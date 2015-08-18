@@ -21,7 +21,7 @@ module Discordrb
     def login
       # Login
       login_response = RestClient.post Discordrb::Endpoints::LOGIN, :email => @email, :password => @password
-      raise HTTPStatusException.new(response.code) if response.code >= 400
+      raise HTTPStatusException.new(login_response.code) if login_response.code >= 400
 
       # Parse response
       login_response_object = JSON.parse(login_response)
