@@ -51,6 +51,23 @@ module Discordrb
     end
 
     def websocket_open(event)
+      # Send the initial packet
+      packet = {
+        "op" => 2,    # Packet identifier
+        "d" => {      # Packet data
+          "v" => 2,   # Another identifier
+          "token" => @token,
+          "properties" => {   # I'm unsure what these values are for exactly, but they don't appear to impact bot functionality in any way.
+            "$os" => "Linux",
+            "$browser" => "Chrome",
+            "$device" => "discordrb",
+            "$referrer" => "",
+            "$referring_domain" => ""
+          }
+        }
+      }
+
+      @ws.send(packet.to_json)
     end
   end
 end
