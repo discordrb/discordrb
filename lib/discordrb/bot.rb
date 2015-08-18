@@ -25,9 +25,9 @@ module Discordrb
 
       # Parse response
       login_response_object = JSON.parse(login_response)
-      raise InvalidAuthenticationException unless login_response_object[token]
+      raise InvalidAuthenticationException unless login_response_object['token']
 
-      login_response_object[token]
+      login_response_object['token']
     end
 
     def websocket_connect
