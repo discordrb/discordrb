@@ -45,6 +45,19 @@ module Discordrb
     end
 
     def websocket_message(event)
+      # Parse packet
+      packet = JSON.parse(event.data)
+
+      raise "Invalid Packet" unless packet['op'] == 0   # TODO
+
+      data = packet['d']
+      case packet['t']
+      when "READY"
+        initialize_bot(data)
+        # TODO
+      when "MESSAGE_CREATE"
+        # TODO
+      end
     end
 
     def websocket_close(event)
