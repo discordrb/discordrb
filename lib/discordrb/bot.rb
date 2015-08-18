@@ -34,7 +34,7 @@ module Discordrb
       EM.run {
         @ws = Faye::WebSocket::Client.new(Discordrb::Endpoints::WEBSOCKET_HUB)
 
-        @ws.on :open do |event|; websocket_message(event); end
+        @ws.on :open do |event|; websocket_open(event); end
         @ws.on :message do |event|; websocket_message(event); end
 
         @ws.on :close do |event|
