@@ -4,7 +4,7 @@ module Discordrb::Events
     def initialize(object); @object = object; end
   end
 
-  def matches_all(attributes, to_check, &block)
+  def self.matches_all(attributes, to_check, &block)
     # "Zeroth" case: attributes is nil
     return true unless attributes
 
@@ -37,6 +37,10 @@ module Discordrb::Events
 
     def match(event)
       @block.call(event) if matches? event
+    end
+
+    def matches_all(attributes, to_check, &block)
+      Discordrb::Events.matches_all(attributes, to_check, &block)
     end
   end
 
