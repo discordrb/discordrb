@@ -1,6 +1,6 @@
 module Discordrb::Events
   class EventHandler
-    def initialize(attributes, &block)
+    def initialize(attributes, block)
       @attributes = attributes
       @block = block
     end
