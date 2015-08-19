@@ -1,5 +1,3 @@
-require 'discordrb/events/utility'
-
 def not!(object)
   Negated.new(object)
 end
