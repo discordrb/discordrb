@@ -6,7 +6,7 @@ module Discordrb::Events
 
       # First case: there's only a single attribute
       unless attributes.is_a? Array
-        return true if yield(attributes, to_check)
+        return yield(attributes, to_check)
       end
 
       # Second case: it's an array of attributes
