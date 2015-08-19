@@ -10,13 +10,15 @@ require 'discordrb/exceptions'
 require 'discordrb/data'
 
 module Discordrb
+  include Events
   class Bot
     def initialize(email, password)
       @email = email
       @password = password
 
       @token = login()
-      websocket_connect()
+
+      Thread.new { websocket_connect() }
 
       @event_handlers = {}
     end
@@ -78,7 +80,7 @@ module Discordrb
         end
       when "MESSAGE_CREATE"
         message = Message.new(data, self)
-        event = Events::MessageEvent.new(message)
+        event = MessageEvent.new(message)
         raise_event(event)
       end
     end
