@@ -160,7 +160,7 @@ module Discordrb
         event = MessageEvent.new(message)
         raise_event(event)
       when "TYPING_START"
-        event = TypingEvent.new(data)
+        event = TypingEvent.new(data, self)
         raise_event(event)
       end
     end
