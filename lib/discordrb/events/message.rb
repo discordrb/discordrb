@@ -1,4 +1,4 @@
-module Discordrb
+module Discordrb::Events
   class MessageEvent
     attr_reader :message
 
