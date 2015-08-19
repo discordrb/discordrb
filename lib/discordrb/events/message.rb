@@ -4,7 +4,8 @@ module Discordrb::Events
   class MessageEvent
     attr_reader :message
 
-    def initialize(message)
+    def initialize(message, bot)
+      @bot = bot
       @message = message
     end
 
