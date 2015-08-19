@@ -11,6 +11,11 @@ module Discordrb
       @discriminator = data['discriminator']
       @avatar = data['avatar']
     end
+
+    # Utility function to mention users in messages
+    def mention
+      "<@#{@id}>"
+    end
   end
 
   class Message
