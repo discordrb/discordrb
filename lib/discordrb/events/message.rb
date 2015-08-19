@@ -1,3 +1,5 @@
+require 'discordrb/events/generic'
+
 module Discordrb::Events
   class MessageEvent
     attr_reader :message
