@@ -1,4 +1,4 @@
-module Discordrb::Events
+module Discordrb::Events::Utility
   def matches_all(attributes, to_check, &block)
     # First case: there's only a single attribute
     unless attributes.is_a? Array

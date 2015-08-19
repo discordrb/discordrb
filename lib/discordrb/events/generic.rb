@@ -1,5 +1,8 @@
+require 'discordrb/events/utility'
+
 module Discordrb::Events
   class EventHandler
+    include Discordrb::Events::Utility
     def initialize(attributes, block)
       @attributes = attributes
       @block = block

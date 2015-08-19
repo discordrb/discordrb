@@ -1,5 +1,4 @@
 require 'discordrb/events/generic'
-require 'discordrb/events/utility'
 
 module Discordrb::Events
   class MessageEvent
