@@ -78,8 +78,8 @@ module Discordrb
         end
       when "MESSAGE_CREATE"
         message = Message.new(data)
-
-        # TODO: Call event handlers
+        event = MessageEvent.new(message)
+        raise_event(event)
       end
     end
 
