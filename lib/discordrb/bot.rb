@@ -21,6 +21,7 @@ module Discordrb
 
       @event_handlers = {}
       @channels = {}
+      @debug = false
     end
 
     def run
@@ -38,6 +39,7 @@ module Discordrb
     end
 
     def channel(id)
+      debug("Obtaining data for channel with id #{id}")
       return @channels[id] if @channels[id]
 
       response = RestClient.get Discordrb::Endpoints::CHANNELS + "/#{id}", {:Authorization => @token}
@@ -46,12 +48,17 @@ module Discordrb
     end
 
     def send_message(channel_id, content)
+      debug("Sending message to #{channel_id} with content '#{content}'")
       data = {
         'content' => content,
         'mentions' => []
       }
 
       RestClient.post Discordrb::Endpoints::CHANNELS + "/#{channel_id}/messages", data.to_json, {:Authorization => @token, :content_type => :json}
+    end
+
+    def debug=(debug)
+      @debug = debug
     end
 
     def message(attributes = {}, &block)
@@ -71,7 +78,12 @@ module Discordrb
 
     private
 
+    def debug(message)
+      puts "[DEBUG] #{message}" if @debug
+    end
+
     def login
+      debug("Logging in")
       # Login
       login_response = RestClient.post Discordrb::Endpoints::LOGIN, :email => @email, :password => @password
       raise HTTPStatusException.new(login_response.code) if login_response.code >= 400
@@ -98,6 +110,8 @@ module Discordrb
     end
 
     def websocket_message(event)
+      debug("Received packet #{event.data}")
+
       # Parse packet
       packet = JSON.parse(event.data)
 
@@ -109,6 +123,7 @@ module Discordrb
         # Activate the heartbeats
         @heartbeat_interval = data['heartbeat_interval'].to_f / 1000.0
         @heartbeat_active = true
+        debug("Desired heartbeat_interval: #{@heartbeat_interval}")
 
         # Initialize the bot user
         @bot_user = User.new(data['user'], self)
@@ -154,6 +169,7 @@ module Discordrb
     end
 
     def raise_event(event)
+      debug("Raised a #{event.class}")
       handlers = @event_handlers[event.class]
       handlers.each do |handler|
         handler.match(event)
@@ -161,9 +177,11 @@ module Discordrb
     end
 
     def send_heartbeat
+      millis = Time.now.strftime("%s%L").to_i
+      debug("Sending heartbeat at #{millis}")
       data = {
         'op' => 1,
-        'd' => Time.now.strftime("%s%L").to_i
+        'd' => millis
       }
 
       @ws.send(data.to_json)
