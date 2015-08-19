@@ -7,9 +7,9 @@ module Discordrb::Events
     end
 
     def author; @message.author; end
-    def user; @message.author; end
+    alias_method :user, :author
     def channel; @message.channel; end
     def content; @message.content; end
-    def text; @message.content; end
+    alias_method :text, :content
   end
 end
