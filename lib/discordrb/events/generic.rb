@@ -13,7 +13,7 @@ module Discordrb::Events
     end
 
     def match(event)
-      block.call(event) if matches? event
+      @block.call(event) if matches? event
     end
   end
 end
