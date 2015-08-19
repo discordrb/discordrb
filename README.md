@@ -22,15 +22,17 @@ Or install it yourself as:
 
 You can make a simple bot like this:
 
-    require 'discordrb'
+```ruby
+require 'discordrb'
 
-    bot = Discordrb::Bot.new "email@example.com", "hunter2"
+bot = Discordrb::Bot.new "email@example.com", "hunter2"
 
-    bot.message(with_text: "Ping!") do |event|
-      event.respond "Pong!"
-    end
+bot.message(with_text: "Ping!") do |event|
+  event.respond "Pong!"
+end
 
-    bot.run
+bot.run
+```
 
 This bot responds to every "Ping!" with a "Pong!".
 
