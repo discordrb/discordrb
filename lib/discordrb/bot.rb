@@ -54,10 +54,23 @@ module Discordrb
       data = packet['d']
       case packet['t']
       when "READY"
-        initialize_bot(data)
-        # TODO
+        # Handle heartbeats
+        @heartbeat_interval = data['heartbeat_interval']
+        setup_heartbeat
+
+        # Initialize the bot user
+        @bot_user = User.new(data['user'])
+
+        # Initialize servers
+        @servers = {}
+        data['guilds'].each do |element|
+          server = Server.new(element)
+          @servers[server.id] = server
+        end
       when "MESSAGE_CREATE"
         message = Message.new(data)
+
+        # TODO: Call event handlers
       end
     end
 
@@ -82,6 +95,19 @@ module Discordrb
       }
 
       @ws.send(packet.to_json)
+    end
+
+    def setup_heartbeat
+      Thread.new do
+        loop do
+          send_heartbeat
+          sleep @heartbeat_interval
+        end
+      end
+    end
+
+    def send_heartbeat
+      # TODO
     end
   end
 end
