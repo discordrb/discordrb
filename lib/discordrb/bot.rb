@@ -7,6 +7,7 @@ require 'discordrb/endpoints/endpoints'
 require 'discordrb/events/message'
 require 'discordrb/events/typing'
 require 'discordrb/events/lifetime'
+require 'discordrb/events/presence'
 
 require 'discordrb/exceptions'
 require 'discordrb/data'
@@ -205,8 +206,9 @@ module Discordrb
     end
 
     def register_event(clazz, attributes, block)
+      handler = Kernel.const_get(clazz.to_s + "Handler")
       @event_handlers[clazz] ||= []
-      @event_handlers[clazz] << clazz.new(attributes, block)
+      @event_handlers[clazz] << handler.new(attributes, block)
     end
 
     def send_heartbeat
