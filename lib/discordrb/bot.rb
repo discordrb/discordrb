@@ -5,6 +5,7 @@ require 'eventmachine'
 require 'discordrb/endpoints/endpoints'
 
 require 'discordrb/events/message'
+require 'discordrb/events/lifetime'
 
 require 'discordrb/exceptions'
 require 'discordrb/data'
