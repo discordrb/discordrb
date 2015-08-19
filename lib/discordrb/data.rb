@@ -28,7 +28,7 @@ module Discordrb
       @server_id = data['guild_id']
       @type = data['type']
       @id = data['id']
-      @is_private = (data['is_private'].downcase == 'true')
+      @is_private = data['is_private']
     end
 
     def send_message(content)
