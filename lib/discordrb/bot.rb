@@ -34,6 +34,15 @@ module Discordrb
       @channels[id] = channel
     end
 
+    def send_message(channel_id, content)
+      data = {
+        'content' => content,
+        'mentions' => []
+      }
+
+      RestClient.post Discordrb::Endpoints::CHANNELS + "/#{channel_id}/messages", data.to_json, :content_type => :json
+    end
+
     def message(attributes = {}, &block)
       @event_handlers[MessageEvent] ||= []
       @event_handlers[MessageEvent] << MessageEventHandler.new(attributes, block)

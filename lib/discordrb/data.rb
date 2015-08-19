@@ -30,6 +30,13 @@ module Discordrb
       @id = data['id']
       @is_private = (data['is_private'].downcase == 'true')
     end
+
+    def send_message(content)
+      @bot.send_message(@id, content)
+    end
+
+    alias_method :send, :send_message
+    alias_method :message, :send_message
   end
 
   class Message
