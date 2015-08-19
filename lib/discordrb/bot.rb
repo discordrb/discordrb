@@ -16,11 +16,13 @@ module Discordrb
       @email = email
       @password = password
 
-      @token = login()
-
-      Thread.new { websocket_connect() }
+      @token = login
 
       @event_handlers = {}
+    end
+
+    def run
+      websocket_connect
     end
 
     def message(attributes = {}, &block)
