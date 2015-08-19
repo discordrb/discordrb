@@ -1,6 +1,10 @@
 # These classes hold relevant Discord data, such as messages or channels.
 
 module Discordrb
+  class User
+    attr_reader :username, :
+  end
+
   class Message
     attr_reader :content, :author, :channel, :timestamp, :id, :mentions
 
@@ -9,7 +13,7 @@ module Discordrb
       @author = User.new(data['author'])
       # TODO: Channel
       @timestamp = Time.at(data['timestamp'].to_i)
-      @id = data['id']
+      @id = data['id'].to_i
 
       @mentions = []
 
