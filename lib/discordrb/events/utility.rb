@@ -2,8 +2,8 @@ module Discordrb::Events
   module Utility
     def matches_all(attributes, to_check, &block)
       # "Zeroth" case: attributes is nil
-      return false unless attributes
-      
+      return true unless attributes
+
       # First case: there's only a single attribute
       unless attributes.is_a? Array
         return true if yield(attributes, to_check)
