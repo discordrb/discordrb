@@ -13,13 +13,8 @@ module Discordrb::Events
     alias_method :text, :content
   end
 
-  class MessageEventHandler
-    def initialize(attributes, &block)
-      @attributes = attributes
-      @block = block
-    end
-
-    def match(event)
+  class MessageEventHandler < EventHandler
+    def matches?(event)
       # Check for the proper event type
       return false unless event.is_a? MessageEvent
 
