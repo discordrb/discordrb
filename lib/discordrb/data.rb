@@ -20,12 +20,12 @@ module Discordrb
   end
 
   class Channel
-    attr_reader :name, :server_id, :type, :id, :is_private
+    attr_reader :name, :server, :type, :id, :is_private
 
     def initialize(data, bot)
       @bot = bot
       @name = data['name']
-      @server_id = data['guild_id']
+      @server = bot.server(data['guild_id'].to_i)
       @type = data['type']
       @id = data['id']
       @is_private = data['is_private']
