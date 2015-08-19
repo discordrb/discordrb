@@ -43,7 +43,7 @@ module Discordrb::Events
           end
         end,
         matches_all(@attributes[:with_text], event.content) { |a,e| e == a }
-      ].reduce(false, &:|)
+      ].reduce(true, &:&)
     end
   end
 end
