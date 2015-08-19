@@ -55,6 +55,10 @@ module Discordrb
       @users[id]
     end
 
+    def server(id)
+      @servers[id]
+    end
+
     def send_message(channel_id, content)
       debug("Sending message to #{channel_id} with content '#{content}'")
       data = {
