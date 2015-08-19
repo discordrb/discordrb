@@ -1,6 +1,15 @@
 require 'discordrb/events/utility'
 
+def not(object)
+  Negated.new(object)
+end
+
 module Discordrb::Events
+  class Negated
+    attr_reader :object
+    def initialize(object); @object = object; end
+  end
+
   class EventHandler
     include Discordrb::Events::Utility
     def initialize(attributes, block)
