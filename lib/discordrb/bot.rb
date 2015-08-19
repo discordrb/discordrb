@@ -149,7 +149,7 @@ module Discordrb
 
           # Initialize users
           server.members.each do |element|
-            users[element.id] = element
+            @users[element.id] = element
           end
         end
 
