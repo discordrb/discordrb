@@ -40,7 +40,7 @@ module Discordrb
         'mentions' => []
       }
 
-      RestClient.post Discordrb::Endpoints::CHANNELS + "/#{channel_id}/messages", data.to_json, :content_type => :json
+      RestClient.post Discordrb::Endpoints::CHANNELS + "/#{channel_id}/messages", data.to_json, :content_type => :json, {:Authorization => @token}
     end
 
     def message(attributes = {}, &block)
