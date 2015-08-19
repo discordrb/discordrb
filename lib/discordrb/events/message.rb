@@ -14,6 +14,10 @@ module Discordrb::Events
     def content; @message.content; end
     alias_method :text, :content
     def timestamp; @message.timestamp; end
+    
+    def send_message(content); @message.send_message(content); end
+    def send(content); @message.send(content); end
+    def message(content); @message.message(content); end
   end
 
   class MessageEventHandler < EventHandler
