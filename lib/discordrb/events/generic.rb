@@ -14,13 +14,21 @@ module Discordrb::Events
     # "Zeroth" case: attributes is nil
     return true unless attributes
 
-    # First case: there's only a single attribute
+    # First case: there's a single negated attribute
+    if attributes.is_a? Negated
+      # The contained object might also be an array, so recursively call matches_all (and negate the result)
+      return !matches_all(attributes.object, to_check, &block)
+    end
+
+    # Second case: there's a single, not-negated attribute
     unless attributes.is_a? Array
       return yield(attributes, to_check)
     end
 
-    # Second case: it's an array of attributes
-    attributes.reduce(false) { |result, element| result || yield(element, to_check) }
+    # Third case: it's an array of attributes
+    attributes.reduce(false) do |result, element|
+      result || yield(element, to_check)
+    end
   end
 
   class EventHandler
