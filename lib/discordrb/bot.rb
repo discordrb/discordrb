@@ -5,6 +5,7 @@ require 'eventmachine'
 require 'discordrb/endpoints/endpoints'
 
 require 'discordrb/events/message'
+require 'discordrb/events/typing'
 require 'discordrb/events/lifetime'
 
 require 'discordrb/exceptions'
@@ -83,6 +84,11 @@ module Discordrb
       @event_handlers[DisconnectEvent] << DisconnectEventHandler.new(attributes, block)
     end
 
+    def typing(attributes = {}, &block)
+      @event_handlers[TypingEvent] ||= []
+      @event_handlers[TypingEvent] << TypingEvent.new(attributes, block)
+    end
+
     private
 
     def debug(message)
@@ -152,6 +158,9 @@ module Discordrb
       when "MESSAGE_CREATE"
         message = Message.new(data, self)
         event = MessageEvent.new(message)
+        raise_event(event)
+      when "TYPING_START"
+        event = TypingEvent.new(data)
         raise_event(event)
       end
     end
