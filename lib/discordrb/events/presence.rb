@@ -1,11 +1,12 @@
 require 'discordrb/events/generic'
+require 'discordrb/data'
 
 module Discordrb::Events
   class PresenceEvent
     attr_reader :server, :user, :status
 
     def initialize(data, bot)
-      @user = User.new(data['user'], bot)
+      @user = Discordrb::User.new(data['user'], bot)
       @status = data['status'].to_sym
       @server = bot.server(data['guild_id'])
     end
