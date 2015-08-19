@@ -18,6 +18,18 @@ module Discordrb
     end
   end
 
+  class Channel
+    attr_reader :name, :server_id, :type, :id, :is_private
+
+    def initialize(data)
+      @name = data['name']
+      @server_id = data['guild_id']
+      @type = data['type']
+      @id = data['id']
+      @is_private = (data['is_private'].downcase == 'true')
+    end
+  end
+
   class Message
     attr_reader :content, :author, :channel, :timestamp, :id, :mentions
     alias_method :user, :author
