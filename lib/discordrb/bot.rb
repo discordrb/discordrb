@@ -204,9 +204,9 @@ module Discordrb
       end
     end
 
-    def register_event(class, attributes, block)
-      @event_handlers[class] ||= []
-      @event_handlers[class] << class.new(attributes, block)
+    def register_event(clazz, attributes, block)
+      @event_handlers[clazz] ||= []
+      @event_handlers[clazz] << clazz.new(attributes, block)
     end
 
     def send_heartbeat
