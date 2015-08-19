@@ -49,4 +49,21 @@ module Discordrb
       end
     end
   end
+
+  class Server
+    attr_reader :region, :name, :owner_id, :id, :members
+
+    def initialize(data)
+      @region = data['region']
+      @name = data['name']
+      @owner_id = data['owner_id'].to_i
+      @id = data['id'].to_i
+
+      @members = []
+
+      data['members'].each do |element|
+        @members << User.new(element)
+      end
+    end
+  end
 end
