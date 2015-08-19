@@ -20,7 +20,10 @@ module Discordrb
       @token = login
 
       @event_handlers = {}
+
       @channels = {}
+      @users = {}
+
       @debug = false
     end
 
@@ -45,6 +48,10 @@ module Discordrb
       response = RestClient.get Discordrb::Endpoints::CHANNELS + "/#{id}", {:Authorization => @token}
       channel = Channel.new(JSON.parse(response), self)
       @channels[id] = channel
+    end
+
+    def user(id)
+      @users[id]
     end
 
     def send_message(channel_id, content)
@@ -133,6 +140,11 @@ module Discordrb
         data['guilds'].each do |element|
           server = Server.new(element, self)
           @servers[server.id] = server
+
+          # Initialize users
+          server.members.each do |element|
+            users[element.id] = element
+          end
         end
 
         # Make sure to raise the event
