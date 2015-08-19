@@ -2,11 +2,12 @@ require 'discordrb/events/generic'
 
 module Discordrb::Events
   class TypingEvent
-    attr_reader :channel, :timestamp
+    attr_reader :channel, :user, :timestamp
 
     def initialize(data, bot)
       @user_id = data['user_id']
-      @channel_id = data['user_id']
+      @user = bot.user(@user_id)
+      @channel_id = data['channel_id']
       @channel = bot.channel(@channel_id)
       @timestamp = Time.at(data['timestamp'].to_i)
     end
