@@ -16,4 +16,11 @@ module Discordrb::Events
       @block.call(event) if matches? event
     end
   end
+
+  # Event handler that matches all events
+  class TrueEventHandler < EventHandler
+    def matches?(event)
+      true
+    end
+  end
 end
