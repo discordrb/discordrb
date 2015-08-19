@@ -12,4 +12,14 @@ module Discordrb::Events
     def content; @message.content; end
     alias_method :text, :content
   end
+
+  class MessageEventHandler
+    def initialize(attributes, &block)
+      @attributes = attributes
+      @block = block
+    end
+
+    def match(event)
+    end
+  end
 end
