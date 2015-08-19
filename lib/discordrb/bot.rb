@@ -192,7 +192,7 @@ module Discordrb
     def raise_event(event)
       debug("Raised a #{event.class}")
       handlers = @event_handlers[event.class]
-      handlers.each do |handler|
+      (handlers || []).each do |handler|
         handler.match(event)
       end
     end
