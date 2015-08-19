@@ -13,6 +13,7 @@ module Discordrb::Events
     def channel; @message.channel; end
     def content; @message.content; end
     alias_method :text, :content
+    def timestamp; @message.timestamp; end
   end
 
   class MessageEventHandler < EventHandler
@@ -42,7 +43,9 @@ module Discordrb::Events
             a == e
           end
         end,
-        matches_all(@attributes[:with_text], event.content) { |a,e| e == a }
+        matches_all(@attributes[:with_text], event.content) { |a,e| e == a },
+        matches_all(@attributes[:after], event.timestamp) { |a,e| a > e },
+        matches_all(@attributes[:before], event.timestamp) { |a,e| a < e }
       ].reduce(true, &:&)
     end
   end

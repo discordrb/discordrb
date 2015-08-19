@@ -36,7 +36,9 @@ module Discordrb::Events
           else
             a == e
           end
-        end
+        end,
+        matches_all(@attributes[:after], event.timestamp) { |a,e| a > e },
+        matches_all(@attributes[:before], event.timestamp) { |a,e| a < e }
       ].reduce(true, &:&)
     end
   end
