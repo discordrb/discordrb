@@ -20,7 +20,19 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+You can make a simple bot like this:
+
+    require 'discordrb'
+
+    bot = Discordrb::Bot.new "email@example.com", "hunter2"
+
+    bot.message(with_text: "Ping!") do |event|
+      event.respond "Pong!"
+    end
+
+    bot.run
+
+This bot responds to every "Ping!" with a "Pong!".
 
 ## Development
 
