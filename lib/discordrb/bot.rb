@@ -78,7 +78,7 @@ module Discordrb
         end
       when "MESSAGE_CREATE"
         message = Message.new(data, self)
-        event = MessageEvent.new(message)
+        event = Events::MessageEvent.new(message)
         raise_event(event)
       end
     end
