@@ -89,6 +89,11 @@ module Discordrb
       @event_handlers[TypingEvent] << TypingEvent.new(attributes, block)
     end
 
+    def presence(attributes = {}, &block)
+      @event_handlers[PresenceEvent] ||= []
+      @event_handlers[PresenceEvent] << PresenceEvent.new(attributes, block)
+    end
+
     private
 
     def debug(message)
@@ -161,6 +166,9 @@ module Discordrb
         raise_event(event)
       when "TYPING_START"
         event = TypingEvent.new(data, self)
+        raise_event(event)
+      when "PRESENCE_UPDATE"
+        event = PresenceEvent.new(data, self)
         raise_event(event)
       end
     end
