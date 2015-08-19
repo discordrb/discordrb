@@ -4,6 +4,8 @@ require 'eventmachine'
 
 require 'discordrb/endpoints/endpoints'
 
+require 'discordrb/events/message'
+
 require 'discordrb/exceptions'
 require 'discordrb/data'
 
@@ -15,6 +17,13 @@ module Discordrb
 
       @token = login()
       websocket_connect()
+
+      @event_handlers = {}
+    end
+
+    def message(attributes = {}, &block)
+      @event_handlers[MessageEvent] ||= []
+      @event_handlers[MessageEvent] << MessageEventHandler.new(attributes, block)
     end
 
     private
@@ -55,7 +64,7 @@ module Discordrb
       case packet['t']
       when "READY"
         # Handle heartbeats
-        @heartbeat_interval = data['heartbeat_interval'].to_f * 1000
+        @heartbeat_interval = data['heartbeat_interval'].to_f / 1000.0
         setup_heartbeat
 
         # Initialize the bot user
@@ -95,6 +104,13 @@ module Discordrb
       }
 
       @ws.send(packet.to_json)
+    end
+
+    def raise_event(event)
+      handlers = @event_handlers[event.class]
+      handlers.each do |handler|
+        handler.match(event)
+      end
     end
 
     def setup_heartbeat
