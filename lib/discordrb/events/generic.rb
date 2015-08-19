@@ -1,7 +1,3 @@
-def not!(object)
-  Negated.new(object)
-end
-
 module Discordrb::Events
   class Negated
     attr_reader :object
@@ -50,4 +46,8 @@ module Discordrb::Events
       true
     end
   end
+end
+
+def not!(object)
+  Discordrb::Events::Negated.new(object)
 end
