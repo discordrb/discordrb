@@ -10,7 +10,7 @@ module Discordrb::Events
       end
 
       # Second case: it's an array of attributes
-      attributes.reduce(false) { |result, element| result || yield(element, to_check) }
+      attributes.reduce(true) { |result, element| result && yield(element, to_check) }
     end
   end
 end
