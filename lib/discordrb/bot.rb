@@ -23,6 +23,16 @@ module Discordrb
     end
 
     def run
+      # Handle heartbeats
+      @heartbeat_interval = 1
+      @heartbeat_active = false
+      @heartbeat_thread = Thread.new do
+        while true do
+          sleep @heartbeat_interval
+          send_heartbeat if @heartbeat_active
+        end
+      end
+
       websocket_connect
     end
 
@@ -85,9 +95,9 @@ module Discordrb
       data = packet['d']
       case packet['t']
       when "READY"
-        # Handle heartbeats
+        # Activate the heartbeats
         @heartbeat_interval = data['heartbeat_interval'].to_f / 1000.0
-        setup_heartbeat
+        @heartbeat_active = true
 
         # Initialize the bot user
         @bot_user = User.new(data['user'], self)
@@ -135,17 +145,13 @@ module Discordrb
       end
     end
 
-    def setup_heartbeat
-      Thread.new do
-        loop do
-          send_heartbeat
-          sleep @heartbeat_interval
-        end
-      end
-    end
-
     def send_heartbeat
-      # TODO
+      data = {
+        'op' => 1,
+        'd' => Time.now.strftime("%s%L").to_i
+      }
+
+      @ws.send(data.to_json)
     end
   end
 end
