@@ -70,26 +70,23 @@ module Discordrb
     end
 
     def message(attributes = {}, &block)
-      @event_handlers[MessageEvent] ||= []
-      @event_handlers[MessageEvent] << MessageEventHandler.new(attributes, block)
+      register_event(MessageEvent, attributes, block)
     end
 
     def ready(attributes = {}, &block)
-      @event_handlers[ReadyEvent] ||= []
-      @event_handlers[ReadyEvent] << ReadyEventHandler.new(attributes, block)
+      register_event(ReadyEvent, attributes, block)
     end
 
     def disconnected(attributes = {}, &block)
-      @event_handlers[DisconnectEvent] ||= []
-      @event_handlers[DisconnectEvent] << DisconnectEventHandler.new(attributes, block)
+      register_event(DisconnectEvent, attributes, block)
     end
 
     def typing(attributes = {}, &block)
-      @event_handlers[TypingEvent] ||= []
-      @event_handlers[TypingEvent] << TypingEvent.new(attributes, block)
+      register_event(TypingEvent, attributes, block)
     end
 
     def presence(attributes = {}, &block)
+      register_event(PresenceEvent, attributes, block)
     end
 
     private
@@ -202,7 +199,7 @@ module Discordrb
         handler.match(event)
       end
     end
-    
+
     def register_event(class, attributes, block)
       @event_handlers[class] ||= []
       @event_handlers[class] << class.new(attributes, block)
