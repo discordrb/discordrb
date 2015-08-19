@@ -68,16 +68,16 @@ module Discordrb
         setup_heartbeat
 
         # Initialize the bot user
-        @bot_user = User.new(data['user'])
+        @bot_user = User.new(data['user'], self)
 
         # Initialize servers
         @servers = {}
         data['guilds'].each do |element|
-          server = Server.new(element)
+          server = Server.new(element, self)
           @servers[server.id] = server
         end
       when "MESSAGE_CREATE"
-        message = Message.new(data)
+        message = Message.new(data, self)
         event = MessageEvent.new(message)
         raise_event(event)
       end
