@@ -58,6 +58,16 @@ module Discordrb
       @event_handlers[MessageEvent] << MessageEventHandler.new(attributes, block)
     end
 
+    def ready(attributes = {}, &block)
+      @event_handlers[ReadyEvent] ||= []
+      @event_handlers[ReadyEvent] << ReadyEventHandler.new(attributes, block)
+    end
+
+    def disconnected(attributes = {}, &block)
+      @event_handlers[DisconnectEvent] ||= []
+      @event_handlers[DisconnectEvent] << DisconnectEventHandler.new(attributes, block)
+    end
+
     private
 
     def login
@@ -108,6 +118,9 @@ module Discordrb
           server = Server.new(element, self)
           @servers[server.id] = server
         end
+
+        # Make sure to raise the event
+        raise_event(ReadyEvent.new)
       when "MESSAGE_CREATE"
         message = Message.new(data, self)
         event = MessageEvent.new(message)
@@ -116,6 +129,7 @@ module Discordrb
     end
 
     def websocket_close(event)
+      raise_event(DisconnectEvent.new)
     end
 
     def websocket_open(event)
