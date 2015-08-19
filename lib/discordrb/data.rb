@@ -41,7 +41,7 @@ module Discordrb
       @bot = bot
       @content = data['content']
       @author = User.new(data['author'], bot)
-      # TODO: Channel
+      @channel = bot.channel(data['channel_id'].to_i)
       @timestamp = Time.at(data['timestamp'].to_i)
       @id = data['id'].to_i
 

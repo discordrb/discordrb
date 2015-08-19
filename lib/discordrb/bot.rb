@@ -19,10 +19,19 @@ module Discordrb
       @token = login
 
       @event_handlers = {}
+      @channels = {}
     end
 
     def run
       websocket_connect
+    end
+
+    def channel(id)
+      return @channels[id] if @channels[id]
+
+      response = RestClient.get Discordrb::Endpoints::CHANNELS + "/#{id}", {:Authorization => @token}
+      channel = Channel.new(JSON.parse(response), self)
+      @channels[id] = channel
     end
 
     def message(attributes = {}, &block)
