@@ -5,6 +5,7 @@ require 'eventmachine'
 require 'discordrb/endpoints/endpoints'
 
 require 'discordrb/exceptions'
+require 'discordrb/data'
 
 module Discordrb
   class Bot
@@ -56,7 +57,7 @@ module Discordrb
         initialize_bot(data)
         # TODO
       when "MESSAGE_CREATE"
-        # TODO
+        message = Message.new(data)
       end
     end
 
