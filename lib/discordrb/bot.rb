@@ -90,8 +90,6 @@ module Discordrb
     end
 
     def presence(attributes = {}, &block)
-      @event_handlers[PresenceEvent] ||= []
-      @event_handlers[PresenceEvent] << PresenceEvent.new(attributes, block)
     end
 
     private
@@ -203,6 +201,11 @@ module Discordrb
       (handlers || []).each do |handler|
         handler.match(event)
       end
+    end
+    
+    def register_event(class, attributes, block)
+      @event_handlers[class] ||= []
+      @event_handlers[class] << class.new(attributes, block)
     end
 
     def send_heartbeat
