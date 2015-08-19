@@ -1,12 +1,10 @@
 # These classes hold relevant Discord data, such as messages or channels.
 
 module Discordrb
-  class User
-    attr_reader :username, :
-  end
-
   class Message
     attr_reader :content, :author, :channel, :timestamp, :id, :mentions
+    alias_method :user, :author
+    alias_method :text, :content
 
     def initialize(data)
       @content = data['content']
