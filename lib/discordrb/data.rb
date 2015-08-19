@@ -5,7 +5,8 @@ module Discordrb
     attr_reader :username, :id, :discriminator, :avatar
     alias_method :name, :username
 
-    def initialize(data)
+    def initialize(data, bot)
+      @bot = bot
       @username = data['username']
       @id = data['id'].to_i
       @discriminator = data['discriminator']
@@ -21,7 +22,8 @@ module Discordrb
   class Channel
     attr_reader :name, :server_id, :type, :id, :is_private
 
-    def initialize(data)
+    def initialize(data, bot)
+      @bot = bot
       @name = data['name']
       @server_id = data['guild_id']
       @type = data['type']
@@ -35,9 +37,10 @@ module Discordrb
     alias_method :user, :author
     alias_method :text, :content
 
-    def initialize(data)
+    def initialize(data, bot)
+      @bot = bot
       @content = data['content']
-      @author = User.new(data['author'])
+      @author = User.new(data['author'], bot)
       # TODO: Channel
       @timestamp = Time.at(data['timestamp'].to_i)
       @id = data['id'].to_i
@@ -45,7 +48,7 @@ module Discordrb
       @mentions = []
 
       data['mentions'].each do |element|
-        @mentions << User.new(element)
+        @mentions << User.new(element, bot)
       end
     end
   end
@@ -53,7 +56,8 @@ module Discordrb
   class Server
     attr_reader :region, :name, :owner_id, :id, :members
 
-    def initialize(data)
+    def initialize(data, bot)
+      @bot = bot
       @region = data['region']
       @name = data['name']
       @owner_id = data['owner_id'].to_i
@@ -62,7 +66,7 @@ module Discordrb
       @members = []
 
       data['members'].each do |element|
-        @members << User.new(element)
+        @members << User.new(element, bot)
       end
     end
   end
