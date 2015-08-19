@@ -10,8 +10,8 @@ require 'discordrb/exceptions'
 require 'discordrb/data'
 
 module Discordrb
-  include Events
   class Bot
+    include Discordrb::Events
     def initialize(email, password)
       @email = email
       @password = password
