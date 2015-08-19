@@ -55,7 +55,7 @@ module Discordrb
       case packet['t']
       when "READY"
         # Handle heartbeats
-        @heartbeat_interval = data['heartbeat_interval']
+        @heartbeat_interval = data['heartbeat_interval'].to_f * 1000
         setup_heartbeat
 
         # Initialize the bot user
