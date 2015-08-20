@@ -94,6 +94,10 @@ module Discordrb
       register_event(PresenceEvent, attributes, block)
     end
 
+    def mention(attributes = {}, &block)
+      register_event(MentionEvent, attributes, block)
+    end
+
     private
 
     def debug(message)
@@ -164,6 +168,11 @@ module Discordrb
         message = Message.new(data, self)
         event = MessageEvent.new(message, self)
         raise_event(event)
+
+        if message.mentions.any? { |user| user.id == @bot_user.id }
+          event = MentionEvent.new(message, self)
+          raise_event(event)
+        end
       when "TYPING_START"
         event = TypingEvent.new(data, self)
         raise_event(event)

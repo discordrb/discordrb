@@ -56,4 +56,7 @@ module Discordrb::Events
       ].reduce(true, &:&)
     end
   end
+
+  class MentionEvent < MessageEvent; end
+  class MentionEventHandler < MessageEventHandler; end
 end
