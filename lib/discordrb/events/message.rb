@@ -33,7 +33,8 @@ module Discordrb::Events
         matches_all(@attributes[:containing], event.content) { |a,e| e.include? a },
         matches_all(@attributes[:in], event.channel) do |a,e|
           if a.is_a? String
-            a == e.name
+            # Make sure to remove the "#" from channel names in case it was specified
+            a.gsub('#', '') == e.name
           elsif a.is_a? Fixnum
             a == e.id
           else
