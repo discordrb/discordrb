@@ -21,7 +21,7 @@ module Discordrb::Events
       return [
         matches_all(@attributes[:in], event.channel) do |a,e|
           if a.is_a? String
-            a == e.name
+            a.gsub('#', '') == e.name
           elsif a.is_a? Fixnum
             a == e.id
           else
