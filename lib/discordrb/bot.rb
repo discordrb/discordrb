@@ -162,7 +162,7 @@ module Discordrb
         raise_event(ReadyEvent.new)
       when "MESSAGE_CREATE"
         message = Message.new(data, self)
-        event = MessageEvent.new(message)
+        event = MessageEvent.new(message, self)
         raise_event(event)
       when "TYPING_START"
         event = TypingEvent.new(data, self)
