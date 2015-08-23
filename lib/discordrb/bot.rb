@@ -215,7 +215,8 @@ module Discordrb
     end
 
     def register_event(clazz, attributes, block)
-      handler = Kernel.const_get(clazz.to_s + "Handler")
+      #handler = Kernel.const_get(clazz.to_s + "Handler")
+      handler = class_from_string(clazz.to_s + "Handler")
       @event_handlers[clazz] ||= []
       @event_handlers[clazz] << handler.new(attributes, block)
     end
@@ -229,6 +230,12 @@ module Discordrb
       }
 
       @ws.send(data.to_json)
+    end
+
+    def class_from_string(str)
+      str.split('::').inject(Object) do |mod, class_name|
+        mod.const_get(class_name)
+      end
     end
   end
 end
