@@ -18,7 +18,6 @@ module Discordrb::Events
 
     def send_message(content); @message.channel.send_message(content); end
     alias_method :send, :send_message
-    alias_method :message, :send_message
     alias_method :respond, :send_message
   end
 
