@@ -107,6 +107,16 @@ module Discordrb
       register_event(MentionEvent, attributes, block)
     end
 
+    def remove_handler(handler)
+      clazz = event_class(handler.class)
+      @event_handlers[clazz].delete(handler)
+    end
+
+    def add_handler(handler)
+      clazz = event_class(handler.class)
+      @event_handlers[clazz] << handler
+    end
+
     private
 
     def debug(message)
@@ -233,10 +243,13 @@ module Discordrb
     end
 
     def register_event(clazz, attributes, block)
-      #handler = Kernel.const_get(clazz.to_s + "Handler")
-      handler = class_from_string(clazz.to_s + "Handler")
+      handler = handler_class(clazz).new(attributes, block)
+
       @event_handlers[clazz] ||= []
-      @event_handlers[clazz] << handler.new(attributes, block)
+      @event_handlers[clazz] << handler
+
+      # Return the handler so it can be removed later
+      handler
     end
 
     def send_heartbeat
@@ -254,6 +267,17 @@ module Discordrb
       str.split('::').inject(Object) do |mod, class_name|
         mod.const_get(class_name)
       end
+    end
+
+    def event_class(handler_class)
+      class_name = handler_class.to_s
+      return nil unless class_name.end_with? "Handler"
+
+      class_from_string(class_name[0..-8])
+    end
+
+    def handler_class(event_class)
+      class_from_string(event_class.to_s + "Handler")
     end
   end
 end
