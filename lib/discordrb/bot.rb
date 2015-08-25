@@ -52,6 +52,15 @@ module Discordrb
       @channels[id] = channel
     end
 
+    def private_channel(id)
+      debug("Creating private channel with user id #{id}")
+      return @private_channels[id] if @private_channels[id]
+
+      response = RestClient.get Discordrb::Endpoints::USERS + "/#{id}/channels", {:Authorization => @token}
+      channel = Channel.new(JSON.parse(response), self)
+      @private_channels[id] = channel
+    end
+
     def user(id)
       @users[id]
     end

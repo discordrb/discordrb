@@ -10,4 +10,6 @@ module Discordrb::Endpoints
   SERVERS = APIBASE + "/guilds"
 
   CHANNELS = APIBASE + "/channels"
+
+  USERS = APIBASE + "/users"
 end
