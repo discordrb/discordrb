@@ -117,6 +117,8 @@ module Discordrb
       @event_handlers[clazz] << handler
     end
 
+    alias_method :<<, :add_handler
+
     private
 
     def debug(message)
