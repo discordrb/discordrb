@@ -42,7 +42,7 @@ module Discordrb
 
       @is_private = data['is_private']
       if @is_private
-        @recipient == User.new(data['recipient'], bot)
+        @recipient = User.new(data['recipient'], bot)
         @name = @recipient.username
       else
         @name = data['name']
