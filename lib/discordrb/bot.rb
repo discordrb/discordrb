@@ -176,7 +176,7 @@ module Discordrb
         @private_channels = {}
         data['private_channels'].each do |element|
           channel = Channel.new(element, self)
-          @channels[element.id] = channel
+          @channels[channel.id] = channel
           @private_channels[channel.recipient.id] = channel
         end
 
