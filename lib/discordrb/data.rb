@@ -32,7 +32,7 @@ module Discordrb
   end
 
   class Channel
-    attr_reader :name, :server, :type, :id, :is_private
+    attr_reader :name, :server, :type, :id, :is_private, :recipient
 
     def initialize(data, bot)
       @bot = bot
