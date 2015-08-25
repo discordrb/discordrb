@@ -15,7 +15,9 @@ require 'discordrb/data'
 module Discordrb
   class Bot
     include Discordrb::Events
-    def initialize(email, password)
+    def initialize(email, password, debug = false)
+      @debug = debug
+
       @email = email
       @password = password
 
@@ -25,8 +27,6 @@ module Discordrb
 
       @channels = {}
       @users = {}
-
-      @debug = false
     end
 
     def run
