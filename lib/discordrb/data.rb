@@ -24,11 +24,18 @@ module Discordrb
 
     def initialize(data, bot)
       @bot = bot
-      @name = data['name']
-      @server = bot.server(data['guild_id'].to_i)
-      @type = data['type']
+
       @id = data['id']
+      @type = data['type'] || 'text'
+
       @is_private = data['is_private']
+      if @is_private
+        @recipient == User.new(data['recipient'], bot)
+        @name = @recipient.username
+      else
+        @name = data['name']
+        @server = bot.server(data['guild_id'].to_i)
+      end
     end
 
     def send_message(content)
