@@ -163,6 +163,14 @@ module Discordrb
           end
         end
 
+        # Add private channels
+        @private_channels = {}
+        data['private_channels'].each do |element|
+          channel = Channel.new(element, bot)
+          @channels[element.id] = channel
+          @private_channels[channel.recipient.id] = channel
+        end
+
         # Make sure to raise the event
         raise_event(ReadyEvent.new)
       when "MESSAGE_CREATE"
