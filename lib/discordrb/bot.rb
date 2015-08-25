@@ -114,6 +114,7 @@ module Discordrb
       login_response_object = JSON.parse(login_response)
       raise InvalidAuthenticationException unless login_response_object['token']
 
+      debug("Received token: #{login_response_object['token']}")
       login_response_object['token']
     end
 
