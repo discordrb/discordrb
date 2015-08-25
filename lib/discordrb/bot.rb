@@ -175,7 +175,7 @@ module Discordrb
         # Add private channels
         @private_channels = {}
         data['private_channels'].each do |element|
-          channel = Channel.new(element, bot)
+          channel = Channel.new(element, self)
           @channels[element.id] = channel
           @private_channels[channel.recipient.id] = channel
         end
