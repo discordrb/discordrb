@@ -17,6 +17,18 @@ module Discordrb
     def mention
       "<@#{@id}>"
     end
+
+    # Utility function to send a PM
+    def pm(content = nil)
+      if content
+        # Recursively call pm to get the channel, then send a message to it
+        channel = pm
+        channel.send_message(content)
+      else
+        # If no message was specified, return the PM channel
+        @bot.private_channel(@id)
+      end
+    end
   end
 
   class Channel
