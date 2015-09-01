@@ -40,7 +40,12 @@ module Discordrb
         end
       end
 
-      websocket_connect
+      while true do
+        @token = login
+        websocket_connect
+        puts "disconnected. attempting to reconnect."
+        sleep 5
+      end
     end
 
     def channel(id)
@@ -127,6 +132,8 @@ module Discordrb
 
     def login
       debug("Logging in")
+      login_attempts = login_attempts || 0
+
       # Login
       login_response = RestClient.post Discordrb::Endpoints::LOGIN, :email => @email, :password => @password
       raise HTTPStatusException.new(login_response.code) if login_response.code >= 400
@@ -137,6 +144,15 @@ module Discordrb
 
       debug("Received token: #{login_response_object['token']}")
       login_response_object['token']
+    rescue SocketError => e
+      if login_attempts < 100 && e.inspect.include?("No such host is known.")
+        sleep 15
+        puts "login failed. reattempting."
+        login_attempts = login_attempts + 1
+        retry
+      else
+        raise $!
+      end
     end
 
     def websocket_connect
@@ -214,6 +230,7 @@ module Discordrb
 
     def websocket_close(event)
       raise_event(DisconnectEvent.new)
+      EM.stop
     end
 
     def websocket_open(event)
