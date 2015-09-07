@@ -43,8 +43,8 @@ module Discordrb
       while true do
         @token = login
         websocket_connect
-        puts "disconnected. attempting to reconnect."
-        sleep 5
+        puts "disconnected. attempting to reconnect. " + Time.now
+        sleep 2
       end
     end
 
@@ -144,10 +144,10 @@ module Discordrb
 
       debug("Received token: #{login_response_object['token']}")
       login_response_object['token']
-    rescue SocketError => e
-      if login_attempts < 100 && e.inspect.include?("No such host is known.")
+    rescue Exception => e
+      if login_attempts < 100 && ( e.inspect.include?("No such host is known.") || login_response.code == 523)
         sleep 15
-        puts "login failed. reattempting."
+        puts "login failed. reattempting. " + Time.now.to_s
         login_attempts = login_attempts + 1
         retry
       else
