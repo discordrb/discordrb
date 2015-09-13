@@ -4,19 +4,17 @@ module Discordrb::Events
   class MessageEvent
     attr_reader :message
 
+    delegate :author, :channel, :content, :timestamp, to: :message
+
     def initialize(message, bot)
       @bot = bot
       @message = message
     end
 
-    def author; @message.author; end
-    alias_method :user, :author
-    def channel; @message.channel; end
-    def content; @message.content; end
-    alias_method :text, :content
-    def timestamp; @message.timestamp; end
-
     def send_message(content); @message.channel.send_message(content); end
+
+    alias_method :user, :author
+    alias_method :text, :content
     alias_method :send, :send_message
     alias_method :respond, :send_message
   end
