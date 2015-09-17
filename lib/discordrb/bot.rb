@@ -43,7 +43,7 @@ module Discordrb
       while true do
         @token = login
         websocket_connect
-        puts "disconnected. attempting to reconnect. " + Time.now
+        puts "disconnected. attempting to reconnect. " + Time.now.to_s
         sleep 2
       end
     end
