@@ -1,3 +1,5 @@
+require 'active_support/core_ext/module'
+
 module Discordrb::Events
   class Negated
     attr_reader :object
