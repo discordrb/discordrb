@@ -41,10 +41,10 @@ module Discordrb
       end
 
       while true do
-        @token = login
         websocket_connect
         puts "disconnected. attempting to reconnect. " + Time.now.to_s
         sleep 2
+        @token = login
       end
     end
 
@@ -77,7 +77,7 @@ module Discordrb
     def send_message(channel_id, content)
       debug("Sending message to #{channel_id} with content '#{content}'")
       data = {
-        'content' => content,
+        'content' => content.to_s,
         'mentions' => []
       }
 
@@ -145,7 +145,7 @@ module Discordrb
       debug("Received token: #{login_response_object['token']}")
       login_response_object['token']
     rescue Exception => e
-      response_code = login_response.code || 0
+      response_code = login_response.code || 0 ######## mackmm145
       if login_attempts < 100 && ( e.inspect.include?("No such host is known.") || response_code == 523)
         sleep 15
         puts "login failed. reattempting. " + Time.now.to_s
@@ -156,17 +156,22 @@ module Discordrb
       end
     end
 
+    def get_gateway
+      response = JSON.parse( RestClient.get Discordrb::Endpoints::GATEWAY, :authorization => @token ) #get updated websocket_hub
+      response["url"]
+    end
+
     def websocket_connect
+      websocket_hub = get_gateway
+
       EM.run {
-        @ws = Faye::WebSocket::Client.new(Discordrb::Endpoints::WEBSOCKET_HUB)
+        #@ws = Faye::WebSocket::Client.new(Discordrb::Endpoints::WEBSOCKET_HUB)
+        @ws = Faye::WebSocket::Client.new(websocket_hub)
 
         @ws.on :open do |event|; websocket_open(event); end
         @ws.on :message do |event|; websocket_message(event); end
-
-        @ws.on :close do |event|
-          websocket_close(event)
-          @ws = nil
-        end
+        @ws.on :error do |event|; debug(event.message); end
+        @ws.on :close do |event|; websocket_close(event); @ws = nil; end
       }
     end
 
@@ -243,7 +248,7 @@ module Discordrb
           "token" => @token,
           "properties" => {   # I'm unsure what these values are for exactly, but they don't appear to impact bot functionality in any way.
             "$os" => "Linux",
-            "$browser" => "Chrome",
+            "$browser" => "",
             "$device" => "discordrb",
             "$referrer" => "",
             "$referring_domain" => ""
