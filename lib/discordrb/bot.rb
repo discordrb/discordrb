@@ -145,7 +145,7 @@ module Discordrb
       debug("Received token: #{login_response_object['token']}")
       login_response_object['token']
     rescue Exception => e
-      response_code = login_response.code || 0 ######## mackmm145
+      response_code = login_response.nil? ? 0 : login_response.code ######## mackmm145
       if login_attempts < 100 && ( e.inspect.include?("No such host is known.") || response_code == 523)
         sleep 15
         puts "login failed. reattempting. " + Time.now.to_s
