@@ -37,6 +37,9 @@ module Discordrb
     def initialize(data, bot)
       @bot = bot
 
+      #data is a sometimes a Hash and othertimes an array of Hashes, you only want the last one if it's an array
+      data = data[-1] if data.is_a?(Array) 
+
       @id = data['id']
       @type = data['type'] || 'text'
 
