@@ -61,7 +61,11 @@ module Discordrb
       debug("Creating private channel with user id #{id}")
       return @private_channels[id] if @private_channels[id]
 
-      response = RestClient.get Discordrb::Endpoints::USERS + "/#{id}/channels", {:Authorization => @token}
+      data = {
+        'recipient_id' => id
+      }
+
+      response = RestClient.post Discordrb::Endpoints::USERS + "/#{@bot_user.id}/channels", data.to_json, {:Authorization => @token, :content_type => :json}
       channel = Channel.new(JSON.parse(response), self)
       @private_channels[id] = channel
     end
@@ -80,7 +84,6 @@ module Discordrb
         'content' => content.to_s,
         'mentions' => []
       }
-
       RestClient.post Discordrb::Endpoints::CHANNELS + "/#{channel_id}/messages", data.to_json, {:Authorization => @token, :content_type => :json}
     end
 
