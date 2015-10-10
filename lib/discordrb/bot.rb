@@ -159,7 +159,7 @@ module Discordrb
         debug("Login failed permanently after #{login_attempts + 1} attempts")
 
         # Apparently we get a 401 if the password or username is incorrect. In that case, tell the user
-        debug("Are you sure you're using the correct username and password?") if response_code == 401
+        debug("Are you sure you're using the correct username and password?") if response_code == 400
         raise $!
       end
     end
