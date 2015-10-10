@@ -42,8 +42,8 @@ module Discordrb
 
       while true do
         websocket_connect
-        puts "disconnected. attempting to reconnect. " + Time.now.to_s
-        sleep 2
+        debug("Disconnected! Attempting to reconnect in 5 seconds.")
+        sleep 5
         @token = login
       end
     end
@@ -130,7 +130,7 @@ module Discordrb
     private
 
     def debug(message)
-      puts "[DEBUG] #{message}" if @debug
+      puts "[DEBUG @ #{Time.now.to_s}] #{message}" if @debug
     end
 
     def login
