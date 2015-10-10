@@ -243,6 +243,9 @@ module Discordrb
     end
 
     def websocket_close(event)
+      debug("Disconnected from WebSocket!")
+      debug(" (Reason: #{event.reason})")
+      debug(" (Code: #{event.code})")
       raise_event(DisconnectEvent.new)
       EM.stop
     end
