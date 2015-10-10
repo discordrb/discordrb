@@ -149,26 +149,31 @@ module Discordrb
       login_response_object['token']
     rescue Exception => e
       response_code = login_response.nil? ? 0 : login_response.code ######## mackmm145
-      if login_attempts < 100 && ( e.inspect.include?("No such host is known.") || response_code == 523)
-        sleep 15
-        puts "login failed. reattempting. " + Time.now.to_s
-        login_attempts = login_attempts + 1
+      if login_attempts < 100 && (e.inspect.include?("No such host is known.") || response_code == 523)
+        debug("Login failed! Reattempting in 5 seconds. #{100 - login_attempts} attempts remaining.")
+        debug("Error was: #{e.inspect}")
+        sleep 5
+        login_attempts += 1
         retry
       else
+        debug("Login failed permanently after #{login_attempts} attempts")
         raise $!
       end
     end
 
     def get_gateway
-      response = JSON.parse( RestClient.get Discordrb::Endpoints::GATEWAY, :authorization => @token ) #get updated websocket_hub
-      response["url"]
+      # Get updated websocket_hub
+      response = RestClient.get Discordrb::Endpoints::GATEWAY, :authorization => @token
+      JSON.parse(response)["url"]
     end
 
     def websocket_connect
+      debug("Attempting to get gateway URL...")
       websocket_hub = get_gateway
+      debug("Success! Gateway URL is #{websocket_hub}.")
+      debug("Now running bot")
 
       EM.run {
-        #@ws = Faye::WebSocket::Client.new(Discordrb::Endpoints::WEBSOCKET_HUB)
         @ws = Faye::WebSocket::Client.new(websocket_hub)
 
         @ws.on :open do |event|; websocket_open(event); end
