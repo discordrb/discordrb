@@ -156,7 +156,7 @@ module Discordrb
         login_attempts += 1
         retry
       else
-        debug("Login failed permanently after #{login_attempts} attempts")
+        debug("Login failed permanently after #{login_attempts + 1} attempts")
         raise $!
       end
     end
