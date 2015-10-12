@@ -4,12 +4,6 @@ module Discordrb
   class User
     attr_reader :username, :id, :discriminator, :avatar
 
-    # Is the user muted?
-    attr_reader :mute
-
-    # Is the user deafened?
-    attr_reader :deaf
-
     # Is the user online, offline, or away?
     attr_reader :status
 
@@ -18,17 +12,11 @@ module Discordrb
     def initialize(data, bot)
       @bot = bot
 
-      user_data = data['user']
-      if user_data
-        @username = user_data['username']
-        @id = user_data['id'].to_i
-        @discriminator = user_data['discriminator']
-        @avatar = user_data['avatar']
-      end
-        
-      @mute = data['mute']
-      @deaf = data['deaf']
-
+      @username = data['username']
+      @id = data['id'].to_i
+      @discriminator = data['discriminator']
+      @avatar = data['avatar']
+      
       @status = :offline
     end
 
@@ -119,7 +107,7 @@ module Discordrb
       members_by_id = {}
 
       data['members'].each do |element|
-        user = User.new(element, bot)
+        user = User.new(element['user'], bot)
         @members << user
         members_by_id[user.id] = user
       end
