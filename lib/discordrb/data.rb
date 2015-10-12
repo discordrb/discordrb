@@ -3,14 +3,33 @@
 module Discordrb
   class User
     attr_reader :username, :id, :discriminator, :avatar
+
+    # Is the user muted?
+    attr_reader :mute
+
+    # Is the user deafened?
+    attr_reader :deaf
+
+    # Is the user online, offline, or away?
+    attr_reader :status
+
     alias_method :name, :username
 
     def initialize(data, bot)
       @bot = bot
-      @username = data['username']
-      @id = data['id'].to_i
-      @discriminator = data['discriminator']
-      @avatar = data['avatar']
+
+      user_data = data['user']
+      if user_data
+        @username = user_data['username']
+        @id = user_data['id'].to_i
+        @discriminator = user_data['discriminator']
+        @avatar = user_data['avatar']
+      end
+        
+      @mute = data['mute']
+      @deaf = data['deaf']
+
+      @status = :offline
     end
 
     # Utility function to mention users in messages
@@ -38,7 +57,7 @@ module Discordrb
       @bot = bot
 
       #data is a sometimes a Hash and othertimes an array of Hashes, you only want the last one if it's an array
-      data = data[-1] if data.is_a?(Array) 
+      data = data[-1] if data.is_a?(Array)
 
       @id = data['id']
       @type = data['type'] || 'text'
@@ -85,6 +104,9 @@ module Discordrb
   class Server
     attr_reader :region, :name, :owner_id, :id, :members
 
+    # Array of channels on the server
+    attr_reader :channels
+
     def initialize(data, bot)
       @bot = bot
       @region = data['region']
@@ -93,9 +115,36 @@ module Discordrb
       @id = data['id'].to_i
 
       @members = []
+      members_by_id = {}
 
       data['members'].each do |element|
-        @members << User.new(element, bot)
+        user = User.new(element, bot)
+        @members << user
+        members_by_id[user.id] = user
+      end
+
+      # Update user statuses with presence info
+      if data['presences']
+        data['presences'].each do |element|
+          if element['user']
+            user = members_by_id[element['user']['id'].to_i]
+            if user && element['status']
+              # I don't want to make User#status writable, so we'll use
+              # instance_exec to open the object and set the status
+              user.instance_exec(element['status']) do |status|
+                @status = status.to_sym
+              end
+            end
+          end
+        end
+      end
+
+      @channels = []
+
+      if data['channels']
+        data['channels'].each do |element|
+          @channels << Channel.new(element, bot)
+        end
       end
     end
   end
