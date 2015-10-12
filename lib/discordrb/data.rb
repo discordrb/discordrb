@@ -51,7 +51,7 @@ module Discordrb
   end
 
   class Channel
-    attr_reader :name, :server, :type, :id, :is_private, :recipient
+    attr_reader :name, :server, :type, :id, :is_private, :recipient, :topic
 
     def initialize(data, bot)
       @bot = bot
@@ -59,8 +59,9 @@ module Discordrb
       #data is a sometimes a Hash and othertimes an array of Hashes, you only want the last one if it's an array
       data = data[-1] if data.is_a?(Array)
 
-      @id = data['id']
+      @id = data['id'].to_i
       @type = data['type'] || 'text'
+      @topic = data['topic']
 
       @is_private = data['is_private']
       if @is_private
