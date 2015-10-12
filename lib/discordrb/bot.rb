@@ -131,7 +131,6 @@ module Discordrb
 
     private
 
-
     # Register any default event handlers that the end user shouldn't
     # need to worry about implementing
     def add_default_handlers
@@ -144,7 +143,7 @@ module Discordrb
           @users[user_id] = event.user
           cached_user = event.user
         end
-        event.user.instance_exec(event.status) do |status|
+        cached_user.instance_exec(event.status) do |status|
           @status = status
         end
       end
