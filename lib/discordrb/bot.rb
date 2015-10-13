@@ -27,6 +27,8 @@ module Discordrb
 
       @channels = {}
       @users = {}
+
+      add_default_handlers
     end
 
     def run
@@ -128,6 +130,24 @@ module Discordrb
     alias_method :<<, :add_handler
 
     private
+
+    # Register any default event handlers that the end user shouldn't
+    # need to worry about implementing
+    def add_default_handlers
+      # Update a user's status
+      presence do |event|
+        user_id = event.user.id
+        cached_user = @users[user_id]
+        if !cached_user
+          # If this is a user we've never seen before, add them
+          @users[user_id] = event.user
+          cached_user = event.user
+        end
+        cached_user.instance_exec(event.status) do |status|
+          @status = status
+        end
+      end
+    end
 
     def debug(message)
       puts "[DEBUG @ #{Time.now.to_s}] #{message}" if @debug
