@@ -142,6 +142,19 @@ module Discordrb
     def channel_delete(attributes = {}, &block)
       register_event(ChannelDeleteEvent, attributes, block)
     end
+    
+    # Handle a change to a voice state.
+    # This includes joining a voice channel or changing mute or deaf state.
+    # Attributes:
+    # * from: User whose voice state changed
+    # * mute: server mute status
+    # * deaf: server deaf status
+    # * self_mute: self mute status
+    # * self_deaf: self deaf status
+    # * channel: channel the user joined
+    def voice_state_update(attributes = {}, &block)
+      register_event(VoiceStateUpdateEvent, attributes, block)
+    end
 
     def remove_handler(handler)
       clazz = event_class(handler.class)
@@ -170,14 +183,7 @@ module Discordrb
       end
       
       status = data['status'].to_sym
-      if status == :offline
-        # Remove this user from our cache
-        #@users.reject! {|u| u.id == user.id }
-      else
-        # Make sure the user is cached and in the members list
-        #if !(@users.find {|u| u.id == user.id })
-        #  @users << user
-        #end
+      if status != :offline
         if !(server.members.find {|u| u.id == user.id })
           server.members << user
         end
