@@ -8,6 +8,10 @@ require 'discordrb/events/message'
 require 'discordrb/events/typing'
 require 'discordrb/events/lifetime'
 require 'discordrb/events/presence'
+require 'discordrb/events/voice-state-update'
+require 'discordrb/events/channel-create'
+require 'discordrb/events/channel-update'
+require 'discordrb/events/channel-delete'
 
 require 'discordrb/exceptions'
 require 'discordrb/data'
@@ -27,8 +31,6 @@ module Discordrb
 
       @channels = {}
       @users = {}
-
-      add_default_handlers
     end
 
     def run
@@ -116,6 +118,30 @@ module Discordrb
     def mention(attributes = {}, &block)
       register_event(MentionEvent, attributes, block)
     end
+    
+    # Handle channel creation
+    # Attributes:
+    # * type: Channel type ('text' or 'voice')
+    # * name: Channel name
+    def channel_create(attributes = {}, &block)
+      register_event(ChannelCreateEvent, attributes, block)
+    end
+    
+    # Handle channel update
+    # Attributes:
+    # * type: Channel type ('text' or 'voice')
+    # * name: Channel name
+    def channel_update(attributes = {}, &block)
+      register_event(ChannelUpdateEvent, attributes, block)
+    end
+    
+    # Handle channel deletion
+    # Attributes:
+    # * type: Channel type ('text' or 'voice')
+    # * name: Channel name
+    def channel_delete(attributes = {}, &block)
+      register_event(ChannelDeleteEvent, attributes, block)
+    end
 
     def remove_handler(handler)
       clazz = event_class(handler.class)
@@ -130,23 +156,78 @@ module Discordrb
     alias_method :<<, :add_handler
 
     private
-
-    # Register any default event handlers that the end user shouldn't
-    # need to worry about implementing
-    def add_default_handlers
-      # Update a user's status
-      presence do |event|
-        user_id = event.user.id
-        cached_user = @users[user_id]
-        if !cached_user
-          # If this is a user we've never seen before, add them
-          @users[user_id] = event.user
-          cached_user = event.user
-        end
-        cached_user.instance_exec(event.status) do |status|
-          @status = status
+    
+    # Internal handler for PRESENCE_UPDATE
+    def presence_update(data)
+      user_id = data['user']['id'].to_i
+      server_id = data['guild_id'].to_i
+      server = @servers[server_id]
+      return if !server
+      
+      user = server.members.find {|u| u.id == user_id}
+      if !user
+        user = User.new(data['user'], self)
+      end
+      
+      status = data['status'].to_sym
+      if status == :offline
+        # Remove this user from our cache
+        #@users.reject! {|u| u.id == user.id }
+      else
+        # Make sure the user is cached and in the members list
+        #if !(@users.find {|u| u.id == user.id })
+        #  @users << user
+        #end
+        if !(server.members.find {|u| u.id == user.id })
+          server.members << user
         end
       end
+      user.status = status
+      user.game_id = data['game_id']
+    end
+    
+    # Internal handler for VOICE_STATUS_UPDATE
+    def voice_state_update(data)
+      user_id = data['user_id'].to_i
+      server_id = data['guild_id'].to_i
+      server = @servers[server_id]
+      return if !server
+      
+      user = server.members.find {|u| u.id == user_id }
+      user.server_mute = data['mute']
+      user.server_deaf = data['deaf']
+      user.self_mute = data['self_mute']
+      user.self_deaf = data['self_deaf']
+      
+      channel_id = data['channel_id']
+      channel = nil
+      if channel_id
+        channel = server.channels.find {|c| c.id == channel_id.to_i }
+      end
+      user.move(channel)
+    end
+    
+    # Internal handler for CHANNEL_CREATE
+    def channel_create(data)
+      channel = Channel.new(data, self)
+      server = channel.server
+      server.channels << channel if channel
+    end
+    
+    # Internal handler for CHANNEL_UPDATE
+    def channel_update(data)
+      channel = Channel.new(data, self)
+      server = channel.server
+      old_channel = server.channels.find {|chan| chan.id == channel.id }
+      return if !old_channel
+      old_channel.update_from(channel)
+    end
+    
+    # Internal handler for CHANNEL_DELETE
+    def channel_delete(data)
+      channel = Channel.new(data, self)
+      server = channel.server
+      server.channels.reject! {|chan| chan.id == channel.id }
     end
 
     def debug(message)
@@ -207,6 +288,7 @@ module Discordrb
     end
 
     def websocket_message(event)
+      begin
       debug("Received packet #{event.data}")
 
       # Parse packet
@@ -260,8 +342,29 @@ module Discordrb
         event = TypingEvent.new(data, self)
         raise_event(event)
       when "PRESENCE_UPDATE"
+        presence_update(data)
         event = PresenceEvent.new(data, self)
         raise_event(event)
+      when "VOICE_STATE_UPDATE"
+        voice_state_update(data)
+        event = VoiceStateUpdateEvent.new(data, self)
+        raise_event(event)
+      when "CHANNEL_CREATE"
+        channel_create(data)
+        event = ChannelCreateEvent.new(data, self)
+        raise_event(event)
+      when "CHANNEL_UPDATE"
+        channel_update(data)
+        event = ChannelUpdateEvent.new(data, self)
+        raise_event(event)
+      when "CHANNEL_DELETE"
+        channel_delete(data)
+        event = ChannelDeleteEvent.new(data, self)
+        raise_event(event)
+      end
+      rescue Exception => e
+        debug("Exception: #{e.inspect}")
+        e.backtrace.each {|line| debug(line) }
       end
     end
 
