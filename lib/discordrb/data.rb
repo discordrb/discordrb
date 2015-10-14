@@ -4,12 +4,6 @@ module Discordrb
   class User
     attr_reader :username, :id, :discriminator, :avatar
     
-    # Is the member muted?
-    attr_reader :mute
-
-    # Is the member deafened?
-    attr_reader :deaf
-    
     attr_accessor :status
     attr_accessor :game_id
     attr_accessor :server_mute
