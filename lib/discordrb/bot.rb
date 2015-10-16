@@ -171,15 +171,16 @@ module Discordrb
     private
     
     # Internal handler for PRESENCE_UPDATE
-    def presence_update(data)
+    def update_presence(data)
       user_id = data['user']['id'].to_i
       server_id = data['guild_id'].to_i
       server = @servers[server_id]
       return if !server
       
-      user = server.members.find {|u| u.id == user_id}
+      user = @users[user_id]
       if !user
         user = User.new(data['user'], self)
+        @users[user_id] = user
       end
       
       status = data['status'].to_sym
@@ -193,13 +194,13 @@ module Discordrb
     end
     
     # Internal handler for VOICE_STATUS_UPDATE
-    def voice_state_update(data)
+    def update_voice_state(data)
       user_id = data['user_id'].to_i
       server_id = data['guild_id'].to_i
       server = @servers[server_id]
       return if !server
       
-      user = server.members.find {|u| u.id == user_id }
+      user = @users[user_id]
       user.server_mute = data['mute']
       user.server_deaf = data['deaf']
       user.self_mute = data['self_mute']
@@ -208,32 +209,34 @@ module Discordrb
       channel_id = data['channel_id']
       channel = nil
       if channel_id
-        channel = server.channels.find {|c| c.id == channel_id.to_i }
+        channel = @channels[channel_id.to_i]
       end
       user.move(channel)
     end
     
     # Internal handler for CHANNEL_CREATE
-    def channel_create(data)
+    def create_channel(data)
       channel = Channel.new(data, self)
       server = channel.server
-      server.channels << channel if channel
+      server.channels << channel
+      @channels[channel.id] = channel
     end
     
     # Internal handler for CHANNEL_UPDATE
-    def channel_update(data)
+    def update_channel(data)
       channel = Channel.new(data, self)
       server = channel.server
-      old_channel = server.channels.find {|chan| chan.id == channel.id }
+      old_channel = @channels[channel.id]
       return if !old_channel
       old_channel.update_from(channel)
     end
     
     # Internal handler for CHANNEL_DELETE
-    def channel_delete(data)
+    def delete_channel(data)
       channel = Channel.new(data, self)
       server = channel.server
-      server.channels.reject! {|chan| chan.id == channel.id }
+      @channels[channel.id] = nil
+      server.channels.reject! {|c| c.id == channel.id}
     end
 
     def debug(message)
@@ -348,23 +351,23 @@ module Discordrb
         event = TypingEvent.new(data, self)
         raise_event(event)
       when "PRESENCE_UPDATE"
-        presence_update(data)
+        update_presence(data)
         event = PresenceEvent.new(data, self)
         raise_event(event)
       when "VOICE_STATE_UPDATE"
-        voice_state_update(data)
+        update_voice_state(data)
         event = VoiceStateUpdateEvent.new(data, self)
         raise_event(event)
       when "CHANNEL_CREATE"
-        channel_create(data)
+        create_channel(data)
         event = ChannelCreateEvent.new(data, self)
         raise_event(event)
       when "CHANNEL_UPDATE"
-        channel_update(data)
+        update_channel(data)
         event = ChannelUpdateEvent.new(data, self)
         raise_event(event)
       when "CHANNEL_DELETE"
-        channel_delete(data)
+        delete_channel(data)
         event = ChannelDeleteEvent.new(data, self)
         raise_event(event)
       end
