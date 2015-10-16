@@ -25,9 +25,9 @@ module Discordrb::Events
       @server = bot.server(data['guild_id'].to_i)
       return if !@server
       if data['channel_id']
-        @channel = @server.channels.find {|channel| channel.id == data['channel_id'].to_i }
+        @channel = bot.channel(data['channel_id'].to_i)
       end
-      @user = @server.members.find {|user| user.id == data['user_id'].to_i }
+      @user = bot.user(data['user_id'].to_i)
     end
   end
 

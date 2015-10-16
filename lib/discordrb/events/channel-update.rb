@@ -19,7 +19,7 @@ module Discordrb::Events
       @is_private = data['is_private']
       @server = bot.server(data['guild_id'].to_i)
       return if !@server
-      @channel = @server.channels.find {|channel| channel.id == data['id'].to_i }
+      @channel = bot.channel(data['id'].to_i)
     end
   end
 
