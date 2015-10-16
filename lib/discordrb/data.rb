@@ -134,7 +134,7 @@ module Discordrb
       @name = data['name']
       @owner_id = data['owner_id'].to_i
       @id = data['id'].to_i
-
+      
       @members = []
       members_by_id = {}
 
@@ -159,10 +159,13 @@ module Discordrb
       end
       
       @channels = []
+      channels_by_id = {}
 
       if data['channels']
         data['channels'].each do |element|
-          @channels << Channel.new(element, bot, self)
+          channel = Channel.new(element, bot, self)
+          @channels << channel
+          channels_by_id[channel.id] = channel
         end
       end
       
@@ -178,7 +181,7 @@ module Discordrb
             channel_id = element['channel_id']
             channel = nil
             if channel_id
-              channel = @channels.find {|c| c.id == channel_id.to_i }
+              channel = channels_by_id[channel_id]
             end
             user.move(channel)
           end
