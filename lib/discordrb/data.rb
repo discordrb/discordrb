@@ -3,9 +3,14 @@
 module Discordrb
   class User
     attr_reader :username, :id, :discriminator, :avatar
-
-    # Is the user online, offline, or away?
-    attr_reader :status
+    
+    attr_accessor :status
+    attr_accessor :game_id
+    attr_accessor :server_mute
+    attr_accessor :server_deaf
+    attr_accessor :self_mute
+    attr_accessor :self_deaf
+    attr_reader :voice_channel
 
     alias_method :name, :username
 
@@ -36,12 +41,18 @@ module Discordrb
         @bot.private_channel(@id)
       end
     end
+    
+    # Move a user into a voice channel
+    def move(to_channel)
+      return if to_channel && to_channel.type != 'voice'
+      @voice_channel = to_channel
+    end
   end
 
   class Channel
     attr_reader :name, :server, :type, :id, :is_private, :recipient, :topic
 
-    def initialize(data, bot)
+    def initialize(data, bot, server = nil)
       @bot = bot
 
       #data is a sometimes a Hash and othertimes an array of Hashes, you only want the last one if it's an array
@@ -58,11 +69,32 @@ module Discordrb
       else
         @name = data['name']
         @server = bot.server(data['guild_id'].to_i)
+        @server = server if !@server
       end
     end
 
     def send_message(content)
       @bot.send_message(@id, content)
+    end
+    
+    def update_from(other)
+      @topic = other.topic
+      @name = other.name
+      @is_private = other.is_private
+      @recipient = other.recipient
+    end
+    
+    # List of users currently in a channel
+    def users
+      if @type == 'text'
+        @server.members.select {|u| u.status != :offline }
+      else
+        @server.members.select do |user|
+          if user.voice_channel
+            user.voice_channel.id == @id
+          end
+        end
+      end
     end
 
     alias_method :send, :send_message
@@ -102,7 +134,7 @@ module Discordrb
       @name = data['name']
       @owner_id = data['owner_id'].to_i
       @id = data['id'].to_i
-
+      
       @members = []
       members_by_id = {}
 
@@ -116,23 +148,43 @@ module Discordrb
       if data['presences']
         data['presences'].each do |element|
           if element['user']
-            user = members_by_id[element['user']['id'].to_i]
-            if user && element['status']
-              # I don't want to make User#status writable, so we'll use
-              # instance_exec to open the object and set the status
-              user.instance_exec(element['status']) do |status|
-                @status = status.to_sym
-              end
+            user_id = element['user']['id'].to_i
+            user = members_by_id[user_id]
+            if user
+              user.status = element['status'].to_sym
+              user.game_id = element['game_id']
             end
           end
         end
       end
-
+      
       @channels = []
+      channels_by_id = {}
 
       if data['channels']
         data['channels'].each do |element|
-          @channels << Channel.new(element, bot)
+          channel = Channel.new(element, bot, self)
+          @channels << channel
+          channels_by_id[channel.id] = channel
+        end
+      end
+      
+      if data['voice_states']
+        data['voice_states'].each do |element|
+          user_id = element['user_id'].to_i
+          user = members_by_id[user_id]
+          if user
+            user.server_mute = element['mute']
+            user.server_deaf = element['deaf']
+            user.self_mute = element['self_mute']
+            user.self_mute = element['self_mute']
+            channel_id = element['channel_id']
+            channel = nil
+            if channel_id
+              channel = channels_by_id[channel_id]
+            end
+            user.move(channel)
+          end
         end
       end
     end
