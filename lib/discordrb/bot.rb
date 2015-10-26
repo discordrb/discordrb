@@ -360,8 +360,7 @@ module Discordrb
         @heartbeat_active = true
         debug("Desired heartbeat_interval: #{@heartbeat_interval}")
 
-        # Initialize the bot user
-        @bot_user = User.new(data['user'], self)
+        bot_user_id = data['user']['id'].to_i
 
         # Initialize servers
         @servers = {}
@@ -373,6 +372,9 @@ module Discordrb
           server.members.each do |element|
             @users[element.id] = element
           end
+          
+          # Save the bot user
+          @bot_user = @users[bot_user_id]
         end
 
         # Add private channels
