@@ -57,6 +57,63 @@ module Discordrb
     def update_roles(roles)
       @roles = roles
     end
+    
+    # Determine if the user has permission to do an action
+    # action is a permission from Permissions::Flags.
+    # channel is the channel in which the action takes place (not applicable for server-wide actions).
+    def has_permission?(action, channel = nil)
+      # For each role, check if
+      #   (1) the channel explicitly allows or permits an action for the role and
+      #   (2) if the user is allowed to do the action if the channel doesn't specify
+      @roles.reduce(false) do |can_act, role|
+        channel_allow = nil
+        if channel && channel.permission_overwrites[role.id]
+          allow = channel.permission_overwrites[role.id].allow
+          deny = channel.permission_overwrites[role.id].deny
+          if allow.instance_variable_get("@#{action}")
+            channel_allow = true
+          elsif deny.instance_variable_get("@#{action}")
+            channel_allow = false
+          # else
+          #   If the channel has nothing to say on the matter, we can defer to the role itself
+          end
+        end
+        if channel_allow == false
+          can_act = can_act || false
+        elsif channel_allow == true
+          can_act = true
+        else # channel_allow == nil
+          can_act = role.permissions.instance_variable_get("@#{action}") || can_act
+        end
+      end
+    end
+    
+    def method_missing(method_name, *args, &block)
+      if /\Acan_(?<action>\w+)\?\Z/ =~ method_name
+        action = action.to_sym
+        if Permissions::Flags.has_value? action
+          has_permission? action, args.first
+        else
+          super
+        end
+      else
+        super
+      end
+    end
+    
+    # Respond to can_*? methods
+    def respond_to?(method_name, include_private = false)
+      if /\Acan_(?<action>\w+)\?\Z/ =~ method_name
+        action = action.to_sym
+        if Permissions::Flags.has_value? action
+          true
+        else
+          super
+        end
+      else
+        super
+      end
+    end
   end
   
   class Role
@@ -93,11 +150,11 @@ module Discordrb
       3 => :manage_roles ,         # 8
       4 => :manage_channels,       # 16
       5 => :manage_server,         # 32
-      6 => :read_messages,         # 64
+      #6                           # 64
       #7                           # 128
       #8                           # 256
       #9                           # 512
-      #10                          # 1024
+      10 => :read_messages,        # 1024
       11 => :send_messages,        # 2048
       12 => :send_tts_messages,    # 4096
       13 => :manage_messages,      # 8192
