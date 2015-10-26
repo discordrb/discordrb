@@ -8,7 +8,7 @@ module Discordrb::Events
     attr_reader :position
     attr_reader :name
     attr_reader :is_private
-    attr_reader :channel
+    attr_reader :id
     attr_reader :server
 
     def initialize(data, bot)
@@ -17,16 +17,15 @@ module Discordrb::Events
       @position = data['position']
       @name = data['name']
       @is_private = data['is_private']
+      @id = data['id'].to_i
       @server = bot.server(data['guild_id'].to_i)
-      return if !@server
-      @channel = bot.channel(data['id'].to_i)
     end
   end
 
   class ChannelDeleteEventHandler < EventHandler
     def matches?(event)
       # Check for the proper event type
-      return false unless event.is_a? VoiceStateUpdateEvent
+      return false unless event.is_a? ChannelDeleteEvent
 
       return [
         matches_all(@attributes[:type], event.type) do |a,e|

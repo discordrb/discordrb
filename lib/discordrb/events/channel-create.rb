@@ -25,7 +25,7 @@ module Discordrb::Events
   class ChannelCreateEventHandler < EventHandler
     def matches?(event)
       # Check for the proper event type
-      return false unless event.is_a? VoiceStateUpdateEvent
+      return false unless event.is_a? ChannelCreateEvent
 
       return [
         matches_all(@attributes[:type], event.type) do |a,e|
