@@ -12,6 +12,10 @@ require 'discordrb/events/voice-state-update'
 require 'discordrb/events/channel-create'
 require 'discordrb/events/channel-update'
 require 'discordrb/events/channel-delete'
+require 'discordrb/events/guild-member-update'
+require 'discordrb/events/guild-role-create'
+require 'discordrb/events/guild-role-delete'
+require 'discordrb/events/guild-role-update'
 
 require 'discordrb/exceptions'
 require 'discordrb/data'
@@ -238,6 +242,49 @@ module Discordrb
       @channels[channel.id] = nil
       server.channels.reject! {|c| c.id == channel.id}
     end
+    
+    # Internal handler for GUILD_MEMBER_UPDATE
+    def update_guild_member(data)
+      user_data = data['user']
+      server_id = data['guild_id'].to_i
+      roles = []
+      data['roles'].each do |element|
+        role_id = element.to_i
+        roles << @servers[server_id].roles.find {|r| r.id == role_id}
+      end
+      user_id = user_data['id'].to_i
+      user = @users[user_id]
+      user.update_roles(roles)
+    end
+    
+    # Internal handler for GUILD_ROLE_UPDATE
+    def update_guild_role(data)
+      role_data = data['role']
+      server_id = data['guild_id'].to_i
+      server = @servers[server_id]
+      new_role = Role.new(role_data, self, server)
+      role_id = role_data['id'].to_i
+      old_role = server.roles.find {|r| r.id == role_id}
+      old_role.update_from(new_role)
+    end
+    
+    # Internal handler for GUILD_ROLE_CREATE
+    def create_guild_role(data)
+      role_data = data['role']
+      server_id = data['guild_id'].to_i
+      server = @servers[server_id]
+      new_role = Role.new(role_data, self, server)
+      server.add_role(new_role)
+    end
+    
+    # Internal handler for GUILD_ROLE_DELETE
+    def delete_guild_role(data)
+      role_data = data['role']
+      role_id = role_data['id'].to_i
+      server_id = data['guild_id'].to_i
+      server = @servers[server_id]
+      server.delete_role(role_id)
+    end
 
     def debug(message)
       puts "[DEBUG @ #{Time.now.to_s}] #{message}" if @debug
@@ -369,6 +416,22 @@ module Discordrb
       when "CHANNEL_DELETE"
         delete_channel(data)
         event = ChannelDeleteEvent.new(data, self)
+        raise_event(event)
+      when "GUILD_MEMBER_UPDATE"
+        update_guild_member(data)
+        event = GuildMemberUpdateEvent.new(data, self)
+        raise_event(event)
+      when "GUILD_ROLE_UPDATE"
+        update_guild_role(data)
+        event = GuildRoleUpdateEvent.new(data, self)
+        raise_event(event)
+      when "GUILD_ROLE_CREATE"
+        create_guild_role(data)
+        event = GuildRoleCreateEvent.new(data, self)
+        raise_event(event)
+      when "GUILD_ROLE_DELETE"
+        delete_guild_role(data)
+        event = GuildRoleDeleteEvent.new(data, self)
         raise_event(event)
       end
       rescue Exception => e
