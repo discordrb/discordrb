@@ -24,6 +24,12 @@ module Discordrb
   class Bot
     include Discordrb::Events
     def initialize(email, password, debug = false)
+      # Make sure people replace the login details in the example files...
+      if email.end_with? "example.com"
+        puts "You have to replace the login details in the example files with your own!"
+        exit
+      end
+
       @debug = debug
 
       @email = email
@@ -122,7 +128,7 @@ module Discordrb
     def mention(attributes = {}, &block)
       register_event(MentionEvent, attributes, block)
     end
-    
+
     # Handle channel creation
     # Attributes:
     # * type: Channel type ('text' or 'voice')
@@ -130,7 +136,7 @@ module Discordrb
     def channel_create(attributes = {}, &block)
       register_event(ChannelCreateEvent, attributes, block)
     end
-    
+
     # Handle channel update
     # Attributes:
     # * type: Channel type ('text' or 'voice')
@@ -138,7 +144,7 @@ module Discordrb
     def channel_update(attributes = {}, &block)
       register_event(ChannelUpdateEvent, attributes, block)
     end
-    
+
     # Handle channel deletion
     # Attributes:
     # * type: Channel type ('text' or 'voice')
@@ -146,7 +152,7 @@ module Discordrb
     def channel_delete(attributes = {}, &block)
       register_event(ChannelDeleteEvent, attributes, block)
     end
-    
+
     # Handle a change to a voice state.
     # This includes joining a voice channel or changing mute or deaf state.
     # Attributes:
@@ -173,20 +179,20 @@ module Discordrb
     alias_method :<<, :add_handler
 
     private
-    
+
     # Internal handler for PRESENCE_UPDATE
     def update_presence(data)
       user_id = data['user']['id'].to_i
       server_id = data['guild_id'].to_i
       server = @servers[server_id]
       return if !server
-      
+
       user = @users[user_id]
       if !user
         user = User.new(data['user'], self)
         @users[user_id] = user
       end
-      
+
       status = data['status'].to_sym
       if status != :offline
         if !(server.members.find {|u| u.id == user.id })
@@ -196,20 +202,20 @@ module Discordrb
       user.status = status
       user.game_id = data['game_id']
     end
-    
+
     # Internal handler for VOICE_STATUS_UPDATE
     def update_voice_state(data)
       user_id = data['user_id'].to_i
       server_id = data['guild_id'].to_i
       server = @servers[server_id]
       return if !server
-      
+
       user = @users[user_id]
       user.server_mute = data['mute']
       user.server_deaf = data['deaf']
       user.self_mute = data['self_mute']
       user.self_deaf = data['self_deaf']
-      
+
       channel_id = data['channel_id']
       channel = nil
       if channel_id
@@ -217,7 +223,7 @@ module Discordrb
       end
       user.move(channel)
     end
-    
+
     # Internal handler for CHANNEL_CREATE
     def create_channel(data)
       channel = Channel.new(data, self)
@@ -225,7 +231,7 @@ module Discordrb
       server.channels << channel
       @channels[channel.id] = channel
     end
-    
+
     # Internal handler for CHANNEL_UPDATE
     def update_channel(data)
       channel = Channel.new(data, self)
@@ -234,7 +240,7 @@ module Discordrb
       return if !old_channel
       old_channel.update_from(channel)
     end
-    
+
     # Internal handler for CHANNEL_DELETE
     def delete_channel(data)
       channel = Channel.new(data, self)
