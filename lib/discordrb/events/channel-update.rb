@@ -26,7 +26,7 @@ module Discordrb::Events
   class ChannelUpdateEventHandler < EventHandler
     def matches?(event)
       # Check for the proper event type
-      return false unless event.is_a? VoiceStateUpdateEvent
+      return false unless event.is_a? ChannelUpdateEvent
 
       return [
         matches_all(@attributes[:type], event.type) do |a,e|
