@@ -253,14 +253,15 @@ module Discordrb
     def update_guild_member(data)
       user_data = data['user']
       server_id = data['guild_id'].to_i
+      server = @servers[server_id]
       roles = []
       data['roles'].each do |element|
         role_id = element.to_i
-        roles << @servers[server_id].roles.find {|r| r.id == role_id}
+        roles << server.roles.find {|r| r.id == role_id}
       end
       user_id = user_data['id'].to_i
       user = @users[user_id]
-      user.update_roles(roles)
+      user.update_roles(server, roles)
     end
     
     # Internal handler for GUILD_ROLE_UPDATE
