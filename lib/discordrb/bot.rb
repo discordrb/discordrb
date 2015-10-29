@@ -176,6 +176,10 @@ module Discordrb
       @event_handlers[clazz] << handler
     end
 
+    def debug(message)
+      puts "[DEBUG @ #{Time.now.to_s}] #{message}" if @debug
+    end
+
     alias_method :<<, :add_handler
 
     private
@@ -297,10 +301,6 @@ module Discordrb
 
     # Internal handler for TYPING_START
     def start_typing(data); end
-
-    def debug(message)
-      puts "[DEBUG @ #{Time.now.to_s}] #{message}" if @debug
-    end
 
     def login
       debug("Logging in")
