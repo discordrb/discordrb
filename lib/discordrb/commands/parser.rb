@@ -106,7 +106,7 @@ module Discordrb::Commands
         command = @attributes[:chain_delimiter] + command if first && @chain.start_with?(@attributes[:chain_delimiter])
         first = false
 
-        command.trim!
+        command.strip!
 
         # Replace the hacky delimiter that was used inside quotes with actual delimiters
         command.gsub! hacky_delim, @attributes[:chain_delimiter]
