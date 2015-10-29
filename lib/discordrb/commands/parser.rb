@@ -12,10 +12,10 @@ module Discordrb::Commands
         chain_usable: attributes[:chain_usable].nil? ? true : attributes[:chain_usable],
 
         # Description (for help command)
-        description: attributes[:description] || '',
+        description: attributes[:description] || nil,
 
         # Usage description (for help command and error messages)
-        usage: attributes[:usage] || '',
+        usage: attributes[:usage] || nil,
 
         # Minimum number of arguments
         min_args: attributes[:min_args] || 0,
@@ -30,12 +30,12 @@ module Discordrb::Commands
     def call(event, arguments)
       if arguments.length < @attributes[:min_args]
         event.respond "Too few arguments for command `#{name}`!"
-        event.respond "Usage: #{usage}"
+        event.respond "Usage: `#{@attributes[:usage]}`" if @attributes[:usage]
         return
       end
-      if arguments.length > @attributes[:max_args]
+      if @attributes[:max_args] >= 0 && arguments.length > @attributes[:max_args]
         event.respond "Too many arguments for command `#{name}`!"
-        event.respond "Usage: #{@attributes[:usage]}"
+        event.respond "Usage: `#{@attributes[:usage]}`" if @attributes[:usage]
         return
       end
       @block.call(event, *arguments)
