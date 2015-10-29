@@ -99,11 +99,11 @@ class CommandChain
     chain_to_split = @chain
 
     # Don't break if a command is called the same thing as the chain delimiter
-    chain_to_split.slice!(1..-1) if chain_to_split.start_with? @attributes[:chain_delimiter]
+    chain_to_split.slice!(1..-1) if chain_to_split.start_with?(@attributes[:chain_delimiter])
 
     first = true
     chain_to_split.split(@attributes[:chain_delimiter]).each do |command|
-      command = @attributes[:chain_delimiter] + command if first && @chain.start_with? @attributes[:chain_delimiter]
+      command = @attributes[:chain_delimiter] + command if first && @chain.start_with?(@attributes[:chain_delimiter])
       first = false
 
       command.trim!
