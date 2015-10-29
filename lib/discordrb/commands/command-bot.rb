@@ -49,8 +49,8 @@ module Discordrb::Commands
     end
 
     def create_message(data)
-      message = Message.new(data, self)
-      event = MessageEvent.new(message, self)
+      message = Discordrb::Message.new(data, self)
+      event = Discordrb::Events::MessageEvent.new(message, self)
 
       if message.content.start_with? @prefix
         chain = message.content[@prefix.length..-1]
