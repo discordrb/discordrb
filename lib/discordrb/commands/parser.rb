@@ -152,7 +152,7 @@ module Discordrb::Commands
           executed_chain = divide_chain(old_chain).last
 
           arg[1].to_i.times do
-            new_result << CommandChain.new(executed_chain, @bot).execute
+            new_result << CommandChain.new(executed_chain, @bot).execute(event)
           end
 
           result = new_result
