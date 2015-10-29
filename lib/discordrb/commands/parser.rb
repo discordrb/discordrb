@@ -1,7 +1,7 @@
 module Discordrb::Commands
   class Command
     attr_reader :attributes, :name
-    
+
     def initialize(name, attributes = {}, &block)
       @name = name
       @attributes = {
@@ -28,6 +28,16 @@ module Discordrb::Commands
     end
 
     def call(event, arguments)
+      if arguments.length < min_args
+        event.respond "Too few arguments for command #{name}!"
+        event.respond "Usage: #{usage}"
+        return
+      end
+      if arguments.length > max_args
+        event.respond "Too many arguments for command #{name}!"
+        event.respond "Usage: #{usage}"
+        return
+      end
       @block.call(event, *arguments)
     end
   end
