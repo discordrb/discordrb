@@ -46,6 +46,10 @@ module Discordrb::Commands
     def execute_command(name, event, arguments)
       debug("Executing command #{name} with arguments #{arguments}")
       command = @commands[name]
+      unless command
+        event.respond "The command `#{name}` doesn't exist!"
+        return
+      end
       command.call(event, arguments)
     end
 
