@@ -1,5 +1,7 @@
 module Discordrb::Commands
   class Command
+    attr_reader :attributes, :name
+    
     def initialize(name, attributes = {}, &block)
       @name = name
       @attributes = {
