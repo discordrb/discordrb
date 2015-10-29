@@ -178,7 +178,7 @@ module Discordrb::Commands
           arg.split ' '
         end
 
-        chain.slice!(chain_args_index+1..-1)
+        chain = chain[chain_args_index+1..-1]
       end
 
       [chain_args, chain]
