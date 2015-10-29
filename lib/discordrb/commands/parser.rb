@@ -139,9 +139,12 @@ module Discordrb::Commands
 
     def execute(event)
       old_chain = @chain
+      @bot.debug "Executing bare chain"
       result = execute_bare(event)
 
       @chain_args ||= []
+
+      @bot.debug "Found chain args #{@chain_args}, preliminary result #{result}"
 
       @chain_args.each do |arg|
         case arg.first
