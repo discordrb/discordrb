@@ -56,7 +56,8 @@ module Discordrb::Commands
       if message.content.start_with? @prefix
         chain = message.content[@prefix.length..-1]
         debug("Parsing command chain #{chain}")
-        CommandChain.new(chain, self, true).execute(event)
+        result = CommandChain.new(chain, self, true).execute(event)
+        event.respond result
       end
     end
   end
