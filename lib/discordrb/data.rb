@@ -1,6 +1,7 @@
 # These classes hold relevant Discord data, such as messages or channels.
 
 require 'ostruct'
+require 'discordrb/permissions'
 
 module Discordrb
   class User
@@ -13,19 +14,22 @@ module Discordrb
     attr_accessor :self_mute
     attr_accessor :self_deaf
     attr_reader :voice_channel
+    
+    # Hash of user roles.
+    # Key: Server ID
+    # Value: Array of roles.
     attr_reader :roles
 
     alias_method :name, :username
 
-    def initialize(data, bot, server = nil)
+    def initialize(data, bot)
       @bot = bot
 
       @username = data['username']
       @id = data['id'].to_i
       @discriminator = data['discriminator']
       @avatar = data['avatar']
-      @server = server
-      @roles = []
+      @roles = {}
       
       @status = :offline
     end
@@ -54,18 +58,20 @@ module Discordrb
     end
     
     # Set this user's roles
-    def update_roles(roles)
-      @roles = roles
+    def update_roles(server, roles)
+      @roles[server.id] = roles
     end
     
     # Determine if the user has permission to do an action
     # action is a permission from Permissions::Flags.
     # channel is the channel in which the action takes place (not applicable for server-wide actions).
-    def has_permission?(action, channel = nil)
+    def has_permission?(action, server, channel = nil)
       # For each role, check if
       #   (1) the channel explicitly allows or permits an action for the role and
       #   (2) if the user is allowed to do the action if the channel doesn't specify
-      @roles.reduce(false) do |can_act, role|
+      return false if !@roles[server.id]
+      
+      @roles[server.id].reduce(false) do |can_act, role|
         channel_allow = nil
         if channel && channel.permission_overwrites[role.id]
           allow = channel.permission_overwrites[role.id].allow
@@ -88,30 +94,10 @@ module Discordrb
       end
     end
     
-    def method_missing(method_name, *args, &block)
-      if /\Acan_(?<action>\w+)\?\Z/ =~ method_name
-        action = action.to_sym
-        if Permissions::Flags.has_value? action
-          has_permission? action, args.first
-        else
-          super
-        end
-      else
-        super
-      end
-    end
-    
-    # Respond to can_*? methods
-    def respond_to?(method_name, include_private = false)
-      if /\Acan_(?<action>\w+)\?\Z/ =~ method_name
-        action = action.to_sym
-        if Permissions::Flags.has_value? action
-          true
-        else
-          super
-        end
-      else
-        super
+    # Define methods for querying permissions
+    Discordrb::Permissions::Flags.each_value do |flag|
+      define_method "can_#{flag}?" do |server, channel = nil|
+        has_permission? flag, server, channel
       end
     end
   end
@@ -139,51 +125,6 @@ module Discordrb
     end
   end
   
-  class Permissions
-    # This hash maps bit positions to logical permissions.
-    # I'm not sure what the unlabeled bits are reserved for.
-    Flags = {
-      # Bit => Permission # Value
-      0 => :create_instant_invite, # 1
-      1 => :kick_members,          # 2
-      2 => :ban_members,           # 4
-      3 => :manage_roles ,         # 8
-      4 => :manage_channels,       # 16
-      5 => :manage_server,         # 32
-      #6                           # 64
-      #7                           # 128
-      #8                           # 256
-      #9                           # 512
-      10 => :read_messages,        # 1024
-      11 => :send_messages,        # 2048
-      12 => :send_tts_messages,    # 4096
-      13 => :manage_messages,      # 8192
-      14 => :embed_links,          # 16384
-      15 => :attach_files,         # 32768
-      16 => :read_message_history, # 65536
-      17 => :mention_everyone,     # 131072
-      #18                          # 262144
-      #19                          # 524288
-      20 => :connect,              # 1048576
-      21 => :speak,                # 2097152
-      22 => :mute_members,         # 4194304
-      23 => :deafen_members,       # 8388608
-      24 => :move_members,         # 16777216
-      25 => :use_voice_activity    # 33554432
-    }
-             
-    Flags.each_value do |flag|
-      attr_reader flag
-    end
-  
-    def initialize(bits)
-      Flags.each do |position, flag|
-        flag_set = ((bits >> position) & 0x1) == 1
-        instance_variable_set "@#{flag}", flag_set
-      end
-    end
-  end
-
   class Channel
     attr_reader :name, :server, :type, :id, :is_private, :recipient, :topic
     
@@ -306,7 +247,7 @@ module Discordrb
       members_by_id = {}
 
       data['members'].each do |element|
-        user = User.new(element['user'], bot, self)
+        user = User.new(element['user'], bot)
         @members << user
         members_by_id[user.id] = user
         user_roles = []
@@ -314,7 +255,7 @@ module Discordrb
           role_id = element.to_i
           user_roles << roles_by_id[role_id]
         end
-        user.update_roles(user_roles)
+        user.update_roles(self, user_roles)
       end
 
       # Update user statuses with presence info
@@ -370,7 +311,7 @@ module Discordrb
       @roles.reject! {|r| r.id == role_id}
       @members.each do |user|
         new_roles = user.roles.reject {|r| r.id == role_id}
-        user.update_roles(new_roles)
+        user.update_roles(self, new_roles)
       end
       @channels.each do |channel|
         overwrites = channel.permission_overwrites.reject {|id, perm| id == role_id}
