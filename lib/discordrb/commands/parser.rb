@@ -42,7 +42,7 @@ module Discordrb::Commands
       b_start, b_level = -1, 0
       result = ''
       quoted = false
-      hacky_delim, hacky_space, hacky_prev = [0xe001, 0xe002, 0xe003].map &:chr
+      hacky_delim, hacky_space, hacky_prev = [0xe001, 0xe002, 0xe003].pack('U*').chars
 
       @chain.each_char.each_with_index do |char, index|
         # Quote begin
