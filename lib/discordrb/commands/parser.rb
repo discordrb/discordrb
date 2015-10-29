@@ -29,12 +29,12 @@ module Discordrb::Commands
 
     def call(event, arguments)
       if arguments.length < @attributes[:min_args]
-        event.respond "Too few arguments for command #{name}!"
+        event.respond "Too few arguments for command `#{name}`!"
         event.respond "Usage: #{usage}"
         return
       end
       if arguments.length > @attributes[:max_args]
-        event.respond "Too many arguments for command #{name}!"
+        event.respond "Too many arguments for command `#{name}`!"
         event.respond "Usage: #{@attributes[:usage]}"
         return
       end
