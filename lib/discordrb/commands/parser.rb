@@ -31,10 +31,9 @@ module Discordrb::Commands
   end
 
   class CommandChain
-    def initialize(chain, bot, first_chain = false)
+    def initialize(chain, bot)
       @attributes = bot.attributes
-      # Append a chain delimiter to the first chain to make it easier on the parser (hacky!)
-      @chain = first_chain ? @attributes[:chain_delimiter] + chain : chain
+      @chain = chain
       @bot = bot
     end
 
@@ -153,7 +152,7 @@ module Discordrb::Commands
           executed_chain = divide_chain(old_chain).last
 
           arg[1].to_i.times do
-            new_result << CommandChain.new(executed_chain, @bot, true).execute
+            new_result << CommandChain.new(executed_chain, @bot).execute
           end
 
           result = new_result
