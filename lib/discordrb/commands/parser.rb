@@ -82,7 +82,7 @@ module Discordrb::Commands
           b_level -= 1
           if b_level == 0
             nested = @chain[b_start + 1 .. index - 1]
-            subchain = CommandChain.new(nested)
+            subchain = CommandChain.new(nested, @bot)
             result << subchain.execute(event)
           end
         end
