@@ -1,3 +1,4 @@
+require 'discordrb/bot'
 require 'discordrb/commands/parser'
 
 # Specialized bot to run commands
