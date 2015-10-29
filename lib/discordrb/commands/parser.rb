@@ -30,9 +30,10 @@ class Command
 end
 
 class CommandChain
-  def initialize(chain, bot)
-    @chain = chain
+  def initialize(chain, bot, first_chain = false)
     @attributes = bot.attributes
+    # Append a chain delimiter to the first chain to make it easier on the parser (hacky!)
+    @chain = first_chain ? @attributes[:chain_delimiter] + chain : chain
     @bot = bot
   end
 
@@ -91,14 +92,7 @@ class CommandChain
 
     @chain = result
 
-    chain_args_index = @chain.index @attributes[:chain_args_delim]
-
-    if chain_args_index
-      @chain_args = []
-    else
-      @chain_args = @chain[0..chain_args_index].split ','
-      @chain.slice!(chain_args_index+1..-1)
-    end
+    @chain_args, @chain = divide_chain(@chain)
 
     prev = ''
 
@@ -136,9 +130,54 @@ class CommandChain
       end
 
       # Finally execute the command
-      prev = @bot.execute_command(command_name.to_sym, event, arguments).trim
+      prev = @bot.execute_command(command_name.to_sym, event, arguments)
     end
 
     prev
+  end
+
+  def execute(event)
+    old_chain = @chain
+    result = execute_bare(event)
+
+    @chain_args ||= []
+
+    @chain_args.each do |arg|
+      case arg.first
+      when 'repeat'
+        new_result = ''
+        executed_chain = divide_chain(old_chain).last
+
+        arg[1].to_i.times do
+          new_result << CommandChain.new(executed_chain, @bot, true).execute
+        end
+
+        result = new_result
+      # TODO: more chain arguments
+      end
+    end
+
+    result
+  end
+
+  private
+
+  def divide_chain(chain)
+    chain_args_index = chain.index @attributes[:chain_args_delim]
+    chain_args = []
+
+    if chain_args_index
+      chain_args = chain[0..chain_args_index].split ','
+
+      # Split up the arguments
+
+      chain_args.map! do |arg|
+        arg.split ' '
+      end
+
+      chain.slice!(chain_args_index+1..-1)
+    end
+
+    [chain_args, chain]
   end
 end
