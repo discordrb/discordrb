@@ -44,6 +44,7 @@ module Discordrb::Commands
     end
 
     def execute_command(name, event, arguments)
+      debug("Executing command #{name} with arguments #{arguments}")
       command = @commands[name]
       command.call(event, arguments)
     end
@@ -54,6 +55,7 @@ module Discordrb::Commands
 
       if message.content.start_with? @prefix
         chain = message.content[@prefix.length..-1]
+        debug("Parsing command chain #{chain}")
         CommandChain.new(chain, self, true).execute(event)
       end
     end
