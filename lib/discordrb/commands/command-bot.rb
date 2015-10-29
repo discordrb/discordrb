@@ -4,7 +4,7 @@ require 'discordrb/commands/parser'
 # Specialized bot to run commands
 
 module Discordrb::Commands
-  class CommandBot < Bot
+  class CommandBot < Discordrb::Bot
     attr_reader :attributes, :prefix
 
     def initialize(email, password, prefix, attributes = {}, debug = false)
