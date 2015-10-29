@@ -122,7 +122,7 @@ module Discordrb::Commands
         # Replace hacky previous signs with actual ones
         arguments.gsub! hacky_prev, @attributes[:previous]
 
-        arguments = arguments.split! ' '
+        arguments = arguments.split ' '
 
         # Replace the hacky spaces with actual spaces
         arguments.map! do |elem|
