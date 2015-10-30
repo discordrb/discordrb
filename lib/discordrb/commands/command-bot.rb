@@ -36,10 +36,10 @@ module Discordrb::Commands
         sub_chain_end: attributes[:sub_chain_end] || ']',
 
         # Quoted mode starting character
-        quote_start: attributes[:quote_start] || "'",
+        quote_start: attributes[:quote_start] || '"',
 
         # Quoted mode ending character
-        quote_end: attributes[:quote_end] || "'"
+        quote_end: attributes[:quote_end] || '"'
       }
 
       @permissions = {
