@@ -383,7 +383,12 @@ module Discordrb
 
           # Initialize users
           server.members.each do |element|
-            @users[element.id] = element
+            unless @users[element.id]
+              @users[element.id] = element
+            else
+              # If the user is already cached, just add the new roles
+              @users[element.id].merge_roles(server, element.roles[server.id])
+            end
           end
 
           # Save the bot user

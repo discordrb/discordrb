@@ -6,7 +6,7 @@ require 'discordrb/permissions'
 module Discordrb
   class User
     attr_reader :username, :id, :discriminator, :avatar
-    
+
     attr_accessor :status
     attr_accessor :game_id
     attr_accessor :server_mute
@@ -14,7 +14,7 @@ module Discordrb
     attr_accessor :self_mute
     attr_accessor :self_deaf
     attr_reader :voice_channel
-    
+
     # Hash of user roles.
     # Key: Server ID
     # Value: Array of roles.
@@ -30,7 +30,7 @@ module Discordrb
       @discriminator = data['discriminator']
       @avatar = data['avatar']
       @roles = {}
-      
+
       @status = :offline
     end
 
@@ -50,18 +50,27 @@ module Discordrb
         @bot.private_channel(@id)
       end
     end
-    
+
     # Move a user into a voice channel
     def move(to_channel)
       return if to_channel && to_channel.type != 'voice'
       @voice_channel = to_channel
     end
-    
+
     # Set this user's roles
     def update_roles(server, roles)
       @roles[server.id] = roles
     end
-    
+
+    # Merge this user's roles with the roles from another instance of this user (from another server)
+    def merge_roles(server, roles)
+      if @roles[server.id]
+        @roles[server.id] = (@roles[server.id] + roles).uniq
+      else
+        @roles[server.id] = roles
+      end
+    end
+
     # Determine if the user has permission to do an action
     # action is a permission from Permissions::Flags.
     # channel is the channel in which the action takes place (not applicable for server-wide actions).
@@ -70,7 +79,7 @@ module Discordrb
       #   (1) the channel explicitly allows or permits an action for the role and
       #   (2) if the user is allowed to do the action if the channel doesn't specify
       return false if !@roles[server.id]
-      
+
       @roles[server.id].reduce(false) do |can_act, role|
         channel_allow = nil
         if channel && channel.permission_overwrites[role.id]
@@ -93,7 +102,7 @@ module Discordrb
         end
       end
     end
-    
+
     # Define methods for querying permissions
     Discordrb::Permissions::Flags.each_value do |flag|
       define_method "can_#{flag}?" do |server, channel = nil|
@@ -101,14 +110,14 @@ module Discordrb
       end
     end
   end
-  
+
   class Role
     attr_reader :permissions
     attr_reader :name
     attr_reader :id
     attr_reader :hoist
     attr_reader :color
-    
+
     def initialize(data, bot, server = nil)
       @permissions = Permissions.new(data['permissions'])
       @name = data['name']
@@ -116,7 +125,7 @@ module Discordrb
       @hoist = data['hoist']
       @color = ColorRGB.new(data['color'])
     end
-    
+
     def update_from(other)
       @permissions = other.permissions
       @name = other.name
@@ -124,10 +133,10 @@ module Discordrb
       @color = other.color
     end
   end
-  
+
   class Channel
     attr_reader :name, :server, :type, :id, :is_private, :recipient, :topic
-    
+
     attr_reader :permission_overwrites
 
     def initialize(data, bot, server = nil)
@@ -149,7 +158,7 @@ module Discordrb
         @server = bot.server(data['guild_id'].to_i)
         @server = server if !@server
       end
-      
+
       # Populate permission overwrites
       @permission_overwrites = {}
       if data['permission_overwrites']
@@ -167,7 +176,7 @@ module Discordrb
     def send_message(content)
       @bot.send_message(@id, content)
     end
-    
+
     def update_from(other)
       @topic = other.topic
       @name = other.name
@@ -175,7 +184,7 @@ module Discordrb
       @recipient = other.recipient
       @permission_overwrites = other.permission_overwrites
     end
-    
+
     # List of users currently in a channel
     def users
       if @type == 'text'
@@ -188,7 +197,7 @@ module Discordrb
         end
       end
     end
-    
+
     def update_overwrites(overwrites)
       @permission_overwrites = overwrites
     end
@@ -223,7 +232,7 @@ module Discordrb
 
     # Array of channels on the server
     attr_reader :channels
-    
+
     # Array of roles on the server
     attr_reader :roles
 
@@ -233,7 +242,7 @@ module Discordrb
       @name = data['name']
       @owner_id = data['owner_id'].to_i
       @id = data['id'].to_i
-      
+
       # Create roles
       @roles = []
       roles_by_id = {}
@@ -242,7 +251,7 @@ module Discordrb
         @roles << role
         roles_by_id[role.id] = role
       end
-      
+
       @members = []
       members_by_id = {}
 
@@ -271,7 +280,7 @@ module Discordrb
           end
         end
       end
-      
+
       @channels = []
       channels_by_id = {}
 
@@ -282,7 +291,7 @@ module Discordrb
           channels_by_id[channel.id] = channel
         end
       end
-      
+
       if data['voice_states']
         data['voice_states'].each do |element|
           user_id = element['user_id'].to_i
@@ -302,11 +311,11 @@ module Discordrb
         end
       end
     end
-    
+
     def add_role(role)
       @roles << role
     end
-    
+
     def delete_role(role_id)
       @roles.reject! {|r| r.id == role_id}
       @members.each do |user|
@@ -319,10 +328,10 @@ module Discordrb
       end
     end
   end
-  
+
   class ColorRGB
     attr_reader :red, :green, :blue
-    
+
     def initialize(combined)
       @red = (combined >> 16) & 0xFF
       @green = (combined >> 8) & 0xFF

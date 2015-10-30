@@ -5,6 +5,7 @@ module Discordrb::Events
     attr_reader :message
 
     delegate :author, :channel, :content, :timestamp, to: :message
+    delegate :server, to: :channel
 
     def initialize(message, bot)
       @bot = bot

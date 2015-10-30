@@ -91,7 +91,7 @@ module Discordrb::Commands
         event.respond "The command `#{name}` doesn't exist!"
         return
       end
-      if permission?(event.user, command.attributes[:permission_level])
+      if permission?(user(event.user.id), command.attributes[:permission_level], event.server.id)
         command.call(event, arguments, chained)
       else
         event.respond "You don't have permission to execute command `#{name}`!"
@@ -123,8 +123,8 @@ module Discordrb::Commands
       @permissions[:roles][id] = level
     end
 
-    def permission?(user, level)
-      determined_level = user.roles.each.reduce(0) do |memo, role|
+    def permission?(user, level, server_id)
+      determined_level = user.roles[server_id].each.reduce(0) do |memo, role|
         [@permissions[:roles][role.id] || 0, memo].max
       end
       [@permissions[:users][user.id] || 0, determined_level].max >= level
