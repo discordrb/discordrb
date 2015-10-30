@@ -1,4 +1,5 @@
 require 'discordrb/bot'
+require 'discordrb/data'
 require 'discordrb/commands/parser'
 
 # Specialized bot to run commands
@@ -39,6 +40,11 @@ module Discordrb::Commands
 
         # Quoted mode ending character
         quote_end: attributes[:quote_end] || "'"
+      }
+
+      @permissions = {
+        roles: {},
+        users: {}
       }
 
       if @attributes[:help_command]
@@ -85,7 +91,11 @@ module Discordrb::Commands
         event.respond "The command `#{name}` doesn't exist!"
         return
       end
-      command.call(event, arguments, chained)
+      if permission?(event.user, command.attributes[:permission_level])
+        command.call(event, arguments, chained)
+      else
+        event.respond "You don't have permission to execute command `#{name}`!"
+      end
     end
 
     def create_message(data)
@@ -98,6 +108,21 @@ module Discordrb::Commands
         result = CommandChain.new(chain, self).execute(event)
         event.respond result if result
       end
+    end
+
+    def set_user_permission(id, level)
+      @permissions[:users][id] = level
+    end
+
+    def set_role_permission(id, level)
+      @permissions[:roles][id] = level
+    end
+
+    def permission?(user, level)
+      determined_level = user.roles.each.reduce(0) do |memo, role|
+        [@permissions[:roles][role.id] || 0, memo].max
+      end
+      [@permissions[:users][user.id] || 0, determined_level].max >= level
     end
   end
 end
