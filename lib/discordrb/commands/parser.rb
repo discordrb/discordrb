@@ -27,7 +27,7 @@ module Discordrb::Commands
       @block = block
     end
 
-    def call(event, arguments)
+    def call(event, arguments, chained = false)
       if arguments.length < @attributes[:min_args]
         event.respond "Too few arguments for command `#{name}`!"
         event.respond "Usage: `#{@attributes[:usage]}`" if @attributes[:usage]
@@ -38,15 +38,22 @@ module Discordrb::Commands
         event.respond "Usage: `#{@attributes[:usage]}`" if @attributes[:usage]
         return
       end
+      unless @attributes[:chain_usable]
+        if chained
+          event.respond "Command `#{name}` cannot be used in a command chain!"
+          return
+        end
+      end
       @block.call(event, *arguments)
     end
   end
 
   class CommandChain
-    def initialize(chain, bot)
+    def initialize(chain, bot, subchain = false)
       @attributes = bot.attributes
       @chain = chain
       @bot = bot
+      @subchain = subchain
     end
 
     def execute_bare(event)
@@ -94,7 +101,7 @@ module Discordrb::Commands
           b_level -= 1
           if b_level == 0
             nested = @chain[b_start + 1 .. index - 1]
-            subchain = CommandChain.new(nested, @bot)
+            subchain = CommandChain.new(nested, @bot, true)
             result << subchain.execute(event)
           end
         end
@@ -114,7 +121,8 @@ module Discordrb::Commands
       chain_to_split.slice!(1..-1) if chain_to_split.start_with?(@attributes[:chain_delimiter])
 
       first = true
-      chain_to_split.split(@attributes[:chain_delimiter]).each do |command|
+      split_chain = chain_to_split.split(@attributes[:chain_delimiter])
+      split_chain.each do |command|
         command = @attributes[:chain_delimiter] + command if first && @chain.start_with?(@attributes[:chain_delimiter])
         first = false
 
@@ -142,7 +150,7 @@ module Discordrb::Commands
         end
 
         # Finally execute the command
-        prev = @bot.execute_command(command_name.to_sym, event, arguments)
+        prev = @bot.execute_command(command_name.to_sym, event, arguments, split_chain.length > 1 || @subchain)
       end
 
       prev

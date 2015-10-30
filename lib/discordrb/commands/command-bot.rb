@@ -43,14 +43,14 @@ module Discordrb::Commands
       @commands[name] = Command.new(name, attributes, &block)
     end
 
-    def execute_command(name, event, arguments)
+    def execute_command(name, event, arguments, chained = false)
       debug("Executing command #{name} with arguments #{arguments}")
       command = @commands[name]
       unless command
         event.respond "The command `#{name}` doesn't exist!"
         return
       end
-      command.call(event, arguments)
+      command.call(event, arguments, chained)
     end
 
     def create_message(data)
