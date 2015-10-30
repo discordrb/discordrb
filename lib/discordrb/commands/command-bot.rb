@@ -95,6 +95,7 @@ module Discordrb::Commands
         command.call(event, arguments, chained)
       else
         event.respond "You don't have permission to execute command `#{name}`!"
+        return
       end
     end
 
@@ -111,6 +112,7 @@ module Discordrb::Commands
         chain = message.content[@prefix.length..-1]
         debug("Parsing command chain #{chain}")
         result = (@attributes[:advanced_functionality]) ? CommandChain.new(chain, self).execute(event) : simple_execute(chain, event)
+        p result
         event.respond result if result
       end
     end
