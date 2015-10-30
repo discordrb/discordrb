@@ -98,6 +98,11 @@ module Discordrb::Commands
       end
     end
 
+    def simple_execute(chain, event)
+      args = chain.split(' ')
+      execute_command(args[0].to_sym, event, args[1..-1])
+    end
+
     def create_message(data)
       message = Discordrb::Message.new(data, self)
       event = Discordrb::Events::MessageEvent.new(message, self)
@@ -105,7 +110,7 @@ module Discordrb::Commands
       if message.content.start_with? @prefix
         chain = message.content[@prefix.length..-1]
         debug("Parsing command chain #{chain}")
-        result = CommandChain.new(chain, self).execute(event)
+        result = (@attributes[:advanced_functionality]) ? CommandChain.new(chain, self).execute(event) : simple_execute(chain, event)
         event.respond result if result
       end
     end
