@@ -61,7 +61,7 @@ module Discordrb::Commands
         chain = message.content[@prefix.length..-1]
         debug("Parsing command chain #{chain}")
         result = CommandChain.new(chain, self).execute(event)
-        event.respond result
+        event.respond result if result
       end
     end
   end
