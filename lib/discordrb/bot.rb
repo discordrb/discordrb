@@ -176,6 +176,10 @@ module Discordrb
       @event_handlers[clazz] << handler
     end
 
+    def debug(message)
+      puts "[DEBUG @ #{Time.now.to_s}] #{message}" if @debug
+    end
+
     alias_method :<<, :add_handler
 
     private
@@ -248,7 +252,7 @@ module Discordrb
       @channels[channel.id] = nil
       server.channels.reject! {|c| c.id == channel.id}
     end
-    
+
     # Internal handler for GUILD_MEMBER_UPDATE
     def update_guild_member(data)
       user_data = data['user']
@@ -263,7 +267,7 @@ module Discordrb
       user = @users[user_id]
       user.update_roles(server, roles)
     end
-    
+
     # Internal handler for GUILD_ROLE_UPDATE
     def update_guild_role(data)
       role_data = data['role']
@@ -274,7 +278,7 @@ module Discordrb
       old_role = server.roles.find {|r| r.id == role_id}
       old_role.update_from(new_role)
     end
-    
+
     # Internal handler for GUILD_ROLE_CREATE
     def create_guild_role(data)
       role_data = data['role']
@@ -283,7 +287,7 @@ module Discordrb
       new_role = Role.new(role_data, self, server)
       server.add_role(new_role)
     end
-    
+
     # Internal handler for GUILD_ROLE_DELETE
     def delete_guild_role(data)
       role_data = data['role']
@@ -293,9 +297,11 @@ module Discordrb
       server.delete_role(role_id)
     end
 
-    def debug(message)
-      puts "[DEBUG @ #{Time.now.to_s}] #{message}" if @debug
-    end
+    # Internal handler for MESSAGE_CREATE
+    def create_message(data); end
+
+    # Internal handler for TYPING_START
+    def start_typing(data); end
 
     def login
       debug("Logging in")
@@ -379,7 +385,7 @@ module Discordrb
           server.members.each do |element|
             @users[element.id] = element
           end
-          
+
           # Save the bot user
           @bot_user = @users[bot_user_id]
         end
@@ -395,6 +401,8 @@ module Discordrb
         # Make sure to raise the event
         raise_event(ReadyEvent.new)
       when "MESSAGE_CREATE"
+        create_message(data)
+
         message = Message.new(data, self)
         event = MessageEvent.new(message, self)
         raise_event(event)
@@ -404,42 +412,53 @@ module Discordrb
           raise_event(event)
         end
       when "TYPING_START"
+        start_typing(data)
+
         event = TypingEvent.new(data, self)
         raise_event(event)
       when "PRESENCE_UPDATE"
         update_presence(data)
+
         event = PresenceEvent.new(data, self)
         raise_event(event)
       when "VOICE_STATE_UPDATE"
         update_voice_state(data)
+
         event = VoiceStateUpdateEvent.new(data, self)
         raise_event(event)
       when "CHANNEL_CREATE"
         create_channel(data)
+
         event = ChannelCreateEvent.new(data, self)
         raise_event(event)
       when "CHANNEL_UPDATE"
         update_channel(data)
+
         event = ChannelUpdateEvent.new(data, self)
         raise_event(event)
       when "CHANNEL_DELETE"
         delete_channel(data)
+
         event = ChannelDeleteEvent.new(data, self)
         raise_event(event)
       when "GUILD_MEMBER_UPDATE"
         update_guild_member(data)
+
         event = GuildMemberUpdateEvent.new(data, self)
         raise_event(event)
       when "GUILD_ROLE_UPDATE"
         update_guild_role(data)
+
         event = GuildRoleUpdateEvent.new(data, self)
         raise_event(event)
       when "GUILD_ROLE_CREATE"
         create_guild_role(data)
+
         event = GuildRoleCreateEvent.new(data, self)
         raise_event(event)
       when "GUILD_ROLE_DELETE"
         delete_guild_role(data)
+
         event = GuildRoleDeleteEvent.new(data, self)
         raise_event(event)
       end
