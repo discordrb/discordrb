@@ -11,6 +11,9 @@ module Discordrb::Commands
         # Whether this command is usable in a command chain
         chain_usable: attributes[:chain_usable].nil? ? true : attributes[:chain_usable],
 
+        # Whether this command should show up in the help command
+        help_available: attributes[:help_available].nil? ? true : attributes[:help_available],
+
         # Description (for help command)
         description: attributes[:description] || nil,
 

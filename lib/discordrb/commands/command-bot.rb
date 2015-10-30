@@ -53,18 +53,19 @@ module Discordrb::Commands
             result = "**`#{command_name}`**: #{desc}"
             result << "\nUsage: `#{usage}`" if usage
           else
-            case @commands.length
+            available_commands = @commands.values.reject { |command| !command.attributes[:help_available] }
+            case available_commands.length
             when 0..5
-              @commands.reduce "**List of commands:**\n" do |memo, command|
-                memo + "**`#{command.last.name}`**: #{command.last.attributes[:description] || '*No description available*'}\n"
+              available_commands.reduce "**List of commands:**\n" do |memo, command|
+                memo + "**`#{command.name}`**: #{command.attributes[:description] || '*No description available*'}\n"
               end
             when 5..50
-              (@commands.reduce "**List of commands:**\n" do |memo, command|
-                memo + "`#{command.last.name}`, "
+              (available_commands.reduce "**List of commands:**\n" do |memo, command|
+                memo + "`#{command.name}`, "
               end)[0..-3]
             else
-              event.user.pm (@commands.reduce "**List of commands:**\n" do |memo, command|
-                memo + "`#{command.last.name}`, "
+              event.user.pm (available_commands.reduce "**List of commands:**\n" do |memo, command|
+                memo + "`#{command.name}`, "
               end)[0..-3]
               "Sending list in PM!"
             end
