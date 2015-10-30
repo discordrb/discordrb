@@ -15,6 +15,9 @@ module Discordrb::Commands
         # Whether advanced functionality such as command chains are enabled
         advanced_functionality: attributes[:advanced_functionality].nil? ? true : attributes[:advanced_functionality],
 
+        # The name of the help command (that displays information to other commands). Nil if none should exist
+        help_command: attributes[:help_command] || :help,
+
         # All of the following need to be one character
         # String to designate previous result in command chain
         previous: attributes[:previous] || '~',
@@ -37,6 +40,37 @@ module Discordrb::Commands
         # Quoted mode ending character
         quote_end: attributes[:quote_end] || "'"
       }
+
+      if @attributes[:help_command]
+        command(@attributes[:help_command], max_args: 1, description: 'Shows a list of all the commands available or displays help for a specific command.', usage: 'help [command name]') do |event, command_name|
+          if command_name
+            command = @commands[command_name.to_sym]
+            unless command
+              return "The command `#{command_name}` does not exist!"
+            end
+            desc = command.attributes[:description] || '*No description available*'
+            usage = command.attributes[:usage]
+            result = "**`#{command_name}`**: #{desc}"
+            result << "\nUsage: `#{usage}`" if usage
+          else
+            case @commands.length
+            when 0..5
+              @commands.reduce "**List of commands:**\n" do |memo, command|
+                memo + "**`#{command.last.name}`**: #{command.last.attributes[:description] || '*No description available*'}\n"
+              end
+            when 5..50
+              (@commands.reduce "**List of commands:**\n" do |memo, command|
+                memo + "`#{command.last.name}`, "
+              end)[0..-3]
+            else
+              event.user.pm (@commands.reduce "**List of commands:**\n" do |memo, command|
+                memo + "`#{command.last.name}`, "
+              end)[0..-3]
+              "Sending list in PM!"
+            end
+          end
+        end
+      end
     end
 
     def command(name, attributes = {}, &block)
