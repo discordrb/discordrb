@@ -105,7 +105,7 @@ module Discordrb::API
     RestClient.post(
       "#{APIBASE}/users/#{bot_user_id}/channels",
       { 'recipient_id' => user_id }.to_json,
-      Authorization: @token,
+      Authorization: token,
       content_type: :json
     )
   end
