@@ -100,6 +100,14 @@ module Discordrb::API
     )
   end
 
+  # Resolve an invite
+  def resolve_invite(token, code)
+    RestClient.get(
+      "#{APIBASE}/invite/#{code}",
+      Authorization: token
+    )
+  end
+
   # Create a private channel
   def create_private(token, bot_user_id, user_id)
     RestClient.post(
