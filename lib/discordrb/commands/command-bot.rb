@@ -1,6 +1,7 @@
 require 'discordrb/bot'
 require 'discordrb/data'
 require 'discordrb/commands/parser'
+require 'discordrb/commands/events'
 
 # Specialized bot to run commands
 
@@ -92,6 +93,7 @@ module Discordrb::Commands
         return
       end
       if permission?(user(event.user.id), command.attributes[:permission_level], event.server.id)
+        event.command = command
         command.call(event, arguments, chained)
       else
         event.respond "You don't have permission to execute command `#{name}`!"
@@ -106,13 +108,13 @@ module Discordrb::Commands
 
     def create_message(data)
       message = Discordrb::Message.new(data, self)
-      event = Discordrb::Events::MessageEvent.new(message, self)
+      event = CommandEvent.new(message, self)
 
       if message.content.start_with? @prefix
         chain = message.content[@prefix.length..-1]
         debug("Parsing command chain #{chain}")
         result = (@attributes[:advanced_functionality]) ? CommandChain.new(chain, self).execute(event) : simple_execute(chain, event)
-        p result
+        result = event.saved_message + (result || '')
         event.respond result if result
       end
     end
