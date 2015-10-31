@@ -17,6 +17,8 @@ require 'discordrb/events/guild-role-create'
 require 'discordrb/events/guild-role-delete'
 require 'discordrb/events/guild-role-update'
 
+require 'discordrb/api'
+
 require 'discordrb/exceptions'
 require 'discordrb/data'
 
@@ -66,7 +68,7 @@ module Discordrb
       debug("Obtaining data for channel with id #{id}")
       return @channels[id] if @channels[id]
 
-      response = RestClient.get Discordrb::Endpoints::CHANNELS + "/#{id}", {:Authorization => @token}
+      response = API.channel(@token, id)
       channel = Channel.new(JSON.parse(response), self)
       @channels[id] = channel
     end
@@ -79,7 +81,7 @@ module Discordrb
         'recipient_id' => id
       }
 
-      response = RestClient.post Discordrb::Endpoints::USERS + "/#{@bot_user.id}/channels", data.to_json, {:Authorization => @token, :content_type => :json}
+      response = API.create_private(@token, @bot_user.id, id)
       channel = Channel.new(JSON.parse(response), self)
       @private_channels[id] = channel
     end
@@ -98,7 +100,7 @@ module Discordrb
         'content' => content.to_s,
         'mentions' => []
       }
-      RestClient.post Discordrb::Endpoints::CHANNELS + "/#{channel_id}/messages", data.to_json, {:Authorization => @token, :content_type => :json}
+      API.send_message(@token, channel_id, content)
     end
 
     def debug=(debug)
@@ -308,7 +310,7 @@ module Discordrb
       login_attempts = login_attempts || 0
 
       # Login
-      login_response = RestClient.post Discordrb::Endpoints::LOGIN, :email => @email, :password => @password
+      login_response = API.login(@email, @password)
       raise HTTPStatusException.new(login_response.code) if login_response.code >= 400
 
       # Parse response
@@ -336,7 +338,7 @@ module Discordrb
 
     def get_gateway
       # Get updated websocket_hub
-      response = RestClient.get Discordrb::Endpoints::GATEWAY, :authorization => @token
+      response = API.gateway(@token)
       JSON.parse(response)["url"]
     end
 
