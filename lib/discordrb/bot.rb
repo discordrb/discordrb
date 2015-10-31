@@ -86,6 +86,11 @@ module Discordrb
       @private_channels[id] = channel
     end
 
+    def join(invite)
+      invite = invite[invite.rindex('/')+1..-1] if invite.start_with?('http') || invite.start_with?('discord.gg')
+      API.join_server(@token, invite)
+    end
+
     def user(id)
       @users[id]
     end
