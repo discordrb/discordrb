@@ -55,6 +55,14 @@ module Discordrb::API
     )
   end
 
+  # Get a channel's data
+  def channel(token, channel_id)
+    RestClient.get(
+      "#{APIBASE}/channels/#{channel_id}",
+      Authorization: token
+    )
+  end
+
   # Create a channel
   def create_channel(token, server_id, name, type)
     RestClient.post(
@@ -229,6 +237,14 @@ module Discordrb::API
   def start_typing(token, channel_id)
     RestClient.post(
       "#{APIBASE}/channels/#{channel_id}/typing",
+      Authorization: token
+    )
+  end
+
+  # Get user data
+  def user(token, user_id)
+    RestClient.get(
+      "#{APIBASE}/users/#{user_id}",
       Authorization: token
     )
   end
