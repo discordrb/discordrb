@@ -3,6 +3,7 @@ require 'json'
 
 module Discordrb::API
   APIBASE = 'https://discordapp.com/api'
+  module_function
 
   # Ban a user from a server and delete their messages from the last message_days days
   def ban_user(token, server_id, user_id, message_days)
