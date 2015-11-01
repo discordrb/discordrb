@@ -112,8 +112,8 @@ module Discordrb
       API.send_message(@token, channel_id, content)
     end
 
-    def send_file(channel_id, file, filename = 'filename')
-      API.send_file(@token, channel_id, file, filename)
+    def send_file(channel_id, file)
+      API.send_file(@token, channel_id, file)
     end
 
     def debug=(debug)
