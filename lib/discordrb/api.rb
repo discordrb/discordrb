@@ -167,10 +167,10 @@ module Discordrb::API
   end
 
   # Send a file as a message to a channel
-  def send_file(token, channel_id, file, filename = 'filename')
+  def send_file(token, channel_id, file)
     RestClient.post(
       "#{APIBASE}/channels/#{channel_id}/messages",
-      (filename.to_sym) => file,
+      {:file => file},
       Authorization: token
     )
   end
