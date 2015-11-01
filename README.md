@@ -29,7 +29,12 @@ Run the [ping example](https://github.com/meew0/discordrb/blob/master/examples/p
     ERROR:  Error installing discordrb:
             The 'websocket-driver' native gem requires installed build tools.
 
-You're missing the development kit required to build native extensions. Follow [these instructions](https://github.com/oneclick/rubyinstaller/wiki/Development-Kit#installation-instructions) and reinstall discordrb:
+You're missing the development kit required to build native extensions. Download the development kit [here](http://rubyinstaller.org/downloads/) (scroll down to "Development Kit", then choose the one for Ruby 2.0 and your system architecture) and extract it somewhere. Open a command prompt in that folder and run:
+
+    $ ruby dk.rb init
+    $ ruby dk.rb install
+
+Then reinstall discordrb:
 
     $ gem uninstall discordrb
     $ gem install discordrb
