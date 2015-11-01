@@ -177,6 +177,10 @@ module Discordrb
       @bot.send_message(@id, content)
     end
 
+    def send_file(file, filename = nil)
+      @bot.send_file(@id, file, filename || File.basename(file.path))
+    end
+
     def update_from(other)
       @topic = other.topic
       @name = other.name
