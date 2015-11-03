@@ -109,7 +109,8 @@ module Discordrb
         'content' => content.to_s,
         'mentions' => []
       }
-      API.send_message(@token, channel_id, content)
+      response = API.send_message(@token, channel_id, content)
+      Message.new(response)
     end
 
     def send_file(channel_id, file)
