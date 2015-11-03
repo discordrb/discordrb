@@ -147,9 +147,9 @@ module Discordrb::API
   end
 
   # Edit a message
-  def edit_message(token, channel_id, message, mentions = [])
+  def edit_message(token, channel_id, message_id, message, mentions = [])
     RestClient.patch(
-      "#{APIBASE}/channels/#{channel_id}/messages",
+      "#{APIBASE}/channels/#{channel_id}/messages/#{message_id}",
       { 'content' => message, 'mentions' => mentions }.to_json,
       Authorization: token,
       content_type: :json
