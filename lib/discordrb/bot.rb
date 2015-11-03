@@ -26,7 +26,7 @@ module Discordrb
   class Bot
     include Discordrb::Events
 
-    attr_reader :bot_user
+    attr_reader :bot_user, :token
 
     def initialize(email, password, debug = false)
       # Make sure people replace the login details in the example files...
