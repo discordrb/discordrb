@@ -20,6 +20,9 @@ module Discordrb::Commands
         # The name of the help command (that displays information to other commands). Nil if none should exist
         help_command: attributes[:help_command] || :help,
 
+        # The message to display for when a command doesn't exist, %command% to get the command name in question and nil for no message
+        command_doesnt_exist_message: attributes[:command_doesnt_exist_message] || "The command `%command%` doesn't exist!"
+
         # All of the following need to be one character
         # String to designate previous result in command chain
         previous: attributes[:previous] || '~',
@@ -89,7 +92,7 @@ module Discordrb::Commands
       debug("Executing command #{name} with arguments #{arguments}")
       command = @commands[name]
       unless command
-        event.respond "The command `#{name}` doesn't exist!"
+        event.respond @attributes[:command_doesnt_exist_message].gsub('%command%', name) if @attributes[:command_doesnt_exist_message]
         return
       end
       if permission?(user(event.user.id), command.attributes[:permission_level], event.server.id)
