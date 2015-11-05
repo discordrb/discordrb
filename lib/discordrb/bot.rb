@@ -192,8 +192,8 @@ module Discordrb
       @event_handlers[clazz] << handler
     end
 
-    def debug(message)
-      puts "[DEBUG @ #{Time.now.to_s}] #{message}" if @debug
+    def debug(message, important = false)
+      puts "[DEBUG @ #{Time.now.to_s}] #{message}" if @debug || important
     end
 
     alias_method :<<, :add_handler
@@ -484,7 +484,7 @@ module Discordrb
         raise_event(event)
       end
       rescue Exception => e
-        debug("Exception: #{e.inspect}")
+        debug("Exception: #{e.inspect}", true)
         e.backtrace.each {|line| debug(line) }
       end
     end
