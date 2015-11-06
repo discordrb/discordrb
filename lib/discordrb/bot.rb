@@ -122,7 +122,7 @@ module Discordrb
         'op' => 3,
         'd' => {
           'idle_since' => nil,
-          'game_id' => game.id
+          'game_id' => game ? game.id : 60  # 60 blanks out the game playing
         }
       }
 
