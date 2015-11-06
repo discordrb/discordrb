@@ -21,7 +21,7 @@ module Discordrb::Commands
         help_command: attributes[:help_command] || :help,
 
         # The message to display for when a command doesn't exist, %command% to get the command name in question and nil for no message
-        command_doesnt_exist_message: attributes[:command_doesnt_exist_message] || "The command `%command%` doesn't exist!"
+        command_doesnt_exist_message: attributes[:command_doesnt_exist_message] || "The command `%command%` doesn't exist!",
 
         # All of the following need to be one character
         # String to designate previous result in command chain
