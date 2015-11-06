@@ -2,6 +2,7 @@
 
 require 'ostruct'
 require 'discordrb/permissions'
+require 'discordrb/api'
 
 module Discordrb
   class User
@@ -228,6 +229,18 @@ module Discordrb
       data['mentions'].each do |element|
         @mentions << User.new(element, bot)
       end
+    end
+
+    def reply(content)
+      @channel.send_message(content)
+    end
+
+    def edit(new_content)
+      API.edit_message(@bot.token, @channel.id, @id, new_content)
+    end
+
+    def delete
+      API.delete_message(@bot.token, @channel.id, @id)
     end
   end
 
