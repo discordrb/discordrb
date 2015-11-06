@@ -9,7 +9,7 @@ module Discordrb
     attr_reader :username, :id, :discriminator, :avatar
 
     attr_accessor :status
-    attr_accessor :game_id
+    attr_accessor :game
     attr_accessor :server_mute
     attr_accessor :server_deaf
     attr_accessor :self_mute
