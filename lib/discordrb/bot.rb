@@ -2,8 +2,6 @@ require 'rest-client'
 require 'faye/websocket'
 require 'eventmachine'
 
-require 'discordrb/endpoints/endpoints'
-
 require 'discordrb/events/message'
 require 'discordrb/events/typing'
 require 'discordrb/events/lifetime'
