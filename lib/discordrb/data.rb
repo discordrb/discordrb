@@ -3,6 +3,7 @@
 require 'ostruct'
 require 'discordrb/permissions'
 require 'discordrb/api'
+require 'discordrb/games'
 
 module Discordrb
   class User
@@ -292,7 +293,7 @@ module Discordrb
             user = members_by_id[user_id]
             if user
               user.status = element['status'].to_sym
-              user.game_id = element['game_id']
+              user.game = Discordrb::Games.find_game(element['game_id'])
             end
           end
         end
