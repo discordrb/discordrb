@@ -183,6 +183,10 @@ module Discordrb
       @bot.send_file(@id, file)
     end
 
+    def delete
+      API.delete_channel(@bot.token, @id)
+    end
+
     def update_from(other)
       @topic = other.topic
       @name = other.name
@@ -344,6 +348,11 @@ module Discordrb
         overwrites = channel.permission_overwrites.reject {|id, perm| id == role_id}
         channel.update_overwrites(overwrites)
       end
+    end
+
+    def create_channel(name)
+      response = API.create_channel(@bot.token, @id, name, 'text')
+      Channel.new(JSON.parse(response), @bot)
     end
   end
 
