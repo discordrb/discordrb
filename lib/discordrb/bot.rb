@@ -117,6 +117,7 @@ module Discordrb
 
     def game=(name_or_id)
       game = Discordrb::Games.find_game(name_or_id)
+      @game = game
 
       data = {
         'op' => 3,
