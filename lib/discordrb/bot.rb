@@ -18,7 +18,7 @@ require 'discordrb/events/guild-role-delete'
 require 'discordrb/events/guild-role-update'
 
 require 'discordrb/api'
-
+require 'discordrb/games'
 require 'discordrb/exceptions'
 require 'discordrb/data'
 
@@ -115,6 +115,21 @@ module Discordrb
 
     def send_file(channel_id, file)
       API.send_file(@token, channel_id, file)
+    end
+
+    def game=(name_or_id)
+      game = Discordrb::Games.find_game(name_or_id)
+
+      data = {
+        'op' => 3,
+        'd' => {
+          'idle_since' => nil,
+          'game_id' => game.id
+        }
+      }
+
+      @ws.send(data.to_json)
+      game
     end
 
     def debug=(debug)
