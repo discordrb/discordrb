@@ -137,7 +137,7 @@ module Discordrb
   end
 
   class Channel
-    attr_reader :name, :server, :type, :id, :is_private, :recipient, :topic
+    attr_reader :name, :server, :type, :id, :is_private, :recipient, :topic, :position
 
     attr_reader :permission_overwrites
 
@@ -150,6 +150,7 @@ module Discordrb
       @id = data['id'].to_i
       @type = data['type'] || 'text'
       @topic = data['topic']
+      @position = data['position']
 
       @is_private = data['is_private']
       if @is_private
@@ -187,6 +188,21 @@ module Discordrb
       API.delete_channel(@bot.token, @id)
     end
 
+    def name=(name)
+      @name = name
+      update_channel_data
+    end
+
+    def topic=(topic)
+      @topic = topic
+      update_channel_data
+    end
+
+    def position=(position)
+      @position = position
+      update_channel_data
+    end
+
     def update_from(other)
       @topic = other.topic
       @name = other.name
@@ -214,6 +230,12 @@ module Discordrb
 
     alias_method :send, :send_message
     alias_method :message, :send_message
+
+    private
+
+    def update_channel_data
+      API.update_channel(@bot.token, @id, @name, @topic, @position)
+    end
   end
 
   class Message
