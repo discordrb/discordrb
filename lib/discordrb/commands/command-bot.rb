@@ -105,6 +105,7 @@ module Discordrb::Commands
     end
 
     def simple_execute(chain, event)
+      return nil if chain.empty?
       args = chain.split(' ')
       execute_command(args[0].to_sym, event, args[1..-1])
     end
@@ -115,6 +116,12 @@ module Discordrb::Commands
 
       if message.content.start_with? @prefix
         chain = message.content[@prefix.length..-1]
+
+        if chain.strip.empty?
+          debug("Chain is empty")
+          return
+        end
+
         debug("Parsing command chain #{chain}")
         result = (@attributes[:advanced_functionality]) ? CommandChain.new(chain, self).execute(event) : simple_execute(chain, event)
         result = event.saved_message + (result || '')
