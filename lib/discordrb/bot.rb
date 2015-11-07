@@ -245,7 +245,7 @@ module Discordrb
       end
       user.status = status
       user.game = Discordrb::Games.find_game(data['game_id'])
-      @users[user_id] = user
+      user
     end
 
     # Internal handler for VOICE_STATUS_UPDATE
