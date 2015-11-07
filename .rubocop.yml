@@ -28,7 +28,7 @@ Metrics/PerceivedComplexity:
 
 # Prefer compact module/class defs
 Style/ClassAndModuleChildren:
-  EnforcedStyle: compact
+  Enabled: false
 
 # Exclude the list of games
 AllCops:
