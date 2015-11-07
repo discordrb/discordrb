@@ -52,7 +52,7 @@ module Discordrb
       return if async
 
       debug('Oh wait! Not exiting yet as run was run synchronously.')
-      loop {}
+      sync
     end
 
     def run_async
@@ -83,6 +83,10 @@ module Discordrb
 
     def sync
       @ws_thread.join
+    end
+
+    def stop
+      @ws_thread.kill
     end
 
     def channel(id)
