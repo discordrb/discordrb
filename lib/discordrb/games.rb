@@ -1,6 +1,8 @@
 require 'discordrb/games_list'
 
+# The "Game" class and a list of games
 module Discordrb::Games
+  # A game Discord uses in the "Playing game" status
   class Game
     attr_reader :id, :name, :executables
 

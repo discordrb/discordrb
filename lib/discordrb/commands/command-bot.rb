@@ -6,6 +6,7 @@ require 'discordrb/commands/events'
 # Specialized bot to run commands
 
 module Discordrb::Commands
+  # Bot that supports commands and command chains
   class CommandBot < Discordrb::Bot
     attr_reader :attributes, :prefix
 
@@ -51,34 +52,29 @@ module Discordrb::Commands
         users: {}
       }
 
-      if @attributes[:help_command]
-        command(@attributes[:help_command], max_args: 1, description: 'Shows a list of all the commands available or displays help for a specific command.', usage: 'help [command name]') do |event, command_name|
-          if command_name
-            command = @commands[command_name.to_sym]
-            unless command
-              return "The command `#{command_name}` does not exist!"
+      return unless @attributes[:help_command]
+      command(@attributes[:help_command], max_args: 1, description: 'Shows a list of all the commands available or displays help for a specific command.', usage: 'help [command name]') do |event, command_name|
+        if command_name
+          command = @commands[command_name.to_sym]
+          return "The command `#{command_name}` does not exist!" unless command
+          desc = command.attributes[:description] || '*No description available*'
+          usage = command.attributes[:usage]
+          result = "**`#{command_name}`**: #{desc}"
+          result << "\nUsage: `#{usage}`" if usage
+        else
+          available_commands = @commands.values.reject { |c| !c.attributes[:help_available] }
+          case available_commands.length
+          when 0..5
+            available_commands.reduce "**List of commands:**\n" do |memo, c|
+              memo + "**`#{c.name}`**: #{c.attributes[:description] || '*No description available*'}\n"
             end
-            desc = command.attributes[:description] || '*No description available*'
-            usage = command.attributes[:usage]
-            result = "**`#{command_name}`**: #{desc}"
-            result << "\nUsage: `#{usage}`" if usage
+          when 5..50
+            (available_commands.reduce "**List of commands:**\n" do |memo, c|
+              memo + "`#{c.name}`, "
+            end)[0..-3]
           else
-            available_commands = @commands.values.reject { |command| !command.attributes[:help_available] }
-            case available_commands.length
-            when 0..5
-              available_commands.reduce "**List of commands:**\n" do |memo, command|
-                memo + "**`#{command.name}`**: #{command.attributes[:description] || '*No description available*'}\n"
-              end
-            when 5..50
-              (available_commands.reduce "**List of commands:**\n" do |memo, command|
-                memo + "`#{command.name}`, "
-              end)[0..-3]
-            else
-              event.user.pm (available_commands.reduce "**List of commands:**\n" do |memo, command|
-                memo + "`#{command.name}`, "
-              end)[0..-3]
-              "Sending list in PM!"
-            end
+            event.user.pm(available_commands.reduce("**List of commands:**\n") { |a, e| a + "`#{e.name}`, " })[0..-3]
+            'Sending list in PM!'
           end
         end
       end
@@ -114,19 +110,18 @@ module Discordrb::Commands
       message = Discordrb::Message.new(data, self)
       event = CommandEvent.new(message, self)
 
-      if message.content.start_with? @prefix
-        chain = message.content[@prefix.length..-1]
+      return unless message.content.start_with? @prefix
+      chain = message.content[@prefix.length..-1]
 
-        if chain.strip.empty?
-          debug("Chain is empty")
-          return
-        end
-
-        debug("Parsing command chain #{chain}")
-        result = (@attributes[:advanced_functionality]) ? CommandChain.new(chain, self).execute(event) : simple_execute(chain, event)
-        result = event.saved_message + (result || '')
-        event.respond result if result
+      if chain.strip.empty?
+        debug('Chain is empty')
+        return
       end
+
+      debug("Parsing command chain #{chain}")
+      result = (@attributes[:advanced_functionality]) ? CommandChain.new(chain, self).execute(event) : simple_execute(chain, event)
+      result = event.saved_message + (result || '')
+      event.respond result if result
     end
 
     def set_user_permission(id, level)

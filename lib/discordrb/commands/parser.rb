@@ -1,4 +1,5 @@
 module Discordrb::Commands
+  # Command that can be called in a chain
   class Command
     attr_reader :attributes, :name
 
@@ -51,6 +52,7 @@ module Discordrb::Commands
     end
   end
 
+  # Command chain, may have multiple commands, nested and commands
   class CommandChain
     def initialize(chain, bot, subchain = false)
       @attributes = bot.attributes
@@ -60,7 +62,8 @@ module Discordrb::Commands
     end
 
     def execute_bare(event)
-      b_start, b_level = -1, 0
+      b_start = -1
+      b_level = 0
       result = ''
       quoted = false
       hacky_delim, hacky_space, hacky_prev = [0xe001, 0xe002, 0xe003].pack('U*').chars
@@ -100,14 +103,12 @@ module Discordrb::Commands
 
         result << char if b_level <= 0
 
-        if char == @attributes[:sub_chain_end] && !quoted
-          b_level -= 1
-          if b_level == 0
-            nested = @chain[b_start + 1 .. index - 1]
-            subchain = CommandChain.new(nested, @bot, true)
-            result << subchain.execute(event)
-          end
-        end
+        next unless char == @attributes[:sub_chain_end] && !quoted
+        b_level -= 1
+        next unless b_level == 0
+        nested = @chain[b_start + 1..index - 1]
+        subchain = CommandChain.new(nested, @bot, true)
+        result << subchain.execute(event)
       end
 
       event.respond("Your subchains are mismatched! Make sure you don't have any extra #{@attributes[:sub_chain_start]}'s or #{@attributes[:sub_chain_end]}'s") unless b_level == 0
@@ -135,8 +136,8 @@ module Discordrb::Commands
         command.gsub! hacky_delim, @attributes[:chain_delimiter]
 
         first_space = command.index ' '
-        command_name = first_space ? command[0..first_space-1] : command
-        arguments = first_space ? command[first_space+1..-1] : ''
+        command_name = first_space ? command[0..first_space - 1] : command
+        arguments = first_space ? command[first_space + 1..-1] : ''
 
         # Append a previous sign if none is present
         arguments << @attributes[:previous] unless arguments.include? @attributes[:previous]
@@ -161,7 +162,7 @@ module Discordrb::Commands
 
     def execute(event)
       old_chain = @chain
-      @bot.debug "Executing bare chain"
+      @bot.debug 'Executing bare chain'
       result = execute_bare(event)
 
       @chain_args ||= []
@@ -179,7 +180,7 @@ module Discordrb::Commands
           end
 
           result = new_result
-        # TODO: more chain arguments
+          # TODO: more chain arguments
         end
       end
 
@@ -201,7 +202,7 @@ module Discordrb::Commands
           arg.split ' '
         end
 
-        chain = chain[chain_args_index+1..-1]
+        chain = chain[chain_args_index + 1..-1]
       end
 
       [chain_args, chain]

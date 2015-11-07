@@ -2,6 +2,7 @@ require 'discordrb/events/generic'
 require 'discordrb/data'
 
 module Discordrb::Events
+  # Raised when a channel is deleted
   class ChannelDeleteEvent
     attr_reader :type
     attr_reader :topic
@@ -22,20 +23,21 @@ module Discordrb::Events
     end
   end
 
+  # Event handler for ChannelDeleteEvent
   class ChannelDeleteEventHandler < EventHandler
     def matches?(event)
       # Check for the proper event type
       return false unless event.is_a? ChannelDeleteEvent
 
-      return [
-        matches_all(@attributes[:type], event.type) do |a,e|
+      [
+        matches_all(@attributes[:type], event.type) do |a, e|
           if a.is_a? String
             a == e.name
           else
             a == e
           end
         end,
-        matches_all(@attributes[:name], event.name) do |a,e|
+        matches_all(@attributes[:name], event.name) do |a, e|
           if a.is_a? String
             a == e.to_s
           else

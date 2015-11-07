@@ -30,6 +30,10 @@ Metrics/PerceivedComplexity:
 Style/ClassAndModuleChildren:
   Enabled: false
 
+# Allow CamelCase constants as well as SCREAMING_SNAKE_CASE
+Style/ConstantName:
+  Enabled: false
+
 # Allow 'Pokémon-style' exception handling
 Lint/RescueException:
   Enabled: false

@@ -21,6 +21,7 @@ require 'discordrb/exceptions'
 require 'discordrb/data'
 
 module Discordrb
+  # Represents a Discord bot, including servers, users, etc.
   class Bot
     include Discordrb::Events
 
@@ -59,20 +60,20 @@ module Discordrb
       @heartbeat_interval = 1
       @heartbeat_active = false
       @heartbeat_thread = Thread.new do
-        while true do
+        loop do
           sleep @heartbeat_interval
           send_heartbeat if @heartbeat_active
         end
       end
 
-      @ws_thread = Thread.new {
-        while true do
+      @ws_thread = Thread.new do
+        loop do
           websocket_connect
           debug('Disconnected! Attempting to reconnect in 5 seconds.')
           sleep 5
           @token = login
         end
-      }
+      end
 
       debug('WS thread created! Now waiting for confirmation that everything worked')
       @ws_success = false
@@ -97,17 +98,13 @@ module Discordrb
       debug("Creating private channel with user id #{id}")
       return @private_channels[id] if @private_channels[id]
 
-      data = {
-        'recipient_id' => id
-      }
-
       response = API.create_private(@token, @bot_user.id, id)
       channel = Channel.new(JSON.parse(response), self)
       @private_channels[id] = channel
     end
 
     def join(invite)
-      invite = invite[invite.rindex('/')+1..-1] if invite.start_with?('http') || invite.start_with?('discord.gg')
+      invite = invite[invite.rindex('/') + 1..-1] if invite.start_with?('http') || invite.start_with?('discord.gg')
       resolved = JSON.parse(API.resolve_invite(@token, invite))['code']
       API.join_server(@token, resolved)
     end
@@ -122,10 +119,6 @@ module Discordrb
 
     def send_message(channel_id, content)
       debug("Sending message to #{channel_id} with content '#{content}'")
-      data = {
-        'content' => content.to_s,
-        'mentions' => []
-      }
       response = API.send_message(@token, channel_id, content)
       Message.new(JSON.parse(response), self)
     end
@@ -142,7 +135,7 @@ module Discordrb
         'op' => 3,
         'd' => {
           'idle_since' => nil,
-          'game_id' => game ? game.id : 60  # 60 blanks out the game playing
+          'game_id' => game ? game.id : 60 # 60 blanks out the game playing
         }
       }
 
@@ -150,9 +143,7 @@ module Discordrb
       game
     end
 
-    def debug=(debug)
-      @debug = debug
-    end
+    attr_writer :debug
 
     def message(attributes = {}, &block)
       register_event(MessageEvent, attributes, block)
@@ -226,7 +217,7 @@ module Discordrb
     end
 
     def debug(message, important = false)
-      puts "[DEBUG @ #{Time.now.to_s}] #{message}" if @debug || important
+      puts "[DEBUG @ #{Time.now}] #{message}" if @debug || important
     end
 
     alias_method :<<, :add_handler
@@ -238,17 +229,17 @@ module Discordrb
       user_id = data['user']['id'].to_i
       server_id = data['guild_id'].to_i
       server = @servers[server_id]
-      return if !server
+      return unless server
 
       user = @users[user_id]
-      if !user
+      unless user
         user = User.new(data['user'], self)
         @users[user_id] = user
       end
 
       status = data['status'].to_sym
       if status != :offline
-        if !(server.members.find {|u| u.id == user.id })
+        unless server.members.find { |u| u.id == user.id }
           server.members << user
         end
       end
@@ -261,7 +252,7 @@ module Discordrb
       user_id = data['user_id'].to_i
       server_id = data['guild_id'].to_i
       server = @servers[server_id]
-      return if !server
+      return unless server
 
       user = @users[user_id]
       user.server_mute = data['mute']
@@ -271,9 +262,7 @@ module Discordrb
 
       channel_id = data['channel_id']
       channel = nil
-      if channel_id
-        channel = @channels[channel_id.to_i]
-      end
+      channel = @channels[channel_id.to_i] if channel_id
       user.move(channel)
     end
 
@@ -288,9 +277,8 @@ module Discordrb
     # Internal handler for CHANNEL_UPDATE
     def update_channel(data)
       channel = Channel.new(data, self)
-      server = channel.server
       old_channel = @channels[channel.id]
-      return if !old_channel
+      return unless old_channel
       old_channel.update_from(channel)
     end
 
@@ -299,7 +287,7 @@ module Discordrb
       channel = Channel.new(data, self)
       server = channel.server
       @channels[channel.id] = nil
-      server.channels.reject! {|c| c.id == channel.id}
+      server.channels.reject! { |c| c.id == channel.id }
     end
 
     # Internal handler for GUILD_MEMBER_UPDATE
@@ -310,7 +298,7 @@ module Discordrb
       roles = []
       data['roles'].each do |element|
         role_id = element.to_i
-        roles << server.roles.find {|r| r.id == role_id}
+        roles << server.roles.find { |r| r.id == role_id }
       end
       user_id = user_data['id'].to_i
       user = @users[user_id]
@@ -324,7 +312,7 @@ module Discordrb
       server = @servers[server_id]
       new_role = Role.new(role_data, self, server)
       role_id = role_data['id'].to_i
-      old_role = server.roles.find {|r| r.id == role_id}
+      old_role = server.roles.find { |r| r.id == role_id }
       old_role.update_from(new_role)
     end
 
@@ -354,21 +342,21 @@ module Discordrb
 
     def login
       debug('Logging in')
-      login_attempts = login_attempts || 0
+      login_attempts ||= 0
 
       # Login
       login_response = API.login(@email, @password)
-      raise HTTPStatusException.new(login_response.code) if login_response.code >= 400
+      fail HTTPStatusException, login_response.code if login_response.code >= 400
 
       # Parse response
       login_response_object = JSON.parse(login_response)
-      raise InvalidAuthenticationException unless login_response_object['token']
+      fail InvalidAuthenticationException unless login_response_object['token']
 
       debug("Received token: #{login_response_object['token']}")
       login_response_object['token']
     rescue Exception => e
       response_code = login_response.nil? ? 0 : login_response.code ######## mackmm145
-      if login_attempts < 100 && (e.inspect.include?(N'o such host is known.') || response_code == 523)
+      if login_attempts < 100 && (e.inspect.include?('No such host is known.') || response_code == 523)
         debug("Login failed! Reattempting in 5 seconds. #{100 - login_attempts} attempts remaining.")
         debug("Error was: #{e.inspect}")
         sleep 5
@@ -379,11 +367,11 @@ module Discordrb
 
         # Apparently we get a 400 if the password or username is incorrect. In that case, tell the user
         debug("Are you sure you're using the correct username and password?") if e.class == RestClient::BadRequest
-        raise $!
+        raise $ERROR_INFO
       end
     end
 
-    def get_gateway
+    def find_gateway
       # Get updated websocket_hub
       response = API.gateway(@token)
       JSON.parse(response)['url']
@@ -391,28 +379,30 @@ module Discordrb
 
     def websocket_connect
       debug('Attempting to get gateway URL...')
-      websocket_hub = get_gateway
+      websocket_hub = find_gateway
       debug("Success! Gateway URL is #{websocket_hub}.")
       debug('Now running bot')
 
-      EM.run {
+      EM.run do
         @ws = Faye::WebSocket::Client.new(websocket_hub)
 
-        @ws.on :open do |event|; websocket_open(event); end
-        @ws.on :message do |event|; websocket_message(event); end
-        @ws.on :error do |event|; debug(event.message); end
-        @ws.on :close do |event|; websocket_close(event); @ws = nil; end
-      }
+        @ws.on(:open) { |event| websocket_open(event) }
+        @ws.on(:message) { |event| websocket_message(event) }
+        @ws.on(:error) { |event| debug(event.message) }
+        @ws.on :close do |event|
+          websocket_close(event)
+          @ws = nil
+        end
+      end
     end
 
     def websocket_message(event)
-      begin
       debug("Received packet #{event.data}")
 
       # Parse packet
       packet = JSON.parse(event.data)
 
-      raise 'Invalid Packet' unless packet['op'] == 0   # TODO
+      fail 'Invalid Packet' unless packet['op'] == 0 # TODO
 
       data = packet['d']
       case packet['t']
@@ -431,12 +421,12 @@ module Discordrb
           @servers[server.id] = server
 
           # Initialize users
-          server.members.each do |element|
-            unless @users[element.id]
-              @users[element.id] = element
-            else
+          server.members.each do |member|
+            if @users[member.id]
               # If the user is already cached, just add the new roles
-              @users[element.id].merge_roles(server, element.roles[server.id])
+              @users[member.id].merge_roles(server, member.roles[server.id])
+            else
+              @users[member.id] = element
             end
           end
 
@@ -519,10 +509,9 @@ module Discordrb
         event = GuildRoleDeleteEvent.new(data, self)
         raise_event(event)
       end
-      rescue Exception => e
-        debug("Exception: #{e.inspect}", true)
-        e.backtrace.each {|line| debug(line) }
-      end
+    rescue Exception => e
+      debug("Exception: #{e.inspect}", true)
+      e.backtrace.each { |line| debug(line) }
     end
 
     def websocket_close(event)
@@ -533,14 +522,14 @@ module Discordrb
       EM.stop
     end
 
-    def websocket_open(event)
+    def websocket_open(_)
       # Send the initial packet
       packet = {
         'op' => 2,    # Packet identifier
         'd' => {      # Packet data
           'v' => 2,   # Another identifier
           'token' => @token,
-          'properties' => {   # I'm unsure what these values are for exactly, but they don't appear to impact bot functionality in any way.
+          'properties' => { # I'm unsure what these values are for exactly, but they don't appear to impact bot functionality in any way.
             '$os' => "#{RUBY_PLATFORM}",
             '$browser' => 'discordrb',
             '$device' => 'discordrb',

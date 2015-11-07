@@ -1,4 +1,5 @@
 module Discordrb
+  # List of permissions Discord uses
   class Permissions
     # This hash maps bit positions to logical permissions.
     # I'm not sure what the unlabeled bits are reserved for.
@@ -7,13 +8,13 @@ module Discordrb
       0 => :create_instant_invite, # 1
       1 => :kick_members,          # 2
       2 => :ban_members,           # 4
-      3 => :manage_roles ,         # 8
+      3 => :manage_roles,          # 8
       4 => :manage_channels,       # 16
       5 => :manage_server,         # 32
-      #6                           # 64
-      #7                           # 128
-      #8                           # 256
-      #9                           # 512
+      # 6                          # 64
+      # 7                          # 128
+      # 8                          # 256
+      # 9                          # 512
       10 => :read_messages,        # 1024
       11 => :send_messages,        # 2048
       12 => :send_tts_messages,    # 4096
@@ -22,8 +23,8 @@ module Discordrb
       15 => :attach_files,         # 32768
       16 => :read_message_history, # 65536
       17 => :mention_everyone,     # 131072
-      #18                          # 262144
-      #19                          # 524288
+      # 18                         # 262144
+      # 19                         # 524288
       20 => :connect,              # 1048576
       21 => :speak,                # 2097152
       22 => :mute_members,         # 4194304
@@ -31,11 +32,11 @@ module Discordrb
       24 => :move_members,         # 16777216
       25 => :use_voice_activity    # 33554432
     }
-             
+
     Flags.each_value do |flag|
       attr_reader flag
     end
-  
+
     def initialize(bits)
       Flags.each do |position, flag|
         flag_set = ((bits >> position) & 0x1) == 1

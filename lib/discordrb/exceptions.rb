@@ -4,7 +4,9 @@ module Discordrb
 
   # Raised when a HTTP status code indicates a failure
   class HTTPStatusException < RuntimeError
-    attr :status
-    def initialize(status); @status = status; end
+    attr_reader :status
+    def initialize(status)
+      @status = status
+    end
   end
 end

@@ -6,6 +6,7 @@ require 'discordrb/api'
 require 'discordrb/games'
 
 module Discordrb
+  # User on Discord, including internal data like discriminators
   class User
     attr_reader :username, :id, :discriminator, :avatar
 
@@ -76,11 +77,11 @@ module Discordrb
     # Determine if the user has permission to do an action
     # action is a permission from Permissions::Flags.
     # channel is the channel in which the action takes place (not applicable for server-wide actions).
-    def has_permission?(action, server, channel = nil)
+    def permission?(action, server, channel = nil)
       # For each role, check if
       #   (1) the channel explicitly allows or permits an action for the role and
       #   (2) if the user is allowed to do the action if the channel doesn't specify
-      return false if !@roles[server.id]
+      return false unless @roles[server.id]
 
       @roles[server.id].reduce(false) do |can_act, role|
         channel_allow = nil
@@ -91,28 +92,29 @@ module Discordrb
             channel_allow = true
           elsif deny.instance_variable_get("@#{action}")
             channel_allow = false
-          # else
-          #   If the channel has nothing to say on the matter, we can defer to the role itself
           end
+          # If the channel has nothing to say on the matter, we can defer to the role itself
         end
         if channel_allow == false
-          can_act = can_act || false
+          can_act = false
         elsif channel_allow == true
           can_act = true
         else # channel_allow == nil
           can_act = role.permissions.instance_variable_get("@#{action}") || can_act
         end
+        can_act
       end
     end
 
     # Define methods for querying permissions
     Discordrb::Permissions::Flags.each_value do |flag|
       define_method "can_#{flag}?" do |server, channel = nil|
-        has_permission? flag, server, channel
+        permission? flag, server, channel
       end
     end
   end
 
+  # A Discord role that contains permissions and applies to certain users
   class Role
     attr_reader :permissions
     attr_reader :name
@@ -121,6 +123,8 @@ module Discordrb
     attr_reader :color
 
     def initialize(data, bot, server = nil)
+      @bot = bot
+      @server = server
       @permissions = Permissions.new(data['permissions'])
       @name = data['name']
       @id = data['id'].to_i
@@ -136,6 +140,7 @@ module Discordrb
     end
   end
 
+  # A Discord channel, including data like the topic
   class Channel
     attr_reader :name, :server, :type, :id, :is_private, :recipient, :topic, :position
 
@@ -144,7 +149,7 @@ module Discordrb
     def initialize(data, bot, server = nil)
       @bot = bot
 
-      #data is a sometimes a Hash and othertimes an array of Hashes, you only want the last one if it's an array
+      # data is a sometimes a Hash and othertimes an array of Hashes, you only want the last one if it's an array
       data = data[-1] if data.is_a?(Array)
 
       @id = data['id'].to_i
@@ -159,20 +164,19 @@ module Discordrb
       else
         @name = data['name']
         @server = bot.server(data['guild_id'].to_i)
-        @server = server if !@server
+        @server ||= server
       end
 
       # Populate permission overwrites
       @permission_overwrites = {}
-      if data['permission_overwrites']
-        data['permission_overwrites'].each do |element|
-          role_id = element['id'].to_i
-          deny = Permissions.new(element['deny'])
-          allow = Permissions.new(element['allow'])
-          @permission_overwrites[role_id] = OpenStruct.new
-          @permission_overwrites[role_id].deny = deny
-          @permission_overwrites[role_id].allow = allow
-        end
+      return unless data['permission_overwrites']
+      data['permission_overwrites'].each do |element|
+        role_id = element['id'].to_i
+        deny = Permissions.new(element['deny'])
+        allow = Permissions.new(element['allow'])
+        @permission_overwrites[role_id] = OpenStruct.new
+        @permission_overwrites[role_id].deny = deny
+        @permission_overwrites[role_id].allow = allow
       end
     end
 
@@ -214,12 +218,10 @@ module Discordrb
     # List of users currently in a channel
     def users
       if @type == 'text'
-        @server.members.select {|u| u.status != :offline }
+        @server.members.select { |u| u.status != :offline }
       else
         @server.members.select do |user|
-          if user.voice_channel
-            user.voice_channel.id == @id
-          end
+          user.voice_channel.id == @id if user.voice_channel
         end
       end
     end
@@ -238,6 +240,7 @@ module Discordrb
     end
   end
 
+  # A message on Discord that was sent to a text channel
   class Message
     attr_reader :content, :author, :channel, :timestamp, :id, :mentions
     alias_method :user, :author
@@ -271,6 +274,7 @@ module Discordrb
     end
   end
 
+  # A server on Discord
   class Server
     attr_reader :region, :name, :owner_id, :id, :members
 
@@ -304,8 +308,8 @@ module Discordrb
         @members << user
         members_by_id[user.id] = user
         user_roles = []
-        element['roles'].each do |element|
-          role_id = element.to_i
+        element['roles'].each do |e|
+          role_id = e.to_i
           user_roles << roles_by_id[role_id]
         end
         user.update_roles(self, user_roles)
@@ -314,13 +318,12 @@ module Discordrb
       # Update user statuses with presence info
       if data['presences']
         data['presences'].each do |element|
-          if element['user']
-            user_id = element['user']['id'].to_i
-            user = members_by_id[user_id]
-            if user
-              user.status = element['status'].to_sym
-              user.game = Discordrb::Games.find_game(element['game_id'])
-            end
+          next unless element['user']
+          user_id = element['user']['id'].to_i
+          user = members_by_id[user_id]
+          if user
+            user.status = element['status'].to_sym
+            user.game = Discordrb::Games.find_game(element['game_id'])
           end
         end
       end
@@ -336,23 +339,18 @@ module Discordrb
         end
       end
 
-      if data['voice_states']
-        data['voice_states'].each do |element|
-          user_id = element['user_id'].to_i
-          user = members_by_id[user_id]
-          if user
-            user.server_mute = element['mute']
-            user.server_deaf = element['deaf']
-            user.self_mute = element['self_mute']
-            user.self_mute = element['self_mute']
-            channel_id = element['channel_id']
-            channel = nil
-            if channel_id
-              channel = channels_by_id[channel_id]
-            end
-            user.move(channel)
-          end
-        end
+      return unless data['voice_states']
+      data['voice_states'].each do |element|
+        user_id = element['user_id'].to_i
+        user = members_by_id[user_id]
+        next unless user
+        user.server_mute = element['mute']
+        user.server_deaf = element['deaf']
+        user.self_mute = element['self_mute']
+        user.self_mute = element['self_mute']
+        channel_id = element['channel_id']
+        channel = channel_id ? channels_by_id[channel_id] : nil
+        user.move(channel)
       end
     end
 
@@ -361,13 +359,13 @@ module Discordrb
     end
 
     def delete_role(role_id)
-      @roles.reject! {|r| r.id == role_id}
+      @roles.reject! { |r| r.id == role_id }
       @members.each do |user|
-        new_roles = user.roles.reject {|r| r.id == role_id}
+        new_roles = user.roles.reject { |r| r.id == role_id }
         user.update_roles(self, new_roles)
       end
       @channels.each do |channel|
-        overwrites = channel.permission_overwrites.reject {|id, perm| id == role_id}
+        overwrites = channel.permission_overwrites.reject { |id, _| id == role_id }
         channel.update_overwrites(overwrites)
       end
     end
@@ -378,6 +376,7 @@ module Discordrb
     end
   end
 
+  # A colour (red, green and blue values). Used for role colours
   class ColorRGB
     attr_reader :red, :green, :blue
 

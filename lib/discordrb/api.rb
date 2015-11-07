@@ -1,8 +1,10 @@
 require 'rest-client'
 require 'json'
 
+# List of methods representing endpoints in Discord's API
 module Discordrb::API
   APIBASE = 'https://discordapp.com/api'
+
   module_function
 
   # Ban a user from a server and delete their messages from the last message_days days
@@ -170,7 +172,7 @@ module Discordrb::API
   def send_file(token, channel_id, file)
     RestClient.post(
       "#{APIBASE}/channels/#{channel_id}/messages",
-      {:file => file},
+      { file: file },
       Authorization: token
     )
   end
@@ -187,7 +189,7 @@ module Discordrb::API
   # Permissions are the Discord defaults; allowed: invite creation, reading/sending messages,
   # sending TTS messages, embedding links, sending files, reading the history, mentioning everybody,
   # connecting to voice, speaking and voice activity (push-to-talk isn't mandatory)
-  def update_role(token, server_id, role_id, name, colour, hoist = false, packed_permissions = 36953089)
+  def update_role(token, server_id, role_id, name, colour, hoist = false, packed_permissions = 36_953_089)
     RestClient.patch(
       "#{APIBASE}/guilds/#{server_id}/roles/#{role_id}",
       { 'color' => colour, 'name' => name, 'hoist' => hoist, 'permissions' => packed_permissions }.to_json,
@@ -275,5 +277,4 @@ module Discordrb::API
       Authorization: token
     )
   end
-
 end
