@@ -46,7 +46,15 @@ module Discordrb
       @users = {}
     end
 
-    def run
+    def run(async = false)
+      run_async
+      return if async
+
+      debug('Oh wait! Not exiting yet as run was run synchronously.')
+      loop {}
+    end
+
+    def run_async
       # Handle heartbeats
       @heartbeat_interval = 1
       @heartbeat_active = false
@@ -57,12 +65,23 @@ module Discordrb
         end
       end
 
-      while true do
-        websocket_connect
-        debug("Disconnected! Attempting to reconnect in 5 seconds.")
-        sleep 5
-        @token = login
-      end
+      @ws_thread = Thread.new {
+        while true do
+          websocket_connect
+          debug("Disconnected! Attempting to reconnect in 5 seconds.")
+          sleep 5
+          @token = login
+        end
+      }
+
+      debug("WS thread created! Now waiting for confirmation that everything worked")
+      @ws_success = false
+      sleep(0.5) until @ws_success
+      debug("Confirmation received! Exiting run.")
+    end
+
+    def sync
+      @ws_thread.join
     end
 
     def channel(id)
@@ -435,6 +454,9 @@ module Discordrb
 
         # Make sure to raise the event
         raise_event(ReadyEvent.new)
+
+        # Tell the run method that everything was successful
+        @ws_success = true
       when "MESSAGE_CREATE"
         create_message(data)
 
