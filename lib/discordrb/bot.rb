@@ -28,8 +28,8 @@ module Discordrb
 
     def initialize(email, password, debug = false)
       # Make sure people replace the login details in the example files...
-      if email.end_with? "example.com"
-        puts "You have to replace the login details in the example files with your own!"
+      if email.end_with? 'example.com'
+        puts 'You have to replace the login details in the example files with your own!'
         exit
       end
 
@@ -68,16 +68,16 @@ module Discordrb
       @ws_thread = Thread.new {
         while true do
           websocket_connect
-          debug("Disconnected! Attempting to reconnect in 5 seconds.")
+          debug('Disconnected! Attempting to reconnect in 5 seconds.')
           sleep 5
           @token = login
         end
       }
 
-      debug("WS thread created! Now waiting for confirmation that everything worked")
+      debug('WS thread created! Now waiting for confirmation that everything worked')
       @ws_success = false
       sleep(0.5) until @ws_success
-      debug("Confirmation received! Exiting run.")
+      debug('Confirmation received! Exiting run.')
     end
 
     def sync
@@ -353,7 +353,7 @@ module Discordrb
     def start_typing(data); end
 
     def login
-      debug("Logging in")
+      debug('Logging in')
       login_attempts = login_attempts || 0
 
       # Login
@@ -368,7 +368,7 @@ module Discordrb
       login_response_object['token']
     rescue Exception => e
       response_code = login_response.nil? ? 0 : login_response.code ######## mackmm145
-      if login_attempts < 100 && (e.inspect.include?("No such host is known.") || response_code == 523)
+      if login_attempts < 100 && (e.inspect.include?(N'o such host is known.') || response_code == 523)
         debug("Login failed! Reattempting in 5 seconds. #{100 - login_attempts} attempts remaining.")
         debug("Error was: #{e.inspect}")
         sleep 5
@@ -386,14 +386,14 @@ module Discordrb
     def get_gateway
       # Get updated websocket_hub
       response = API.gateway(@token)
-      JSON.parse(response)["url"]
+      JSON.parse(response)['url']
     end
 
     def websocket_connect
-      debug("Attempting to get gateway URL...")
+      debug('Attempting to get gateway URL...')
       websocket_hub = get_gateway
       debug("Success! Gateway URL is #{websocket_hub}.")
-      debug("Now running bot")
+      debug('Now running bot')
 
       EM.run {
         @ws = Faye::WebSocket::Client.new(websocket_hub)
@@ -412,11 +412,11 @@ module Discordrb
       # Parse packet
       packet = JSON.parse(event.data)
 
-      raise "Invalid Packet" unless packet['op'] == 0   # TODO
+      raise 'Invalid Packet' unless packet['op'] == 0   # TODO
 
       data = packet['d']
       case packet['t']
-      when "READY"
+      when 'READY'
         # Activate the heartbeats
         @heartbeat_interval = data['heartbeat_interval'].to_f / 1000.0
         @heartbeat_active = true
@@ -457,7 +457,7 @@ module Discordrb
 
         # Tell the run method that everything was successful
         @ws_success = true
-      when "MESSAGE_CREATE"
+      when 'MESSAGE_CREATE'
         create_message(data)
 
         message = Message.new(data, self)
@@ -468,52 +468,52 @@ module Discordrb
           event = MentionEvent.new(message, self)
           raise_event(event)
         end
-      when "TYPING_START"
+      when 'TYPING_START'
         start_typing(data)
 
         event = TypingEvent.new(data, self)
         raise_event(event)
-      when "PRESENCE_UPDATE"
+      when 'PRESENCE_UPDATE'
         update_presence(data)
 
         event = PresenceEvent.new(data, self)
         raise_event(event)
-      when "VOICE_STATE_UPDATE"
+      when 'VOICE_STATE_UPDATE'
         update_voice_state(data)
 
         event = VoiceStateUpdateEvent.new(data, self)
         raise_event(event)
-      when "CHANNEL_CREATE"
+      when 'CHANNEL_CREATE'
         create_channel(data)
 
         event = ChannelCreateEvent.new(data, self)
         raise_event(event)
-      when "CHANNEL_UPDATE"
+      when 'CHANNEL_UPDATE'
         update_channel(data)
 
         event = ChannelUpdateEvent.new(data, self)
         raise_event(event)
-      when "CHANNEL_DELETE"
+      when 'CHANNEL_DELETE'
         delete_channel(data)
 
         event = ChannelDeleteEvent.new(data, self)
         raise_event(event)
-      when "GUILD_MEMBER_UPDATE"
+      when 'GUILD_MEMBER_UPDATE'
         update_guild_member(data)
 
         event = GuildMemberUpdateEvent.new(data, self)
         raise_event(event)
-      when "GUILD_ROLE_UPDATE"
+      when 'GUILD_ROLE_UPDATE'
         update_guild_role(data)
 
         event = GuildRoleUpdateEvent.new(data, self)
         raise_event(event)
-      when "GUILD_ROLE_CREATE"
+      when 'GUILD_ROLE_CREATE'
         create_guild_role(data)
 
         event = GuildRoleCreateEvent.new(data, self)
         raise_event(event)
-      when "GUILD_ROLE_DELETE"
+      when 'GUILD_ROLE_DELETE'
         delete_guild_role(data)
 
         event = GuildRoleDeleteEvent.new(data, self)
@@ -526,7 +526,7 @@ module Discordrb
     end
 
     def websocket_close(event)
-      debug("Disconnected from WebSocket!")
+      debug('Disconnected from WebSocket!')
       debug(" (Reason: #{event.reason})")
       debug(" (Code: #{event.code})")
       raise_event(DisconnectEvent.new)
@@ -536,16 +536,16 @@ module Discordrb
     def websocket_open(event)
       # Send the initial packet
       packet = {
-        "op" => 2,    # Packet identifier
-        "d" => {      # Packet data
-          "v" => 2,   # Another identifier
-          "token" => @token,
-          "properties" => {   # I'm unsure what these values are for exactly, but they don't appear to impact bot functionality in any way.
-            "$os" => "#{RUBY_PLATFORM}",
-            "$browser" => "discordrb",
-            "$device" => "discordrb",
-            "$referrer" => "",
-            "$referring_domain" => ""
+        'op' => 2,    # Packet identifier
+        'd' => {      # Packet data
+          'v' => 2,   # Another identifier
+          'token' => @token,
+          'properties' => {   # I'm unsure what these values are for exactly, but they don't appear to impact bot functionality in any way.
+            '$os' => "#{RUBY_PLATFORM}",
+            '$browser' => 'discordrb',
+            '$device' => 'discordrb',
+            '$referrer' => '',
+            '$referring_domain' => ''
           }
         }
       }
@@ -572,7 +572,7 @@ module Discordrb
     end
 
     def send_heartbeat
-      millis = Time.now.strftime("%s%L").to_i
+      millis = Time.now.strftime('%s%L').to_i
       debug("Sending heartbeat at #{millis}")
       data = {
         'op' => 1,
@@ -590,13 +590,13 @@ module Discordrb
 
     def event_class(handler_class)
       class_name = handler_class.to_s
-      return nil unless class_name.end_with? "Handler"
+      return nil unless class_name.end_with? 'Handler'
 
       class_from_string(class_name[0..-8])
     end
 
     def handler_class(event_class)
-      class_from_string(event_class.to_s + "Handler")
+      class_from_string(event_class.to_s + 'Handler')
     end
   end
 end

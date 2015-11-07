@@ -34,7 +34,7 @@ module Discordrb::Events
     end
 
     def matches?(event)
-      raise "Attempted to call matches?() from a generic EventHandler"
+      raise 'Attempted to call matches?() from a generic EventHandler'
     end
 
     def match(event)
