@@ -427,7 +427,7 @@ module Discordrb
               # If the user is already cached, just add the new roles
               @users[member.id].merge_roles(server, member.roles[server.id])
             else
-              @users[member.id] = element
+              @users[member.id] = member
             end
           end
 
