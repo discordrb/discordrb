@@ -30,6 +30,10 @@ Metrics/PerceivedComplexity:
 Style/ClassAndModuleChildren:
   Enabled: false
 
+# Allow 'Pokémon-style' exception handling
+Lint/RescueException:
+  Enabled: false
+
 # Exclude the list of games
 AllCops:
   Exclude:
