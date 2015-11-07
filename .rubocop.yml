@@ -25,3 +25,12 @@ Metrics/ParameterLists:
 
 Metrics/PerceivedComplexity:
   Enabled: false
+
+# Prefer compact module/class defs
+Style/ClassAndModuleChildren:
+  EnforcedStyle: compact
+
+# Exclude the list of games
+AllCops:
+  Exclude:
+    - '**/games_list.rb'
