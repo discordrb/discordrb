@@ -119,6 +119,7 @@ module Discordrb::Voice
     private
 
     def lookup_endpoint
+      @orig_endpoint = @endpoint
       @bot.debug("Resolving voice endpoint #{@endpoint}")
       @endpoint = @endpoint[6..-1] if @endpoint.start_with? 'wss://'
       @endpoint.delete!(':80') # The endpoint may contain a port, we don't want that
@@ -129,20 +130,13 @@ module Discordrb::Voice
     def init_udp
       @bot.debug('Initializing UDP')
       @udp = UDPSocket.new
-
-      # Receive one message, then parse it
-      message = @udp.recvmsg
-      @bot.debug("Received message #{message}")
-      ip = message[4..message.index("\0")].delete("\0")
-      port = message[-2..-1].to_i
-
-      @bot.debug("IP is #{ip}, Port is #{port}")
-      [ip, port]
     end
 
     def init_ws
       EM.run do
-        @ws = Faye::WebSocket::Client.new(@endpoint)
+        @bot.debug('Opening VWS')
+        @ws = Faye::WebSocket::Client.new("wss://#{@endpoint}")
+        @bot.debug('VWS connected')
 
         @ws.on(:open) do
           @bot.debug('VWS opened')
@@ -161,6 +155,7 @@ module Discordrb::Voice
           @bot.debug('VWS init packet sent!')
         end
         @ws.on(:message) { |event| websocket_message(event) }
+        @bot.debug('VWS opened with events')
       end
     end
 
@@ -177,9 +172,12 @@ module Discordrb::Voice
 
     def websocket_message(event)
       packet = JSON.parse(event.data)
+      @bot.debug("Received VWS message! #{event.data}")
 
       case packet['op']
+        # Opcode 2 (see below)
       when 2
+        @bot.debug('Got opcode 2 packet!')
         @ws_data = packet['d']
 
         @heartbeat_interval = @ws_data['heartbeat_interval']
@@ -191,6 +189,10 @@ module Discordrb::Voice
         end
 
         to_send = [@ws_data['ssrc']].pack('N')
+        # Add 66 zeros so the buffer is 70 long
+        to_send += '\0' * 66
+        # Send UDP discovery
+        @bot.debug("Sending UDP discovery: #{to_send}")
         @udp.send(to_send, 0, @endpoint, @ws_data['port'])
       when 4
         @ws_data = packet['d']
@@ -199,12 +201,36 @@ module Discordrb::Voice
       end
     end
 
+    # Communication goes like this:
+    # me                    discord
+    #   |                      |
+    # websocket connect ->     |
+    #   |                      |
+    #   |     <- websocket opcode 2
+    #   |                      |
+    # UDP discovery ->         |
+    #   |                      |
+    #   |       <- UDP reply packet
+    #   |                      |
+    # websocket opcode 1 ->    |
+    #   |                      |
+    # ...
     def init_connections
       lookup_endpoint
-      ip, port = init_udp
+      init_udp
+      # Connect websocket
       @ws_thread = Thread.new { init_ws }
 
-      # Send ws init packet
+      # Now wait for opcode 2 and the resulting UDP reply packet
+      @bot.debug('Waiting for recv')
+      message = @udp.recvmsg
+      @bot.debug("Received message #{message}")
+      ip = message[4..message.index("\0")].delete("\0")
+      port = message[-2..-1].to_i
+
+      @bot.debug("IP is #{ip}, Port is #{port}")
+
+      # Send ws init packet (opcode 1)
       data = {
         op: 1,
         d: {
@@ -218,7 +244,7 @@ module Discordrb::Voice
       }
 
       @ws.send(data.to_json)
-      @bot.debug('VWS protocol init packet sent!')
+      @bot.debug('VWS protocol init packet sent (opcode 1)!')
     end
   end
 end
