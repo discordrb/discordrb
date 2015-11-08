@@ -9,14 +9,16 @@ require 'json'
 module Discordrb::Voice
   # A voice connection consisting of a UDP socket and a websocket client
   class VoiceBot
-    def initialize(channel, bot, session, endpoint)
+    def initialize(channel, bot, token, session, endpoint)
       @channel = channel
       @bot = bot
+      @token = token
       @session = session
       @endpoint = endpoint
       @endpoint.delete(':80')
 
       @encoder = Encoder.new
+      bot.debug('Initing connections...')
       init_connections
     end
 
@@ -107,6 +109,8 @@ module Discordrb::Voice
       @playing = false
     end
 
+    alias_method :destroy, :stop_playing
+
     def play_file(file)
       @file_io = @encoder.encode_file(file)
       play_raw(@file_io)
@@ -115,18 +119,23 @@ module Discordrb::Voice
     private
 
     def lookup_endpoint
+      @bot.debug("Resolving voice endpoint #{@endpoint}")
       @endpoint = @endpoint[6..-1] if @endpoint.start_with? 'wss://'
       @endpoint = Resolv.getaddress @endpoint
+      @bot.debug("Got voice endpoint IP: #{@endpoint}")
     end
 
     def init_udp
+      @bot.debug('Initializing UDP')
       @udp = UDPSocket.new
 
       # Receive one message, then parse it
       message = @udp.recvmsg
+      @bot.debug("Received message #{message}")
       ip = message[4..message.index("\0")].delete("\0")
       port = message[-2..-1].to_i
 
+      @bot.debug("IP is #{ip}, Port is #{port}")
       [ip, port]
     end
 
@@ -135,6 +144,7 @@ module Discordrb::Voice
         @ws = Faye::WebSocket::Client.new(@endpoint)
 
         @ws.on(:open) do
+          @bot.debug('VWS opened')
           # Send init packet
           data = {
             op: 0,
@@ -142,11 +152,12 @@ module Discordrb::Voice
               server_id: @channel.server.id,
               user_id: @bot.bot_user.id,
               session_id: @session,
-              token: @bot.token
+              token: @token
             }
           }
 
           @ws.send(data.to_json)
+          @bot.debug('VWS init packet sent!')
         end
         @ws.on(:message) { |event| websocket_message(event) }
       end
@@ -206,6 +217,7 @@ module Discordrb::Voice
       }
 
       @ws.send(data.to_json)
+      @bot.debug('VWS protocol init packet sent!')
     end
   end
 end

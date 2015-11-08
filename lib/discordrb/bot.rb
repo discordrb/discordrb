@@ -20,6 +20,8 @@ require 'discordrb/games'
 require 'discordrb/exceptions'
 require 'discordrb/data'
 
+require 'discordrb/voice/voice_bot'
+
 module Discordrb
   # Represents a Discord bot, including servers, users, etc.
   class Bot
@@ -111,6 +113,37 @@ module Discordrb
       invite = invite[invite.rindex('/') + 1..-1] if invite.start_with?('http') || invite.start_with?('discord.gg')
       resolved = JSON.parse(API.resolve_invite(@token, invite))['code']
       API.join_server(@token, resolved)
+    end
+
+    attr_reader :voice
+
+    def voice_connect(channel_id)
+      if @voice
+        debug('Voice bot exists already! Destroying it')
+        @voice.destroy
+        @voice = nil
+      end
+
+      @voice_channel = channel(channel_id)
+      debug("Got voice channel: #{@voice_channel}")
+
+      data = {
+        op: 4,
+        d: {
+          guild_id: @voice_channel.server.id,
+          channel_id: @voice_channel.id,
+          self_mute: false,
+          self_deaf: false
+        }
+      }
+
+      @should_connect_to_voice = true
+      @ws.send(data.to_json)
+      debug('Voice channel init packet sent! Now waiting.')
+
+      sleep(0.05) until @voice
+      debug('Voice connect succeeded!')
+      @voice
     end
 
     def user(id)
@@ -269,6 +302,24 @@ module Discordrb
       channel = nil
       channel = @channels[channel_id.to_i] if channel_id
       user.move(channel)
+
+      @session_id = data['session_id']
+    end
+
+    # Internal handler for VOICE_SERVER_UPDATE
+    def update_voice_server(data)
+      debug("Voice server update received! should connect: #{should_connect_to_voice}")
+      return unless @should_connect_to_voice
+      @should_connect_to_voice = false
+      debug('Updating voice server!')
+
+      token = data['token']
+      endpoint = data['endpoint']
+      channel = @voice_channel
+
+      debug('Got data, now creating the bot.')
+      @voice = VoiceBot.new(channel, self, token, @session_id, endpoint)
+      @voice
     end
 
     # Internal handler for CHANNEL_CREATE
@@ -478,6 +529,10 @@ module Discordrb
 
         event = VoiceStateUpdateEvent.new(data, self)
         raise_event(event)
+      when 'VOICE_SERVER_UPDATE'
+        update_voice_server(data)
+
+        # no event as this is irrelevant to users
       when 'CHANNEL_CREATE'
         create_channel(data)
 
