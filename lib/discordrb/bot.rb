@@ -319,7 +319,7 @@ module Discordrb
       channel = @voice_channel
 
       debug('Got data, now creating the bot.')
-      @voice = VoiceBot.new(channel, self, token, @session_id, endpoint)
+      @voice = Discordrb::Voice::VoiceBot.new(channel, self, token, @session_id, endpoint)
       @voice
     end
 
