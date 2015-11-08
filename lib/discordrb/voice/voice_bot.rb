@@ -1,6 +1,7 @@
 require 'discordrb/voice/encoder'
 
 require 'faye/websocket'
+require 'eventmachine'
 
 require 'resolv'
 require 'socket'
@@ -135,8 +136,13 @@ module Discordrb::Voice
     def init_ws
       EM.run do
         @bot.debug('Opening VWS')
-        @ws = Faye::WebSocket::Client.new("wss://#{@endpoint}")
+        host = "wss://#{@orig_endpoint.delete(':80')}"
+        @bot.debug("Host: #{host}")
+        @ws = Faye::WebSocket::Client.new(host)
         @bot.debug('VWS connected')
+
+        puts @ws
+        puts @ws.status
 
         @ws.on(:open) do
           @bot.debug('VWS opened')
@@ -155,8 +161,10 @@ module Discordrb::Voice
           @bot.debug('VWS init packet sent!')
         end
         @ws.on(:message) { |event| websocket_message(event) }
+        @ws.on(:error) { |event| @bot.debug(event.message) }
         @bot.debug('VWS opened with events')
       end
+      @bot.debug('VWS EM exited, wat')
     end
 
     def send_heartbeat
@@ -219,7 +227,7 @@ module Discordrb::Voice
       lookup_endpoint
       init_udp
       # Connect websocket
-      @ws_thread = Thread.new { init_ws }
+      @ws_thread = Thread.new { init_ws; @bot.debug('all of my wat') }
 
       # Now wait for opcode 2 and the resulting UDP reply packet
       @bot.debug('Waiting for recv')
