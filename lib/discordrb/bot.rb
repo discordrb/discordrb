@@ -130,12 +130,13 @@ module Discordrb
       data = {
         op: 4,
         d: {
-          guild_id: @voice_channel.server.id,
-          channel_id: @voice_channel.id,
+          guild_id: @voice_channel.server.id.to_s,
+          channel_id: @voice_channel.id.to_s,
           self_mute: false,
           self_deaf: false
         }
       }
+      debug("Voice channel init packet is: #{data.to_json}")
 
       @should_connect_to_voice = true
       @ws.send(data.to_json)
@@ -308,7 +309,7 @@ module Discordrb
 
     # Internal handler for VOICE_SERVER_UPDATE
     def update_voice_server(data)
-      debug("Voice server update received! should connect: #{should_connect_to_voice}")
+      debug("Voice server update received! should connect: #{@should_connect_to_voice}")
       return unless @should_connect_to_voice
       @should_connect_to_voice = false
       debug('Updating voice server!')
