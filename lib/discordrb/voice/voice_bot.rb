@@ -121,6 +121,7 @@ module Discordrb::Voice
     def lookup_endpoint
       @bot.debug("Resolving voice endpoint #{@endpoint}")
       @endpoint = @endpoint[6..-1] if @endpoint.start_with? 'wss://'
+      @endpoint.delete!(':80') # The endpoint may contain a port, we don't want that
       @endpoint = Resolv.getaddress @endpoint
       @bot.debug("Got voice endpoint IP: #{@endpoint}")
     end
