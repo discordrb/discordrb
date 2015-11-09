@@ -1,7 +1,6 @@
 require 'discordrb/voice/encoder'
 
-require 'faye/websocket'
-require 'eventmachine'
+require 'websocket-client-simple'
 
 require 'resolv'
 require 'socket'
@@ -42,9 +41,11 @@ module Discordrb::Voice
       @playing = true
       @on_warning = false
 
+      @bot.debug('Starting')
+
       self.speaking = true
       loop do
-        unless playing
+        unless @playing
           self.speaking = false
           break
         end
@@ -61,6 +62,7 @@ module Discordrb::Voice
             self.speaking = false
             break
           else
+            @on_warning = true
             sleep length * 10.0
             continue
           end
@@ -76,6 +78,7 @@ module Discordrb::Voice
         @stream_time = count * length
         next_time = start_time + @stream_time
         delay = length + (next_time - Time.now.to_f)
+        delay /= 1000.0 # milliseconds
 
         self.speaking = true unless @playing
 
@@ -113,8 +116,62 @@ module Discordrb::Voice
     alias_method :destroy, :stop_playing
 
     def play_file(file)
+      @bot.debug("Playing file #{file.path}!")
       @file_io = @encoder.encode_file(file)
+      @bot.debug("IO: #{@file_io}")
       play_raw(@file_io)
+    end
+
+    # these are public so they can be accessed from within ws-simple's events
+
+    def websocket_open
+      @bot.debug('VWS opened')
+      # Send init packet
+      data = {
+        op: 0,
+        d: {
+          server_id: @channel.server.id,
+          user_id: @bot.bot_user.id,
+          session_id: @session,
+          token: @token
+        }
+      }
+
+      @ws.send(data.to_json)
+      @bot.debug('VWS init packet sent!')
+    end
+
+    def websocket_message(msg)
+      packet = JSON.parse(msg)
+      @bot.debug("Received VWS message! #{msg}")
+
+      case packet['op']
+        # Opcode 2 (see below)
+      when 2
+        @bot.debug('Got opcode 2 packet!')
+        @ws_data = packet['d']
+
+        @heartbeat_interval = @ws_data['heartbeat_interval']
+        @heartbeat_thread = Thread.new do
+          loop do
+            sleep @heartbeat_interval
+            send_heartbeat
+          end
+        end
+
+        @bot.debug "SSRC: #{@ws_data['ssrc']}"
+        to_send = [@ws_data['ssrc']].pack('N')
+        @bot.debug "Length: #{to_send.length}"
+        # Add 66 zeros so the buffer is 70 long
+        to_send += "\0" * 66
+        # Send UDP discovery
+        @bot.debug('Sending UDP discovery')
+        @udp.send(to_send, 0, @endpoint, @ws_data['port'])
+      when 4
+        @ws_data = packet['d']
+        @ready = true
+        @mode = @ws_data['mode']
+      end
     end
 
     private
@@ -134,37 +191,25 @@ module Discordrb::Voice
     end
 
     def init_ws
-      EM.run do
-        @bot.debug('Opening VWS')
-        host = "wss://#{@orig_endpoint.delete(':80')}"
-        @bot.debug("Host: #{host}")
-        @ws = Faye::WebSocket::Client.new(host)
-        @bot.debug('VWS connected')
+      @bot.debug('Opening VWS')
+      host = "wss://#{@orig_endpoint}:443"
+      @bot.debug("Host: #{host}")
+      @ws = WebSocket::Client::Simple.connect(host)
+      @bot.debug('VWS connected')
 
-        puts @ws
-        puts @ws.status
+      # Change some instance to local variables for the blocks
+      voice_bot = self
 
-        @ws.on(:open) do
-          @bot.debug('VWS opened')
-          # Send init packet
-          data = {
-            op: 0,
-            d: {
-              server_id: @channel.server.id,
-              user_id: @bot.bot_user.id,
-              session_id: @session,
-              token: @token
-            }
-          }
+      puts @ws
 
-          @ws.send(data.to_json)
-          @bot.debug('VWS init packet sent!')
-        end
-        @ws.on(:message) { |event| websocket_message(event) }
-        @ws.on(:error) { |event| @bot.debug(event.message) }
-        @bot.debug('VWS opened with events')
-      end
-      @bot.debug('VWS EM exited, wat')
+      @ws.on(:open) { voice_bot.websocket_open }
+      @ws.on(:message) { |msg| voice_bot.websocket_message(msg.data) }
+      @ws.on(:error) { |e| puts e.to_s }
+      @ws.on(:close) { |e| puts e.to_s }
+
+      @bot.debug('VWS opened with events')
+
+      loop {}
     end
 
     def send_heartbeat
@@ -176,37 +221,6 @@ module Discordrb::Voice
       }
 
       @ws.send(data.to_json)
-    end
-
-    def websocket_message(event)
-      packet = JSON.parse(event.data)
-      @bot.debug("Received VWS message! #{event.data}")
-
-      case packet['op']
-        # Opcode 2 (see below)
-      when 2
-        @bot.debug('Got opcode 2 packet!')
-        @ws_data = packet['d']
-
-        @heartbeat_interval = @ws_data['heartbeat_interval']
-        @heartbeat_thread = Thread.new do
-          loop do
-            sleep @heartbeat_interval
-            send_heartbeat
-          end
-        end
-
-        to_send = [@ws_data['ssrc']].pack('N')
-        # Add 66 zeros so the buffer is 70 long
-        to_send += '\0' * 66
-        # Send UDP discovery
-        @bot.debug("Sending UDP discovery: #{to_send}")
-        @udp.send(to_send, 0, @endpoint, @ws_data['port'])
-      when 4
-        @ws_data = packet['d']
-        @ready = true
-        @mode = @ws_data['mode']
-      end
     end
 
     # Communication goes like this:
@@ -231,9 +245,9 @@ module Discordrb::Voice
 
       # Now wait for opcode 2 and the resulting UDP reply packet
       @bot.debug('Waiting for recv')
-      message = @udp.recvmsg
-      @bot.debug("Received message #{message}")
-      ip = message[4..message.index("\0")].delete("\0")
+      message = @udp.recvmsg.first
+      @bot.debug('Received message')
+      ip = message[4..-3].delete("\0")
       port = message[-2..-1].to_i
 
       @bot.debug("IP is #{ip}, Port is #{port}")
