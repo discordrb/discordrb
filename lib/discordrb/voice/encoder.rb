@@ -12,8 +12,6 @@ module Discordrb::Voice
     end
 
     def encode(buffer)
-      # Create a new buffer each time so opus doesn't segfault. Don't ask me why
-      # It still segfaults though
       opus = Opus::Encoder.new(@sample_rate, @frame_size, @channels)
       encoded = opus.encode(buffer, 1920)
       opus.destroy
