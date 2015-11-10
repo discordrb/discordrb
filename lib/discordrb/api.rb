@@ -36,6 +36,7 @@ module Discordrb::API
   def logout(token)
     RestClient.post(
       "#{APIBASE}/auth/logout",
+      nil,
       Authorization: token
     )
   end
@@ -98,6 +99,7 @@ module Discordrb::API
   def join_server(token, invite_id)
     RestClient.post(
       "#{APIBASE}/invite/#{invite_id}",
+      nil,
       Authorization: token
     )
   end
@@ -164,6 +166,7 @@ module Discordrb::API
   def acknowledge_message(token, channel_id, message_id)
     RestClient.post(
       "#{APIBASE}/channels/#{channel_id}/messages/#{message_id}/ack",
+      nil,
       Authorization: token
     )
   end
@@ -181,6 +184,7 @@ module Discordrb::API
   def create_role(token, server_id)
     RestClient.post(
       "#{APIBASE}/guilds/#{server_id}/roles",
+      nil,
       Authorization: token
     )
   end
@@ -248,6 +252,7 @@ module Discordrb::API
   def start_typing(token, channel_id)
     RestClient.post(
       "#{APIBASE}/channels/#{channel_id}/typing",
+      nil,
       Authorization: token
     )
   end
