@@ -9,18 +9,19 @@ module Discordrb::Voice
       @frame_size = 960
       # Mono because Discord would make it mono on playback anyway
       @channels = 1
+      @opus = Opus::Encoder.new(@sample_rate, @frame_size, @channels)
     end
 
     def encode(buffer)
-      opus = Opus::Encoder.new(@sample_rate, @frame_size, @channels)
-      encoded = opus.encode(buffer, 1920)
-      opus.destroy
-      encoded
+      @opus.encode(buffer, 1920)
+    end
+
+    def destroy
+      @opus.destroy
     end
 
     def encode_file(file)
       command = "ffmpeg -i #{file.path} -f s16le -ar 48000 -ac 1 -af volume=1 pipe:1"
-      puts "Command: #{command}"
       IO.popen(command)
     end
   end

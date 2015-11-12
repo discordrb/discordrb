@@ -46,17 +46,21 @@ module Discordrb::Voice
       self.speaking = true
       loop do
         unless @playing
+          @bot.debug('Not playing anymore, exiting')
           self.speaking = false
           break
         end
 
         buf = io.read(1920)
+
         unless buf
+          @bot.debug('Invalid buffer!')
           sleep length * 10.0
           continue
         end
 
         if buf.length != 1920
+          @bot.debug("Invalid buffer length: #{buf.length}")
           if @on_warning
             io.close
             self.speaking = false
@@ -74,10 +78,11 @@ module Discordrb::Voice
         (time + 9600 < 4_294_967_295) ? time += 960 : time = 0
 
         send_buffer(buf, sequence, time)
+        puts "A"
 
         @stream_time = count * length
         next_time = start_time + @stream_time
-        delay = length + (next_time - Time.now.to_f)
+        delay = (next_time - Time.now.to_f)
         delay /= 1000.0 # milliseconds
 
         self.speaking = true unless @playing
@@ -87,29 +92,25 @@ module Discordrb::Voice
     end
 
     def send_packet(packet)
-      @playing = true
-      @udp.send(packet, 0, @ws_data['port'], @endpoint)
-    rescue
-      @playing = false
-      nil
+      @udp.send(packet, 0, @port, @endpoint)
     end
 
     def make_packet(buf, sequence, time, ssrc)
-      [0x80, 0x78, sequence, time, ssrc].pack('CCnNN') + buf
+      header = [0x80, 0x78, sequence, time, ssrc].pack('CCnNN')
+      header + buf
     end
 
     def send_buffer(raw_buf, sequence, time)
-      @playing = true
-      packet = make_packet(@encoder.encode(raw_buf), sequence, time, @ws_data['ssrc'])
+      encoded = @encoder.encode(raw_buf)
+      packet = make_packet(encoded, sequence, time, @ssrc)
       send_packet(packet)
-    rescue
-      nil
     end
 
     def stop_playing
       @file_io.close if @file_io
       @ws_thread.kill if @ws_thread
       @heartbeat_thread.kill if @heartbeat_thread
+      @encoder.destroy
       @playing = false
     end
 
@@ -159,14 +160,17 @@ module Discordrb::Voice
           end
         end
 
-        @bot.debug "SSRC: #{@ws_data['ssrc']}"
-        to_send = [@ws_data['ssrc']].pack('N')
+        @ssrc = @ws_data['ssrc']
+        @port = @ws_data['port']
+
+        @bot.debug "SSRC: #{@ssrc}"
+        to_send = [@ssrc].pack('N')
         @bot.debug "Length: #{to_send.length}"
         # Add 66 zeros so the buffer is 70 long
         to_send += "\0" * 66
         # Send UDP discovery
         @bot.debug('Sending UDP discovery')
-        @udp.send(to_send, 0, @endpoint, @ws_data['port'])
+        @udp.send(to_send, 0, @endpoint, @port)
       when 4
         @ws_data = packet['d']
         @ready = true
@@ -241,7 +245,7 @@ module Discordrb::Voice
       lookup_endpoint
       init_udp
       # Connect websocket
-      @ws_thread = Thread.new { init_ws; @bot.debug('all of my wat') }
+      @ws_thread = Thread.new { init_ws }
 
       # Now wait for opcode 2 and the resulting UDP reply packet
       @bot.debug('Waiting for recv')
