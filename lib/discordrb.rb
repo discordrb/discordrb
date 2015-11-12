@@ -4,6 +4,8 @@ require 'discordrb/commands/command_bot'
 
 # All discordrb functionality, to be extended by other files
 module Discordrb
+  module_function
+
   # Simple Levenshtein distance (slow)
   def levenshtein(one, two)
     return 0 if one == two
