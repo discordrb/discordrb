@@ -6,6 +6,7 @@ require 'discordrb/commands/command_bot'
 module Discordrb
   # Simple Levenshtein distance (slow)
   def levenshtein(one, two)
+    return 0 if one == two
     return two.size if one.size == 0
     return one.size if two.size == 0
 
