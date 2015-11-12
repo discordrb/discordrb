@@ -121,6 +121,18 @@ module Discordrb
       @servers[id]
     end
 
+    def find(channel_name, server_name = nil, threshold = 0)
+      results = []
+      @servers.values.each do |server|
+        server.channels.each do |channel|
+          distance = Discordrb.levenshtein(channel.name, channel_name)
+          distance += Discordrb.levenshtein(server_name || server.name, server.name)
+          results << channel if distance <= threshold
+        end
+      end
+      results
+    end
+
     def send_message(channel_id, content)
       debug("Sending message to #{channel_id} with content '#{content}'")
       response = API.send_message(@token, channel_id, content)
