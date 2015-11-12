@@ -122,11 +122,13 @@ module Discordrb
     end
 
     def find(channel_name, server_name = nil, threshold = 0)
+      require 'levenshtein'
+
       results = []
       @servers.values.each do |server|
         server.channels.each do |channel|
-          distance = Discordrb.levenshtein(channel.name, channel_name)
-          distance += Discordrb.levenshtein(server_name || server.name, server.name)
+          distance = Levenshtein.distance(channel.name, channel_name)
+          distance += Levenshtein.distance(server_name || server.name, server.name)
           results << channel if distance <= threshold
         end
       end
