@@ -358,6 +358,14 @@ module Discordrb
     def ban(user, message_days = 0)
       API.ban_user(@bot.token, @id, user.id, message_days)
     end
+
+    def unban(user)
+      API.unban_user(@bot.token, @id, user.id)
+    end
+
+    def kick(user)
+      API.kick_user(@bot.token, @id, user.id)
+    end
   end
 
   # A colour (red, green and blue values). Used for role colours
