@@ -91,7 +91,7 @@ module Discordrb::Commands
         event.respond @attributes[:command_doesnt_exist_message].gsub('%command%', name) if @attributes[:command_doesnt_exist_message]
         return
       end
-      if permission?(user(event.user.id), command.attributes[:permission_level], event.server.id)
+      if permission?(user(event.user.id), command.attributes[:permission_level], event.server)
         event.command = command
         command.call(event, arguments, chained)
       else
@@ -132,8 +132,8 @@ module Discordrb::Commands
       @permissions[:roles][id] = level
     end
 
-    def permission?(user, level, server_id)
-      determined_level = user.roles[server_id].each.reduce(0) do |memo, role|
+    def permission?(user, level, server)
+      determined_level = server.nil? ? 0 : user.roles[server.id].each.reduce(0) do |memo, role|
         [@permissions[:roles][role.id] || 0, memo].max
       end
       [@permissions[:users][user.id] || 0, determined_level].max >= level
