@@ -8,20 +8,12 @@ require 'discordrb/games'
 module Discordrb
   # User on Discord, including internal data like discriminators
   class User
-    attr_reader :username, :id, :discriminator, :avatar
+    attr_reader :username, :id, :discriminator, :avatar, :voice_channel, :roles
+    attr_accessor :status, :game, :server_mute, :server_deaf, :self_mute, :self_deaf
 
-    attr_accessor :status
-    attr_accessor :game
-    attr_accessor :server_mute
-    attr_accessor :server_deaf
-    attr_accessor :self_mute
-    attr_accessor :self_deaf
-    attr_reader :voice_channel
-
-    # Hash of user roles.
+    # @roles is a hash of user roles:
     # Key: Server ID
     # Value: Array of roles.
-    attr_reader :roles
 
     alias_method :name, :username
 
@@ -116,11 +108,7 @@ module Discordrb
 
   # A Discord role that contains permissions and applies to certain users
   class Role
-    attr_reader :permissions
-    attr_reader :name
-    attr_reader :id
-    attr_reader :hoist
-    attr_reader :color
+    attr_reader :permissions, :name, :id, :hoist, :color
 
     def initialize(data, bot, server = nil)
       @bot = bot
@@ -142,9 +130,7 @@ module Discordrb
 
   # A Discord channel, including data like the topic
   class Channel
-    attr_reader :name, :server, :type, :id, :is_private, :recipient, :topic, :position
-
-    attr_reader :permission_overwrites
+    attr_reader :name, :server, :type, :id, :is_private, :recipient, :topic, :position, :permission_overwrites
 
     def initialize(data, bot, server = nil)
       @bot = bot
@@ -276,13 +262,7 @@ module Discordrb
 
   # A server on Discord
   class Server
-    attr_reader :region, :name, :owner_id, :id, :members
-
-    # Array of channels on the server
-    attr_reader :channels
-
-    # Array of roles on the server
-    attr_reader :roles
+    attr_reader :region, :name, :owner_id, :id, :members, :channels, :roles
 
     def initialize(data, bot)
       @bot = bot
