@@ -129,7 +129,14 @@ module Discordrb
         server.channels.each do |channel|
           distance = Levenshtein.distance(channel.name, channel_name)
           distance += Levenshtein.distance(server_name || server.name, server.name)
-          results << channel if distance <= threshold
+          next if distance > threshold
+
+          # Make a singleton accessor "distance"
+          channel.instance_variable_set(:@distance, distance)
+          class << channel
+            attr_reader :distance
+          end
+          results << channel
         end
       end
       results
