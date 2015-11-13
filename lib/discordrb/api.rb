@@ -15,6 +15,22 @@ module Discordrb::API
     )
   end
 
+  # Unban a user from a server
+  def unban_user(token, server_id, user_id)
+    RestClient.delete(
+      "#{APIBASE}/guilds/#{server_id}/bans/#{user_id}",
+      Authorization: token
+    )
+  end
+
+  # Kick a user from a server
+  def kick_user(token, server_id, user_id)
+    RestClient.delete(
+      "#{APIBASE}/guilds/#{server_id}/members/#{user_id}",
+      Authorization: token
+    )
+  end
+
   # Get a server's banned users
   def bans(token, server_id)
     RestClient.get(
