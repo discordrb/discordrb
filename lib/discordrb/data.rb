@@ -354,6 +354,10 @@ module Discordrb
       response = API.create_channel(@bot.token, @id, name, 'text')
       Channel.new(JSON.parse(response), @bot)
     end
+
+    def ban(user, message_days = 0)
+      API.ban_user(@bot.token, @id, user.id, message_days)
+    end
   end
 
   # A colour (red, green and blue values). Used for role colours
