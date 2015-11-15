@@ -152,6 +152,12 @@ module Discordrb
       API.send_file(@token, channel_id, file)
     end
 
+    def parse_mention(mention)
+      # Mention format: <@id>
+      return nil unless /\<@(?<id>\d+)\>?/ =~ mention
+      user(id)
+    end
+
     def game=(name_or_id)
       game = Discordrb::Games.find_game(name_or_id)
       @game = game
