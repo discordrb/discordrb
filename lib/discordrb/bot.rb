@@ -353,6 +353,8 @@ module Discordrb
       else
         @users[user.id] = user
       end
+
+      server.add_user(user)
     end
 
     # Internal handler for GUILD_MEMBER_UPDATE
