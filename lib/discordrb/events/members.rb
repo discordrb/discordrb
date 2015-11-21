@@ -12,8 +12,18 @@ module Discordrb::Events
       @server = bot.server(data['guild_id'].to_i)
       return unless @server
 
+      init_user(data)
+      init_roles(data)
+    end
+
+    private
+
+    def init_user(data)
       user_id = data['user']['id'].to_i
       @user = @server.members.find { |u| u.id == user_id }
+    end
+
+    def init_roles(data)
       @roles = []
       data['roles'].each do |element|
         role_id = element.to_i
@@ -41,12 +51,20 @@ module Discordrb::Events
   end
 
   # Specialized subclasses
+  # Member joins
   class GuildMemberAddEvent < GuildMemberEvent; end
   class GuildMemberAddHandler < GuildMemberHandler; end
 
+  # Member is updated (e.g. name changed)
   class GuildMemberUpdateEvent < GuildMemberEvent; end
   class GuildMemberUpdateHandler < GuildMemberHandler; end
 
-  class GuildMemberDeleteEvent < GuildMemberEvent; end
+  # Member leaves
+  class GuildMemberDeleteEvent < GuildMemberEvent
+    # Overide init_user to account for the deleted user on the server
+    def init_user(data)
+      @user = User.new(data['user'])
+    end
+  end
   class GuildMemberDeleteHandler < GuildMemberHandler; end
 end
