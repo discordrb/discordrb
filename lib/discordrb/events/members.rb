@@ -25,6 +25,7 @@ module Discordrb::Events
 
     def init_roles(data, _)
       @roles = []
+      return unless data['roles']
       data['roles'].each do |element|
         role_id = element.to_i
         @roles << @server.roles.find { |r| r.id == role_id }
