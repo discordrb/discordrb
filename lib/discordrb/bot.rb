@@ -336,7 +336,7 @@ module Discordrb
 
     # Internal handler for GUILD_MEMBER_ADD
     def add_guild_member(data)
-      user = User.new(data['user'])
+      user = User.new(data['user'], self)
       server_id = data['guild_id'].to_i
       server = @servers[server_id]
 
