@@ -37,7 +37,7 @@ module Discordrb::Events
   class GuildMemberEventHandler < EventHandler
     def matches?(event)
       # Check for the proper event type
-      return false unless event.is_a? GuildMemberAddEvent
+      return false unless event.is_a? GuildMemberEvent
 
       [
         matches_all(@attributes[:username], event.user.name) do |a, e|
