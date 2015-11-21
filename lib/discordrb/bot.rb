@@ -10,7 +10,7 @@ require 'discordrb/events/voice_state_update'
 require 'discordrb/events/channel_create'
 require 'discordrb/events/channel_update'
 require 'discordrb/events/channel_delete'
-require 'discordrb/events/guild_member_update'
+require 'discordrb/events/members'
 require 'discordrb/events/guild_role_create'
 require 'discordrb/events/guild_role_delete'
 require 'discordrb/events/guild_role_update'
@@ -237,6 +237,18 @@ module Discordrb
       register_event(VoiceStateUpdateEvent, attributes, block)
     end
 
+    def member_join(attributes = {}, &block)
+      register_event(GuildMemberAddEvent, attributes, block)
+    end
+
+    def member_update(attributes = {}, &block)
+      register_event(GuildMemberUpdateEvent, attributes, block)
+    end
+
+    def member_leave(attributes = {}, &block)
+      register_event(GuildMemberDeleteEvent, attributes, block)
+    end
+
     def remove_handler(handler)
       clazz = event_class(handler.class)
       @event_handlers[clazz].delete(handler)
@@ -322,19 +334,53 @@ module Discordrb
       server.channels.reject! { |c| c.id == channel.id }
     end
 
-    # Internal handler for GUILD_MEMBER_UPDATE
-    def update_guild_member(data)
-      user_data = data['user']
+    # Internal handler for GUILD_MEMBER_ADD
+    def add_guild_member(data)
+      user = User.new(data['user'])
       server_id = data['guild_id'].to_i
       server = @servers[server_id]
+
       roles = []
       data['roles'].each do |element|
         role_id = element.to_i
         roles << server.roles.find { |r| r.id == role_id }
       end
-      user_id = user_data['id'].to_i
-      user = @users[user_id]
       user.update_roles(server, roles)
+
+      if @users[user.id]
+        # If the user is already cached, just add the new roles
+        @users[user.id].merge_roles(server, user.roles[server.id])
+      else
+        @users[user.id] = user
+      end
+    end
+
+    # Internal handler for GUILD_MEMBER_UPDATE
+    def update_guild_member(data)
+      user_id = data['user']['id'].to_i
+      user = @users[user_id]
+
+      server_id = data['guild_id'].to_i
+      server = @servers[server_id]
+
+      roles = []
+      data['roles'].each do |element|
+        role_id = element.to_i
+        roles << server.roles.find { |r| r.id == role_id }
+      end
+      user.update_roles(server, roles)
+    end
+
+    # Internal handler for GUILD_MEMBER_DELETE
+    def delete_guild_member(data)
+      user_id = data['user']['id'].to_i
+      user = @users[user_id]
+
+      server_id = data['guild_id'].to_i
+      server = @servers[server_id]
+
+      user.delete_roles(server_id)
+      server.delete_user(user_id)
     end
 
     # Internal handler for GUILD_ROLE_UPDATE
@@ -520,10 +566,20 @@ module Discordrb
 
         event = ChannelDeleteEvent.new(data, self)
         raise_event(event)
+      when 'GUILD_MEMBER_ADD'
+        add_guild_member(data)
+
+        event = GuildMemberAddEvent.new(data, self)
+        raise_event(event)
       when 'GUILD_MEMBER_UPDATE'
         update_guild_member(data)
 
         event = GuildMemberUpdateEvent.new(data, self)
+        raise_event(event)
+      when 'GUILD_MEMBER_DELETE'
+        delete_guild_member(data)
+
+        event = GuildMemberDeleteEvent.new(data, self)
         raise_event(event)
       when 'GUILD_ROLE_UPDATE'
         update_guild_role(data)

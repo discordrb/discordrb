@@ -66,6 +66,11 @@ module Discordrb
       end
     end
 
+    # Delete a specific server from the roles (in case a user leaves a server)
+    def delete_roles(server_id)
+      @roles.delete(server_id)
+    end
+
     # Determine if the user has permission to do an action
     # action is a permission from Permissions::Flags.
     # channel is the channel in which the action takes place (not applicable for server-wide actions).
@@ -348,6 +353,14 @@ module Discordrb
         overwrites = channel.permission_overwrites.reject { |id, _| id == role_id }
         channel.update_overwrites(overwrites)
       end
+    end
+
+    def add_user(user)
+      @members << user
+    end
+
+    def delete_user(user_id)
+      @members.reject! { |member| member.id == user_id }
     end
 
     def create_channel(name)
