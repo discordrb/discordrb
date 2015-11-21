@@ -33,7 +33,7 @@ module Discordrb::Events
   end
 
   # Generic event handler for member events
-  class GuildMemberHandler < EventHandler
+  class GuildMemberEventHandler < EventHandler
     def matches?(event)
       # Check for the proper event type
       return false unless event.is_a? GuildMemberAddEvent
@@ -53,11 +53,11 @@ module Discordrb::Events
   # Specialized subclasses
   # Member joins
   class GuildMemberAddEvent < GuildMemberEvent; end
-  class GuildMemberAddHandler < GuildMemberHandler; end
+  class GuildMemberAddEventHandler < GuildMemberEventHandler; end
 
   # Member is updated (e.g. name changed)
   class GuildMemberUpdateEvent < GuildMemberEvent; end
-  class GuildMemberUpdateHandler < GuildMemberHandler; end
+  class GuildMemberUpdateEventHandler < GuildMemberEventHandler; end
 
   # Member leaves
   class GuildMemberDeleteEvent < GuildMemberEvent
@@ -66,5 +66,5 @@ module Discordrb::Events
       @user = User.new(data['user'])
     end
   end
-  class GuildMemberDeleteHandler < GuildMemberHandler; end
+  class GuildMemberDeleteEventHandler < GuildMemberEventHandler; end
 end
