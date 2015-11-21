@@ -576,7 +576,7 @@ module Discordrb
 
         event = GuildMemberUpdateEvent.new(data, self)
         raise_event(event)
-      when 'GUILD_MEMBER_DELETE'
+      when 'GUILD_MEMBER_REMOVE'
         delete_guild_member(data)
 
         event = GuildMemberDeleteEvent.new(data, self)
