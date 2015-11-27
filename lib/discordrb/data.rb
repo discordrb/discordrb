@@ -72,8 +72,8 @@ module Discordrb
     end
 
     # Add an await for a message from this user
-    def await(key, &block)
-      @bot.add_await(key, MessageEvent, from: @id, &block)
+    def await(key, attributes = {}, &block)
+      @bot.add_await(key, MessageEvent, { from: @id }.merge(attributes), &block)
     end
 
     # Determine if the user has permission to do an action
@@ -227,8 +227,8 @@ module Discordrb
     end
 
     # Add an await for a message in this channel
-    def await(key, &block)
-      @bot.add_await(key, MessageEvent, in: @id, &block)
+    def await(key, attributes = {}, &block)
+      @bot.add_await(key, MessageEvent, { in: @id }.merge(attributes), &block)
     end
 
     alias_method :send, :send_message
@@ -275,8 +275,8 @@ module Discordrb
     end
 
     # Add an await for a message with the same user and channel
-    def await(key, &block)
-      @bot.add_await(key, MessageEvent, from: @author.id, in: @channel.id, &block)
+    def await(key, attributes = {}, &block)
+      @bot.add_await(key, MessageEvent, { from: @author.id, in: @channel.id }.merge(attributes), &block)
     end
   end
 
