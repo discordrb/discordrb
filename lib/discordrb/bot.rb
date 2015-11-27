@@ -267,6 +267,10 @@ module Discordrb
       register_event(GuildMemberDeleteEvent, attributes, block)
     end
 
+    def await(attributes = {}, &block)
+      register_event(AwaitEvent, attributes, block)
+    end
+
     def remove_handler(handler)
       clazz = event_class(handler.class)
       @event_handlers[clazz].delete(handler)
