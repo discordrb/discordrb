@@ -4,10 +4,10 @@ require 'discordrb/await'
 module Discordrb::Events
   # Event raised when an await is triggered
   class AwaitEvent
-    attr_reader :await
+    attr_reader :await, :event
     delegate :key, :type, :attributes, to: :await
 
-    def initialize(await, bot)
+    def initialize(await, event, bot)
       @await = await
       @bot = bot
     end
