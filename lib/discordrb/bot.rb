@@ -45,6 +45,8 @@ module Discordrb
 
       @channels = {}
       @users = {}
+
+      @awaits = {}
     end
 
     def run(async = false)
@@ -150,6 +152,11 @@ module Discordrb
 
     def send_file(channel_id, file)
       API.send_file(@token, channel_id, file)
+    end
+
+    def add_await(key, type, attributes, &block)
+      await = Await.new(self, key, type, attributes, block)
+      @awaits << await
     end
 
     def parse_mention(mention)
