@@ -12,7 +12,7 @@ module Discordrb
     end
 
     def match(event)
-      dummy_handler = bot.handler_class(@type).new(@attributes) {}
+      dummy_handler = @bot.handler_class(@type).new(@attributes) {}
       return nil unless dummy_handler.matches?(event)
 
       @block.call(event) if @block
