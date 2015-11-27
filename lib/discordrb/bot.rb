@@ -697,7 +697,7 @@ module Discordrb
         result = await.match(event)
         next unless result
 
-        await_event = Discordrb::Events::AwaitEvent.new(await, self)
+        await_event = Discordrb::Events::AwaitEvent.new(await, event, self)
         raise_event(await_event)
       end
     end
