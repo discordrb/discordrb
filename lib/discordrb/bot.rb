@@ -159,7 +159,7 @@ module Discordrb
     def add_await(key, type, attributes, &block)
       fail "You can't await an AwaitEvent!" if type == Discordrb::Events::AwaitEvent
       await = Await.new(self, key, type, attributes, block)
-      @awaits << await
+      @awaits[key] << await
     end
 
     def parse_mention(mention)
@@ -693,7 +693,7 @@ module Discordrb
     end
 
     def handle_awaits(event)
-      @awaits.each do |await|
+      @awaits.each do |_, await|
         result = await.match(event)
         next unless result
 
