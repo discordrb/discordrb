@@ -9,6 +9,7 @@ module Discordrb::Events
 
     def initialize(await, event, bot)
       @await = await
+      @event = event
       @bot = bot
     end
   end
