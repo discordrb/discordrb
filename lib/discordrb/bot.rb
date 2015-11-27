@@ -156,7 +156,7 @@ module Discordrb
       API.send_file(@token, channel_id, file)
     end
 
-    def add_await(key, type, attributes, &block)
+    def add_await(key, type, attributes = {}, &block)
       fail "You can't await an AwaitEvent!" if type == Discordrb::Events::AwaitEvent
       await = Await.new(self, key, type, attributes, block)
       @awaits[key] = await
