@@ -14,11 +14,13 @@ require 'discordrb/events/members'
 require 'discordrb/events/guild_role_create'
 require 'discordrb/events/guild_role_delete'
 require 'discordrb/events/guild_role_update'
+require 'discordrb/events/await'
 
 require 'discordrb/api'
 require 'discordrb/games'
 require 'discordrb/exceptions'
 require 'discordrb/data'
+require 'discordrb/await'
 
 module Discordrb
   # Represents a Discord bot, including servers, users, etc.
