@@ -677,9 +677,21 @@ module Discordrb
 
     def raise_event(event)
       debug("Raised a #{event.class}")
+      handle_awaits(event)
+
       handlers = @event_handlers[event.class]
       (handlers || []).each do |handler|
         handler.match(event)
+      end
+    end
+
+    def handle_awaits(event)
+      awaits.each do |await|
+        result = await.match(event)
+        next unless result
+
+        await_event = Discordrb::Events::AwaitEvent.new(await, self)
+        raise_event(await_event)
       end
     end
 
