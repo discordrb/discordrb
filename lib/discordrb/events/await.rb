@@ -17,7 +17,7 @@ module Discordrb::Events
   class AwaitEventHandler < EventHandler
     def matches?(event)
       # Check for the proper event type
-      return false unless event.is_a? TypingEvent
+      return false unless event.is_a? AwaitEvent
 
       [
         matches_all(@attributes[:key], event.key) { |a, e| a == e },
