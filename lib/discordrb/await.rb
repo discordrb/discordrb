@@ -13,9 +13,9 @@ module Discordrb
 
     def match(event)
       dummy_handler = @bot.handler_class(@type).new(@attributes, @bot)
-      return nil unless dummy_handler.matches?(event)
+      return [nil, nil] unless dummy_handler.matches?(event)
 
-      should_delete = true if (@block && @block.call(event) != false) || !block
+      should_delete = true if @block && @block.call(event) != false
 
       [@key, should_delete]
     end
