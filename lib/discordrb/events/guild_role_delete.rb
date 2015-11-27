@@ -4,8 +4,7 @@ require 'discordrb/data'
 module Discordrb::Events
   # Raised when a role is deleted from a server
   class GuildRoleDeleteEvent
-    attr_reader :id
-    attr_reader :server
+    attr_reader :id, :server
 
     def initialize(data, bot)
       # The role should already be deleted from the server's list

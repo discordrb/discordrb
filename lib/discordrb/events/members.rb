@@ -4,9 +4,7 @@ require 'discordrb/data'
 module Discordrb::Events
   # Generic subclass for server member events (add/update/delete)
   class GuildMemberEvent
-    attr_reader :user
-    attr_reader :roles
-    attr_reader :server
+    attr_reader :user, :roles, :server
 
     def initialize(data, bot)
       @server = bot.server(data['guild_id'].to_i)
