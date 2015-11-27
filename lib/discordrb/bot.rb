@@ -693,7 +693,7 @@ module Discordrb
     end
 
     def handle_awaits(event)
-      awaits.each do |await|
+      @awaits.each do |await|
         result = await.match(event)
         next unless result
 
