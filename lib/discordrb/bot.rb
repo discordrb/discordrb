@@ -263,6 +263,10 @@ module Discordrb
       puts "[DEBUG @ #{Time.now}] #{message}" if @debug || important
     end
 
+    def handler_class(event_class)
+      class_from_string(event_class.to_s + 'Handler')
+    end
+
     alias_method :<<, :add_handler
 
     private
@@ -672,10 +676,6 @@ module Discordrb
       return nil unless class_name.end_with? 'Handler'
 
       class_from_string(class_name[0..-8])
-    end
-
-    def handler_class(event_class)
-      class_from_string(event_class.to_s + 'Handler')
     end
   end
 end
