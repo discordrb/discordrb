@@ -694,8 +694,9 @@ module Discordrb
 
     def handle_awaits(event)
       @awaits.each do |_, await|
-        result = await.match(event)
-        next unless result
+        key, should_delete = await.match(event)
+        next unless key
+        @awaits.delete(await) if should_delete
 
         await_event = Discordrb::Events::AwaitEvent.new(await, event, self)
         raise_event(await_event)
