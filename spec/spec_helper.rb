@@ -28,7 +28,7 @@ RSpec.configure do |config|
     #     # => "be bigger than 2 and smaller than 4"
     # ...rather than:
     #     # => "be bigger than 2"
-    expectations.syntax = :should
+    expectations.syntax = [:should, :expect]
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true
   end
 
