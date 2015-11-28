@@ -142,6 +142,10 @@ module Discordrb
   class Channel
     attr_reader :name, :server, :type, :id, :is_private, :recipient, :topic, :position, :permission_overwrites
 
+    def private?
+      @is_private
+    end
+
     def initialize(data, bot, server = nil)
       @bot = bot
 
