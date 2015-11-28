@@ -97,4 +97,28 @@ describe Discordrb::Events do
       Discordrb::Events.matches_all(not!([1, 2, 3]), 4) { |a, e| a == e }.should be_truthy
     end
   end
+
+  describe Discordrb::Events::EventHandler do
+    describe 'matches?' do
+      it 'should raise an error' do
+        expect { Discordrb::Events::EventHandler.new({}, nil).matches?(nil) }.to raise_error
+      end
+    end
+  end
+
+  describe Discordrb::Events::TrueEventHandler do
+    describe 'matches?' do
+      it 'should return true' do
+        Discordrb::Events::TrueEventHandler.new({}, nil).matches?(nil).should == true
+      end
+
+      it 'should always call the block given' do
+        expect { |b| Discordrb::Events::TrueEventHandler.new({}, b).match(nil) }.to yield_control
+        expect { |b| Discordrb::Events::TrueEventHandler.new({}, b).match(1) }.to yield_control
+        expect { |b| Discordrb::Events::TrueEventHandler.new({}, b).match(1) }.to yield_with_args(1)
+        expect { |b| Discordrb::Events::TrueEventHandler.new({ a: b }, b).match(1) }.to yield_control
+        expect { |b| Discordrb::Events::TrueEventHandler.new(nil, b).match(1) }.to yield_control
+      end
+    end
+  end
 end
