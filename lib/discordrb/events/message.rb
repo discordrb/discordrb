@@ -78,7 +78,8 @@ module Discordrb::Events
           end
         end,
         matches_all(@attributes[:after], event.timestamp) { |a, e| a > e },
-        matches_all(@attributes[:before], event.timestamp) { |a, e| a < e }
+        matches_all(@attributes[:before], event.timestamp) { |a, e| a < e },
+        matches_all(@attributes[:private], event.channel.private?) { |a, e| !e == !a }
       ].reduce(true, &:&)
     end
   end
