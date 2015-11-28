@@ -30,9 +30,9 @@ module Discordrb::Events
       return false unless event.is_a? MessageEvent
 
       [
-        matches_all(@attributes[:starting_with], event.content) { |a, e| e.start_with? a },
-        matches_all(@attributes[:ending_with], event.content) { |a, e| e.end_with? a },
-        matches_all(@attributes[:containing], event.content) { |a, e| e.include? a },
+        matches_all(@attributes[:starting_with] || @attributes[:start_with], event.content) { |a, e| e.start_with? a },
+        matches_all(@attributes[:ending_with] || @attributes[:end_with], event.content) { |a, e| e.end_with? a },
+        matches_all(@attributes[:containing] || @attributes[:contains], event.content) { |a, e| e.include? a },
         matches_all(@attributes[:in], event.channel) do |a, e|
           if a.is_a? String
             # Make sure to remove the "#" from channel names in case it was specified
@@ -52,7 +52,7 @@ module Discordrb::Events
             a == e
           end
         end,
-        matches_all(@attributes[:with_text], event.content) { |a, e| e == a },
+        matches_all(@attributes[:with_text] || @attributes[:content], event.content) { |a, e| e == a },
         matches_all(@attributes[:after], event.timestamp) { |a, e| a > e },
         matches_all(@attributes[:before], event.timestamp) { |a, e| a < e }
       ].reduce(true, &:&)
