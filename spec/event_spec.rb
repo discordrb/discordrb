@@ -101,7 +101,7 @@ describe Discordrb::Events do
   describe Discordrb::Events::EventHandler do
     describe 'matches?' do
       it 'should raise an error' do
-        expect { Discordrb::Events::EventHandler.new({}, nil).matches?(nil) }.to raise_error
+        expect { Discordrb::Events::EventHandler.new({}, nil).matches?(nil) }.to raise_error(RuntimeError)
       end
     end
   end
@@ -113,11 +113,15 @@ describe Discordrb::Events do
       end
 
       it 'should always call the block given' do
-        expect { |b| Discordrb::Events::TrueEventHandler.new({}, b).match(nil) }.to yield_control
-        expect { |b| Discordrb::Events::TrueEventHandler.new({}, b).match(1) }.to yield_control
-        expect { |b| Discordrb::Events::TrueEventHandler.new({}, b).match(1) }.to yield_with_args(1)
-        expect { |b| Discordrb::Events::TrueEventHandler.new({ a: b }, b).match(1) }.to yield_control
-        expect { |b| Discordrb::Events::TrueEventHandler.new(nil, b).match(1) }.to yield_control
+        count = 0
+        Discordrb::Events::TrueEventHandler.new({}, proc { count += 1 }).match(nil)
+        Discordrb::Events::TrueEventHandler.new({}, proc { count += 2 }).match(1)
+        Discordrb::Events::TrueEventHandler.new({}, proc do |e|
+          e.should eq(1)
+          count += 4
+        end).match(1)
+        Discordrb::Events::TrueEventHandler.new({ a: :b }, proc { count += 8 }).match(1)
+        Discordrb::Events::TrueEventHandler.new(nil, proc { count += 16 }).match(1)
       end
     end
   end
