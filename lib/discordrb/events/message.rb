@@ -92,4 +92,7 @@ module Discordrb::Events
 
   class MentionEvent < MessageEvent; end
   class MentionEventHandler < MessageEventHandler; end
+
+  class PrivateMessageEvent < MessageEvent; end
+  class PrivateMessageEventHandler < MessageEventHandler; end
 end
