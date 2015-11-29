@@ -95,3 +95,25 @@ RSpec.configure do |config|
   Kernel.srand config.seed
 =end
 end
+
+# Keeps track of what events are run; if one isn't run it will fail
+class EventTracker
+  def initialize(messages)
+    @messages = messages
+    @tracker = [nil] * @messages.length
+  end
+
+  def track(num)
+    @tracker[num - 1] = true
+  end
+
+  def summary
+    @tracker.each_with_index do |tracked, num|
+      fail "Not executed: #{@messages[num]}" unless tracked
+    end
+  end
+end
+
+def track(*messages)
+  EventTracker.new(messages)
+end
