@@ -143,7 +143,7 @@ module Discordrb
     attr_reader :name, :server, :type, :id, :is_private, :recipient, :topic, :position, :permission_overwrites
 
     def private?
-      @is_private
+      @server.nil?
     end
 
     def initialize(data, bot, server = nil)
