@@ -588,6 +588,11 @@ module Discordrb
           event = MentionEvent.new(message, self)
           raise_event(event)
         end
+
+        if message.channel.private?
+          event = PrivateMessageEvent.new(message, self)
+          raise_event(event)
+        end
       when 'TYPING_START'
         start_typing(data)
 
