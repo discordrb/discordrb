@@ -271,6 +271,12 @@ module Discordrb
       register_event(AwaitEvent, attributes, block)
     end
 
+    def pm(attributes = {}, &block)
+      register_event(PrivateMessageEvent, attributes, block)
+    end
+
+    alias_method :private_message, :pm
+
     def remove_handler(handler)
       clazz = event_class(handler.class)
       @event_handlers[clazz].delete(handler)
