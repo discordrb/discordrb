@@ -17,6 +17,10 @@ module Discordrb::Events
       @message.channel.send_message(content)
     end
 
+    def from_bot?
+      @message.user.id == @bot.bot_user.id
+    end
+
     alias_method :user, :author
     alias_method :text, :content
     alias_method :send, :send_message
@@ -57,6 +61,8 @@ module Discordrb::Events
             a.delete('#') == e.name
           elsif a.is_a? Fixnum
             a == e.id
+          elsif a == ':bot'
+            e.from_bot?
           else
             a == e
           end
