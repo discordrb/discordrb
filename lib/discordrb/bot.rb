@@ -590,7 +590,7 @@ module Discordrb
 
         message = Message.new(data, self)
 
-        unless message.from_bot? && !should_parse_self
+        unless message.from_bot? && should_parse_self
           event = MessageEvent.new(message, self)
           raise_event(event)
 
