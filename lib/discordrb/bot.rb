@@ -28,6 +28,7 @@ module Discordrb
     include Discordrb::Events
 
     attr_reader :bot_user, :token, :users, :servers
+    attr_accessor :should_parse_self
 
     def initialize(email, password, debug = false)
       # Make sure people replace the login details in the example files...
@@ -37,6 +38,7 @@ module Discordrb
       end
 
       @debug = debug
+      @should_parse_self = false
 
       @email = email
       @password = password
@@ -587,6 +589,9 @@ module Discordrb
         create_message(data)
 
         message = Message.new(data, self)
+
+        return if message.from_bot? && !should_parse_self
+
         event = MessageEvent.new(message, self)
         raise_event(event)
 
