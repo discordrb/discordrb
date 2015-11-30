@@ -61,8 +61,6 @@ module Discordrb::Events
             a.delete('#') == e.name
           elsif a.is_a? Fixnum
             a == e.id
-          elsif a == ':bot'
-            e.from_bot?
           else
             a == e
           end
@@ -72,6 +70,8 @@ module Discordrb::Events
             a == e.name
           elsif a.is_a? Fixnum
             a == e.id
+          elsif a == :bot
+            e.from_bot?
           else
             a == e
           end
