@@ -289,7 +289,7 @@ module Discordrb
     end
 
     def from_bot?
-      @user.bot?
+      @author.bot?
     end
   end
 
