@@ -590,19 +590,19 @@ module Discordrb
 
         message = Message.new(data, self)
 
-        unless message.from_bot? && should_parse_self
-          event = MessageEvent.new(message, self)
+        return if message.from_bot? && !should_parse_self
+
+        event = MessageEvent.new(message, self)
+        raise_event(event)
+
+        if message.mentions.any? { |user| user.id == @bot_user.id }
+          event = MentionEvent.new(message, self)
           raise_event(event)
+        end
 
-          if message.mentions.any? { |user| user.id == @bot_user.id }
-            event = MentionEvent.new(message, self)
-            raise_event(event)
-          end
-
-          if message.channel.private?
-            event = PrivateMessageEvent.new(message, self)
-            raise_event(event)
-          end
+        if message.channel.private?
+          event = PrivateMessageEvent.new(message, self)
+          raise_event(event)
         end
       when 'TYPING_START'
         start_typing(data)
