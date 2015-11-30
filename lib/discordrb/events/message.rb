@@ -71,7 +71,7 @@ module Discordrb::Events
           elsif a.is_a? Fixnum
             a == e.id
           elsif a == :bot
-            e.from_bot?
+            e.bot?
           else
             a == e
           end

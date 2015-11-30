@@ -76,6 +76,11 @@ module Discordrb
       @bot.add_await(key, MessageEvent, { from: @id }.merge(attributes), &block)
     end
 
+    # Is the user the bot?
+    def bot?
+      @bot.bot_user.id == @id
+    end
+
     # Determine if the user has permission to do an action
     # action is a permission from Permissions::Flags.
     # channel is the channel in which the action takes place (not applicable for server-wide actions).
@@ -281,6 +286,10 @@ module Discordrb
     # Add an await for a message with the same user and channel
     def await(key, attributes = {}, &block)
       @bot.add_await(key, MessageEvent, { from: @author.id, in: @channel.id }.merge(attributes), &block)
+    end
+
+    def from_bot?
+      @user.bot?
     end
   end
 
