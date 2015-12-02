@@ -275,6 +275,13 @@ module Discordrb
       Invite.new(JSON.parse(response), @bot)
     end
 
+    # Starts typing, which displays the typing indicator on the client for five seconds.
+    # If you want to keep typing you'll have to resend this every five seconds. (An abstraction
+    # for this will eventually be coming)
+    def start_typing
+      API.start_typing(@bot.token, @id)
+    end
+
     alias_method :send, :send_message
     alias_method :message, :send_message
     alias_method :invite, :make_invite
