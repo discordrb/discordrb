@@ -167,6 +167,10 @@ module Discordrb
 
       @code = data['code']
     end
+
+    def delete
+      API.delete_invite(@bot.token, @code)
+    end
   end
 
   # A Discord channel, including data like the topic
