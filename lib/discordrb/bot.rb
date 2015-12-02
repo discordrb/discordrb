@@ -114,6 +114,7 @@ module Discordrb
     end
 
     def resolve_invite_code(invite)
+      invite = invite.code if invite.is_a? Discordrb::Invite
       invite = invite[invite.rindex('/') + 1..-1] if invite.start_with?('http') || invite.start_with?('discord.gg')
       invite
     end
