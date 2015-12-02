@@ -113,10 +113,20 @@ module Discordrb
       @private_channels[id] = channel
     end
 
-    def join(invite)
+    def resolve_invite_code(invite)
       invite = invite[invite.rindex('/') + 1..-1] if invite.start_with?('http') || invite.start_with?('discord.gg')
+      invite
+    end
+
+    def join(invite)
+      invite = resolve_invite_code(invite)
       resolved = JSON.parse(API.resolve_invite(@token, invite))['code']
       API.join_server(@token, resolved)
+    end
+
+    def delete_invite(code)
+      invite = resolve_invite_code(code)
+      API.delete_invite(@token, invite)
     end
 
     def user(id)
