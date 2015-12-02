@@ -145,7 +145,7 @@ module Discordrb
 
   # A Discord invite to a channel
   class Invite
-    attr_reader :channel, :uses, :inviter, :temporary, :revoked, :xkcd
+    attr_reader :channel, :uses, :inviter, :temporary, :revoked, :xkcd, :code
     alias_method :max_uses, :uses
     alias_method :user, :inviter
 
@@ -164,6 +164,8 @@ module Discordrb
       @temporary = data['temporary']
       @revoked = data['revoked']
       @xkcd = data['xkcdpass']
+
+      @code = data['code']
     end
   end
 
