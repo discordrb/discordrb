@@ -160,7 +160,7 @@ module Discordrb
 
       @channel = Channel.new(data['channel'], bot)
       @uses = data['uses']
-      @inviter = @bot.user(data['inviter']['id'].to_i) || User.new(data['inviter'])
+      @inviter = @bot.user(data['inviter']['id'].to_i) || User.new(data['inviter'], bot)
       @temporary = data['temporary']
       @revoked = data['revoked']
       @xkcd = data['xkcdpass']
