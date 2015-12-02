@@ -158,7 +158,7 @@ module Discordrb
     def initialize(data, bot)
       @bot = bot
 
-      @channel = @bot.channel(data['channel_id'].to_i)
+      @channel = Channel.new(data['channel'], bot)
       @uses = data['uses']
       @inviter = @bot.user(data['inviter']['id'].to_i) || User.new(data['inviter'])
       @temporary = data['temporary']
