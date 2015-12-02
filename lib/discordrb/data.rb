@@ -264,8 +264,14 @@ module Discordrb
       @bot.add_await(key, MessageEvent, { in: @id }.merge(attributes), &block)
     end
 
+    def make_invite(max_age = 0, max_uses = 0, temporary = false, xkcd = false)
+      response = API.create_invite(@bot.token, @id, max_age, max_uses, temporary, xkcd)
+      Invite.new(response, @bot)
+    end
+
     alias_method :send, :send_message
     alias_method :message, :send_message
+    alias_method :invite, :make_invite
 
     private
 
