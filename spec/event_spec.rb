@@ -133,7 +133,7 @@ describe Discordrb::Events do
         event = double('Discordrb::Events::MessageEvent')
         p event.inspect
         Discordrb::Events::MessageEventHandler.new({}, proc { t.track(1) }).match(event)
-        t.summary
+        # t.summary
       end
     end
   end
