@@ -143,6 +143,30 @@ module Discordrb
     end
   end
 
+  # A Discord invite to a channel
+  class Invite
+    attr_reader :channel, :uses, :inviter, :temporary, :revoked, :xkcd
+    alias_method :max_uses, :uses
+    alias_method :user, :inviter
+
+    alias_method :temporary?, :temporary
+    alias_method :revoked?, :revoked
+    alias_method :xkcd?, :xkcd
+
+    delegate :server, to: :channel
+
+    def initialize(data, bot)
+      @bot = bot
+
+      @channel = @bot.channel(data['channel_id'].to_i)
+      @uses = data['uses']
+      @inviter = @bot.user(data['inviter']['id'].to_i) || User.new(data['inviter'])
+      @temporary = data['temporary']
+      @revoked = data['revoked']
+      @xkcd = data['xkcdpass']
+    end
+  end
+
   # A Discord channel, including data like the topic
   class Channel
     attr_reader :name, :server, :type, :id, :is_private, :recipient, :topic, :position, :permission_overwrites
