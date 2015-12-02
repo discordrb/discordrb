@@ -19,7 +19,9 @@ module Discordrb::Games
 
   module_function
 
-  attr_reader :games
+  def games
+    @games
+  end
 
   def find_game(name_or_id)
     return name_or_id if name_or_id.is_a? Game
