@@ -7,6 +7,7 @@ GAMES_LIST_FILE_PATH = 'lib/discordrb/games_list.rb'
 
 raw_json = open(GAMES_LIST_URL).read
 puts "Loaded #{raw_json.length} bytes from #{GAMES_LIST_URL}"
+
 parsed = JSON.parse(raw_json)
 puts "Loaded #{parsed.length} games"
 
@@ -16,3 +17,4 @@ end
 "
 
 File.write(GAMES_LIST_FILE_PATH, list)
+puts "Successfully wrote games list to #{GAMES_LIST_FILE_PATH}"
