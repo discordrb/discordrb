@@ -7,9 +7,9 @@ module Discordrb::Games
     attr_reader :id, :name, :executables
 
     def initialize(hash)
-      @id = hash[:id]
-      @name = hash[:name]
-      @executables = hash[:executables]
+      @id = hash[:id] || hash['id']
+      @name = hash[:name] || hash['name']
+      @executables = hash[:executables] || hash['executables']
     end
   end
 
