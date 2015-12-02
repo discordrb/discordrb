@@ -148,6 +148,14 @@ module Discordrb::API
     )
   end
 
+  # Delete an invite by ID
+  def delete_invite(token, id)
+    RestClient.delete(
+      "#{APIBASE}/invites/#{id}",
+      Authorization: token
+    )
+  end
+
   # Send a message to a channel
   def send_message(token, channel_id, message, mentions = [], tts = false)
     RestClient.post(
