@@ -28,7 +28,7 @@ module Discordrb
   class Bot
     include Discordrb::Events
 
-    attr_reader :bot_user, :token, :users, :servers
+    attr_reader :bot_user, :token, :users, :servers, :event_threads
     attr_accessor :should_parse_self
 
     def initialize(email, password, debug = false)
@@ -52,6 +52,9 @@ module Discordrb
       @users = {}
 
       @awaits = {}
+
+      @event_threads = []
+      @current_thread = 0
     end
 
     def run(async = false)
@@ -793,8 +796,11 @@ module Discordrb
     end
 
     def call_event(handler, event)
-      Thread.new do
+      t = Thread.new do
+        @event_threads << t
+        Thread.current[:name] = "et-#{@current_thread += 1}"
         handler.call(event)
+        @event_threads.delete(t)
       end
     end
 
