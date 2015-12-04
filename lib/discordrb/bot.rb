@@ -14,6 +14,7 @@ require 'discordrb/events/members'
 require 'discordrb/events/guild_role_create'
 require 'discordrb/events/guild_role_delete'
 require 'discordrb/events/guild_role_update'
+require 'discordrb/events/guilds'
 require 'discordrb/events/await'
 
 require 'discordrb/api'
