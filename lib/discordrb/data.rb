@@ -500,11 +500,11 @@ module Discordrb
     end
 
     def update_data(new_data)
-      @name = new_data[:name] || @name
-      @region = new_data[:region] || @region
-      @icon = new_data[:icon] || @icon
-      @afk_channel_id = new_data[:afk_channel_id] || @afk_channel_id
-      @afk_timeout = new_data[:afk_timeout] || @afk_timeout
+      @name = new_data[:name] || new_data['name'] || @name
+      @region = new_data[:region] || new_data['region'] || @region
+      @icon = new_data[:icon] || new_data['icon'] || @icon
+      @afk_channel_id = new_data[:afk_channel_id] || new_data['afk_channel_id'].to_i || @afk_channel_id
+      @afk_timeout = new_data[:afk_timeout] || new_data['afk_timeout'].to_i || @afk_timeout
     end
 
     private
