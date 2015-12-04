@@ -67,6 +67,16 @@ module Discordrb::API
     )
   end
 
+  # Update a server
+  def update_server(token, server_id, name, region, icon, afk_channel_id, afk_timeout)
+    RestClient.patch(
+      "#{APIBASE}/guilds/#{server_id}",
+      { 'name' => name, 'region' => region, 'icon' => icon, 'afk_channel_id' => afk_channel_id, 'afk_timeout' => afk_timeout }.to_json,
+      Authorization: token,
+      content_type: :json
+    )
+  end
+
   # Delete a server
   def delete_server(token, server_id)
     RestClient.delete(
