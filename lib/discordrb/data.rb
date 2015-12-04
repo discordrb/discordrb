@@ -365,7 +365,7 @@ module Discordrb
       @roles = []
       @roles_by_id = {}
       roles.each do |element|
-        role = Role.new(element, bot)
+        role = Role.new(element, @bot)
         @roles << role
         @roles_by_id[role.id] = role
       end
@@ -376,7 +376,7 @@ module Discordrb
       @members_by_id = {}
 
       members.each do |element|
-        user = User.new(element['user'], bot)
+        user = User.new(element['user'], @bot)
         @members << user
         @members_by_id[user.id] = user
         user_roles = []
@@ -408,7 +408,7 @@ module Discordrb
 
       return unless channels
       channels.each do |element|
-        channel = Channel.new(element, bot, self)
+        channel = Channel.new(element, @bot, self)
         @channels << channel
         @channels_by_id[channel.id] = channel
       end
