@@ -196,6 +196,24 @@ module Discordrb
       @hoist = other.hoist
       @color = other.color
     end
+
+    def update_data(new_data)
+      @name = new_data[:name] || new_data['name'] || @name
+      @hoist = new_data['hoist'] unless new_data['hoist'].nil?
+      @hoist = new_data[:hoist] unless new_data[:hoist].nil?
+      @color = new_data[:color] || ColorRGB.new(new_data['color']) || @color
+    end
+
+    private
+
+    def update_role_data(new_data)
+      API.update_role(@bot.token, @server.id, @id,
+                      new_data[:name] || @name,
+                      (new_data[:color] || @color).combined,
+                      new_data[:hoist].nil? ? new_data[:hoist] : @hoist,
+                      (new_data[:permissions] || @permissions).bits)
+      update_data(new_data)
+    end
   end
 
   # A Discord invite to a channel
