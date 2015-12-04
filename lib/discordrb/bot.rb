@@ -288,6 +288,18 @@ module Discordrb
       register_event(GuildMemberDeleteEvent, attributes, block)
     end
 
+    def server_create(attributes = {}, &block)
+      register_event(GuildCreateEvent, attributes, block)
+    end
+
+    def server_update(attributes = {}, &block)
+      register_event(GuildUpdateEvent, attributes, block)
+    end
+
+    def server_delete(attributes = {}, &block)
+      register_event(GuildDeleteEvent, attributes, block)
+    end
+
     def await(attributes = {}, &block)
       register_event(AwaitEvent, attributes, block)
     end
