@@ -805,8 +805,13 @@ module Discordrb
       t = Thread.new do
         @event_threads << t
         Thread.current[:discordrb_name] = "et-#{@current_thread += 1}"
-        handler.call(event)
-        @event_threads.delete(t)
+        begin
+          handler.call(event)
+        rescue => e
+          log_exception(e)
+        ensure
+          @event_threads.delete(t)
+        end
       end
     end
 

@@ -125,13 +125,16 @@ module Discordrb::Commands
       t = Thread.new do
         @event_threads << t
         Thread.current[:discordrb_name] = "ct-#{@current_thread += 1}"
-
-        debug("Parsing command chain #{chain}")
-        result = (@attributes[:advanced_functionality]) ? CommandChain.new(chain, self).execute(event) : simple_execute(chain, event)
-        result = event.saved_message + (result || '')
-        event.respond result if result
-
-        @event_threads.delete(t)
+        begin
+          debug("Parsing command chain #{chain}")
+          result = (@attributes[:advanced_functionality]) ? CommandChain.new(chain, self).execute(event) : simple_execute(chain, event)
+          result = event.saved_message + (result || '')
+          event.respond result if result
+        rescue => e
+          log_exception(e)
+        ensure
+          @event_threads.delete(t)
+        end
       end
     end
 
