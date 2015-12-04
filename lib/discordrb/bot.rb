@@ -503,7 +503,7 @@ module Discordrb
 
     # Internal handler for GUILD_UPDATE
     def update_guild(data)
-      @servers[data['id']].update_data(data)
+      @servers[data['id'].to_i].update_data(data)
     end
 
     # Internal handler for GUILD_DELETE
