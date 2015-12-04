@@ -195,7 +195,7 @@ module Discordrb
     def initialize(data, bot, server = nil)
       @bot = bot
       @server = server
-      @permissions = Permissions.new(data['permissions'])
+      @permissions = Permissions.new(data['permissions'], RoleWriter.new(self, @bot.token))
       @name = data['name']
       @id = data['id'].to_i
       @hoist = data['hoist']
