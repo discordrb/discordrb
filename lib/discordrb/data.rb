@@ -601,9 +601,10 @@ module Discordrb
 
   # A colour (red, green and blue values). Used for role colours
   class ColorRGB
-    attr_reader :red, :green, :blue
+    attr_reader :red, :green, :blue, :combined
 
     def initialize(combined)
+      @combined = combined
       @red = (combined >> 16) & 0xFF
       @green = (combined >> 8) & 0xFF
       @blue = combined & 0xFF
