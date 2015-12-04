@@ -475,6 +475,30 @@ module Discordrb
       API.delete_server(@bot.token, @id)
     end
 
+    def name=(name)
+      update_server_data(name: name)
+    end
+
+    def region=(region)
+      update_server_data(region: region.to_s)
+    end
+
+    def icon=(icon)
+      update_server_data(icon: icon)
+    end
+
+    def afk_channel=(afk_channel)
+      update_server_data(afk_channel_id: afk_channel.id)
+    end
+
+    def afk_channel_id=(afk_channel_id)
+      update_server_data(afk_channel_id: afk_channel_id)
+    end
+
+    def afk_timeout=(afk_timeout)
+      update_server_data(afk_timeout: afk_timeout)
+    end
+
     private
 
     def update_server_data(new_data)
