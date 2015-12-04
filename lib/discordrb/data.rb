@@ -233,6 +233,11 @@ module Discordrb
       @permissions.bits = packed if update_perms
     end
 
+    def delete
+      API.delete_role(@bot.token, @server.id, @id)
+      @server.delete_role(@id)
+    end
+
     private
 
     def update_role_data(new_data)
