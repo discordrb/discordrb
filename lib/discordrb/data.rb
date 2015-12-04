@@ -464,7 +464,7 @@ module Discordrb
       @roles = []
       @roles_by_id = {}
       roles.each do |element|
-        role = Role.new(element, @bot)
+        role = Role.new(element, @bot, self)
         @roles << role
         @roles_by_id[role.id] = role
       end
