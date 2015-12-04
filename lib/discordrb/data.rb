@@ -121,6 +121,54 @@ module Discordrb
     end
   end
 
+  # A class that represents the bot user itself and has methods to change stuff
+  class Profile < User
+    def initialize(data, bot, email, password)
+      super(data, bot)
+      @email = email
+      @password = password
+    end
+
+    def bot?
+      true
+    end
+
+    def username=(username)
+      update_server_data(username: username)
+    end
+
+    def email=(email)
+      update_server_data(email: email)
+    end
+
+    def password=(password)
+      update_server_data(new_password: password)
+    end
+
+    def avatar=(avatar)
+      update_server_data(avatar: avatar)
+    end
+
+    def update_data(new_data)
+      @email = new_data[:email] || @email
+      @password = new_data[:new_password] || @password
+      @username = new_data[:username] || @username
+      @avatar = new_data[:avatar] || @avatar
+    end
+
+    private
+
+    def update_server_data(new_data)
+      API.update_user(@bot.token,
+                      new_data[:email] || @email,
+                      @password,
+                      new_data[:username] || @username,
+                      new_data[:avatar] || @avatar,
+                      new_data[:new_password] || nil)
+      update_data(new_data)
+    end
+  end
+
   # A Discord role that contains permissions and applies to certain users
   class Role
     attr_reader :permissions, :name, :id, :hoist, :color
