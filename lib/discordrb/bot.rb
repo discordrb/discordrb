@@ -320,6 +320,31 @@ module Discordrb
 
     private
 
+    #######     ###     ######  ##     ## ########
+    ##    ##   ## ##   ##    ## ##     ## ##
+    ##        ##   ##  ##       ##     ## ##
+    ##       ##     ## ##       ######### ######
+    ##       ######### ##       ##     ## ##
+    ##    ## ##     ## ##    ## ##     ## ##
+    #######  ##     ##  ######  ##     ## ########
+
+    def add_server(data)
+      server = Server.new(data, self)
+      @servers[server.id] = server
+
+      # Initialize users
+      server.members.each do |member|
+        if @users[member.id]
+          # If the user is already cached, just add the new roles
+          @users[member.id].merge_roles(server, member.roles[server.id])
+        else
+          @users[member.id] = member
+        end
+      end
+
+      server
+    end
+
     ### ##    ## ######## ######## ########  ##    ##    ###    ##        ######
     ##  ###   ##    ##    ##       ##     ## ###   ##   ## ##   ##       ##    ##
     ##  ####  ##    ##    ##       ##     ## ####  ##  ##   ##  ##       ##
@@ -574,18 +599,7 @@ module Discordrb
         # Initialize servers
         @servers = {}
         data['guilds'].each do |element|
-          server = Server.new(element, self)
-          @servers[server.id] = server
-
-          # Initialize users
-          server.members.each do |member|
-            if @users[member.id]
-              # If the user is already cached, just add the new roles
-              @users[member.id].merge_roles(server, member.roles[server.id])
-            else
-              @users[member.id] = member
-            end
-          end
+          add_server(element)
 
           # Save the bot user
           @bot_user = @users[bot_user_id]
@@ -683,6 +697,9 @@ module Discordrb
 
         event = GuildRoleDeleteEvent.new(data, self)
         raise_event(event)
+      when 'GUILD_CREATE'
+      when 'GUILD_UPDATE'
+      when 'GUILD_DELETE'
       end
     rescue Exception => e
       debug("Exception: #{e.inspect}", true)
