@@ -562,7 +562,9 @@ module Discordrb
 
     def create_role
       response = API.create_role(@bot.token, @id)
-      Role.new(JSON.parse(response), @bot)
+      role = Role.new(JSON.parse(response), @bot)
+      @roles << role
+      role
     end
 
     def ban(user, message_days = 0)
