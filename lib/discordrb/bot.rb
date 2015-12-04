@@ -28,7 +28,7 @@ module Discordrb
   class Bot
     include Discordrb::Events
 
-    attr_reader :bot_user, :token, :users, :servers, :event_threads
+    attr_reader :bot_user, :token, :users, :servers, :event_threads, :profile
     attr_accessor :should_parse_self
 
     def initialize(email, password, debug = false)
@@ -641,6 +641,7 @@ module Discordrb
         debug("Desired heartbeat_interval: #{@heartbeat_interval}")
 
         bot_user_id = data['user']['id'].to_i
+        @profile = Profile.new(data['user'], self, @email, @password)
 
         # Initialize servers
         @servers = {}
