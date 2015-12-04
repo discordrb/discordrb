@@ -179,6 +179,7 @@ module Discordrb
   # A Discord role that contains permissions and applies to certain users
   class Role
     attr_reader :permissions, :name, :id, :hoist, :colour
+    alias_method :color, :colour
 
     # Class that writes data for a Permissions object
     class RoleWriter
@@ -227,6 +228,8 @@ module Discordrb
     def colour=(colour)
       update_role_data(colour: colour)
     end
+
+    alias_method :color=, :colour=
 
     def packed=(packed, update_perms = true)
       update_role_data(permissions: packed)
@@ -646,4 +649,6 @@ module Discordrb
       @blue = combined & 0xFF
     end
   end
+
+  ColorRGB = ColourRGB
 end
