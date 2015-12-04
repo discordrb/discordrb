@@ -120,18 +120,18 @@ module Discordrb::API
   end
 
   # Join a server using an invite
-  def join_server(token, invite_id)
+  def join_server(token, invite_code)
     RestClient.post(
-      "#{APIBASE}/invite/#{invite_id}",
+      "#{APIBASE}/invite/#{invite_code}",
       nil,
       Authorization: token
     )
   end
 
   # Resolve an invite
-  def resolve_invite(token, code)
+  def resolve_invite(token, invite_code)
     RestClient.get(
-      "#{APIBASE}/invite/#{code}",
+      "#{APIBASE}/invite/#{invite_code}",
       Authorization: token
     )
   end
@@ -147,19 +147,19 @@ module Discordrb::API
   end
 
   # Create an instant invite from a server or a channel id
-  def create_invite(token, id, max_age = 0, max_uses = 0, temporary = false, xkcd = false)
+  def create_invite(token, channel_id, max_age = 0, max_uses = 0, temporary = false, xkcd = false)
     RestClient.post(
-      "#{APIBASE}/channels/#{id}/invites",
+      "#{APIBASE}/channels/#{channel_id}/invites",
       { 'max_age' => max_age, 'max_uses' => max_uses, 'temporary' => temporary, 'xkcdpass' => xkcd }.to_json,
       Authorization: token,
       content_type: :json
     )
   end
 
-  # Delete an invite by ID
-  def delete_invite(token, id)
+  # Delete an invite by code
+  def delete_invite(token, code)
     RestClient.delete(
-      "#{APIBASE}/invites/#{id}",
+      "#{APIBASE}/invites/#{code}",
       Authorization: token
     )
   end
