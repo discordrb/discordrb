@@ -175,6 +175,14 @@ module Discordrb
       @awaits[key] = await
     end
 
+    # Regions: :london, :amsterdam, :frankfurt, :us-east, :us-west, :singapore, :sydney
+    def create_server(name, region)
+      response = API.create_server(@token, name, region)
+      id = JSON.parse(response)['guild']['id'].to_i
+      sleep 0.1 until @servers[id]
+      @servers[id]
+    end
+
     def parse_mention(mention)
       # Mention format: <@id>
       return nil unless /\<@(?<id>\d+)\>?/ =~ mention
