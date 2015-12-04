@@ -70,7 +70,7 @@ module Discordrb
       @heartbeat_interval = 1
       @heartbeat_active = false
       @heartbeat_thread = Thread.new do
-        Thread.current[:name] = 'heartbeat'
+        Thread.current[:discordrb_name] = 'heartbeat'
         loop do
           sleep @heartbeat_interval
           send_heartbeat if @heartbeat_active
@@ -78,7 +78,7 @@ module Discordrb
       end
 
       @ws_thread = Thread.new do
-        Thread.current[:name] = 'websocket'
+        Thread.current[:discordrb_name] = 'websocket'
         loop do
           websocket_connect
           debug('Disconnected! Attempting to reconnect in 5 seconds.')
@@ -329,7 +329,7 @@ module Discordrb
     end
 
     def debug(message, important = false)
-      puts "[DEBUG : #{Thread.current[:name]} @ #{Time.now}] #{message}" if @debug || important
+      puts "[DEBUG : #{Thread.current[:discordrb_name]} @ #{Time.now}] #{message}" if @debug || important
     end
 
     def handler_class(event_class)
@@ -800,7 +800,7 @@ module Discordrb
     def call_event(handler, event)
       t = Thread.new do
         @event_threads << t
-        Thread.current[:name] = "et-#{@current_thread += 1}"
+        Thread.current[:discordrb_name] = "et-#{@current_thread += 1}"
         handler.call(event)
         @event_threads.delete(t)
       end
