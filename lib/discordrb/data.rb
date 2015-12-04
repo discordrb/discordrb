@@ -368,6 +368,7 @@ module Discordrb
       @members = []
       @members_by_id = {}
 
+      return unless members
       members.each do |element|
         user = User.new(element['user'], @bot)
         @members << user
