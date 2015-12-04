@@ -478,13 +478,17 @@ module Discordrb
     private
 
     def update_server_data(new_data)
-      API.update_server(@bot.token,
-                        @id = new_data[:id] || @id,
-                        @name = new_data[:name] || @name,
-                        @region = new_data[:region] || @region,
-                        @icon = new_data[:icon] || @icon,
-                        @afk_channel_id = new_data[:afk_channel_id] || @afk_channel_id,
-                        @afk_timeout = new_data[:afk_timeout] || @afk_timeout)
+      API.update_server(@bot.token, @id,
+                        new_data[:name] || @name,
+                        new_data[:region] || @region,
+                        new_data[:icon] || @icon,
+                        new_data[:afk_channel_id] || @afk_channel_id,
+                        new_data[:afk_timeout] || @afk_timeout)
+      @name = new_data[:name] || @name
+      @region = new_data[:region] || @region
+      @icon = new_data[:icon] || @icon
+      @afk_channel_id = new_data[:afk_channel_id] || @afk_channel_id
+      @afk_timeout = new_data[:afk_timeout] || @afk_timeout
     end
   end
 
