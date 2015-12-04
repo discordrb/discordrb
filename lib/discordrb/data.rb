@@ -188,7 +188,7 @@ module Discordrb
       end
 
       def write(bits)
-        @role.packed = bits
+        @role.send(:packed=, bits, false)
       end
     end
 
@@ -228,8 +228,9 @@ module Discordrb
       update_role_data(color: color)
     end
 
-    def packed=(packed)
+    def packed=(packed, update_perms = true)
       update_role_data(permissions: packed)
+      @permissions.bits = packed if update_perms
     end
 
     private
@@ -239,7 +240,7 @@ module Discordrb
                       new_data[:name] || @name,
                       (new_data[:color] || @color).combined,
                       !(!(new_data[:hoist].nil? ? new_data[:hoist] : @hoist)),
-                      (new_data[:permissions] || @permissions).bits)
+                      new_data[:permissions] || @permissions.bits)
       update_data(new_data)
     end
   end
