@@ -50,6 +50,8 @@ module Discordrb
       end
     end
 
+    attr_reader :bits
+
     def init_vars
       Flags.each do |position, flag|
         flag_set = ((@bits >> position) & 0x1) == 1
