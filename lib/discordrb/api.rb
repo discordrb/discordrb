@@ -58,10 +58,10 @@ module Discordrb::API
   end
 
   # Create a server
-  def create_server(token, name, region)
+  def create_server(token, name, region = :london)
     RestClient.post(
       "#{APIBASE}/guilds",
-      { 'name' => name, 'region' => region }.to_json,
+      { 'name' => name, 'region' => region.to_s }.to_json,
       Authorization: token,
       content_type: :json
     )
