@@ -204,6 +204,18 @@ module Discordrb
       @color = new_data[:color] || ColorRGB.new(new_data['color']) || @color
     end
 
+    def name=(name)
+      update_role_data(name: name)
+    end
+
+    def hoist=(hoist)
+      update_role_data(hoist: hoist)
+    end
+
+    def color=(color)
+      update_role_data(color: color)
+    end
+
     private
 
     def update_role_data(new_data)
