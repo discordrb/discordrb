@@ -176,7 +176,7 @@ module Discordrb
     end
 
     # Regions: :london, :amsterdam, :frankfurt, :us-east, :us-west, :singapore, :sydney
-    def create_server(name, region)
+    def create_server(name, region = :london)
       response = API.create_server(@token, name, region)
       id = JSON.parse(response)['guild']['id'].to_i
       sleep 0.1 until @servers[id]
