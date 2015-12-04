@@ -474,6 +474,18 @@ module Discordrb
     def delete
       API.delete_server(@bot.token, @id)
     end
+
+    private
+
+    def update_server_data(new_data)
+      API.update_server(@bot.token,
+                        @id = new_data[:id] || @id,
+                        @name = new_data[:name] || @name,
+                        @region = new_data[:region] || @region,
+                        @icon = new_data[:icon] || @icon,
+                        @afk_channel_id = new_data[:afk_channel_id] || @afk_channel_id,
+                        @afk_timeout = new_data[:afk_timeout] || @afk_timeout)
+    end
   end
 
   # A colour (red, green and blue values). Used for role colours
