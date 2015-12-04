@@ -67,6 +67,14 @@ module Discordrb::API
     )
   end
 
+  # Delete a server
+  def delete_server(token, server_id)
+    RestClient.delete(
+      "#{APIBASE}/guilds/#{server_id}",
+      Authorization: token
+    )
+  end
+
   # Leave a server
   def leave_server(server_id)
     RestClient.delete(
