@@ -6,6 +6,7 @@ require 'discordrb/api'
 require 'discordrb/games'
 require 'base64'
 
+# Discordrb module
 module Discordrb
   # User on Discord, including internal data like discriminators
   class User
