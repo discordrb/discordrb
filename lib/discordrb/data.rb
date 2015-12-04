@@ -450,6 +450,10 @@ module Discordrb
     def kick(user)
       API.kick_user(@bot.token, @id, user.id)
     end
+
+    def delete
+      API.delete_server(@bot.token, @id)
+    end
   end
 
   # A colour (red, green and blue values). Used for role colours
