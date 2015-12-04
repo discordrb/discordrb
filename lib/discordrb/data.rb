@@ -513,6 +513,11 @@ module Discordrb
       Channel.new(JSON.parse(response), @bot)
     end
 
+    def create_role
+      response = API.create_role(@bot.token, @id)
+      Role.new(JSON.parse(response), @bot)
+    end
+
     def ban(user, message_days = 0)
       API.ban_user(@bot.token, @id, user.id, message_days)
     end
