@@ -719,8 +719,20 @@ module Discordrb
         event = GuildRoleDeleteEvent.new(data, self)
         raise_event(event)
       when 'GUILD_CREATE'
+        create_guild(data)
+
+        event = GuildCreateEvent.new(data, self)
+        raise_event(event)
       when 'GUILD_UPDATE'
+        update_guild(data)
+
+        event = GuildUpdateEvent.new(data, self)
+        raise_event(event)
       when 'GUILD_DELETE'
+        delete_guild(data)
+
+        event = GuildDeleteEvent.new(data, self)
+        raise_event(event)
       end
     rescue Exception => e
       debug("Exception: #{e.inspect}", true)
