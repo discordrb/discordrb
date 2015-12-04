@@ -327,7 +327,7 @@ module Discordrb
     end
 
     def debug(message, important = false)
-      puts "[DEBUG @ #{Time.now}] #{message}" if @debug || important
+      puts "[DEBUG : #{Thread.current[:name]} @ #{Time.now}] #{message}" if @debug || important
     end
 
     def handler_class(event_class)
