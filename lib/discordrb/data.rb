@@ -351,7 +351,7 @@ module Discordrb
       @afk_timeout = data['afk_timeout'].to_i
 
       afk_channel_id = data['afk_channel_id']
-      @afk_channel = bot.channel(afk_channel_id)
+      @afk_channel = bot.channel(afk_channel_id) if afk_channel_id
 
       process_roles(data['roles'])
       process_members(data['members'])
