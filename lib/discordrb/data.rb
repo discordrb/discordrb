@@ -316,6 +316,11 @@ module Discordrb
       end
     end
 
+    def history(amount, before_id = nil, after_id = nil)
+      logs = API.channel_log(@bot.token, @id, amount, before_id, after_id)
+      JSON.parse(logs).map { |message| Message.new(message, @bot) }
+    end
+
     def update_overwrites(overwrites)
       @permission_overwrites = overwrites
     end
