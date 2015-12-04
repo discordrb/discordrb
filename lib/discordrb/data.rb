@@ -146,7 +146,13 @@ module Discordrb
     end
 
     def avatar=(avatar)
-      update_server_data(avatar: avatar)
+      if avatar.is_a? File
+        avatar_string = 'data:image/jpg;base64,'
+        avatar_string += Base64.strict_encode64(avatar.read)
+        update_server_data(avatar: avatar_string)
+      else
+        update_server_data(avatar: avatar)
+      end
     end
 
     def update_data(new_data)
