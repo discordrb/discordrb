@@ -332,6 +332,11 @@ module Discordrb
       puts "[DEBUG : #{Thread.current[:discordrb_name]} @ #{Time.now}] #{message}" if @debug || important
     end
 
+    def log_exception(e)
+      debug("Exception: #{e.inspect}", true)
+      e.backtrace.each { |line| debug(line, true) }
+    end
+
     def handler_class(event_class)
       class_from_string(event_class.to_s + 'Handler')
     end
@@ -755,8 +760,7 @@ module Discordrb
         raise_event(event)
       end
     rescue Exception => e
-      debug("Exception: #{e.inspect}", true)
-      e.backtrace.each { |line| debug(line) }
+      log_exception(e)
     end
 
     def websocket_close(event)
