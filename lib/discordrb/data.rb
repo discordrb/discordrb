@@ -347,65 +347,79 @@ module Discordrb
       @owner_id = data['owner_id'].to_i
       @id = data['id'].to_i
 
+      process_roles(data['roles'])
+      process_members(data['members'])
+      process_presences(data['presences'])
+      process_channels(data['channels'])
+      process_voice_states(data['voice_states'])
+    end
+
+    def process_roles(roles)
       # Create roles
       @roles = []
-      roles_by_id = {}
-      data['roles'].each do |element|
+      @roles_by_id = {}
+      roles.each do |element|
         role = Role.new(element, bot)
         @roles << role
-        roles_by_id[role.id] = role
+        @roles_by_id[role.id] = role
       end
+    end
 
+    def process_members(members)
       @members = []
-      members_by_id = {}
+      @members_by_id = {}
 
-      data['members'].each do |element|
+      members.each do |element|
         user = User.new(element['user'], bot)
         @members << user
-        members_by_id[user.id] = user
+        @members_by_id[user.id] = user
         user_roles = []
         element['roles'].each do |e|
           role_id = e.to_i
-          user_roles << roles_by_id[role_id]
+          user_roles << @roles_by_id[role_id]
         end
         user.update_roles(self, user_roles)
       end
+    end
 
+    def process_presences(presences)
       # Update user statuses with presence info
-      if data['presences']
-        data['presences'].each do |element|
-          next unless element['user']
-          user_id = element['user']['id'].to_i
-          user = members_by_id[user_id]
-          if user
-            user.status = element['status'].to_sym
-            user.game = Discordrb::Games.find_game(element['game_id'])
-          end
+      return unless presences
+      presences.each do |element|
+        next unless element['user']
+        user_id = element['user']['id'].to_i
+        user = @members_by_id[user_id]
+        if user
+          user.status = element['status'].to_sym
+          user.game = Discordrb::Games.find_game(element['game_id'])
         end
       end
+    end
 
+    def process_channels(channels)
       @channels = []
-      channels_by_id = {}
+      @channels_by_id = {}
 
-      if data['channels']
-        data['channels'].each do |element|
-          channel = Channel.new(element, bot, self)
-          @channels << channel
-          channels_by_id[channel.id] = channel
-        end
+      return unless channels
+      channels.each do |element|
+        channel = Channel.new(element, bot, self)
+        @channels << channel
+        @channels_by_id[channel.id] = channel
       end
+    end
 
-      return unless data['voice_states']
-      data['voice_states'].each do |element|
+    def process_voice_states(voice_states)
+      return unless voice_states
+      voice_states.each do |element|
         user_id = element['user_id'].to_i
-        user = members_by_id[user_id]
+        user = @members_by_id[user_id]
         next unless user
         user.server_mute = element['mute']
         user.server_deaf = element['deaf']
         user.self_mute = element['self_mute']
         user.self_mute = element['self_mute']
         channel_id = element['channel_id']
-        channel = channel_id ? channels_by_id[channel_id] : nil
+        channel = channel_id ? @channels_by_id[channel_id] : nil
         user.move(channel)
       end
     end
