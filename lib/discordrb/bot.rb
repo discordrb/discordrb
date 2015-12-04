@@ -471,6 +471,27 @@ module Discordrb
       server.delete_user(user_id)
     end
 
+    # Internal handler for GUILD_CREATE
+    def create_guild(data)
+      add_server(data)
+    end
+
+    # Internal handler for GUILD_UPDATE
+    def update_guild(data)
+      add_server(data)
+    end
+
+    # Internal handler for GUILD_DELETE
+    def delete_guild(data)
+      id = data['id']
+
+      @users.each do |user|
+        user.delete_roles(id)
+      end
+
+      @servers.delete(id)
+    end
+
     # Internal handler for GUILD_ROLE_UPDATE
     def update_guild_role(data)
       role_data = data['role']
