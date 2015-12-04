@@ -42,7 +42,11 @@ module Discordrb::Events
     end
 
     def match(event)
-      @block.call(event) if matches? event
+      call(event) if matches? event
+    end
+
+    def call(event)
+      @block.call(event)
     end
 
     def matches_all(attributes, to_check, &block)
