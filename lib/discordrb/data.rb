@@ -213,7 +213,7 @@ module Discordrb
       @name = new_data[:name] || new_data['name'] || @name
       @hoist = new_data['hoist'] unless new_data['hoist'].nil?
       @hoist = new_data[:hoist] unless new_data[:hoist].nil?
-      @color = new_data[:color] || ColorRGB.new(new_data['color']) || @color
+      @color = new_data[:color] || (new_data['color'] ? ColorRGB.new(new_data['color']) : @color)
     end
 
     def name=(name)
@@ -238,7 +238,7 @@ module Discordrb
       API.update_role(@bot.token, @server.id, @id,
                       new_data[:name] || @name,
                       (new_data[:color] || @color).combined,
-                      new_data[:hoist].nil? ? new_data[:hoist] : @hoist,
+                      !(!(new_data[:hoist].nil? ? new_data[:hoist] : @hoist)),
                       (new_data[:permissions] || @permissions).bits)
       update_data(new_data)
     end
