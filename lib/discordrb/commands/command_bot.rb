@@ -88,7 +88,7 @@ module Discordrb::Commands
       debug("Executing command #{name} with arguments #{arguments}")
       command = @commands[name]
       unless command
-        event.respond @attributes[:command_doesnt_exist_message].gsub('%command%', name) if @attributes[:command_doesnt_exist_message]
+        event.respond @attributes[:command_doesnt_exist_message].gsub('%command%', name.to_s) if @attributes[:command_doesnt_exist_message]
         return
       end
       if permission?(user(event.user.id), command.attributes[:permission_level], event.server)
