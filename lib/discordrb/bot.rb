@@ -70,6 +70,7 @@ module Discordrb
       @heartbeat_interval = 1
       @heartbeat_active = false
       @heartbeat_thread = Thread.new do
+        Thread.current[:name] = 'heartbeat'
         loop do
           sleep @heartbeat_interval
           send_heartbeat if @heartbeat_active
@@ -77,6 +78,7 @@ module Discordrb
       end
 
       @ws_thread = Thread.new do
+        Thread.current[:name] = 'websocket'
         loop do
           websocket_connect
           debug('Disconnected! Attempting to reconnect in 5 seconds.')
