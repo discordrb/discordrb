@@ -4,6 +4,7 @@ require 'ostruct'
 require 'discordrb/permissions'
 require 'discordrb/api'
 require 'discordrb/games'
+require 'base64'
 
 module Discordrb
   # User on Discord, including internal data like discriminators
