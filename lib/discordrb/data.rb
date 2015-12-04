@@ -178,7 +178,7 @@ module Discordrb
 
   # A Discord role that contains permissions and applies to certain users
   class Role
-    attr_reader :permissions, :name, :id, :hoist, :color
+    attr_reader :permissions, :name, :id, :hoist, :colour
 
     # Class that writes data for a Permissions object
     class RoleWriter
@@ -199,21 +199,21 @@ module Discordrb
       @name = data['name']
       @id = data['id'].to_i
       @hoist = data['hoist']
-      @color = ColorRGB.new(data['color'])
+      @colour = ColourRGB.new(data['color'])
     end
 
     def update_from(other)
       @permissions = other.permissions
       @name = other.name
       @hoist = other.hoist
-      @color = other.color
+      @colour = other.colour
     end
 
     def update_data(new_data)
       @name = new_data[:name] || new_data['name'] || @name
       @hoist = new_data['hoist'] unless new_data['hoist'].nil?
       @hoist = new_data[:hoist] unless new_data[:hoist].nil?
-      @color = new_data[:color] || (new_data['color'] ? ColorRGB.new(new_data['color']) : @color)
+      @colour = new_data[:colour] || (new_data['color'] ? ColourRGB.new(new_data['color']) : @colour)
     end
 
     def name=(name)
@@ -224,8 +224,8 @@ module Discordrb
       update_role_data(hoist: hoist)
     end
 
-    def color=(color)
-      update_role_data(color: color)
+    def colour=(colour)
+      update_role_data(colour: colour)
     end
 
     def packed=(packed, update_perms = true)
@@ -243,7 +243,7 @@ module Discordrb
     def update_role_data(new_data)
       API.update_role(@bot.token, @server.id, @id,
                       new_data[:name] || @name,
-                      (new_data[:color] || @color).combined,
+                      (new_data[:colour] || @colour).combined,
                       !(!(new_data[:hoist].nil? ? new_data[:hoist] : @hoist)),
                       new_data[:permissions] || @permissions.bits)
       update_data(new_data)
@@ -636,7 +636,7 @@ module Discordrb
   end
 
   # A colour (red, green and blue values). Used for role colours
-  class ColorRGB
+  class ColourRGB
     attr_reader :red, :green, :blue, :combined
 
     def initialize(combined)
