@@ -180,6 +180,18 @@ module Discordrb
   class Role
     attr_reader :permissions, :name, :id, :hoist, :color
 
+    # Class that writes data for a Permissions object
+    class RoleWriter
+      def initialize(role, token)
+        @role = role
+        @token = token
+      end
+
+      def write(bits)
+        @role.packed = bits
+      end
+    end
+
     def initialize(data, bot, server = nil)
       @bot = bot
       @server = server
@@ -214,6 +226,10 @@ module Discordrb
 
     def color=(color)
       update_role_data(color: color)
+    end
+
+    def packed=(packed)
+      update_role_data(permissions: packed)
     end
 
     private
