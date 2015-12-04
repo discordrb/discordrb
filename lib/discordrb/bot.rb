@@ -788,7 +788,13 @@ module Discordrb
 
       handlers = @event_handlers[event.class]
       (handlers || []).each do |handler|
-        handler.match(event)
+        call_event(handler, event) if handler.matches?(event)
+      end
+    end
+
+    def call_event(handler, event)
+      Thread.new do
+        handler.call(event)
       end
     end
 
