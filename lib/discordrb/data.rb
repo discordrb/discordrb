@@ -543,7 +543,7 @@ module Discordrb
     def delete_role(role_id)
       @roles.reject! { |r| r.id == role_id }
       @members.each do |user|
-        new_roles = user.roles.reject { |r| r.id == role_id }
+        new_roles = user.roles[@id].reject { |r| r.id == role_id }
         user.update_roles(self, new_roles)
       end
       @channels.each do |channel|
