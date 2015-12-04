@@ -510,7 +510,7 @@ module Discordrb
     def delete_guild(data)
       id = data['id']
 
-      @users.each do |user|
+      @users.each do |_, user|
         user.delete_roles(id)
       end
 
