@@ -499,6 +499,14 @@ module Discordrb
       update_server_data(afk_timeout: afk_timeout)
     end
 
+    def update_data(new_data)
+      @name = new_data[:name] || @name
+      @region = new_data[:region] || @region
+      @icon = new_data[:icon] || @icon
+      @afk_channel_id = new_data[:afk_channel_id] || @afk_channel_id
+      @afk_timeout = new_data[:afk_timeout] || @afk_timeout
+    end
+
     private
 
     def update_server_data(new_data)
@@ -508,11 +516,7 @@ module Discordrb
                         new_data[:icon] || @icon,
                         new_data[:afk_channel_id] || @afk_channel_id,
                         new_data[:afk_timeout] || @afk_timeout)
-      @name = new_data[:name] || @name
-      @region = new_data[:region] || @region
-      @icon = new_data[:icon] || @icon
-      @afk_channel_id = new_data[:afk_channel_id] || @afk_channel_id
-      @afk_timeout = new_data[:afk_timeout] || @afk_timeout
+      update_data(new_data)
     end
   end
 
