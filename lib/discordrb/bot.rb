@@ -180,7 +180,9 @@ module Discordrb
       response = API.create_server(@token, name, region)
       id = JSON.parse(response)['guild']['id'].to_i
       sleep 0.1 until @servers[id]
-      @servers[id]
+      server = @servers[id]
+      debug "Successfully created server #{server.id} with name #{server.name}"
+      server
     end
 
     def parse_mention(mention)
