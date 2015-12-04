@@ -338,7 +338,7 @@ module Discordrb
 
   # A server on Discord
   class Server
-    attr_reader :region, :name, :owner_id, :id, :members, :channels, :roles
+    attr_reader :region, :name, :owner_id, :id, :members, :channels, :roles, :icon, :afk_timeout, :afk_channel_id
 
     def initialize(data, bot)
       @bot = bot
@@ -346,6 +346,12 @@ module Discordrb
       @name = data['name']
       @owner_id = data['owner_id'].to_i
       @id = data['id'].to_i
+
+      @icon = data['icon']
+      @afk_timeout = data['afk_timeout'].to_i
+
+      afk_channel_id = data['afk_channel_id']
+      @afk_channel = bot.channel(afk_channel_id)
 
       process_roles(data['roles'])
       process_members(data['members'])
