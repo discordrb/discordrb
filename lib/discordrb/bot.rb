@@ -164,7 +164,7 @@ module Discordrb
 
     # Revokes an invite to a server. Will fail unless you have the Manage Server permission.
     # It is recommended that you use {Invite#delete} instead.
-    # @param invite [String, Invite] The invite to revoke. For possible formats see {#resolve_invite_code}.
+    # @param code [String, Invite] The invite to revoke. For possible formats see {#resolve_invite_code}.
     def delete_invite(code)
       invite = resolve_invite_code(code)
       API.delete_invite(@token, invite)
