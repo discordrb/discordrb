@@ -61,7 +61,7 @@ module Discordrb
     # Whether or not the bot should parse its own messages. Off by default.
     attr_accessor :should_parse_self
 
-    # Makes a new bot with the given email and password. It will be ready to be added event handlers to and can eventually be run with #run.
+    # Makes a new bot with the given email and password. It will be ready to be added event handlers to and can eventually be run with {#run}.
     # @param email [String] The email for your (or the bot's) Discord account.
     # @param password [String] The valid password that should be used to log in to the account.
     # @param debug [Boolean] Whether or not the bug should run in debug mode, which gives increased console output.
@@ -172,11 +172,12 @@ module Discordrb
 
     # Gets the code for an invite.
     # @param invite [String, Invite] The invite to get the code for. Possible formats are:
+    #
     #    * An {Invite} object
     #    * The code for an invite
-    #    * A fully qualified invite URL (e. g. https://discordapp.com/invite/0A37aN7fasF7n83q)
-    #    * A short invite URL with protocol (e. g. https://discord.gg/0A37aN7fasF7n83q)
-    #    * A short invite URL without protocol (e. g. discord.gg/0A37aN7fasF7n83q)
+    #    * A fully qualified invite URL (e. g. `https://discordapp.com/invite/0A37aN7fasF7n83q`)
+    #    * A short invite URL with protocol (e. g. `https://discord.gg/0A37aN7fasF7n83q`)
+    #    * A short invite URL without protocol (e. g. `discord.gg/0A37aN7fasF7n83q`)
     # @return [String] Only the code for the invite.
     def resolve_invite_code(invite)
       invite = invite.code if invite.is_a? Discordrb::Invite
@@ -192,7 +193,7 @@ module Discordrb
       API.join_server(@token, resolved)
     end
 
-    # Revokes an invite to a server. Will fail unless you have the Manage Server permission.
+    # Revokes an invite to a server. Will fail unless you have the *Manage Server* permission.
     # It is recommended that you use {Invite#delete} instead.
     # @param code [String, Invite] The invite to revoke. For possible formats see {#resolve_invite_code}.
     def delete_invite(code)
@@ -203,7 +204,7 @@ module Discordrb
     # Gets a user by its ID.
     # @note This can only resolve users known by the bot (i.e. that share a server with the bot).
     # @param id [Integer] The user ID that should be resolved.
-    # @return [User, nil] The user identified by the ID, or nil if it couldn't be found.
+    # @return [User, nil] The user identified by the ID, or `nil` if it couldn't be found.
     def user(id)
       @users[id]
     end
@@ -211,7 +212,7 @@ module Discordrb
     # Gets a server by its ID.
     # @note This can only resolve servers the bot is currently in.
     # @param id [Integer] The server ID that should be resolved.
-    # @return [Server, nil] The server identified by the ID, or nil if it couldn't be found.
+    # @return [Server, nil] The server identified by the ID, or `nil` if it couldn't be found.
     def server(id)
       @servers[id]
     end
@@ -220,9 +221,9 @@ module Discordrb
     # is not 0, it will use a Levenshtein distance function to find the channel in a fuzzy way, which
     # allows slight misspellings.
     # @param channel_name [String] The channel to search for.
-    # @param server_name [String] Optional. The server to search for.
-    # @param threshold [Integer] Optional (default = 0). The threshold for the
-    #   Levenshtein algorithm. The larger the threshold is, the more misspellings will be allowed.
+    # @param server_name [String] The server to search for, or `nil` if only the channel should be searched for.
+    # @param threshold [Integer] The threshold for the Levenshtein algorithm. The larger
+    #   the threshold is, the more misspellings will be allowed.
     # @return [Array<Channel>] The array of channels that were found. May be empty if none were found.
     def find(channel_name, server_name = nil, threshold = 0)
       require 'levenshtein'
@@ -281,6 +282,7 @@ module Discordrb
     #   waits until the data has been received via the websocket. This may make the execution take a while.
     # @param name [String] The name the new server should have. Doesn't have to be alphanumeric.
     # @param region [Symbol] The region where the server should be created. Possible regions are:
+    #
     #   * `:london`
     #   * `:amsterdam`
     #   * `:frankfurt`
@@ -300,7 +302,7 @@ module Discordrb
 
     # Gets the user from a mention of the user.
     # @param mention [String] The mention, which should look like <@12314873129>.
-    # @return [User] The user identified by the mention, or nil if none exists.
+    # @return [User] The user identified by the mention, or `nil` if none exists.
     def parse_mention(mention)
       # Mention format: <@id>
       return nil unless /\<@(?<id>\d+)\>?/ =~ mention
