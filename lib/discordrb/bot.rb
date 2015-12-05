@@ -31,6 +31,10 @@ module Discordrb
     attr_reader :bot_user, :token, :users, :servers, :event_threads, :profile
     attr_accessor :should_parse_self
 
+    # Makes a new bot with the given email and password. It will be ready to be added event handlers to and can eventually be run with #run.
+    # @param email [String] The email for your (or the bot's) Discord account.
+    # @param password [String] The valid password that should be used to log in to the account.
+    # @param debug [Boolean] Whether or not the bug should run in debug mode, which gives increased console output.
     def initialize(email, password, debug = false)
       # Make sure people replace the login details in the example files...
       if email.end_with? 'example.com'
@@ -57,6 +61,12 @@ module Discordrb
       @current_thread = 0
     end
 
+    # Runs the bot, which logs into Discord and connects the WebSocket. This prevents all further execution unless it is executed with `async` = `:async`.
+    # @param async [Symbol] If it is `:async`, then the bot will allow further execution.
+    #   It doesn't necessarily have to be that, anything truthy will work,
+    #   however it is recommended to use `:async` for code readability reasons.
+    #   If the bot is run in async mode, make sure to eventually run {#sync} so
+    #   the script doesn't stop prematurely.
     def run(async = false)
       run_async
       return if async
@@ -93,14 +103,20 @@ module Discordrb
       debug('Confirmation received! Exiting run.')
     end
 
+    # Prevents all further execution until the websocket thread stops (e. g. through a closed connection).
     def sync
       @ws_thread.join
     end
 
+    # Kills the websocket thread, stopping all connections to Discord.
     def stop
       @ws_thread.kill
     end
 
+    # Gets a channel given its ID. This queries the internal channel cache, and if the channel doesn't
+    # exist in there, it will get the data from Discord.
+    # @param id [Integer] The channel ID for which to search for.
+    # @return [Channel] The channel identified by the ID.
     def channel(id)
       debug("Obtaining data for channel with id #{id}")
       return @channels[id] if @channels[id]
@@ -110,6 +126,11 @@ module Discordrb
       @channels[id] = channel
     end
 
+    # Creates a private channel for the given user ID, or if one exists already, returns that one.
+    # It is recommended that you use {User#pm} instead, as this is mainly for internal use. However,
+    # usage of this method may be unavoidable if only the user ID is known.
+    # @param id [Integer] The user ID to generate a private channel for.
+    # @return [Channel] A private channel for that user.
     def private_channel(id)
       debug("Creating private channel with user id #{id}")
       return @private_channels[id] if @private_channels[id]
@@ -119,31 +140,60 @@ module Discordrb
       @private_channels[id] = channel
     end
 
+    # Gets the code for an invite.
+    # @param invite [String, Invite] The invite to get the code for. Possible formats are:
+    #    * An {Invite} object
+    #    * The code for an invite
+    #    * A fully qualified invite URL (e. g. https://discordapp.com/invite/0A37aN7fasF7n83q)
+    #    * A short invite URL with protocol (e. g. https://discord.gg/0A37aN7fasF7n83q)
+    #    * A short invite URL without protocol (e. g. discord.gg/0A37aN7fasF7n83q)
+    # @return [String] Only the code for the invite.
     def resolve_invite_code(invite)
       invite = invite.code if invite.is_a? Discordrb::Invite
       invite = invite[invite.rindex('/') + 1..-1] if invite.start_with?('http') || invite.start_with?('discord.gg')
       invite
     end
 
+    # Makes the bot join an invite to a server.
+    # @param invite [String, Invite] The invite to join. For possible formats see {#resolve_invite_code}.
     def join(invite)
       invite = resolve_invite_code(invite)
       resolved = JSON.parse(API.resolve_invite(@token, invite))['code']
       API.join_server(@token, resolved)
     end
 
+    # Revokes an invite to a server. Will fail unless you have the Manage Server permission.
+    # It is recommended that you use {Invite#delete} instead.
+    # @param invite [String, Invite] The invite to revoke. For possible formats see {#resolve_invite_code}.
     def delete_invite(code)
       invite = resolve_invite_code(code)
       API.delete_invite(@token, invite)
     end
 
+    # Gets a user by its ID.
+    # @note This can only resolve users known by the bot (i.e. that share a server with the bot).
+    # @param id [Integer] The user ID that should be resolved.
+    # @return [User, nil] The user identified by the ID, or nil if it couldn't be found.
     def user(id)
       @users[id]
     end
 
+    # Gets a server by its ID.
+    # @note This can only resolve servers the bot is currently in.
+    # @param id [Integer] The server ID that should be resolved.
+    # @return [Server, nil] The server identified by the ID, or nil if it couldn't be found.
     def server(id)
       @servers[id]
     end
 
+    # Finds a channel given its name and optionally the name of the server it is in. If the threshold
+    # is not 0, it will use a Levenshtein distance function to find the channel in a fuzzy way, which
+    # allows slight misspellings.
+    # @param channel_name [String] The channel to search for.
+    # @param server_name [String] Optional. The server to search for.
+    # @param threshold [Integer] Optional (default = 0). The threshold for the
+    #   Levenshtein algorithm. The larger the threshold is, the more misspellings will be allowed.
+    # @return [Array<Channel>] The array of channels that were found. May be empty if none were found.
     def find(channel_name, server_name = nil, threshold = 0)
       require 'levenshtein'
 
@@ -165,23 +215,50 @@ module Discordrb
       results
     end
 
+    # Sends a text message to a channel given its ID and the message's content.
+    # @param channel_id [Integer] The ID that identifies the channel to send something to.
+    # @param content [String] The text that should be sent as a message. It is limited to 2000 characters (Discord imposed).
+    # @return [Message] The message that was sent.
     def send_message(channel_id, content)
       debug("Sending message to #{channel_id} with content '#{content}'")
       response = API.send_message(@token, channel_id, content)
       Message.new(JSON.parse(response), self)
     end
 
+    # Sends a file to a channel. If it is an image, it will automatically be embedded.
+    # @note This executes in a blocking way, so if you're sending long files, be wary of delays.
+    # @param channel_id [Integer] The ID that identifies the channel to send something to.
+    # @param file [File] The file that should be sent.
     def send_file(channel_id, file)
       API.send_file(@token, channel_id, file)
     end
 
+    # Add an await the bot should listen to. For information on awaits, see {Await}.
+    # @param key [Symbol] The key that uniquely identifies the await for {AwaitEvent}s to listen to (see {#await}).
+    # @param type [Class] The event class that should be listened for.
+    # @param attributes [Hash] The attributes the event should check for. The block will only be executed if all attributes match.
+    # @yield Is executed when the await is triggered.
+    # @yieldparam event [Event] The event object that was triggered.
+    # @return [Await] The await that was created.
     def add_await(key, type, attributes = {}, &block)
       fail "You can't await an AwaitEvent!" if type == Discordrb::Events::AwaitEvent
       await = Await.new(self, key, type, attributes, block)
       @awaits[key] = await
     end
 
-    # Regions: :london, :amsterdam, :frankfurt, :us-east, :us-west, :singapore, :sydney
+    # Creates a server on Discord with a specified name and a region.
+    # @note Discord's API doesn't directly return the server when creating it, so this method
+    #   waits until the data has been received via the websocket. This may make the execution take a while.
+    # @param name [String] The name the new server should have. Doesn't have to be alphanumeric.
+    # @param region [Symbol] The region where the server should be created. Possible regions are:
+    #   * `:london`
+    #   * `:amsterdam`
+    #   * `:frankfurt`
+    #   * `:us-east`
+    #   * `:us-west`
+    #   * `:singapore`
+    #   * `:sydney`
+    # @return [Server] The server that was created.
     def create_server(name, region = :london)
       response = API.create_server(@token, name, region)
       id = JSON.parse(response)['id'].to_i
@@ -191,12 +268,18 @@ module Discordrb
       server
     end
 
+    # Gets the user from a mention of the user.
+    # @param mention [String] The mention, which should look like <@12314873129>.
+    # @return [User] The user identified by the mention, or nil if none exists.
     def parse_mention(mention)
       # Mention format: <@id>
       return nil unless /\<@(?<id>\d+)\>?/ =~ mention
       user(id)
     end
 
+    # Sets the currently playing game to the specified game.
+    # @param name_or_id [String, Fixnum] The name or the ID of the game to be played.
+    # @return [Game] The game object that is being played now.
     def game=(name_or_id)
       game = Discordrb::Games.find_game(name_or_id)
       @game = game
@@ -213,6 +296,7 @@ module Discordrb
       game
     end
 
+    # Sets debug mode. If debug mode is on, many things will be outputted to STDOUT.
     attr_writer :debug
 
     ##     ##    ###    ##    ## ########  ##       ######## ########   ######
