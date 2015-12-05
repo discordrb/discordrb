@@ -424,6 +424,14 @@ module Discordrb
       register_event(GuildDeleteEvent, attributes, block)
     end
 
+    # This event is raised when an {Await} is triggered. It provides an easy way to execute code
+    # on an await without having to rely on the await's block.
+    # @param attributes [Hash] The event's attributes.
+    # @option attributes [Symbol] :key Exactly matches the await's key.
+    # @option attributes [Class] :type Exactly matches the event's type.
+    # @yield The block is executed when the event is raised.
+    # @yieldparam event [AwaitEvent] The event that was raised.
+    # @return [AwaitEventHandler] The event handler that was registered.
     def await(attributes = {}, &block)
       register_event(AwaitEvent, attributes, block)
     end

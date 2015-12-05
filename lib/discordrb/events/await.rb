@@ -2,11 +2,18 @@ require 'discordrb/events/generic'
 require 'discordrb/await'
 
 module Discordrb::Events
-  # Event raised when an await is triggered
+  # @see {Bot#await}
   class AwaitEvent
-    attr_reader :await, :event
+    # The await that was triggered.
+    # @return [Await] The await
+    attr_reader :await
+
+    # The event that triggered the await.
+    # @return [Event] The event
+    attr_reader :event
     delegate :key, :type, :attributes, to: :await
 
+    # For internal use only
     def initialize(await, event, bot)
       @await = await
       @event = event
@@ -14,7 +21,7 @@ module Discordrb::Events
     end
   end
 
-  # Event handler for AwaitEvent
+  # Event handler for {AwaitEvent}
   class AwaitEventHandler < EventHandler
     def matches?(event)
       # Check for the proper event type
