@@ -2,7 +2,7 @@ require 'discordrb/events/generic'
 require 'discordrb/await'
 
 module Discordrb::Events
-  # @see {Bot#await}
+  # @see Bot#await
   class AwaitEvent
     # The await that was triggered.
     # @return [Await] The await
