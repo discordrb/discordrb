@@ -53,8 +53,7 @@ module Discordrb
     # @return [Array<Thread>] The threads.
     attr_reader :event_threads
 
-    # The user that represents the bot itself. *Unlike {#bot_user}, this version is not identical to
-    # the user in the {#users} list.* This user is a special {Profile} user that can be used
+    # The bot's user profile. This special user object can be used
     # to edit user data like the current username (see {Profile#username=}).
     # @return [Profile] The bot's profile that can be used to edit data.
     attr_reader :profile
