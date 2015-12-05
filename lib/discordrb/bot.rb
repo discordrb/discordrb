@@ -28,7 +28,38 @@ module Discordrb
   class Bot
     include Discordrb::Events
 
-    attr_reader :bot_user, :token, :users, :servers, :event_threads, :profile
+    # The user that represents the bot itself. This version will always be identical to
+    # the user determined by {#user} called with the bot's ID.
+    # @return [User] The bot user.
+    attr_reader :bot_user
+
+    # The Discord API token received when logging in. Useful to explicitly call
+    # {API} methods.
+    # @return [String] The API token.
+    attr_reader :token
+
+    # The list of users the bot shares a server with.
+    # @return [Array<User>] The users.
+    attr_reader :users
+
+    # The list of servers the bot is currently in.
+    # @return [Array<Server>] The servers.
+    attr_reader :servers
+
+    # The list of currently running threads used to parse and call events.
+    # The threads will have a local variable `:discordrb_name` in the format of `et-1234`, where
+    # "et" stands for "event thread" and the number is a continually incrementing number representing
+    # how many events were executed before.
+    # @return [Array<Thread>] The threads.
+    attr_reader :event_threads
+
+    # The user that represents the bot itself. *Unlike {#bot_user}, this version is not identical to
+    # the user in the {#users} list.* This user is a special {Profile} user that can be used
+    # to edit user data like the current username (see {Profile#username=}).
+    # @return [Profile] The bot's profile that can be used to edit data.
+    attr_reader :profile
+
+    # Whether or not the bot should parse its own messages. Off by default.
     attr_accessor :should_parse_self
 
     # Makes a new bot with the given email and password. It will be ready to be added event handlers to and can eventually be run with #run.
