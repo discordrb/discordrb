@@ -1,0 +1,44 @@
+# Disable all metrics.
+Metrics/AbcSize:
+  Enabled: false
+
+Metrics/BlockNesting:
+  Enabled: false
+
+Metrics/ClassLength:
+  Enabled: false
+
+Metrics/ModuleLength:
+  Enabled: false
+
+Metrics/CyclomaticComplexity:
+  Enabled: false
+
+Metrics/LineLength:
+  Enabled: false
+
+Metrics/MethodLength:
+  Enabled: false
+
+Metrics/ParameterLists:
+  Enabled: false
+
+Metrics/PerceivedComplexity:
+  Enabled: false
+
+# Prefer compact module/class defs
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+# Allow CamelCase constants as well as SCREAMING_SNAKE_CASE
+Style/ConstantName:
+  Enabled: false
+
+# Allow 'Pokémon-style' exception handling
+Lint/RescueException:
+  Enabled: false
+
+# Exclude the list of games
+AllCops:
+  Exclude:
+    - '**/games_list.rb'

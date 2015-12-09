@@ -2,10 +2,10 @@
 
 require 'discordrb'
 
-bot = Discordrb::Bot.new "email@example.com", "hunter2"
+bot = Discordrb::Bot.new 'email@example.com', 'hunter2'
 
-bot.message(with_text: "Ping!") do |event|
-  event.respond "Pong!"
+bot.message(with_text: 'Ping!') do |event|
+  event.respond 'Pong!'
 end
 
 bot.run

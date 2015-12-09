@@ -2,6 +2,7 @@ require 'discordrb/events/generic'
 require 'discordrb/data'
 
 module Discordrb::Events
+  # Event raised when a user's presence state updates (playing game, idle or back online)
   class PresenceEvent
     attr_reader :server, :user, :status
 
@@ -12,13 +13,14 @@ module Discordrb::Events
     end
   end
 
+  # Event handler for PresenceEvent
   class PresenceEventHandler < EventHandler
     def matches?(event)
       # Check for the proper event type
       return false unless event.is_a? PresenceEvent
 
-      return [
-        matches_all(@attributes[:from], event.user) do |a,e|
+      [
+        matches_all(@attributes[:from], event.user) do |a, e|
           if a.is_a? String
             a == e.name
           elsif a.is_a? Fixnum
@@ -27,7 +29,7 @@ module Discordrb::Events
             a == e
           end
         end,
-        matches_all(@attributes[:status], event.status) do |a,e|
+        matches_all(@attributes[:status], event.status) do |a, e|
           if a.is_a? String
             a == e.to_s
           else
