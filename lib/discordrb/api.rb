@@ -8,9 +8,30 @@ module Discordrb::API
 
   module_function
 
+  # Generate a user agent identifying this requester as discordrb.
+  def user_agent
+    libraries = [
+      # rest-client
+      "rest-client/#{RestClient::VERSION}",
+
+      # ruby
+      "#{RUBY_ENGINE}/#{RUBY_VERSION}p#{RUBY_PATCHLEVEL}",
+
+      # discordrb
+      "discordrb/#{Discordrb::VERSION}"
+    ]
+
+    # Required by Discord devs
+    required = "DiscordBot (https://github.com/meew0/discordrb, v#{Discordrb::VERSION})"
+    "#{libraries.join(' ')} #{required}"
+  end
+
   # Make an API request. Utility function to implement message queueing
   # in the future
   def request(type, *attributes)
+    # Add a custom user agent
+    attributes.last[:user_agent] = user_agent if attributes.last.is_a? Hash
+    puts attributes.last[:user_agent]
     RestClient.send(type, *attributes)
   end
 
