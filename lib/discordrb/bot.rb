@@ -726,6 +726,7 @@ module Discordrb
 
         # Apparently we get a 400 if the password or username is incorrect. In that case, tell the user
         debug("Are you sure you're using the correct username and password?") if e.class == RestClient::BadRequest
+        log_exception(e)
         raise $ERROR_INFO
       end
     end
