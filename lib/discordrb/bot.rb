@@ -353,7 +353,9 @@ module Discordrb
     end
 
     # Sets debug mode. If debug mode is on, many things will be outputted to STDOUT.
-    attr_writer :debug
+    def debug=(new_debug)
+      LOGGER.debug = new_debug
+    end
 
     ##     ##    ###    ##    ## ########  ##       ######## ########   ######
     ##     ##   ## ##   ###   ## ##     ## ##       ##       ##     ## ##    ##
