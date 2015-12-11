@@ -492,12 +492,11 @@ module Discordrb
     end
 
     def debug(message, important = false)
-      puts "[DEBUG : #{Thread.current[:discordrb_name]} @ #{Time.now}] #{message}" if @debug || important
+      LOGGER.debug(message, important)
     end
 
     def log_exception(e)
-      debug("Exception: #{e.inspect}", true)
-      e.backtrace.each { |line| debug(line, true) }
+      LOGGER.log_exception(e)
     end
 
     def handler_class(event_class)
