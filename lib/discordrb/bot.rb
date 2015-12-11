@@ -72,7 +72,7 @@ module Discordrb
         exit
       end
 
-      @debug = debug
+      LOGGER.debug = debug
       @should_parse_self = false
 
       @email = email
