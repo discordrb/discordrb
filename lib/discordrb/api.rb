@@ -31,7 +31,6 @@ module Discordrb::API
   def request(type, *attributes)
     # Add a custom user agent
     attributes.last[:user_agent] = user_agent if attributes.last.is_a? Hash
-    puts attributes.last[:user_agent]
     RestClient.send(type, *attributes)
   end
 
