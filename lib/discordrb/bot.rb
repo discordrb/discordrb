@@ -261,11 +261,11 @@ module Discordrb
         next if distance > threshold
 
         # Make a singleton accessor "distance"
-        channel.instance_variable_set(:@distance, distance)
-        class << channel
+        user.instance_variable_set(:@distance, distance)
+        class << user
           attr_reader :distance
         end
-        results << channel
+        results << user
       end
       results
     end
