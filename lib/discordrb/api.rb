@@ -26,12 +26,25 @@ module Discordrb::API
     "#{libraries.join(' ')} #{required}"
   end
 
+  def raw_request(type, attributes)
+    RestClient.send(type, *attributes)
+  end
+
   # Make an API request. Utility function to implement message queueing
   # in the future
   def request(type, *attributes)
     # Add a custom user agent
     attributes.last[:user_agent] = user_agent if attributes.last.is_a? Hash
-    RestClient.send(type, *attributes)
+    response = raw_request(type, attributes)
+
+    while response.code == 429
+      wait_seconds = response[:retry_after].to_i / 1000.0
+      LOGGER.debug("WARNING: Discord rate limiting will cause a delay of #{wait_seconds} seconds for the request: #{type} #{attributes}")
+      sleep wait_seconds / 1000.0
+      response = raw_request(type, attributes)
+    end
+
+    response
   end
 
   # Ban a user from a server and delete their messages from the last message_days days
