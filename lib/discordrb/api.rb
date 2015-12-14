@@ -8,9 +8,49 @@ module Discordrb::API
 
   module_function
 
+  # Generate a user agent identifying this requester as discordrb.
+  def user_agent
+    libraries = [
+      # rest-client
+      "rest-client/#{RestClient::VERSION}",
+
+      # ruby
+      "#{RUBY_ENGINE}/#{RUBY_VERSION}p#{RUBY_PATCHLEVEL}",
+
+      # discordrb
+      "discordrb/#{Discordrb::VERSION}"
+    ]
+
+    # Required by Discord devs
+    required = "DiscordBot (https://github.com/meew0/discordrb, v#{Discordrb::VERSION})"
+    "#{libraries.join(' ')} #{required}"
+  end
+
+  def raw_request(type, attributes)
+    RestClient.send(type, *attributes)
+  end
+
+  # Make an API request. Utility function to implement message queueing
+  # in the future
+  def request(type, *attributes)
+    # Add a custom user agent
+    attributes.last[:user_agent] = user_agent if attributes.last.is_a? Hash
+    response = raw_request(type, attributes)
+
+    while response.code == 429
+      wait_seconds = response[:retry_after].to_i / 1000.0
+      LOGGER.debug("WARNING: Discord rate limiting will cause a delay of #{wait_seconds} seconds for the request: #{type} #{attributes}")
+      sleep wait_seconds / 1000.0
+      response = raw_request(type, attributes)
+    end
+
+    response
+  end
+
   # Ban a user from a server and delete their messages from the last message_days days
   def ban_user(token, server_id, user_id, message_days)
-    RestClient.put(
+    request(
+      :put,
       "#{APIBASE}/guilds/#{server_id}/bans/#{user_id}?delete-message-days=#{message_days}",
       Authorization: token
     )
@@ -18,7 +58,8 @@ module Discordrb::API
 
   # Unban a user from a server
   def unban_user(token, server_id, user_id)
-    RestClient.delete(
+    request(
+      :delete,
       "#{APIBASE}/guilds/#{server_id}/bans/#{user_id}",
       Authorization: token
     )
@@ -26,7 +67,8 @@ module Discordrb::API
 
   # Kick a user from a server
   def kick_user(token, server_id, user_id)
-    RestClient.delete(
+    request(
+      :delete,
       "#{APIBASE}/guilds/#{server_id}/members/#{user_id}",
       Authorization: token
     )
@@ -34,7 +76,8 @@ module Discordrb::API
 
   # Get a server's banned users
   def bans(token, server_id)
-    RestClient.get(
+    request(
+      :get,
       "#{APIBASE}/guilds/#{server_id}/bans",
       Authorization: token
     )
@@ -42,7 +85,8 @@ module Discordrb::API
 
   # Login to the server
   def login(email, password)
-    RestClient.post(
+    request(
+      :post,
       "#{APIBASE}/auth/login",
       email: email,
       password: password
@@ -51,7 +95,8 @@ module Discordrb::API
 
   # Logout from the server
   def logout(token)
-    RestClient.post(
+    request(
+      :post,
       "#{APIBASE}/auth/logout",
       nil,
       Authorization: token
@@ -60,7 +105,8 @@ module Discordrb::API
 
   # Create a server
   def create_server(token, name, region = :london)
-    RestClient.post(
+    request(
+      :post,
       "#{APIBASE}/guilds",
       { 'name' => name, 'region' => region.to_s }.to_json,
       Authorization: token,
@@ -70,7 +116,8 @@ module Discordrb::API
 
   # Update a server
   def update_server(token, server_id, name, region, icon, afk_channel_id, afk_timeout)
-    RestClient.patch(
+    request(
+      :patch,
       "#{APIBASE}/guilds/#{server_id}",
       { 'name' => name, 'region' => region, 'icon' => icon, 'afk_channel_id' => afk_channel_id, 'afk_timeout' => afk_timeout }.to_json,
       Authorization: token,
@@ -80,7 +127,8 @@ module Discordrb::API
 
   # Delete a server
   def delete_server(token, server_id)
-    RestClient.delete(
+    request(
+      :delete,
       "#{APIBASE}/guilds/#{server_id}",
       Authorization: token
     )
@@ -88,7 +136,8 @@ module Discordrb::API
 
   # Leave a server
   def leave_server(server_id)
-    RestClient.delete(
+    request(
+      :delete,
       "#{APIBASE}/guilds/#{server_id}",
       Authorization: token
     )
@@ -96,7 +145,8 @@ module Discordrb::API
 
   # Get a channel's data
   def channel(token, channel_id)
-    RestClient.get(
+    request(
+      :get,
       "#{APIBASE}/channels/#{channel_id}",
       Authorization: token
     )
@@ -104,7 +154,8 @@ module Discordrb::API
 
   # Create a channel
   def create_channel(token, server_id, name, type)
-    RestClient.post(
+    request(
+      :post,
       "#{APIBASE}/guilds/#{server_id}/channels",
       { 'name' => name, 'type' => type }.to_json,
       Authorization: token,
@@ -114,7 +165,8 @@ module Discordrb::API
 
   # Update a channel's data
   def update_channel(token, channel_id, name, topic, position = 0)
-    RestClient.patch(
+    request(
+      :patch,
       "#{APIBASE}/channels/#{channel_id}",
       { 'name' => name, 'position' => position, 'topic' => topic }.to_json,
       Authorization: token,
@@ -124,7 +176,8 @@ module Discordrb::API
 
   # Delete a channel
   def delete_channel(token, channel_id)
-    RestClient.delete(
+    request(
+      :delete,
       "#{APIBASE}/channels/#{channel_id}",
       Authorization: token
     )
@@ -132,7 +185,8 @@ module Discordrb::API
 
   # Join a server using an invite
   def join_server(token, invite_code)
-    RestClient.post(
+    request(
+      :post,
       "#{APIBASE}/invite/#{invite_code}",
       nil,
       Authorization: token
@@ -141,7 +195,8 @@ module Discordrb::API
 
   # Resolve an invite
   def resolve_invite(token, invite_code)
-    RestClient.get(
+    request(
+      :get,
       "#{APIBASE}/invite/#{invite_code}",
       Authorization: token
     )
@@ -149,7 +204,8 @@ module Discordrb::API
 
   # Create a private channel
   def create_private(token, bot_user_id, user_id)
-    RestClient.post(
+    request(
+      :post,
       "#{APIBASE}/users/#{bot_user_id}/channels",
       { 'recipient_id' => user_id }.to_json,
       Authorization: token,
@@ -159,7 +215,8 @@ module Discordrb::API
 
   # Create an instant invite from a server or a channel id
   def create_invite(token, channel_id, max_age = 0, max_uses = 0, temporary = false, xkcd = false)
-    RestClient.post(
+    request(
+      :post,
       "#{APIBASE}/channels/#{channel_id}/invites",
       { 'max_age' => max_age, 'max_uses' => max_uses, 'temporary' => temporary, 'xkcdpass' => xkcd }.to_json,
       Authorization: token,
@@ -169,7 +226,8 @@ module Discordrb::API
 
   # Delete an invite by code
   def delete_invite(token, code)
-    RestClient.delete(
+    request(
+      :delete,
       "#{APIBASE}/invites/#{code}",
       Authorization: token
     )
@@ -177,7 +235,8 @@ module Discordrb::API
 
   # Send a message to a channel
   def send_message(token, channel_id, message, mentions = [], tts = false)
-    RestClient.post(
+    request(
+      :post,
       "#{APIBASE}/channels/#{channel_id}/messages",
       { 'content' => message, 'mentions' => mentions, tts => tts }.to_json,
       Authorization: token,
@@ -187,7 +246,8 @@ module Discordrb::API
 
   # Delete a message
   def delete_message(token, channel_id, message_id)
-    RestClient.delete(
+    request(
+      :delete,
       "#{APIBASE}/channels/#{channel_id}/messages/#{message_id}",
       Authorization: token
     )
@@ -195,7 +255,8 @@ module Discordrb::API
 
   # Edit a message
   def edit_message(token, channel_id, message_id, message, mentions = [])
-    RestClient.patch(
+    request(
+      :patch,
       "#{APIBASE}/channels/#{channel_id}/messages/#{message_id}",
       { 'content' => message, 'mentions' => mentions }.to_json,
       Authorization: token,
@@ -207,7 +268,8 @@ module Discordrb::API
   # The last acknowledged message will be sent in the ready packet,
   # so this is an easy way to catch up on messages
   def acknowledge_message(token, channel_id, message_id)
-    RestClient.post(
+    request(
+      :post,
       "#{APIBASE}/channels/#{channel_id}/messages/#{message_id}/ack",
       nil,
       Authorization: token
@@ -216,7 +278,8 @@ module Discordrb::API
 
   # Send a file as a message to a channel
   def send_file(token, channel_id, file)
-    RestClient.post(
+    request(
+      :post,
       "#{APIBASE}/channels/#{channel_id}/messages",
       { file: file },
       Authorization: token
@@ -225,7 +288,8 @@ module Discordrb::API
 
   # Create a role (parameters such as name and colour will have to be set by update_role afterwards)
   def create_role(token, server_id)
-    RestClient.post(
+    request(
+      :post,
       "#{APIBASE}/guilds/#{server_id}/roles",
       nil,
       Authorization: token
@@ -237,7 +301,8 @@ module Discordrb::API
   # sending TTS messages, embedding links, sending files, reading the history, mentioning everybody,
   # connecting to voice, speaking and voice activity (push-to-talk isn't mandatory)
   def update_role(token, server_id, role_id, name, colour, hoist = false, packed_permissions = 36_953_089)
-    RestClient.patch(
+    request(
+      :patch,
       "#{APIBASE}/guilds/#{server_id}/roles/#{role_id}",
       { 'color' => colour, 'name' => name, 'hoist' => hoist, 'permissions' => packed_permissions }.to_json,
       Authorization: token,
@@ -247,7 +312,8 @@ module Discordrb::API
 
   # Delete a role
   def delete_role(token, server_id, role_id)
-    RestClient.delete(
+    request(
+      :delete,
       "#{APIBASE}/guilds/#{server_id}/roles/#{role_id}",
       Authorization: token
     )
@@ -255,7 +321,8 @@ module Discordrb::API
 
   # Update a user's roles
   def update_user_roles(token, server_id, user_id, roles)
-    RestClient.patch(
+    request(
+      :patch,
       "#{APIBASE}/guilds/#{server_id}/members/#{user_id}",
       { 'roles' => roles }.to_json,
       Authorization: token,
@@ -265,7 +332,8 @@ module Discordrb::API
 
   # Update a user's permission overrides in a channel
   def update_user_overrides(token, channel_id, user_id, allow, deny)
-    RestClient.put(
+    request(
+      :put,
       "#{APIBASE}/channels/#{channel_id}/permissions/#{user_id}",
       { 'type' => 'member', 'id' => user_id, 'allow' => allow, 'deny' => deny }.to_json,
       Authorization: token,
@@ -275,7 +343,8 @@ module Discordrb::API
 
   # Update a role's permission overrides in a channel
   def update_role_overrides(token, channel_id, role_id, allow, deny)
-    RestClient.put(
+    request(
+      :put,
       "#{APIBASE}/channels/#{channel_id}/permissions/#{role_id}",
       { 'type' => 'role', 'id' => role_id, 'allow' => allow, 'deny' => deny }.to_json,
       Authorization: token,
@@ -285,7 +354,8 @@ module Discordrb::API
 
   # Get the gateway to be used
   def gateway(token)
-    RestClient.get(
+    request(
+      :get,
       "#{APIBASE}/gateway",
       Authorization: token
     )
@@ -293,7 +363,8 @@ module Discordrb::API
 
   # Start typing (needs to be resent every 5 seconds to keep up the typing)
   def start_typing(token, channel_id)
-    RestClient.post(
+    request(
+      :post,
       "#{APIBASE}/channels/#{channel_id}/typing",
       nil,
       Authorization: token
@@ -302,7 +373,8 @@ module Discordrb::API
 
   # Get user data
   def user(token, user_id)
-    RestClient.get(
+    request(
+      :get,
       "#{APIBASE}/users/#{user_id}",
       Authorization: token
     )
@@ -310,7 +382,8 @@ module Discordrb::API
 
   # Update user data
   def update_user(token, email, password, new_username, avatar, new_password = nil)
-    RestClient.patch(
+    request(
+      :patch,
       "#{APIBASE}/users/@me",
       { 'avatar' => avatar, 'email' => email, 'new_password' => new_password, 'password' => password, 'username' => new_username }.to_json,
       Authorization: token,
@@ -320,7 +393,8 @@ module Discordrb::API
 
   # Get a list of messages from a channel's history
   def channel_log(token, channel_id, amount, before = nil, after = nil)
-    RestClient.get(
+    request(
+      :get,
       "#{APIBASE}/channels/#{channel_id}/messages?limit=#{amount}#{"&before=#{before}" if before}#{"&after=#{after}" if after}",
       Authorization: token
     )

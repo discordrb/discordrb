@@ -72,7 +72,7 @@ module Discordrb
         exit
       end
 
-      @debug = debug
+      LOGGER.debug = debug
       @should_parse_self = false
 
       @email = email
@@ -246,6 +246,30 @@ module Discordrb
       results
     end
 
+    # Finds a user given its username. This allows fuzzy finding using Levenshtein
+    # distances, see {#find}
+    # @param username [String] The username to look for.
+    # @param threshold [Integer] The threshold for the Levenshtein algorithm. The larger
+    #   the threshold is, the more misspellings will be allowed.
+    # @return [Array<User>] The array of users that were found. May be empty if none were found.
+    def find_user(username, threshold = 0)
+      require 'levenshtein'
+
+      results = []
+      @users.values.each do |user|
+        distance = Levenshtein.distance(user.username, username)
+        next if distance > threshold
+
+        # Make a singleton accessor "distance"
+        user.instance_variable_set(:@distance, distance)
+        class << user
+          attr_reader :distance
+        end
+        results << user
+      end
+      results
+    end
+
     # Sends a text message to a channel given its ID and the message's content.
     # @param channel_id [Integer] The ID that identifies the channel to send something to.
     # @param content [String] The text that should be sent as a message. It is limited to 2000 characters (Discord imposed).
@@ -329,7 +353,9 @@ module Discordrb
     end
 
     # Sets debug mode. If debug mode is on, many things will be outputted to STDOUT.
-    attr_writer :debug
+    def debug=(new_debug)
+      LOGGER.debug = new_debug
+    end
 
     ##     ##    ###    ##    ## ########  ##       ######## ########   ######
     ##     ##   ## ##   ###   ## ##     ## ##       ##       ##     ## ##    ##
@@ -468,12 +494,11 @@ module Discordrb
     end
 
     def debug(message, important = false)
-      puts "[DEBUG : #{Thread.current[:discordrb_name]} @ #{Time.now}] #{message}" if @debug || important
+      LOGGER.debug(message, important)
     end
 
     def log_exception(e)
-      debug("Exception: #{e.inspect}", true)
-      e.backtrace.each { |line| debug(line, true) }
+      LOGGER.log_exception(e)
     end
 
     def handler_class(event_class)
@@ -726,6 +751,7 @@ module Discordrb
 
         # Apparently we get a 400 if the password or username is incorrect. In that case, tell the user
         debug("Are you sure you're using the correct username and password?") if e.class == RestClient::BadRequest
+        log_exception(e)
         raise $ERROR_INFO
       end
     end
