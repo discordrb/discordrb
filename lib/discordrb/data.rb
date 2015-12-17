@@ -592,6 +592,8 @@ module Discordrb
       API.delete_server(@bot.token, @id)
     end
 
+    alias_method :leave, :delete
+
     def name=(name)
       update_server_data(name: name)
     end
