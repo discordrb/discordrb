@@ -5,6 +5,7 @@ require 'discordrb/permissions'
 require 'discordrb/api'
 require 'discordrb/games'
 require 'discordrb/events/message'
+require 'time'
 require 'base64'
 
 # Discordrb module
@@ -421,7 +422,7 @@ module Discordrb
       @content = data['content']
       @author = User.new(data['author'], bot)
       @channel = bot.channel(data['channel_id'].to_i)
-      @timestamp = Time.at(data['timestamp'].to_i)
+      @timestamp = Time.parse(data['timestamp'])
       @id = data['id'].to_i
 
       @mentions = []
