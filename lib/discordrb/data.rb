@@ -4,6 +4,7 @@ require 'ostruct'
 require 'discordrb/permissions'
 require 'discordrb/api'
 require 'discordrb/games'
+require 'discordrb/events/message'
 require 'base64'
 
 # Discordrb module
@@ -75,7 +76,7 @@ module Discordrb
 
     # Add an await for a message from this user
     def await(key, attributes = {}, &block)
-      @bot.add_await(key, MessageEvent, { from: @id }.merge(attributes), &block)
+      @bot.add_await(key, Discordrb::Events::MessageEvent, { from: @id }.merge(attributes), &block)
     end
 
     # Is the user the bot?
@@ -383,7 +384,7 @@ module Discordrb
 
     # Add an await for a message in this channel
     def await(key, attributes = {}, &block)
-      @bot.add_await(key, MessageEvent, { in: @id }.merge(attributes), &block)
+      @bot.add_await(key, Discordrb::Events::MessageEvent, { in: @id }.merge(attributes), &block)
     end
 
     def make_invite(max_age = 0, max_uses = 0, temporary = false, xkcd = false)
@@ -444,7 +445,7 @@ module Discordrb
 
     # Add an await for a message with the same user and channel
     def await(key, attributes = {}, &block)
-      @bot.add_await(key, MessageEvent, { from: @author.id, in: @channel.id }.merge(attributes), &block)
+      @bot.add_await(key, Discordrb::Events::MessageEvent, { from: @author.id, in: @channel.id }.merge(attributes), &block)
     end
 
     def from_bot?
