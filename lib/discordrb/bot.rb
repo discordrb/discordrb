@@ -277,19 +277,7 @@ module Discordrb
     def send_message(channel_id, content)
       debug("Sending message to #{channel_id} with content '#{content}'")
 
-      # Replace mentions
-      mentions = []
-      content.gsub!(/<@([0-9]+)>/) do
-        id = Regexp.last_match(1).to_i
-        if @users[id]
-          mentions << id
-          "@#{@users[id].name}"
-        else
-          "<@#{id}}>"
-        end
-      end
-
-      response = API.send_message(@token, channel_id, content, mentions)
+      response = API.send_message(@token, channel_id, content)
       Message.new(JSON.parse(response), self)
     end
 
