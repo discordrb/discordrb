@@ -563,7 +563,11 @@ module Discordrb
         end
       end
       user.status = status
-      user.game = Discordrb::Games.find_game(data['game_id'])
+      if data['game']
+        user.game = Discordrb::Games.find_game(data['game']['name'])
+      else
+        user.game = nil
+      end
       user
     end
 

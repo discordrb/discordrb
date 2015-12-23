@@ -28,6 +28,16 @@ module Discordrb::Games
     @games.each do |game|
       return game if game.name == name_or_id || game.id == name_or_id || game.id.to_s == name_or_id
     end
-    nil
+    DummyGame.new(name_or_id)
+  end
+
+  # A dummy game for when the user isn't playing a registered game
+  class DummyGame
+    attr_reader :id, :name, :executables
+    def initialize(name)
+      @id = 0
+      @executables = []
+      @name = name
+    end
   end
 end
