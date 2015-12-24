@@ -24,6 +24,7 @@ module Discordrb::Games
   end
 
   def find_game(name_or_id)
+    return nil unless name_or_id
     return name_or_id if name_or_id.is_a? Game
     @games.each do |game|
       return game if game.name == name_or_id || game.id == name_or_id || game.id.to_s == name_or_id
