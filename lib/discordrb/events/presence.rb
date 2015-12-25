@@ -7,9 +7,9 @@ module Discordrb::Events
     attr_reader :server, :user, :status
 
     def initialize(data, bot)
-      @user = Discordrb::User.new(data['user'], bot)
+      @user = bot.user(data['user']['id'].to_i)
       @status = data['status'].to_sym
-      @server = bot.server(data['guild_id'])
+      @server = bot.server(data['guild_id'].to_i)
     end
   end
 
