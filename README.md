@@ -10,17 +10,17 @@ An implementation of the [Discord](https://discordapp.com/) API using Ruby.
 
 On Linux, it should be as simple as running:
 
-    $ gem install discordrb
+    gem install discordrb
 
 ### Windows
 
 On Windows, to install discordrb, run this in a shell:
 
-    $ gem install discordrb
+    gem install discordrb
 
 Run the [ping example](https://github.com/meew0/discordrb/blob/master/examples/ping.rb) to verify that the installation works (make sure to replace the username and password in there with your own or your bots'!):
 
-    $ ruby ping.rb
+    ruby ping.rb
 
 #### Troubleshooting
 
@@ -31,13 +31,13 @@ Run the [ping example](https://github.com/meew0/discordrb/blob/master/examples/p
 
 You're missing the development kit required to build native extensions. Download the development kit [here](http://rubyinstaller.org/downloads/) (scroll down to "Development Kit", then choose the one for Ruby 2.0 and your system architecture) and extract it somewhere. Open a command prompt in that folder and run:
 
-    $ ruby dk.rb init
-    $ ruby dk.rb install
+    ruby dk.rb init
+    ruby dk.rb install
 
 Then reinstall discordrb:
 
-    $ gem uninstall discordrb
-    $ gem install discordrb
+    gem uninstall discordrb
+    gem install discordrb
 
 **If you get an error like this when running the example**:
 
@@ -46,8 +46,8 @@ Then reinstall discordrb:
 
 You're missing the OpenSSL libraries that EventMachine, a dependency of discordrb, needs to be built with to use encrypted connections (which Discord requires). Download the OpenSSL libraries from [here](http://slproweb.com/download/Win32OpenSSL-1_0_2d.exe), install them to their default location and reinstall EventMachine using these libraries:
 
-    $ gem uninstall eventmachine
-    $ gem install eventmachine -- --with-ssl-dir=C:/OpenSSL-Win32
+    gem uninstall eventmachine
+    gem install eventmachine -- --with-ssl-dir=C:/OpenSSL-Win32
 
 ## Usage
 
