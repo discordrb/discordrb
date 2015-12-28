@@ -416,6 +416,7 @@ module Discordrb
     attr_reader :content, :author, :channel, :timestamp, :id, :mentions
     alias_method :user, :author
     alias_method :text, :content
+    alias_method :to_s, :content
 
     def initialize(data, bot)
       @bot = bot
