@@ -28,7 +28,7 @@ module Discordrb
       @id = data['id'].to_i
       @discriminator = data['discriminator']
       @avatar = data['avatar']
-      @roles = nil
+      @roles = {}
 
       @status = :offline
     end
@@ -36,19 +36,6 @@ module Discordrb
     # Utility function to mention users in messages
     def mention
       "<@#{@id}>"
-    end
-
-    # Get a user's role hash
-    def roles(resolve = true)
-      if resolve && !@roles
-        resolved = @bot.user(@id)
-
-        # Don't resolve the roles now because we don't want infinite recursion
-        @roles = resolved.roles(false)
-      end
-
-      # Use an empty hash if we couldn't get the roles from the server either
-      @roles || {}
     end
 
     # Utility function to send a PM
