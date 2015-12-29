@@ -40,7 +40,7 @@ module Discordrb
 
     # Get a user's role hash
     def roles(resolve = true)
-      if resolve && !roles
+      if resolve && !@roles
         resolved = @bot.user(@id)
 
         # Don't resolve the roles now because we don't want infinite recursion
