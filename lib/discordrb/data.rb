@@ -71,6 +71,7 @@ module Discordrb
 
     # Set this user's roles
     def update_roles(server, roles)
+      @roles ||= {}
       @roles[server.id] = roles
     end
 
