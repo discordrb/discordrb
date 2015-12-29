@@ -435,7 +435,7 @@ module Discordrb
     def initialize(data, bot)
       @bot = bot
       @content = data['content']
-      @author = bot.user(data['author'].id.to_i)
+      @author = bot.user(data['author']['id'].to_i)
       @channel = bot.channel(data['channel_id'].to_i)
       @timestamp = Time.parse(data['timestamp'])
       @id = data['id'].to_i
