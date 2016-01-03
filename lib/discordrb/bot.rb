@@ -860,9 +860,16 @@ module Discordrb
         event = TypingEvent.new(data, self)
         raise_event(event)
       when 'PRESENCE_UPDATE'
+        now_playing = !data['game'].nil?
+        played_before = !user(data['user']['id'].to_i).nil?
         update_presence(data)
 
-        event = PresenceEvent.new(data, self)
+        if now_playing != played_before
+          event = PlayingEvent.new(data, self)
+        else
+          event = PresenceEvent.new(data, self)
+        end
+
         raise_event(event)
       when 'VOICE_STATE_UPDATE'
         update_voice_state(data)
