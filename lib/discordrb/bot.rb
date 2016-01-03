@@ -864,8 +864,8 @@ module Discordrb
         event = TypingEvent.new(data, self)
         raise_event(event)
       when 'PRESENCE_UPDATE'
-        now_playing = !data['game'].nil?
-        played_before = !user(data['user']['id'].to_i).nil?
+        now_playing = data['game']
+        played_before = user(data['user']['id'].to_i).game
         update_presence(data)
 
         if now_playing != played_before
