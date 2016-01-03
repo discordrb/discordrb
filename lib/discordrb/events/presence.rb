@@ -47,7 +47,13 @@ module Discordrb::Events
 
     def initialize(data, bot)
       @user = bot.user(data['user']['id'].to_i)
-      @game = Discordrb::Games.find_game(data['game']['name'])
+
+      if data['game']
+        @game = Discordrb::Games.find_game(data['game']['name'])
+      else
+        @game = nil
+      end
+
       @server = bot.server(data['guild_id'].to_i)
     end
   end
