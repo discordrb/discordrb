@@ -6,7 +6,7 @@ module Discordrb::Events
     attr_reader :channel, :user, :timestamp
 
     def initialize(data, bot)
-      @user_id = data['user_id']
+      @user_id = data['user_id'].to_i
       @user = bot.user(@user_id)
       @channel_id = data['channel_id']
       @channel = bot.channel(@channel_id)
