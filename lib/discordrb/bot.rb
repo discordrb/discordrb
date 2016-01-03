@@ -401,6 +401,10 @@ module Discordrb
       register_event(PresenceEvent, attributes, block)
     end
 
+    def playing(attributes = {}, &block)
+      register_event(PlayingEvent, attributes, block)
+    end
+
     def mention(attributes = {}, &block)
       register_event(MentionEvent, attributes, block)
     end
