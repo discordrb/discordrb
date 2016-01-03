@@ -41,7 +41,7 @@ module Discordrb::Events
     end
   end
 
-  # Event raised when a user plays a game.
+  # Event raised when a user starts or stops playing a game
   class PlayingEvent
     attr_reader :server, :user, :game
 
