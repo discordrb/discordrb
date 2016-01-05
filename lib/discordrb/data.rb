@@ -3,7 +3,6 @@
 require 'ostruct'
 require 'discordrb/permissions'
 require 'discordrb/api'
-require 'discordrb/games'
 require 'discordrb/events/message'
 require 'time'
 require 'base64'
@@ -511,7 +510,7 @@ module Discordrb
         user = @members_by_id[user_id]
         if user
           user.status = element['status'].to_sym
-          user.game = Discordrb::Games.find_game(element['game_id'])
+          user.game = element['game'] ? element['game']['name'] : nil
         end
       end
     end

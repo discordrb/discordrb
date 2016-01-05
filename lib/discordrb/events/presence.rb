@@ -1,6 +1,5 @@
 require 'discordrb/events/generic'
 require 'discordrb/data'
-require 'discordrb/games'
 
 module Discordrb::Events
   # Event raised when a user's presence state updates (idle or online)
@@ -49,7 +48,7 @@ module Discordrb::Events
       @user = bot.user(data['user']['id'].to_i)
 
       if data['game']
-        @game = Discordrb::Games.find_game(data['game']['name'])
+        @game = data['game']['name']
       else
         @game = nil
       end

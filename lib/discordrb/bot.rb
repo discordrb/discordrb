@@ -18,7 +18,6 @@ require 'discordrb/events/guilds'
 require 'discordrb/events/await'
 
 require 'discordrb/api'
-require 'discordrb/games'
 require 'discordrb/exceptions'
 require 'discordrb/data'
 require 'discordrb/await'
@@ -335,22 +334,21 @@ module Discordrb
     end
 
     # Sets the currently playing game to the specified game.
-    # @param name_or_id [String, Fixnum] The name or the ID of the game to be played.
-    # @return [Game] The game object that is being played now.
-    def game=(name_or_id)
-      game = Discordrb::Games.find_game(name_or_id)
-      @game = game
+    # @param name [String] The name of the game to be played.
+    # @return [String] The game that is being played now.
+    def game=(name)
+      @game = name
 
       data = {
         'op' => 3,
         'd' => {
           'idle_since' => nil,
-          'game' => game ? { 'name' => game.name } : nil
+          'game' => name ? { 'name' => name } : nil
         }
       }
 
       @ws.send(data.to_json)
-      game
+      name
     end
 
     # Sets debug mode. If debug mode is on, many things will be outputted to STDOUT.
@@ -568,7 +566,7 @@ module Discordrb
       end
       user.status = status
       if data['game']
-        user.game = Discordrb::Games.find_game(data['game']['name'])
+        user.game = data['game']['name']
       else
         user.game = nil
       end
