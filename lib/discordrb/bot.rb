@@ -710,8 +710,7 @@ module Discordrb
 
     # Internal handler for GUILD_ROLE_DELETE
     def delete_guild_role(data)
-      role_data = data['role']
-      role_id = role_data['id'].to_i
+      role_id = data['role_id'].to_i
       server_id = data['guild_id'].to_i
       server = @servers[server_id]
       server.delete_role(role_id)
