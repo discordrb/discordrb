@@ -9,6 +9,11 @@ require 'base64'
 
 # Discordrb module
 module Discordrb
+  # Compares two objects based on IDs - either the objects' IDs are equal, or one object is equal to the other's ID.
+  def self.id_compare(one, other)
+    other.respond_to?(:id) ? (one.id == other.id) : (one.id == other)
+  end
+
   # User on Discord, including internal data like discriminators
   class User
     attr_reader :username, :id, :discriminator, :avatar, :voice_channel, :roles
