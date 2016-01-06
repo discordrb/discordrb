@@ -8,7 +8,7 @@ module Discordrb::Events
     def initialize(data, bot)
       @user_id = data['user_id'].to_i
       @user = bot.user(@user_id)
-      @channel_id = data['channel_id']
+      @channel_id = data['channel_id'].to_i
       @channel = bot.channel(@channel_id)
       @timestamp = Time.at(data['timestamp'].to_i)
     end

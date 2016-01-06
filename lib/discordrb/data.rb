@@ -587,7 +587,7 @@ module Discordrb
         user.server_deaf = element['deaf']
         user.self_mute = element['self_mute']
         user.self_mute = element['self_mute']
-        channel_id = element['channel_id']
+        channel_id = element['channel_id'].to_i
         channel = channel_id ? @channels_by_id[channel_id] : nil
         user.move(channel)
       end
