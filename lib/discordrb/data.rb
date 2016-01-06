@@ -37,6 +37,11 @@ module Discordrb
       @status = :offline
     end
 
+    # ID based comparison
+    def ==(other)
+      Discordrb.id_compare(@id, other)
+    end
+
     # Utility function to mention users in messages
     def mention
       "<@#{@id}>"
@@ -227,6 +232,11 @@ module Discordrb
       @colour = ColourRGB.new(data['color'])
     end
 
+    # ID based comparison
+    def ==(other)
+      Discordrb.id_compare(@id, other)
+    end
+
     def update_from(other)
       @permissions = other.permissions
       @name = other.name
@@ -349,6 +359,11 @@ module Discordrb
       end
     end
 
+    # ID based comparison
+    def ==(other)
+      Discordrb.id_compare(@id, other)
+    end
+
     def send_message(content)
       @bot.send_message(@id, content)
     end
@@ -454,6 +469,11 @@ module Discordrb
       end
     end
 
+    # ID based comparison
+    def ==(other)
+      Discordrb.id_compare(@id, other)
+    end
+
     def reply(content)
       @channel.send_message(content)
     end
@@ -491,6 +511,11 @@ module Discordrb
       process_presences(data['presences'])
       process_channels(data['channels'])
       process_voice_states(data['voice_states'])
+    end
+
+    # ID based comparison
+    def ==(other)
+      Discordrb.id_compare(@id, other)
     end
 
     def process_roles(roles)
