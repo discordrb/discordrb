@@ -67,3 +67,56 @@
 
 ### Bugfixes
 * Fixed a bug where command handling would crash if the command didn't exist.
+
+## 1.3.12
+* Add an attribute `Bot.should_parse_self` (false by default) that prevents the bot from raising an event if it receives a message from itself.
+* `User.bot?` and `Message.from_bot?` were implemented to check whether the user is the bot or the message was sent by it.
+* Add an event for private messages specifically (`Bot.pm` and `PrivateMessageEvent`)
+
+### Bugfixes
+* Fix the `MessageEvent` attribute that checks whether the message is from the bot not working at all.
+
+## 1.3.11
+* Add a user selector (`:bot`) that is usable in the `from:` `MessageEvent` attribute to check whether the message was sent by a bot.
+
+### Bugfixes
+* `Channel.private?` now checks for the server being nil instead of the `is_private` attribute provided by Discord as the latter is unreliable. (wtf)
+
+## 1.3.10
+* Add a method `Channel.private?` to check for a PM channel
+* Add a `MessageEvent` attribute (`:private`) to check whether a message was sent in a PM channel
+* Add various aliases to `MessageEvent` attributes
+* Allow regexes to check for strings in `MessageEvent` attributes
+
+### Bugfixes
+* The `matches_all` method would break in certain edge cases. This didn't really affect discordrb and I don't think anyone else uses that method (it's pretty useless otherwise). This has been fixed
+
+## 1.3.9
+* Add awaits, a powerful way to add temporary event handlers.
+* Add a `Bot.find` method to fuzzy-search for channels.
+* Add methods to kick, ban and unban users.
+
+### Bugfixes
+* Permission overrides now work correctly for private channels (i. e. they don't exist at all)
+* Users joining and leaving servers are now handled correctly.
+
+## 1.3.8
+* Added `Bot.users` and `Bot.servers` readers to get the list of users and servers.
+
+### Bugfixes
+* POST requests to API calls that don't need a payload will now send a `nil` payload instead. This fixes the bot being unable to join any servers and various other latent problems. (#21, thanks @davidkus)
+
+## 1.3.7
+*Bugfix-only release.*
+
+### Bugfixes
+* Fix the command bot being included wrong, which caused crashes upon startup.
+
+## 1.3.6
+* The bot can now be stopped from the script using the new method `Bot.stop`.
+
+### Bugfixes
+* Fix some wrong file requires which caused crashes sometimes.
+
+## 1.3.5
+* The bot can now be run asynchronously using `Bot.run(:async)` to do further initialization after the bot was started.
