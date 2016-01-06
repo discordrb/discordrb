@@ -589,6 +589,10 @@ module Discordrb
       end
     end
 
+    def role(id)
+      @roles.find { |e| e.id == id }
+    end
+
     def add_role(role)
       @roles << role
     end
