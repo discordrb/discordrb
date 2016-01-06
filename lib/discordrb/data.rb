@@ -76,7 +76,7 @@ module Discordrb
       user_roles = @roles[server.id] || []
 
       # If the given role has an ID (i.e. is a Role object), then check whether its ID is equal, otherwise check whether it's equal directly
-      user_roles.delete_if { |e| role.respond_to?(:id) ? (e.id == role.id) : (e.id == role) }
+      user_roles.delete_if { |e| e == role }
       ids = user_roles.map(&:id)
       API.update_user_roles(@bot.token, @id, server.id, ids)
     end
