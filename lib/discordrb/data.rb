@@ -69,7 +69,7 @@ module Discordrb
       user_roles = @roles[server.id] || []
       user_roles << role
       ids = user_roles.map(&:id)
-      API.update_user_roles(@bot.token, @id, server.id, ids)
+      API.update_user_roles(@bot.token, server.id, @id, ids)
     end
 
     def remove_role(server, role)
@@ -78,7 +78,7 @@ module Discordrb
       # If the given role has an ID (i.e. is a Role object), then check whether its ID is equal, otherwise check whether it's equal directly
       user_roles.delete_if { |e| e == role }
       ids = user_roles.map(&:id)
-      API.update_user_roles(@bot.token, @id, server.id, ids)
+      API.update_user_roles(@bot.token, server.id, @id, ids)
     end
 
     # Set this user's roles
