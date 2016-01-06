@@ -312,6 +312,10 @@ module Discordrb
       @code = data['code']
     end
 
+    def ==(other)
+      other.respond_to?(:code) ? (@code == other.code) : (@code == other)
+    end
+
     def delete
       API.delete_invite(@bot.token, @code)
     end
