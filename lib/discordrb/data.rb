@@ -55,6 +55,13 @@ module Discordrb
       @voice_channel = to_channel
     end
 
+    def add_role(server, role)
+      user_roles = @roles[server.id] || []
+      user_roles << role
+      ids = user_roles.map(&:id)
+      API.update_user_roles(@bot.token, @id, server.id, ids)
+    end
+
     # Set this user's roles
     def update_roles(server, roles)
       @roles ||= {}
