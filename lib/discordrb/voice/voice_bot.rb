@@ -18,7 +18,6 @@ module Discordrb::Voice
       @endpoint.delete(':80')
 
       @encoder = Encoder.new
-      bot.debug('Initing connections...')
       init_connections
     end
 
@@ -35,18 +34,14 @@ module Discordrb::Voice
     end
 
     def play_raw(io)
-      start_time = Time.now.to_f
       sequence = time = count = 0
       length = 20.0
       @playing = true
       @on_warning = false
 
-      @bot.debug('Starting')
-
       self.speaking = true
       loop do
         unless @playing
-          @bot.debug('Not playing anymore, exiting')
           self.speaking = false
           break
         end
@@ -54,13 +49,11 @@ module Discordrb::Voice
         buf = io.read(1920)
 
         unless buf
-          @bot.debug('Invalid buffer!')
           sleep length * 10.0
           continue
         end
 
         if buf.length != 1920
-          @bot.debug("Invalid buffer length: #{buf.length}")
           if @on_warning
             io.close
             self.speaking = false
@@ -78,21 +71,16 @@ module Discordrb::Voice
         (time + 9600 < 4_294_967_295) ? time += 960 : time = 0
 
         send_buffer(buf, sequence, time)
-        puts "A"
-
-        @stream_time = count * length
-        next_time = start_time + @stream_time
-        delay = (next_time - Time.now.to_f)
-        delay /= 1000.0 # milliseconds
 
         self.speaking = true unless @playing
 
-        sleep delay
+        @stream_time = count * length / 1000
+        sleep length / 1000.0
       end
     end
 
     def send_packet(packet)
-      @udp.send(packet, 0, @port, @endpoint)
+      @udp.send(packet, 0, @endpoint, @port)
     end
 
     def make_packet(buf, sequence, time, ssrc)
@@ -117,16 +105,13 @@ module Discordrb::Voice
     alias_method :destroy, :stop_playing
 
     def play_file(file)
-      @bot.debug("Playing file #{file.path}!")
       @file_io = @encoder.encode_file(file)
-      @bot.debug("IO: #{@file_io}")
       play_raw(@file_io)
     end
 
     # these are public so they can be accessed from within ws-simple's events
 
     def websocket_open
-      @bot.debug('VWS opened')
       # Send init packet
       data = {
         op: 0,
@@ -139,37 +124,26 @@ module Discordrb::Voice
       }
 
       @ws.send(data.to_json)
-      @bot.debug('VWS init packet sent!')
     end
 
     def websocket_message(msg)
       packet = JSON.parse(msg)
-      @bot.debug("Received VWS message! #{msg}")
 
       case packet['op']
         # Opcode 2 (see below)
       when 2
-        @bot.debug('Got opcode 2 packet!')
         @ws_data = packet['d']
 
         @heartbeat_interval = @ws_data['heartbeat_interval']
-        @heartbeat_thread = Thread.new do
-          loop do
-            sleep @heartbeat_interval
-            send_heartbeat
-          end
-        end
-
         @ssrc = @ws_data['ssrc']
         @port = @ws_data['port']
 
-        @bot.debug "SSRC: #{@ssrc}"
         to_send = [@ssrc].pack('N')
-        @bot.debug "Length: #{to_send.length}"
+
         # Add 66 zeros so the buffer is 70 long
         to_send += "\0" * 66
+
         # Send UDP discovery
-        @bot.debug('Sending UDP discovery')
         @udp.send(to_send, 0, @endpoint, @port)
       when 4
         @ws_data = packet['d']
@@ -182,38 +156,35 @@ module Discordrb::Voice
 
     def lookup_endpoint
       @orig_endpoint = @endpoint
-      @bot.debug("Resolving voice endpoint #{@endpoint}")
       @endpoint = @endpoint[6..-1] if @endpoint.start_with? 'wss://'
       @endpoint.delete!(':80') # The endpoint may contain a port, we don't want that
       @endpoint = Resolv.getaddress @endpoint
-      @bot.debug("Got voice endpoint IP: #{@endpoint}")
     end
 
     def init_udp
-      @bot.debug('Initializing UDP')
       @udp = UDPSocket.new
     end
 
     def init_ws
-      @bot.debug('Opening VWS')
       host = "wss://#{@orig_endpoint}:443"
-      @bot.debug("Host: #{host}")
       @ws = WebSocket::Client::Simple.connect(host)
-      @bot.debug('VWS connected')
 
       # Change some instance to local variables for the blocks
       voice_bot = self
-
-      puts @ws
 
       @ws.on(:open) { voice_bot.websocket_open }
       @ws.on(:message) { |msg| voice_bot.websocket_message(msg.data) }
       @ws.on(:error) { |e| puts e.to_s }
       @ws.on(:close) { |e| puts e.to_s }
 
-      @bot.debug('VWS opened with events')
-
-      loop {}
+      loop do
+        if @heartbeat_interval
+          sleep @heartbeat_interval / 1000.0
+          send_heartbeat
+        else
+          sleep 1
+        end
+      end
     end
 
     def send_heartbeat
@@ -248,13 +219,9 @@ module Discordrb::Voice
       @ws_thread = Thread.new { init_ws }
 
       # Now wait for opcode 2 and the resulting UDP reply packet
-      @bot.debug('Waiting for recv')
       message = @udp.recvmsg.first
-      @bot.debug('Received message')
       ip = message[4..-3].delete("\0")
       port = message[-2..-1].to_i
-
-      @bot.debug("IP is #{ip}, Port is #{port}")
 
       # Send ws init packet (opcode 1)
       data = {
@@ -270,7 +237,6 @@ module Discordrb::Voice
       }
 
       @ws.send(data.to_json)
-      @bot.debug('VWS protocol init packet sent (opcode 1)!')
     end
   end
 end
