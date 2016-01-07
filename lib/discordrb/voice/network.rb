@@ -24,7 +24,7 @@ module Discordrb::Voice
 
     def receive_discovery_reply
       # Wait for a UDP message
-      message = @udp.recvmsg.first
+      message = @socket.recvmsg.first
       ip = message[4..-3].delete("\0")
       port = message[-2..-1].to_i
       [ip, port]
@@ -52,6 +52,8 @@ module Discordrb::Voice
 
   # Represents a websocket connection to the voice server
   class VoiceWS
+    attr_reader :udp
+
     def initialize(channel, bot, token, session, endpoint)
       @channel = channel
       @bot = bot
@@ -100,6 +102,17 @@ module Discordrb::Voice
       @client.send({
         'op' => 3,
         'd' => nil
+      }.to_json)
+    end
+
+    # Send a speaking packet (op 5). This determines the green circle around the avatar in the voice channel
+    def send_speaking(value)
+      @client.send({
+        op: 5,
+        d: {
+          speaking: value,
+          delay: 0
+        }
       }.to_json)
     end
 
