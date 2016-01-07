@@ -107,6 +107,7 @@ module Discordrb::Voice
 
     # Send a speaking packet (op 5). This determines the green circle around the avatar in the voice channel
     def send_speaking(value)
+      @bot.debug("Speaking: #{value}")
       @client.send({
         op: 5,
         d: {
@@ -123,6 +124,7 @@ module Discordrb::Voice
     end
 
     def websocket_message(msg)
+      @bot.debug("Received VWS message! #{msg}")
       packet = JSON.parse(msg)
 
       case packet['op']
@@ -163,8 +165,11 @@ module Discordrb::Voice
       # Connect websocket
       @thread = Thread.new { init_ws }
 
+      @bot.debug('Started websocket initialization, now waiting for UDP discovery reply')
+
       # Now wait for opcode 2 and the resulting UDP reply packet
       ip, port = @udp.receive_discovery_reply
+      @bot.debug("UDP discovery reply received! #{ip} #{port}")
 
       # Send UDP init packet with received UDP data
       send_udp_connection(ip, port, @udp_mode)
@@ -186,6 +191,7 @@ module Discordrb::Voice
 
     def init_ws
       host = "#{@endpoint}:443"
+      @bot.debug("Connecting VWS to host: #{host}")
       @client = WebSocket::Client::Simple.connect(host)
 
       # Change some instance to local variables for the blocks
