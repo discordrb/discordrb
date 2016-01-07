@@ -61,7 +61,7 @@ module Discordrb::Voice
       @session = session
 
       @endpoint = endpoint
-      @endpoint.delete(':80')
+      @endpoint.delete!(':80')
 
       @udp = VoiceUDP.new
     end
@@ -190,17 +190,17 @@ module Discordrb::Voice
     end
 
     def init_ws
-      host = "#{@endpoint}:443"
+      host = "wss://#{@endpoint}:443"
       @bot.debug("Connecting VWS to host: #{host}")
       @client = WebSocket::Client::Simple.connect(host)
 
       # Change some instance to local variables for the blocks
       instance = self
 
-      @ws.on(:open) { instance.websocket_open }
-      @ws.on(:message) { |msg| instance.websocket_message(msg.data) }
-      @ws.on(:error) { |e| puts e.to_s }
-      @ws.on(:close) { |e| puts e.to_s }
+      @client.on(:open) { instance.websocket_open }
+      @client.on(:message) { |msg| instance.websocket_message(msg.data) }
+      @client.on(:error) { |e| puts e.to_s }
+      @client.on(:close) { |e| puts e.to_s }
 
       # Block any further execution
       heartbeat_loop
