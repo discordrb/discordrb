@@ -8,6 +8,7 @@ module Discordrb::Voice
   # A voice connection consisting of a UDP socket and a websocket client
   class VoiceBot
     def initialize(channel, bot, token, session, endpoint)
+      @bot = bot
       @ws = VoiceWS.new(channel, bot, token, session, endpoint)
       @udp = @ws.udp
 
@@ -26,17 +27,18 @@ module Discordrb::Voice
         break unless @playing
 
         # Read some data from the buffer
-        buf = @io.read(1920)
+        buf = nil
+        begin
+          buf = @io.readpartial(1920)
+        rescue EOFError
+          @bot.debug('EOF while reading, breaking immediately')
+          break
+        end
 
         # Check whether the buffer has enough data
         if !buf || buf.length != 1920
-          if @break_next
-            break
-          else
-            @break_next = true
-            sleep LENGTH * 10.0
-            next
-          end
+          @bot.debug('No data is available! Breaking')
+          break
         end
 
         # Track packet count, sequence and time (Discord requires this)
@@ -53,6 +55,8 @@ module Discordrb::Voice
         # Wait `length` ms, then send the next packet
         sleep LENGTH / 1000.0
       end
+
+      @bot.debug('Performing final cleanup after stream ended')
 
       # Final cleanup
       stop_playing
