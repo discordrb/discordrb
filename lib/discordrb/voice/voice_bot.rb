@@ -97,7 +97,6 @@ module Discordrb::Voice
     def stop_playing
       @file_io.close if @file_io
       @ws_thread.kill if @ws_thread
-      @heartbeat_thread.kill if @heartbeat_thread
       @encoder.destroy
       @playing = false
     end
@@ -189,7 +188,7 @@ module Discordrb::Voice
 
     def send_heartbeat
       millis = Time.now.strftime('%s%L').to_i
-      debug("Sending voice heartbeat at #{millis}")
+      @bot.debug("Sending voice heartbeat at #{millis}")
       data = {
         'op' => 3,
         'd' => nil
