@@ -33,7 +33,6 @@ module Discordrb::Voice
         buf = nil
         begin
           buf = @io.readpartial(DATA_LENGTH)
-          puts buf.length
         rescue EOFError
           @bot.debug('EOF while reading, breaking immediately')
           break
