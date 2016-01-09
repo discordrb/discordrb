@@ -24,6 +24,16 @@ module Discordrb::Voice
       @encoder.volume = value
     end
 
+    # Pause playback
+    def pause
+      @paused = true
+    end
+
+    # Continue playback
+    def continue
+      @paused = false
+    end
+
     # Plays the data from the @io stream as Discord requires it
     def play_io
       sequence = time = count = 0
@@ -81,6 +91,9 @@ module Discordrb::Voice
           @bot.debug("Length adjustment: new length #{@length}")
           @length_adjust = nil
         end
+
+        # If paused, wait
+        sleep 0.1 while @paused
 
         # Wait `length` ms, then send the next packet
         sleep @length / 1000.0
