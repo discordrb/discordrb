@@ -58,7 +58,7 @@ module Discordrb::Voice
     def play(encoded_io)
       stop_playing if @playing
       @io = encoded_io
-      play_io
+      play_internal
     end
 
     def play_file(file)
@@ -68,7 +68,7 @@ module Discordrb::Voice
     private
 
     # Plays the data from the @io stream as Discord requires it
-    def play_io
+    def play_internal
       count = 0
       @playing = true
       @retry_attempts = 3
