@@ -23,7 +23,7 @@ module Discordrb::Voice
     def play_io
       sequence = time = count = 0
       @playing = true
-      @break_next = false
+      @retry_attempts = 3
 
       self.speaking = true
       loop do
@@ -41,8 +41,13 @@ module Discordrb::Voice
 
         # Check whether the buffer has enough data
         if !buf || buf.length != DATA_LENGTH
-          @bot.debug('No data is available! Breaking')
-          break
+          @bot.debug("No data is available! Retrying #{@retry_attempts} more times")
+          if @retry_attempts == 0
+            break
+          else
+            @retry_attempts -= 1
+            next
+          end
         end
 
         # Track packet count, sequence and time (Discord requires this)
