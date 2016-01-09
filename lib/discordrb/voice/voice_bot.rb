@@ -65,6 +65,12 @@ module Discordrb::Voice
       play @encoder.encode_file(file)
     end
 
+    def play_io(io)
+      play @encoder.encode_io(io)
+    end
+
+    alias_method :play_stream, :play_io
+
     private
 
     # Plays the data from the @io stream as Discord requires it

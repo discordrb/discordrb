@@ -26,5 +26,12 @@ module Discordrb::Voice
       command = "ffmpeg -loglevel 0 -i #{file.path} -f s16le -ar 48000 -ac 2 -af volume=#{@volume} pipe:1"
       IO.popen(command)
     end
+
+    def encode_io(io)
+      ret_io, writer = IO.pipe
+      command = "ffmpeg -loglevel 0 -i - -f s16le -ar 48000 -ac 2 -af volume=#{@volume} pipe:1"
+      spawn(command, in: io, out: writer)
+      ret_io
+    end
   end
 end
