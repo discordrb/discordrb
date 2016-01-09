@@ -126,6 +126,7 @@ module Discordrb::Voice
     end
 
     def play_file(file)
+      stop_playing if @playing
       @io = @encoder.encode_file(file)
       play_io
     end
