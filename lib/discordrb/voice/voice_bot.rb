@@ -113,8 +113,10 @@ module Discordrb::Voice
     end
 
     def stop_playing
+      @was_playing_before = @playing
       @speaking = false
       @io.close if @io
+      sleep IDEAL_LENGTH / 1000.0 if @was_playing_before
     end
 
     def destroy
