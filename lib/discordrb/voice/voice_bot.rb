@@ -36,6 +36,37 @@ module Discordrb::Voice
       @paused = false
     end
 
+    def speaking=(value)
+      @playing = value
+      @ws.send_speaking(value)
+    end
+
+    def stop_playing
+      @was_playing_before = @playing
+      @speaking = false
+      @io.close if @io
+      @io = nil
+      sleep IDEAL_LENGTH / 1000.0 if @was_playing_before
+    end
+
+    def destroy
+      stop_playing
+      @ws_thread.kill if @ws_thread
+      @encoder.destroy
+    end
+
+    def play(encoded_io)
+      stop_playing if @playing
+      @io = encoded_io
+      play_io
+    end
+
+    def play_file(file)
+      play @encoder.encode_file(file)
+    end
+
+    private
+
     # Plays the data from the @io stream as Discord requires it
     def play_io
       count = 0
@@ -105,35 +136,6 @@ module Discordrb::Voice
 
       # Final cleanup
       stop_playing
-    end
-
-    def speaking=(value)
-      @playing = value
-      @ws.send_speaking(value)
-    end
-
-    def stop_playing
-      @was_playing_before = @playing
-      @speaking = false
-      @io.close if @io
-      @io = nil
-      sleep IDEAL_LENGTH / 1000.0 if @was_playing_before
-    end
-
-    def destroy
-      stop_playing
-      @ws_thread.kill if @ws_thread
-      @encoder.destroy
-    end
-
-    def play(encoded_io)
-      stop_playing if @playing
-      @io = encoded_io
-      play_io
-    end
-
-    def play_file(file)
-      play @encoder.encode_file(file)
     end
   end
 end
