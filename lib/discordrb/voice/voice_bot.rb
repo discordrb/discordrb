@@ -19,6 +19,11 @@ module Discordrb::Voice
       @ws.connect
     end
 
+    # Set the volume. Only applies to future playbacks
+    def volume=(value)
+      @encoder.volume = value
+    end
+
     # Plays the data from the @io stream as Discord requires it
     def play_io
       sequence = time = count = 0
