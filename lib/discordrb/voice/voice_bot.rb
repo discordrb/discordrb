@@ -2,8 +2,6 @@ require 'discordrb/voice/encoder'
 require 'discordrb/voice/network'
 
 module Discordrb::Voice
-  # How many milliseconds of audio data are to be sent each packet
-  LENGTH = 20.0
 
   # How many bytes of data to read (1920 bytes * 2 channels)
   DATA_LENGTH = 1920 * 2
@@ -24,6 +22,9 @@ module Discordrb::Voice
       sequence = time = count = 0
       @playing = true
       @retry_attempts = 3
+
+      # Default play length (ms), will be adjusted later
+      @length = 20
 
       self.speaking = true
       loop do
@@ -58,10 +59,10 @@ module Discordrb::Voice
         @udp.send_audio(@encoder.encode(buf), sequence, time)
 
         # Set the stream time (for tracking how long we've been playing)
-        @stream_time = count * LENGTH / 1000
+        @stream_time = count * @length / 1000
 
         # Wait `length` ms, then send the next packet
-        sleep LENGTH / 1000.0
+        sleep @length / 1000.0
       end
 
       @bot.debug('Performing final cleanup after stream ended')
