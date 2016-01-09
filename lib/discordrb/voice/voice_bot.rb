@@ -2,6 +2,8 @@ require 'discordrb/voice/encoder'
 require 'discordrb/voice/network'
 
 module Discordrb::Voice
+  # How long one packet should ideally be (20 ms as defined by Discord)
+  IDEAL_LENGTH = 20.0
 
   # How many bytes of data to read (1920 bytes * 2 channels)
   DATA_LENGTH = 1920 * 2
@@ -24,11 +26,16 @@ module Discordrb::Voice
       @retry_attempts = 3
 
       # Default play length (ms), will be adjusted later
-      @length = 20
+      @length = IDEAL_LENGTH
 
       self.speaking = true
       loop do
         break unless @playing
+
+        if count % 100 == 10
+          # Starting from the tenth packet, perform length adjustment every 100 packets (2 seconds)
+          @length_adjust = Time.now.nsec
+        end
 
         # Read some data from the buffer
         buf = nil
@@ -60,6 +67,15 @@ module Discordrb::Voice
 
         # Set the stream time (for tracking how long we've been playing)
         @stream_time = count * @length / 1000
+
+        # Perform length adjustment
+        if @length_adjust
+          # Difference between length_adjust and now in ms
+          ms_diff = (Time.now.nsec - @length_adjust) / 1_000_000.0
+          @length = IDEAL_LENGTH - ms_diff
+          @bot.debug("Length adjustment: new length #{@length}")
+          @length_adjust = nil
+        end
 
         # Wait `length` ms, then send the next packet
         sleep @length / 1000.0
