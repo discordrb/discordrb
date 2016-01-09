@@ -5,6 +5,9 @@ module Discordrb::Voice
   # How many milliseconds of audio data are to be sent each packet
   LENGTH = 20.0
 
+  # How many bytes of data to read (1920 bytes * 2 channels)
+  DATA_LENGTH = 1920 * 2
+
   # A voice connection consisting of a UDP socket and a websocket client
   class VoiceBot
     def initialize(channel, bot, token, session, endpoint)
@@ -29,14 +32,15 @@ module Discordrb::Voice
         # Read some data from the buffer
         buf = nil
         begin
-          buf = @io.readpartial(1920)
+          buf = @io.readpartial(DATA_LENGTH)
+          puts buf.length
         rescue EOFError
           @bot.debug('EOF while reading, breaking immediately')
           break
         end
 
         # Check whether the buffer has enough data
-        if !buf || buf.length != 1920
+        if !buf || buf.length != DATA_LENGTH
           @bot.debug('No data is available! Breaking')
           break
         end
