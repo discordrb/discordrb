@@ -15,6 +15,8 @@ module Discordrb::Voice
       @ws = VoiceWS.new(channel, bot, token, session, endpoint)
       @udp = @ws.udp
 
+      @sequence = @time = 0
+
       @encoder = Encoder.new
       @ws.connect
     end
@@ -36,7 +38,7 @@ module Discordrb::Voice
 
     # Plays the data from the @io stream as Discord requires it
     def play_io
-      sequence = time = count = 0
+      count = 0
       @playing = true
       @retry_attempts = 3
 
@@ -74,11 +76,11 @@ module Discordrb::Voice
 
         # Track packet count, sequence and time (Discord requires this)
         count += 1
-        (sequence + 10 < 65_535) ? sequence += 1 : sequence = 0
-        (time + 9600 < 4_294_967_295) ? time += 960 : time = 0
+        (@sequence + 10 < 65_535) ? @sequence += 1 : @sequence = 0
+        (@time + 9600 < 4_294_967_295) ? @time += 960 : @time = 0
 
         # Encode the packet and send it
-        @udp.send_audio(@encoder.encode(buf), sequence, time)
+        @udp.send_audio(@encoder.encode(buf), @sequence, @time)
 
         # Set the stream time (for tracking how long we've been playing)
         @stream_time = count * @length / 1000
