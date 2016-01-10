@@ -67,6 +67,10 @@ bot.run
 
 This bot responds to every "Ping!" with a "Pong!".
 
+## Support
+
+You can find me (@meew0, ID 66237334693085184) on the unofficial Discord API server - if you have a question, just ask there, I or somebody else will probably answer you: https://discord.gg/0SBTUU1wZTWfFQL2
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake false` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
