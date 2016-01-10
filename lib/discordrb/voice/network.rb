@@ -24,7 +24,7 @@ module Discordrb::Voice
 
     def receive_discovery_reply
       # Wait for a UDP message
-      message = @socket.recvmsg.first
+      message = @socket.recv(70)
       ip = message[4..-3].delete("\0")
       port = message[-2..-1].to_i
       [ip, port]
