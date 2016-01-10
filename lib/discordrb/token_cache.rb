@@ -1,6 +1,7 @@
 require 'base64'
 require 'json'
 require 'openssl'
+require 'discordrb/api'
 
 # Discordrb
 module Discordrb
@@ -54,18 +55,21 @@ module Discordrb
       decipher.decrypt
       decipher.key = key
       decipher.iv = @iv
-      @token = decipher.update(@encrypted_token) + decipher.final
-      @token
+      decipher.update(@encrypted_token) + decipher.final
     end
 
-    def encrypt_token(password)
+    def encrypt_token(password, token)
       key = obtain_key(password)
       cipher = OpenSSL::Cipher::AES256.new(:CBC)
       cipher.encrypt
       cipher.key = key
       @iv = cipher.random_iv
-      @encrypted_token = cipher.update(@token) + cipher.final
+      @encrypted_token = cipher.update(token) + cipher.final
       @encrypted_token
+    end
+
+    def test_token(token)
+      Discordrb::API.gateway(token)
     end
 
     private
@@ -73,6 +77,63 @@ module Discordrb
     def hash_password(password)
       digest = OpenSSL::Digest::SHA256.new
       OpenSSL::PKCS5.pbkdf2_hmac(password, @verify_salt, 20_000, digest.digest_length, digest)
+    end
+  end
+
+  # Path where the cache file will be stored
+  CACHE_PATH = Dir.home + '/.discordrb_token_cache.json'
+
+  # Represents a token file
+  class TokenCache
+    def initialize
+      if File.file? CACHE_PATH
+        @data = JSON.parse(File.read(CACHE_PATH))
+      else
+        LOGGER.debug("Cache file #{CACHE_PATH} not found. Using empty cache")
+        @data = {}
+      end
+    end
+
+    def token(email, password)
+      if @data[email]
+        begin
+          cached = CachedToken.new(@data[email])
+          if cached.verify_password(password)
+            token = cached.decrypt_token(password)
+            if token
+              begin
+                cached.test_token(token)
+              rescue => e; fail_token('Token cached, verified and decrypted, but rejected by Discord', email, e)
+              end
+            else; fail_token('Token cached and verified, but decryption failed', email)
+            end
+          else; fail_token('Token verification failed', email)
+          end
+        rescue => e; fail_token('Token cached but invalid', email, e)
+        end
+      else; fail_token('Token not cached at all')
+      end
+    end
+
+    def store_token(email, password, token)
+      cached = CachedToken.new
+      cached.generate_verify_hash(password)
+      cached.encrypt_token(password, token)
+      @data[email] = cached.data
+      write_cache
+    end
+
+    def write_cache
+      File.write(CACHE_PATH, @data.to_json)
+    end
+
+    private
+
+    def fail_token(msg, email = nil, e = nil)
+      LOGGER.debug("Token not retrieved from cache - #{msg}")
+      LOGGER.log_exception(e, false) if e
+      @data.delete(email) if email
+      nil
     end
   end
 end
