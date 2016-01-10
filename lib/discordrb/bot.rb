@@ -10,15 +10,17 @@ require 'discordrb/events/voice_state_update'
 require 'discordrb/events/channel_create'
 require 'discordrb/events/channel_update'
 require 'discordrb/events/channel_delete'
-require 'discordrb/events/guild_member_update'
+require 'discordrb/events/members'
 require 'discordrb/events/guild_role_create'
 require 'discordrb/events/guild_role_delete'
 require 'discordrb/events/guild_role_update'
+require 'discordrb/events/guilds'
+require 'discordrb/events/await'
 
 require 'discordrb/api'
-require 'discordrb/games'
 require 'discordrb/exceptions'
 require 'discordrb/data'
+require 'discordrb/await'
 
 require 'discordrb/voice/voice_bot'
 
@@ -27,8 +29,43 @@ module Discordrb
   class Bot
     include Discordrb::Events
 
-    attr_reader :bot_user, :token
+    # The user that represents the bot itself. This version will always be identical to
+    # the user determined by {#user} called with the bot's ID.
+    # @return [User] The bot user.
+    attr_reader :bot_user
 
+    # The Discord API token received when logging in. Useful to explicitly call
+    # {API} methods.
+    # @return [String] The API token.
+    attr_reader :token
+
+    # The list of users the bot shares a server with.
+    # @return [Array<User>] The users.
+    attr_reader :users
+
+    # The list of servers the bot is currently in.
+    # @return [Array<Server>] The servers.
+    attr_reader :servers
+
+    # The list of currently running threads used to parse and call events.
+    # The threads will have a local variable `:discordrb_name` in the format of `et-1234`, where
+    # "et" stands for "event thread" and the number is a continually incrementing number representing
+    # how many events were executed before.
+    # @return [Array<Thread>] The threads.
+    attr_reader :event_threads
+
+    # The bot's user profile. This special user object can be used
+    # to edit user data like the current username (see {Profile#username=}).
+    # @return [Profile] The bot's profile that can be used to edit data.
+    attr_reader :profile
+
+    # Whether or not the bot should parse its own messages. Off by default.
+    attr_accessor :should_parse_self
+
+    # Makes a new bot with the given email and password. It will be ready to be added event handlers to and can eventually be run with {#run}.
+    # @param email [String] The email for your (or the bot's) Discord account.
+    # @param password [String] The valid password that should be used to log in to the account.
+    # @param debug [Boolean] Whether or not the bug should run in debug mode, which gives increased console output.
     def initialize(email, password, debug = false)
       # Make sure people replace the login details in the example files...
       if email.end_with? 'example.com'
@@ -36,7 +73,8 @@ module Discordrb
         exit
       end
 
-      @debug = debug
+      LOGGER.debug = debug
+      @should_parse_self = false
 
       @email = email
       @password = password
@@ -47,8 +85,19 @@ module Discordrb
 
       @channels = {}
       @users = {}
+
+      @awaits = {}
+
+      @event_threads = []
+      @current_thread = 0
     end
 
+    # Runs the bot, which logs into Discord and connects the WebSocket. This prevents all further execution unless it is executed with `async` = `:async`.
+    # @param async [Symbol] If it is `:async`, then the bot will allow further execution.
+    #   It doesn't necessarily have to be that, anything truthy will work,
+    #   however it is recommended to use `:async` for code readability reasons.
+    #   If the bot is run in async mode, make sure to eventually run {#sync} so
+    #   the script doesn't stop prematurely.
     def run(async = false)
       run_async
       return if async
@@ -62,6 +111,7 @@ module Discordrb
       @heartbeat_interval = 1
       @heartbeat_active = false
       @heartbeat_thread = Thread.new do
+        Thread.current[:discordrb_name] = 'heartbeat'
         loop do
           sleep @heartbeat_interval
           send_heartbeat if @heartbeat_active
@@ -69,6 +119,7 @@ module Discordrb
       end
 
       @ws_thread = Thread.new do
+        Thread.current[:discordrb_name] = 'websocket'
         loop do
           websocket_connect
           debug('Disconnected! Attempting to reconnect in 5 seconds.')
@@ -83,14 +134,20 @@ module Discordrb
       debug('Confirmation received! Exiting run.')
     end
 
+    # Prevents all further execution until the websocket thread stops (e. g. through a closed connection).
     def sync
       @ws_thread.join
     end
 
+    # Kills the websocket thread, stopping all connections to Discord.
     def stop
       @ws_thread.kill
     end
 
+    # Gets a channel given its ID. This queries the internal channel cache, and if the channel doesn't
+    # exist in there, it will get the data from Discord.
+    # @param id [Integer] The channel ID for which to search for.
+    # @return [Channel] The channel identified by the ID.
     def channel(id)
       debug("Obtaining data for channel with id #{id}")
       return @channels[id] if @channels[id]
@@ -100,6 +157,11 @@ module Discordrb
       @channels[id] = channel
     end
 
+    # Creates a private channel for the given user ID, or if one exists already, returns that one.
+    # It is recommended that you use {User#pm} instead, as this is mainly for internal use. However,
+    # usage of this method may be unavoidable if only the user ID is known.
+    # @param id [Integer] The user ID to generate a private channel for.
+    # @return [Channel] A private channel for that user.
     def private_channel(id)
       debug("Creating private channel with user id #{id}")
       return @private_channels[id] if @private_channels[id]
@@ -109,8 +171,25 @@ module Discordrb
       @private_channels[id] = channel
     end
 
-    def join(invite)
+    # Gets the code for an invite.
+    # @param invite [String, Invite] The invite to get the code for. Possible formats are:
+    #
+    #    * An {Invite} object
+    #    * The code for an invite
+    #    * A fully qualified invite URL (e. g. `https://discordapp.com/invite/0A37aN7fasF7n83q`)
+    #    * A short invite URL with protocol (e. g. `https://discord.gg/0A37aN7fasF7n83q`)
+    #    * A short invite URL without protocol (e. g. `discord.gg/0A37aN7fasF7n83q`)
+    # @return [String] Only the code for the invite.
+    def resolve_invite_code(invite)
+      invite = invite.code if invite.is_a? Discordrb::Invite
       invite = invite[invite.rindex('/') + 1..-1] if invite.start_with?('http') || invite.start_with?('discord.gg')
+      invite
+    end
+
+    # Makes the bot join an invite to a server.
+    # @param invite [String, Invite] The invite to join. For possible formats see {#resolve_invite_code}.
+    def join(invite)
+      invite = resolve_invite_code(invite)
       resolved = JSON.parse(API.resolve_invite(@token, invite))['code']
       API.join_server(@token, resolved)
     end
@@ -147,42 +226,193 @@ module Discordrb
       @voice
     end
 
+    # Revokes an invite to a server. Will fail unless you have the *Manage Server* permission.
+    # It is recommended that you use {Invite#delete} instead.
+    # @param code [String, Invite] The invite to revoke. For possible formats see {#resolve_invite_code}.
+    def delete_invite(code)
+      invite = resolve_invite_code(code)
+      API.delete_invite(@token, invite)
+    end
+
+    # Gets a user by its ID.
+    # @note This can only resolve users known by the bot (i.e. that share a server with the bot).
+    # @param id [Integer] The user ID that should be resolved.
+    # @return [User, nil] The user identified by the ID, or `nil` if it couldn't be found.
     def user(id)
       @users[id]
     end
 
+    # Gets a server by its ID.
+    # @note This can only resolve servers the bot is currently in.
+    # @param id [Integer] The server ID that should be resolved.
+    # @return [Server, nil] The server identified by the ID, or `nil` if it couldn't be found.
     def server(id)
       @servers[id]
     end
 
+    # Finds a channel given its name and optionally the name of the server it is in. If the threshold
+    # is not 0, it will use a Levenshtein distance function to find the channel in a fuzzy way, which
+    # allows slight misspellings.
+    # @param channel_name [String] The channel to search for.
+    # @param server_name [String] The server to search for, or `nil` if only the channel should be searched for.
+    # @param threshold [Integer] The threshold for the Levenshtein algorithm. The larger
+    #   the threshold is, the more misspellings will be allowed.
+    # @return [Array<Channel>] The array of channels that were found. May be empty if none were found.
+    def find(channel_name, server_name = nil, threshold = 0)
+      require 'levenshtein'
+
+      results = []
+      @servers.values.each do |server|
+        server.channels.each do |channel|
+          distance = Levenshtein.distance(channel.name, channel_name)
+          distance += Levenshtein.distance(server_name || server.name, server.name)
+          next if distance > threshold
+
+          # Make a singleton accessor "distance"
+          channel.instance_variable_set(:@distance, distance)
+          class << channel
+            attr_reader :distance
+          end
+          results << channel
+        end
+      end
+      results
+    end
+
+    # Finds a user given its username. This allows fuzzy finding using Levenshtein
+    # distances, see {#find}
+    # @param username [String] The username to look for.
+    # @param threshold [Integer] The threshold for the Levenshtein algorithm. The larger
+    #   the threshold is, the more misspellings will be allowed.
+    # @return [Array<User>] The array of users that were found. May be empty if none were found.
+    def find_user(username, threshold = 0)
+      require 'levenshtein'
+
+      results = []
+      @users.values.each do |user|
+        distance = Levenshtein.distance(user.username, username)
+        next if distance > threshold
+
+        # Make a singleton accessor "distance"
+        user.instance_variable_set(:@distance, distance)
+        class << user
+          attr_reader :distance
+        end
+        results << user
+      end
+      results
+    end
+
+    # Sends a text message to a channel given its ID and the message's content.
+    # @param channel_id [Integer] The ID that identifies the channel to send something to.
+    # @param content [String] The text that should be sent as a message. It is limited to 2000 characters (Discord imposed).
+    # @return [Message] The message that was sent.
     def send_message(channel_id, content)
       debug("Sending message to #{channel_id} with content '#{content}'")
+
       response = API.send_message(@token, channel_id, content)
       Message.new(JSON.parse(response), self)
     end
 
+    # Sends a file to a channel. If it is an image, it will automatically be embedded.
+    # @note This executes in a blocking way, so if you're sending long files, be wary of delays.
+    # @param channel_id [Integer] The ID that identifies the channel to send something to.
+    # @param file [File] The file that should be sent.
     def send_file(channel_id, file)
       API.send_file(@token, channel_id, file)
     end
 
-    def game=(name_or_id)
-      game = Discordrb::Games.find_game(name_or_id)
-      @game = game
+    # Add an await the bot should listen to. For information on awaits, see {Await}.
+    # @param key [Symbol] The key that uniquely identifies the await for {AwaitEvent}s to listen to (see {#await}).
+    # @param type [Class] The event class that should be listened for.
+    # @param attributes [Hash] The attributes the event should check for. The block will only be executed if all attributes match.
+    # @yield Is executed when the await is triggered.
+    # @yieldparam event [Event] The event object that was triggered.
+    # @return [Await] The await that was created.
+    def add_await(key, type, attributes = {}, &block)
+      fail "You can't await an AwaitEvent!" if type == Discordrb::Events::AwaitEvent
+      await = Await.new(self, key, type, attributes, block)
+      @awaits[key] = await
+    end
+
+    # Creates a server on Discord with a specified name and a region.
+    # @note Discord's API doesn't directly return the server when creating it, so this method
+    #   waits until the data has been received via the websocket. This may make the execution take a while.
+    # @param name [String] The name the new server should have. Doesn't have to be alphanumeric.
+    # @param region [Symbol] The region where the server should be created. Possible regions are:
+    #
+    #   * `:london`
+    #   * `:amsterdam`
+    #   * `:frankfurt`
+    #   * `:us-east`
+    #   * `:us-west`
+    #   * `:singapore`
+    #   * `:sydney`
+    # @return [Server] The server that was created.
+    def create_server(name, region = :london)
+      response = API.create_server(@token, name, region)
+      id = JSON.parse(response)['id'].to_i
+      sleep 0.1 until @servers[id]
+      server = @servers[id]
+      debug "Successfully created server #{server.id} with name #{server.name}"
+      server
+    end
+
+    # Gets the user from a mention of the user.
+    # @param mention [String] The mention, which should look like <@12314873129>.
+    # @return [User] The user identified by the mention, or `nil` if none exists.
+    def parse_mention(mention)
+      # Mention format: <@id>
+      return nil unless /\<@(?<id>\d+)\>?/ =~ mention
+      user(id)
+    end
+
+    # Sets the currently playing game to the specified game.
+    # @param name [String] The name of the game to be played.
+    # @return [String] The game that is being played now.
+    def game=(name)
+      @game = name
 
       data = {
         'op' => 3,
         'd' => {
           'idle_since' => nil,
-          'game_id' => game ? game.id : 60 # 60 blanks out the game playing
+          'game' => name ? { 'name' => name } : nil
         }
       }
 
       @ws.send(data.to_json)
-      game
+      name
     end
 
-    attr_writer :debug
+    # Sets debug mode. If debug mode is on, many things will be outputted to STDOUT.
+    def debug=(new_debug)
+      LOGGER.debug = new_debug
+    end
 
+    ##     ##    ###    ##    ## ########  ##       ######## ########   ######
+    ##     ##   ## ##   ###   ## ##     ## ##       ##       ##     ## ##    ##
+    ##     ##  ##   ##  ####  ## ##     ## ##       ##       ##     ## ##
+    ######### ##     ## ## ## ## ##     ## ##       ######   ########   ######
+    ##     ## ######### ##  #### ##     ## ##       ##       ##   ##         ##
+    ##     ## ##     ## ##   ### ##     ## ##       ##       ##    ##  ##    ##
+    ##     ## ##     ## ##    ## ########  ######## ######## ##     ##  ######
+
+    # This **event** is raised when a message is sent to a text channel the bot is currently in.
+    # @param attributes [Hash] The event's attributes.
+    # @option attributes [String, Regexp] :start_with Matches the string the message starts with.
+    # @option attributes [String, Regexp] :end_with Matches the string the message ends with.
+    # @option attributes [String, Regexp] :contains Matches a string the message contains.
+    # @option attributes [String, Integer, Channel] :in Matches the channel the message was sent in.
+    # @option attributes [String, Integer, User] :from Matches the user that sent the message.
+    # @option attributes [String] :content Exactly matches the entire content of the message.
+    # @option attributes [String] :content Exactly matches the entire content of the message.
+    # @option attributes [Time] :after Matches a time after the time the message was sent at.
+    # @option attributes [Time] :before Matches a time before the time the message was sent at.
+    # @option attributes [Boolean] :private Matches whether or not the channel is private.
+    # @yield The block is executed when the event is raised.
+    # @yieldparam event [MessageEvent] The event that was raised.
+    # @return [MessageEventHandler] The event handler that was registered.
     def message(attributes = {}, &block)
       register_event(MessageEvent, attributes, block)
     end
@@ -201,6 +431,10 @@ module Discordrb
 
     def presence(attributes = {}, &block)
       register_event(PresenceEvent, attributes, block)
+    end
+
+    def playing(attributes = {}, &block)
+      register_event(PlayingEvent, attributes, block)
     end
 
     def mention(attributes = {}, &block)
@@ -244,6 +478,48 @@ module Discordrb
       register_event(VoiceStateUpdateEvent, attributes, block)
     end
 
+    def member_join(attributes = {}, &block)
+      register_event(GuildMemberAddEvent, attributes, block)
+    end
+
+    def member_update(attributes = {}, &block)
+      register_event(GuildMemberUpdateEvent, attributes, block)
+    end
+
+    def member_leave(attributes = {}, &block)
+      register_event(GuildMemberDeleteEvent, attributes, block)
+    end
+
+    def server_create(attributes = {}, &block)
+      register_event(GuildCreateEvent, attributes, block)
+    end
+
+    def server_update(attributes = {}, &block)
+      register_event(GuildUpdateEvent, attributes, block)
+    end
+
+    def server_delete(attributes = {}, &block)
+      register_event(GuildDeleteEvent, attributes, block)
+    end
+
+    # This **event** is raised when an {Await} is triggered. It provides an easy way to execute code
+    # on an await without having to rely on the await's block.
+    # @param attributes [Hash] The event's attributes.
+    # @option attributes [Symbol] :key Exactly matches the await's key.
+    # @option attributes [Class] :type Exactly matches the event's type.
+    # @yield The block is executed when the event is raised.
+    # @yieldparam event [AwaitEvent] The event that was raised.
+    # @return [AwaitEventHandler] The event handler that was registered.
+    def await(attributes = {}, &block)
+      register_event(AwaitEvent, attributes, block)
+    end
+
+    def pm(attributes = {}, &block)
+      register_event(PrivateMessageEvent, attributes, block)
+    end
+
+    alias_method :private_message, :pm
+
     def remove_handler(handler)
       clazz = event_class(handler.class)
       @event_handlers[clazz].delete(handler)
@@ -255,12 +531,53 @@ module Discordrb
     end
 
     def debug(message, important = false)
-      puts "[DEBUG @ #{Time.now}] #{message}" if @debug || important
+      LOGGER.debug(message, important)
+    end
+
+    def log_exception(e)
+      LOGGER.log_exception(e)
+    end
+
+    def handler_class(event_class)
+      class_from_string(event_class.to_s + 'Handler')
     end
 
     alias_method :<<, :add_handler
 
     private
+
+    #######     ###     ######  ##     ## ########
+    ##    ##   ## ##   ##    ## ##     ## ##
+    ##        ##   ##  ##       ##     ## ##
+    ##       ##     ## ##       ######### ######
+    ##       ######### ##       ##     ## ##
+    ##    ## ##     ## ##    ## ##     ## ##
+    #######  ##     ##  ######  ##     ## ########
+
+    def add_server(data)
+      server = Server.new(data, self)
+      @servers[server.id] = server
+
+      # Initialize users
+      server.members.each do |member|
+        if @users[member.id]
+          # If the user is already cached, just add the new roles
+          @users[member.id].merge_roles(server, member.roles[server.id])
+        else
+          @users[member.id] = member
+        end
+      end
+
+      server
+    end
+
+    ### ##    ## ######## ######## ########  ##    ##    ###    ##        ######
+    ##  ###   ##    ##    ##       ##     ## ###   ##   ## ##   ##       ##    ##
+    ##  ####  ##    ##    ##       ##     ## ####  ##  ##   ##  ##       ##
+    ##  ## ## ##    ##    ######   ########  ## ## ## ##     ## ##        ######
+    ##  ##  ####    ##    ##       ##   ##   ##  #### ######### ##             ##
+    ##  ##   ###    ##    ##       ##    ##  ##   ### ##     ## ##       ##    ##
+    ### ##    ##    ##    ######## ##     ## ##    ## ##     ## ########  ######
 
     # Internal handler for PRESENCE_UPDATE
     def update_presence(data)
@@ -282,7 +599,11 @@ module Discordrb
         end
       end
       user.status = status
-      user.game = Discordrb::Games.find_game(data['game_id'])
+      if data['game']
+        user.game = data['game']['name']
+      else
+        user.game = nil
+      end
       user
     end
 
@@ -347,19 +668,76 @@ module Discordrb
       server.channels.reject! { |c| c.id == channel.id }
     end
 
-    # Internal handler for GUILD_MEMBER_UPDATE
-    def update_guild_member(data)
-      user_data = data['user']
+    # Internal handler for GUILD_MEMBER_ADD
+    def add_guild_member(data)
+      user = User.new(data['user'], self)
       server_id = data['guild_id'].to_i
       server = @servers[server_id]
+
       roles = []
       data['roles'].each do |element|
         role_id = element.to_i
         roles << server.roles.find { |r| r.id == role_id }
       end
-      user_id = user_data['id'].to_i
-      user = @users[user_id]
       user.update_roles(server, roles)
+
+      if @users[user.id]
+        # If the user is already cached, just add the new roles
+        @users[user.id].merge_roles(server, user.roles[server.id])
+      else
+        @users[user.id] = user
+      end
+
+      server.add_user(user)
+    end
+
+    # Internal handler for GUILD_MEMBER_UPDATE
+    def update_guild_member(data)
+      user_id = data['user']['id'].to_i
+      user = @users[user_id]
+
+      server_id = data['guild_id'].to_i
+      server = @servers[server_id]
+
+      roles = []
+      data['roles'].each do |element|
+        role_id = element.to_i
+        roles << server.roles.find { |r| r.id == role_id }
+      end
+      user.update_roles(server, roles)
+    end
+
+    # Internal handler for GUILD_MEMBER_DELETE
+    def delete_guild_member(data)
+      user_id = data['user']['id'].to_i
+      user = @users[user_id]
+
+      server_id = data['guild_id'].to_i
+      server = @servers[server_id]
+
+      user.delete_roles(server_id)
+      server.delete_user(user_id)
+    end
+
+    # Internal handler for GUILD_CREATE
+    def create_guild(data)
+      add_server(data)
+    end
+
+    # Internal handler for GUILD_UPDATE
+    def update_guild(data)
+      @servers[data['id'].to_i].update_data(data)
+    end
+
+    # Internal handler for GUILD_DELETE
+    def delete_guild(data)
+      id = data['id'].to_i
+
+      @users.each do |_, user|
+        user.delete_roles(id)
+      end
+
+      @servers.delete(id)
     end
 
     # Internal handler for GUILD_ROLE_UPDATE
@@ -384,8 +762,7 @@ module Discordrb
 
     # Internal handler for GUILD_ROLE_DELETE
     def delete_guild_role(data)
-      role_data = data['role']
-      role_id = role_data['id'].to_i
+      role_id = data['role_id'].to_i
       server_id = data['guild_id'].to_i
       server = @servers[server_id]
       server.delete_role(role_id)
@@ -396,6 +773,14 @@ module Discordrb
 
     # Internal handler for TYPING_START
     def start_typing(data); end
+
+    ##        #######   ######   #### ##    ##
+    ##       ##     ## ##    ##   ##  ###   ##
+    ##       ##     ## ##         ##  ####  ##
+    ##       ##     ## ##   ####  ##  ## ## ##
+    ##       ##     ## ##    ##   ##  ##  ####
+    ##       ##     ## ##    ##   ##  ##   ###
+    ########  #######   ######   #### ##    ##
 
     def login
       debug('Logging in')
@@ -424,6 +809,7 @@ module Discordrb
 
         # Apparently we get a 400 if the password or username is incorrect. In that case, tell the user
         debug("Are you sure you're using the correct username and password?") if e.class == RestClient::BadRequest
+        log_exception(e)
         raise $ERROR_INFO
       end
     end
@@ -433,6 +819,14 @@ module Discordrb
       response = API.gateway(@token)
       JSON.parse(response)['url']
     end
+
+    ##      ##  ######     ######## ##     ## ######## ##    ## ########  ######
+    ##  ##  ## ##    ##    ##       ##     ## ##       ###   ##    ##    ##    ##
+    ##  ##  ## ##          ##       ##     ## ##       ####  ##    ##    ##
+    ##  ##  ##  ######     ######   ##     ## ######   ## ## ##    ##     ######
+    ##  ##  ##       ##    ##        ##   ##  ##       ##  ####    ##          ##
+    ##  ##  ## ##    ##    ##         ## ##   ##       ##   ###    ##    ##    ##
+    ####  ###   ######     ########    ###    ######## ##    ##    ##     ######
 
     def websocket_connect
       debug('Attempting to get gateway URL...')
@@ -470,22 +864,12 @@ module Discordrb
         debug("Desired heartbeat_interval: #{@heartbeat_interval}")
 
         bot_user_id = data['user']['id'].to_i
+        @profile = Profile.new(data['user'], self, @email, @password)
 
         # Initialize servers
         @servers = {}
         data['guilds'].each do |element|
-          server = Server.new(element, self)
-          @servers[server.id] = server
-
-          # Initialize users
-          server.members.each do |member|
-            if @users[member.id]
-              # If the user is already cached, just add the new roles
-              @users[member.id].merge_roles(server, member.roles[server.id])
-            else
-              @users[member.id] = member
-            end
-          end
+          add_server(element)
 
           # Save the bot user
           @bot_user = @users[bot_user_id]
@@ -508,11 +892,19 @@ module Discordrb
         create_message(data)
 
         message = Message.new(data, self)
+
+        return if message.from_bot? && !should_parse_self
+
         event = MessageEvent.new(message, self)
         raise_event(event)
 
         if message.mentions.any? { |user| user.id == @bot_user.id }
           event = MentionEvent.new(message, self)
+          raise_event(event)
+        end
+
+        if message.channel.private?
+          event = PrivateMessageEvent.new(message, self)
           raise_event(event)
         end
       when 'TYPING_START'
@@ -521,9 +913,16 @@ module Discordrb
         event = TypingEvent.new(data, self)
         raise_event(event)
       when 'PRESENCE_UPDATE'
+        now_playing = data['game']
+        played_before = user(data['user']['id'].to_i).game
         update_presence(data)
 
-        event = PresenceEvent.new(data, self)
+        if now_playing != played_before
+          event = PlayingEvent.new(data, self)
+        else
+          event = PresenceEvent.new(data, self)
+        end
+
         raise_event(event)
       when 'VOICE_STATE_UPDATE'
         update_voice_state(data)
@@ -549,10 +948,20 @@ module Discordrb
 
         event = ChannelDeleteEvent.new(data, self)
         raise_event(event)
+      when 'GUILD_MEMBER_ADD'
+        add_guild_member(data)
+
+        event = GuildMemberAddEvent.new(data, self)
+        raise_event(event)
       when 'GUILD_MEMBER_UPDATE'
         update_guild_member(data)
 
         event = GuildMemberUpdateEvent.new(data, self)
+        raise_event(event)
+      when 'GUILD_MEMBER_REMOVE'
+        delete_guild_member(data)
+
+        event = GuildMemberDeleteEvent.new(data, self)
         raise_event(event)
       when 'GUILD_ROLE_UPDATE'
         update_guild_role(data)
@@ -569,10 +978,24 @@ module Discordrb
 
         event = GuildRoleDeleteEvent.new(data, self)
         raise_event(event)
+      when 'GUILD_CREATE'
+        create_guild(data)
+
+        event = GuildCreateEvent.new(data, self)
+        raise_event(event)
+      when 'GUILD_UPDATE'
+        update_guild(data)
+
+        event = GuildUpdateEvent.new(data, self)
+        raise_event(event)
+      when 'GUILD_DELETE'
+        delete_guild(data)
+
+        event = GuildDeleteEvent.new(data, self)
+        raise_event(event)
       end
     rescue Exception => e
-      debug("Exception: #{e.inspect}", true)
-      e.backtrace.each { |line| debug(line) }
+      log_exception(e)
     end
 
     def websocket_close(event)
@@ -605,11 +1028,37 @@ module Discordrb
 
     def raise_event(event)
       debug("Raised a #{event.class}")
-      Thread.new do
-        handlers = @event_handlers[event.class]
-        (handlers || []).each do |handler|
-          handler.match(event)
+      handle_awaits(event)
+
+      handlers = @event_handlers[event.class]
+      (handlers || []).each do |handler|
+        call_event(handler, event) if handler.matches?(event)
+      end
+    end
+
+    def call_event(handler, event)
+      t = Thread.new do
+        @event_threads << t
+        Thread.current[:discordrb_name] = "et-#{@current_thread += 1}"
+        begin
+          handler.call(event)
+        rescue => e
+          log_exception(e)
+        ensure
+          @event_threads.delete(t)
         end
+      end
+    end
+
+    def handle_awaits(event)
+      @awaits.each do |_, await|
+        key, should_delete = await.match(event)
+        next unless key
+        debug("should_delete: #{should_delete}")
+        @awaits.delete(await.key) if should_delete
+
+        await_event = Discordrb::Events::AwaitEvent.new(await, event, self)
+        raise_event(await_event)
       end
     end
 
@@ -645,10 +1094,6 @@ module Discordrb
       return nil unless class_name.end_with? 'Handler'
 
       class_from_string(class_name[0..-8])
-    end
-
-    def handler_class(event_class)
-      class_from_string(event_class.to_s + 'Handler')
     end
   end
 end

@@ -22,7 +22,8 @@ module Discordrb::Commands
         help_command: attributes[:help_command] || :help,
 
         # The message to display for when a command doesn't exist, %command% to get the command name in question and nil for no message
-        command_doesnt_exist_message: attributes[:command_doesnt_exist_message] || "The command `%command%` doesn't exist!",
+        # No default value here because it may not be desired behaviour
+        command_doesnt_exist_message: attributes[:command_doesnt_exist_message],
 
         # All of the following need to be one character
         # String to designate previous result in command chain
@@ -88,12 +89,13 @@ module Discordrb::Commands
       debug("Executing command #{name} with arguments #{arguments}")
       command = @commands[name]
       unless command
-        event.respond @attributes[:command_doesnt_exist_message].gsub('%command%', name) if @attributes[:command_doesnt_exist_message]
+        event.respond @attributes[:command_doesnt_exist_message].gsub('%command%', name.to_s) if @attributes[:command_doesnt_exist_message]
         return
       end
-      if permission?(user(event.user.id), command.attributes[:permission_level], event.server.id)
+      if permission?(user(event.user.id), command.attributes[:permission_level], event.server)
         event.command = command
-        command.call(event, arguments, chained)
+        result = command.call(event, arguments, chained)
+        result.to_s
       else
         event.respond "You don't have permission to execute command `#{name}`!"
         return
@@ -118,10 +120,24 @@ module Discordrb::Commands
         return
       end
 
-      debug("Parsing command chain #{chain}")
-      result = (@attributes[:advanced_functionality]) ? CommandChain.new(chain, self).execute(event) : simple_execute(chain, event)
-      result = event.saved_message + (result || '')
-      event.respond result if result
+      execute_chain(chain, event)
+    end
+
+    def execute_chain(chain, event)
+      t = Thread.new do
+        @event_threads << t
+        Thread.current[:discordrb_name] = "ct-#{@current_thread += 1}"
+        begin
+          debug("Parsing command chain #{chain}")
+          result = (@attributes[:advanced_functionality]) ? CommandChain.new(chain, self).execute(event) : simple_execute(chain, event)
+          result = event.saved_message + (result || '')
+          event.respond result unless result.nil? || result.empty?
+        rescue => e
+          log_exception(e)
+        ensure
+          @event_threads.delete(t)
+        end
+      end
     end
 
     def set_user_permission(id, level)
@@ -132,8 +148,8 @@ module Discordrb::Commands
       @permissions[:roles][id] = level
     end
 
-    def permission?(user, level, server_id)
-      determined_level = user.roles[server_id].each.reduce(0) do |memo, role|
+    def permission?(user, level, server)
+      determined_level = server.nil? ? 0 : user.roles[server.id].each.reduce(0) do |memo, role|
         [@permissions[:roles][role.id] || 0, memo].max
       end
       [@permissions[:users][user.id] || 0, determined_level].max >= level

@@ -3,25 +3,25 @@
 require 'ostruct'
 require 'discordrb/permissions'
 require 'discordrb/api'
-require 'discordrb/games'
+require 'discordrb/events/message'
+require 'time'
+require 'base64'
 
+# Discordrb module
 module Discordrb
+  # Compares two objects based on IDs - either the objects' IDs are equal, or one object is equal to the other's ID.
+  def self.id_compare(one_id, other)
+    other.respond_to?(:id) ? (one_id == other.id) : (one_id == other)
+  end
+
   # User on Discord, including internal data like discriminators
   class User
-    attr_reader :username, :id, :discriminator, :avatar
+    attr_reader :username, :id, :discriminator, :avatar, :voice_channel, :roles
+    attr_accessor :status, :game, :server_mute, :server_deaf, :self_mute, :self_deaf
 
-    attr_accessor :status
-    attr_accessor :game
-    attr_accessor :server_mute
-    attr_accessor :server_deaf
-    attr_accessor :self_mute
-    attr_accessor :self_deaf
-    attr_reader :voice_channel
-
-    # Hash of user roles.
+    # @roles is a hash of user roles:
     # Key: Server ID
     # Value: Array of roles.
-    attr_reader :roles
 
     alias_method :name, :username
 
@@ -35,6 +35,11 @@ module Discordrb
       @roles = {}
 
       @status = :offline
+    end
+
+    # ID based comparison
+    def ==(other)
+      Discordrb.id_compare(@id, other)
     end
 
     # Utility function to mention users in messages
@@ -60,8 +65,25 @@ module Discordrb
       @voice_channel = to_channel
     end
 
+    def add_role(server, role)
+      user_roles = @roles[server.id] || []
+      user_roles << role
+      ids = user_roles.map(&:id)
+      API.update_user_roles(@bot.token, server.id, @id, ids)
+    end
+
+    def remove_role(server, role)
+      user_roles = @roles[server.id] || []
+
+      # If the given role has an ID (i.e. is a Role object), then check whether its ID is equal, otherwise check whether it's equal directly
+      user_roles.delete_if { |e| e == role }
+      ids = user_roles.map(&:id)
+      API.update_user_roles(@bot.token, server.id, @id, ids)
+    end
+
     # Set this user's roles
     def update_roles(server, roles)
+      @roles ||= {}
       @roles[server.id] = roles
     end
 
@@ -72,6 +94,21 @@ module Discordrb
       else
         @roles[server.id] = roles
       end
+    end
+
+    # Delete a specific server from the roles (in case a user leaves a server)
+    def delete_roles(server_id)
+      @roles.delete(server_id)
+    end
+
+    # Add an await for a message from this user
+    def await(key, attributes = {}, &block)
+      @bot.add_await(key, Discordrb::Events::MessageEvent, { from: @id }.merge(attributes), &block)
+    end
+
+    # Is the user the bot?
+    def bot?
+      @bot.bot_user.id == @id
     end
 
     # Determine if the user has permission to do an action
@@ -114,37 +151,183 @@ module Discordrb
     end
   end
 
+  # A class that represents the bot user itself and has methods to change stuff
+  class Profile < User
+    def initialize(data, bot, email, password)
+      super(data, bot)
+      @email = email
+      @password = password
+    end
+
+    def bot?
+      true
+    end
+
+    def username=(username)
+      update_server_data(username: username)
+    end
+
+    def email=(email)
+      update_server_data(email: email)
+    end
+
+    def password=(password)
+      update_server_data(new_password: password)
+    end
+
+    def avatar=(avatar)
+      if avatar.is_a? File
+        avatar_string = 'data:image/jpg;base64,'
+        avatar_string += Base64.strict_encode64(avatar.read)
+        update_server_data(avatar: avatar_string)
+      else
+        update_server_data(avatar: avatar)
+      end
+    end
+
+    def update_data(new_data)
+      @email = new_data[:email] || @email
+      @password = new_data[:new_password] || @password
+      @username = new_data[:username] || @username
+      @avatar = new_data[:avatar] || @avatar
+    end
+
+    private
+
+    def update_server_data(new_data)
+      API.update_user(@bot.token,
+                      new_data[:email] || @email,
+                      @password,
+                      new_data[:username] || @username,
+                      new_data[:avatar] || @avatar,
+                      new_data[:new_password] || nil)
+      update_data(new_data)
+    end
+  end
+
   # A Discord role that contains permissions and applies to certain users
   class Role
-    attr_reader :permissions
-    attr_reader :name
-    attr_reader :id
-    attr_reader :hoist
-    attr_reader :color
+    attr_reader :permissions, :name, :id, :hoist, :colour
+    alias_method :color, :colour
+
+    # Class that writes data for a Permissions object
+    class RoleWriter
+      def initialize(role, token)
+        @role = role
+        @token = token
+      end
+
+      def write(bits)
+        @role.send(:packed=, bits, false)
+      end
+    end
 
     def initialize(data, bot, server = nil)
       @bot = bot
       @server = server
-      @permissions = Permissions.new(data['permissions'])
+      @permissions = Permissions.new(data['permissions'], RoleWriter.new(self, @bot.token))
       @name = data['name']
       @id = data['id'].to_i
       @hoist = data['hoist']
-      @color = ColorRGB.new(data['color'])
+      @colour = ColourRGB.new(data['color'])
+    end
+
+    # ID based comparison
+    def ==(other)
+      Discordrb.id_compare(@id, other)
     end
 
     def update_from(other)
       @permissions = other.permissions
       @name = other.name
       @hoist = other.hoist
-      @color = other.color
+      @colour = other.colour
+    end
+
+    def update_data(new_data)
+      @name = new_data[:name] || new_data['name'] || @name
+      @hoist = new_data['hoist'] unless new_data['hoist'].nil?
+      @hoist = new_data[:hoist] unless new_data[:hoist].nil?
+      @colour = new_data[:colour] || (new_data['color'] ? ColourRGB.new(new_data['color']) : @colour)
+    end
+
+    def name=(name)
+      update_role_data(name: name)
+    end
+
+    def hoist=(hoist)
+      update_role_data(hoist: hoist)
+    end
+
+    def colour=(colour)
+      update_role_data(colour: colour)
+    end
+
+    alias_method :color=, :colour=
+
+    def packed=(packed, update_perms = true)
+      update_role_data(permissions: packed)
+      @permissions.bits = packed if update_perms
+    end
+
+    def delete
+      API.delete_role(@bot.token, @server.id, @id)
+      @server.delete_role(@id)
+    end
+
+    private
+
+    def update_role_data(new_data)
+      API.update_role(@bot.token, @server.id, @id,
+                      new_data[:name] || @name,
+                      (new_data[:colour] || @colour).combined,
+                      !(!(new_data[:hoist].nil? ? new_data[:hoist] : @hoist)),
+                      new_data[:permissions] || @permissions.bits)
+      update_data(new_data)
+    end
+  end
+
+  # A Discord invite to a channel
+  class Invite
+    attr_reader :channel, :uses, :inviter, :temporary, :revoked, :xkcd, :code
+    alias_method :max_uses, :uses
+    alias_method :user, :inviter
+
+    alias_method :temporary?, :temporary
+    alias_method :revoked?, :revoked
+    alias_method :xkcd?, :xkcd
+
+    delegate :server, to: :channel
+
+    def initialize(data, bot)
+      @bot = bot
+
+      @channel = Channel.new(data['channel'], bot)
+      @uses = data['uses']
+      @inviter = @bot.user(data['inviter']['id'].to_i) || User.new(data['inviter'], bot)
+      @temporary = data['temporary']
+      @revoked = data['revoked']
+      @xkcd = data['xkcdpass']
+
+      @code = data['code']
+    end
+
+    def ==(other)
+      other.respond_to?(:code) ? (@code == other.code) : (@code == other)
+    end
+
+    def delete
+      API.delete_invite(@bot.token, @code)
     end
   end
 
   # A Discord channel, including data like the topic
   class Channel
-    attr_reader :name, :server, :type, :id, :is_private, :recipient, :topic, :position
+    attr_reader :name, :server, :type, :id, :is_private, :recipient, :topic, :position, :permission_overwrites
 
-    attr_reader :permission_overwrites
+    def private?
+      @server.nil?
+    end
 
     def initialize(data, bot, server = nil)
       @bot = bot
@@ -178,6 +361,11 @@ module Discordrb
         @permission_overwrites[role_id].deny = deny
         @permission_overwrites[role_id].allow = allow
       end
+    end
+
+    # ID based comparison
+    def ==(other)
+      Discordrb.id_compare(@id, other)
     end
 
     def send_message(content)
@@ -226,12 +414,35 @@ module Discordrb
       end
     end
 
+    def history(amount, before_id = nil, after_id = nil)
+      logs = API.channel_log(@bot.token, @id, amount, before_id, after_id)
+      JSON.parse(logs).map { |message| Message.new(message, @bot) }
+    end
+
     def update_overwrites(overwrites)
       @permission_overwrites = overwrites
     end
 
+    # Add an await for a message in this channel
+    def await(key, attributes = {}, &block)
+      @bot.add_await(key, Discordrb::Events::MessageEvent, { in: @id }.merge(attributes), &block)
+    end
+
+    def make_invite(max_age = 0, max_uses = 0, temporary = false, xkcd = false)
+      response = API.create_invite(@bot.token, @id, max_age, max_uses, temporary, xkcd)
+      Invite.new(JSON.parse(response), @bot)
+    end
+
+    # Starts typing, which displays the typing indicator on the client for five seconds.
+    # If you want to keep typing you'll have to resend this every five seconds. (An abstraction
+    # for this will eventually be coming)
+    def start_typing
+      API.start_typing(@bot.token, @id)
+    end
+
     alias_method :send, :send_message
     alias_method :message, :send_message
+    alias_method :invite, :make_invite
 
     private
 
@@ -245,13 +456,14 @@ module Discordrb
     attr_reader :content, :author, :channel, :timestamp, :id, :mentions
     alias_method :user, :author
     alias_method :text, :content
+    alias_method :to_s, :content
 
     def initialize(data, bot)
       @bot = bot
       @content = data['content']
-      @author = User.new(data['author'], bot)
+      @author = bot.user(data['author']['id'].to_i)
       @channel = bot.channel(data['channel_id'].to_i)
-      @timestamp = Time.at(data['timestamp'].to_i)
+      @timestamp = Time.parse(data['timestamp'])
       @id = data['id'].to_i
 
       @mentions = []
@@ -259,6 +471,11 @@ module Discordrb
       data['mentions'].each do |element|
         @mentions << User.new(element, bot)
       end
+    end
+
+    # ID based comparison
+    def ==(other)
+      Discordrb.id_compare(@id, other)
     end
 
     def reply(content)
@@ -272,86 +489,112 @@ module Discordrb
     def delete
       API.delete_message(@bot.token, @channel.id, @id)
     end
+
+    # Add an await for a message with the same user and channel
+    def await(key, attributes = {}, &block)
+      @bot.add_await(key, Discordrb::Events::MessageEvent, { from: @author.id, in: @channel.id }.merge(attributes), &block)
+    end
+
+    def from_bot?
+      @author.bot?
+    end
   end
 
   # A server on Discord
   class Server
-    attr_reader :region, :name, :owner_id, :id, :members
-
-    # Array of channels on the server
-    attr_reader :channels
-
-    # Array of roles on the server
-    attr_reader :roles
+    attr_reader :region, :name, :owner_id, :id, :members, :channels, :roles, :icon, :afk_timeout, :afk_channel_id
 
     def initialize(data, bot)
       @bot = bot
-      @region = data['region']
-      @name = data['name']
       @owner_id = data['owner_id'].to_i
       @id = data['id'].to_i
+      update_data(data)
 
+      process_roles(data['roles'])
+      process_members(data['members'])
+      process_presences(data['presences'])
+      process_channels(data['channels'])
+      process_voice_states(data['voice_states'])
+    end
+
+    # ID based comparison
+    def ==(other)
+      Discordrb.id_compare(@id, other)
+    end
+
+    def process_roles(roles)
       # Create roles
       @roles = []
-      roles_by_id = {}
-      data['roles'].each do |element|
-        role = Role.new(element, bot)
+      @roles_by_id = {}
+      roles.each do |element|
+        role = Role.new(element, @bot, self)
         @roles << role
-        roles_by_id[role.id] = role
+        @roles_by_id[role.id] = role
       end
+    end
 
+    def process_members(members)
       @members = []
-      members_by_id = {}
+      @members_by_id = {}
 
-      data['members'].each do |element|
-        user = User.new(element['user'], bot)
+      return unless members
+      members.each do |element|
+        user = User.new(element['user'], @bot)
         @members << user
-        members_by_id[user.id] = user
+        @members_by_id[user.id] = user
         user_roles = []
         element['roles'].each do |e|
           role_id = e.to_i
-          user_roles << roles_by_id[role_id]
+          user_roles << @roles_by_id[role_id]
         end
         user.update_roles(self, user_roles)
       end
+    end
 
+    def process_presences(presences)
       # Update user statuses with presence info
-      if data['presences']
-        data['presences'].each do |element|
-          next unless element['user']
-          user_id = element['user']['id'].to_i
-          user = members_by_id[user_id]
-          if user
-            user.status = element['status'].to_sym
-            user.game = Discordrb::Games.find_game(element['game_id'])
-          end
+      return unless presences
+      presences.each do |element|
+        next unless element['user']
+        user_id = element['user']['id'].to_i
+        user = @members_by_id[user_id]
+        if user
+          user.status = element['status'].to_sym
+          user.game = element['game'] ? element['game']['name'] : nil
         end
       end
+    end
 
+    def process_channels(channels)
       @channels = []
-      channels_by_id = {}
+      @channels_by_id = {}
 
-      if data['channels']
-        data['channels'].each do |element|
-          channel = Channel.new(element, bot, self)
-          @channels << channel
-          channels_by_id[channel.id] = channel
-        end
+      return unless channels
+      channels.each do |element|
+        channel = Channel.new(element, @bot, self)
+        @channels << channel
+        @channels_by_id[channel.id] = channel
       end
+    end
 
-      return unless data['voice_states']
-      data['voice_states'].each do |element|
+    def process_voice_states(voice_states)
+      return unless voice_states
+      voice_states.each do |element|
         user_id = element['user_id'].to_i
-        user = members_by_id[user_id]
+        user = @members_by_id[user_id]
         next unless user
         user.server_mute = element['mute']
         user.server_deaf = element['deaf']
         user.self_mute = element['self_mute']
         user.self_mute = element['self_mute']
-        channel_id = element['channel_id']
-        channel = channel_id ? channels_by_id[channel_id] : nil
+        channel_id = element['channel_id'].to_i
+        channel = channel_id ? @channels_by_id[channel_id] : nil
         user.move(channel)
       end
+    end
+
+    def role(id)
+      @roles.find { |e| e.id == id }
     end
 
     def add_role(role)
@@ -361,7 +604,7 @@ module Discordrb
     def delete_role(role_id)
       @roles.reject! { |r| r.id == role_id }
       @members.each do |user|
-        new_roles = user.roles.reject { |r| r.id == role_id }
+        new_roles = user.roles[@id].reject { |r| r.id == role_id }
         user.update_roles(self, new_roles)
       end
       @channels.each do |channel|
@@ -370,20 +613,102 @@ module Discordrb
       end
     end
 
+    def add_user(user)
+      @members << user
+    end
+
+    def delete_user(user_id)
+      @members.reject! { |member| member.id == user_id }
+    end
+
     def create_channel(name)
       response = API.create_channel(@bot.token, @id, name, 'text')
       Channel.new(JSON.parse(response), @bot)
     end
+
+    def create_role
+      response = API.create_role(@bot.token, @id)
+      role = Role.new(JSON.parse(response), @bot)
+      @roles << role
+      role
+    end
+
+    def ban(user, message_days = 0)
+      API.ban_user(@bot.token, @id, user.id, message_days)
+    end
+
+    def unban(user)
+      API.unban_user(@bot.token, @id, user.id)
+    end
+
+    def kick(user)
+      API.kick_user(@bot.token, @id, user.id)
+    end
+
+    def delete
+      API.delete_server(@bot.token, @id)
+    end
+
+    alias_method :leave, :delete
+
+    def name=(name)
+      update_server_data(name: name)
+    end
+
+    def region=(region)
+      update_server_data(region: region.to_s)
+    end
+
+    def icon=(icon)
+      update_server_data(icon: icon)
+    end
+
+    def afk_channel=(afk_channel)
+      update_server_data(afk_channel_id: afk_channel.id)
+    end
+
+    def afk_channel_id=(afk_channel_id)
+      update_server_data(afk_channel_id: afk_channel_id)
+    end
+
+    def afk_timeout=(afk_timeout)
+      update_server_data(afk_timeout: afk_timeout)
+    end
+
+    def update_data(new_data)
+      @name = new_data[:name] || new_data['name'] || @name
+      @region = new_data[:region] || new_data['region'] || @region
+      @icon = new_data[:icon] || new_data['icon'] || @icon
+      @afk_timeout = new_data[:afk_timeout] || new_data['afk_timeout'].to_i || @afk_timeout
+
+      afk_channel_id = new_data[:afk_channel_id] || new_data['afk_channel_id'].to_i || @afk_channel.id
+      @afk_channel = @bot.channel(afk_channel_id) if afk_channel_id != 0 && (!@afk_channel || afk_channel_id != @afk_channel.id)
+    end
+
+    private
+
+    def update_server_data(new_data)
+      API.update_server(@bot.token, @id,
+                        new_data[:name] || @name,
+                        new_data[:region] || @region,
+                        new_data[:icon] || @icon,
+                        new_data[:afk_channel_id] || @afk_channel_id,
+                        new_data[:afk_timeout] || @afk_timeout)
+      update_data(new_data)
+    end
   end
 
   # A colour (red, green and blue values). Used for role colours
-  class ColorRGB
-    attr_reader :red, :green, :blue
+  class ColourRGB
+    attr_reader :red, :green, :blue, :combined
 
     def initialize(combined)
+      @combined = combined
       @red = (combined >> 16) & 0xFF
       @green = (combined >> 8) & 0xFF
       @blue = combined & 0xFF
     end
   end
+
+  ColorRGB = ColourRGB
 end

@@ -13,7 +13,7 @@ module Discordrb::Events
 
   def self.matches_all(attributes, to_check, &block)
     # "Zeroth" case: attributes is nil
-    return true unless attributes
+    return true if attributes.nil?
 
     # First case: there's a single negated attribute
     if attributes.is_a? Negated
@@ -42,7 +42,11 @@ module Discordrb::Events
     end
 
     def match(event)
-      @block.call(event) if matches? event
+      call(event) if matches? event
+    end
+
+    def call(event)
+      @block.call(event)
     end
 
     def matches_all(attributes, to_check, &block)

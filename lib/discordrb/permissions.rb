@@ -33,15 +33,41 @@ module Discordrb
       25 => :use_voice_activity    # 33554432
     }
 
-    Flags.each_value do |flag|
+    Flags.each do |position, flag|
       attr_reader flag
+      define_method "can_#{flag}=" do |value|
+        if @writer
+          new_bits = @bits
+          if value
+            new_bits |= (1 << position)
+          else
+            new_bits &= ~(1 << position)
+          end
+          @writer.write(new_bits)
+          @bits = new_bits
+          init_vars
+        end
+      end
     end
 
-    def initialize(bits)
+    attr_reader :bits
+
+    def bits=(bits)
+      @bits = bits
+      init_vars
+    end
+
+    def init_vars
       Flags.each do |position, flag|
-        flag_set = ((bits >> position) & 0x1) == 1
+        flag_set = ((@bits >> position) & 0x1) == 1
         instance_variable_set "@#{flag}", flag_set
       end
+    end
+
+    def initialize(bits, writer = nil)
+      @writer = writer
+      @bits = bits
+      init_vars
     end
   end
 end
