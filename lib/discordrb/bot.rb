@@ -21,6 +21,7 @@ require 'discordrb/api'
 require 'discordrb/exceptions'
 require 'discordrb/data'
 require 'discordrb/await'
+require 'discordrb/token_cache'
 
 require 'discordrb/voice/voice_bot'
 
@@ -79,6 +80,9 @@ module Discordrb
       @email = email
       @password = password
 
+      debug('Creating token cache')
+      @token_cache = Discordrb::TokenCache.new
+      debug('Token cache created successfully')
       @token = login
 
       @event_handlers = {}
@@ -786,6 +790,13 @@ module Discordrb
       debug('Logging in')
       login_attempts ||= 0
 
+      # First, attempt to get the token from the cache
+      token = @token_cache.token(@email, @password)
+      if token
+        debug("Token successfully obtained from cache: #{token}")
+        return token
+      end
+
       # Login
       login_response = API.login(@email, @password)
       fail HTTPStatusException, login_response.code if login_response.code >= 400
@@ -795,6 +806,10 @@ module Discordrb
       fail InvalidAuthenticationException unless login_response_object['token']
 
       debug("Received token: #{login_response_object['token']}")
+
+      # Cache the token
+      @token_cache.store_token(@email, @password, login_response_object['token'])
+
       login_response_object['token']
     rescue Exception => e
       response_code = login_response.nil? ? 0 : login_response.code ######## mackmm145
