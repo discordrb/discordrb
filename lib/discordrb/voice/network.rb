@@ -163,7 +163,10 @@ module Discordrb::Voice
     # ...
     def connect
       # Connect websocket
-      @thread = Thread.new { init_ws }
+      @thread = Thread.new do
+        Thread.current[:discordrb_name] = 'vws'
+        init_ws
+      end
 
       @bot.debug('Started websocket initialization, now waiting for UDP discovery reply')
 
@@ -173,6 +176,10 @@ module Discordrb::Voice
 
       # Send UDP init packet with received UDP data
       send_udp_connection(ip, port, @udp_mode)
+    end
+
+    def destroy
+      @thread.kill if @thread
     end
 
     private

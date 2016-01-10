@@ -54,7 +54,7 @@ module Discordrb::Voice
 
     def destroy
       stop_playing
-      @ws_thread.kill if @ws_thread
+      @ws.destroy
       @encoder.destroy
     end
 
