@@ -1,4 +1,17 @@
 # Changelog
+
+## 1.5.0
+* Voice support: discordrb can now connect to voice using `bot.voice_connect` and do the following things:
+  * Play files and URLs using `VoiceBot.play_file`
+  * Play arbitrary streams using `VoiceBot.play_io`
+  * Set the volume of future playbacks using `VoiceBot.volume=`
+  * Pause and resume playback (`VoiceBot.pause` and `VoiceBot.continue`)
+* Authentication tokens are now cached and no login request will be made if a cached token is found. This is mostly to reduce strain on Discord's servers.
+
+### Bugfixes
+* Some latent ID casting errors were fixed - those would probably never have been noticed anyway, but they're fixed now.
+* `Bot.parse_mention` now works, it didn't work at all previously
+
 ## 1.4.8
 * The `User` class now has the methods `add_role` and `remove_role` which add a role to a user and remove it, respectively.
 * All data classes now have a useful `==` implementation.
