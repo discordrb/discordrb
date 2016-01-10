@@ -1,6 +1,7 @@
 require 'discordrb/voice/encoder'
 require 'discordrb/voice/network'
 
+# Voice support
 module Discordrb::Voice
   # How long one packet should ideally be (20 ms as defined by Discord)
   IDEAL_LENGTH = 20.0
