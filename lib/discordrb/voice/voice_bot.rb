@@ -127,8 +127,10 @@ module Discordrb::Voice
         if @length_adjust
           # Difference between length_adjust and now in ms
           ms_diff = (Time.now.nsec - @length_adjust) / 1_000_000.0
-          @length = IDEAL_LENGTH - ms_diff
-          @bot.debug("Length adjustment: new length #{@length}")
+          if ms_diff >= 0
+            @length = IDEAL_LENGTH - ms_diff
+            @bot.debug("Length adjustment: new length #{@length}")
+          end
           @length_adjust = nil
         end
 
