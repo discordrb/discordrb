@@ -196,14 +196,14 @@ module Discordrb
 
     attr_reader :voice
 
-    def voice_connect(channel_id)
+    def voice_connect(channel)
       if @voice
         debug('Voice bot exists already! Destroying it')
         @voice.destroy
         @voice = nil
       end
 
-      @voice_channel = channel(channel_id)
+      @voice_channel = channel
       debug("Got voice channel: #{@voice_channel}")
 
       data = {
