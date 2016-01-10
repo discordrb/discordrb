@@ -103,6 +103,7 @@ module Discordrb
             if token
               begin
                 cached.test_token(token)
+                token
               rescue => e; fail_token('Token cached, verified and decrypted, but rejected by Discord', email, e)
               end
             else; fail_token('Token cached and verified, but decryption failed', email)
