@@ -364,7 +364,7 @@ module Discordrb
     def parse_mention(mention)
       # Mention format: <@id>
       return nil unless /\<@(?<id>\d+)\>?/ =~ mention
-      user(id)
+      user(id.to_i)
     end
 
     # Sets the currently playing game to the specified game.
