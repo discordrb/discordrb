@@ -22,6 +22,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'faye-websocket'
   spec.add_dependency 'rest-client'
   spec.add_dependency 'activesupport'
+  spec.add_dependency 'opus-ruby'
 
   spec.required_ruby_version = '>= 2.1.0'
 
