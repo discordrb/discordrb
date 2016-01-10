@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.5.1
+* The connection to voice was made more reliable. I haven't experienced any issues with it myself but I got reports where `recv` worked better than `recvmsg`.
+
 ## 1.5.0
 * Voice support: discordrb can now connect to voice using `bot.voice_connect` and do the following things:
   * Play files and URLs using `VoiceBot.play_file`
