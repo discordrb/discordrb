@@ -11,6 +11,8 @@ module Discordrb::Voice
 
   # A voice connection consisting of a UDP socket and a websocket client
   class VoiceBot
+    attr_reader :stream_time
+
     def initialize(channel, bot, token, session, endpoint)
       @bot = bot
       @ws = VoiceWS.new(channel, bot, token, session, endpoint)
