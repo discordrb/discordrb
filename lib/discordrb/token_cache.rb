@@ -41,7 +41,7 @@ module Discordrb
     end
 
     def obtain_key(password)
-      @key = OpenSSL::PKCS5.pbkdf2_hmac_sha1(password, @encrypt_salt, 20_000, KEYLEN)
+      @key = OpenSSL::PKCS5.pbkdf2_hmac_sha1(password, @encrypt_salt, 300_000, KEYLEN)
     end
 
     def generate_salts
@@ -76,7 +76,7 @@ module Discordrb
 
     def hash_password(password)
       digest = OpenSSL::Digest::SHA256.new
-      OpenSSL::PKCS5.pbkdf2_hmac(password, @verify_salt, 20_000, digest.digest_length, digest)
+      OpenSSL::PKCS5.pbkdf2_hmac(password, @verify_salt, 300_000, digest.digest_length, digest)
     end
   end
 
