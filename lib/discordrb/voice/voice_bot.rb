@@ -29,6 +29,10 @@ module Discordrb::Voice
       @encoder.volume = value
     end
 
+    def volume
+      @encoder.volume
+    end
+
     # Pause playback
     def pause
       @paused = true
