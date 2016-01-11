@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.5.2
+* `bot.voice_connect` can now use a channel ID directly.
+* A reader `bot.volume` now exists for the corresponding writer.
+* The attribute `bot.encoder.use_avconv` was added that makes the bot use avconv instead of ffmpeg (for those on Ubuntu 14.x)
+* The PBKDF2 iteration count for token caching was increased to 300,000 for extra security.
+
+### Bugfixes
+* Fix a bug where `play_file` wouldn't properly accept string file paths (#36, thanks @purintai)
+* Fix a concurrency issue where `VoiceBot` would try to read from nil
+
+
 ## 1.5.1
 * The connection to voice was made more reliable. I haven't experienced any issues with it myself but I got reports where `recv` worked better than `recvmsg`.
 
