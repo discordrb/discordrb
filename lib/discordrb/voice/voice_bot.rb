@@ -21,8 +21,8 @@ module Discordrb::Voice
 
       @sequence = @time = 0
 
-      @adjust_interval = 100
-      @adjust_offset = 10
+      @adjust_interval = 15
+      @adjust_offset = 5
 
       @encoder = Encoder.new
       @ws.connect
