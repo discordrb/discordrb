@@ -12,7 +12,7 @@ module Discordrb::Voice
   # A voice connection consisting of a UDP socket and a websocket client
   class VoiceBot
     attr_reader :stream_time, :encoder
-    attr_accessor :adjust_interval, :adjust_offset
+    attr_accessor :adjust_interval, :adjust_offset, :adjust_average
 
     def initialize(channel, bot, token, session, endpoint)
       @bot = bot
@@ -23,6 +23,7 @@ module Discordrb::Voice
 
       @adjust_interval = 100
       @adjust_offset = 10
+      @adjust_average = false
 
       @encoder = Encoder.new
       @ws.connect
@@ -139,7 +140,12 @@ module Discordrb::Voice
           # Difference between length_adjust and now in ms
           ms_diff = (Time.now.nsec - @length_adjust) / 1_000_000.0
           if ms_diff >= 0
-            @length = (IDEAL_LENGTH - ms_diff + @length) / 2.0
+            if @adjust_average
+              @length = (IDEAL_LENGTH - ms_diff + @length) / 2.0
+            else
+              @length = IDEAL_LENGTH - ms_diff
+            end
+
             @bot.debug("Length adjustment: new length #{@length}")
           end
           @length_adjust = nil
