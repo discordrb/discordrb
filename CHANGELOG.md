@@ -40,7 +40,7 @@
 * `Message` now has a useful `to_s` method that just returns the content.
 
 ### Bugfixes
-* The `TypingEvent` `user` property is now initialized correctly (#29, thanks @purintal)
+* The `TypingEvent` `user` property is now initialized correctly (#29, thanks @purintai)
 
 ## 1.4.6
 *Bugfix-only release.*
