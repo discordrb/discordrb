@@ -23,7 +23,7 @@ module Discordrb::Voice
     end
 
     def encode_file(file)
-      command = "ffmpeg -loglevel 0 -i #{file.path} -f s16le -ar 48000 -ac 2 -af volume=#{@volume} pipe:1"
+      command = "ffmpeg -loglevel 0 -i \"#{file}\" -f s16le -ar 48000 -ac 2 -af volume=#{@volume} pipe:1"
       IO.popen(command)
     end
 
