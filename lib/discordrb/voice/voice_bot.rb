@@ -92,6 +92,7 @@ module Discordrb::Voice
       self.speaking = true
       loop do
         break unless @playing
+        break unless @io
 
         if count % 100 == 10
           # Starting from the tenth packet, perform length adjustment every 100 packets (2 seconds)
@@ -101,7 +102,7 @@ module Discordrb::Voice
         # Read some data from the buffer
         buf = nil
         begin
-          buf = @io.readpartial(DATA_LENGTH)
+          buf = @io.readpartial(DATA_LENGTH) if @io
         rescue EOFError
           @bot.debug('EOF while reading, breaking immediately')
           break
