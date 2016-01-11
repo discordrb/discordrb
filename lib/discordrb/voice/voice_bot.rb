@@ -95,13 +95,13 @@ module Discordrb::Voice
 
       self.speaking = true
       loop do
-        break unless @playing
-        break unless @io
-
         if count % @adjust_interval == @adjust_offset
           # Starting from the tenth packet, perform length adjustment every 100 packets (2 seconds)
           @length_adjust = Time.now.nsec
         end
+
+        break unless @playing
+        break unless @io
 
         # Read some data from the buffer
         buf = nil
