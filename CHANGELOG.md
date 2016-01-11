@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.5.3
+* Voice bot length adjustments are now configurable using `bot.voice.adjust_interval` and `bot.voice.adjust_offset` (make sure the latter is less than the first, or no adjustment will be performed at all)
+* Length adjustments can now be made more smooth using `bot.voice.adjust_average` (true allows for more smooth adjustments, *may* improve stutteriness but might make it worse as well)
+
 ## 1.5.2
 * `bot.voice_connect` can now use a channel ID directly.
 * A reader `bot.volume` now exists for the corresponding writer.
