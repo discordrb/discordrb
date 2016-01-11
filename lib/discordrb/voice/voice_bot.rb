@@ -12,6 +12,7 @@ module Discordrb::Voice
   # A voice connection consisting of a UDP socket and a websocket client
   class VoiceBot
     attr_reader :stream_time, :encoder
+    attr_accessor :adjust_interval, :adjust_offset
 
     def initialize(channel, bot, token, session, endpoint)
       @bot = bot
@@ -19,6 +20,9 @@ module Discordrb::Voice
       @udp = @ws.udp
 
       @sequence = @time = 0
+
+      @adjust_interval = 100
+      @adjust_offset = 10
 
       @encoder = Encoder.new
       @ws.connect
@@ -94,7 +98,7 @@ module Discordrb::Voice
         break unless @playing
         break unless @io
 
-        if count % 100 == 10
+        if count % @adjust_interval == @adjust_offset
           # Starting from the tenth packet, perform length adjustment every 100 packets (2 seconds)
           @length_adjust = Time.now.nsec
         end
