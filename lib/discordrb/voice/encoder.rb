@@ -23,13 +23,13 @@ module Discordrb::Voice
     end
 
     def encode_file(file)
-      command = "#{ffmpeg_command} -loglevel 0 -i \"#{file}\" -f s16le -ar 48000 -ac 2 -af volume=#{@volume} pipe:1"
+      command = "#{ffmpeg_command} -loglevel 0 -i \"#{file}\" -f s16le -ar 48000 -ac 2 #{ffmpeg_volume} pipe:1"
       IO.popen(command)
     end
 
     def encode_io(io)
       ret_io, writer = IO.pipe
-      command = "#{ffmpeg_command} -loglevel 0 -i - -f s16le -ar 48000 -ac 2 -af volume=#{@volume} pipe:1"
+      command = "#{ffmpeg_command} -loglevel 0 -i - -f s16le -ar 48000 -ac 2 #{ffmpeg_volume} pipe:1"
       spawn(command, in: io, out: writer)
       ret_io
     end
@@ -38,6 +38,10 @@ module Discordrb::Voice
 
     def ffmpeg_command
       @use_avconv ? 'avconv' : 'ffmpeg'
+    end
+    
+    def ffmpeg_volume
+      @use_avconv ? "-vol #{(@volume * 256).ceil}" : "-af volume=#{@volume}"
     end
   end
 end
