@@ -264,12 +264,16 @@ module Discordrb
     #   the threshold is, the more misspellings will be allowed.
     # @return [Array<Channel>] The array of channels that were found. May be empty if none were found.
     def find(channel_name, server_name = nil, threshold = 0)
-      require 'levenshtein' if threshold > 0
+      begin
+        require 'levenshtein' if threshold > 0
+        levenshtein_available = true
+      rescue LoadError; levenshtein_available = false; end
 
       results = []
       @servers.values.each do |server|
         server.channels.each do |channel|
           if threshold > 0
+            fail LoadError, 'Levenshtein distance unavailable! Either set threshold to 0 or install the `levenshtein-ffi` gem' unless levenshtein_available
             distance = Levenshtein.distance(channel.name, channel_name)
             distance += Levenshtein.distance(server_name || server.name, server.name)
             next if distance > threshold
@@ -297,11 +301,15 @@ module Discordrb
     #   the threshold is, the more misspellings will be allowed.
     # @return [Array<User>] The array of users that were found. May be empty if none were found.
     def find_user(username, threshold = 0)
-      require 'levenshtein' if threshold > 0
+      begin
+        require 'levenshtein' if threshold > 0
+        levenshtein_available = true
+      rescue LoadError; levenshtein_available = false; end
 
       results = []
       @users.values.each do |user|
         if threshold > 0
+          fail LoadError, 'Levenshtein distance unavailable! Either set threshold to 0 or install the `levenshtein-ffi` gem' unless levenshtein_available
           distance = Levenshtein.distance(user.username, username)
           next if distance > threshold
         else
