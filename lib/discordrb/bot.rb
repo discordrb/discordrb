@@ -264,20 +264,26 @@ module Discordrb
     #   the threshold is, the more misspellings will be allowed.
     # @return [Array<Channel>] The array of channels that were found. May be empty if none were found.
     def find(channel_name, server_name = nil, threshold = 0)
-      require 'levenshtein'
+      require 'levenshtein' if threshold > 0
 
       results = []
       @servers.values.each do |server|
         server.channels.each do |channel|
-          distance = Levenshtein.distance(channel.name, channel_name)
-          distance += Levenshtein.distance(server_name || server.name, server.name)
-          next if distance > threshold
+          if threshold > 0
+            distance = Levenshtein.distance(channel.name, channel_name)
+            distance += Levenshtein.distance(server_name || server.name, server.name)
+            next if distance > threshold
+          else
+            distance = 0
+            next if channel.name != channel_name || (server_name || server.name) != server.name
+          end
 
           # Make a singleton accessor "distance"
           channel.instance_variable_set(:@distance, distance)
           class << channel
             attr_reader :distance
           end
+
           results << channel
         end
       end
@@ -291,12 +297,17 @@ module Discordrb
     #   the threshold is, the more misspellings will be allowed.
     # @return [Array<User>] The array of users that were found. May be empty if none were found.
     def find_user(username, threshold = 0)
-      require 'levenshtein'
+      require 'levenshtein' if threshold > 0
 
       results = []
       @users.values.each do |user|
-        distance = Levenshtein.distance(user.username, username)
-        next if distance > threshold
+        if threshold > 0
+          distance = Levenshtein.distance(user.username, username)
+          next if distance > threshold
+        else
+          distance = 0
+          next if user.username != username
+        end
 
         # Make a singleton accessor "distance"
         user.instance_variable_set(:@distance, distance)
