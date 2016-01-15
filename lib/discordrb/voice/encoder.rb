@@ -1,4 +1,9 @@
-require 'opus-ruby'
+begin
+  require 'opus-ruby'
+  OPUS_AVAILABLE = true
+rescue LoadError
+  OPUS_AVAILABLE = false
+end
 
 # Discord voice chat support
 module Discordrb::Voice
@@ -11,7 +16,12 @@ module Discordrb::Voice
       @frame_size = 960
       @channels = 2
       @volume = 1.0
-      @opus = Opus::Encoder.new(@sample_rate, @frame_size, @channels)
+
+      if OPUS_AVAILABLE
+        @opus = Opus::Encoder.new(@sample_rate, @frame_size, @channels)
+      else
+        fail LoadError, 'Opus unavailable - voice not supported! Please install opus for voice support to work.'
+      end
     end
 
     def encode(buffer)
