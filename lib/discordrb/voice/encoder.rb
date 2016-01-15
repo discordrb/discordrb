@@ -49,7 +49,7 @@ module Discordrb::Voice
     def ffmpeg_command
       @use_avconv ? 'avconv' : 'ffmpeg'
     end
-    
+
     def ffmpeg_volume
       @use_avconv ? "-vol #{(@volume * 256).ceil}" : "-af volume=#{@volume}"
     end
