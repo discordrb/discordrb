@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.5.4
+* The `opus-ruby` and `levenshtein` dependencies are now optional - if you don't need them, it won't crash immediately (only when you try to use voice / `find` with a threshold > 0, respectively)
+
+### Bugfixes
+* Voice volume can now be properly set when using avconv (#37, thanks @purintai)
+* `websocket-client-simple`, which is required for voice, is now specified in the dependencies.
+
 ## 1.5.3
 * Voice bot length adjustments are now configurable using `bot.voice.adjust_interval` and `bot.voice.adjust_offset` (make sure the latter is less than the first, or no adjustment will be performed at all)
 * Length adjustments can now be made more smooth using `bot.voice.adjust_average` (true allows for more smooth adjustments, *may* improve stutteriness but might make it worse as well)
