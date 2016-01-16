@@ -19,10 +19,6 @@ module Discordrb
     attr_reader :username, :id, :discriminator, :avatar, :voice_channel, :roles
     attr_accessor :status, :game, :server_mute, :server_deaf, :self_mute, :self_deaf
 
-    # @roles is a hash of user roles:
-    # Key: Server ID
-    # Value: Array of roles.
-
     alias_method :name, :username
 
     def initialize(data, bot)
