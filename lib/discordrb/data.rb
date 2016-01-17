@@ -521,6 +521,8 @@ module Discordrb
       # Create roles
       @roles = []
       @roles_by_id = {}
+
+      return unless roles
       roles.each do |element|
         role = Role.new(element, @bot, self)
         @roles << role
