@@ -74,6 +74,17 @@ module Discordrb::API
     )
   end
 
+  # Move a user to a different voice channel
+  def move_user(token, server_id, user_id, channel_id)
+    request(
+      :patch,
+      "#{APIBASE}/guilds/#{server_id}/members/#{user_id}",
+      { 'channel_id' => channel_id }.to_json,
+      Authorization: token,
+      content_type: :json
+    )
+  end
+
   # Get a server's banned users
   def bans(token, server_id)
     request(
