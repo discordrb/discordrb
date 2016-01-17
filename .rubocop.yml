@@ -40,3 +40,7 @@ Lint/RescueException:
 
 AllCops:
   TargetRubyVersion: 2.1
+
+# Apparently setting the target version to 2.1 is not enough to prevent this cop...
+Style/FrozenStringLiteralComment:
+  Enabled: false
