@@ -47,11 +47,7 @@ module Discordrb::Events
     def initialize(data, bot)
       @user = bot.user(data['user']['id'].to_i)
 
-      if data['game']
-        @game = data['game']['name']
-      else
-        @game = nil
-      end
+      @game = data['game'] ? data['game']['name'] : nil
 
       @server = bot.server(data['guild_id'].to_i)
     end
@@ -65,20 +61,20 @@ module Discordrb::Events
 
       [
         matches_all(@attributes[:from], event.user) do |a, e|
-          if a.is_a? String
-            a == e.name
-          elsif a.is_a? Fixnum
-            a == e.id
-          else
-            a == e
-          end
+          a == if a.is_a? String
+                 e.name
+               elsif a.is_a? Fixnum
+                 e.id
+               else
+                 e
+               end
         end,
         matches_all(@attributes[:game], event.game) do |a, e|
-          if a.is_a? String
-            a == e.name
-          else
-            a == e
-          end
+          a == if a.is_a? String
+                 e.name
+               else
+                 e
+               end
         end
       ].reduce(true, &:&)
     end
