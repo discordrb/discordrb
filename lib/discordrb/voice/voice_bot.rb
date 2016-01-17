@@ -116,12 +116,10 @@ module Discordrb::Voice
         # Check whether the buffer has enough data
         if !buf || buf.length != DATA_LENGTH
           @bot.debug("No data is available! Retrying #{@retry_attempts} more times")
-          if @retry_attempts == 0
-            break
-          else
-            @retry_attempts -= 1
-            next
-          end
+          break if @retry_attempts == 0
+
+          @retry_attempts -= 1
+          next
         end
 
         # Track packet count, sequence and time (Discord requires this)
@@ -140,11 +138,11 @@ module Discordrb::Voice
           # Difference between length_adjust and now in ms
           ms_diff = (Time.now.nsec - @length_adjust) / 1_000_000.0
           if ms_diff >= 0
-            if @adjust_average
-              @length = (IDEAL_LENGTH - ms_diff + @length) / 2.0
-            else
-              @length = IDEAL_LENGTH - ms_diff
-            end
+            @length = if @adjust_average
+                        (IDEAL_LENGTH - ms_diff + @length) / 2.0
+                      else
+                        IDEAL_LENGTH - ms_diff
+                      end
 
             @bot.debug("Length adjustment: new length #{@length}")
           end

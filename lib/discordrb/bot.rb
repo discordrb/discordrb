@@ -186,7 +186,7 @@ module Discordrb
     # @return [String] Only the code for the invite.
     def resolve_invite_code(invite)
       invite = invite.code if invite.is_a? Discordrb::Invite
-      invite = invite[invite.rindex('/') + 1..-1] if invite.start_with?('http') || invite.start_with?('discord.gg')
+      invite = invite[invite.rindex('/') + 1..-1] if invite.start_with?('http', 'discord.gg')
       invite
     end
 
@@ -630,11 +630,7 @@ module Discordrb
         end
       end
       user.status = status
-      if data['game']
-        user.game = data['game']['name']
-      else
-        user.game = nil
-      end
+      user.game = data['game'] ? data['game']['name'] : nil
       user
     end
 
@@ -959,11 +955,11 @@ module Discordrb
         played_before = user(data['user']['id'].to_i).game
         update_presence(data)
 
-        if now_playing != played_before
-          event = PlayingEvent.new(data, self)
-        else
-          event = PresenceEvent.new(data, self)
-        end
+        event = if now_playing != played_before
+                  PlayingEvent.new(data, self)
+                else
+                  PresenceEvent.new(data, self)
+                end
 
         raise_event(event)
       when 'VOICE_STATE_UPDATE'
@@ -1056,7 +1052,7 @@ module Discordrb
           'v' => 2,   # Another identifier
           'token' => @token,
           'properties' => { # I'm unsure what these values are for exactly, but they don't appear to impact bot functionality in any way.
-            '$os' => "#{RUBY_PLATFORM}",
+            '$os' => RUBY_PLATFORM.to_s,
             '$browser' => 'discordrb',
             '$device' => 'discordrb',
             '$referrer' => '',

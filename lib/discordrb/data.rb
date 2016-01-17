@@ -85,11 +85,11 @@ module Discordrb
 
     # Merge this user's roles with the roles from another instance of this user (from another server)
     def merge_roles(server, roles)
-      if @roles[server.id]
-        @roles[server.id] = (@roles[server.id] + roles).uniq
-      else
-        @roles[server.id] = roles
-      end
+      @roles[server.id] = if @roles[server.id]
+                            (@roles[server.id] + roles).uniq
+                          else
+                            roles
+                          end
     end
 
     # Delete a specific server from the roles (in case a user leaves a server)
@@ -128,13 +128,13 @@ module Discordrb
           end
           # If the channel has nothing to say on the matter, we can defer to the role itself
         end
-        if channel_allow == false
-          can_act = false
-        elsif channel_allow == true
-          can_act = true
-        else # channel_allow == nil
-          can_act = role.permissions.instance_variable_get("@#{action}") || can_act
-        end
+        can_act = if channel_allow == false
+                    false
+                  elsif channel_allow == true
+                    true
+                  else # channel_allow == nil
+                    role.permissions.instance_variable_get("@#{action}") || can_act
+                  end
         can_act
       end
     end
@@ -277,7 +277,7 @@ module Discordrb
       API.update_role(@bot.token, @server.id, @id,
                       new_data[:name] || @name,
                       (new_data[:colour] || @colour).combined,
-                      !(!(new_data[:hoist].nil? ? new_data[:hoist] : @hoist)),
+                      new_data[:hoist].nil? ? false : !@hoist.nil?,
                       new_data[:permissions] || @permissions.bits)
       update_data(new_data)
     end
