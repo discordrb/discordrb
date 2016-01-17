@@ -31,13 +31,13 @@ module Discordrb::Events
           end
         end,
         matches_all(@attributes[:from], event.user) do |a, e|
-          if a.is_a? String
-            a == e.name
-          elsif a.is_a? Fixnum
-            a == e.id
-          else
-            a == e
-          end
+          a == if a.is_a? String
+                 e.name
+               elsif a.is_a? Fixnum
+                 e.id
+               else
+                 e
+               end
         end,
         matches_all(@attributes[:after], event.timestamp) { |a, e| a > e },
         matches_all(@attributes[:before], event.timestamp) { |a, e| a < e }

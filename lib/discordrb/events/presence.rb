@@ -21,20 +21,20 @@ module Discordrb::Events
 
       [
         matches_all(@attributes[:from], event.user) do |a, e|
-          if a.is_a? String
-            a == e.name
-          elsif a.is_a? Fixnum
-            a == e.id
-          else
-            a == e
-          end
+          a == if a.is_a? String
+                 e.name
+               elsif a.is_a? Fixnum
+                 e.id
+               else
+                 e
+               end
         end,
         matches_all(@attributes[:status], event.status) do |a, e|
-          if a.is_a? String
-            a == e.to_s
-          else
-            a == e
-          end
+          a == if a.is_a? String
+                 e.to_s
+               else
+                 e
+               end
         end
       ].reduce(true, &:&)
     end

@@ -27,18 +27,18 @@ module Discordrb::Events
 
       [
         matches_all(@attributes[:type], event.type) do |a, e|
-          if a.is_a? String
-            a == e.name
-          else
-            a == e
-          end
+          a == if a.is_a? String
+                 e.name
+               else
+                 e
+               end
         end,
         matches_all(@attributes[:name], event.name) do |a, e|
-          if a.is_a? String
-            a == e.to_s
-          else
-            a == e
-          end
+          a == if a.is_a? String
+                 e.to_s
+               else
+                 e
+               end
         end
       ].reduce(true, &:&)
     end

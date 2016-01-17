@@ -30,50 +30,50 @@ module Discordrb::Events
 
       [
         matches_all(@attributes[:from], event.user) do |a, e|
-          if a.is_a? String
-            a == e.name
-          elsif a.is_a? Fixnum
-            a == e.id
-          else
-            a == e
-          end
+          a == if a.is_a? String
+                 e.name
+               elsif a.is_a? Fixnum
+                 e.id
+               else
+                 e
+               end
         end,
         matches_all(@attributes[:mute], event.mute) do |a, e|
-          if a.is_a? Boolean
-            a == e.to_s
-          else
-            a == e
-          end
+          a == if a.is_a? Boolean
+                 e.to_s
+               else
+                 e
+               end
         end,
         matches_all(@attributes[:deaf], event.deaf) do |a, e|
-          if a.is_a? Boolean
-            a == e.to_s
-          else
-            a == e
-          end
+          a == if a.is_a? Boolean
+                 e.to_s
+               else
+                 e
+               end
         end,
         matches_all(@attributes[:self_mute], event.self_mute) do |a, e|
-          if a.is_a? Boolean
-            a == e.to_s
-          else
-            a == e
-          end
+          a == if a.is_a? Boolean
+                 e.to_s
+               else
+                 e
+               end
         end,
         matches_all(@attributes[:self_deaf], event.self_deaf) do |a, e|
-          if a.is_a? Boolean
-            a == e.to_s
-          else
-            a == e
-          end
+          a == if a.is_a? Boolean
+                 e.to_s
+               else
+                 e
+               end
         end,
         matches_all(@attributes[:channel], event.channel) do |a, e|
-          if a.is_a? String
-            a == e.name
-          elsif a.is_a? Fixnum
-            a == e.id
-          else
-            a == e
-          end
+          a == if a.is_a? String
+                 e.name
+               elsif a.is_a? Fixnum
+                 e.id
+               else
+                 e
+               end
         end
       ].reduce(true, &:&)
     end
