@@ -642,6 +642,13 @@ module Discordrb
       API.kick_user(@bot.token, @id, user.id)
     end
 
+    # Forcibly moves a user into a different voice channel. Only works if the bot has the permission needed.
+    # @param user [User] The user to move.
+    # @param channel [Channel] The voice channel to move into.
+    def move(user, channel)
+      API.move_user(@bot.token, @id, user.id, channel.id)
+    end
+
     def delete
       API.delete_server(@bot.token, @id)
     end
