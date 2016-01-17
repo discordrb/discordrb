@@ -37,3 +37,6 @@ Style/ConstantName:
 # Allow 'Pokémon-style' exception handling
 Lint/RescueException:
   Enabled: false
+
+AllCops:
+  TargetRubyVersion: 2.1
