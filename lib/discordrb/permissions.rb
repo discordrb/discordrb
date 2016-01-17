@@ -31,7 +31,7 @@ module Discordrb
       23 => :deafen_members,       # 8388608
       24 => :move_members,         # 16777216
       25 => :use_voice_activity    # 33554432
-    }
+    }.freeze
 
     Flags.each do |position, flag|
       attr_reader flag

@@ -4,7 +4,7 @@ require 'json'
 # List of methods representing endpoints in Discord's API
 module Discordrb::API
   # The base URL of the Discord REST API.
-  APIBASE = 'https://discordapp.com/api'
+  APIBASE = 'https://discordapp.com/api'.freeze
 
   module_function
 
