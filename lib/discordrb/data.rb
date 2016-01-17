@@ -296,11 +296,12 @@ module Discordrb
     delegate :server, to: :channel
 
     def initialize(data, bot)
+      p data
       @bot = bot
 
       @channel = Channel.new(data['channel'], bot)
       @uses = data['uses']
-      @inviter = @bot.user(data['inviter']['id'].to_i) || User.new(data['inviter'], bot)
+      @inviter = data['inviter'] ? (@bot.user(data['inviter']['id'].to_i) || User.new(data['inviter'], bot)) : nil
       @temporary = data['temporary']
       @revoked = data['revoked']
       @xkcd = data['xkcdpass']
