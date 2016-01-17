@@ -296,7 +296,6 @@ module Discordrb
     delegate :server, to: :channel
 
     def initialize(data, bot)
-      p data
       @bot = bot
 
       @channel = Channel.new(data['channel'], bot)
