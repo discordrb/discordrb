@@ -190,11 +190,18 @@ module Discordrb
       invite
     end
 
+    # Gets information about an invite.
+    # @param invite [String, Invite] The invite to join. For possible formats see {#resolve_invite_code}.
+    # @return [Invite] The invite with information about the given invite URL.
+    def invite(invite)
+      code = resolve_invite_code(invite)
+      Invite.new(JSON.parse(API.resolve_invite(@token, code)), self)
+    end
+
     # Makes the bot join an invite to a server.
     # @param invite [String, Invite] The invite to join. For possible formats see {#resolve_invite_code}.
     def join(invite)
-      invite = resolve_invite_code(invite)
-      resolved = JSON.parse(API.resolve_invite(@token, invite))['code']
+      resolved = invite(invite)['code']
       API.join_server(@token, resolved)
     end
 
