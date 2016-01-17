@@ -285,7 +285,7 @@ module Discordrb
 
   # A Discord invite to a channel
   class Invite
-    attr_reader :channel, :uses, :inviter, :temporary, :revoked, :xkcd, :code
+    attr_reader :channel, :server, :uses, :inviter, :temporary, :revoked, :xkcd, :code
     alias_method :max_uses, :uses
     alias_method :user, :inviter
 
@@ -293,12 +293,11 @@ module Discordrb
     alias_method :revoked?, :revoked
     alias_method :xkcd?, :xkcd
 
-    delegate :server, to: :channel
-
     def initialize(data, bot)
       @bot = bot
 
       @channel = Channel.new(data['channel'], bot)
+      @server = Server.new(data['guild'], bot)
       @uses = data['uses']
       @inviter = data['inviter'] ? (@bot.user(data['inviter']['id'].to_i) || User.new(data['inviter'], bot)) : nil
       @temporary = data['temporary']
