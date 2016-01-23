@@ -12,7 +12,6 @@ module Discordrb::Events
 
     def init_server(data, bot)
       @server = bot.server(data['id'].to_i)
-      return unless @server
     end
   end
 

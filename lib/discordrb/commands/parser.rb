@@ -181,6 +181,8 @@ module Discordrb::Commands
 
           result = new_result
           # TODO: more chain arguments
+        else
+          # ignore
         end
       end
 

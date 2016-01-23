@@ -104,7 +104,6 @@ module Discordrb::Commands
         result.to_s
       else
         event.respond "You don't have permission to execute command `#{name}`!"
-        return
       end
     end
 

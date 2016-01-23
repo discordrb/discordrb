@@ -65,7 +65,6 @@ module Discordrb
       cipher.key = key
       @iv = cipher.random_iv
       @encrypted_token = cipher.update(token) + cipher.final
-      @encrypted_token
     end
 
     def test_token(token)

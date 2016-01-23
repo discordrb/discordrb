@@ -144,6 +144,8 @@ module Discordrb::Voice
         @ws_data = packet['d']
         @ready = true
         @mode = @ws_data['mode']
+      else
+        # irrelevant opcode, ignore
       end
     end
 

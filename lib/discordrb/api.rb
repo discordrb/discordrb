@@ -10,20 +10,10 @@ module Discordrb::API
 
   # Generate a user agent identifying this requester as discordrb.
   def user_agent
-    libraries = [
-      # rest-client
-      "rest-client/#{RestClient::VERSION}",
-
-      # ruby
-      "#{RUBY_ENGINE}/#{RUBY_VERSION}p#{RUBY_PATCHLEVEL}",
-
-      # discordrb
-      "discordrb/#{Discordrb::VERSION}"
-    ]
-
-    # Required by Discord devs
+    # This particular string is required by the Discord devs.
     required = "DiscordBot (https://github.com/meew0/discordrb, v#{Discordrb::VERSION})"
-    "#{libraries.join(' ')} #{required}"
+
+    "rest-client/#{RestClient::VERSION} #{RUBY_ENGINE}/#{RUBY_VERSION}p#{RUBY_PATCHLEVEL} discordrb/#{Discordrb::VERSION} #{libraries.join(' ')} #{required}"
   end
 
   def raw_request(type, attributes)

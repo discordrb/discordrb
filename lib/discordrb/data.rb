@@ -128,12 +128,10 @@ module Discordrb
           end
           # If the channel has nothing to say on the matter, we can defer to the role itself
         end
-        can_act = if channel_allow == false
-                    false
-                  elsif channel_allow == true
-                    true
-                  else # channel_allow == nil
+        can_act = if channel_allow.nil?
                     role.permissions.instance_variable_get("@#{action}") || can_act
+                  else
+                    channel_allow
                   end
         can_act
       end

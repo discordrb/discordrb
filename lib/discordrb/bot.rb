@@ -394,7 +394,7 @@ module Discordrb
     # @return [User] The user identified by the mention, or `nil` if none exists.
     def parse_mention(mention)
       # Mention format: <@id>
-      return nil unless /\<@(?<id>\d+)\>?/ =~ mention
+      return nil unless /<@(?<id>\d+)>?/ =~ mention
       user(id.to_i)
     end
 
@@ -668,7 +668,6 @@ module Discordrb
 
       debug('Got data, now creating the bot.')
       @voice = Discordrb::Voice::VoiceBot.new(channel, self, token, @session_id, endpoint)
-      @voice
     end
 
     # Internal handler for CHANNEL_CREATE
@@ -1031,6 +1030,9 @@ module Discordrb
 
         event = GuildDeleteEvent.new(data, self)
         raise_event(event)
+      else
+        # another event that we don't support yet
+        debug "Event #{packet['t']} has been received but is unsupported, ignoring"
       end
     rescue Exception => e
       log_exception(e)
