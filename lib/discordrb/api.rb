@@ -96,13 +96,12 @@ module Discordrb::API
 
   # Logout from the server
   def logout(token)
-    request = request(
+    request(
         :post,
         "#{APIBASE}/auth/logout",
         nil,
         Authorization: token
     )
-    request
   end
 
   # Create a server
