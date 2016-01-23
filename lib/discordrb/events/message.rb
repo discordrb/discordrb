@@ -95,4 +95,10 @@ module Discordrb::Events
 
   class PrivateMessageEvent < MessageEvent; end
   class PrivateMessageEventHandler < MessageEventHandler; end
+
+  class MessageEditEvent < MessageEvent; end
+  class MessageEditEventHandler < MessageEventHandler; end
+
+  class MessageDeleteEvent < MessageEvent; end
+  class MessageDeleteEventHandler < MessageEventHandler; end
 end
