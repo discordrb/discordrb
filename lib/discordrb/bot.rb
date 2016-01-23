@@ -405,10 +405,10 @@ module Discordrb
       @game = name
 
       data = {
-        'op' => 3,
-        'd' => {
-          'idle_since' => nil,
-          'game' => name ? { 'name' => name } : nil
+        op: 3,
+        d: {
+          idle_since: nil,
+          game: name ? { name: name } : nil
         }
       }
 
@@ -1049,16 +1049,16 @@ module Discordrb
     def websocket_open(_)
       # Send the initial packet
       packet = {
-        'op' => 2,    # Packet identifier
-        'd' => {      # Packet data
-          'v' => 2,   # Another identifier
-          'token' => @token,
-          'properties' => { # I'm unsure what these values are for exactly, but they don't appear to impact bot functionality in any way.
-            '$os' => RUBY_PLATFORM.to_s,
-            '$browser' => 'discordrb',
-            '$device' => 'discordrb',
-            '$referrer' => '',
-            '$referring_domain' => ''
+        op: 2,    # Packet identifier
+        d: {      # Packet data
+          v: 2,   # Another identifier
+          token: @token,
+          properties: { # I'm unsure what these values are for exactly, but they don't appear to impact bot functionality in any way.
+            '$os': RUBY_PLATFORM.to_s,
+            '$browser': 'discordrb',
+            '$device': 'discordrb',
+            '$referrer': '',
+            '$referring_domain': ''
           }
         }
       }
@@ -1116,8 +1116,8 @@ module Discordrb
       millis = Time.now.strftime('%s%L').to_i
       debug("Sending heartbeat at #{millis}")
       data = {
-        'op' => 1,
-        'd' => millis
+        op: 1,
+        d: millis
       }
 
       @ws.send(data.to_json)

@@ -100,8 +100,8 @@ module Discordrb::Voice
       @bot.debug("Sending voice heartbeat at #{millis}")
 
       @client.send({
-        'op' => 3,
-        'd' => nil
+        op: 3,
+        d: nil
       }.to_json)
     end
 

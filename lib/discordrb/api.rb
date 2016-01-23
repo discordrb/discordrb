@@ -69,7 +69,7 @@ module Discordrb::API
     request(
       :patch,
       "#{APIBASE}/guilds/#{server_id}/members/#{user_id}",
-      { 'channel_id' => channel_id }.to_json,
+      { channel_id: channel_id }.to_json,
       Authorization: token,
       content_type: :json
     )
@@ -96,12 +96,13 @@ module Discordrb::API
 
   # Logout from the server
   def logout(token)
-    request(
-      :post,
-      "#{APIBASE}/auth/logout",
-      nil,
-      Authorization: token
+    request = request(
+        :post,
+        "#{APIBASE}/auth/logout",
+        nil,
+        Authorization: token
     )
+    request
   end
 
   # Create a server
@@ -109,7 +110,7 @@ module Discordrb::API
     request(
       :post,
       "#{APIBASE}/guilds",
-      { 'name' => name, 'region' => region.to_s }.to_json,
+      { name: name, region: region.to_s }.to_json,
       Authorization: token,
       content_type: :json
     )
@@ -120,7 +121,7 @@ module Discordrb::API
     request(
       :patch,
       "#{APIBASE}/guilds/#{server_id}",
-      { 'name' => name, 'region' => region, 'icon' => icon, 'afk_channel_id' => afk_channel_id, 'afk_timeout' => afk_timeout }.to_json,
+      { name: name, region: region, icon: icon, afk_channel_id: afk_channel_id, afk_timeout: afk_timeout }.to_json,
       Authorization: token,
       content_type: :json
     )
@@ -131,7 +132,7 @@ module Discordrb::API
     request(
       :patch,
       "#{APIBASE}/guilds/#{server_id}",
-      { 'owner_id' => user_id }.to_json,
+      { owner_id: user_id }.to_json,
       Authorization: token,
       content_type: :json
     )
@@ -162,7 +163,7 @@ module Discordrb::API
     request(
       :post,
       "#{APIBASE}/guilds/#{server_id}/channels",
-      { 'name' => name, 'type' => type }.to_json,
+      { name: name, type: type }.to_json,
       Authorization: token,
       content_type: :json
     )
@@ -173,7 +174,7 @@ module Discordrb::API
     request(
       :patch,
       "#{APIBASE}/channels/#{channel_id}",
-      { 'name' => name, 'position' => position, 'topic' => topic }.to_json,
+      { name: name, position: position, topic: topic }.to_json,
       Authorization: token,
       content_type: :json
     )
@@ -212,7 +213,7 @@ module Discordrb::API
     request(
       :post,
       "#{APIBASE}/users/#{bot_user_id}/channels",
-      { 'recipient_id' => user_id }.to_json,
+      { recipient_id: user_id }.to_json,
       Authorization: token,
       content_type: :json
     )
@@ -223,7 +224,7 @@ module Discordrb::API
     request(
       :post,
       "#{APIBASE}/channels/#{channel_id}/invites",
-      { 'max_age' => max_age, 'max_uses' => max_uses, 'temporary' => temporary, 'xkcdpass' => xkcd }.to_json,
+      { max_age: max_age, max_uses: max_uses, temporary: temporary, xkcdpass: xkcd }.to_json,
       Authorization: token,
       content_type: :json
     )
@@ -243,7 +244,7 @@ module Discordrb::API
     request(
       :post,
       "#{APIBASE}/channels/#{channel_id}/messages",
-      { 'content' => message, 'mentions' => mentions, tts => tts }.to_json,
+      { content: message, mentions: mentions, tts => tts }.to_json,
       Authorization: token,
       content_type: :json
     )
@@ -263,7 +264,7 @@ module Discordrb::API
     request(
       :patch,
       "#{APIBASE}/channels/#{channel_id}/messages/#{message_id}",
-      { 'content' => message, 'mentions' => mentions }.to_json,
+      { content: message, mentions: mentions }.to_json,
       Authorization: token,
       content_type: :json
     )
@@ -309,7 +310,7 @@ module Discordrb::API
     request(
       :patch,
       "#{APIBASE}/guilds/#{server_id}/roles/#{role_id}",
-      { 'color' => colour, 'name' => name, 'hoist' => hoist, 'permissions' => packed_permissions }.to_json,
+      { color: colour, name: name, hoist: hoist, permissions: packed_permissions }.to_json,
       Authorization: token,
       content_type: :json
     )
@@ -329,7 +330,7 @@ module Discordrb::API
     request(
       :patch,
       "#{APIBASE}/guilds/#{server_id}/members/#{user_id}",
-      { 'roles' => roles }.to_json,
+      { roles: roles }.to_json,
       Authorization: token,
       content_type: :json
     )
@@ -340,7 +341,7 @@ module Discordrb::API
     request(
       :put,
       "#{APIBASE}/channels/#{channel_id}/permissions/#{user_id}",
-      { 'type' => 'member', 'id' => user_id, 'allow' => allow, 'deny' => deny }.to_json,
+      { type: 'member', id: user_id, allow: allow, deny: deny }.to_json,
       Authorization: token,
       content_type: :json
     )
@@ -351,7 +352,7 @@ module Discordrb::API
     request(
       :put,
       "#{APIBASE}/channels/#{channel_id}/permissions/#{role_id}",
-      { 'type' => 'role', 'id' => role_id, 'allow' => allow, 'deny' => deny }.to_json,
+      { type: 'role', id: role_id, allow: allow, deny: deny }.to_json,
       Authorization: token,
       content_type: :json
     )
@@ -390,7 +391,7 @@ module Discordrb::API
     request(
       :patch,
       "#{APIBASE}/users/@me",
-      { 'avatar' => avatar, 'email' => email, 'new_password' => new_password, 'password' => password, 'username' => new_username }.to_json,
+      { avatar: avatar, email: email, new_password: new_password, password: password, username: new_username }.to_json,
       Authorization: token,
       content_type: :json
     )
