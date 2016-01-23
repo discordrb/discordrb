@@ -655,6 +655,10 @@ module Discordrb
 
     alias_method :leave, :delete
 
+    def owner=(user)
+      API.transfer_ownership(@bot.token, @id, user.id)
+    end
+
     def name=(name)
       update_server_data(name: name)
     end
