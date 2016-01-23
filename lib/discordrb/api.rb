@@ -136,6 +136,17 @@ module Discordrb::API
     )
   end
 
+  # Transfer server ownership
+  def transfer_ownership(token, server_id, user_id)
+    request(
+      :patch,
+      "#{APIBASE}/guilds/#{server_id}",
+      { 'owner_id' => user_id }.to_json,
+      Authorization: token,
+      content_type: :json
+    )
+  end
+
   # Delete a server
   def delete_server(token, server_id)
     request(
