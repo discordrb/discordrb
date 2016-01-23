@@ -687,8 +687,8 @@ module Discordrb
       @icon = new_data[:icon] || new_data['icon'] || @icon
       @afk_timeout = new_data[:afk_timeout] || new_data['afk_timeout'].to_i || @afk_timeout
 
-      afk_channel_id = new_data[:afk_channel_id] || new_data['afk_channel_id'].to_i || @afk_channel.id
-      @afk_channel = @bot.channel(afk_channel_id) if afk_channel_id != 0 && (!@afk_channel || afk_channel_id != @afk_channel.id)
+      @afk_channel_id = new_data[:afk_channel_id] || new_data['afk_channel_id'].to_i || @afk_channel.id
+      @afk_channel = @bot.channel(@afk_channel_id) if @afk_channel_id != 0 && (!@afk_channel || @afk_channel_id != @afk_channel.id)
     end
 
     private
