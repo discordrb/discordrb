@@ -13,7 +13,7 @@ module Discordrb::API
     # This particular string is required by the Discord devs.
     required = "DiscordBot (https://github.com/meew0/discordrb, v#{Discordrb::VERSION})"
 
-    "rest-client/#{RestClient::VERSION} #{RUBY_ENGINE}/#{RUBY_VERSION}p#{RUBY_PATCHLEVEL} discordrb/#{Discordrb::VERSION} #{libraries.join(' ')} #{required}"
+    "rest-client/#{RestClient::VERSION} #{RUBY_ENGINE}/#{RUBY_VERSION}p#{RUBY_PATCHLEVEL} discordrb/#{Discordrb::VERSION} #{required}"
   end
 
   def raw_request(type, attributes)
