@@ -292,21 +292,39 @@ module Discordrb
 
   # A Discord role that contains permissions and applies to certain users
   class Role
-    attr_reader :permissions, :name, :id, :hoist, :colour
+    # @return [Permissions] This role's permissions.
+    attr_reader :permissions
+
+    # @return [String] This role's name ("new role" if it hasn't been changed)
+    attr_reader :name
+
+    # @return [Integer] The ID used to identify this role internally
+    attr_reader :id
+
+    # @return [true, false] Whether or not this role should be displayed separately from other users
+    attr_reader :hoist
+
+    # @return [ColourRGB] The role colour
+    attr_reader :colour
+
     alias_method :color, :colour
 
-    # Class that writes data for a Permissions object
+    # This class is used internally as a wrapper to a Role object that allows easy writing of permission data.
     class RoleWriter
+      # @!visibility private
       def initialize(role, token)
         @role = role
         @token = token
       end
 
+      # Write the specified permission data to the role, without updating the permission cache
+      # @param bits [Integer] The packed permissions to write.
       def write(bits)
         @role.send(:packed=, bits, false)
       end
     end
 
+    # @!visibility private
     def initialize(data, bot, server = nil)
       @bot = bot
       @server = server
@@ -322,6 +340,9 @@ module Discordrb
       Discordrb.id_compare(@id, other)
     end
 
+    # Updates the data cache from another Role object
+    # @note For internal use only
+    # @!visibility private
     def update_from(other)
       @permissions = other.permissions
       @name = other.name
@@ -329,6 +350,9 @@ module Discordrb
       @colour = other.colour
     end
 
+    # Updates the data cache from a hash containing data
+    # @note For internal use only
+    # @!visibility private
     def update_data(new_data)
       @name = new_data[:name] || new_data['name'] || @name
       @hoist = new_data['hoist'] unless new_data['hoist'].nil?
@@ -336,25 +360,35 @@ module Discordrb
       @colour = new_data[:colour] || (new_data['color'] ? ColourRGB.new(new_data['color']) : @colour)
     end
 
+    # Sets the role name to something new
+    # @param name [String] The name that should be set
     def name=(name)
       update_role_data(name: name)
     end
 
+    # Changes whether or not this role is displayed at the top of the user list
+    # @param hoist [true, false] The value it should be changed to
     def hoist=(hoist)
       update_role_data(hoist: hoist)
     end
 
+    # Sets the role colour to something new
+    # @param colour [ColourRGB] The new colour
     def colour=(colour)
       update_role_data(colour: colour)
     end
 
     alias_method :color=, :colour=
 
+    # Changes the internal packed permissions
+    # @note For internal use only
+    # @!visibility private
     def packed=(packed, update_perms = true)
       update_role_data(permissions: packed)
       @permissions.bits = packed if update_perms
     end
 
+    # Delets this role. This cannot be undone without recreating the role!
     def delete
       API.delete_role(@bot.token, @server.id, @id)
       @server.delete_role(@id)
