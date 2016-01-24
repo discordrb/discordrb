@@ -16,29 +16,23 @@ module Discordrb
 
   # User on Discord, including internal data like discriminators
   class User
-    # @!attribute [r] username
-    #   @return [String] This user's username
+    # @return [String] This user's username
     attr_reader :username
 
-    # @!attribute [r] id
-    #   @return [Integer] This user's ID which uniquely identifies them across Discord.
+    # @return [Integer] This user's ID which uniquely identifies them across Discord.
     attr_reader :id
 
-    # @!attribute [r] discriminator
-    #   @return [String] This user's discriminator which is used internally to identify users with identical usernames.
+    # @return [String] This user's discriminator which is used internally to identify users with identical usernames.
     attr_reader :discriminator
 
-    # @!attribute [r] avatar_id
-    #   @return [String] The ID of this user's current avatar, can be used to generate an avatar URL.
-    #   @see #avatar_url
+    # @return [String] The ID of this user's current avatar, can be used to generate an avatar URL.
+    # @see #avatar_url
     attr_reader :avatar_id
 
-    # @!attribute [r] voice_channel
-    #   @return [Channel, nil] The voice channel this user is on currently.
+    # @return [Channel, nil] The voice channel this user is on currently.
     attr_reader :voice_channel
 
-    # @!attribute [r] roles
-    #   @return [Hash<Integer => Array<Role>>] The roles this user has, grouped by server ID.
+    # @return [Hash<Integer => Array<Role>>] The roles this user has, grouped by server ID.
     attr_reader :roles
 
     # @!attribute [r] status
