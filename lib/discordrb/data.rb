@@ -410,7 +410,30 @@ module Discordrb
 
   # A Discord invite to a channel
   class Invite
-    attr_reader :channel, :server, :uses, :inviter, :temporary, :revoked, :xkcd, :code
+    # @return [Channel] the channel this invite references
+    attr_reader :channel
+
+    # @return [Server] the server this invite references
+    attr_reader :server
+
+    # @return [Integer] the amount of uses left on this invite
+    attr_reader :uses
+
+    # @return [User, nil] the user that made this invite. May also be nil if the user can't be determined.
+    attr_reader :inviter
+
+    # @return [true, false] whether or not this invite is temporary.
+    attr_reader :temporary
+
+    # @return [true, false] whether this invite is still valid.
+    attr_reader :revoked
+
+    # @return [true, false] whether this invite is in xkcd format (i. e. "Human readable" in the invite settings)
+    attr_reader :xkcd
+
+    # @return [String] this invite's code
+    attr_reader :code
+
     alias_method :max_uses, :uses
     alias_method :user, :inviter
 
@@ -418,6 +441,7 @@ module Discordrb
     alias_method :revoked?, :revoked
     alias_method :xkcd?, :xkcd
 
+    # @!visibility private
     def initialize(data, bot)
       @bot = bot
 
@@ -432,13 +456,17 @@ module Discordrb
       @code = data['code']
     end
 
+    # Code based comparison
     def ==(other)
       other.respond_to?(:code) ? (@code == other.code) : (@code == other)
     end
 
+    # Deletes this invite
     def delete
       API.delete_invite(@bot.token, @code)
     end
+
+    alias_method :revoke, :delete
   end
 
   # A Discord channel, including data like the topic
