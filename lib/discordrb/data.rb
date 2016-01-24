@@ -89,6 +89,7 @@ module Discordrb
       API.avatar_url(@id, @avatar_id)
     end
 
+    # Get a user's PM channel or send them a PM
     # @overload pm
     #   Creates a private message channel for this user or returns an existing one if it already exists
     #   @return [Channel] The PM channel to this user.
