@@ -37,6 +37,11 @@ module Discordrb::API
     response
   end
 
+  # Make an avatar URL from the user and avatar IDs
+  def avatar_url(user_id, avatar_id)
+    "#{APIBASE}/users/#{user_id}/avatars/#{avatar_id}.jpg"
+  end
+
   # Ban a user from a server and delete their messages from the last message_days days
   def ban_user(token, server_id, user_id, message_days)
     request(
