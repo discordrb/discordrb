@@ -48,6 +48,7 @@ module Discordrb
     attr_accessor :self_mute
 
     # @todo Fix these (server_mute and _deaf should be server specific, not sure about self_deaf or what it does anyway)
+    # @!visibility private
     attr_accessor :server_mute, :server_deaf, :self_deaf
 
     alias_method :name, :username
@@ -108,6 +109,7 @@ module Discordrb
 
     # Changes a user's voice channel.
     # @note For internal use only
+    # @!visibility private
     def move(to_channel)
       return if to_channel && to_channel.type != 'voice'
       @voice_channel = to_channel
@@ -137,6 +139,7 @@ module Discordrb
 
     # Set this user's roles in the cache
     # @note For internal use only
+    # @!visibility private
     def update_roles(server, roles)
       @roles ||= {}
       @roles[server.id] = roles
@@ -144,6 +147,7 @@ module Discordrb
 
     # Merge this user's roles with the roles from another instance of this user (from another server)
     # @note For internal use only
+    # @!visibility private
     def merge_roles(server, roles)
       @roles[server.id] = if @roles[server.id]
                             (@roles[server.id] + roles).uniq
@@ -154,6 +158,7 @@ module Discordrb
 
     # Delete a specific server from the roles (in case a user leaves a server)
     # @note For internal use only
+    # @!visibility private
     def delete_roles(server_id)
       @roles.delete(server_id)
     end
@@ -593,12 +598,14 @@ module Discordrb
 
     # Adds a role to the role cache
     # @note For internal use only
+    # @!visibility private
     def add_role(role)
       @roles << role
     end
 
     # Removes a role from the role cache
     # @note For internal use only
+    # @!visibility private
     def delete_role(role_id)
       @roles.reject! { |r| r.id == role_id }
       @members.each do |user|
@@ -613,12 +620,14 @@ module Discordrb
 
     # Adds a user to the user cache.
     # @note For internal use only
+    # @!visibility private
     def add_user(user)
       @members << user
     end
 
     # Removes a user from the user cache.
     # @note For internal use only
+    # @!visibility private
     def delete_user(user_id)
       @members.reject! { |member| member.id == user_id }
     end
