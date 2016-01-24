@@ -10,3 +10,19 @@ module Discordrb
   # The default debug logger used by discordrb.
   LOGGER = Logger.new
 end
+
+# In discordrb, Integer and {String} are monkey-patched to allow for easy resolution of IDs
+class Integer
+  # @return [Integer] The Discord ID represented by this integer, i. e. the integer itself
+  def resolve_id
+    self
+  end
+end
+
+# In discordrb, {Integer} and String are monkey-patched to allow for easy resolution of IDs
+class String
+  # @return [Integer] The Discord ID represented by this string, i. e. the string converted to an integer
+  def resolve_id
+    to_i
+  end
+end
