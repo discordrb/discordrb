@@ -52,6 +52,7 @@ module Discordrb
     attr_accessor :server_mute, :server_deaf, :self_deaf
 
     alias_method :name, :username
+    alias_method :resolve_id, :id
 
     def initialize(data, bot)
       @bot = bot
@@ -308,6 +309,7 @@ module Discordrb
     attr_reader :colour
 
     alias_method :color, :colour
+    alias_method :resolve_id, :id
 
     # This class is used internally as a wrapper to a Role object that allows easy writing of permission data.
     class RoleWriter
@@ -443,6 +445,8 @@ module Discordrb
   class Channel
     attr_reader :name, :server, :type, :id, :is_private, :recipient, :topic, :position, :permission_overwrites
 
+    alias_method :resolve_id, :id
+
     def private?
       @server.nil?
     end
@@ -575,6 +579,7 @@ module Discordrb
     alias_method :user, :author
     alias_method :text, :content
     alias_method :to_s, :content
+    alias_method :resolve_id, :id
 
     def initialize(data, bot)
       @bot = bot
@@ -621,6 +626,8 @@ module Discordrb
   # A server on Discord
   class Server
     attr_reader :region, :name, :owner_id, :id, :members, :channels, :roles, :icon, :afk_timeout, :afk_channel_id
+
+    alias_method :resolve_id, :id
 
     def initialize(data, bot)
       @bot = bot
