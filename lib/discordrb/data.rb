@@ -16,7 +16,7 @@ module Discordrb
 
   # User on Discord, including internal data like discriminators
   class User
-    attr_reader :username, :id, :discriminator, :avatar, :voice_channel, :roles
+    attr_reader :username, :id, :discriminator, :avatar_id, :voice_channel, :roles
     attr_accessor :status, :game, :server_mute, :server_deaf, :self_mute, :self_deaf
 
     alias_method :name, :username
@@ -27,7 +27,7 @@ module Discordrb
       @username = data['username']
       @id = data['id'].to_i
       @discriminator = data['discriminator']
-      @avatar = data['avatar']
+      @avatar_id = data['avatar']
       @roles = {}
 
       @status = :offline
@@ -45,7 +45,7 @@ module Discordrb
 
     # Utility function to get a user's avatar URL.
     def avatar_url
-      API.avatar_url(@id, @avatar)
+      API.avatar_url(@id, @avatar_id)
     end
 
     # Utility function to send a PM
@@ -188,7 +188,7 @@ module Discordrb
       @email = new_data[:email] || @email
       @password = new_data[:new_password] || @password
       @username = new_data[:username] || @username
-      @avatar = new_data[:avatar] || @avatar
+      @avatar_id = new_data[:avatar_id] || @avatar_id
     end
 
     private
@@ -198,7 +198,7 @@ module Discordrb
                       new_data[:email] || @email,
                       @password,
                       new_data[:username] || @username,
-                      new_data[:avatar] || @avatar,
+                      new_data[:avatar_id] || @avatar_id,
                       new_data[:new_password] || nil)
       update_data(new_data)
     end
