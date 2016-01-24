@@ -153,6 +153,7 @@ module Discordrb
     # @param id [Integer] The channel ID for which to search for.
     # @return [Channel] The channel identified by the ID.
     def channel(id)
+      id = id.resolve_id
       debug("Obtaining data for channel with id #{id}")
       return @channels[id] if @channels[id]
 
@@ -167,6 +168,7 @@ module Discordrb
     # @param id [Integer] The user ID to generate a private channel for.
     # @return [Channel] A private channel for that user.
     def private_channel(id)
+      id = id.resolve_id
       debug("Creating private channel with user id #{id}")
       return @private_channels[id] if @private_channels[id]
 
@@ -251,6 +253,7 @@ module Discordrb
     # @param id [Integer] The user ID that should be resolved.
     # @return [User, nil] The user identified by the ID, or `nil` if it couldn't be found.
     def user(id)
+      id = id.resolve_id
       @users[id]
     end
 
@@ -259,6 +262,7 @@ module Discordrb
     # @param id [Integer] The server ID that should be resolved.
     # @return [Server, nil] The server identified by the ID, or `nil` if it couldn't be found.
     def server(id)
+      id = id.resolve_id
       @servers[id]
     end
 
