@@ -53,7 +53,7 @@ module Discordrb
     #   @return [true, false] Whether or not the user is currently muted by the bot.
     attr_accessor :self_mute
 
-    # TODO: Fix these (server_mute and _deaf should be server specific, not sure about self_deaf or what it does anyway)
+    # @todo Fix these (server_mute and _deaf should be server specific, not sure about self_deaf or what it does anyway)
     attr_accessor :server_mute, :server_deaf, :self_deaf
 
     alias_method :name, :username
