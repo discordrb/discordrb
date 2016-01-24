@@ -16,35 +16,35 @@ module Discordrb
 
   # User on Discord, including internal data like discriminators
   class User
-    # @return [String] This user's username
+    # @return [String] this user's username
     attr_reader :username
 
-    # @return [Integer] This user's ID which uniquely identifies them across Discord.
+    # @return [Integer] this user's ID which uniquely identifies them across Discord.
     attr_reader :id
 
-    # @return [String] This user's discriminator which is used internally to identify users with identical usernames.
+    # @return [String] this user's discriminator which is used internally to identify users with identical usernames.
     attr_reader :discriminator
 
-    # @return [String] The ID of this user's current avatar, can be used to generate an avatar URL.
+    # @return [String] the ID of this user's current avatar, can be used to generate an avatar URL.
     # @see #avatar_url
     attr_reader :avatar_id
 
-    # @return [Channel, nil] The voice channel this user is on currently.
+    # @return [Channel, nil] the voice channel this user is on currently.
     attr_reader :voice_channel
 
-    # @return [Hash<Integer => Array<Role>>] The roles this user has, grouped by server ID.
+    # @return [Hash<Integer => Array<Role>>] the roles this user has, grouped by server ID.
     attr_reader :roles
 
     # @!attribute [r] status
-    #   @return [Symbol] The current online status of the user (`:online`, `:offline` or `:idle`)
+    #   @return [Symbol] the current online status of the user (`:online`, `:offline` or `:idle`)
     attr_accessor :status
 
     # @!attribute [r] game
-    #   @return [String, nil] The game the user is currently playing, or `nil` if none is being played.
+    #   @return [String, nil] the game the user is currently playing, or `nil` if none is being played.
     attr_accessor :game
 
     # @!attribute [r] self_mute
-    #   @return [true, false] Whether or not the user is currently muted by the bot.
+    #   @return [true, false] whether or not the user is currently muted by the bot.
     attr_accessor :self_mute
 
     # @todo Fix these (server_mute and _deaf should be server specific, not sure about self_deaf or what it does anyway)
@@ -78,13 +78,13 @@ module Discordrb
     end
 
     # Utility function to mention users in messages
-    # @return [String] The mention code in the form of <@id>
+    # @return [String] the mention code in the form of <@id>
     def mention
       "<@#{@id}>"
     end
 
     # Utility function to get a user's avatar URL.
-    # @return [String] The URL to the avatar image.
+    # @return [String] the URL to the avatar image.
     def avatar_url
       API.avatar_url(@id, @avatar_id)
     end
@@ -92,11 +92,11 @@ module Discordrb
     # Get a user's PM channel or send them a PM
     # @overload pm
     #   Creates a private message channel for this user or returns an existing one if it already exists
-    #   @return [Channel] The PM channel to this user.
+    #   @return [Channel] the PM channel to this user.
     # @overload pm(content)
     #   Sends a private to this user.
     #   @param content [String] The content to send.
-    #   @return [Message] The message sent to this user.
+    #   @return [Message] the message sent to this user.
     def pm(content = nil)
       if content
         # Recursively call pm to get the channel, then send a message to it
@@ -170,13 +170,13 @@ module Discordrb
     # @param attributes [Hash<Symbol => Object>] The additional attributes to add to this event.
     # @yield Is executed when the await is triggered.
     # @yieldparam event [Event] The event object that was triggered.
-    # @return [Await] The await that was created.
+    # @return [Await] the await that was created.
     def await(key, attributes = {}, &block)
       @bot.add_await(key, Discordrb::Events::MessageEvent, { from: @id }.merge(attributes), &block)
     end
 
     # Is the user the bot?
-    # @return [true, false] Whether this user is the bot
+    # @return [true, false] whether this user is the bot
     def bot?
       @bot.bot_user.id == @id
     end
@@ -185,7 +185,7 @@ module Discordrb
     # @param action [Symbol] The permission that should be checked. See also {Permissions::Flags} for a list.
     # @param server [Server] The server on which the permission should be checked.
     # @param channel [Channel, nil] If channel overrides should be checked too, this channel specifies where the overrides should be checked.
-    # @return [true, false] Whether or not this user has the permission.
+    # @return [true, false] whether or not this user has the permission.
     def permission?(action, server, channel = nil)
       # For each role, check if
       #   (1) the channel explicitly allows or permits an action for the role and
@@ -292,19 +292,19 @@ module Discordrb
 
   # A Discord role that contains permissions and applies to certain users
   class Role
-    # @return [Permissions] This role's permissions.
+    # @return [Permissions] this role's permissions.
     attr_reader :permissions
 
-    # @return [String] This role's name ("new role" if it hasn't been changed)
+    # @return [String] this role's name ("new role" if it hasn't been changed)
     attr_reader :name
 
-    # @return [Integer] The ID used to identify this role internally
+    # @return [Integer] the ID used to identify this role internally
     attr_reader :id
 
-    # @return [true, false] Whether or not this role should be displayed separately from other users
+    # @return [true, false] whether or not this role should be displayed separately from other users
     attr_reader :hoist
 
-    # @return [ColourRGB] The role colour
+    # @return [ColourRGB] the role colour
     attr_reader :colour
 
     alias_method :color, :colour
@@ -683,7 +683,7 @@ module Discordrb
     end
 
     # Creates a channel on this server with the given name.
-    # @return [Channel] The created channel.
+    # @return [Channel] the created channel.
     def create_channel(name)
       response = API.create_channel(@bot.token, @id, name, 'text')
       Channel.new(JSON.parse(response), @bot)
@@ -692,7 +692,7 @@ module Discordrb
     # Creates a role on this server which can then be modified. It will be initialized (on Discord's side)
     # with the regular role defaults the client uses, i. e. name is "new role", permissions are the default,
     # colour is the default etc.
-    # @return [Role] The created role.
+    # @return [Role] the created role.
     def create_role
       response = API.create_role(@bot.token, @id)
       role = Role.new(JSON.parse(response), @bot)
