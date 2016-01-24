@@ -410,13 +410,13 @@ module Discordrb
 
   # A Discord invite to a channel
   class Invite
-    # @return [Channel] the channel this invite references
+    # @return [Channel] the channel this invite references.
     attr_reader :channel
 
-    # @return [Server] the server this invite references
+    # @return [Server] the server this invite references.
     attr_reader :server
 
-    # @return [Integer] the amount of uses left on this invite
+    # @return [Integer] the amount of uses left on this invite.
     attr_reader :uses
 
     # @return [User, nil] the user that made this invite. May also be nil if the user can't be determined.
@@ -471,14 +471,48 @@ module Discordrb
 
   # A Discord channel, including data like the topic
   class Channel
-    attr_reader :name, :server, :type, :id, :is_private, :recipient, :topic, :position, :permission_overwrites
+    # @return [String] this channel's name.
+    attr_reader :name
+
+    # @return [Server] the server this channel is on.
+    attr_reader :server
+
+    # @return [String] the type of this channel (currently either 'text' or 'voice')
+    attr_reader :type
+
+    # @note If this channel is a #general channel, its ID will be equal to the server on which it is on.
+    # @return [Integer] the channel's unique ID.
+    attr_reader :id
+
+    # @note This data is sent by Discord and it's possible for this to falsely be true for certain kinds of integration
+    #   channels (like Twitch subscriber ones). This appears to be a Discord bug that I can't reproduce myself, due to
+    #   not having any integrations in place. If this occurs to you please tell me.
+    # @deprecated Use {#private?} instead, it's guaranteed to be accurate.
+    # @return [true, false] whether or not this channel is a private messaging channel.
+    attr_reader :is_private
+
+    # @return [User, nil] the recipient of the private messages, or nil if this is not a PM channel
+    attr_reader :recipient
+
+    # @return [String] the channel's topic
+    attr_reader :topic
+
+    # @return [Integer] the channel's position on the channel list
+    attr_reader :position
+
+    # This channel's permission overwrites, represented as a hash of role/user ID to an OpenStruct which has the
+    # `allow` and `deny` properties which are {Permission} objects respectively.
+    # @return [Hash<Integer => OpenStruct>] the channel's permission overwrites
+    attr_reader :permission_overwrites
 
     alias_method :resolve_id, :id
 
+    # @return [true, false] whether or not this channel is a PM channel, with more accuracy than {#is_private}.
     def private?
       @server.nil?
     end
 
+    # @!visibility private
     def initialize(data, bot, server = nil)
       @bot = bot
 
@@ -518,33 +552,48 @@ module Discordrb
       Discordrb.id_compare(@id, other)
     end
 
+    # Sends a message to this channel.
+    # @param content [String] The content to send. Should not be longer than 2000 characters or it will result in an error.
+    # @return [Message] the message that was sent.
     def send_message(content)
       @bot.send_message(@id, content)
     end
 
+    # Sends a file to this channel. If it is an image, it will be embedded.
+    # @param file [File] The file to send. There's no clear size limit for this, you'll have to attempt it for yourself (most non-image files are fine, large images may fail to embed)
     def send_file(file)
       @bot.send_file(@id, file)
     end
 
+    # Permanently deletes this channel
     def delete
       API.delete_channel(@bot.token, @id)
     end
 
+    # Sets this channel's name. The name must be alphanumeric with dashes, unless this is a voice channel (then there are no limitations)
+    # @param name [String] The new name.
     def name=(name)
       @name = name
       update_channel_data
     end
 
+    # Sets this channel's topic.
+    # @param topic [String] The new topic.
     def topic=(topic)
       @topic = topic
       update_channel_data
     end
 
+    # Sets this channel's position in the list.
+    # @param position [Integer] The new position.
     def position=(position)
       @position = position
       update_channel_data
     end
 
+    # Updates the cached data from another channel.
+    # @note For internal use only
+    # @!visibility private
     def update_from(other)
       @topic = other.topic
       @name = other.name
@@ -553,7 +602,9 @@ module Discordrb
       @permission_overwrites = other.permission_overwrites
     end
 
-    # List of users currently in a channel
+    # The list of users currently in this channel. This is mostly useful for a voice channel, for a text channel it will
+    # just return the users on the server that are online.
+    # @return [Array<User>] the users in this channel
     def users
       if @type == 'text'
         @server.members.select { |u| u.status != :offline }
@@ -564,16 +615,33 @@ module Discordrb
       end
     end
 
+    # Retrieves some of this channel's message history.
+    # @param amount [Integer] How many messages to retrieve. This must be less than or equal to 100, if it is higher
+    #   than 100 it will be treated as 100 on Discord's side.
+    # @param before_id [Integer] The ID of the most recent message the retrieval should start at, or nil if it should
+    #   start at the current message.
+    # @param after_id [Integer] The ID of the oldest message the retrieval should start at, or nil if it should start
+    #   as soon as possible with the specified amount.
+    # @return [Array<Message>] the retrieved messages.
     def history(amount, before_id = nil, after_id = nil)
       logs = API.channel_log(@bot.token, @id, amount, before_id, after_id)
       JSON.parse(logs).map { |message| Message.new(message, @bot) }
     end
 
+    # Updates the cached permission overwrites
+    # @note For internal use only
+    # @!visibility private
     def update_overwrites(overwrites)
       @permission_overwrites = overwrites
     end
 
-    # Add an await for a message in this channel
+    # Add an {Await} for a message in this channel. This is identical in functionality to adding a {MessageEvent} await
+    # with the `in` attribute as this channel.
+    # @param key [Symbol] The key to uniquely identify this await.
+    # @param attributes [Hash<Symbol => Object>] Additional event attributes that should be listened for.
+    # @yield Is executed when the await is triggered.
+    # @yieldparam event [Event] The event object that was triggered.
+    # @return [Await] the await that was added.
     def await(key, attributes = {}, &block)
       @bot.add_await(key, Discordrb::Events::MessageEvent, { in: @id }.merge(attributes), &block)
     end
