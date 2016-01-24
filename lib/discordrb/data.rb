@@ -43,6 +43,11 @@ module Discordrb
       "<@#{@id}>"
     end
 
+    # Utility function to get a user's avatar URL.
+    def avatar_url
+      API.avatar_url(@id, @avatar)
+    end
+
     # Utility function to send a PM
     def pm(content = nil)
       if content
