@@ -5,7 +5,7 @@ require 'discordrb/api'
 
 # Discordrb
 module Discordrb
-  # Amount of bytes the key should be long (32 bytes = 256 bits -> AES256)
+  # Amount of bytes the token encryption key should be long (32 bytes = 256 bits -> AES256)
   KEYLEN = 32
 
   # Represents a cached token with encryption data
@@ -79,7 +79,7 @@ module Discordrb
     end
   end
 
-  # Path where the cache file will be stored
+  # Path where the token cache file will be stored
   CACHE_PATH = Dir.home + '/.discordrb_token_cache.json'
 
   # Represents a token file

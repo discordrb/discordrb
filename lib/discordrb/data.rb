@@ -810,5 +810,6 @@ module Discordrb
     end
   end
 
+  # Alias for the class {ColourRGB}
   ColorRGB = ColourRGB
 end

@@ -7,5 +7,6 @@ require 'discordrb/logger'
 module Discordrb
   Thread.current[:discordrb_name] = 'main'
 
+  # The default debug logger used by discordrb.
   LOGGER = Logger.new
 end
