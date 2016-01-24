@@ -515,14 +515,18 @@ module Discordrb
       Discordrb.id_compare(@id, other)
     end
 
+    # Gets a role on this server based on its ID.
+    # @param id [Integer] The role ID to look for.
     def role(id)
       @roles.find { |e| e.id == id }
     end
 
+    # **For internal use only:** Adds a role to the role cache
     def add_role(role)
       @roles << role
     end
 
+    # **For internal use only:** Removes a role from the role cache
     def delete_role(role_id)
       @roles.reject! { |r| r.id == role_id }
       @members.each do |user|
@@ -535,19 +539,27 @@ module Discordrb
       end
     end
 
+    # **For internal use only:** Adds a user to the user cache.
     def add_user(user)
       @members << user
     end
 
+    # **For internal use only:** Removes a user from the user cache.
     def delete_user(user_id)
       @members.reject! { |member| member.id == user_id }
     end
 
+    # Creates a channel on this server with the given name.
+    # @return [Channel] The created channel.
     def create_channel(name)
       response = API.create_channel(@bot.token, @id, name, 'text')
       Channel.new(JSON.parse(response), @bot)
     end
 
+    # Creates a role on this server which can then be modified. It will be initialized (on Discord's side)
+    # with the regular role defaults the client uses, i. e. name is "new role", permissions are the default,
+    # colour is the default etc.
+    # @return [Role] The created role.
     def create_role
       response = API.create_role(@bot.token, @id)
       role = Role.new(JSON.parse(response), @bot)
@@ -555,14 +567,21 @@ module Discordrb
       role
     end
 
+    # Bans a user from this server.
+    # @param user [User] The user to ban.
+    # @param message_days [Integer] How many days worth of messages sent by the user should be deleted.
     def ban(user, message_days = 0)
       API.ban_user(@bot.token, @id, user.id, message_days)
     end
 
+    # Unbans a previously banned user from this server.
+    # @param user [User] The user to unban.
     def unban(user)
       API.unban_user(@bot.token, @id, user.id)
     end
 
+    # Kicks a user from this server.
+    # @param user [User] The user to kick.
     def kick(user)
       API.kick_user(@bot.token, @id, user.id)
     end
@@ -574,12 +593,17 @@ module Discordrb
       API.move_user(@bot.token, @id, user.id, channel.id)
     end
 
+    # Deletes this server. Be aware that this is permanent and impossible to undo, so be careful!
     def delete
       API.delete_server(@bot.token, @id)
     end
 
+    # Leave the server - to Discord, leaving a server and deleting it are the same, so be careful if the bot
+    # is the server owner!
     alias_method :leave, :delete
 
+    # Transfers server ownership to another user.
+    # @param user [User] The user who should become the new owner.
     def owner=(user)
       API.transfer_ownership(@bot.token, @id, user.id)
     end
