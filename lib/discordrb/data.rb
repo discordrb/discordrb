@@ -221,7 +221,8 @@ module Discordrb
     end
   end
 
-  # A class that represents the bot user itself and has methods to change stuff
+  # This class is a special variant of User that represents the bot's user profile (things like email addresses and the avatar).
+  # It can be accessed using {Bot#profile}.
   class Profile < User
     def initialize(data, bot, email, password)
       super(data, bot)
@@ -229,22 +230,33 @@ module Discordrb
       @password = password
     end
 
+    # Whether or not the user is the bot. The Profile can only ever be the bot user, so this always returns true.
+    # @return [true]
     def bot?
       true
     end
 
+    # Sets the bot's username.
+    # @param username [String] The new username.
     def username=(username)
       update_server_data(username: username)
     end
 
+    # Sets the bot's email address. If you use this method, make sure that the login email in the script matches this
+    # one afterwards, so the bot doesn't have any trouble logging in in the future.
+    # @param email [String] The new email address.
     def email=(email)
       update_server_data(email: email)
     end
 
+    # Changes the bot's password. This will invalidate all tokens so you will have to relog the bot.
+    # @param password [String] The new password.
     def password=(password)
       update_server_data(new_password: password)
     end
 
+    # Changes the bot's avatar.
+    # @param avatar [String, File] A JPG file to be used as the avatar, either as a File object or as a base64-encoded String.
     def avatar=(avatar)
       if avatar.is_a? File
         avatar_string = 'data:image/jpg;base64,'
@@ -255,6 +267,9 @@ module Discordrb
       end
     end
 
+    # Updates the cached profile data with the new one.
+    # @note For internal use only.
+    # @!visibility private
     def update_data(new_data)
       @email = new_data[:email] || @email
       @password = new_data[:new_password] || @password
