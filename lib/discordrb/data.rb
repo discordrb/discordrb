@@ -16,7 +16,34 @@ module Discordrb
 
   # User on Discord, including internal data like discriminators
   class User
+    # @!attribute [r] username
+    #   @return [String] This user's username
+
+    # @!attribute [r] id
+    #   @return [Integer] This user's ID which uniquely identifies them across Discord.
+
+    # @!attribute [r] discriminator
+    #   @return [String] This user's discriminator which is used internally to identify users with identical usernames.
+
+    # @!attribute [r] avatar_id
+    #   @return [String] The ID of this user's current avatar, can be used to generate an avatar URL.
+    #   @see #avatar_url
+
+    # @!attribute [r] voice_channel
+    #   @return [Channel, nil] The voice channel this user is on currently.
+
+    # @!attribute [r] roles
+    #   @return [Hash<Integer => Array<Role>>] The roles this user has, grouped by server ID.
     attr_reader :username, :id, :discriminator, :avatar_id, :voice_channel, :roles
+
+    # @!attribute [r] status
+    #   @return [Symbol] The current online status of the user (`:online`, `:offline` or `:idle`)
+
+    # @!attribute [r] game
+    #   @return [String, nil] The game the user is currently playing, or `nil` if none is being played.
+
+    # @!attribute [r] self_mute
+    #   @return [true, false] Whether or not the user is currently muted by the bot.
     attr_accessor :status, :game, :server_mute, :server_deaf, :self_mute, :self_deaf
 
     alias_method :name, :username
@@ -46,16 +73,24 @@ module Discordrb
     end
 
     # Utility function to mention users in messages
+    # @return [String] The mention code in the form of <@id>
     def mention
       "<@#{@id}>"
     end
 
     # Utility function to get a user's avatar URL.
+    # @return [String] The URL to the avatar image.
     def avatar_url
       API.avatar_url(@id, @avatar_id)
     end
 
-    # Utility function to send a PM
+    # @overload pm
+    #   Creates a private message channel for this user or returns an existing one if it already exists
+    #   @return [Channel] The PM channel to this user.
+    # @overload pm(content)
+    #   Sends a private to this user.
+    #   @param content [String] The content to send.
+    #   @return [Message] The message sent to this user.
     def pm(content = nil)
       if content
         # Recursively call pm to get the channel, then send a message to it
@@ -67,12 +102,16 @@ module Discordrb
       end
     end
 
-    # Move a user into a voice channel
+    # Changes a user's voice channel.
+    # @note For internal use only
     def move(to_channel)
       return if to_channel && to_channel.type != 'voice'
       @voice_channel = to_channel
     end
 
+    # Adds a role to this user on the specified server.
+    # @param server [Server] The server on which to add the role.
+    # @param role [Role] The role to add.
     def add_role(server, role)
       user_roles = @roles[server.id] || []
       user_roles << role
@@ -80,6 +119,9 @@ module Discordrb
       API.update_user_roles(@bot.token, server.id, @id, ids)
     end
 
+    # Removes a role from this user on the specified server.
+    # @param server [Server] The server on which to remove the role.
+    # @param role [Role] The role to remove.
     def remove_role(server, role)
       user_roles = @roles[server.id] || []
 
@@ -89,13 +131,15 @@ module Discordrb
       API.update_user_roles(@bot.token, server.id, @id, ids)
     end
 
-    # Set this user's roles
+    # Set this user's roles in the cache
+    # @note For internal use only
     def update_roles(server, roles)
       @roles ||= {}
       @roles[server.id] = roles
     end
 
     # Merge this user's roles with the roles from another instance of this user (from another server)
+    # @note For internal use only
     def merge_roles(server, roles)
       @roles[server.id] = if @roles[server.id]
                             (@roles[server.id] + roles).uniq
@@ -105,23 +149,33 @@ module Discordrb
     end
 
     # Delete a specific server from the roles (in case a user leaves a server)
+    # @note For internal use only
     def delete_roles(server_id)
       @roles.delete(server_id)
     end
 
-    # Add an await for a message from this user
+    # Add an await for a message from this user. Specifically, this adds a global await for a MessageEvent with this
+    # user's ID as a :from attribute.
+    # @param key [Symbol] The key to identify this await.
+    # @param attributes [Hash<Symbol => Object>] The additional attributes to add to this event.
+    # @yield Is executed when the await is triggered.
+    # @yieldparam event [Event] The event object that was triggered.
+    # @return [Await] The await that was created.
     def await(key, attributes = {}, &block)
       @bot.add_await(key, Discordrb::Events::MessageEvent, { from: @id }.merge(attributes), &block)
     end
 
     # Is the user the bot?
+    # @return [true, false] Whether this user is the bot
     def bot?
       @bot.bot_user.id == @id
     end
 
-    # Determine if the user has permission to do an action
-    # action is a permission from Permissions::Flags.
-    # channel is the channel in which the action takes place (not applicable for server-wide actions).
+    # Determines whether this user has a specific permission on a server (and channel).
+    # @param action [Symbol] The permission that should be checked. See also {Permissions::Flags} for a list.
+    # @param server [Server] The server on which the permission should be checked.
+    # @param channel [Channel, nil] If channel overrides should be checked too, this channel specifies where the overrides should be checked.
+    # @return [true, false] Whether or not this user has the permission.
     def permission?(action, server, channel = nil)
       # For each role, check if
       #   (1) the channel explicitly allows or permits an action for the role and
@@ -533,12 +587,14 @@ module Discordrb
       @roles.find { |e| e.id == id }
     end
 
-    # **For internal use only:** Adds a role to the role cache
+    # Adds a role to the role cache
+    # @note For internal use only
     def add_role(role)
       @roles << role
     end
 
-    # **For internal use only:** Removes a role from the role cache
+    # Removes a role from the role cache
+    # @note For internal use only
     def delete_role(role_id)
       @roles.reject! { |r| r.id == role_id }
       @members.each do |user|
@@ -551,12 +607,14 @@ module Discordrb
       end
     end
 
-    # **For internal use only:** Adds a user to the user cache.
+    # Adds a user to the user cache.
+    # @note For internal use only
     def add_user(user)
       @members << user
     end
 
-    # **For internal use only:** Removes a user from the user cache.
+    # Removes a user from the user cache.
+    # @note For internal use only
     def delete_user(user_id)
       @members.reject! { |member| member.id == user_id }
     end
