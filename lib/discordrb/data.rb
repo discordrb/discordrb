@@ -18,33 +18,43 @@ module Discordrb
   class User
     # @!attribute [r] username
     #   @return [String] This user's username
+    attr_reader :username
 
     # @!attribute [r] id
     #   @return [Integer] This user's ID which uniquely identifies them across Discord.
+    attr_reader :id
 
     # @!attribute [r] discriminator
     #   @return [String] This user's discriminator which is used internally to identify users with identical usernames.
+    attr_reader :discriminator
 
     # @!attribute [r] avatar_id
     #   @return [String] The ID of this user's current avatar, can be used to generate an avatar URL.
     #   @see #avatar_url
+    attr_reader :avatar_id
 
     # @!attribute [r] voice_channel
     #   @return [Channel, nil] The voice channel this user is on currently.
+    attr_reader :voice_channel
 
     # @!attribute [r] roles
     #   @return [Hash<Integer => Array<Role>>] The roles this user has, grouped by server ID.
-    attr_reader :username, :id, :discriminator, :avatar_id, :voice_channel, :roles
+    attr_reader :roles
 
     # @!attribute [r] status
     #   @return [Symbol] The current online status of the user (`:online`, `:offline` or `:idle`)
+    attr_accessor :status
 
     # @!attribute [r] game
     #   @return [String, nil] The game the user is currently playing, or `nil` if none is being played.
+    attr_accessor :game
 
     # @!attribute [r] self_mute
     #   @return [true, false] Whether or not the user is currently muted by the bot.
-    attr_accessor :status, :game, :server_mute, :server_deaf, :self_mute, :self_deaf
+    attr_accessor :self_mute
+
+    # TODO: Fix these (server_mute and _deaf should be server specific, not sure about self_deaf or what it does anyway)
+    attr_accessor :server_mute, :server_deaf, :self_deaf
 
     alias_method :name, :username
 
