@@ -671,12 +671,30 @@ module Discordrb
 
   # A message on Discord that was sent to a text channel
   class Message
-    attr_reader :content, :author, :channel, :timestamp, :id, :mentions
+    # @return [String] the content of this message.
+    attr_reader :content
+
+    # @return [User] the user that sent this message.
+    attr_reader :author
+
+    # @return [Channel] the channel in which this message was sent.
+    attr_reader :channel
+
+    # @return [Time] the timestamp at which this message was sent.
+    attr_reader :timestamp
+
+    # @return [Integer] the ID used to uniquely identify this message.
+    attr_reader :id
+
+    # @return [Array<User>] the users that were mentioned in this message.
+    attr_reader :mentions
+
     alias_method :user, :author
     alias_method :text, :content
     alias_method :to_s, :content
     alias_method :resolve_id, :id
 
+    # @!visibility private
     def initialize(data, bot)
       @bot = bot
       @content = data['content']
@@ -697,23 +715,30 @@ module Discordrb
       Discordrb.id_compare(@id, other)
     end
 
+    # Replies to this message with the specified content.
+    # @see Channel#send_message
     def reply(content)
       @channel.send_message(content)
     end
 
+    # Edits this message to have the specified content instead.
+    # @param new_content [String] the new content the message should have.
     def edit(new_content)
       API.edit_message(@bot.token, @channel.id, @id, new_content)
     end
 
+    # Deletes this message.
     def delete
       API.delete_message(@bot.token, @channel.id, @id)
     end
 
-    # Add an await for a message with the same user and channel
+    # Add an {Await} for a message with the same user and channel.
+    # @see Bot#add_await
     def await(key, attributes = {}, &block)
       @bot.add_await(key, Discordrb::Events::MessageEvent, { from: @author.id, in: @channel.id }.merge(attributes), &block)
     end
 
+    # @return [true, false] whether this message was sent by the current {Bot}.
     def from_bot?
       @author.bot?
     end
