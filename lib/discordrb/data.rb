@@ -38,6 +38,13 @@ module Discordrb
       Discordrb.id_compare(@id, other)
     end
 
+    # Gets the user's avatar ID.
+    # @deprecated Use {#avatar_id} instead.
+    def avatar
+      LOGGER.debug('Warning: Deprecated reader User.avatar was used! Use User.avatar_id (or User.avatar_url if you just want the URL) instead.', true)
+      @avatar_id
+    end
+
     # Utility function to mention users in messages
     def mention
       "<@#{@id}>"
