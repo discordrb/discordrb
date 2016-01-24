@@ -167,11 +167,7 @@ module Discordrb
 
     # Add an await for a message from this user. Specifically, this adds a global await for a MessageEvent with this
     # user's ID as a :from attribute.
-    # @param key [Symbol] The key to identify this await.
-    # @param attributes [Hash<Symbol => Object>] The additional attributes to add to this event.
-    # @yield Is executed when the await is triggered.
-    # @yieldparam event [Event] The event object that was triggered.
-    # @return [Await] the await that was created.
+    # @see Bot#add_await
     def await(key, attributes = {}, &block)
       @bot.add_await(key, Discordrb::Events::MessageEvent, { from: @id }.merge(attributes), &block)
     end
@@ -637,11 +633,7 @@ module Discordrb
 
     # Add an {Await} for a message in this channel. This is identical in functionality to adding a {MessageEvent} await
     # with the `in` attribute as this channel.
-    # @param key [Symbol] The key to uniquely identify this await.
-    # @param attributes [Hash<Symbol => Object>] Additional event attributes that should be listened for.
-    # @yield Is executed when the await is triggered.
-    # @yieldparam event [Event] The event object that was triggered.
-    # @return [Await] the await that was added.
+    # @see Bot#add_await
     def await(key, attributes = {}, &block)
       @bot.add_await(key, Discordrb::Events::MessageEvent, { in: @id }.merge(attributes), &block)
     end
