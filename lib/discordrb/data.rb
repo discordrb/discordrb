@@ -913,10 +913,9 @@ module Discordrb
     end
 
     # Sets the server's AFK channel.
-    # @todo Make this use resolve_id.
     # @param afk_channel [Channel, nil] The new AFK channel, or `nil` if there should be none set.
     def afk_channel=(afk_channel)
-      update_server_data(afk_channel_id: afk_channel.id)
+      update_server_data(afk_channel_id: afk_channel.resolve_id)
     end
 
     # @see #afk_channel=
