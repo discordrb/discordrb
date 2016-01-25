@@ -748,6 +748,9 @@ module Discordrb
     # @return [Integer] the server owner's user ID.
     attr_reader :owner_id
 
+    # @return [User] The server owner.
+    attr_reader :owner
+
     # @return [Integer] the ID used to uniquely identify this server.
     attr_reader :id
 
@@ -777,6 +780,7 @@ module Discordrb
     def initialize(data, bot)
       @bot = bot
       @owner_id = data['owner_id'].to_i
+      @owner = bot.user(@owner_id)
       @id = data['id'].to_i
       update_data(data)
 
@@ -791,6 +795,7 @@ module Discordrb
     def ==(other)
       Discordrb.id_compare(@id, other)
     end
+
 
     # Gets a role on this server based on its ID.
     # @param id [Integer] The role ID to look for.
