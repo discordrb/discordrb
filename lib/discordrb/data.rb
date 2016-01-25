@@ -497,7 +497,7 @@ module Discordrb
     attr_reader :position
 
     # This channel's permission overwrites, represented as a hash of role/user ID to an OpenStruct which has the
-    # `allow` and `deny` properties which are {Permission} objects respectively.
+    # `allow` and `deny` properties which are {Permissions} objects respectively.
     # @return [Hash<Integer => OpenStruct>] the channel's permission overwrites
     attr_reader :permission_overwrites
 
@@ -631,8 +631,8 @@ module Discordrb
       @permission_overwrites = overwrites
     end
 
-    # Add an {Await} for a message in this channel. This is identical in functionality to adding a {MessageEvent} await
-    # with the `in` attribute as this channel.
+    # Add an {Await} for a message in this channel. This is identical in functionality to adding a
+    # {Discordrb::Events::MessageEvent} await with the `in` attribute as this channel.
     # @see Bot#add_await
     def await(key, attributes = {}, &block)
       @bot.add_await(key, Discordrb::Events::MessageEvent, { in: @id }.merge(attributes), &block)

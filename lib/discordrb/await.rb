@@ -7,7 +7,7 @@ module Discordrb
   # If no block is present, the await will also be deleted. This is an easy way to make
   # temporary events that are only temporary under certain conditions.
   #
-  # Besides the given block, an {AwaitEvent} will also be executed with the key and
+  # Besides the given block, an {Discordrb::Events::AwaitEvent} will also be executed with the key and
   # the type of the await that was triggered. It's possible to register multiple events
   # that trigger on the same await.
   class Await
