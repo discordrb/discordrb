@@ -738,10 +738,42 @@ module Discordrb
 
   # A server on Discord
   class Server
-    attr_reader :region, :name, :owner_id, :id, :members, :channels, :roles, :icon, :afk_timeout, :afk_channel_id
+    # @return [String] the region the server is on (e. g. `amsterdam`).
+    attr_reader :region
+
+    # @return [String] this server's name.
+    attr_reader :name
+
+    # @todo Make this into a reader that returns a {User}
+    # @return [Integer] the server owner's user ID.
+    attr_reader :owner_id
+
+    # @return [Integer] the ID used to uniquely identify this server.
+    attr_reader :id
+
+    # @return [Array<User>] an array of all the users on this server.
+    attr_reader :members
+
+    # @return [Array<Channel>] an array of all the channels (text and voice) on this server.
+    attr_reader :channels
+
+    # @return [Array<Role>] an array of all the roles created on this server.
+    attr_reader :roles
+
+    # @todo Make this behave like user.avatar where a URL is available as well.
+    # @return [String] the hexadecimal ID used to identify this server's icon.
+    attr_reader :icon
+
+    # @return [Integer] the amount of time after which a voice user gets moved into the AFK channel, in seconds.
+    attr_reader :afk_timeout
+
+    # @todo Make this a reader that returns a {Channel}
+    # @return [Integer] the channel ID of the AFK channel, or `nil` if none is set.
+    attr_reader :afk_channel_id
 
     alias_method :resolve_id, :id
 
+    # @!visibility private
     def initialize(data, bot)
       @bot = bot
       @owner_id = data['owner_id'].to_i
@@ -861,30 +893,46 @@ module Discordrb
       API.transfer_ownership(@bot.token, @id, user.id)
     end
 
+    # Sets the server's name.
+    # @param name [String] The new server name.
     def name=(name)
       update_server_data(name: name)
     end
 
+    # Moves the server to another region. This will cause a voice interruption of at most a second.
+    # @param region [String] The new region the server should be in.
     def region=(region)
       update_server_data(region: region.to_s)
     end
 
+    # Sets the server's icon.
+    # @todo Make this behave in a similar way to User#avatar=.
+    # @param icon [String] The new icon, in base64-encoded JPG format.
     def icon=(icon)
       update_server_data(icon: icon)
     end
 
+    # Sets the server's AFK channel.
+    # @todo Make this use resolve_id.
+    # @param afk_channel [Channel, nil] The new AFK channel, or `nil` if there should be none set.
     def afk_channel=(afk_channel)
       update_server_data(afk_channel_id: afk_channel.id)
     end
 
+    # @see #afk_channel=
     def afk_channel_id=(afk_channel_id)
       update_server_data(afk_channel_id: afk_channel_id)
     end
 
+    # Sets the amount of time after which a user gets moved into the AFK channel.
+    # @param afk_timeout [Integer] The AFK timeout, in seconds.
     def afk_timeout=(afk_timeout)
       update_server_data(afk_timeout: afk_timeout)
     end
 
+    # Updates the cached data with new data
+    # @note For internal use only
+    # @!visibility private
     def update_data(new_data)
       @name = new_data[:name] || new_data['name'] || @name
       @region = new_data[:region] || new_data['region'] || @region
