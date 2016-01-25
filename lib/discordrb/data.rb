@@ -918,7 +918,7 @@ module Discordrb
       update_server_data(afk_channel_id: afk_channel.resolve_id)
     end
 
-    # @see #afk_channel=
+    # @deprecated Use #afk_channel= with the ID instead.
     def afk_channel_id=(afk_channel_id)
       update_server_data(afk_channel_id: afk_channel_id)
     end
