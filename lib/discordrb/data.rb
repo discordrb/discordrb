@@ -744,7 +744,7 @@ module Discordrb
     # @return [String] this server's name.
     attr_reader :name
 
-    # @todo Make this into a reader that returns a {User}
+    # @deprecated Use #owner instead, then get the resulting {User}'s {User#id}.
     # @return [Integer] the server owner's user ID.
     attr_reader :owner_id
 
