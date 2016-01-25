@@ -4,14 +4,19 @@ require 'socket'
 require 'json'
 
 module Discordrb::Voice
-  # Represents a UDP connection to a voice server
+  # Represents a UDP connection to a voice server. This connection is used to send the actual audio data.
   class VoiceUDP
-    # Only creates a socket as the discovery reply may come before the data is initialized.
+    # Creates a new UDP connection. Only creates a socket as the discovery reply may come before the data is
+    # initialized.
     def initialize
       @socket = UDPSocket.new
     end
 
-    # Initializes the data from opcode 2
+    # Initializes the UDP socket with data obtained from opcode 2.
+    # @param endpoint [String] The voice endpoint to connect to.
+    # @param port [Integer] The port to connect to.
+    # @param ssrc [Integer] The Super Secret Relay Code (SSRC). Discord uses this to identify different voice users
+    #   on the same endpoint.
     def connect(endpoint, port, ssrc)
       @endpoint = endpoint
       @endpoint = @endpoint[6..-1] if @endpoint.start_with? 'wss://'
@@ -22,6 +27,8 @@ module Discordrb::Voice
       @ssrc = ssrc
     end
 
+    # Waits for a UDP discovery reply, and returns the sent data.
+    # @return [Array(String, Integer)] the IP and port received from the discovery reply.
     def receive_discovery_reply
       # Wait for a UDP message
       message = @socket.recv(70)
@@ -30,11 +37,18 @@ module Discordrb::Voice
       [ip, port]
     end
 
+    # Makes an audio packet from a buffer and sends it to Discord.
+    # @param buf [String] The audio data to send, must be exactly one Opus frame
+    # @param sequence [Integer] The packet sequence number, incremented by one for subsequent packets
+    # @param time [Integer] When this packet should be played back, in no particular unit (essentially just the
+    #   sequence number multiplied by 960)
     def send_audio(buf, sequence, time)
       packet = [0x80, 0x78, sequence, time, @ssrc].pack('CCnNN') + buf
       send_packet(packet)
     end
 
+    # Sends the UDP discovery packet with the internally stored SSRC. Discord will send a reply afterwards which can
+    # be received using {#receive_discovery_reply}
     def send_discovery
       discovery_packet = [@ssrc].pack('N')
 
@@ -50,10 +64,19 @@ module Discordrb::Voice
     end
   end
 
-  # Represents a websocket connection to the voice server
+  # Represents a websocket client connection to the voice server. The websocket connection (sometimes called vWS) is
+  # used to manage general data about the connection, such as sending the speaking packet, which determines the green
+  # circle around users on Discord, and obtaining UDP connection info.
   class VoiceWS
+    # @return [VoiceUDP] the UDP voice connection over which the actual audio data is sent.
     attr_reader :udp
 
+    # Makes a new voice websocket client, but doesn't connect it (see {#connect} for that)
+    # @param channel [Channel] The voice channel to connect to
+    # @param bot [Bot] The regular bot to which this vWS is bound
+    # @param token [String] The authentication token which is also used for REST requests
+    # @param session [String] The voice session ID Discord sends over the regular websocket
+    # @param endpoint [String] The endpoint URL to connect to
     def initialize(channel, bot, token, session, endpoint)
       @channel = channel
       @bot = bot
@@ -67,6 +90,10 @@ module Discordrb::Voice
     end
 
     # Send a connection init packet (op 0)
+    # @param server_id [Integer] The ID of the server to connect to
+    # @param bot_user_id [Integer] The ID of the bot that is connecting
+    # @param session_id [String] The voice session ID
+    # @param token [String] The Discord authentication token
     def send_init(server_id, bot_user_id, session_id, token)
       @client.send({
         op: 0,
@@ -80,6 +107,9 @@ module Discordrb::Voice
     end
 
     # Sends the UDP connection packet (op 1)
+    # @param ip [String] The IP to bind UDP to
+    # @param port [Integer] The port to bind UDP to
+    # @param mode [Object] Which mode to use for the voice connection
     def send_udp_connection(ip, port, mode)
       @client.send({
         op: 1,
@@ -106,6 +136,7 @@ module Discordrb::Voice
     end
 
     # Send a speaking packet (op 5). This determines the green circle around the avatar in the voice channel
+    # @param value [true, false] Whether or not the bot should be speaking
     def send_speaking(value)
       @bot.debug("Speaking: #{value}")
       @client.send({
@@ -118,11 +149,13 @@ module Discordrb::Voice
     end
 
     # Event handlers; public for websocket-simple to work correctly
+    # @!visibility private
     def websocket_open
       # Send the init packet
       send_init(@channel.server.id, @bot.bot_user.id, @session, @token)
     end
 
+    # @!visibility private
     def websocket_message(msg)
       @bot.debug("Received VWS message! #{msg}")
       packet = JSON.parse(msg)
@@ -180,6 +213,7 @@ module Discordrb::Voice
       send_udp_connection(ip, port, @udp_mode)
     end
 
+    # Disconnects the websocket and kills the thread
     def destroy
       @thread.kill if @thread
     end
