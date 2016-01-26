@@ -820,7 +820,7 @@ module Discordrb
       # First, attempt to get the token from the cache
       token = @token_cache.token(@email, @password)
       if token
-        debug("Token successfully obtained from cache: #{token}")
+        debug('Token successfully obtained from cache!')
         return token
       end
 
@@ -832,7 +832,7 @@ module Discordrb
       login_response_object = JSON.parse(login_response)
       fail InvalidAuthenticationException unless login_response_object['token']
 
-      debug("Received token: #{login_response_object['token']}")
+      debug('Received token from Discord!')
 
       # Cache the token
       @token_cache.store_token(@email, @password, login_response_object['token'])
