@@ -58,6 +58,10 @@ module Discordrb
     # Whether or not the bot should parse its own messages. Off by default.
     attr_accessor :should_parse_self
 
+    # The bot's name which discordrb sends to Discord when making any request, so Discord can identify bots with the
+    # same codebase. Not required but I recommend setting it anyway.
+    attr_accessor :name
+
     # Makes a new bot with the given email and password. It will be ready to be added event handlers to and can eventually be run with {#run}.
     # @param email [String] The email for your (or the bot's) Discord account.
     # @param password [String] The valid password that should be used to log in to the account.
@@ -74,6 +78,8 @@ module Discordrb
 
       @email = email
       @password = password
+
+      @name = ''
 
       debug('Creating token cache')
       @token_cache = Discordrb::TokenCache.new
