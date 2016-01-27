@@ -35,11 +35,6 @@ module Discordrb
     # @return [User] The bot user.
     attr_reader :bot_user
 
-    # The Discord API token received when logging in. Useful to explicitly call
-    # {API} methods.
-    # @return [String] The API token.
-    attr_reader :token
-
     # The list of users the bot shares a server with.
     # @return [Array<User>] The users.
     attr_reader :users
@@ -94,6 +89,14 @@ module Discordrb
 
       @event_threads = []
       @current_thread = 0
+    end
+
+    # The Discord API token received when logging in. Useful to explicitly call
+    # {API} methods.
+    # @return [String] The API token.
+    def token
+      API.bot_name = @name
+      @token
     end
 
     # Runs the bot, which logs into Discord and connects the WebSocket. This prevents all further execution unless it is executed with `async` = `:async`.
