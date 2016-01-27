@@ -166,7 +166,7 @@ module Discordrb
       debug("Obtaining data for channel with id #{id}")
       return @channels[id] if @channels[id]
 
-      response = API.channel(@token, id)
+      response = API.channel(token, id)
       channel = Channel.new(JSON.parse(response), self)
       @channels[id] = channel
     end
@@ -181,7 +181,7 @@ module Discordrb
       debug("Creating private channel with user id #{id}")
       return @private_channels[id] if @private_channels[id]
 
-      response = API.create_private(@token, @bot_user.id, id)
+      response = API.create_private(token, @bot_user.id, id)
       channel = Channel.new(JSON.parse(response), self)
       @private_channels[id] = channel
     end
@@ -206,14 +206,14 @@ module Discordrb
     # @return [Invite] The invite with information about the given invite URL.
     def invite(invite)
       code = resolve_invite_code(invite)
-      Invite.new(JSON.parse(API.resolve_invite(@token, code)), self)
+      Invite.new(JSON.parse(API.resolve_invite(token, code)), self)
     end
 
     # Makes the bot join an invite to a server.
     # @param invite [String, Invite] The invite to join. For possible formats see {#resolve_invite_code}.
     def join(invite)
       resolved = invite(invite)['code']
-      API.join_server(@token, resolved)
+      API.join_server(token, resolved)
     end
 
     attr_reader :voice
@@ -254,7 +254,7 @@ module Discordrb
     # @param code [String, Invite] The invite to revoke. For possible formats see {#resolve_invite_code}.
     def delete_invite(code)
       invite = resolve_invite_code(code)
-      API.delete_invite(@token, invite)
+      API.delete_invite(token, invite)
     end
 
     # Gets a user by its ID.
@@ -354,7 +354,7 @@ module Discordrb
     def send_message(channel_id, content)
       debug("Sending message to #{channel_id} with content '#{content}'")
 
-      response = API.send_message(@token, channel_id, content)
+      response = API.send_message(token, channel_id, content)
       Message.new(JSON.parse(response), self)
     end
 
@@ -363,7 +363,7 @@ module Discordrb
     # @param channel_id [Integer] The ID that identifies the channel to send something to.
     # @param file [File] The file that should be sent.
     def send_file(channel_id, file)
-      response = API.send_file(@token, channel_id, file)
+      response = API.send_file(token, channel_id, file)
       Message.new(JSON.parse(response), self)
     end
 
@@ -395,7 +395,7 @@ module Discordrb
     #   * `:sydney`
     # @return [Server] The server that was created.
     def create_server(name, region = :london)
-      response = API.create_server(@token, name, region)
+      response = API.create_server(token, name, region)
       id = JSON.parse(response)['id'].to_i
       sleep 0.1 until @servers[id]
       server = @servers[id]
@@ -867,7 +867,7 @@ module Discordrb
 
     def find_gateway
       # Get updated websocket_hub
-      response = API.gateway(@token)
+      response = API.gateway(token)
       JSON.parse(response)['url']
     end
 
