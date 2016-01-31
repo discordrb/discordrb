@@ -49,6 +49,10 @@ You're missing the OpenSSL libraries that EventMachine, a dependency of discordr
     gem uninstall eventmachine
     gem install eventmachine -- --with-ssl-dir=C:/OpenSSL-Win32
 
+**If you're having trouble getting voice playback to work**:
+
+Look here: https://github.com/meew0/discordrb/wiki/Voice-sending#troubleshooting
+
 ## Usage
 
 You can make a simple bot like this:
