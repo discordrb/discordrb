@@ -1,3 +1,5 @@
+require 'discordrb/events/generic'
+
 module Discordrb::Events
   # Raised when a user is banned
   class UserBanEvent
@@ -16,7 +18,7 @@ module Discordrb::Events
   end
 
   # Event handler for {UserBanEvent}
-  class UserBanEventHandler
+  class UserBanEventHandler < EventHandler
     def matches?(event)
       # Check for the proper event type
       return false unless event.is_a? UserBanEvent
