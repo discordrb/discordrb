@@ -177,7 +177,7 @@ module Discordrb::Voice
         @heartbeat_interval = @ws_data['heartbeat_interval']
         @ssrc = @ws_data['ssrc']
         @port = @ws_data['port']
-        @udp_mode = @ws_data['modes'][0]
+        @udp_mode = mode
 
         @udp.connect(@endpoint, @port, @ssrc)
         @udp.send_discovery
