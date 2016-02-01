@@ -55,7 +55,7 @@ module Discordrb::Voice
 
     # Encodes a given file (or rather, decodes it) using ffmpeg. This accepts pretty much any format, even videos with
     # an audio track. For a list of supported formats, see https://ffmpeg.org/general.html#Audio-Codecs. It even accepts
-    # URLs, though encoding them is pretty slow - I recommend to make a stream of it and then use {#play_io} instead.
+    # URLs, though encoding them is pretty slow - I recommend to make a stream of it and then use {#encode_io} instead.
     # @param file [String] The path or URL to encode.
     # @return [IO] the audio, encoded as s16le PCM
     def encode_file(file)
