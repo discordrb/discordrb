@@ -229,6 +229,11 @@ module Discordrb::Voice
 
     private
 
+    # @return [String] the mode string that signifies whether encryption should be used or not
+    def mode
+      @udp.encrypted ? ENCRYPTED_MODE : PLAIN_MODE
+    end
+
     def heartbeat_loop
       loop do
         if @heartbeat_interval
