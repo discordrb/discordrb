@@ -801,6 +801,8 @@ module Discordrb
       @bot.channel(@id)
     end
 
+    alias_method :general_channel, :default_channel
+
     # Gets a role on this server based on its ID.
     # @param id [Integer] The role ID to look for.
     def role(id)
