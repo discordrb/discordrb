@@ -2,6 +2,7 @@ require 'websocket-client-simple'
 require 'resolv'
 require 'socket'
 require 'json'
+require 'rbnacl/libsodium'
 
 module Discordrb::Voice
   # Signifies to Discord that encryption should be used
@@ -56,8 +57,15 @@ module Discordrb::Voice
     # @param time [Integer] When this packet should be played back, in no particular unit (essentially just the
     #   sequence number multiplied by 960)
     def send_audio(buf, sequence, time)
-      packet = [0x80, 0x78, sequence, time, @ssrc].pack('CCnNN') + buf
-      send_packet(packet)
+      # Header of the audio packet
+      header = [0x80, 0x78, sequence, time, @ssrc].pack('CCnNN')
+
+      # Encrypt data, if necessary
+      if encrypted?
+        buf = encrypt_audio(header, buf)
+      end
+
+      send_packet(header + buf)
     end
 
     # Sends the UDP discovery packet with the internally stored SSRC. Discord will send a reply afterwards which can
@@ -71,6 +79,20 @@ module Discordrb::Voice
     end
 
     private
+
+    # Encrypts audio data using RbNaCl
+    # @param header [String] The header of the packet, to be used as the nonce
+    # @param buf [String] The encoded audio data to be encrypted
+    # @return [String] the audio data, encrypted
+    def encrypt_audio(header, buf)
+      fail 'No secret key found, despite encryption being enabled!' unless @secret_key
+      box = RbNaCl::SecretBox.new(@secret_key)
+
+      # The nonce is the header of the voice packet with 12 null bytes appended
+      nonce = header + ([0] * 12).pack('C*')
+
+      box.encrypt(nonce, buf)
+    end
 
     def send_packet(packet)
       @socket.send(packet, 0, @endpoint, @port)
