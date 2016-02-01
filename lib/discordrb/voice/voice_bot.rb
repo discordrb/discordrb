@@ -81,11 +81,6 @@ module Discordrb::Voice
       @udp.encrypted
     end
 
-    # Sets whether or not audio data will be encrypted
-    def encrypted=(value)
-      @udp.encrypted = value
-    end
-
     # Pause playback. This is not instant; it may take up to 20 ms for this change to take effect. (This is usually
     # negligible.)
     def pause
