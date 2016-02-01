@@ -48,10 +48,11 @@ module Discordrb::Voice
     # @return [true, false] whether adjustment lengths should be averaged with the respective previous value.
     attr_accessor :adjust_average
 
-    def initialize(channel, bot, token, session, endpoint)
+    def initialize(channel, bot, token, session, endpoint, encrypted)
       @bot = bot
       @ws = VoiceWS.new(channel, bot, token, session, endpoint)
       @udp = @ws.udp
+      @udp.encrypted = encrypted
 
       @sequence = @time = 0
 
