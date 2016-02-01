@@ -211,7 +211,7 @@ module Discordrb::Voice
         # Opcode 4 sends the secret key used for encryption
         @ws_data = packet['d']
         @ready = true
-        @udp.secret_key = @ws_data['secret_key']
+        @udp.secret_key = @ws_data['secret_key'].pack('C*')
       else
         # irrelevant opcode, ignore
       end
