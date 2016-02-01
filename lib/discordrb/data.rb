@@ -796,6 +796,10 @@ module Discordrb
       Discordrb.id_compare(@id, other)
     end
 
+    # @return [Channel] The default channel on this server (usually called #general)
+    def default_channel
+      @bot.channel(@id)
+    end
 
     # Gets a role on this server based on its ID.
     # @param id [Integer] The role ID to look for.
