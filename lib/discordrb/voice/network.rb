@@ -6,6 +6,9 @@ require 'json'
 module Discordrb::Voice
   # Represents a UDP connection to a voice server. This connection is used to send the actual audio data.
   class VoiceUDP
+    # @return [true, false] whether or not UDP communications are encrypted.
+    attr_accessor :encrypted
+
     # Creates a new UDP connection. Only creates a socket as the discovery reply may come before the data is
     # initialized.
     def initialize
