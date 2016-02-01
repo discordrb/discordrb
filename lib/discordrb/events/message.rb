@@ -1,4 +1,5 @@
 require 'discordrb/events/generic'
+require 'discordrb/events/id'
 
 module Discordrb::Events
   # Event raised when a text message is sent to a channel
@@ -96,9 +97,13 @@ module Discordrb::Events
   class PrivateMessageEvent < MessageEvent; end
   class PrivateMessageEventHandler < MessageEventHandler; end
 
-  class MessageEditEvent < MessageEvent; end
-  class MessageEditEventHandler < MessageEventHandler; end
+  # These classes are IDEvents because they contain no further information than the message ID
 
-  class MessageDeleteEvent < MessageEvent; end
-  class MessageDeleteEventHandler < MessageEventHandler; end
+  # Raised when a message is edited
+  class MessageEditEvent < IDEvent; end
+  class MessageEditEventHandler < IDEventHandler; end
+
+  # Raised when a message is deleted
+  class MessageDeleteEvent < IDEvent; end
+  class MessageDeleteEventHandler < IDEventHandler; end
 end
