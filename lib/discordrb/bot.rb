@@ -16,6 +16,7 @@ require 'discordrb/events/guild_role_delete'
 require 'discordrb/events/guild_role_update'
 require 'discordrb/events/guilds'
 require 'discordrb/events/await'
+require 'discordrb/events/bans'
 
 require 'discordrb/api'
 require 'discordrb/exceptions'
@@ -551,6 +552,14 @@ module Discordrb
       register_event(GuildMemberDeleteEvent, attributes, block)
     end
 
+    def user_ban(attributes = {}, &block)
+      register_event(UserBanEvent, attributes, block)
+    end
+
+    def user_unban(attributes = {}, &block)
+      register_event(UserUnbanEvent, attributes, block)
+    end
+
     def server_create(attributes = {}, &block)
       register_event(GuildCreateEvent, attributes, block)
     end
@@ -836,6 +845,12 @@ module Discordrb
     # Internal handler for MESSAGE_DELETE
     def delete_message(data); end
 
+    # Internal handler for GUILD_BAN_ADD
+    def add_user_ban(data); end
+
+    # Internal handler for GUILD_BAN_REMOVE
+    def remove_user_ban(data); end
+
     ##        #######   ######   #### ##    ##
     ##       ##     ## ##    ##   ##  ###   ##
     ##       ##     ## ##         ##  ####  ##
@@ -1045,6 +1060,16 @@ module Discordrb
         delete_guild_member(data)
 
         event = GuildMemberDeleteEvent.new(data, self)
+        raise_event(event)
+      when 'GUILD_BAN_ADD'
+        add_user_ban(data)
+
+        event = UserBanEvent.new(data, self)
+        raise_event(event)
+      when 'GUILD_BAN_REMOVE'
+        remove_user_ban(data)
+
+        event = UserUnbanEvent.new(data, self)
         raise_event(event)
       when 'GUILD_ROLE_UPDATE'
         update_guild_role(data)
