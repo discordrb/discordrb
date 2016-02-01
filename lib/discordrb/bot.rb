@@ -218,6 +218,12 @@ module Discordrb
 
     attr_reader :voice
 
+    # Connects to a voice channel, initializes network connections and returns the {Voice::VoiceBot} over which audio
+    # data can then be sent. After connecting, the bot can also be accessed using {#voice}.
+    # @param chan [Channel] The voice channel to connect to.
+    # @param encrypted [true, false] Whether voice communication should be encrypted using RbNaCl's SecretBox
+    #   (uses an XSalsa20 stream cipher for encryption and Poly1305 for authentication)
+    # @return [Voice::VoiceBot] the initialized bot over which audio data can then be sent.
     def voice_connect(chan, encrypted = true)
       if @voice
         debug('Voice bot exists already! Destroying it')
