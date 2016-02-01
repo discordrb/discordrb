@@ -5,8 +5,9 @@ module Discordrb::Events
     attr_reader :id
 
     # @!visibility private
-    def initialize(id)
+    def initialize(id, bot)
       @id = id
+      @bot = bot
     end
   end
 
