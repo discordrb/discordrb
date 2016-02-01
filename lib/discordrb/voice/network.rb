@@ -15,6 +15,9 @@ module Discordrb::Voice
     # @return [true, false] whether or not UDP communications are encrypted.
     attr_accessor :encrypted
 
+    # Sets the secret key used for encryption
+    attr_writer :secret_key
+
     # Creates a new UDP connection. Only creates a socket as the discovery reply may come before the data is
     # initialized.
     def initialize
@@ -182,10 +185,10 @@ module Discordrb::Voice
         @udp.connect(@endpoint, @port, @ssrc)
         @udp.send_discovery
       when 4
-        # I'm not 100% sure what this packet does, but I'm keeping it for future compatibility.
+        # Opcode 4 sends the secret key used for encryption
         @ws_data = packet['d']
         @ready = true
-        @mode = @ws_data['mode']
+        @udp.secret_key = @ws_data['secret_key']
       else
         # irrelevant opcode, ignore
       end
