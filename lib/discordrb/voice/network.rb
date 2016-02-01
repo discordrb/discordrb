@@ -4,6 +4,12 @@ require 'socket'
 require 'json'
 
 module Discordrb::Voice
+  # Signifies to Discord that encryption should be used
+  ENCRYPTED_MODE = 'xsalsa20_poly1305'
+
+  # Signifies to Discord that no encryption should be used
+  PLAIN_MODE = 'plain'
+
   # Represents a UDP connection to a voice server. This connection is used to send the actual audio data.
   class VoiceUDP
     # @return [true, false] whether or not UDP communications are encrypted.
