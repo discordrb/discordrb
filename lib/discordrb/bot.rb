@@ -218,7 +218,7 @@ module Discordrb
 
     attr_reader :voice
 
-    def voice_connect(chan)
+    def voice_connect(chan, encrypted = true)
       if @voice
         debug('Voice bot exists already! Destroying it')
         @voice.destroy
@@ -227,6 +227,8 @@ module Discordrb
 
       chan = channel(chan) if chan.is_a? Integer
       @voice_channel = chan
+      @should_encrypt_voice = encrypted
+
       debug("Got voice channel: #{@voice_channel}")
 
       data = {
@@ -681,7 +683,7 @@ module Discordrb
       channel = @voice_channel
 
       debug('Got data, now creating the bot.')
-      @voice = Discordrb::Voice::VoiceBot.new(channel, self, token, @session_id, endpoint)
+      @voice = Discordrb::Voice::VoiceBot.new(channel, self, token, @session_id, endpoint, @should_encrypt_voice)
     end
 
     # Internal handler for CHANNEL_CREATE
