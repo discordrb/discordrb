@@ -1,5 +1,4 @@
 require 'discordrb/events/generic'
-require 'discordrb/events/id'
 
 module Discordrb::Events
   # Event raised when a text message is sent to a channel
@@ -97,13 +96,51 @@ module Discordrb::Events
   class PrivateMessageEvent < MessageEvent; end
   class PrivateMessageEventHandler < MessageEventHandler; end
 
-  # These classes are IDEvents because they contain no further information than the message ID
+  # A subset of MessageEvent that only contains a message ID and a channel
+  class MessageIDEvent
+    # @return [Integer] the ID associated with this event
+    attr_reader :id
+
+    # @return [Channel] the channel in which this event occurred
+    attr_reader :channel
+
+    # @!visibility private
+    def initialize(data, bot)
+      @id = data['id'].to_i
+      @channel = bot.channel(data['channel_id'].to_i)
+      @bot = bot
+    end
+  end
+
+  # Event handler for {MessageIDEvent}
+  class MessageIDEventHandler < EventHandler
+    def matches?(event)
+      # Check for the proper event type
+      return false unless event.is_a? MessageIDEvent
+
+      [
+        matches_all(@attributes[:id], event.id) do |a, e|
+          a.resolve_id == e.resolve_id
+        end,
+        matches_all(@attributes[:in], event.channel) do |a, e|
+          if a.is_a? String
+            # Make sure to remove the "#" from channel names in case it was specified
+            a.delete('#') == e.name
+          elsif a.is_a? Integer
+            a == e.id
+          else
+            a == e
+          end
+        end
+      ].reduce(true, &:&)
+    end
+  end
 
   # Raised when a message is edited
-  class MessageEditEvent < IDEvent; end
-  class MessageEditEventHandler < IDEventHandler; end
+  class MessageEditEvent < MessageIDEvent; end
+  class MessageEditEventHandler < MessageIDEventHandler; end
 
   # Raised when a message is deleted
-  class MessageDeleteEvent < IDEvent; end
-  class MessageDeleteEventHandler < IDEventHandler; end
+  class MessageDeleteEvent < MessageIDEvent; end
+  class MessageDeleteEventHandler < MessageIDEventHandler; end
 end
