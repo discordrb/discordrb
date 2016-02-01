@@ -78,7 +78,7 @@ module Discordrb::Voice
 
     # @return [true, false] whether audio data sent will be encrypted.
     def encrypted?
-      @udp.encrypted
+      @udp.encrypted?
     end
 
     # Pause playback. This is not instant; it may take up to 20 ms for this change to take effect. (This is usually

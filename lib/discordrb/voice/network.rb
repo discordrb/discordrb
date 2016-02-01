@@ -14,6 +14,7 @@ module Discordrb::Voice
   class VoiceUDP
     # @return [true, false] whether or not UDP communications are encrypted.
     attr_accessor :encrypted
+    alias_method :encrypted?, :encrypted
 
     # Sets the secret key used for encryption
     attr_writer :secret_key
@@ -234,7 +235,7 @@ module Discordrb::Voice
 
     # @return [String] the mode string that signifies whether encryption should be used or not
     def mode
-      @udp.encrypted ? ENCRYPTED_MODE : PLAIN_MODE
+      @udp.encrypted? ? ENCRYPTED_MODE : PLAIN_MODE
     end
 
     def heartbeat_loop
