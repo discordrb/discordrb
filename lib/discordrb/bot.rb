@@ -231,7 +231,7 @@ module Discordrb
         @voice = nil
       end
 
-      chan = channel(chan) if chan.is_a? Integer
+      chan = channel(chan.resolve_id)
       @voice_channel = chan
       @should_encrypt_voice = encrypted
 
