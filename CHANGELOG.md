@@ -10,12 +10,12 @@
   * The events `bot.message_edit` and `bot.message_delete` are now available for message editing and deletion. Note that Discord doesn't provide the content of edited/deleted messages, so you'll have to implement message caching yourself if you really need it.
   * The events `bot.user_ban` and `bot.user_unban` are now available for users getting banned/unbanned from servers.
 * A bot's name can now be sent using `bot.name=`. This data will be sent to Discord with the user-agent and it might be used for cool statistics in the future.
-* Discord server ownership transfer is now implemented using the writer `server.owner=`.
+* Discord server ownership transfer is now implemented using the writer `server.owner=`. (#41)
 * `CommandBot`s can now have command aliases by simply using an array of symbols as the command name.
 * A utility method `server.default_channel` was implemented that returns the default text channel of a server, usually called #general. (An alias `general_channel` is available too.)
 * Tokens will no longer appear in debug output, so you're safe sending output logs to other people.
 * A reader `server.owner` that returns the server's owner as a `User` was added. Previously, users had to manually get the `User` object using `bot.user`.
-* Most methods that accept IDs or data objects now also accept `Integer`s or `String`s containing the IDs now. This is implemented by adding a method `resolve_id` to all objects that could potentially contain an ID. (Note that this change is not complete yet and I might have missed some methods.)
+* Most methods that accept IDs or data objects now also accept `Integer`s or `String`s containing the IDs now. This is implemented by adding a method `resolve_id` to all objects that could potentially contain an ID. (Note that this change is not complete yet and I might have missed some methods.) (#40)
 * The writer `server.afk_channel_id=` is now deprecated as its functionality is now covered by `server.afk_channel=`.
 * A new reader `user.avatar_url` was added that returns the full image URL to a user's avatar.
 * To avoid confusion with `avatar_url`, the reader `user.avatar` was renamed to `avatar_id`. (`user.avatar` still exists but is now deprecated.)
