@@ -482,6 +482,14 @@ module Discordrb
       register_event(TypingEvent, attributes, block)
     end
 
+    def message_edit(attributes = {}, &block)
+      register_event(MessageEditEvent, attributes, block)
+    end
+
+    def message_delete(attributes = {}, &block)
+      register_event(MessageDeleteEvent, attributes, block)
+    end
+
     def presence(attributes = {}, &block)
       register_event(PresenceEvent, attributes, block)
     end
@@ -822,6 +830,12 @@ module Discordrb
     # Internal handler for TYPING_START
     def start_typing(data); end
 
+    # Internal handler for MESSAGE_UPDATE
+    def update_message(data); end
+
+    # Internal handler for MESSAGE_DELETE
+    def delete_message(data); end
+
     ##        #######   ######   #### ##    ##
     ##       ##     ## ##    ##   ##  ###   ##
     ##       ##     ## ##         ##  ####  ##
@@ -966,6 +980,16 @@ module Discordrb
           event = PrivateMessageEvent.new(message, self)
           raise_event(event)
         end
+      when 'MESSAGE_UPDATE'
+        update_message(data)
+
+        event = MessageEditEvent.new(data, self)
+        raise_event(event)
+      when 'MESSAGE_DELETE'
+        delete_message(data)
+
+        event = MessageDeleteEvent.new(data, self)
+        raise_event(event)
       when 'TYPING_START'
         start_typing(data)
 
