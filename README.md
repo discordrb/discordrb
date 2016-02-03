@@ -44,7 +44,7 @@ Then reinstall discordrb:
     terminate called after throwing an instance of 'std::runtime_error'
       what():  Encryption not available on this event-machine
 
-You're missing the OpenSSL libraries that EventMachine, a dependency of discordrb, needs to be built with to use encrypted connections (which Discord requires). Download the OpenSSL libraries from [here](https://slproweb.com/download/Win32OpenSSL-1_0_2e.exe), install them to their default location and reinstall EventMachine using these libraries:
+You're missing the OpenSSL libraries that EventMachine, a dependency of discordrb, needs to be built with to use encrypted connections (which Discord requires). Download the OpenSSL libraries from [here](https://slproweb.com/download/Win32OpenSSL-1_0_2f.exe), install them to their default location and reinstall EventMachine using these libraries:
 
     gem uninstall eventmachine
     gem install eventmachine -- --with-ssl-dir=C:/OpenSSL-Win32
