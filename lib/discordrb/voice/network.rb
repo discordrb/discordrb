@@ -2,7 +2,7 @@ require 'websocket-client-simple'
 require 'resolv'
 require 'socket'
 require 'json'
-require 'rbnacl/libsodium'
+require 'rbnacl'
 
 module Discordrb::Voice
   # Signifies to Discord that encryption should be used
