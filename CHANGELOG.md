@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.6.1
+* It's now possible to prevent the `READY` packet from being printed in debug mode, run `bot.suppress_ready_debug` once before the `bot.run` to do it.
+
+### Bugfixes
+* Token cache files with invalid JSON syntax will no longer crash the bot at login.
+
 ## 1.6.0
 
 * The inline documentation using YARD was greatly improved and is now mostly usable, at least for the data classes and voice classes. It's still not complete enough to be released on GitHub, but you can build it yourself using [YARD](http://yardoc.org/).
