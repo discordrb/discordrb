@@ -444,6 +444,11 @@ module Discordrb
       LOGGER.debug = new_debug
     end
 
+    # Prevents the READY packet from being printed regardless of debug mode.
+    def suppress_ready_debug
+      @prevent_ready = true
+    end
+
     ##     ##    ###    ##    ## ########  ##       ######## ########   ######
     ##     ##   ## ##   ###   ## ##     ## ##       ##       ##     ## ##    ##
     ##     ##  ##   ##  ####  ## ##     ## ##       ##       ##     ## ##
@@ -936,10 +941,14 @@ module Discordrb
     end
 
     def websocket_message(event)
-      debug("Received packet #{event.data}")
-
       # Parse packet
       packet = JSON.parse(event.data)
+
+      if @prevent_ready && packet['t'] == 'READY'
+        debug('READY packet was received and suppressed')
+      else
+        debug("Received packet #{event.data}")
+      end
 
       fail 'Invalid Packet' unless packet['op'] == 0 # TODO
 
