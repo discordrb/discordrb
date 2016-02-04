@@ -91,6 +91,11 @@ module Discordrb
         LOGGER.debug("Cache file #{CACHE_PATH} not found. Using empty cache")
         @data = {}
       end
+    rescue => e
+      LOGGER.debug('Exception occurred while parsing token cache file:', true)
+      LOGGER.log_exception(e)
+      LOGGER.debug('Continuing with empty cache')
+      @data = {}
     end
 
     def token(email, password)
