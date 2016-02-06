@@ -2,7 +2,16 @@ require 'websocket-client-simple'
 require 'resolv'
 require 'socket'
 require 'json'
-require 'rbnacl'
+
+begin
+  require 'rbnacl'
+  rbnacl_available = true
+rescue LoadError
+  puts "libsodium not available! You can continue to use discordrb as normal but voice support won't work.
+        Read https://github.com/meew0/discordrb/wiki/Installing-libsodium for more details."
+  rbnacl_available = false
+end
+
 
 module Discordrb::Voice
   # Signifies to Discord that encryption should be used
