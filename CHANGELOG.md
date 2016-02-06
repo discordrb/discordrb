@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.6.2
+
+### Bugfixes
+* RbNaCl is now installed directly instead of the wrapper that also contains libsodium. This has the disadvantage that you will have to install libsodium manually but at least it's not broken on Windows anymore.
+
 ## 1.6.1
 * It's now possible to prevent the `READY` packet from being printed in debug mode, run `bot.suppress_ready_debug` once before the `bot.run` to do it.
 
