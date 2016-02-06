@@ -103,8 +103,7 @@ module Discordrb::Voice
     def stop_playing
       @was_playing_before = @playing
       @speaking = false
-      @io.close if @io
-      @io = nil
+      @playing = false
       sleep IDEAL_LENGTH / 1000.0 if @was_playing_before
     end
 
@@ -122,8 +121,31 @@ module Discordrb::Voice
     # @param encoded_io [IO] A stream of raw PCM data (s16le)
     def play(encoded_io)
       stop_playing if @playing
-      @io = encoded_io
-      play_internal
+      @retry_attempts = 3
+
+      play_internal do
+        buf = nil
+
+        # Read some data from the buffer
+        begin
+          buf = encoded_io.readpartial(DATA_LENGTH) if encoded_io
+        rescue EOFError
+          @bot.debug('EOF while reading, breaking immediately')
+          break
+        end
+
+        # Check whether the buffer has enough data
+        if !buf || buf.length != DATA_LENGTH
+          @bot.debug("No data is available! Retrying #{@retry_attempts} more times")
+          break if @retry_attempts == 0
+
+          @retry_attempts -= 1
+          next
+        end
+
+        # Encode data
+        @encoder.encode(buf)
+      end
     end
 
     # Plays an encoded audio file of arbitrary format to the channel.
@@ -140,6 +162,31 @@ module Discordrb::Voice
       play @encoder.encode_io(io)
     end
 
+    # Plays a stream of audio data in the DCA format. This format has the advantage that no recoding has to be
+    # done - the file contains the data exactly as Discord needs it.
+    # @see https://github.com/bwmarrin/ff2opus.
+    # @see #play
+    def play_dca(file)
+      stop_playing if @playing
+
+      @bot.debug "Reading DCA file #{file}"
+      input_stream = open(file)
+
+      # Play the data, without re-encoding it to opus
+      play_internal do
+        begin
+          # Read header
+          header = input_stream.read(2).unpack('S')[0]
+        rescue EOFError
+          @bot.debug 'Finished DCA parsing'
+          break
+        end
+
+        # Read bytes
+        input_stream.read(header)
+      end
+    end
+
     alias_method :play_stream, :play_io
 
     private
@@ -148,7 +195,6 @@ module Discordrb::Voice
     def play_internal
       count = 0
       @playing = true
-      @retry_attempts = 3
 
       # Default play length (ms), will be adjusted later
       @length = IDEAL_LENGTH
@@ -161,33 +207,18 @@ module Discordrb::Voice
         end
 
         break unless @playing
-        break unless @io
-
-        # Read some data from the buffer
-        buf = nil
-        begin
-          buf = @io.readpartial(DATA_LENGTH) if @io
-        rescue EOFError
-          @bot.debug('EOF while reading, breaking immediately')
-          break
-        end
-
-        # Check whether the buffer has enough data
-        if !buf || buf.length != DATA_LENGTH
-          @bot.debug("No data is available! Retrying #{@retry_attempts} more times")
-          break if @retry_attempts == 0
-
-          @retry_attempts -= 1
-          next
-        end
 
         # Track packet count, sequence and time (Discord requires this)
         count += 1
         (@sequence + 10 < 65_535) ? @sequence += 1 : @sequence = 0
         (@time + 9600 < 4_294_967_295) ? @time += 960 : @time = 0
 
-        # Encode the packet and send it
-        @udp.send_audio(@encoder.encode(buf), @sequence, @time)
+        # Get packet data
+        buf = yield
+        next unless buf
+
+        # Send the packet
+        @udp.send_audio(buf, @sequence, @time)
 
         # Set the stream time (for tracking how long we've been playing)
         @stream_time = count * @length / 1000
