@@ -55,6 +55,7 @@ module Discordrb::Voice
       @udp.encrypted = encrypted
 
       @sequence = @time = 0
+      @skips = 0
 
       @adjust_interval = 100
       @adjust_offset = 10
@@ -90,6 +91,13 @@ module Discordrb::Voice
     # Continue playback. This change may take up to 100 ms to take effect, which is usually negligible.
     def continue
       @paused = false
+    end
+
+    # Skips to a later time in the song. It's impossible to go back without replaying the song.
+    # @param secs [Float] How many seconds to skip forwards. Skipping will always be done in discrete intervals of
+    #   0.05 seconds, so if the given amount is smaller than that, it will be rounded up.
+    def skip(secs)
+      @skips += (secs * (1000 / IDEAL_LENGTH)).ceil
     end
 
     # Sets whether or not the bot is speaking (green circle around user).
@@ -207,6 +215,13 @@ module Discordrb::Voice
         end
 
         break unless @playing
+
+        # If we should skip, get some data, discard it and go to the next iteration
+        if @skips > 0
+          @skips -= 1
+          yield
+          next
+        end
 
         # Track packet count, sequence and time (Discord requires this)
         count += 1
