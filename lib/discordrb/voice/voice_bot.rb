@@ -164,7 +164,7 @@ module Discordrb::Voice
 
     # Plays a stream of audio data in the DCA format. This format has the advantage that no recoding has to be
     # done - the file contains the data exactly as Discord needs it.
-    # @see https://github.com/bwmarrin/ff2opus.
+    # @see https://github.com/bwmarrin/dca
     # @see #play
     def play_dca(file)
       stop_playing if @playing
