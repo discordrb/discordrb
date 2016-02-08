@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.6.3
+
+### Bugfixes
+* Fixed a bug that prevented the banning of users over the API
+
 ## 1.6.2
 
 ### Bugfixes
