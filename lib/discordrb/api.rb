@@ -56,6 +56,7 @@ module Discordrb::API
     request(
       :put,
       "#{APIBASE}/guilds/#{server_id}/bans/#{user_id}?delete-message-days=#{message_days}",
+      nil,
       Authorization: token
     )
   end
