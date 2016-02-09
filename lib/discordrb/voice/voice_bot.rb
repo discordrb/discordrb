@@ -189,10 +189,7 @@ module Discordrb::Voice
         end
 
         # Read bytes
-        buf = input_stream.read(header)
-
-        # Adjust volume
-        @encoder.adjust_volume(buf, @volume) if @volume != 1.0
+        input_stream.read(header)
       end
     end
 
