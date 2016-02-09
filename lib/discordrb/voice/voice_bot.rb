@@ -227,6 +227,9 @@ module Discordrb::Voice
         buf = yield
         next unless buf
 
+        # Adjust volume
+        buf = @encoder.adjust_volume(buf, @volume) if @volume != 1.0
+
         # Send the packet
         @udp.send_audio(buf, @sequence, @time)
 
