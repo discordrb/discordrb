@@ -32,7 +32,9 @@ module Discordrb::Voice
     # Creates a new UDP connection. Only creates a socket as the discovery reply may come before the data is
     # initialized.
     def initialize
+      BasicSocket.do_not_reverse_lookup = true
       @socket = UDPSocket.new
+      @recv_socket = UDPSocket.new
     end
 
     # Initializes the UDP socket with data obtained from opcode 2.
@@ -46,8 +48,21 @@ module Discordrb::Voice
       @endpoint.gsub!(':80', '') # The endpoint may contain a port, we don't want that
       @endpoint = Resolv.getaddress @endpoint
 
-      @port = port
+      @port = port.to_i
+
+      @socket.connect(@endpoint, @port)
+      @recv_socket.bind('0.0.0.0', 0)
+
       @ssrc = ssrc
+
+      @ping_number = 0
+      @ping_thread = Thread.new do
+        loop do
+          puts 'udp ping'
+          send_ping
+          sleep 5
+        end
+      end
     end
 
     # Waits for a UDP discovery reply, and returns the sent data.
@@ -58,6 +73,15 @@ module Discordrb::Voice
       ip = message[4..-3].delete("\0")
       port = message[-2..-1].to_i
       [ip, port]
+    end
+
+    # Waits for a packet of audio data and returns it
+    def receive_audio
+      msg = @socket.recv(1920)
+
+      # Output the received data for testing purposes
+      p msg.unpack('C*')
+      msg
     end
 
     # Makes an audio packet from a buffer and sends it to Discord.
@@ -85,6 +109,15 @@ module Discordrb::Voice
       # Add 66 zeroes so the packet is 70 bytes long
       discovery_packet += "\0" * 66
       send_packet(discovery_packet)
+    end
+
+    # Sends a UDP ping packet
+    def send_ping
+      @ping_number += 1
+
+      # The ping number in 64-bit little endian
+      packet = [@ping_number].pack('Q<')
+      send_packet(packet)
     end
 
     private

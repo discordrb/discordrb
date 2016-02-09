@@ -195,6 +195,13 @@ module Discordrb::Voice
       end
     end
 
+    def listen
+      loop do
+        # For now, just receive the audio data and do nothing with it
+        @udp.receive_audio
+      end
+    end
+
     alias_method :play_stream, :play_io
 
     private
