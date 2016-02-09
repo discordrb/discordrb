@@ -47,6 +47,9 @@ module Discordrb::Voice
     # @param mult [Float] The volume multiplier, 1 for same volume.
     # @return [String] The buffer with adjusted volume, s16le again
     def adjust_volume(buf, mult)
+      # We don't need to adjust anything if the buf is nil so just return in that case
+      return unless buf
+
       # buf is s16le so use 's<' for signed, 16 bit, LE
       result = buf.unpack('s<*').map do |sample|
         sample *= mult
