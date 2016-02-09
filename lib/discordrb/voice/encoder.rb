@@ -11,16 +11,6 @@ module Discordrb::Voice
   # This class conveniently abstracts opus and ffmpeg/avconv, for easy implementation of voice sending. It's not very
   # useful for most users, but I guess it can be useful sometimes.
   class Encoder
-    # The volume that should be used with future ffmpeg conversions. If ffmpeg is used, this can be specified as:
-    #
-    #  * A number, where `1` is no change in volume, `0` is completely silent, `0.5` is half the default volume and `2` is twice the default.
-    #  * A string representation of the above number.
-    #  * A string representing a change in gain given in decibels, in the format `-6dB` or `6dB`.
-    #
-    # If avconv is used (see #use_avconv) then it can only be given as a number from `0` to `1`, where `1` is no change
-    # and `0` is completely silent.
-    # @return [String, Number] the volume for future playbacks, `1.0` by default.
-    attr_accessor :volume
 
     # Whether or not avconv should be used instead of ffmpeg. If possible, it is recommended to use ffmpeg instead,
     # as it is better supported and has a wider range of possible volume settings (see #volume).
@@ -76,7 +66,7 @@ module Discordrb::Voice
     # @param file [String] The path or URL to encode.
     # @return [IO] the audio, encoded as s16le PCM
     def encode_file(file)
-      command = "#{ffmpeg_command} -loglevel 0 -i \"#{file}\" -f s16le -ar 48000 -ac 2 #{ffmpeg_volume} pipe:1"
+      command = "#{ffmpeg_command} -loglevel 0 -i \"#{file}\" -f s16le -ar 48000 -ac 2 pipe:1"
       IO.popen(command)
     end
 
@@ -86,7 +76,7 @@ module Discordrb::Voice
     # @return [IO] the audio, encoded as s16le PCM
     def encode_io(io)
       ret_io, writer = IO.pipe
-      command = "#{ffmpeg_command} -loglevel 0 -i - -f s16le -ar 48000 -ac 2 #{ffmpeg_volume} pipe:1"
+      command = "#{ffmpeg_command} -loglevel 0 -i - -f s16le -ar 48000 -ac 2 pipe:1"
       spawn(command, in: io, out: writer)
       ret_io
     end
@@ -95,10 +85,6 @@ module Discordrb::Voice
 
     def ffmpeg_command
       @use_avconv ? 'avconv' : 'ffmpeg'
-    end
-
-    def ffmpeg_volume
-      @use_avconv ? "-vol #{(@volume * 256).ceil}" : "-af volume=#{@volume}"
     end
   end
 end

@@ -48,6 +48,17 @@ module Discordrb::Voice
     # @return [true, false] whether adjustment lengths should be averaged with the respective previous value.
     attr_accessor :adjust_average
 
+    # The volume that should be used with future ffmpeg conversions. If ffmpeg is used, this can be specified as:
+    #
+    #  * A number, where `1` is no change in volume, `0` is completely silent, `0.5` is half the default volume and `2` is twice the default.
+    #  * A string representation of the above number.
+    #  * A string representing a change in gain given in decibels, in the format `-6dB` or `6dB`.
+    #
+    # If avconv is used (see #use_avconv) then it can only be given as a number from `0` to `1`, where `1` is no change
+    # and `0` is completely silent.
+    # @return [String, Number] the volume for future playbacks, `1.0` by default.
+    attr_accessor :volume
+
     def initialize(channel, bot, token, session, endpoint, encrypted)
       @bot = bot
       @ws = VoiceWS.new(channel, bot, token, session, endpoint)
@@ -61,20 +72,10 @@ module Discordrb::Voice
       @adjust_offset = 10
       @adjust_average = false
 
+      @volume = 1
+
       @encoder = Encoder.new
       @ws.connect
-    end
-
-    # Set the volume. Only applies to future playbacks
-    # @see Encoder#volume=
-    def volume=(value)
-      @encoder.volume = value
-    end
-
-    # @see Encoder#volume
-    # @return [Integer, String] the current encoder volume.
-    def volume
-      @encoder.volume
     end
 
     # @return [true, false] whether audio data sent will be encrypted.
