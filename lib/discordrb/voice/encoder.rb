@@ -13,7 +13,7 @@ module Discordrb::Voice
   class Encoder
 
     # Whether or not avconv should be used instead of ffmpeg. If possible, it is recommended to use ffmpeg instead,
-    # as it is better supported and has a wider range of possible volume settings (see #volume).
+    # as it is better supported.
     # @return [true, false] whether avconv should be used instead of ffmpeg.
     attr_accessor :use_avconv
 
@@ -22,7 +22,6 @@ module Discordrb::Voice
       @sample_rate = 48_000
       @frame_size = 960
       @channels = 2
-      @volume = 1.0
 
       if OPUS_AVAILABLE
         @opus = Opus::Encoder.new(@sample_rate, @frame_size, @channels)
