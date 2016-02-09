@@ -32,9 +32,7 @@ module Discordrb::Voice
     # Creates a new UDP connection. Only creates a socket as the discovery reply may come before the data is
     # initialized.
     def initialize
-      BasicSocket.do_not_reverse_lookup = true
       @socket = UDPSocket.new
-      @recv_socket = UDPSocket.new
     end
 
     # Initializes the UDP socket with data obtained from opcode 2.
@@ -49,10 +47,6 @@ module Discordrb::Voice
       @endpoint = Resolv.getaddress @endpoint
 
       @port = port.to_i
-
-      @socket.connect(@endpoint, @port)
-      @recv_socket.bind('0.0.0.0', 0)
-
       @ssrc = ssrc
 
       @ping_number = 0
