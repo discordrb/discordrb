@@ -48,7 +48,7 @@ module Discordrb::Voice
     # @return [String] The buffer with adjusted volume, s16le again
     def adjust_volume(buf, mult)
       # buf is s16le so use 's<' for signed, 16 bit, LE
-      result = buf.unpack('s<').map do |sample|
+      result = buf.unpack('s<*').map do |sample|
         sample *= mult
 
         # clamp to s16 range
@@ -56,7 +56,7 @@ module Discordrb::Voice
       end
 
       # After modification, make it s16le again
-      result.pack('s<')
+      result.pack('s<*')
     end
 
     # Encodes a given file (or rather, decodes it) using ffmpeg. This accepts pretty much any format, even videos with
