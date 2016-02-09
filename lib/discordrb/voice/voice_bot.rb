@@ -146,6 +146,9 @@ module Discordrb::Voice
           next
         end
 
+        # Adjust volume
+        buf = @encoder.adjust_volume(buf, @volume) if @volume != 1.0
+
         # Encode data
         @encoder.encode(buf)
       end
@@ -186,7 +189,10 @@ module Discordrb::Voice
         end
 
         # Read bytes
-        input_stream.read(header)
+        buf = input_stream.read(header)
+
+        # Adjust volume
+        @encoder.adjust_volume(buf, @volume) if @volume != 1.0
       end
     end
 
@@ -226,9 +232,6 @@ module Discordrb::Voice
         # Get packet data
         buf = yield
         next unless buf
-
-        # Adjust volume
-        buf = @encoder.adjust_volume(buf, @volume) if @volume != 1.0
 
         # Send the packet
         @udp.send_audio(buf, @sequence, @time)
