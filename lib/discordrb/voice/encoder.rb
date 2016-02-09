@@ -53,6 +53,23 @@ module Discordrb::Voice
       @opus.destroy
     end
 
+    # Adjusts the volume of a given buffer of s16le PCM data.
+    # @param buf [String] An unencoded PCM (s16le) buffer.
+    # @param mult [Float] The volume multiplier, 1 for same volume.
+    # @return [String] The buffer with adjusted volume, s16le again
+    def adjust_volume(buf, mult)
+      # buf is s16le so use 's<' for signed, 16 bit, LE
+      result = buf.unpack('s<').map do |sample|
+        sample *= mult
+
+        # clamp to s16 range
+        sample = [32767, [-32768, sample].max].min
+      end
+
+      # After modification, make it s16le again
+      result.pack('s<')
+    end
+
     # Encodes a given file (or rather, decodes it) using ffmpeg. This accepts pretty much any format, even videos with
     # an audio track. For a list of supported formats, see https://ffmpeg.org/general.html#Audio-Codecs. It even accepts
     # URLs, though encoding them is pretty slow - I recommend to make a stream of it and then use {#encode_io} instead.
