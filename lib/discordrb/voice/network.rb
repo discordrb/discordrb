@@ -220,8 +220,6 @@ module Discordrb::Voice
         @ws_data = packet['d']
         @ready = true
         @udp.secret_key = @ws_data['secret_key'].pack('C*')
-      else
-        # irrelevant opcode, ignore
       end
     end
 
