@@ -111,10 +111,10 @@ module Discordrb::API
   # Logout from the server
   def logout(token)
     request(
-        :post,
-        "#{APIBASE}/auth/logout",
-        nil,
-        Authorization: token
+      :post,
+      "#{APIBASE}/auth/logout",
+      nil,
+      Authorization: token
     )
   end
 
