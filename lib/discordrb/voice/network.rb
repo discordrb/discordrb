@@ -12,7 +12,6 @@ rescue LoadError
   RBNACL_AVAILABLE = false
 end
 
-
 module Discordrb::Voice
   # Signifies to Discord that encryption should be used
   ENCRYPTED_MODE = 'xsalsa20_poly1305'.freeze
