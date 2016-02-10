@@ -15,10 +15,10 @@ end
 
 module Discordrb::Voice
   # Signifies to Discord that encryption should be used
-  ENCRYPTED_MODE = 'xsalsa20_poly1305'
+  ENCRYPTED_MODE = 'xsalsa20_poly1305'.freeze
 
   # Signifies to Discord that no encryption should be used
-  PLAIN_MODE = 'plain'
+  PLAIN_MODE = 'plain'.freeze
 
   # Represents a UDP connection to a voice server. This connection is used to send the actual audio data.
   class VoiceUDP
