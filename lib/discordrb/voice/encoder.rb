@@ -11,7 +11,6 @@ module Discordrb::Voice
   # This class conveniently abstracts opus and ffmpeg/avconv, for easy implementation of voice sending. It's not very
   # useful for most users, but I guess it can be useful sometimes.
   class Encoder
-
     # Whether or not avconv should be used instead of ffmpeg. If possible, it is recommended to use ffmpeg instead,
     # as it is better supported.
     # @return [true, false] whether avconv should be used instead of ffmpeg.
@@ -55,7 +54,7 @@ module Discordrb::Voice
         sample *= mult
 
         # clamp to s16 range
-        sample = [32767, [-32768, sample].max].min
+        [32_767, [-32_768, sample].max].min
       end
 
       # After modification, make it s16le again
