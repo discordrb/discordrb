@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.6.4
+
+### Bugfixes
+* Fixed a bug that made the joining of servers using an invite impossible.
+
 ## 1.6.3
 
 ### Bugfixes
