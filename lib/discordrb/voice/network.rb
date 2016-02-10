@@ -5,11 +5,11 @@ require 'json'
 
 begin
   require 'rbnacl'
-  $rbnacl_available = true
+  RBNACL_AVAILABLE = true
 rescue LoadError
   puts "libsodium not available! You can continue to use discordrb as normal but voice support won't work.
         Read https://github.com/meew0/discordrb/wiki/Installing-libsodium for more details."
-  $rbnacl_available = false
+  RBNACL_AVAILABLE = false
 end
 
 
@@ -122,7 +122,7 @@ module Discordrb::Voice
     # @param session [String] The voice session ID Discord sends over the regular websocket
     # @param endpoint [String] The endpoint URL to connect to
     def initialize(channel, bot, token, session, endpoint)
-      fail 'RbNaCl is unavailable - unable to create voice bot! Please read https://github.com/meew0/discordrb/wiki/Installing-libsodium' unless $rbnacl_available
+      fail 'RbNaCl is unavailable - unable to create voice bot! Please read https://github.com/meew0/discordrb/wiki/Installing-libsodium' unless RBNACL_AVAILABLE
 
       @channel = channel
       @bot = bot
