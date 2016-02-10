@@ -1134,11 +1134,11 @@ module Discordrb
           v: 2,   # Another identifier
           token: @token,
           properties: { # I'm unsure what these values are for exactly, but they don't appear to impact bot functionality in any way.
-            '$os': RUBY_PLATFORM.to_s,
-            '$browser': 'discordrb',
-            '$device': 'discordrb',
-            '$referrer': '',
-            '$referring_domain': ''
+            :'$os' => RUBY_PLATFORM.to_s,
+            :'$browser' => 'discordrb',
+            :'$device' => 'discordrb',
+            :'$referrer' => '',
+            :'$referring_domain' => ''
           }
         }
       }
