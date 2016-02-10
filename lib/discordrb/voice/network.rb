@@ -69,9 +69,7 @@ module Discordrb::Voice
       header = [0x80, 0x78, sequence, time, @ssrc].pack('CCnNN')
 
       # Encrypt data, if necessary
-      if encrypted?
-        buf = encrypt_audio(header, buf)
-      end
+      buf = encrypt_audio(header, buf) if encrypted?
 
       send_packet(header + buf)
     end
