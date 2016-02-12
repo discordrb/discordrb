@@ -1172,7 +1172,8 @@ module Discordrb
             '$device': 'discordrb',
             '$referrer': '',
             '$referring_domain': ''
-          }
+          },
+          large_threshold: 100
         }
       }
 
