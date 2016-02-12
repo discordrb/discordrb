@@ -172,6 +172,15 @@ module Discordrb::API
     )
   end
 
+  # Get a member's data
+  def member(token, server_id, user_id)
+    request(
+      :get,
+      "#{APIBASE}/guilds/#{server_id}/members/#{user_id}",
+      Authorization: token
+    )
+  end
+
   # Create a channel
   def create_channel(token, server_id, name, type)
     request(
