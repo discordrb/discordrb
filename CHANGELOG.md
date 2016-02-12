@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.6.5
+* The bot will now request the users that would previously be sent all in one READY packet in multiple chunks. This improves startup time slightly and ensures compatibility with the latest Discord change, but it also means that some users won't be in server members lists until a while after creation (usually a couple seconds at most).
+
 ## 1.6.4
 
 ### Bugfixes
