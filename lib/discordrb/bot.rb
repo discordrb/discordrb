@@ -1162,6 +1162,7 @@ module Discordrb
         Thread.current[:discordrb_name] = "et-#{@current_thread += 1}"
         begin
           handler.call(event)
+          handler.after_call(event)
         rescue => e
           log_exception(e)
         ensure
