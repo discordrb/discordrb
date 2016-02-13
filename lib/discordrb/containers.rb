@@ -172,6 +172,19 @@ module Discordrb
       class_from_string(event_class.to_s + 'Handler')
     end
 
+    def self.event_class(handler_class)
+      class_name = handler_class.to_s
+      return nil unless class_name.end_with? 'Handler'
+
+      EventContainer.class_from_string(class_name[0..-8])
+    end
+
+    def self.class_from_string(str)
+      str.split('::').inject(Object) do |mod, class_name|
+        mod.const_get(class_name)
+      end
+    end
+
     private
 
     include Discordrb::Events
@@ -185,19 +198,6 @@ module Discordrb
 
       # Return the handler so it can be removed later
       handler
-    end
-
-    def class_from_string(str)
-      str.split('::').inject(Object) do |mod, class_name|
-        mod.const_get(class_name)
-      end
-    end
-
-    def event_class(handler_class)
-      class_name = handler_class.to_s
-      return nil unless class_name.end_with? 'Handler'
-
-      class_from_string(class_name[0..-8])
     end
   end
 end
