@@ -170,6 +170,12 @@ module Discordrb
       @event_handlers[clazz] << handler
     end
 
+    def include!(container)
+      handlers = container.instance_variable_get '@event_handlers'
+      @event_handlers ||= {}
+      @event_handlers.merge! handlers
+    end
+
     alias_method :<<, :add_handler
 
     def self.handler_class(event_class)
