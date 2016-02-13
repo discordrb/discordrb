@@ -835,7 +835,7 @@ module Discordrb
     # @note For internal use only
     # @!visibility private
     def add_user(user)
-      @members << user
+      @members << user unless @members.include? user
     end
 
     # Removes a user from the user cache.
