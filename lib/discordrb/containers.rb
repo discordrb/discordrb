@@ -168,16 +168,16 @@ module Discordrb
       @event_handlers[clazz] << handler
     end
 
+    def self.handler_class(event_class)
+      class_from_string(event_class.to_s + 'Handler')
+    end
+
     private
 
     include Discordrb::Events
 
-    def handler_class(event_class)
-      class_from_string(event_class.to_s + 'Handler')
-    end
-
     def register_event(clazz, attributes, block)
-      handler = handler_class(clazz).new(attributes, block)
+      handler = EventContainer.handler_class(clazz).new(attributes, block)
 
       @event_handlers ||= {}
       @event_handlers[clazz] ||= []
