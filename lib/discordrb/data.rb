@@ -854,8 +854,8 @@ module Discordrb
     # @note For internal use only
     # @!visibility private
     def delete_user(user_id)
-      count = @members.reject! { |member| member.id == user_id }.length
-      @member_count -= count
+      @members.reject! { |member| member.id == user_id }.length
+      @member_count -= 1
     end
 
     # Creates a channel on this server with the given name.
