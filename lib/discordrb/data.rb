@@ -763,6 +763,11 @@ module Discordrb
     # @return [Array<Role>] an array of all the roles created on this server.
     attr_reader :roles
 
+    # @return [true, false] whether or not this server is large (members > 100). If it is,
+    # it means the members list may be inaccurate for a couple seconds after starting up the bot.
+    attr_reader :large
+    alias_method :large?, :large
+
     # @todo Make this behave like user.avatar where a URL is available as well.
     # @return [String] the hexadecimal ID used to identify this server's icon.
     attr_reader :icon
@@ -783,6 +788,8 @@ module Discordrb
       @owner = bot.user(@owner_id)
       @id = data['id'].to_i
       update_data(data)
+
+      @large = data['large']
 
       process_roles(data['roles'])
       process_members(data['members'])
