@@ -2,6 +2,7 @@ require 'discordrb/bot'
 require 'discordrb/data'
 require 'discordrb/commands/parser'
 require 'discordrb/commands/events'
+require 'discordrb/commands/container'
 
 # Specialized bot to run commands
 
@@ -10,10 +11,11 @@ module Discordrb::Commands
   class CommandBot < Discordrb::Bot
     attr_reader :attributes, :prefix
 
+    include CommandContainer
+
     def initialize(email, password, prefix, attributes = {}, debug = false)
       super(email, password, debug)
       @prefix = prefix
-      @commands = {}
       @attributes = {
         # Whether advanced functionality such as command chains are enabled
         advanced_functionality: attributes[:advanced_functionality].nil? ? true : attributes[:advanced_functionality],
@@ -78,16 +80,6 @@ module Discordrb::Commands
             'Sending list in PM!'
           end
         end
-      end
-    end
-
-    def command(name, attributes = {}, &block)
-      if name.is_a? Array
-        new_command = Command.new(name[0], attributes, &block)
-        name.each { |n| @commands[n] = new_command }
-        new_command
-      else
-        @commands[name] = Command.new(name, attributes, &block)
       end
     end
 
