@@ -1,3 +1,5 @@
+require 'discordrb/containers'
+
 module Discordrb
   # Awaits are a way to register new, temporary event handlers on the fly. Awaits can be
   # registered using {Bot#add_await}, {User#await}, {Message#await} and {Channel#await}.
@@ -37,7 +39,7 @@ module Discordrb
     # @param event [Event] An event to check for.
     # @return [Array] This await's key and whether or not it should be deleted. If there was no match, both are nil.
     def match(event)
-      dummy_handler = @bot.handler_class(@type).new(@attributes, @bot)
+      dummy_handler = EventContainer.handler_class(@type).new(@attributes, @bot)
       return [nil, nil] unless dummy_handler.matches?(event)
 
       should_delete = nil
