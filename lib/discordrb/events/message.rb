@@ -3,7 +3,7 @@ require 'discordrb/events/generic'
 module Discordrb::Events
   # Event raised when a text message is sent to a channel
   class MessageEvent
-    attr_reader :message
+    attr_reader :message, :saved_message
 
     delegate :author, :channel, :content, :timestamp, to: :message
     delegate :server, to: :channel
@@ -11,6 +11,7 @@ module Discordrb::Events
     def initialize(message, bot)
       @bot = bot
       @message = message
+      @saved_message = ''
     end
 
     def send_message(content)
@@ -19,6 +20,11 @@ module Discordrb::Events
 
     def from_bot?
       @message.user.id == @bot.bot_user.id
+    end
+
+    def <<(message)
+      @saved_message += "#{message}\n"
+      nil
     end
 
     alias_method :user, :author
