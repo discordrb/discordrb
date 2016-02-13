@@ -94,6 +94,10 @@ module Discordrb::Events
         matches_all(@attributes[:private], event.channel.private?) { |a, e| !e == !a }
       ].reduce(true, &:&)
     end
+
+    def after_call(event)
+      event.send_message(event.saved_message)
+    end
   end
 
   class MentionEvent < MessageEvent; end
