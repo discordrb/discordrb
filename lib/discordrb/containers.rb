@@ -178,12 +178,13 @@ module Discordrb
 
     # Adds all event handlers from another container into this one. Existing event handlers will be overwritten.
     # @param container [Module] A module that `extend`s {EventContainer} from which the handlers will be added.
-    def include!(container)
+    def include_events(container)
       handlers = container.instance_variable_get '@event_handlers'
       @event_handlers ||= {}
       @event_handlers.merge! handlers
     end
 
+    alias_method :include!, :include_events
     alias_method :<<, :add_handler
 
     # Returns the handler class for an event class type
