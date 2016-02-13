@@ -455,8 +455,6 @@ module Discordrb
       LOGGER.log_exception(e)
     end
 
-    alias_method :<<, :add_handler
-
     private
 
     #######     ###     ######  ##     ## ########

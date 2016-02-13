@@ -170,6 +170,8 @@ module Discordrb
       @event_handlers[clazz] << handler
     end
 
+    alias_method :<<, :add_handler
+
     def self.handler_class(event_class)
       class_from_string(event_class.to_s + 'Handler')
     end
