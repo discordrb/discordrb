@@ -433,8 +433,6 @@ module Discordrb
       @prevent_ready = true
     end
 
-    alias_method :private_message, :pm
-
     # Add an await the bot should listen to. For information on awaits, see {Await}.
     # @param key [Symbol] The key that uniquely identifies the await for {AwaitEvent}s to listen to (see {#await}).
     # @param type [Class] The event class that should be listened for.
