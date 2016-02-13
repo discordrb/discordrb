@@ -768,6 +768,9 @@ module Discordrb
     attr_reader :large
     alias_method :large?, :large
 
+    # @return [Integer] the absolute number of members on this server, offline or not.
+    attr_reader :member_count
+
     # @todo Make this behave like user.avatar where a URL is available as well.
     # @return [String] the hexadecimal ID used to identify this server's icon.
     attr_reader :icon
@@ -790,6 +793,7 @@ module Discordrb
       update_data(data)
 
       @large = data['large']
+      @member_count = data['member_count']
 
       process_roles(data['roles'])
       process_members(data['members'])
