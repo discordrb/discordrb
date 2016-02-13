@@ -29,6 +29,8 @@ module Discordrb::API
 
   def raw_request(type, attributes)
     RestClient.send(type, *attributes)
+  rescue RestClient::Forbidden
+    raise Discordrb::NoPermission, "The bot doesn't have the required permission to do this!"
   end
 
   # Make an API request. Utility function to implement message queueing

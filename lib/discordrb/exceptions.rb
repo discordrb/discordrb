@@ -12,4 +12,7 @@ module Discordrb
 
   # Raised when a message is over the character limit
   class MessageTooLong < RuntimeError; end
+
+  # Raised when the bot can't do something because its permissions on the server are insufficient
+  class NoPermission < RuntimeError; end
 end
