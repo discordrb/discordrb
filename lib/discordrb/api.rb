@@ -1,6 +1,8 @@
 require 'rest-client'
 require 'json'
 
+require 'discordrb/exceptions'
+
 # List of methods representing endpoints in Discord's API
 module Discordrb::API
   # The base URL of the Discord REST API.
@@ -261,6 +263,8 @@ module Discordrb::API
       Authorization: token,
       content_type: :json
     )
+  rescue RestClient::InternalServerError
+    raise Discordrb::MessageTooLong, "Message over the character limit (#{message.length} > 2000)"
   end
 
   # Delete a message

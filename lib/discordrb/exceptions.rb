@@ -9,4 +9,7 @@ module Discordrb
       @status = status
     end
   end
+
+  # Raised when a message is over the character limit
+  class MessageTooLong < RuntimeError; end
 end
