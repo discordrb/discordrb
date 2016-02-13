@@ -847,13 +847,15 @@ module Discordrb
     # @!visibility private
     def add_user(user)
       @members << user
+      @member_count += 1
     end
 
     # Removes a user from the user cache.
     # @note For internal use only
     # @!visibility private
     def delete_user(user_id)
-      @members.reject! { |member| member.id == user_id }
+      count = @members.reject! { |member| member.id == user_id }.length
+      @member_count -= count
     end
 
     # Creates a channel on this server with the given name.
