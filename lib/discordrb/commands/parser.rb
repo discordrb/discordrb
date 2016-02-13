@@ -48,7 +48,10 @@ module Discordrb::Commands
           return
         end
       end
+
       @block.call(event, *arguments)
+    rescue LocalJumpError # occurs when breaking
+      nil
     end
   end
 
