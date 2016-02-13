@@ -12,5 +12,10 @@ module Discordrb::Commands
         @commands[name] = Command.new(name, attributes, &block)
       end
     end
+
+    def remove_command(name)
+      @commands ||= {}
+      @commands.delete name
+    end
   end
 end
