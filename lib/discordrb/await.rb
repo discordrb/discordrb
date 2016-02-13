@@ -1,4 +1,4 @@
-require 'discordrb/containers'
+require 'discordrb/container'
 
 module Discordrb
   # Awaits are a way to register new, temporary event handlers on the fly. Awaits can be

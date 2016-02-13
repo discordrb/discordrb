@@ -23,7 +23,7 @@ require 'discordrb/exceptions'
 require 'discordrb/data'
 require 'discordrb/await'
 require 'discordrb/token_cache'
-require 'discordrb/containers'
+require 'discordrb/container'
 
 require 'discordrb/voice/voice_bot'
 

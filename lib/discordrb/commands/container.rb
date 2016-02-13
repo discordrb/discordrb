@@ -1,4 +1,4 @@
-require 'discordrb/containers'
+require 'discordrb/container'
 
 module Discordrb::Commands
   # This module holds a collection of commands that can be easily added to by calling the {CommandContainer#command}
