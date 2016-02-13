@@ -157,13 +157,13 @@ module Discordrb
     end
 
     def remove_handler(handler)
-      clazz = event_class(handler.class)
+      clazz = EventContainer.event_class(handler.class)
       @event_handlers ||= {}
       @event_handlers[clazz].delete(handler)
     end
 
     def add_handler(handler)
-      clazz = event_class(handler.class)
+      clazz = EventContainer.event_class(handler.class)
       @event_handlers ||= {}
       @event_handlers[clazz] << handler
     end
