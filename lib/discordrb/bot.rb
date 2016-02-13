@@ -43,6 +43,13 @@ module Discordrb
     # @return [Array<Server>] The servers.
     attr_reader :servers
 
+    # The list of currently running threads used to parse and call events.
+    # The threads will have a local variable `:discordrb_name` in the format of `et-1234`, where
+    # "et" stands for "event thread" and the number is a continually incrementing number representing
+    # how many events were executed before.
+    # @return [Array<Thread>] The threads.
+    attr_reader :event_threads
+
     # The bot's user profile. This special user object can be used
     # to edit user data like the current username (see {Profile#username=}).
     # @return [Profile] The bot's profile that can be used to edit data.
@@ -83,6 +90,9 @@ module Discordrb
 
       @channels = {}
       @users = {}
+
+      @event_threads = []
+      @current_thread = 0
     end
 
     # The Discord API token received when logging in. Useful to explicitly call
@@ -424,6 +434,20 @@ module Discordrb
     end
 
     alias_method :private_message, :pm
+
+    # Add an await the bot should listen to. For information on awaits, see {Await}.
+    # @param key [Symbol] The key that uniquely identifies the await for {AwaitEvent}s to listen to (see {#await}).
+    # @param type [Class] The event class that should be listened for.
+    # @param attributes [Hash] The attributes the event should check for. The block will only be executed if all attributes match.
+    # @yield Is executed when the await is triggered.
+    # @yieldparam event [Event] The event object that was triggered.
+    # @return [Await] The await that was created.
+    def add_await(key, type, attributes = {}, &block)
+      fail "You can't await an AwaitEvent!" if type == Discordrb::Events::AwaitEvent
+      await = Await.new(self, key, type, attributes, block)
+      @awaits ||= {}
+      @awaits[key] = await
+    end
 
     def debug(message, important = false)
       LOGGER.debug(message, important)
@@ -971,6 +995,48 @@ module Discordrb
       }
 
       @ws.send(data.to_json)
+    end
+
+    def raise_event(event)
+      debug("Raised a #{event.class}")
+      handle_awaits(event)
+
+      @event_handlers ||= {}
+      handlers = @event_handlers[event.class]
+      (handlers || []).each do |handler|
+        call_event(handler, event) if handler.matches?(event)
+      end
+    end
+
+    def call_event(handler, event)
+      t = Thread.new do
+        @event_threads ||= []
+        @current_thread ||= 0
+
+        @event_threads << t
+        Thread.current[:discordrb_name] = "et-#{@current_thread += 1}"
+        begin
+          handler.call(event)
+          handler.after_call(event)
+        rescue => e
+          log_exception(e)
+        ensure
+          @event_threads.delete(t)
+        end
+      end
+    end
+
+    def handle_awaits(event)
+      @awaits ||= {}
+      @awaits.each do |_, await|
+        key, should_delete = await.match(event)
+        next unless key
+        debug("should_delete: #{should_delete}")
+        @awaits.delete(await.key) if should_delete
+
+        await_event = Discordrb::Events::AwaitEvent.new(await, event, self)
+        raise_event(await_event)
+      end
     end
   end
 end
