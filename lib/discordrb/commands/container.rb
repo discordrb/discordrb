@@ -1,4 +1,6 @@
 module Discordrb::Commands
+  # This module holds a collection of commands that can be easily added to by calling the {CommandContainer#command}
+  # function. Other containers can be included into it as well. This allows for modularization of command bots.
   module CommandContainer
     def command(name, attributes = {}, &block)
       @commands ||= {}
