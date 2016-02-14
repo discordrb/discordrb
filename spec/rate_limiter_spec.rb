@@ -88,5 +88,15 @@ describe Discordrb::Commands::Bucket do
       b.rate_limited?(:a, Time.now + 4).should be_truthy
       b.rate_limited?(:a, Time.now + 5).should be_truthy
     end
+
+    it 'should return correct times' do
+      start_time = Time.now
+      b = BUCKET.new(2, 5, 2)
+      b.rate_limited?(:a, start_time).should be_falsy
+      b.rate_limited?(:a, start_time).round(2).should eq(2)
+      b.rate_limited?(:a, start_time + 1).round(2).should eq(1)
+      b.rate_limited?(:a, start_time + 2.01).should be_falsy
+      b.rate_limited?(:a, start_time + 2).round(2).should eq(3)
+    end
   end
 end
