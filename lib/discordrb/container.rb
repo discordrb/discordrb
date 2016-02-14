@@ -226,6 +226,13 @@ module Discordrb
       register_event(UserBanEvent, attributes, block)
     end
 
+    # This **event** is raised when a user is unbanned from a server.
+    # @param attributes [Hash] The event's attributes.
+    # @option attributes [String, Integer, User] :user Matches the user that was unbanned.
+    # @option attributes [String, Integer, Server] :server Matches the server from which the user was unbanned.
+    # @yield The block is executed when the event is raised.
+    # @yieldparam event [UserUnbanEvent] The event that was raised.
+    # @return [UserUnbanEventHandler] The event handler that was registered.
     def user_unban(attributes = {}, &block)
       register_event(UserUnbanEvent, attributes, block)
     end
