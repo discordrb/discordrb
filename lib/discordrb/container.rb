@@ -43,7 +43,7 @@ module Discordrb
     # initialization. It's the recommended way to do things when the bot has finished starting up.
     # @param attributes [Hash] Event attributes, none in this particular case
     # @yield The block is executed when the event is raised.
-    # @yieldparam event [MessageEvent] The event that was raised.
+    # @yieldparam event [ReadyEvent] The event that was raised.
     # @return [ReadyEventHandler] The event handler that was registered.
     def ready(attributes = {}, &block)
       register_event(ReadyEvent, attributes, block)
@@ -53,7 +53,7 @@ module Discordrb
     # external causes. It's the recommended way to do clean-up tasks.
     # @param attributes [Hash] Event attributes, none in this particular case
     # @yield The block is executed when the event is raised.
-    # @yieldparam event [MessageEvent] The event that was raised.
+    # @yieldparam event [DisconnectEvent] The event that was raised.
     # @return [DisconnectEventHandler] The event handler that was registered.
     def disconnected(attributes = {}, &block)
       register_event(DisconnectEvent, attributes, block)
