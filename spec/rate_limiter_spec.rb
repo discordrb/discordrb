@@ -54,5 +54,39 @@ describe Discordrb::Commands::Bucket do
       b.rate_limited?(:a, Time.now + 5.01).should be_falsy
       b.rate_limited?(:a, Time.now + 5.02).should be_truthy
     end
+
+    it 'should rate limit based on delay' do
+      b = BUCKET.new(nil, nil, 2)
+      b.rate_limited?(:a).should be_falsy
+      b.rate_limited?(:a).should be_truthy
+    end
+
+    it 'should not rate limit after the delay ran out' do
+      b = BUCKET.new(nil, nil, 2)
+      b.rate_limited?(:a).should be_falsy
+      b.rate_limited?(:a).should be_truthy
+      b.rate_limited?(:a, Time.now + 2).should be_falsy
+      b.rate_limited?(:a, Time.now + 2).should be_truthy
+      b.rate_limited?(:a, Time.now + 4).should be_falsy
+      b.rate_limited?(:a, Time.now + 4).should be_truthy
+    end
+
+    it 'should rate limit based on both limit and delay' do
+      b = BUCKET.new(2, 5, 2)
+      b.rate_limited?(:a).should be_falsy
+      b.rate_limited?(:a).should be_truthy
+      b.rate_limited?(:a, Time.now + 2).should be_falsy
+      b.rate_limited?(:a, Time.now + 2).should be_truthy
+      b.rate_limited?(:a, Time.now + 4).should be_truthy
+      b.rate_limited?(:a, Time.now + 5).should be_falsy
+      b.rate_limited?(:a, Time.now + 6).should be_truthy
+
+      b = BUCKET.new(2, 5, 2)
+      b.rate_limited?(:a).should be_falsy
+      b.rate_limited?(:a).should be_truthy
+      b.rate_limited?(:a, Time.now + 4).should be_falsy
+      b.rate_limited?(:a, Time.now + 4).should be_truthy
+      b.rate_limited?(:a, Time.now + 5).should be_truthy
+    end
   end
 end
