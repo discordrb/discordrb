@@ -1,7 +1,11 @@
 module Discordrb::Commands
   # Command that can be called in a chain
   class Command
-    attr_reader :attributes, :name
+    # @return [Hash] the attributes the command was initialized with
+    attr_reader :attributes
+
+    # @return [Symbol] the name of this command
+    attr_reader :name
 
     def initialize(name, attributes = {}, &block)
       @name = name
