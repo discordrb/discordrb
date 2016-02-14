@@ -13,6 +13,21 @@ module Discordrb::Commands
 
       @bucket = {}
     end
+
+    # Performs a rate limiting request
+    # @param thing [#resolve_id, Integer, Symbol] The particular thing that should be rate-limited (usually a user/channel, but you can also choose arbitrary integers or symbols)
+    # @return [Integer, false] the waiting time until the next request, or false if the request succeeded
+    def rate_limited?(thing)
+
+    end
+
+    private
+
+    def resolve_key(thing)
+      return thing.resolve_id if thing.respond_to? :resolve_id
+      return thing if thing.is_a?(Integer) || thing.is_a?(Symbol)
+      fail ArgumentError, "Cannot use a #{thing.class} as a rate limiting key!"
+    end
   end
 
   class RateLimiter
