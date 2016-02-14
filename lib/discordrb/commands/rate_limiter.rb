@@ -86,6 +86,7 @@ module Discordrb::Commands
     end
   end
 
+  # Represents a collection of {Bucket}s.
   module RateLimiter
     # Defines a new bucket for this rate limiter.
     # @param key [Symbol] The name for this new bucket.
