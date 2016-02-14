@@ -107,6 +107,13 @@ module Discordrb
       register_event(PresenceEvent, attributes, block)
     end
 
+    # This **event** is raised when the game a user is playing changes.
+    # @param attributes [Hash] The event's attributes.
+    # @option attributes [String, Integer, User] :from Matches the user whose playing game changes.
+    # @option attributes [String] :game Matches the game the user is now playing.
+    # @yield The block is executed when the event is raised.
+    # @yieldparam event [PlayingEvent] The event that was raised.
+    # @return [PlayingEventHandler] The event handler that was registered.
     def playing(attributes = {}, &block)
       register_event(PlayingEvent, attributes, block)
     end
