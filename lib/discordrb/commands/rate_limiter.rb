@@ -124,4 +124,15 @@ module Discordrb::Commands
       @buckets.merge! buckets
     end
   end
+
+  # This class provides a convenient way to do rate-limiting on non-command events.
+  # @see RateLimiter
+  class SimpleRateLimiter
+    include RateLimiter
+
+    # Makes a new rate limiter
+    def initialize
+      @buckets = {}
+    end
+  end
 end
