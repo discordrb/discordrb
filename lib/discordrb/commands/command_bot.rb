@@ -14,6 +14,37 @@ module Discordrb::Commands
 
     include CommandContainer
 
+    # Creates a new CommandBot and logs in to Discord.
+    # @param email [String] The email to use to log in.
+    # @param password [String] The password corresponding to the email.
+    # @param prefix [String] The prefix that should trigger this bot's commands. Can be any string (including the empty
+    #   string), but note that it will be literal - if the prefix is "hi" then the corresponding trigger string for
+    #   a command called "test" would be "hitest". Don't forget to put spaces in if you need them!
+    # @param attributes [Hash] The attributes to initialize the CommandBot with.
+    # @param debug [true, false] Whether or not debug mode should be used - debug mode logs tons of extra stuff to the
+    #   console that may be useful in development.
+    # @option attributes [true, false] :advanced_functionality Whether to enable advanced functionality (very powerful
+    #   way to nest commands into chains, see https://github.com/meew0/discordrb/wiki/Commands#command-chain-syntax
+    #   for info. Default is true.
+    # @option attributes [Symbol, Array<Symbol>] :help_command The name of the command that displays info for other
+    #   commands. Use an array if you want to have aliases. Default is "help".
+    # @option attributes [String] :command_doesnt_exist_message The message that should be displayed if a user attempts
+    #   to use a command that does not exist. If none is specified, no message will be displayed. In the message, you
+    #   can use the string '%command%' that will be replaced with the name of the command.
+    # @option attributes [String] :previous Character that should designate the result of the previous command in
+    #   a command chain (see :advanced_functionality). Default is '~'.
+    # @option attributes [String] :chain_delimiter Character that should designate that a new command begins in the
+    #   command chain (see :advanced_functionality). Default is '>'.
+    # @option attributes [String] :chain_args_delim Character that should separate the command chain arguments from the
+    #   chain itself (see :advanced_functionality). Default is ':'.
+    # @option attributes [String] :sub_chain_start Character that should start a sub-chain (see
+    #   :advanced_functionality). Default is '['.
+    # @option attributes [String] :sub_chain_end Character that should end a sub-chain (see
+    #   :advanced_functionality). Default is ']'.
+    # @option attributes [String] :quote_start Character that should start a quoted string (see
+    #   :advanced_functionality). Default is '"'.
+    # @option attributes [String] :quote_end Character that should end a quoted string (see
+    #   :advanced_functionality). Default is '"'.
     def initialize(email, password, prefix, attributes = {}, debug = false)
       super(email, password, debug)
       @prefix = prefix
