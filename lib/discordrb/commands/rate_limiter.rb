@@ -49,7 +49,12 @@ module Discordrb::Commands
 
       if @delay && rate_limit_time < (limit_hash[:last_time] + @delay)
         # Fourth case: we're being delayed
-        return limit_hash[:last_time] - rate_limit_time
+        limit_hash[:last_time] - rate_limit_time
+      else
+        # Fifth case: no rate limiting at all! Increment the count, set the last_time, and return false
+        limit_hash[:last_time] = rate_limit_time
+        limit_hash[:count] += 1
+        false
       end
     end
 
