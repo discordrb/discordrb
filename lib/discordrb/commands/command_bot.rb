@@ -165,6 +165,7 @@ module Discordrb::Commands
 
     private
 
+    # Internal handler for MESSAGE_CREATE that is overwritten to allow for command handling
     def create_message(data)
       message = Discordrb::Message.new(data, self)
       event = CommandEvent.new(message, self)
