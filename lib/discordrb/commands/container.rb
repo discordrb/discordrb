@@ -42,6 +42,8 @@ module Discordrb::Commands
       end
     end
 
+    # Removes a specific command from this container.
+    # @param name [Symbol] The command to remove.
     def remove_command(name)
       @commands ||= {}
       @commands.delete name
@@ -55,6 +57,8 @@ module Discordrb::Commands
       @commands.merge! handlers
     end
 
+    # Includes another container into this one.
+    # @param container [Module] An EventContainer or CommandContainer that will be included if it can.
     def include!(container)
       container_modules = container.singleton_class.included_modules
 
