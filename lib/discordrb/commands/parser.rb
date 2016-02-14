@@ -27,6 +27,10 @@ module Discordrb::Commands
         # Maximum number of arguments (-1 for no limit)
         max_args: attributes[:max_args] || -1,
 
+        # Message to display upon rate limiting (%time% in the message for the remaining time until the next possible
+        # request, nil for no message)
+        rate_limit_message: attributes[:rate_limit_message],
+
         # Rate limiting bucket (nil for no rate limiting)
         bucket: attributes[:bucket]
       }
