@@ -259,6 +259,13 @@ module Discordrb
       register_event(GuildUpdateEvent, attributes, block)
     end
 
+    # This **event** is raised when a server is deleted, or when the bot leaves a server. (These two cases are identical
+    # to Discord.)
+    # @param attributes [Hash] The event's attributes.
+    # @option attributes [String, Integer, Server] :server Matches the server that was deleted.
+    # @yield The block is executed when the event is raised.
+    # @yieldparam event [GuildDeleteEvent] The event that was raised.
+    # @return [GuildDeleteEventHandler] The event handler that was registered.
     def server_delete(attributes = {}, &block)
       register_event(GuildDeleteEvent, attributes, block)
     end
