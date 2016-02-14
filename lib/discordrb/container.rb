@@ -218,7 +218,7 @@ module Discordrb
     # This **event** is raised when a user is banned from a server.
     # @param attributes [Hash] The event's attributes.
     # @option attributes [String, Integer, User] :user Matches the user that was banned.
-    # @option attributes [String, Integer, Server] :server Matches the server from which the user was banned..
+    # @option attributes [String, Integer, Server] :server Matches the server from which the user was banned.
     # @yield The block is executed when the event is raised.
     # @yieldparam event [UserBanEvent] The event that was raised.
     # @return [UserBanEventHandler] The event handler that was registered.
