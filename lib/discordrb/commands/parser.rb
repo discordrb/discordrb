@@ -7,6 +7,7 @@ module Discordrb::Commands
     # @return [Symbol] the name of this command
     attr_reader :name
 
+    # @!visibility private
     def initialize(name, attributes = {}, &block)
       @name = name
       @attributes = {
@@ -42,6 +43,11 @@ module Discordrb::Commands
       @block = block
     end
 
+    # Calls this command and executes the code inside.
+    # @param event [CommandEvent] The event to call the command with.
+    # @param arguments [Array<String>] The attributes for the command.
+    # @param chained [true, false] Whether or not this command is part of a command chain.
+    # @return [String] the result of the execution.
     def call(event, arguments, chained = false)
       if arguments.length < @attributes[:min_args]
         event.respond "Too few arguments for command `#{name}`!"
