@@ -1,4 +1,6 @@
 module Discordrb::Commands
+  # This class represents a bucket for rate limiting - it keeps track of how many requests have been made and when
+  # exactly the user should be rate limited.
   class Bucket
     # Makes a new bucket
     # @param limit [Integer, nil] How many requests the user may perform in the given time_span, or nil if there should be no limit.
