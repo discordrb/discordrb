@@ -138,11 +138,32 @@ module Discordrb::Commands
       end
     end
 
+    # Executes a command in a simple manner, without command chains or permissions.
+    # @param chain [String] The command with its arguments separated by spaces.
+    # @param event [CommandEvent] The event to pass to the command.
+    # @return [String, nil] the command's result, if there is any.
     def simple_execute(chain, event)
       return nil if chain.empty?
       args = chain.split(' ')
       execute_command(args[0].to_sym, event, args[1..-1])
     end
+
+    def set_user_permission(id, level)
+      @permissions[:users][id] = level
+    end
+
+    def set_role_permission(id, level)
+      @permissions[:roles][id] = level
+    end
+
+    def permission?(user, level, server)
+      determined_level = server.nil? ? 0 : user.roles[server.id].each.reduce(0) do |memo, role|
+        [@permissions[:roles][role.id] || 0, memo].max
+      end
+      [@permissions[:users][user.id] || 0, determined_level].max >= level
+    end
+
+    private
 
     def create_message(data)
       message = Discordrb::Message.new(data, self)
@@ -174,21 +195,6 @@ module Discordrb::Commands
           @event_threads.delete(t)
         end
       end
-    end
-
-    def set_user_permission(id, level)
-      @permissions[:users][id] = level
-    end
-
-    def set_role_permission(id, level)
-      @permissions[:roles][id] = level
-    end
-
-    def permission?(user, level, server)
-      determined_level = server.nil? ? 0 : user.roles[server.id].each.reduce(0) do |memo, role|
-        [@permissions[:roles][role.id] || 0, memo].max
-      end
-      [@permissions[:users][user.id] || 0, determined_level].max >= level
     end
   end
 end
