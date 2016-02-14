@@ -52,6 +52,7 @@ describe Discordrb::Commands::Bucket do
       b.rate_limited?(:a).should be_truthy
       b.rate_limited?(:a, Time.now + 5).should be_falsy
       b.rate_limited?(:a, Time.now + 5.01).should be_falsy
+      b.rate_limited?(:a, Time.now + 5.02).should be_truthy
     end
   end
 end
