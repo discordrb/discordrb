@@ -237,6 +237,14 @@ module Discordrb
       register_event(UserUnbanEvent, attributes, block)
     end
 
+    # This **event** is raised when a server is created respective to the bot, i. e. the bot joins a server or creates
+    # a new one itself. It should never be necessary to listen to this event as it will only ever be triggered by
+    # things the bot itself does, but one can never know.
+    # @param attributes [Hash] The event's attributes.
+    # @option attributes [String, Integer, Server] :server Matches the server that was created.
+    # @yield The block is executed when the event is raised.
+    # @yieldparam event [GuildCreateEvent] The event that was raised.
+    # @return [GuildCreateEventHandler] The event handler that was registered.
     def server_create(attributes = {}, &block)
       register_event(GuildCreateEvent, attributes, block)
     end
