@@ -117,6 +117,8 @@ module Discordrb
       sync
     end
 
+    # Runs the bot asynchronously. Equivalent to #run with the :async parameter.
+    # @see #run
     def run_async
       # Handle heartbeats
       @heartbeat_interval = 1
@@ -447,10 +449,13 @@ module Discordrb
       @awaits[key] = await
     end
 
+    # Writes a debug message to the console.
+    # @param important [true, false] Whether this message should be printed regardless of debug mode being on or off.
     def debug(message, important = false)
       LOGGER.debug(message, important)
     end
 
+    # Logs an exception to the console. Will always be printed regardless of debug mode
     def log_exception(e)
       LOGGER.log_exception(e)
     end
