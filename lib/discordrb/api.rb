@@ -10,10 +10,12 @@ module Discordrb::API
 
   module_function
 
+  # @return [String] the bot name, previously specified using #bot_name=.
   def bot_name
     @bot_name
   end
 
+  # Sets the bot name to something.
   def bot_name=(value)
     @bot_name = value
   end
@@ -27,6 +29,9 @@ module Discordrb::API
     "rest-client/#{RestClient::VERSION} #{RUBY_ENGINE}/#{RUBY_VERSION}p#{RUBY_PATCHLEVEL} discordrb/#{Discordrb::VERSION} #{required} #{@bot_name}"
   end
 
+  # Performs a RestClient request.
+  # @param type [Symbol] The type of HTTP request to use.
+  # @param attributes [Array] The attributes for the request.
   def raw_request(type, attributes)
     RestClient.send(type, *attributes)
   rescue RestClient::Forbidden
