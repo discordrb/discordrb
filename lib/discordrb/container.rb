@@ -118,6 +118,21 @@ module Discordrb
       register_event(PlayingEvent, attributes, block)
     end
 
+    # This **event** is raised when the bot is mentioned in a message.
+    # @param attributes [Hash] The event's attributes.
+    # @option attributes [String, Regexp] :start_with Matches the string the message starts with.
+    # @option attributes [String, Regexp] :end_with Matches the string the message ends with.
+    # @option attributes [String, Regexp] :contains Matches a string the message contains.
+    # @option attributes [String, Integer, Channel] :in Matches the channel the message was sent in.
+    # @option attributes [String, Integer, User] :from Matches the user that sent the message.
+    # @option attributes [String] :content Exactly matches the entire content of the message.
+    # @option attributes [String] :content Exactly matches the entire content of the message.
+    # @option attributes [Time] :after Matches a time after the time the message was sent at.
+    # @option attributes [Time] :before Matches a time before the time the message was sent at.
+    # @option attributes [Boolean] :private Matches whether or not the channel is private.
+    # @yield The block is executed when the event is raised.
+    # @yieldparam event [MentionEvent] The event that was raised.
+    # @return [MentionEventHandler] The event handler that was registered.
     def mention(attributes = {}, &block)
       register_event(MentionEvent, attributes, block)
     end
