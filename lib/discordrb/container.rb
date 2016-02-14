@@ -249,6 +249,12 @@ module Discordrb
       register_event(GuildCreateEvent, attributes, block)
     end
 
+    # This **event** is raised when a server is updated, for example if the name or region has changed.
+    # @param attributes [Hash] The event's attributes.
+    # @option attributes [String, Integer, Server] :server Matches the server that was updated.
+    # @yield The block is executed when the event is raised.
+    # @yieldparam event [GuildUpdateEvent] The event that was raised.
+    # @return [GuildUpdateEventHandler] The event handler that was registered.
     def server_update(attributes = {}, &block)
       register_event(GuildUpdateEvent, attributes, block)
     end
