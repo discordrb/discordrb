@@ -39,10 +39,22 @@ module Discordrb
       register_event(MessageEvent, attributes, block)
     end
 
+    # This **event** is raised when the READY packet is received, i. e. servers and channels have finished
+    # initialization. It's the recommended way to do things when the bot has finished starting up.
+    # @param attributes [Hash] Event attributes, none in this particular case
+    # @yield The block is executed when the event is raised.
+    # @yieldparam event [MessageEvent] The event that was raised.
+    # @return [ReadyEventHandler] The event handler that was registered.
     def ready(attributes = {}, &block)
       register_event(ReadyEvent, attributes, block)
     end
 
+    # This **event** is raised when the bot has disconnected from the WebSocket, due to the {Bot#stop} method or
+    # external causes. It's the recommended way to do clean-up tasks.
+    # @param attributes [Hash] Event attributes, none in this particular case
+    # @yield The block is executed when the event is raised.
+    # @yieldparam event [MessageEvent] The event that was raised.
+    # @return [DisconnectEventHandler] The event handler that was registered.
     def disconnected(attributes = {}, &block)
       register_event(DisconnectEvent, attributes, block)
     end
