@@ -282,6 +282,21 @@ module Discordrb
       register_event(AwaitEvent, attributes, block)
     end
 
+    # This **event** is raised when a private message is sent to the bot.
+    # @param attributes [Hash] The event's attributes.
+    # @option attributes [String, Regexp] :start_with Matches the string the message starts with.
+    # @option attributes [String, Regexp] :end_with Matches the string the message ends with.
+    # @option attributes [String, Regexp] :contains Matches a string the message contains.
+    # @option attributes [String, Integer, Channel] :in Matches the channel the message was sent in.
+    # @option attributes [String, Integer, User] :from Matches the user that sent the message.
+    # @option attributes [String] :content Exactly matches the entire content of the message.
+    # @option attributes [String] :content Exactly matches the entire content of the message.
+    # @option attributes [Time] :after Matches a time after the time the message was sent at.
+    # @option attributes [Time] :before Matches a time before the time the message was sent at.
+    # @option attributes [Boolean] :private Matches whether or not the channel is private.
+    # @yield The block is executed when the event is raised.
+    # @yieldparam event [PrivateMessageEvent] The event that was raised.
+    # @return [PrivateMessageEventHandler] The event handler that was registered.
     def pm(attributes = {}, &block)
       register_event(PrivateMessageEvent, attributes, block)
     end
