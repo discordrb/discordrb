@@ -17,7 +17,7 @@ module Discordrb::Commands
     # Performs a rate limiting request
     # @param thing [#resolve_id, Integer, Symbol] The particular thing that should be rate-limited (usually a user/channel, but you can also choose arbitrary integers or symbols)
     # @return [Integer, false] the waiting time until the next request, or false if the request succeeded
-    def rate_limited?(thing)
+    def rate_limited?(thing, rate_limit_time = nil)
       key = resolve_key thing
       limit_hash = @bucket[key]
 
@@ -33,7 +33,7 @@ module Discordrb::Commands
       end
 
       # Define the time at which we're being rate limited once so it doesn't get inaccurate
-      rate_limit_time = Time.now
+      rate_limit_time ||= Time.now
 
       if @limit && (limit_hash[:count] + 1) > @limit
         if @time_span && rate_limit_time < (limit_hash[:set_time] + @time_span)
