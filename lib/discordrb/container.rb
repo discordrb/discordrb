@@ -185,6 +185,12 @@ module Discordrb
       register_event(VoiceStateUpdateEvent, attributes, block)
     end
 
+    # This **event** is raised when a new user joins a server.
+    # @param attributes [Hash] The event's attributes.
+    # @option attributes [String] :username Matches the username of the joined user.
+    # @yield The block is executed when the event is raised.
+    # @yieldparam event [GuildMemberAddEvent] The event that was raised.
+    # @return [GuildMemberAddEventHandler] The event handler that was registered.
     def member_join(attributes = {}, &block)
       register_event(GuildMemberAddEvent, attributes, block)
     end
