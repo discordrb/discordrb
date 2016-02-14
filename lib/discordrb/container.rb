@@ -137,7 +137,6 @@ module Discordrb
       register_event(MentionEvent, attributes, block)
     end
 
-
     # This **event** is raised when a channel is created.
     # @param attributes [Hash] The event's attributes.
     # @option attributes [String] :type Matches the type of channel that is being created (text or voice)
