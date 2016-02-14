@@ -18,7 +18,19 @@ module Discordrb::Commands
     # @param thing [#resolve_id, Integer, Symbol] The particular thing that should be rate-limited (usually a user/channel, but you can also choose arbitrary integers or symbols)
     # @return [Integer, false] the waiting time until the next request, or false if the request succeeded
     def rate_limited?(thing)
+      key = resolve_key thing
+      limit_hash = @bucket[key]
 
+      # First case: limit_hash doesn't exist yet
+      unless limit_hash
+        @bucket[key] = {
+          last_time: Time.now,
+          set_time: Time.now,
+          count: 1
+        }
+
+        return false
+      end
     end
 
     private
