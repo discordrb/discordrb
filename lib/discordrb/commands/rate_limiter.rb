@@ -115,5 +115,13 @@ module Discordrb::Commands
     def clean
       @buckets.each(&:clean)
     end
+
+    # Adds all the buckets from another RateLimiter onto this one.
+    # @param limiter [Module] Another {RateLimiter} module
+    def include_buckets(limiter)
+      buckets = limiter.instance_variable_get '@buckets'
+      @buckets ||= {}
+      @buckets.merge! buckets
+    end
   end
 end
