@@ -170,15 +170,17 @@ module Discordrb
       register_event(ChannelDeleteEvent, attributes, block)
     end
 
-    # Handle a change to a voice state.
-    # This includes joining a voice channel or changing mute or deaf state.
-    # Attributes:
-    # * from: User whose voice state changed
-    # * mute: server mute status
-    # * deaf: server deaf status
-    # * self_mute: self mute status
-    # * self_deaf: self deaf status
-    # * channel: channel the user joined
+    # This **event** is raised when a user's voice state changes.
+    # @param attributes [Hash] The event's attributes.
+    # @option attributes [String, Integer, User] :from Matches the user that sent the message.
+    # @option attributes [String, Integer, Channel] :channel Matches the voice channel the user has joined.
+    # @option attributes [true, false] :mute Matches whether or not the user is muted server-wide.
+    # @option attributes [true, false] :deaf Matches whether or not the user is deafened server-wide.
+    # @option attributes [true, false] :self_mute Matches whether or not the user is muted by the bot.
+    # @option attributes [true, false] :self_deaf Matches whether or not the user is deafened by the bot.
+    # @yield The block is executed when the event is raised.
+    # @yieldparam event [VoiceStateUpdateEvent] The event that was raised.
+    # @return [VoiceStateUpdateEventHandler] The event handler that was registered.
     def voice_state_update(attributes = {}, &block)
       register_event(VoiceStateUpdateEvent, attributes, block)
     end
