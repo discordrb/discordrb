@@ -55,7 +55,7 @@ module Discordrb::Commands
       if @limit && (limit_hash[:count] + 1) > @limit
         if @time_span && rate_limit_time < (limit_hash[:set_time] + @time_span)
           # Second case: Count is over the limit and the time has not run out yet
-          return limit_hash[:set_time] - rate_limit_time
+          return (limit_hash[:set_time] + @time_span) - rate_limit_time
         else
           # Third case: Count is over the limit but the time has run out
           # Don't return anything here because there may still be delay-based limiting
@@ -66,7 +66,7 @@ module Discordrb::Commands
 
       if @delay && rate_limit_time < (limit_hash[:last_time] + @delay)
         # Fourth case: we're being delayed
-        limit_hash[:last_time] - rate_limit_time
+        (limit_hash[:last_time] + @delay) - rate_limit_time
       else
         # Fifth case: no rate limiting at all! Increment the count, set the last_time, and return false
         limit_hash[:last_time] = rate_limit_time
