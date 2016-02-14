@@ -86,9 +86,18 @@ module Discordrb::Commands
     end
   end
 
-  class RateLimiter
-    def initialize
-
+  module RateLimiter
+    # Defines a new bucket for this rate limiter.
+    # @param key [Symbol] The name for this new bucket.
+    # @param attributes [Hash] The attributes to initialize the bucket with.
+    # @option attributes [Integer] :limit The limit of requests to perform in the given time span.
+    # @option attributes [Integer] :time_span How many seconds until the limit should be reset.
+    # @option attributes [Integer] :delay How many seconds the user has to wait after each request.
+    # @see Bucket#initialize
+    # @return [Bucket] the created bucket.
+    def bucket(key, attributes)
+      @buckets ||= {}
+      @buckets[key] = Bucket.new(attributes[:limit], attributes[:time_span], attributes[:delay])
     end
   end
 end
