@@ -10,7 +10,11 @@ require 'discordrb/commands/rate_limiter'
 module Discordrb::Commands
   # Bot that supports commands and command chains
   class CommandBot < Discordrb::Bot
-    attr_reader :attributes, :prefix
+    # @return [Hash] this bot's attributes.
+    attr_reader :attributes
+
+    # @return [String] the prefix commands are triggered with.
+    attr_reader :prefix
 
     include CommandContainer
 
