@@ -19,7 +19,7 @@ describe Discordrb::Commands::Bucket do
     end
 
     it 'should fail to rate limit something invalid' do
-      expect { BUCKET.new(1, 5, 2).rate_limited("can't RL a string!") }.to raise_error(ArgumentError)
+      expect { BUCKET.new(1, 5, 2).rate_limited?("can't RL a string!") }.to raise_error(ArgumentError)
     end
   end
 end
