@@ -99,5 +99,20 @@ module Discordrb::Commands
       @buckets ||= {}
       @buckets[key] = Bucket.new(attributes[:limit], attributes[:time_span], attributes[:delay])
     end
+
+    # Performs a rate limit request.
+    # @param key [Symbol] Which bucket to perform the request for.
+    # @param thing [#resolve_id, Integer, Symbol] What should be rate-limited.
+    # @see Bucket#rate_limited?
+    # @return [Integer, false] How much time to wait or false if the request succeeded.
+    def rate_limited?(key, thing)
+      @buckets[key].rate_limited?(thing)
+    end
+
+    # Cleans all buckets
+    # @see Bucket#clean
+    def clean
+      @buckets.each(&:clean)
+    end
   end
 end
