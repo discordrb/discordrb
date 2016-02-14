@@ -115,6 +115,13 @@ module Discordrb::Commands
       end
     end
 
+    # Executes a particular command on the bot. Mostly useful for internal stuff, but one can never know.
+    # @param name [Symbol] The command to execute.
+    # @param event [CommandEvent] The event to pass to the command.
+    # @param arguments [Array<String>] The arguments to pass to the command.
+    # @param chained [true, false] Whether or not it should be executed as part of a command chain. If this is false,
+    #   commands that have chain_usable set to false will not work.
+    # @return [String, nil] the command's result, if there is any.
     def execute_command(name, event, arguments, chained = false)
       debug("Executing command #{name} with arguments #{arguments}")
       command = @commands[name]
