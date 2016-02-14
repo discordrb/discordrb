@@ -16,6 +16,21 @@ module Discordrb::Commands
       @bucket = {}
     end
 
+    # Cleans the bucket, removing all elements that aren't necessary anymore
+    def clean(rate_limit_time = nil)
+      rate_limit_time ||= Time.now
+
+      @bucket.delete_if do |_, limit_hash|
+        # Time limit has not run out
+        return false if @time_span && rate_limit_time < (limit_hash[:set_time] + @time_span)
+
+        # Delay has not run out
+        return false if @delay && rate_limit_time < (limit_hash[:last_time] + @delay)
+
+        true
+      end
+    end
+
     # Performs a rate limiting request
     # @param thing [#resolve_id, Integer, Symbol] The particular thing that should be rate-limited (usually a user/channel, but you can also choose arbitrary integers or symbols)
     # @return [Integer, false] the waiting time until the next request, or false if the request succeeded
