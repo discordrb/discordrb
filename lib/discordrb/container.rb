@@ -74,10 +74,24 @@ module Discordrb
       register_event(TypingEvent, attributes, block)
     end
 
+    # This **event** is raised when a message is edited in a channel.
+    # @param attributes [Hash] The event's attributes.
+    # @option attributes [#resolve_id] :id Matches the ID of the message that was edited.
+    # @option attributes [String, Integer, Channel] :in Matches the channel the message was edited in.
+    # @yield The block is executed when the event is raised.
+    # @yieldparam event [MessageEditEvent] The event that was raised.
+    # @return [MessageEditEventHandler] The event handler that was registered.
     def message_edit(attributes = {}, &block)
       register_event(MessageEditEvent, attributes, block)
     end
 
+    # This **event** is raised when a message is deleted in a channel.
+    # @param attributes [Hash] The event's attributes.
+    # @option attributes [#resolve_id] :id Matches the ID of the message that was deleted.
+    # @option attributes [String, Integer, Channel] :in Matches the channel the message was deleted in.
+    # @yield The block is executed when the event is raised.
+    # @yieldparam event [MessageDeleteEvent] The event that was raised.
+    # @return [MessageDeleteEventHandler] The event handler that was registered.
     def message_delete(attributes = {}, &block)
       register_event(MessageDeleteEvent, attributes, block)
     end
