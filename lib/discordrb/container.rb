@@ -199,12 +199,18 @@ module Discordrb
     # @param attributes [Hash] The event's attributes.
     # @option attributes [String] :username Matches the username of the updated user.
     # @yield The block is executed when the event is raised.
-    # @yieldparam event [GuildMemberAddEvent] The event that was raised.
-    # @return [GuildMemberAddEventHandler] The event handler that was registered.
+    # @yieldparam event [GuildMemberUpdateEvent] The event that was raised.
+    # @return [GuildMemberUpdateEventHandler] The event handler that was registered.
     def member_update(attributes = {}, &block)
       register_event(GuildMemberUpdateEvent, attributes, block)
     end
 
+    # This **event** is raised when a member leaves a server.
+    # @param attributes [Hash] The event's attributes.
+    # @option attributes [String] :username Matches the username of the member.
+    # @yield The block is executed when the event is raised.
+    # @yieldparam event [GuildMemberDeleteEvent] The event that was raised.
+    # @return [GuildMemberDeleteEventHandler] The event handler that was registered.
     def member_leave(attributes = {}, &block)
       register_event(GuildMemberDeleteEvent, attributes, block)
     end
