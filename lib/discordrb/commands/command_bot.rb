@@ -148,14 +148,25 @@ module Discordrb::Commands
       execute_command(args[0].to_sym, event, args[1..-1])
     end
 
+    # Sets the permission level of a user
+    # @param id [Integer] the ID of the user whose level to set
+    # @param level [Integer] the level to set the permission to
     def set_user_permission(id, level)
       @permissions[:users][id] = level
     end
 
+    # Sets the permission level of a role - this applies to all users in the role
+    # @param id [Integer] the ID of the role whose level to set
+    # @param level [Integer] the level to set the permission to
     def set_role_permission(id, level)
       @permissions[:roles][id] = level
     end
 
+    # Check if a user has permission to do something
+    # @param user [User] The user to check
+    # @param level [Integer] The minimum permission level the user should have (inclusive)
+    # @param server [Server] The server on which to check
+    # @return [true, false] whether or not the user has the given permission
     def permission?(user, level, server)
       determined_level = server.nil? ? 0 : user.roles[server.id].each.reduce(0) do |memo, role|
         [@permissions[:roles][role.id] || 0, memo].max
