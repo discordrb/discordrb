@@ -82,6 +82,9 @@ module Discordrb::Commands
 
   # Command chain, may have multiple commands, nested and commands
   class CommandChain
+    # @param chain [String] The string the chain should be parsed from.
+    # @param bot [CommandBot] The bot that executes this command chain.
+    # @param subchain [true, false] Whether this chain is a sub chain of another chain.
     def initialize(chain, bot, subchain = false)
       @attributes = bot.attributes
       @chain = chain
@@ -89,6 +92,10 @@ module Discordrb::Commands
       @subchain = subchain
     end
 
+    # Parses the command chain itself, including sub-chains, and executes it. Executes only the command chain, without
+    # its chain arguments.
+    # @param event [CommandEvent] The event to execute the chain with.
+    # @return [String] the result of the execution.
     def execute_bare(event)
       b_start = -1
       b_level = 0
@@ -188,6 +195,9 @@ module Discordrb::Commands
       prev
     end
 
+    # Divides the command chain into chain arguments and command chain, then executes them both.
+    # @param event [CommandEvent] The event to execute the command with.
+    # @return [String] the result of the command chain execution.
     def execute(event)
       old_chain = @chain
       @bot.debug 'Executing bare chain'
