@@ -449,13 +449,12 @@ module Discordrb
       @awaits[key] = await
     end
 
-    # Writes a debug message to the console.
-    # @param important [true, false] Whether this message should be printed regardless of debug mode being on or off.
+    # @see Logger#debug
     def debug(message, important = false)
       LOGGER.debug(message, important)
     end
 
-    # Logs an exception to the console. Will always be printed regardless of debug mode
+    # @see Logger#log_exception
     def log_exception(e)
       LOGGER.log_exception(e)
     end
