@@ -78,7 +78,7 @@ module Discordrb::Commands
     private
 
     def resolve_key(thing)
-      return thing.resolve_id if thing.respond_to? :resolve_id
+      return thing.resolve_id if thing.respond_to?(:resolve_id) && !thing.is_a?(String)
       return thing if thing.is_a?(Integer) || thing.is_a?(Symbol)
       fail ArgumentError, "Cannot use a #{thing.class} as a rate limiting key!"
     end
