@@ -31,6 +31,16 @@ module Discordrb::Commands
 
         return false
       end
+
+      # Define the time at which we're being rate limited once so it doesn't get inaccurate
+      rate_limit_time = Time.now
+
+      if @limit && (limit_hash[:count] + 1) > @limit
+        if @time_span && rate_limit_time < (limit_hash[:set_time] + @time_span)
+          # Second case: Count is over the limit and the time has not run out yet
+          return limit_hash[:set_time] - rate_limit_time
+        end
+      end
     end
 
     private
