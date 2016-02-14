@@ -3,6 +3,7 @@ require 'discordrb/data'
 require 'discordrb/commands/parser'
 require 'discordrb/commands/events'
 require 'discordrb/commands/container'
+require 'discordrb/commands/rate_limiter'
 
 # Specialized bot to run commands
 
