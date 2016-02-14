@@ -21,5 +21,37 @@ describe Discordrb::Commands::Bucket do
     it 'should fail to rate limit something invalid' do
       expect { BUCKET.new(1, 5, 2).rate_limited?("can't RL a string!") }.to raise_error(ArgumentError)
     end
+
+    it 'should rate limit one request over the limit' do
+      b = BUCKET.new(1, 5, nil)
+      b.rate_limited?(:a).should be_falsy
+      b.rate_limited?(:a).should be_truthy
+    end
+
+    it 'should rate limit multiple requests that are over the limit' do
+      b = BUCKET.new(3, 5, nil)
+      b.rate_limited?(:a).should be_falsy
+      b.rate_limited?(:a).should be_falsy
+      b.rate_limited?(:a).should be_falsy
+      b.rate_limited?(:a).should be_truthy
+    end
+
+    it 'should not rate limit after the limit ran out' do
+      b = BUCKET.new(2, 5, nil)
+      b.rate_limited?(:a).should be_falsy
+      b.rate_limited?(:a).should be_falsy
+      b.rate_limited?(:a).should be_truthy
+      b.rate_limited?(:a, Time.now + 4).should be_truthy
+      b.rate_limited?(:a, Time.now + 5).should be_falsy
+    end
+
+    it 'should reset the limit after it ran out' do
+      b = BUCKET.new(2, 5, nil)
+      b.rate_limited?(:a).should be_falsy
+      b.rate_limited?(:a).should be_falsy
+      b.rate_limited?(:a).should be_truthy
+      b.rate_limited?(:a, Time.now + 5).should be_falsy
+      b.rate_limited?(:a).should be_falsy
+    end
   end
 end
