@@ -17,6 +17,7 @@ module Discordrb::Commands
     end
 
     # Cleans the bucket, removing all elements that aren't necessary anymore
+    # @param rate_limit_time [Time] The time to base the cleaning on, only useful for testing.
     def clean(rate_limit_time = nil)
       rate_limit_time ||= Time.now
 
@@ -33,7 +34,8 @@ module Discordrb::Commands
 
     # Performs a rate limiting request
     # @param thing [#resolve_id, Integer, Symbol] The particular thing that should be rate-limited (usually a user/channel, but you can also choose arbitrary integers or symbols)
-    # @return [Integer, false] the waiting time until the next request, or false if the request succeeded
+    # @param rate_limit_time [Time] The time to base the rate limiting on, only useful for testing.
+    # @return [Integer, false] the waiting time until the next request, in seconds, or false if the request succeeded
     def rate_limited?(thing, rate_limit_time = nil)
       key = resolve_key thing
       limit_hash = @bucket[key]
