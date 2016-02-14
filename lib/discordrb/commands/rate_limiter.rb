@@ -60,7 +60,7 @@ module Discordrb::Commands
           # Third case: Count is over the limit but the time has run out
           # Don't return anything here because there may still be delay-based limiting
           limit_hash[:set_time] = rate_limit_time
-          limit_hash[:count] = 1
+          limit_hash[:count] = 0
         end
       end
 
