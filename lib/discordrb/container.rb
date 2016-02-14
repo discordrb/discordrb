@@ -137,26 +137,36 @@ module Discordrb
       register_event(MentionEvent, attributes, block)
     end
 
-    # Handle channel creation
-    # Attributes:
-    # * type: Channel type ('text' or 'voice')
-    # * name: Channel name
+
+    # This **event** is raised when a channel is created.
+    # @param attributes [Hash] The event's attributes.
+    # @option attributes [String] :type Matches the type of channel that is being created (text or voice)
+    # @option attributes [String] :name Matches the name of the created channel.
+    # @yield The block is executed when the event is raised.
+    # @yieldparam event [ChannelCreateEvent] The event that was raised.
+    # @return [ChannelCreateEventHandler] The event handler that was registered.
     def channel_create(attributes = {}, &block)
       register_event(ChannelCreateEvent, attributes, block)
     end
 
-    # Handle channel update
-    # Attributes:
-    # * type: Channel type ('text' or 'voice')
-    # * name: Channel name
+    # This **event** is raised when a channel is updated.
+    # @param attributes [Hash] The event's attributes.
+    # @option attributes [String] :type Matches the type of channel that is being updated (text or voice)
+    # @option attributes [String] :name Matches the new name of the channel.
+    # @yield The block is executed when the event is raised.
+    # @yieldparam event [ChannelUpdateEvent] The event that was raised.
+    # @return [ChannelUpdateEventHandler] The event handler that was registered.
     def channel_update(attributes = {}, &block)
       register_event(ChannelUpdateEvent, attributes, block)
     end
 
-    # Handle channel deletion
-    # Attributes:
-    # * type: Channel type ('text' or 'voice')
-    # * name: Channel name
+    # This **event** is raised when a channel is updated.
+    # @param attributes [Hash] The event's attributes.
+    # @option attributes [String] :type Matches the type of channel that is being deleted (text or voice)
+    # @option attributes [String] :name Matches the name of the deleted channel.
+    # @yield The block is executed when the event is raised.
+    # @yieldparam event [ChannelDeleteEvent] The event that was raised.
+    # @return [ChannelDeleteEventHandler] The event handler that was registered.
     def channel_delete(attributes = {}, &block)
       register_event(ChannelDeleteEvent, attributes, block)
     end
