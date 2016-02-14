@@ -59,6 +59,17 @@ module Discordrb
       register_event(DisconnectEvent, attributes, block)
     end
 
+    # This **event** is raised when somebody starts typing in a channel the bot is also in. The official Discord
+    # client would display the typing indicator for five seconds after receiving this event. If the user continues
+    # typing after five seconds, the event will be re-raised.
+    # @param attributes [Hash] The event's attributes.
+    # @option attributes [String, Integer, Channel] :in Matches the channel where typing was started.
+    # @option attributes [String, Integer, User] :from Matches the user that started typing.
+    # @option attributes [Time] :after Matches a time after the time the typing started.
+    # @option attributes [Time] :before Matches a time before the time the typing started.
+    # @yield The block is executed when the event is raised.
+    # @yieldparam event [TypingEvent] The event that was raised.
+    # @return [TypingEventHandler] The event handler that was registered.
     def typing(attributes = {}, &block)
       register_event(TypingEvent, attributes, block)
     end
