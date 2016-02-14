@@ -59,7 +59,7 @@ module Discordrb::Commands
       rate_limited = event.bot.rate_limited?(@attributes[:bucket], event.author)
       if @attributes[:bucket] && rate_limited
         if @attributes[:rate_limit_message]
-          event.respond @attributes[:rate_limit_message].gsub('%time%', rate_limited.round(2))
+          event.respond @attributes[:rate_limit_message].gsub('%time%', rate_limited.round(2).to_s)
         end
         return
       end
