@@ -96,6 +96,13 @@ module Discordrb
       register_event(MessageDeleteEvent, attributes, block)
     end
 
+    # This **event** is raised when a user's status (online/offline/idle) changes.
+    # @param attributes [Hash] The event's attributes.
+    # @option attributes [String, Integer, User] :from Matches the user that sent the message.
+    # @option attributes [:offline, :idle, :online] :status Matches the status the user has now.
+    # @yield The block is executed when the event is raised.
+    # @yieldparam event [PresenceEvent] The event that was raised.
+    # @return [PresenceEventHandler] The event handler that was registered.
     def presence(attributes = {}, &block)
       register_event(PresenceEvent, attributes, block)
     end
