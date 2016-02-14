@@ -1,6 +1,7 @@
 module Discordrb
   # Logs debug messages
   class Logger
+    # @return [true, false] whether or not this logger should be in debug mode (all debug messages will be printed)
     attr_writer :debug
 
     # @see Bot#debug
