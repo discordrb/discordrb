@@ -25,7 +25,10 @@ module Discordrb::Commands
         min_args: attributes[:min_args] || 0,
 
         # Maximum number of arguments (-1 for no limit)
-        max_args: attributes[:max_args] || -1
+        max_args: attributes[:max_args] || -1,
+
+        # Rate limiting bucket (nil for no rate limiting)
+        bucket: attributes[:bucket]
       }
 
       @block = block
