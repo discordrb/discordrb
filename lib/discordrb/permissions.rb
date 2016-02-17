@@ -52,11 +52,14 @@ module Discordrb
 
     attr_reader :bits
 
+    # Set the raw bitset of this permission object
+    # @param bits [Fixnum] A number whose binary representation is the desired bitset.
     def bits=(bits)
       @bits = bits
       init_vars
     end
 
+    # Initialize the instance variables based on the bitset.
     def init_vars
       Flags.each do |position, flag|
         flag_set = ((@bits >> position) & 0x1) == 1
