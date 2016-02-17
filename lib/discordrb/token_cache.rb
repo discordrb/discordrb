@@ -120,6 +120,10 @@ module Discordrb
       @data = {}
     end
 
+    # Gets a token from this token cache
+    # @param email [String] The email to get the token for
+    # @param password [String] The plaintext password to get the token for
+    # @return [String, nil] the stored token, or nil if unsuccessful (e. g. token not cached or cached token invalid)
     def token(email, password)
       if @data[email]
         begin
@@ -142,6 +146,10 @@ module Discordrb
       end
     end
 
+    # Caches a token
+    # @param email [String] The email to store this token under
+    # @param password [String] The plaintext password to encrypt the token with
+    # @param token [String] The plaintext token to cache
     def store_token(email, password, token)
       cached = CachedToken.new
       cached.generate_verify_hash(password)
@@ -150,6 +158,7 @@ module Discordrb
       write_cache
     end
 
+    # Writes the cache to a file
     def write_cache
       File.write(CACHE_PATH, @data.to_json)
     end
