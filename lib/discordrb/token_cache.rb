@@ -92,8 +92,9 @@ module Discordrb
       Discordrb::API.gateway(token)
     end
 
-    private
-
+    # Hashes a password using PBKDF2 with a SHA256 digest
+    # @param password [String] The password to hash
+    # @return [String] The hashed password
     def hash_password(password)
       digest = OpenSSL::Digest::SHA256.new
       OpenSSL::PKCS5.pbkdf2_hmac(password, @verify_salt, 300_000, digest.digest_length, digest)
