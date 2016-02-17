@@ -762,6 +762,7 @@ module Discordrb
 
     # @return [Array<User>] an array of all the users on this server.
     attr_reader :members
+    alias_method :users, :members
 
     # @return [Array<Channel>] an array of all the channels (text and voice) on this server.
     attr_reader :channels
