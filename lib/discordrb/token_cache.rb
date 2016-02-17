@@ -22,6 +22,7 @@ module Discordrb
       end
     end
 
+    # @return [Hash<Symbol => String>] the data representing the token and encryption data, all encrypted and base64-encoded
     def data
       {
         verify_salt: Base64.encode64(@verify_salt),
@@ -32,23 +33,37 @@ module Discordrb
       }
     end
 
+    # Verifies this encrypted token with a given password
+    # @param password [String] A plaintext password to verify
+    # @see #hash_password
+    # @return [true, false] whether or not the verification succeeded
     def verify_password(password)
       hash_password(password) == @password_hash
     end
 
+    # Sets the given password as the verification password
+    # @param password [String] A plaintext password to set
+    # @see #hash_password
     def generate_verify_hash(password)
       @password_hash = hash_password(password)
     end
 
+    # Generates a key from a given password using PBKDF2 with a SHA1 HMAC, 300k iterations and 32 bytes long
+    # @param password [String] A password to use as the base for the key
+    # @return [String] The generated key
     def obtain_key(password)
       @key = OpenSSL::PKCS5.pbkdf2_hmac_sha1(password, @encrypt_salt, 300_000, KEYLEN)
     end
 
+    # Generates cryptographically random salts for this token
     def generate_salts
       @verify_salt = OpenSSL::Random.random_bytes(KEYLEN)
       @encrypt_salt = OpenSSL::Random.random_bytes(KEYLEN)
     end
 
+    # Decrypts a token using a given password
+    # @param password [String] The plaintext password to decrypt the token with
+    # @return [String] the plaintext token
     def decrypt_token(password)
       key = obtain_key(password)
       decipher = OpenSSL::Cipher::AES256.new(:CBC)
@@ -58,6 +73,10 @@ module Discordrb
       decipher.update(@encrypted_token) + decipher.final
     end
 
+    # Encrypts a given token with the given password, using AES256 CBC
+    # @param password [String] The plaintext password to encrypt the token with
+    # @param token [String] The plaintext token to encrypt
+    # @return [String] the encrypted token
     def encrypt_token(password, token)
       key = obtain_key(password)
       cipher = OpenSSL::Cipher::AES256.new(:CBC)
@@ -67,6 +86,8 @@ module Discordrb
       @encrypted_token = cipher.update(token) + cipher.final
     end
 
+    # Tests a token by making an API request, throws an error if not successful
+    # @param token [String] A plaintext token to test
     def test_token(token)
       Discordrb::API.gateway(token)
     end
