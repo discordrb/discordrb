@@ -29,6 +29,12 @@ module Discordrb::Voice
       end
     end
 
+    # Set the opus encoding bitrate
+    # @param value [Integer] The new bitrate to use, in bits per second (so 64000 if you want 64 kbps)
+    def bitrate=(value)
+      @opus.bitrate = value
+    end
+
     # Encodes the given buffer using opus.
     # @param buffer [String] An unencoded PCM (s16le) buffer.
     # @return [String] A buffer encoded using opus.
