@@ -65,6 +65,7 @@ module Discordrb::API
     request(
       :put,
       "#{APIBASE}/guilds/#{server_id}/bans/#{user_id}?delete-message-days=#{message_days}",
+      nil,
       Authorization: token
     )
   end
@@ -176,6 +177,15 @@ module Discordrb::API
     request(
       :get,
       "#{APIBASE}/channels/#{channel_id}",
+      Authorization: token
+    )
+  end
+
+  # Get a member's data
+  def member(token, server_id, user_id)
+    request(
+      :get,
+      "#{APIBASE}/guilds/#{server_id}/members/#{user_id}",
       Authorization: token
     )
   end
