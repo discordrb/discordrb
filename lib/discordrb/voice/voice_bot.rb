@@ -53,6 +53,15 @@ module Discordrb::Voice
     # @return [true, false] whether length adjustment debug messages should be printed
     attr_accessor :adjust_debug
 
+    # If this value is set, no length adjustments will ever be done and this value will always be used as the length
+    # (i. e. packets will be sent every N seconds). Be careful not to set it too low as to not spam Discord's servers.
+    # The ideal length is 20 ms (accessible by the {Discordrb::Voice::IDEAL_LENGTH} constant), this value should be
+    # slightly lower than that because encoding + sending takes time. Note that sending DCA files is significantly
+    # faster than sending regular audio files (usually about four times as fast), so you might want to set this value
+    # to something else if you're sending a DCA file.
+    # @return [Float] the packet length that should be used instead of calculating it during the adjustments, in ms.
+    attr_accessor :length_override
+
     # The factor the audio's volume should be multiplied with. `1` is no change in volume, `0` is completely silent,
     # `0.5` is half the default volume and `2` is twice the default.
     # @return [Float] the volume for audio playback, `1.0` by default.
@@ -246,8 +255,9 @@ module Discordrb::Voice
         # Set the stream time (for tracking how long we've been playing)
         @stream_time = count * @length / 1000
 
-        # Perform length adjustment
-        if @length_adjust
+        if @length_override # Don't do adjustment because the user has manually specified an override value
+          @length = @length_override
+        elsif @length_adjust # Perform length adjustment
           # Define the time once so it doesn't get inaccurate
           now = Time.now.nsec
 
