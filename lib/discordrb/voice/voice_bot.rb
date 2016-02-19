@@ -255,7 +255,7 @@ module Discordrb::Voice
                       end
 
             # Track the time it took to encode
-            encode_ms = (now - @intermediate_adjust) / 1_000_000.0
+            encode_ms = (@intermediate_adjust - @length_adjust) / 1_000_000.0
             @bot.debug("Length adjustment: new length #{@length} (measured #{ms_diff}, #{(100 * encode_ms) / ms_diff}% encoding)")
           end
           @length_adjust = nil
