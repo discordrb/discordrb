@@ -207,10 +207,11 @@ module Discordrb::Voice
 
       self.speaking = true
       loop do
-        if count % @adjust_interval == @adjust_offset
-          # Starting from the tenth packet, perform length adjustment every 100 packets (2 seconds)
-          @length_adjust = Time.now.nsec
-        end
+        # Starting from the tenth packet, perform length adjustment every 100 packets (2 seconds)
+        should_adjust_this_packet = (count % @adjust_interval == @adjust_offset)
+
+        # If we should adjust, start now
+        @length_adjust = Time.now.nsec if should_adjust_this_packet
 
         break unless @playing
 
@@ -230,6 +231,9 @@ module Discordrb::Voice
         buf = yield
         next unless buf
 
+        # Track intermediate adjustment so we can measure how much encoding contributes to the total time
+        @intermediate_adjust = Time.now.nsec if should_adjust_this_packet
+
         # Send the packet
         @udp.send_audio(buf, @sequence, @time)
 
@@ -238,8 +242,11 @@ module Discordrb::Voice
 
         # Perform length adjustment
         if @length_adjust
+          # Define the time once so it doesn't get inaccurate
+          now = Time.now.nsec
+
           # Difference between length_adjust and now in ms
-          ms_diff = (Time.now.nsec - @length_adjust) / 1_000_000.0
+          ms_diff = (now - @length_adjust) / 1_000_000.0
           if ms_diff >= 0
             @length = if @adjust_average
                         (IDEAL_LENGTH - ms_diff + @length) / 2.0
@@ -247,7 +254,9 @@ module Discordrb::Voice
                         IDEAL_LENGTH - ms_diff
                       end
 
-            @bot.debug("Length adjustment: new length #{@length}")
+            # Track the time it took to encode
+            encode_ms = (now - @intermediate_adjust) / 1_000_000.0
+            @bot.debug("Length adjustment: new length #{@length} (measured #{ms_diff}, #{(100 * encode_ms) / ms_diff}% encoding)")
           end
           @length_adjust = nil
         end
