@@ -48,6 +48,11 @@ module Discordrb::Voice
     # @return [true, false] whether adjustment lengths should be averaged with the respective previous value.
     attr_accessor :adjust_average
 
+    # Disable the debug message for length adjustment specifically, as it can get quite spammy with very low intervals
+    # @see #adjust_interval
+    # @return [true, false] whether length adjustment debug messages should be printed
+    attr_accessor :adjust_debug
+
     # The factor the audio's volume should be multiplied with. `1` is no change in volume, `0` is completely silent,
     # `0.5` is half the default volume and `2` is twice the default.
     # @return [Float] the volume for audio playback, `1.0` by default.
@@ -65,6 +70,7 @@ module Discordrb::Voice
       @adjust_interval = 100
       @adjust_offset = 10
       @adjust_average = false
+      @adjust_debug = true
 
       @volume = 1.0
 
@@ -256,7 +262,7 @@ module Discordrb::Voice
 
             # Track the time it took to encode
             encode_ms = (@intermediate_adjust - @length_adjust) / 1_000_000.0
-            @bot.debug("Length adjustment: new length #{@length} (measured #{ms_diff}, #{(100 * encode_ms) / ms_diff}% encoding)")
+            @bot.debug("Length adjustment: new length #{@length} (measured #{ms_diff}, #{(100 * encode_ms) / ms_diff}% encoding)") if @adjust_debug
           end
           @length_adjust = nil
         end
