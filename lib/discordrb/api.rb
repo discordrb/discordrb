@@ -170,7 +170,14 @@ module Discordrb::API
     )
   end
 
-  alias_method :leave_server, :delete_server
+  # Leave a server
+  def leave_server(token, server_id)
+    request(
+      :delete,
+      "#{APIBASE}/users/@me/guilds/#{server_id}",
+      Authorization: token
+    )
+  end
 
   # Get a channel's data
   def channel(token, channel_id)
