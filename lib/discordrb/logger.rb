@@ -7,7 +7,7 @@ module Discordrb
     # Writes a debug message to the console.
     # @param important [true, false] Whether this message should be printed regardless of debug mode being on or off.
     def debug(message, important = false)
-      puts "[DEBUG : #{Thread.current[:discordrb_name]} @ #{Time.now}] #{message}" if @debug || important
+      puts "[DEBUG : #{Thread.current[:discordrb_name]} @ #{Time.now.strftime('%Y-%m-%d %H:%M:%S.%L %z')}] #{message}" if @debug || important
     end
 
     # Logs an exception to the console.
