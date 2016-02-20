@@ -914,9 +914,10 @@ module Discordrb
       API.delete_server(@bot.token, @id)
     end
 
-    # Leave the server - to Discord, leaving a server and deleting it are the same, so be careful if the bot
-    # is the server owner!
-    alias_method :leave, :delete
+    # Leave the server
+    def leave
+      API.leave_server(@bot.token, @id)
+    end
 
     # Transfers server ownership to another user.
     # @param user [User] The user who should become the new owner.
