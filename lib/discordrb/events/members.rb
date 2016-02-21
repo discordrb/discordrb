@@ -49,16 +49,18 @@ module Discordrb::Events
     end
   end
 
-  # Specialized subclasses
   # Member joins
+  # @see Discordrb::EventContainer#member_join
   class GuildMemberAddEvent < GuildMemberEvent; end
   class GuildMemberAddEventHandler < GuildMemberEventHandler; end
 
   # Member is updated (e.g. name changed)
+  # @see Discordrb::EventContainer#member_update
   class GuildMemberUpdateEvent < GuildMemberEvent; end
   class GuildMemberUpdateEventHandler < GuildMemberEventHandler; end
 
   # Member leaves
+  # @see Discordrb::EventContainer#member_leave
   class GuildMemberDeleteEvent < GuildMemberEvent
     # Overide init_user to account for the deleted user on the server
     def init_user(data, bot)
