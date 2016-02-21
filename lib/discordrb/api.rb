@@ -35,7 +35,7 @@ module Discordrb::API
   def raw_request(type, attributes)
     RestClient.send(type, *attributes)
   rescue RestClient::Forbidden
-    raise Discordrb::NoPermission, "The bot doesn't have the required permission to do this!"
+    raise Discordrb::Errors::NoPermission, "The bot doesn't have the required permission to do this!"
   end
 
   # Make an API request. Utility function to implement message queueing
@@ -288,7 +288,7 @@ module Discordrb::API
       content_type: :json
     )
   rescue RestClient::InternalServerError
-    raise Discordrb::MessageTooLong, "Message over the character limit (#{message.length} > 2000)"
+    raise Discordrb::Errors::MessageTooLong, "Message over the character limit (#{message.length} > 2000)"
   end
 
   # Delete a message

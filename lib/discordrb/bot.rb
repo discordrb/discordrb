@@ -724,11 +724,11 @@ module Discordrb
 
       # Login
       login_response = API.login(@email, @password)
-      fail HTTPStatusException, login_response.code if login_response.code >= 400
+      fail Discordrb::Errors::HTTPStatusException, login_response.code if login_response.code >= 400
 
       # Parse response
       login_response_object = JSON.parse(login_response)
-      fail InvalidAuthenticationException unless login_response_object['token']
+      fail Discordrb::Errors::InvalidAuthenticationException unless login_response_object['token']
 
       debug('Received token from Discord!')
 
