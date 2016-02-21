@@ -59,6 +59,8 @@ module Discordrb::Events
 
   # Event handler that matches all events
   class TrueEventHandler < EventHandler
+    # Always returns true.
+    # @return [true]
     def matches?(_)
       true
     end
