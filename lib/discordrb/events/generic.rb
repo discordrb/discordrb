@@ -57,7 +57,7 @@ module Discordrb::Events
     end
   end
 
-  # Event handler that matches all events
+  # Event handler that matches all events. Only useful for making an event that has no attributes, such as {ReadyEvent}.
   class TrueEventHandler < EventHandler
     # Always returns true.
     # @return [true]
