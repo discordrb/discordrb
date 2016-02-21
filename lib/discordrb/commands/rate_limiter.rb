@@ -107,6 +107,9 @@ module Discordrb::Commands
     # @see Bucket#rate_limited?
     # @return [Integer, false] How much time to wait or false if the request succeeded.
     def rate_limited?(key, thing)
+      # Check whether the bucket actually exists
+      return false unless @buckets[key]
+
       @buckets[key].rate_limited?(thing)
     end
 
