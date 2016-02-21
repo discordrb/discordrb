@@ -101,9 +101,11 @@ module Discordrb::Events
     end
   end
 
+  # @see Discordrb::EventContainer#mention
   class MentionEvent < MessageEvent; end
   class MentionEventHandler < MessageEventHandler; end
 
+  # @see Discordrb::EventContainer#pm
   class PrivateMessageEvent < MessageEvent; end
   class PrivateMessageEventHandler < MessageEventHandler; end
 
