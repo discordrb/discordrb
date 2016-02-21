@@ -35,16 +35,18 @@ module Discordrb::Events
     end
   end
 
-  # Specialized subclasses
   # Server is created
+  # @see Discordrb::EventContainer#server_create
   class GuildCreateEvent < GuildEvent; end
   class GuildCreateEventHandler < GuildEventHandler; end
 
   # Server is updated (e.g. name changed)
+  # @see Discordrb::EventContainer#server_update
   class GuildUpdateEvent < GuildEvent; end
   class GuildUpdateEventHandler < GuildEventHandler; end
 
   # Server is deleted
+  # @see Discordrb::EventContainer#server_delete
   class GuildDeleteEvent < GuildEvent
     # Overide init_server to account for the deleted server
     def init_server(data, bot)
