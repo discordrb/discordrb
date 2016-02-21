@@ -95,6 +95,7 @@ module Discordrb::Events
       ].reduce(true, &:&)
     end
 
+    # @see EventHandler#after_call
     def after_call(event)
       event.send_message(event.saved_message)
     end
