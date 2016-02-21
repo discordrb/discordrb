@@ -14,14 +14,23 @@ module Discordrb::Events
       @saved_message = ''
     end
 
+    # Sends a message to the channel this message was sent in, right now. It is usually preferable to use {#<<} instead
+    # because it avoids rate limiting problems
+    # @param content [String] The message to send to the channel
+    # @return [Discordrb::Message] the message that was sent
     def send_message(content)
       @message.channel.send_message(content)
     end
 
+    # @return [true, false] whether or not this message was sent by the bot itself
     def from_bot?
       @message.user.id == @bot.bot_user.id
     end
 
+    # Adds a string to be sent after the event has finished execution. Avoids problems with rate limiting because only
+    # one message is ever sent. If it is used multiple times, the strings will bunch up into one message (separated by
+    # newlines)
+    # @param message [String] The message to send to the channel
     def <<(message)
       @saved_message += "#{message}\n"
       nil
