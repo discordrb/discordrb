@@ -19,7 +19,7 @@ require 'discordrb/events/await'
 require 'discordrb/events/bans'
 
 require 'discordrb/api'
-require 'discordrb/exceptions'
+require 'discordrb/errors'
 require 'discordrb/data'
 require 'discordrb/await'
 require 'discordrb/token_cache'
@@ -724,11 +724,11 @@ module Discordrb
 
       # Login
       login_response = API.login(@email, @password)
-      fail Discordrb::Errors::HTTPStatusException, login_response.code if login_response.code >= 400
+      fail Discordrb::Errors::HTTPStatusError, login_response.code if login_response.code >= 400
 
       # Parse response
       login_response_object = JSON.parse(login_response)
-      fail Discordrb::Errors::InvalidAuthenticationException unless login_response_object['token']
+      fail Discordrb::Errors::InvalidAuthenticationError unless login_response_object['token']
 
       debug('Received token from Discord!')
 

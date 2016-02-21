@@ -1,10 +1,10 @@
 module Discordrb
   module Errors
     # Raised when authentication data is invalid or incorrect.
-    class InvalidAuthenticationException < RuntimeError; end
+    class InvalidAuthenticationError < RuntimeError; end
 
     # Raised when a HTTP status code indicates a failure
-    class HTTPStatusException < RuntimeError
+    class HTTPStatusError < RuntimeError
       attr_reader :status
       def initialize(status)
         @status = status

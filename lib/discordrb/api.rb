@@ -1,7 +1,7 @@
 require 'rest-client'
 require 'json'
 
-require 'discordrb/exceptions'
+require 'discordrb/errors'
 
 # List of methods representing endpoints in Discord's API
 module Discordrb::API
