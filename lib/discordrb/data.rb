@@ -147,6 +147,13 @@ module Discordrb
       @roles[server.id] = roles
     end
 
+    # Set the user's name
+    # @note for internal use only
+    # @!visibility private
+    def update_username(username)
+      @username = username
+    end
+
     # Merge this user's roles with the roles from another instance of this user (from another server)
     # @note For internal use only
     # @!visibility private

@@ -513,6 +513,13 @@ module Discordrb
           server.members << user
         end
       end
+
+      username = data['user']['username']
+      if username
+        debug "User changed username: #{user.username} #{username}"
+        user.update_username(username)
+      end
+
       user.status = status
       user.game = data['game'] ? data['game']['name'] : nil
       user
