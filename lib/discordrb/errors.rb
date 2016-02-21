@@ -1,4 +1,5 @@
 module Discordrb
+  # Custom errors raised in various places
   module Errors
     # Raised when authentication data is invalid or incorrect.
     class InvalidAuthenticationError < RuntimeError; end
