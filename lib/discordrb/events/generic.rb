@@ -11,6 +11,24 @@ module Discordrb::Events
     end
   end
 
+  # Attempts to match possible formats of event attributes to a set comparison value, using a comparison block.
+  # It allows five kinds of attribute formats:
+  #  0. nil -> always returns true
+  #  1. A single attribute, not negated
+  #  2. A single attribute, negated
+  #  3. An array of attributes, not negated
+  #  4. An array of attributes, not negated
+  # Note that it doesn't allow an array of negated attributes. For info on negation stuff, see {not!}
+  # @param attributes [Object, Array<Object>, Negated<Object>, Negated<Array<Object>>, nil] One or more attributes to
+  #   compare to the to_check value.
+  # @param to_check [Object] What to compare the attributes to.
+  # @yield [a, e] The block will be called when a comparison happens.
+  # @yieldparam [Object] a The attribute to compare to the value to check. Will always be a single not-negated object,
+  #   all the negation and array handling is done by the method
+  # @yieldparam [Object] e The value to compare the attribute to. Will always be the value passed to the function as
+  #   to_check.
+  # @yieldreturn [true, false] Whether or not the attribute a matches the given comparison value e.
+  # @return [true, false] whether the attributes match the comparison value in at least one way.
   def self.matches_all(attributes, to_check, &block)
     # "Zeroth" case: attributes is nil
     return true if attributes.nil?
