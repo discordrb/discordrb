@@ -2,7 +2,8 @@ require 'active_support/core_ext/module'
 
 # Events used by discordrb
 module Discordrb::Events
-  # A negated object, used to not match something in event parameters
+  # A negated object, used to not match something in event parameters.
+  # @see Discordrb::Events#matches_all
   class Negated
     attr_reader :object
 
@@ -85,6 +86,11 @@ module Discordrb::Events
   end
 end
 
+# Utility function that creates a negated object for {Discordrb::Events#matches_all}
+# @param [Object] object The object to negate
+# @see Discordrb::Events::Negated
+# @see Discordrb::Events#matches_all
+# @return [Negated<Object>] the object, negated, as an attribute to pass to matches_all
 def not!(object)
   Discordrb::Events::Negated.new(object)
 end
