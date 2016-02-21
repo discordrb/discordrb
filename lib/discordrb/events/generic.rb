@@ -56,14 +56,20 @@ module Discordrb::Events
       @block = block
     end
 
+    # Whether or not this event handler matches the given event with its attributes.
+    # @raise [RuntimeError] if this method is called - overwrite it in your event handler!
     def matches?(_)
       fail 'Attempted to call matches?() from a generic EventHandler'
     end
 
+    # Checks whether this handler matches the given event, and then calls it.
+    # @param event [Object] The event object to match and call the handler with
     def match(event)
       call(event) if matches? event
     end
 
+    # Calls this handler
+    # @param event [Object] The event object to call this handler with
     def call(event)
       @block.call(event)
     end
@@ -71,6 +77,7 @@ module Discordrb::Events
     # to be overwritten by extending event handlers
     def after_call(event); end
 
+    # @see Discordrb::Events#matches_all
     def matches_all(attributes, to_check, &block)
       Discordrb::Events.matches_all(attributes, to_check, &block)
     end
