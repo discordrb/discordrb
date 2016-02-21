@@ -150,10 +150,14 @@ module Discordrb::Events
   # Raised when a message is edited
   # @see Discordrb::EventContainer#message_edit
   class MessageEditEvent < MessageIDEvent; end
+
+  # Event handler for {MessageEditEvent}
   class MessageEditEventHandler < MessageIDEventHandler; end
 
   # Raised when a message is deleted
   # @see Discordrb::EventContainer#message_delete
   class MessageDeleteEvent < MessageIDEvent; end
+
+  # Event handler for {MessageDeleteEvent}
   class MessageDeleteEventHandler < MessageIDEventHandler; end
 end
