@@ -631,6 +631,26 @@ module Discordrb
       JSON.parse(logs).map { |message| Message.new(message, @bot) }
     end
 
+    # Deletes the last N messages on this channel.
+    # @note Each delete request is performed in a separate thread for performance reasons, so if a large number of
+    #   messages are pruned, many threads will be created.
+    # @param amount [Integer] How many messages to delete. Must be 100 or less (Discord limitation)
+    # @raise [ArgumentError] if more than 100 messages are requested.
+    def prune(amount)
+      fail ArgumentError, "Can't prune more than 100 messages!" if amount > 100
+
+      threads = []
+      history(amount).each do |message|
+        threads << Thread.new { message.delete }
+      end
+
+      # Make sure all requests have finished
+      threads.each(&:join)
+
+      # Delete the threads
+      threads.map! { nil }
+    end
+
     # Updates the cached permission overwrites
     # @note For internal use only
     # @!visibility private
