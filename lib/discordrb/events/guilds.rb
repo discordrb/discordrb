@@ -38,11 +38,15 @@ module Discordrb::Events
   # Server is created
   # @see Discordrb::EventContainer#server_create
   class GuildCreateEvent < GuildEvent; end
+
+  # Event handler for {GuildCreateEvent}
   class GuildCreateEventHandler < GuildEventHandler; end
 
   # Server is updated (e.g. name changed)
   # @see Discordrb::EventContainer#server_update
   class GuildUpdateEvent < GuildEvent; end
+
+  # Event handler for {GuildUpdateEvent}
   class GuildUpdateEventHandler < GuildEventHandler; end
 
   # Server is deleted
@@ -53,5 +57,7 @@ module Discordrb::Events
       @server = Discordrb::Server.new(data, bot)
     end
   end
+
+  # Event handler for {GuildDeleteEvent}
   class GuildDeleteEventHandler < GuildEventHandler; end
 end
