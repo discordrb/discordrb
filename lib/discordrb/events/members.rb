@@ -52,11 +52,15 @@ module Discordrb::Events
   # Member joins
   # @see Discordrb::EventContainer#member_join
   class GuildMemberAddEvent < GuildMemberEvent; end
+
+  # Event handler for {GuildMemberAddEvent}
   class GuildMemberAddEventHandler < GuildMemberEventHandler; end
 
   # Member is updated (e.g. name changed)
   # @see Discordrb::EventContainer#member_update
   class GuildMemberUpdateEvent < GuildMemberEvent; end
+
+  # Event handler for {GuildMemberUpdateEvent}
   class GuildMemberUpdateEventHandler < GuildMemberEventHandler; end
 
   # Member leaves
@@ -67,5 +71,7 @@ module Discordrb::Events
       @user = Discordrb::User.new(data['user'], bot)
     end
   end
+
+  # Event handler for {GuildMemberDeleteEvent}
   class GuildMemberDeleteEventHandler < GuildMemberEventHandler; end
 end
