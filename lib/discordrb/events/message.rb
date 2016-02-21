@@ -103,10 +103,14 @@ module Discordrb::Events
 
   # @see Discordrb::EventContainer#mention
   class MentionEvent < MessageEvent; end
+
+  # Event handler for {MentionEvent}
   class MentionEventHandler < MessageEventHandler; end
 
   # @see Discordrb::EventContainer#pm
   class PrivateMessageEvent < MessageEvent; end
+
+  # Event handler for {PrivateMessageEvent}
   class PrivateMessageEventHandler < MessageEventHandler; end
 
   # A subset of MessageEvent that only contains a message ID and a channel
