@@ -106,7 +106,7 @@ module Discordrb::Events
 
     # @see EventHandler#after_call
     def after_call(event)
-      event.send_message(event.saved_message)
+      event.send_message(event.saved_message) unless event.saved_message.empty?
     end
   end
 
