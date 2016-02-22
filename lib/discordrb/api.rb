@@ -289,6 +289,8 @@ module Discordrb::API
     )
   rescue RestClient::InternalServerError
     raise Discordrb::Errors::MessageTooLong, "Message over the character limit (#{message.length} > 2000)"
+  rescue RestClient::BadGateway
+    raise Discordrb::Errors::CloudflareError, "Discord's Cloudflare system encountered an error! Usually you can ignore this error and retry the request."
   end
 
   # Delete a message

@@ -17,5 +17,8 @@ module Discordrb
 
     # Raised when the bot can't do something because its permissions on the server are insufficient
     class NoPermission < RuntimeError; end
+
+    # Raised when the bot gets a HTTP 502 error, which is usually caused by Cloudflare.
+    class CloudflareError < RuntimeError; end
   end
 end
