@@ -89,7 +89,7 @@ module Discordrb
     # Tests a token by making an API request, throws an error if not successful
     # @param token [String] A plaintext token to test
     def test_token(token)
-      Discordrb::API.validate_token(token)
+      Discordrb::API.validate_token(token + 'a')
     end
 
     # Hashes a password using PBKDF2 with a SHA256 digest
@@ -134,7 +134,10 @@ module Discordrb
               begin
                 cached.test_token(token)
                 token
-              rescue => e; fail_token('Token cached, verified and decrypted, but rejected by Discord', email, e)
+              rescue => e
+                fail_token('Token cached, verified and decrypted, but rejected by Discord', email, e)
+                sleep 1 # wait some time so we don't get immediately rate limited
+                nil
               end
             else; fail_token('Token cached and verified, but decryption failed', email)
             end
