@@ -133,11 +133,19 @@ module Discordrb
 
       @ws_thread = Thread.new do
         Thread.current[:discordrb_name] = 'websocket'
+
+        # Initialize falloff so we wait for more time before reconnecting each time
+        @falloff = 1.0
+
         loop do
           websocket_connect
-          debug('Disconnected! Attempting to reconnect in 5 seconds.')
-          sleep 5
+          debug("Disconnected! Attempting to reconnect in #{@falloff} seconds.")
+          sleep @falloff
           @token = login
+
+          # Calculate new falloff
+          @falloff *= 1.5
+          @falloff = 115 + (rand * 10) if @falloff > 1 # Cap the falloff at 120 seconds and then add some random jitter
         end
       end
 
