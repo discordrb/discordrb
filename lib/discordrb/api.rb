@@ -410,6 +410,17 @@ module Discordrb::API
     )
   end
 
+  # Validate a token (this request will fail if the token is invalid)
+  def validate_token(token)
+    request(
+      :post,
+      "#{APIBASE}/auth/login",
+      {}.to_json,
+      Authorization: token,
+      content_type: :json
+    )
+  end
+
   # Start typing (needs to be resent every 5 seconds to keep up the typing)
   def start_typing(token, channel_id)
     request(
