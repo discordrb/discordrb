@@ -89,7 +89,7 @@ module Discordrb
     # Tests a token by making an API request, throws an error if not successful
     # @param token [String] A plaintext token to test
     def test_token(token)
-      Discordrb::API.validate_token(token + 'a')
+      Discordrb::API.validate_token(token)
     end
 
     # Hashes a password using PBKDF2 with a SHA256 digest
