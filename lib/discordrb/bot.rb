@@ -287,7 +287,7 @@ module Discordrb
     # @param channel_name [String] The channel to search for.
     # @param server_name [String] The server to search for, or `nil` if only the channel should be searched for.
     # @return [Array<Channel>] The array of channels that were found. May be empty if none were found.
-    def find(channel_name, server_name = nil)
+    def find_channel(channel_name, server_name = nil)
       results = []
 
       @servers.values.each do |server|
@@ -304,6 +304,12 @@ module Discordrb
     # @return [Array<User>] The array of users that were found. May be empty if none were found.
     def find_user(username)
       @users.values.find_all { |e| e.username == username }
+    end
+
+    # @deprecated Use {#find_channel} instead
+    def find(channel_name, server_name = nil)
+      debug('Attempted to use bot.find - this method is deprecated! Use find_channel for the same functionality')
+      find_channel(channel_name, server_name)
     end
 
     # Sends a text message to a channel given its ID and the message's content.
