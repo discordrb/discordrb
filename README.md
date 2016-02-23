@@ -12,6 +12,8 @@ An implementation of the [Discord](https://discordapp.com/) API using Ruby.
 * [Development](https://github.com/meew0/discordrb#development), [Contributing](https://github.com/meew0/discordrb#contributing)
 * [License](https://github.com/meew0/discordrb#license)
 
+See also: [Documentation](https://discord.gg/0SBTUU1wZTWfFQL2), [Tutorials](https://github.com/meew0/discordrb/wiki)
+
 ## Installation
 
 ### Linux
