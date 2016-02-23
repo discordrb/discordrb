@@ -299,37 +299,11 @@ module Discordrb
       results
     end
 
-    # Finds a user given its username. This allows fuzzy finding using Levenshtein
-    # distances, see {#find}
+    # Finds a user given its username.
     # @param username [String] The username to look for.
-    # @param threshold [Integer] The threshold for the Levenshtein algorithm. The larger
-    #   the threshold is, the more misspellings will be allowed.
     # @return [Array<User>] The array of users that were found. May be empty if none were found.
-    def find_user(username, threshold = 0)
-      begin
-        require 'levenshtein' if threshold > 0
-        levenshtein_available = true
-      rescue LoadError; levenshtein_available = false; end
-
-      results = []
-      @users.values.each do |user|
-        if threshold > 0
-          fail LoadError, 'Levenshtein distance unavailable! Either set threshold to 0 or install the `levenshtein-ffi` gem' unless levenshtein_available
-          distance = Levenshtein.distance(user.username, username)
-          next if distance > threshold
-        else
-          distance = 0
-          next if user.username != username
-        end
-
-        # Make a singleton accessor "distance"
-        user.instance_variable_set(:@distance, distance)
-        class << user
-          attr_reader :distance
-        end
-        results << user
-      end
-      results
+    def find_user(username)
+      @users.values.find_all { |e| e.username == username }
     end
 
     # Sends a text message to a channel given its ID and the message's content.
