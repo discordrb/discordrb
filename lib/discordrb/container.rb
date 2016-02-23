@@ -314,7 +314,7 @@ module Discordrb
 
     # Removes all events from this event handler.
     def clear!
-      @event_handlers.clear
+      @event_handlers.clear if @event_handlers
     end
 
     # Adds an event handler to this container. Usually, it's more expressive to just use one of the shorthand adder
