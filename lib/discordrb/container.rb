@@ -327,7 +327,7 @@ module Discordrb
       handlers = container.instance_variable_get '@event_handlers'
       fail "Couldn't include the container #{container} as it doesn't have any event handlers - have you tried to include a commands container into an event-only bot?" unless handlers
       @event_handlers ||= {}
-      @event_handlers.merge! handlers
+      @event_handlers.merge!(handlers) { |_, old, new| old + new }
     end
 
     alias_method :include!, :include_events
