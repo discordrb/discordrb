@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.7.1
+* A `clear!` method was added to EventContainer that removes all events from it, so you can overwrite modules by defining them again. (It's unnecessary for CommandContainers because commands can never be duplicate.)
+
+### Bugfixes
+* The tokens will now be verified correctly when obtained from the cache. (I messed up last time)
+* Events of the same type in different containers will now be merged correctly when including both containers.
+* Got rid of the annoying `undefined method 'game' for nil:NilClass` error that sometimes occurred on startup. (It was harmless but now it's gone entirely)
+
 ## 1.7.0
 * **`bot.find` and `bot.find_user` have had their fuzzy search feature removed because it only caused problems. If you still need it, you can copy the code from the repo's history.** In addition, `find` was renamed to `find_channel` but still exists as a (deprecated) alias.
 * The in-line documentation using Yard is now complete and can be [accessed at RubyDoc](http://www.rubydoc.info/github/meew0/discordrb/master/). It's not quite polished yet and some things may be confusing, but it should be mostly usable.
