@@ -866,7 +866,8 @@ module Discordrb
         raise_event(event)
       when 'PRESENCE_UPDATE'
         now_playing = data['game']
-        played_before = user(data['user']['id'].to_i).game
+        presence_user = user(data['user']['id'].to_i)
+        played_before = presence_user.nil? ? nil : presence_user.game
         update_presence(data)
 
         event = if now_playing != played_before
