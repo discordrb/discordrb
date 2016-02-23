@@ -283,42 +283,19 @@ module Discordrb
       @servers[id]
     end
 
-    # Finds a channel given its name and optionally the name of the server it is in. If the threshold
-    # is not 0, it will use a Levenshtein distance function to find the channel in a fuzzy way, which
-    # allows slight misspellings.
+    # Finds a channel given its name and optionally the name of the server it is in.
     # @param channel_name [String] The channel to search for.
     # @param server_name [String] The server to search for, or `nil` if only the channel should be searched for.
-    # @param threshold [Integer] The threshold for the Levenshtein algorithm. The larger
-    #   the threshold is, the more misspellings will be allowed.
     # @return [Array<Channel>] The array of channels that were found. May be empty if none were found.
-    def find(channel_name, server_name = nil, threshold = 0)
-      begin
-        require 'levenshtein' if threshold > 0
-        levenshtein_available = true
-      rescue LoadError; levenshtein_available = false; end
-
+    def find(channel_name, server_name = nil)
       results = []
+
       @servers.values.each do |server|
         server.channels.each do |channel|
-          if threshold > 0
-            fail LoadError, 'Levenshtein distance unavailable! Either set threshold to 0 or install the `levenshtein-ffi` gem' unless levenshtein_available
-            distance = Levenshtein.distance(channel.name, channel_name)
-            distance += Levenshtein.distance(server_name || server.name, server.name)
-            next if distance > threshold
-          else
-            distance = 0
-            next if channel.name != channel_name || (server_name || server.name) != server.name
-          end
-
-          # Make a singleton accessor "distance"
-          channel.instance_variable_set(:@distance, distance)
-          class << channel
-            attr_reader :distance
-          end
-
-          results << channel
+          results << channel if channel.name == channel_name && (server_name || server.name) == server.name
         end
       end
+
       results
     end
 
