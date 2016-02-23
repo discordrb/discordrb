@@ -312,6 +312,11 @@ module Discordrb
       @event_handlers[clazz].delete(handler)
     end
 
+    # Removes all events from this event handler.
+    def clear!
+      @event_handlers.clear
+    end
+
     # Adds an event handler to this container. Usually, it's more expressive to just use one of the shorthand adder
     # methods like {#message}, but if you want to create one manually you can use this.
     # @param handler [Discordrb::Events::EventHandler] The handler to add.
