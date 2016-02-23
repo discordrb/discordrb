@@ -1,5 +1,31 @@
 # Changelog
 
+## 1.7.0
+* **`bot.find` and `bot.find_user` have had their fuzzy search feature removed because it only caused problems. If you still need it, you can copy the code from the repo's history.** In addition, `find` was renamed to `find_channel` but still exists as a (deprecated) alias.
+* The in-line documentation using Yard is now complete and can be [accessed at RubyDoc](http://www.rubydoc.info/github/meew0/discordrb/master/). It's not quite polished yet and some things may be confusing, but it should be mostly usable.
+* Events and commands can now be thoroughly modularized using a system I call 'containers'. (TODO: Add a tutorial here later)
+* Support for the latest API changes:
+  * `Server.leave` does something different than `Server.delete`
+  * The WebSocket connection now uses version 3 of the protocol
+* Voice bots now support playing DCA files using the [`play_dca`](http://www.rubydoc.info/github/meew0/discordrb/master/Discordrb%2FVoice%2FVoiceBot%3Aplay_dca) method. (TODO: Add a section to the voice tutorial)
+* The [volume](http://www.rubydoc.info/github/meew0/discordrb/master/Discordrb%2FVoice%2FVoiceBot%3Avolume) of a voice bot can now be changed during playback and not only for future playbacks.
+* A `Channel.prune` method was added to quickly delete lots of messages from a channel. (It appears that this is something lots of bots do.)
+* [`Server#members`](http://www.rubydoc.info/github/meew0/discordrb/master/Discordrb%2FServer%3Amembers) is now aliased to `users`.
+* An attribute [`Server#member_count`](http://www.rubydoc.info/github/meew0/discordrb/master/Discordrb%2FServer%3Amember_count) was added that is accurate even if chunked members have not been added yet.
+* An attribute [`Server#large?`](http://www.rubydoc.info/github/meew0/discordrb/master/Discordrb%2FServer%3Alarge) was added that is true if a server could possibly have an inaccurate list of members.
+* Some more specific error classes have been added to replace the RestClient generic ones.
+* Quickly sending a message using the `event << 'text'` syntax now works in every type of message event, not just commands.
+* You can now set the bitrate of sent audio data using `bot.voice.encoder.bitrate = 64000` (see [`Encoder#bitrate=`](http://www.rubydoc.info/github/meew0/discordrb/master/Discordrb/Voice/Encoder#bitrate%3D-instance_method)). Note that sent audio data will always be unaffected by voice channel bitrate settings, those only tell the client at what bitrate it should send.
+* A rate limiting feature was added to commands - you can define buckets using the [`bucket`](http://www.rubydoc.info/github/meew0/discordrb/master/Discordrb%2FCommands%2FRateLimiter%3Abucket) method and use them as a parameter for [`command`](http://www.rubydoc.info/github/meew0/discordrb/master/Discordrb%2FCommands%2FCommandContainer%3Acommand).
+  * A [`SimpleRateLimiter`](http://www.rubydoc.info/github/meew0/discordrb/master/Discordrb/Commands/SimpleRateLimiter) class was also added if you want rate limiting independent from commands (e. g. for events)
+* Connecting to the WebSocket now uses an exponential falloff system so we don't spam Discord with requests anymore.
+* Debug timestamps are now accurate to milliseconds.
+
+
+### Bugfixes
+* The token cacher will now detect whether a cached token has been invalidated due to a password change.
+* `break`ing from an event or command will no longer spew `LocalJumpError`s to the console.
+
 ## 1.6.6
 
 ### Bugfixes
