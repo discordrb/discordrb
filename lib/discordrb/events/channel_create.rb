@@ -3,7 +3,7 @@ require 'discordrb/data'
 
 module Discordrb::Events
   # Raised when a channel is created
-  class ChannelCreateEvent
+  class ChannelCreateEvent < Event
     attr_reader :type, :topic, :position, :name, :is_private, :id, :server
 
     def initialize(data, bot)

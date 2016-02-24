@@ -3,7 +3,7 @@ require 'discordrb/data'
 
 module Discordrb::Events
   # Event raised when a user's voice state updates
-  class VoiceStateUpdateEvent
+  class VoiceStateUpdateEvent < Event
     attr_reader :user, :token, :suppress, :session_id, :self_mute, :self_deaf, :mute, :deaf, :server, :channel
 
     def initialize(data, bot)

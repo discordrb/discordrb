@@ -3,7 +3,7 @@ require 'discordrb/data'
 
 module Discordrb::Events
   # Event raised when a user's presence state updates (idle or online)
-  class PresenceEvent
+  class PresenceEvent < Event
     attr_reader :server, :user, :status
 
     def initialize(data, bot)
@@ -41,7 +41,7 @@ module Discordrb::Events
   end
 
   # Event raised when a user starts or stops playing a game
-  class PlayingEvent
+  class PlayingEvent < Event
     attr_reader :server, :user, :game
 
     def initialize(data, bot)

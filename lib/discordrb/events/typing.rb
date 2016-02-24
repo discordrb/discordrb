@@ -2,7 +2,7 @@ require 'discordrb/events/generic'
 
 module Discordrb::Events
   # Event raised when a user starts typing
-  class TypingEvent
+  class TypingEvent < Event
     attr_reader :channel, :user, :timestamp
 
     def initialize(data, bot)

@@ -2,7 +2,7 @@ require 'discordrb/events/generic'
 
 module Discordrb::Events
   # Raised when a user is banned
-  class UserBanEvent
+  class UserBanEvent < Event
     # @return [User] the user that was banned
     attr_reader :user
 

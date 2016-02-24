@@ -3,7 +3,7 @@ require 'discordrb/data'
 
 module Discordrb::Events
   # Raised when a channel is updated (e.g. topic changes)
-  class ChannelUpdateEvent
+  class ChannelUpdateEvent < Event
     attr_reader :type, :topic, :position, :name, :is_private, :channel, :server
 
     def initialize(data, bot)

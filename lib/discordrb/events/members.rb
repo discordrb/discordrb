@@ -3,7 +3,7 @@ require 'discordrb/data'
 
 module Discordrb::Events
   # Generic subclass for server member events (add/update/delete)
-  class GuildMemberEvent
+  class GuildMemberEvent < Event
     attr_reader :user, :roles, :server
 
     def initialize(data, bot)

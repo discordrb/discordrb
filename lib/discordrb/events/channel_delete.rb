@@ -3,7 +3,7 @@ require 'discordrb/data'
 
 module Discordrb::Events
   # Raised when a channel is deleted
-  class ChannelDeleteEvent
+  class ChannelDeleteEvent < Event
     attr_reader :type, :topic, :position, :name, :is_private, :id, :server
 
     def initialize(data, bot)

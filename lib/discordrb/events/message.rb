@@ -2,7 +2,7 @@ require 'discordrb/events/generic'
 
 module Discordrb::Events
   # Event raised when a text message is sent to a channel
-  class MessageEvent
+  class MessageEvent < Event
     attr_reader :message, :saved_message
 
     delegate :author, :channel, :content, :timestamp, to: :message
@@ -123,7 +123,7 @@ module Discordrb::Events
   class PrivateMessageEventHandler < MessageEventHandler; end
 
   # A subset of MessageEvent that only contains a message ID and a channel
-  class MessageIDEvent
+  class MessageIDEvent < Event
     # @return [Integer] the ID associated with this event
     attr_reader :id
 

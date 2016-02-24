@@ -49,6 +49,9 @@ module Discordrb::Events
     end
   end
 
+  # Generic event class that can be extended
+  class Event; end
+
   # Generic event handler that can be extended
   class EventHandler
     def initialize(attributes, block)

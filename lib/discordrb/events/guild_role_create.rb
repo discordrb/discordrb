@@ -3,7 +3,7 @@ require 'discordrb/data'
 
 module Discordrb::Events
   # Raised when a role is created on a server
-  class GuildRoleCreateEvent
+  class GuildRoleCreateEvent < Event
     attr_reader :role, :server
 
     def initialize(data, bot)

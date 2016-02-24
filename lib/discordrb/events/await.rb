@@ -3,7 +3,7 @@ require 'discordrb/await'
 
 module Discordrb::Events
   # @see Bot#await
-  class AwaitEvent
+  class AwaitEvent < Event
     # The await that was triggered.
     # @return [Await] The await
     attr_reader :await
