@@ -50,7 +50,9 @@ module Discordrb::Events
   end
 
   # Generic event class that can be extended
-  class Event; end
+  class Event
+    attr_reader :bot
+  end
 
   # Generic event handler that can be extended
   class EventHandler
