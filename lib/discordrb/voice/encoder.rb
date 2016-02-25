@@ -16,6 +16,7 @@ module Discordrb::Voice
     # @return [true, false] whether avconv should be used instead of ffmpeg.
     attr_accessor :use_avconv
 
+    # @see VoiceBot#filter_volume=
     # @return [Integer] the volume used as a filter to ffmpeg/avconv.
     attr_accessor :filter_volume
 
