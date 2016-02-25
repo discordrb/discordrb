@@ -100,6 +100,7 @@ module Discordrb::Voice
     end
 
     def filter_volume_argument
+      return '' if @filter_volume == 1
       @use_avconv ? "-vol #{(@filter_volume * 256).ceil}" : "-af volume=#{@filter_volume}"
     end
   end
