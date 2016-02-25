@@ -92,6 +92,13 @@ module Discordrb::Voice
       @udp.encrypted?
     end
 
+    # Set the filter volume. This volume is applied as a filter for decoded audio data. It has the advantage that using
+    # it is much faster than regular volume, but it can only be changed before starting to play something.
+    # @param value [Integer] The value to set the volume to. For possible values, see {#volume}
+    def filter_volume=(value)
+      @encoder.filter_volume = value
+    end
+
     # Pause playback. This is not instant; it may take up to 20 ms for this change to take effect. (This is usually
     # negligible.)
     def pause
