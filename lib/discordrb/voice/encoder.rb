@@ -21,6 +21,7 @@ module Discordrb::Voice
       @sample_rate = 48_000
       @frame_size = 960
       @channels = 2
+      @ffmpeg_volume = 1
 
       if OPUS_AVAILABLE
         @opus = Opus::Encoder.new(@sample_rate, @frame_size, @channels)
@@ -73,7 +74,7 @@ module Discordrb::Voice
     # @param file [String] The path or URL to encode.
     # @return [IO] the audio, encoded as s16le PCM
     def encode_file(file)
-      command = "#{ffmpeg_command} -loglevel 0 -i \"#{file}\" -f s16le -ar 48000 -ac 2 pipe:1"
+      command = "#{ffmpeg_command} -loglevel 0 -i \"#{file}\" -f s16le -ar 48000 -ac 2 #{ffmpeg_volume} pipe:1"
       IO.popen(command)
     end
 
@@ -83,7 +84,7 @@ module Discordrb::Voice
     # @return [IO] the audio, encoded as s16le PCM
     def encode_io(io)
       ret_io, writer = IO.pipe
-      command = "#{ffmpeg_command} -loglevel 0 -i - -f s16le -ar 48000 -ac 2 pipe:1"
+      command = "#{ffmpeg_command} -loglevel 0 -i - -f s16le -ar 48000 -ac 2 #{ffmpeg_volume} pipe:1"
       spawn(command, in: io, out: writer)
       ret_io
     end
@@ -92,6 +93,10 @@ module Discordrb::Voice
 
     def ffmpeg_command
       @use_avconv ? 'avconv' : 'ffmpeg'
+    end
+
+    def ffmpeg_volume
+      @use_avconv ? "-vol #{(@ffmpeg_volume * 256).ceil}" : "-af volume=#{@ffmpeg_volume}"
     end
   end
 end
