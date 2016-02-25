@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.7.2
+* The `bot` object can now be read from all events, not just from command ones.
+* You can now set the `filter_volume` on VoiceBot, which corresponds to the old way of doing volume handling, in case the new way is too slow for you.
+
 ## 1.7.1
 * A `clear!` method was added to EventContainer that removes all events from it, so you can overwrite modules by defining them again. (It's unnecessary for CommandContainers because commands can never be duplicate.)
 
