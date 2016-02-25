@@ -99,6 +99,12 @@ module Discordrb::Voice
       @encoder.filter_volume = value
     end
 
+    # @see #filter_volume=
+    # @return [Integer] the volume used as a filter for ffmpeg/avconv.
+    def filter_volume
+      @encoder.filter_volume
+    end
+
     # Pause playback. This is not instant; it may take up to 20 ms for this change to take effect. (This is usually
     # negligible.)
     def pause
