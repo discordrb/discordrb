@@ -16,6 +16,9 @@ module Discordrb::Voice
     # @return [true, false] whether avconv should be used instead of ffmpeg.
     attr_accessor :use_avconv
 
+    # @return [Integer] the volume used as a filter to ffmpeg/avconv.
+    attr_accessor :filter_volume
+
     # Create a new encoder
     def initialize
       @sample_rate = 48_000
