@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.7.3
+* The server banlist can now be accessed more nicely using `Server#bans`.
+* Some abstractions for OAuth application creation were added - `bot.create_oauth_application` and `bot.update_oauth_application`. See the docs about how to use them.
+
 ## 1.7.2
 * The `bot` object can now be read from all events, not just from command ones.
 * You can now set the `filter_volume` on VoiceBot, which corresponds to the old way of doing volume handling, in case the new way is too slow for you.
