@@ -288,7 +288,7 @@ module Discordrb
                       new_data[:email] || @email,
                       @password,
                       new_data[:username] || @username,
-                      new_data[:avatar_id] || @avatar_id,
+                      new_data[:avatar],
                       new_data[:new_password] || nil)
       update_data(new_data)
     end
