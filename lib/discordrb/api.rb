@@ -128,6 +128,28 @@ module Discordrb::API
     )
   end
 
+  # Create an OAuth application
+  def create_oauth_application(token, name, redirect_uris)
+    request(
+      :post,
+      "#{APIBASE}/oauth2/applications",
+      { name: name, redirect_uris: redirect_uris }.to_json,
+      Authorization: token,
+      content_type: :json
+    )
+  end
+
+  # Change an OAuth application's properties
+  def update_oauth_application(token, name, redirect_uris, description = '', icon = nil)
+    request(
+      :put,
+      "#{APIBASE}/oauth2/applications",
+      { name: name, redirect_uris: redirect_uris, description: description, icon: icon }.to_json,
+      Authorization: token,
+      content_type: :json
+    )
+  end
+
   # Create a server
   def create_server(token, name, region = :london)
     request(

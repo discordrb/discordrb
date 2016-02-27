@@ -910,6 +910,12 @@ module Discordrb
       role
     end
 
+    # @return [Array<User>] a list of banned users on this server.
+    def bans
+      users = JSON.parse(API.bans(@bot.token, @id))
+      users.map { |e| User.new(e['user'], @bot) }
+    end
+
     # Bans a user from this server.
     # @param user [User] The user to ban.
     # @param message_days [Integer] How many days worth of messages sent by the user should be deleted.

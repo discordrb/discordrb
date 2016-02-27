@@ -51,6 +51,7 @@ module Discordrb::Events
 
   # Generic event class that can be extended
   class Event
+    # @return [Bot] the bot used to initialize this event.
     attr_reader :bot
   end
 
