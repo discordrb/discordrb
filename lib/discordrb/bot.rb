@@ -373,6 +373,16 @@ module Discordrb
       [response['id'], response['secret']]
     end
 
+    # Changes information about your OAuth application
+    # @param name [String] What your application should be called.
+    # @param redirect_uris [Array<String>] URIs that Discord should redirect your users to after authorizing.
+    # @param description [String] A string that describes what your application does.
+    # @param icon [String, nil] A data URI for your icon image (for example a base 64 encoded image), or nil if no icon
+    #   should be set or changed.
+    def update_oauth_application(name, redirect_uris, description = '', icon = nil)
+      API.update_oauth_application(@token, name, redirect_uris, description, icon)
+    end
+
     # Gets the user from a mention of the user.
     # @param mention [String] The mention, which should look like <@12314873129>.
     # @return [User] The user identified by the mention, or `nil` if none exists.
