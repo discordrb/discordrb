@@ -363,6 +363,16 @@ module Discordrb
       server
     end
 
+    # Creates a new application to do OAuth authorization with. This allows you to use OAuth to authorize users using
+    # Discord. For information how to use this, see this example: https://github.com/vishnevskiy/discord-oauth2-example
+    # @param name [String] What your application should be called.
+    # @param redirect_uris [Array<String>] URIs that Discord should redirect your users to after authorizing.
+    # @return [Array(String, String)] your applications' client ID and client secret to be used in OAuth authorization.
+    def create_oauth_application(name, redirect_uris)
+      response = JSON.parse(API.create_oauth_application(@token, name, redirect_uris))
+      [response['id'], response['secret']]
+    end
+
     # Gets the user from a mention of the user.
     # @param mention [String] The mention, which should look like <@12314873129>.
     # @return [User] The user identified by the mention, or `nil` if none exists.
