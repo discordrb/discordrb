@@ -904,7 +904,7 @@ module Discordrb
     # colour is the default etc.
     # @return [Role] the created role.
     def create_role
-      response = API.create_role(@bot.token, @id)
+      response = API.create_role(@bot.token, @id, self)
       role = Role.new(JSON.parse(response), @bot)
       @roles << role
       role
