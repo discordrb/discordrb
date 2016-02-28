@@ -290,8 +290,8 @@ module Discordrb::Voice
 
       @client.on(:open) { instance.websocket_open }
       @client.on(:message) { |msg| instance.websocket_message(msg.data) }
-      @client.on(:error) { |e| puts e.to_s }
-      @client.on(:close) { |e| puts e.to_s }
+      @client.on(:error) { |e| puts "VWS error: #{e}" }
+      @client.on(:close) { |e| puts "VWS close: #{e}" }
 
       # Block any further execution
       heartbeat_loop
