@@ -11,6 +11,16 @@ module Discordrb::Events
     # The event that triggered the await.
     # @return [Event] The event
     attr_reader :event
+
+    # @!attribute [r] key
+    #   @return [Symbol] the await's key.
+    #   @see Await#key
+    # @!attribute [r] type
+    #   @return [Class] the await's event class.
+    #   @see Await#type
+    # @!attribute [r] attributes
+    #   @return [Hash] a hash of attributes defined on the await.
+    #   @see Await#attributes
     delegate :key, :type, :attributes, to: :await
 
     # For internal use only
