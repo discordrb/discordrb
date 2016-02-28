@@ -256,7 +256,8 @@ module Discordrb::Voice
 
     # Disconnects the websocket and kills the thread
     def destroy
-      @thread.kill if @thread
+      @client.close
+      @heartbeat_running = false
     end
 
     private
@@ -267,7 +268,8 @@ module Discordrb::Voice
     end
 
     def heartbeat_loop
-      loop do
+      @heartbeat_running = true
+      while @heartbeat_running
         if @heartbeat_interval
           sleep @heartbeat_interval / 1000.0
           send_heartbeat
