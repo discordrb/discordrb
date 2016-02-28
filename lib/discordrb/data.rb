@@ -477,7 +477,7 @@ module Discordrb
     # @return [String] this channel's name.
     attr_reader :name
 
-    # @return [Server] the server this channel is on.
+    # @return [Server, nil] the server this channel is on. If this channel is a PM channel, it will be nil.
     attr_reader :server
 
     # @return [String] the type of this channel (currently either 'text' or 'voice')
