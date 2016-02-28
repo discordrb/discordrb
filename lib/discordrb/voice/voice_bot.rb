@@ -141,6 +141,7 @@ module Discordrb::Voice
     # Permanently disconnects from the voice channel; to reconnect you will have to call {Bot#voice_connect} again.
     def destroy
       stop_playing
+      @bot.voice_destroy(false)
       @ws.destroy
     end
 
