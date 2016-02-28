@@ -787,8 +787,9 @@ module Discordrb
       fail 'Invalid Packet' unless packet['op'] == 0 # TODO
 
       data = packet['d']
-      case packet['t']
-      when 'READY'
+      type = packet['t'].intern
+      case type
+      when :READY
         # Activate the heartbeats
         @heartbeat_interval = data['heartbeat_interval'].to_f / 1000.0
         @heartbeat_active = true
@@ -830,7 +831,7 @@ module Discordrb
 
         # Tell the run method that everything was successful
         @ws_success = true
-      when 'GUILD_MEMBERS_CHUNK'
+      when :GUILD_MEMBERS_CHUNK
         id = data['guild_id'].to_i
         members = data['members']
 
@@ -850,7 +851,7 @@ module Discordrb
         else
           debug "Got one chunk for server #{id}, parsing took #{duration} seconds"
         end
-      when 'MESSAGE_CREATE'
+      when :MESSAGE_CREATE
         create_message(data)
 
         message = Message.new(data, self)
@@ -869,22 +870,22 @@ module Discordrb
           event = PrivateMessageEvent.new(message, self)
           raise_event(event)
         end
-      when 'MESSAGE_UPDATE'
+      when :MESSAGE_UPDATE
         update_message(data)
 
         event = MessageEditEvent.new(data, self)
         raise_event(event)
-      when 'MESSAGE_DELETE'
+      when :MESSAGE_DELETE
         delete_message(data)
 
         event = MessageDeleteEvent.new(data, self)
         raise_event(event)
-      when 'TYPING_START'
+      when :TYPING_START
         start_typing(data)
 
         event = TypingEvent.new(data, self)
         raise_event(event)
-      when 'PRESENCE_UPDATE'
+      when :PRESENCE_UPDATE
         now_playing = data['game']
         presence_user = user(data['user']['id'].to_i)
         played_before = presence_user.nil? ? nil : presence_user.game
@@ -897,81 +898,81 @@ module Discordrb
                 end
 
         raise_event(event)
-      when 'VOICE_STATE_UPDATE'
+      when :VOICE_STATE_UPDATE
         update_voice_state(data)
 
         event = VoiceStateUpdateEvent.new(data, self)
         raise_event(event)
-      when 'VOICE_SERVER_UPDATE'
+      when :VOICE_SERVER_UPDATE
         update_voice_server(data)
 
         # no event as this is irrelevant to users
-      when 'CHANNEL_CREATE'
+      when :CHANNEL_CREATE
         create_channel(data)
 
         event = ChannelCreateEvent.new(data, self)
         raise_event(event)
-      when 'CHANNEL_UPDATE'
+      when :CHANNEL_UPDATE
         update_channel(data)
 
         event = ChannelUpdateEvent.new(data, self)
         raise_event(event)
-      when 'CHANNEL_DELETE'
+      when :CHANNEL_DELETE
         delete_channel(data)
 
         event = ChannelDeleteEvent.new(data, self)
         raise_event(event)
-      when 'GUILD_MEMBER_ADD'
+      when :GUILD_MEMBER_ADD
         add_guild_member(data)
 
         event = GuildMemberAddEvent.new(data, self)
         raise_event(event)
-      when 'GUILD_MEMBER_UPDATE'
+      when :GUILD_MEMBER_UPDATE
         update_guild_member(data)
 
         event = GuildMemberUpdateEvent.new(data, self)
         raise_event(event)
-      when 'GUILD_MEMBER_REMOVE'
+      when :GUILD_MEMBER_REMOVE
         delete_guild_member(data)
 
         event = GuildMemberDeleteEvent.new(data, self)
         raise_event(event)
-      when 'GUILD_BAN_ADD'
+      when :GUILD_BAN_ADD
         add_user_ban(data)
 
         event = UserBanEvent.new(data, self)
         raise_event(event)
-      when 'GUILD_BAN_REMOVE'
+      when :GUILD_BAN_REMOVE
         remove_user_ban(data)
 
         event = UserUnbanEvent.new(data, self)
         raise_event(event)
-      when 'GUILD_ROLE_UPDATE'
+      when :GUILD_ROLE_UPDATE
         update_guild_role(data)
 
         event = GuildRoleUpdateEvent.new(data, self)
         raise_event(event)
-      when 'GUILD_ROLE_CREATE'
+      when :GUILD_ROLE_CREATE
         create_guild_role(data)
 
         event = GuildRoleCreateEvent.new(data, self)
         raise_event(event)
-      when 'GUILD_ROLE_DELETE'
+      when :GUILD_ROLE_DELETE
         delete_guild_role(data)
 
         event = GuildRoleDeleteEvent.new(data, self)
         raise_event(event)
-      when 'GUILD_CREATE'
+      when :GUILD_CREATE
         create_guild(data)
 
         event = GuildCreateEvent.new(data, self)
         raise_event(event)
-      when 'GUILD_UPDATE'
+      when :GUILD_UPDATE
         update_guild(data)
 
         event = GuildUpdateEvent.new(data, self)
         raise_event(event)
-      when 'GUILD_DELETE'
+      when :GUILD_DELETE
         delete_guild(data)
 
         event = GuildDeleteEvent.new(data, self)
