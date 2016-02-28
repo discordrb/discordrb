@@ -142,7 +142,6 @@ module Discordrb::Voice
     def destroy
       stop_playing
       @ws.destroy
-      @encoder.destroy
     end
 
     # Plays a stream of raw data to the channel. All playback methods are blocking, i. e. they wait for the playback to

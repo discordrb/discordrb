@@ -47,11 +47,6 @@ module Discordrb::Voice
       @opus.encode(buffer, 1920)
     end
 
-    # Destroys this encoder and the opus connection, preventing any future encodings.
-    def destroy
-      @opus.destroy
-    end
-
     # Adjusts the volume of a given buffer of s16le PCM data.
     # @param buf [String] An unencoded PCM (s16le) buffer.
     # @param mult [Float] The volume multiplier, 1 for same volume.
