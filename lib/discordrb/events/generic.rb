@@ -65,7 +65,7 @@ module Discordrb::Events
     # Whether or not this event handler matches the given event with its attributes.
     # @raise [RuntimeError] if this method is called - overwrite it in your event handler!
     def matches?(_)
-      fail 'Attempted to call matches?() from a generic EventHandler'
+      raise 'Attempted to call matches?() from a generic EventHandler'
     end
 
     # Checks whether this handler matches the given event, and then calls it.

@@ -76,7 +76,7 @@ class EventTracker
 
   def summary
     @tracker.each_with_index do |tracked, num|
-      fail "Not executed: #{@messages[num]}" unless tracked
+      raise "Not executed: #{@messages[num]}" unless tracked
     end
   end
 end

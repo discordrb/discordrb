@@ -449,7 +449,7 @@ module Discordrb
     # @yieldparam event [Event] The event object that was triggered.
     # @return [Await] The await that was created.
     def add_await(key, type, attributes = {}, &block)
-      fail "You can't await an AwaitEvent!" if type == Discordrb::Events::AwaitEvent
+      raise "You can't await an AwaitEvent!" if type == Discordrb::Events::AwaitEvent
       await = Await.new(self, key, type, attributes, block)
       @awaits ||= {}
       @awaits[key] = await
@@ -730,11 +730,11 @@ module Discordrb
 
       # Login
       login_response = API.login(@email, @password)
-      fail Discordrb::Errors::HTTPStatusError, login_response.code if login_response.code >= 400
+      raise Discordrb::Errors::HTTPStatusError, login_response.code if login_response.code >= 400
 
       # Parse response
       login_response_object = JSON.parse(login_response)
-      fail Discordrb::Errors::InvalidAuthenticationError unless login_response_object['token']
+      raise Discordrb::Errors::InvalidAuthenticationError unless login_response_object['token']
 
       debug('Received token from Discord!')
 
@@ -805,7 +805,7 @@ module Discordrb
         debug("Received packet #{event.data}")
       end
 
-      fail 'Invalid Packet' unless packet['op'] == 0 # TODO
+      raise 'Invalid Packet' unless packet['op'] == 0 # TODO
 
       data = packet['d']
       type = packet['t'].intern
