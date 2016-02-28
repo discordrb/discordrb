@@ -270,13 +270,13 @@ module Discordrb
     #   directly, you should leave it as true.
     def voice_destroy(destroy_vws = true)
       data = {
-          op: 4,
-          d: {
-              guild_id: nil,
-              channel_id: nil,
-              self_mute: false,
-              self_deaf: false
-          }
+        op: 4,
+        d: {
+          guild_id: nil,
+          channel_id: nil,
+          self_mute: false,
+          self_deaf: false
+        }
       }
 
       debug("Voice channel destroy packet is: #{data.to_json}")
