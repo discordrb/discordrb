@@ -474,6 +474,9 @@ module Discordrb
 
   # A Discord channel, including data like the topic
   class Channel
+    TEXT_TYPE = 'text'.freeze
+    VOICE_TYPE = 'voice'.freeze
+
     # @return [String] this channel's name.
     attr_reader :name
 
@@ -523,7 +526,7 @@ module Discordrb
       data = data[-1] if data.is_a?(Array)
 
       @id = data['id'].to_i
-      @type = data['type'] || 'text'
+      @type = data['type'] || TEXT_TYPE
       @topic = data['topic']
       @position = data['position']
 
