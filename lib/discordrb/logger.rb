@@ -1,4 +1,6 @@
 module Discordrb
+  LOG_TIMESTAMP_FORMAT = '%Y-%m-%d %H:%M:%S.%L %z'.freeze
+
   # Logs debug messages
   class Logger
     # @return [true, false] whether or not this logger should be in debug mode (all debug messages will be printed)
@@ -7,7 +9,7 @@ module Discordrb
     # Writes a debug message to the console.
     # @param important [true, false] Whether this message should be printed regardless of debug mode being on or off.
     def debug(message, important = false)
-      puts "[DEBUG : #{Thread.current[:discordrb_name]} @ #{Time.now.strftime('%Y-%m-%d %H:%M:%S.%L %z')}] #{message}" if @debug || important
+      puts "[DEBUG : #{Thread.current[:discordrb_name]} @ #{Time.now.strftime(LOG_TIMESTAMP_FORMAT)}] #{message}" if @debug || important
     end
 
     # Logs an exception to the console.
