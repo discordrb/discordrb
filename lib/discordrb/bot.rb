@@ -265,6 +265,27 @@ module Discordrb
       @voice
     end
 
+    # Disconnects the client from all voice connections across Discord.
+    # @param destroy_vws [true, false] Whether or not the VWS should also be destroyed. If you're calling this method
+    #   directly, you should leave it as true.
+    def voice_destroy(destroy_vws = true)
+      data = {
+          op: 4,
+          d: {
+              guild_id: nil,
+              channel_id: nil,
+              self_mute: false,
+              self_deaf: false
+          }
+      }
+
+      debug("Voice channel destroy packet is: #{data.to_json}")
+      @ws.send(data.to_json)
+
+      @voice.destroy if @voice && destroy_vws
+      @voice = nil
+    end
+
     # Revokes an invite to a server. Will fail unless you have the *Manage Server* permission.
     # It is recommended that you use {Invite#delete} instead.
     # @param code [String, Invite] The invite to revoke. For possible formats see {#resolve_invite_code}.
