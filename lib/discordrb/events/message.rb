@@ -5,7 +5,23 @@ module Discordrb::Events
   class MessageEvent < Event
     attr_reader :message, :saved_message
 
+    # @!attribute [r] author
+    #   @return [User] who sent this message.
+    #   @see Message#author
+    # @!attribute [r] channel
+    #   @return [Channel] the channel in which this message was sent.
+    #   @see Message#channel
+    # @!attribute [r] content
+    #   @return [String] the message's content.
+    #   @see Message#content
+    # @!attribute [r] timestamp
+    #   @return [Time] the time at which the message was sent.
+    #   @see Message#timestamp
     delegate :author, :channel, :content, :timestamp, to: :message
+
+    # @!attribute [r] server
+    #   @return [Server, nil] the server where this message was sent, or nil if it was sent in PM.
+    #   @see Channel#server
     delegate :server, to: :channel
 
     def initialize(message, bot)
