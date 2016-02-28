@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.7.4
+* Added methods `Channel#text?` and `Channel#voice?` to check a channel's type.
+* Frequently allocated strings have been turned into symbols or frozen constants, this should improve performance slightly.
+
+### Bugfixes
+* `VoiceBot#destroy` will now properly disconnect you and should no longer cause segfaults.
+* Fixed a bug where you couldn't set any settings on a role created using `Server#create_role`.
+* Fixed `Profile#avatar=` doing absolutely nothing.
+
 ## 1.7.3
 * The server banlist can now be accessed more nicely using `Server#bans`.
 * Some abstractions for OAuth application creation were added - `bot.create_oauth_application` and `bot.update_oauth_application`. See the docs about how to use them.
