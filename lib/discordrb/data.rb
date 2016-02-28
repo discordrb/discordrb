@@ -558,6 +558,16 @@ module Discordrb
       Discordrb.id_compare(@id, other)
     end
 
+    # @return [true, false] whether or not this channel is a text channel
+    def text?
+      @type == TEXT_TYPE
+    end
+
+    # @return [true, false] whether or not this channel is a voice channel
+    def voice?
+      @type == VOICE_TYPE
+    end
+
     # Sends a message to this channel.
     # @param content [String] The content to send. Should not be longer than 2000 characters or it will result in an error.
     # @return [Message] the message that was sent.
