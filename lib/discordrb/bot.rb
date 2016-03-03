@@ -345,10 +345,10 @@ module Discordrb
     # @param channel_id [Integer] The ID that identifies the channel to send something to.
     # @param content [String] The text that should be sent as a message. It is limited to 2000 characters (Discord imposed).
     # @return [Message] The message that was sent.
-    def send_message(channel_id, content)
+    def send_message(channel_id, content, tts = false)
       debug("Sending message to #{channel_id} with content '#{content}'")
 
-      response = API.send_message(token, channel_id, content)
+      response = API.send_message(token, channel_id, content, [], tts)
       Message.new(JSON.parse(response), self)
     end
 
