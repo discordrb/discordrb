@@ -223,6 +223,10 @@ module Discordrb
         permission? flag, server, channel
       end
     end
+
+    def inspect
+      "<User username=#{@username} id=#{@id} discriminator=#{@discriminator}>"
+    end
   end
 
   # This class is a special variant of User that represents the bot's user profile (things like email addresses and the avatar).
@@ -279,6 +283,10 @@ module Discordrb
       @password = new_data[:new_password] || @password
       @username = new_data[:username] || @username
       @avatar_id = new_data[:avatar_id] || @avatar_id
+    end
+
+    def inspect
+      "<Profile email=#{@email} user=#{super}>"
     end
 
     private
