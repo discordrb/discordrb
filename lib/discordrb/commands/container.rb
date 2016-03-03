@@ -71,7 +71,7 @@ module Discordrb::Commands
         include_commands(container)
         include_buckets(container)
       elsif !container_modules.include? Discordrb::EventContainer
-        fail "Could not include! this particular container - ancestors: #{container_modules}"
+        raise "Could not include! this particular container - ancestors: #{container_modules}"
       end
     end
   end

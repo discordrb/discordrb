@@ -223,6 +223,10 @@ module Discordrb
         permission? flag, server, channel
       end
     end
+
+    def inspect
+      "<User username=#{@username} id=#{@id} discriminator=#{@discriminator}>"
+    end
   end
 
   # This class is a special variant of User that represents the bot's user profile (things like email addresses and the avatar).
@@ -279,6 +283,10 @@ module Discordrb
       @password = new_data[:new_password] || @password
       @username = new_data[:username] || @username
       @avatar_id = new_data[:avatar_id] || @avatar_id
+    end
+
+    def inspect
+      "<Profile email=#{@email} user=#{super}>"
     end
 
     private
@@ -399,6 +407,10 @@ module Discordrb
       @server.delete_role(@id)
     end
 
+    def inspect
+      "<Role name=#{@name} permissions=#{@permissions.inspect} hoist=#{@hoist} colour=#{@colour.inspect} server=#{@server.inspect}>"
+    end
+
     private
 
     def update_role_data(new_data)
@@ -470,6 +482,10 @@ module Discordrb
     end
 
     alias_method :revoke, :delete
+
+    def inspect
+      "<Invite code=#{@code} channel=#{@channel} uses=#{@uses} temporary=#{@temporary} revoked=#{@revoked} xkcd=#{@xkcd}>"
+    end
   end
 
   # A Discord channel, including data like the topic
@@ -570,9 +586,10 @@ module Discordrb
 
     # Sends a message to this channel.
     # @param content [String] The content to send. Should not be longer than 2000 characters or it will result in an error.
+    # @param tts [true, false] Whether or not this message should be sent using Discord text-to-speech.
     # @return [Message] the message that was sent.
-    def send_message(content)
-      @bot.send_message(@id, content)
+    def send_message(content, tts = false)
+      @bot.send_message(@id, content, tts)
     end
 
     # Sends a file to this channel. If it is an image, it will be embedded.
@@ -650,7 +667,7 @@ module Discordrb
     # @param amount [Integer] How many messages to delete. Must be 100 or less (Discord limitation)
     # @raise [ArgumentError] if more than 100 messages are requested.
     def prune(amount)
-      fail ArgumentError, "Can't prune more than 100 messages!" if amount > 100
+      raise ArgumentError, "Can't prune more than 100 messages!" if amount > 100
 
       threads = []
       history(amount).each do |message|
@@ -699,6 +716,10 @@ module Discordrb
     alias_method :send, :send_message
     alias_method :message, :send_message
     alias_method :invite, :make_invite
+
+    def inspect
+      "<Channel name=#{@name} id=#{@id} topic=\"#{@topic}\" type=#{@type} position=#{@position} server=#{@server}>"
+    end
 
     private
 
@@ -779,6 +800,10 @@ module Discordrb
     # @return [true, false] whether this message was sent by the current {Bot}.
     def from_bot?
       @author.bot?
+    end
+
+    def inspect
+      "<Message content=\"#{@content}\" id=#{@id} timestamp=#{@timestamp} author=#{@author} channel=#{@channel}>"
     end
   end
 
@@ -1018,6 +1043,10 @@ module Discordrb
 
       @afk_channel_id = new_data[:afk_channel_id] || new_data['afk_channel_id'].to_i || @afk_channel.id
       @afk_channel = @bot.channel(@afk_channel_id) if @afk_channel_id != 0 && (!@afk_channel || @afk_channel_id != @afk_channel.id)
+    end
+
+    def inspect
+      "<Server name=#{@name} id=#{@id} large=#{@large} region=#{@region} owner=#{@owner} afk_channel_id=#{@afk_channel_id} afk_timeout=#{@afk_timeout}>"
     end
 
     private

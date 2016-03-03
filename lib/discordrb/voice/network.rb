@@ -91,7 +91,7 @@ module Discordrb::Voice
     # @param buf [String] The encoded audio data to be encrypted
     # @return [String] the audio data, encrypted
     def encrypt_audio(header, buf)
-      fail 'No secret key found, despite encryption being enabled!' unless @secret_key
+      raise 'No secret key found, despite encryption being enabled!' unless @secret_key
       box = RbNaCl::SecretBox.new(@secret_key)
 
       # The nonce is the header of the voice packet with 12 null bytes appended
@@ -119,7 +119,7 @@ module Discordrb::Voice
     # @param session [String] The voice session ID Discord sends over the regular websocket
     # @param endpoint [String] The endpoint URL to connect to
     def initialize(channel, bot, token, session, endpoint)
-      fail 'RbNaCl is unavailable - unable to create voice bot! Please read https://github.com/meew0/discordrb/wiki/Installing-libsodium' unless RBNACL_AVAILABLE
+      raise 'RbNaCl is unavailable - unable to create voice bot! Please read https://github.com/meew0/discordrb/wiki/Installing-libsodium' unless RBNACL_AVAILABLE
 
       @channel = channel
       @bot = bot

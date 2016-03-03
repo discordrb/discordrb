@@ -270,13 +270,13 @@ module Discordrb
     #   directly, you should leave it as true.
     def voice_destroy(destroy_vws = true)
       data = {
-          op: 4,
-          d: {
-              guild_id: nil,
-              channel_id: nil,
-              self_mute: false,
-              self_deaf: false
-          }
+        op: 4,
+        d: {
+          guild_id: nil,
+          channel_id: nil,
+          self_mute: false,
+          self_deaf: false
+        }
       }
 
       debug("Voice channel destroy packet is: #{data.to_json}")
@@ -344,11 +344,12 @@ module Discordrb
     # Sends a text message to a channel given its ID and the message's content.
     # @param channel_id [Integer] The ID that identifies the channel to send something to.
     # @param content [String] The text that should be sent as a message. It is limited to 2000 characters (Discord imposed).
+    # @param tts [true, false] Whether or not this message should be sent using Discord text-to-speech.
     # @return [Message] The message that was sent.
-    def send_message(channel_id, content)
+    def send_message(channel_id, content, tts = false)
       debug("Sending message to #{channel_id} with content '#{content}'")
 
-      response = API.send_message(token, channel_id, content)
+      response = API.send_message(token, channel_id, content, [], tts)
       Message.new(JSON.parse(response), self)
     end
 
@@ -449,7 +450,7 @@ module Discordrb
     # @yieldparam event [Event] The event object that was triggered.
     # @return [Await] The await that was created.
     def add_await(key, type, attributes = {}, &block)
-      fail "You can't await an AwaitEvent!" if type == Discordrb::Events::AwaitEvent
+      raise "You can't await an AwaitEvent!" if type == Discordrb::Events::AwaitEvent
       await = Await.new(self, key, type, attributes, block)
       @awaits ||= {}
       @awaits[key] = await
@@ -730,11 +731,11 @@ module Discordrb
 
       # Login
       login_response = API.login(@email, @password)
-      fail Discordrb::Errors::HTTPStatusError, login_response.code if login_response.code >= 400
+      raise Discordrb::Errors::HTTPStatusError, login_response.code if login_response.code >= 400
 
       # Parse response
       login_response_object = JSON.parse(login_response)
-      fail Discordrb::Errors::InvalidAuthenticationError unless login_response_object['token']
+      raise Discordrb::Errors::InvalidAuthenticationError unless login_response_object['token']
 
       debug('Received token from Discord!')
 
@@ -805,7 +806,7 @@ module Discordrb
         debug("Received packet #{event.data}")
       end
 
-      fail 'Invalid Packet' unless packet['op'] == 0 # TODO
+      raise 'Invalid Packet' unless packet['op'] == 0 # TODO
 
       data = packet['d']
       type = packet['t'].intern
