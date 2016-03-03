@@ -1044,6 +1044,10 @@ module Discordrb
       @afk_channel = @bot.channel(@afk_channel_id) if @afk_channel_id != 0 && (!@afk_channel || @afk_channel_id != @afk_channel.id)
     end
 
+    def inspect
+      "<Server name=#{@name} id=#{@id} large=#{@large} region=#{@region} owner=#{@owner} afk_channel_id=#{@afk_channel_id} afk_timeout=#{@afk_timeout}>"
+    end
+
     private
 
     def update_server_data(new_data)
