@@ -482,6 +482,10 @@ module Discordrb
     end
 
     alias_method :revoke, :delete
+
+    def inspect
+      "<Invite code=#{@code} channel=#{@channel} uses=#{@uses} temporary=#{@temporary} revoked=#{@revoked} xkcd=#{@xkcd}>"
+    end
   end
 
   # A Discord channel, including data like the topic
