@@ -407,6 +407,10 @@ module Discordrb
       @server.delete_role(@id)
     end
 
+    def inspect
+      "<Role name=#{@name} permissions=#{@permissions.inspect} hoist=#{@hoist} colour=#{@colour.inspect} server=#{@server.inspect}>"
+    end
+
     private
 
     def update_role_data(new_data)
