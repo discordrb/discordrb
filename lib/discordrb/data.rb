@@ -800,6 +800,10 @@ module Discordrb
     def from_bot?
       @author.bot?
     end
+
+    def inspect
+      "<Message content=\"#{@content}\" id=#{@id} timestamp=#{@timestamp} author=#{@author} channel=#{@channel}>"
+    end
   end
 
   # A server on Discord
