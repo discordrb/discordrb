@@ -22,9 +22,9 @@ end
 
 bot.command(:random, min_args: 0, max_args: 2, description: 'Generates a random number between 0 and 1, 0 and max or min and max.', usage: 'random [min/max] [max]') do |_event, min, max|
   if max
-    rand(min..max)
+    rand(min.to_i..max.to_i)
   elsif min
-    rand(0..min)
+    rand(0..min.to_i)
   else
     rand
   end
