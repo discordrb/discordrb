@@ -716,6 +716,10 @@ module Discordrb
     alias_method :message, :send_message
     alias_method :invite, :make_invite
 
+    def inspect
+      "<Channel name=#{@name} id=#{@id} topic=\"#{@topic}\" type=#{@type} position=#{@position} server=#{@server}>"
+    end
+
     private
 
     def update_channel_data
