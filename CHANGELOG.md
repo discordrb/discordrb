@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.7.5
+* `Channel#send_message` and `Bot#send_message` now have an extra `tts` parameter (false by default) to specify whether the message should use TTS.
+
+### Bugfixes
+* Attempting to `p` a data class, especially a `User` or `Profile`, should no longer lock up the interpreter due to very deep recursion.
+* Manual TTS using `API.send_message` will now work correctly.
+
 ## 1.7.4
 * Added methods `Channel#text?` and `Channel#voice?` to check a channel's type.
 * Frequently allocated strings have been turned into symbols or frozen constants, this should improve performance slightly.
