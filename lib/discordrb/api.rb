@@ -305,7 +305,7 @@ module Discordrb::API
     request(
       :post,
       "#{APIBASE}/channels/#{channel_id}/messages",
-      { content: message, mentions: mentions, tts => tts }.to_json,
+      { content: message, mentions: mentions, tts: tts }.to_json,
       Authorization: token,
       content_type: :json
     )
