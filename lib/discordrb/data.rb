@@ -586,9 +586,10 @@ module Discordrb
 
     # Sends a message to this channel.
     # @param content [String] The content to send. Should not be longer than 2000 characters or it will result in an error.
+    # @param tts [true, false] Whether or not this message should be sent using Discord text-to-speech.
     # @return [Message] the message that was sent.
-    def send_message(content)
-      @bot.send_message(@id, content)
+    def send_message(content, tts = false)
+      @bot.send_message(@id, content, tts)
     end
 
     # Sends a file to this channel. If it is an image, it will be embedded.
