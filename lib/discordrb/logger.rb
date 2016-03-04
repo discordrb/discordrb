@@ -6,6 +6,9 @@ module Discordrb
     # @return [true, false] whether or not this logger should be in debug mode (all debug messages will be printed)
     attr_writer :debug
 
+    # @return [true, false] whether this logger is in the extra-fancy mode!
+    attr_writer :fancy
+
     # Writes a debug message to the console.
     # @param important [true, false] Whether this message should be printed regardless of debug mode being on or off.
     def debug(message, important = false)
