@@ -194,6 +194,9 @@ module Discordrb::Voice
     # Event handlers; public for websocket-simple to work correctly
     # @!visibility private
     def websocket_open
+      # Give the current thread a name ('Voice Web Socket Internal')
+      Thread.current[:discordrb_name] = 'vws-i'
+
       # Send the init packet
       send_init(@channel.server.id, @bot.bot_user.id, @session, @token)
     end
