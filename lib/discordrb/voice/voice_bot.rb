@@ -180,6 +180,12 @@ module Discordrb::Voice
         # Encode data
         @encoder.encode(buf)
       end
+
+      # If the stream is a process, kill it
+      Process.kill('TERM', encoded_io.pid) if encoded_io.respond_to? :pid
+
+      # Close the stream
+      encoded_io.close
     end
 
     # Plays an encoded audio file of arbitrary format to the channel.
