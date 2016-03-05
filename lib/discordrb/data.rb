@@ -28,11 +28,10 @@ module Discordrb
 
   # User on Discord, including internal data like discriminators
   class User
+    include IDObject
+
     # @return [String] this user's username
     attr_reader :username
-
-    # @return [Integer] this user's ID which uniquely identifies them across Discord.
-    attr_reader :id
 
     # @return [String] this user's discriminator which is used internally to identify users with identical usernames.
     attr_reader :discriminator
@@ -64,7 +63,6 @@ module Discordrb
     attr_accessor :server_mute, :server_deaf, :self_deaf
 
     alias_method :name, :username
-    alias_method :resolve_id, :id
 
     def initialize(data, bot)
       @bot = bot
@@ -76,11 +74,6 @@ module Discordrb
       @roles = {}
 
       @status = :offline
-    end
-
-    # ID based comparison
-    def ==(other)
-      Discordrb.id_compare(@id, other)
     end
 
     # Gets the user's avatar ID.
@@ -316,14 +309,13 @@ module Discordrb
 
   # A Discord role that contains permissions and applies to certain users
   class Role
+    include IDObject
+
     # @return [Permissions] this role's permissions.
     attr_reader :permissions
 
     # @return [String] this role's name ("new role" if it hasn't been changed)
     attr_reader :name
-
-    # @return [Integer] the ID used to identify this role internally
-    attr_reader :id
 
     # @return [true, false] whether or not this role should be displayed separately from other users
     attr_reader :hoist
@@ -332,7 +324,6 @@ module Discordrb
     attr_reader :colour
 
     alias_method :color, :colour
-    alias_method :resolve_id, :id
 
     # This class is used internally as a wrapper to a Role object that allows easy writing of permission data.
     class RoleWriter
@@ -358,11 +349,6 @@ module Discordrb
       @id = data['id'].to_i
       @hoist = data['hoist']
       @colour = ColourRGB.new(data['color'])
-    end
-
-    # ID based comparison
-    def ==(other)
-      Discordrb.id_compare(@id, other)
     end
 
     # Updates the data cache from another Role object
@@ -504,6 +490,7 @@ module Discordrb
   class Channel
     TEXT_TYPE = 'text'.freeze
     VOICE_TYPE = 'voice'.freeze
+    include IDObject
 
     # @return [String] this channel's name.
     attr_reader :name
@@ -513,10 +500,6 @@ module Discordrb
 
     # @return [String] the type of this channel (currently either 'text' or 'voice')
     attr_reader :type
-
-    # @note If this channel is a #general channel, its ID will be equal to the server on which it is on.
-    # @return [Integer] the channel's unique ID.
-    attr_reader :id
 
     # @note This data is sent by Discord and it's possible for this to falsely be true for certain kinds of integration
     #   channels (like Twitch subscriber ones). This appears to be a Discord bug that I can't reproduce myself, due to
@@ -538,8 +521,6 @@ module Discordrb
     # `allow` and `deny` properties which are {Permissions} objects respectively.
     # @return [Hash<Integer => OpenStruct>] the channel's permission overwrites
     attr_reader :permission_overwrites
-
-    alias_method :resolve_id, :id
 
     # @return [true, false] whether or not this channel is a PM channel, with more accuracy than {#is_private}.
     def private?
@@ -579,11 +560,6 @@ module Discordrb
         @permission_overwrites[role_id].deny = deny
         @permission_overwrites[role_id].allow = allow
       end
-    end
-
-    # ID based comparison
-    def ==(other)
-      Discordrb.id_compare(@id, other)
     end
 
     # @return [true, false] whether or not this channel is a text channel
@@ -742,6 +718,8 @@ module Discordrb
 
   # A message on Discord that was sent to a text channel
   class Message
+    include IDObject
+
     # @return [String] the content of this message.
     attr_reader :content
 
@@ -754,16 +732,12 @@ module Discordrb
     # @return [Time] the timestamp at which this message was sent.
     attr_reader :timestamp
 
-    # @return [Integer] the ID used to uniquely identify this message.
-    attr_reader :id
-
     # @return [Array<User>] the users that were mentioned in this message.
     attr_reader :mentions
 
     alias_method :user, :author
     alias_method :text, :content
     alias_method :to_s, :content
-    alias_method :resolve_id, :id
 
     # @!visibility private
     def initialize(data, bot)
@@ -779,11 +753,6 @@ module Discordrb
       data['mentions'].each do |element|
         @mentions << User.new(element, bot)
       end
-    end
-
-    # ID based comparison
-    def ==(other)
-      Discordrb.id_compare(@id, other)
     end
 
     # Replies to this message with the specified content.
@@ -821,6 +790,8 @@ module Discordrb
 
   # A server on Discord
   class Server
+    include IDObject
+
     # @return [String] the region the server is on (e. g. `amsterdam`).
     attr_reader :region
 
@@ -833,9 +804,6 @@ module Discordrb
 
     # @return [User] The server owner.
     attr_reader :owner
-
-    # @return [Integer] the ID used to uniquely identify this server.
-    attr_reader :id
 
     # @return [Array<User>] an array of all the users on this server.
     attr_reader :members
@@ -866,8 +834,6 @@ module Discordrb
     # @return [Integer] the channel ID of the AFK channel, or `nil` if none is set.
     attr_reader :afk_channel_id
 
-    alias_method :resolve_id, :id
-
     # @!visibility private
     def initialize(data, bot)
       @bot = bot
@@ -884,11 +850,6 @@ module Discordrb
       process_presences(data['presences'])
       process_channels(data['channels'])
       process_voice_states(data['voice_states'])
-    end
-
-    # ID based comparison
-    def ==(other)
-      Discordrb.id_compare(@id, other)
     end
 
     # @return [Channel] The default channel on this server (usually called #general)
