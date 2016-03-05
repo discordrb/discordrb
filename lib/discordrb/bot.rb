@@ -547,7 +547,7 @@ module Discordrb
 
       channel_id = data['channel_id']
       channel = nil
-      channel = @channels[channel_id.to_i] if channel_id
+      channel = self.channel(channel_id.to_i) if channel_id
       user.move(channel)
 
       @session_id = data['session_id']
