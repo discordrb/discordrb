@@ -14,6 +14,18 @@ module Discordrb
     other.respond_to?(:resolve_id) ? (one_id.resolve_id == other.resolve_id) : (one_id == other)
   end
 
+  # Mixin for objects that have IDs
+  module IDObject
+    # @return [Integer] the ID which uniquely identifies this object across Discord.
+    attr_reader :id
+    alias_method :resolve_id, :id
+
+    # ID based comparison
+    def ==(other)
+      Discordrb.id_compare(@id, other)
+    end
+  end
+
   # User on Discord, including internal data like discriminators
   class User
     # @return [String] this user's username
