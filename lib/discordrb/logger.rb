@@ -6,8 +6,20 @@ module Discordrb
     # @return [true, false] whether or not this logger should be in debug mode (all debug messages will be printed)
     attr_writer :debug
 
-    # @return [true, false] whether this logger is in the extra-fancy mode!
+    # @return [true, false] whether this logger is in extra-fancy mode!
     attr_writer :fancy
+
+    MODES = {
+      debug: { long: 'DEBUG', short: 'D', format_code: '' },
+      good: { long: 'GOOD', short: '✓', format_code: "\u001B[32m" }, # green
+      info: { long: 'INFO', short: 'i', format_code: '' },
+      warn: { long: 'WARN', short: '!', format_code: "\u001B[33m" }, # yellow
+      error: { long: 'ERROR', short: '✗', format_code: "\u001B[31m" }, # red
+      out: { long: 'OUT', short: '→', format_code: "\u001B[36m" }, # cyan
+      in: { long: 'IN', short: '←', format_code: "\u001B[35m" } # purple
+    }.freeze
+
+    FORMAT_RESET = "\u001B[0m".freeze
 
     # Writes a debug message to the console.
     # @param important [true, false] Whether this message should be printed regardless of debug mode being on or off.
