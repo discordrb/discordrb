@@ -9,6 +9,9 @@ require 'base64'
 
 # Discordrb module
 module Discordrb
+  # The unix timestamp Discord IDs are based on
+  DISCORD_EPOCH = 1420070400000
+
   # Compares two objects based on IDs - either the objects' IDs are equal, or one object is equal to the other's ID.
   def self.id_compare(one_id, other)
     other.respond_to?(:resolve_id) ? (one_id.resolve_id == other.resolve_id) : (one_id == other)
@@ -23,6 +26,15 @@ module Discordrb
     # ID based comparison
     def ==(other)
       Discordrb.id_compare(@id, other)
+    end
+
+    # Estimates the time this object was generated on based on the beginning of the ID. This is fairly accurate but
+    # shouldn't be relied on as Discord might change its algorithm at any time
+    # @return [Time] when this object was created at
+    def creation_time
+      # Milliseconds
+      ms = (@id >> 22) + DISCORD_EPOCH
+      Time.at(ms / 1000.0)
     end
   end
 
