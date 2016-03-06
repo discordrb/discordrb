@@ -169,8 +169,8 @@ module Discordrb
     private
 
     def fail_token(msg, email = nil, e = nil)
-      LOGGER.debug("Token not retrieved from cache - #{msg}")
-      LOGGER.log_exception(e, false) if e
+      LOGGER.warn("Token not retrieved from cache - #{msg}")
+      LOGGER.log_exception(e) if e
       @data.delete(email) if email
       nil
     end
