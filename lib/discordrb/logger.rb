@@ -3,9 +3,6 @@ module Discordrb
 
   # Logs debug messages
   class Logger
-    # @return [true, false] whether or not this logger should be in debug mode (all debug messages will be printed)
-    attr_writer :debug
-
     # @return [true, false] whether this logger is in extra-fancy mode!
     attr_writer :fancy
 
@@ -30,6 +27,10 @@ module Discordrb
       define_method(mode) do |message|
         write(message, hash)
       end
+    end
+
+    def debug=(value)
+      self.mode = value ? :debug : :normal
     end
 
     def mode=(value)
