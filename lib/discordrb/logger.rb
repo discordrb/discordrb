@@ -30,6 +30,8 @@ module Discordrb
       end
     end
 
+    # Sets the logging mode to :debug
+    # @param value [true, false] Whether debug mode should be on. If it is off the mode will be set to :normal.
     def debug=(value)
       self.mode = value ? :debug : :normal
     end
