@@ -36,6 +36,14 @@ module Discordrb
       self.mode = value ? :debug : :normal
     end
 
+    # Sets the logging mode
+    # Possible modes are:
+    #  * :debug logs everything
+    #  * :verbose logs everything except for debug messages
+    #  * :normal logs useful information, warnings and errors
+    #  * :quiet only logs warnings and errors
+    #  * :silent logs nothing
+    # @param mode [Symbol] What logging mode to use
     def mode=(value)
       case value
       when :debug
