@@ -851,6 +851,8 @@ module Discordrb
         }.to_json
         @ws.send(chunk_packet)
 
+        LOGGER.good 'Ready'
+
         # Tell the run method that everything was successful
         @ws_success = true
       when :GUILD_MEMBERS_CHUNK
