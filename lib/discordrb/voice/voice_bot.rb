@@ -212,6 +212,9 @@ module Discordrb::Voice
       @bot.debug "Reading DCA file #{file}"
       input_stream = open(file)
 
+      magic = input_stream.read(4)
+      raise ArgumentError, 'Not a DCA1 file! The file might have been corrupted, please recreate it.' unless magic == 'DCA1'
+
       # Play the data, without re-encoding it to opus
       play_internal do
         begin
