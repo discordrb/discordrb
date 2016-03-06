@@ -437,6 +437,12 @@ module Discordrb
       LOGGER.debug = new_debug
     end
 
+    # Sets the logging mode
+    # @see Logger#mode=
+    def mode=(new_mode)
+      LOGGER.mode = new_mode
+    end
+
     # Prevents the READY packet from being printed regardless of debug mode.
     def suppress_ready_debug
       @prevent_ready = true
