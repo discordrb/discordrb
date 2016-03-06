@@ -30,10 +30,9 @@ module Discordrb
 
     # Logs an exception to the console.
     # @param e [Exception] The exception to log.
-    # @param important [true, false] Whether this exception should be printed regardless of debug mode being on or off.
-    def log_exception(e, important = true)
-      debug("Exception: #{e.inspect}", important)
-      e.backtrace.each { |line| debug(line, important) }
+    def log_exception(e)
+      error("Exception: #{e.inspect}")
+      e.backtrace.each { |line| error(line) }
     end
 
     private
