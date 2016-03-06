@@ -822,7 +822,7 @@ module Discordrb
     # @return [String] this server's name.
     attr_reader :name
 
-    # @deprecated Use #owner instead, then get the resulting {User}'s {User#id}.
+    # @deprecated Use #owner instead, then get the resulting {User}'s ID.
     # @return [Integer] the server owner's user ID.
     attr_reader :owner_id
 
