@@ -8,7 +8,7 @@ module Discordrb
   Thread.current[:discordrb_name] = 'main'
 
   # The default debug logger used by discordrb.
-  LOGGER = Logger.new
+  LOGGER = Logger.new(ENV['DISCORDRB_FANCY_LOG'])
 end
 
 # In discordrb, Integer and {String} are monkey-patched to allow for easy resolution of IDs
