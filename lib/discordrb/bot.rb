@@ -803,7 +803,7 @@ module Discordrb
       elsif @prevent_ready && packet['t'] == 'GUILD_MEMBERS_CHUNK'
         # Ignore chunks as they will be handled later anyway
       else
-        debug("Received packet #{event.data}")
+        LOGGER.in(event.data.to_s)
       end
 
       raise 'Invalid Packet' unless packet['op'] == 0 # TODO
