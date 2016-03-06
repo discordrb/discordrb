@@ -223,7 +223,7 @@ module Discordrb::Voice
       play_internal do
         begin
           # Read header
-          header = input_stream.read(2).unpack('S')[0]
+          header = input_stream.read(2).unpack('s<')[0]
         rescue EOFError
           @bot.debug 'Finished DCA parsing'
           break
