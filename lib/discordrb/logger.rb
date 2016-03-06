@@ -32,6 +32,21 @@ module Discordrb
       end
     end
 
+    def mode=(value)
+      case value
+      when :debug
+        @enabled_modes = [:debug, :good, :info, :warn, :error, :out, :in]
+      when :verbose
+        @enabled_modes = [:good, :info, :warn, :error, :out, :in]
+      when :normal
+        @enabled_modes = [:info, :warn, :error]
+      when :quiet
+        @enabled_modes = [:warn, :error]
+      when :silent
+        @enabled_modes = []
+      end
+    end
+
     # Logs an exception to the console.
     # @param e [Exception] The exception to log.
     def log_exception(e)
