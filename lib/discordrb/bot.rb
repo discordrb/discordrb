@@ -1038,7 +1038,7 @@ module Discordrb
 
     def send_heartbeat
       millis = Time.now.strftime('%s%L').to_i
-      debug("Sending heartbeat at #{millis}")
+      LOGGER.out("Sending heartbeat at #{millis}")
       data = {
         op: 1,
         d: millis
