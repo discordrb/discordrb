@@ -8,6 +8,7 @@ module Discordrb
 
     def initialize(fancy = false)
       @fancy = fancy
+      self.mode = :normal
     end
 
     MODES = {
@@ -25,7 +26,7 @@ module Discordrb
 
     MODES.each do |mode, hash|
       define_method(mode) do |message|
-        write(message, hash)
+        write(message, hash) if @enabled_modes.include? mode
       end
     end
 
