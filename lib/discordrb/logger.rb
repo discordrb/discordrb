@@ -11,6 +11,7 @@ module Discordrb
       self.mode = :normal
     end
 
+    # The modes this logger can have. This is probably useless unless you want to write your own Logger
     MODES = {
       debug: { long: 'DEBUG', short: 'D', format_code: '' },
       good: { long: 'GOOD', short: '✓', format_code: "\u001B[32m" }, # green
@@ -21,7 +22,10 @@ module Discordrb
       in: { long: 'IN', short: '←', format_code: "\u001B[35m" } # purple
     }.freeze
 
+    # The ANSI format code that resets formatting
     FORMAT_RESET = "\u001B[0m".freeze
+
+    # The ANSI format code that makes something bold
     FORMAT_BOLD = "\u001B[1m".freeze
 
     MODES.each do |mode, hash|
