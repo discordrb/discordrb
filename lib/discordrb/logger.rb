@@ -9,6 +9,10 @@ module Discordrb
     # @return [true, false] whether this logger is in extra-fancy mode!
     attr_writer :fancy
 
+    def initialize(fancy = false)
+      @fancy = fancy
+    end
+
     MODES = {
       debug: { long: 'DEBUG', short: 'D', format_code: '' },
       good: { long: 'GOOD', short: '✓', format_code: "\u001B[32m" }, # green
