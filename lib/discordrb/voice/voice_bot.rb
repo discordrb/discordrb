@@ -224,6 +224,8 @@ module Discordrb::Voice
         begin
           # Read header
           header = input_stream.read(2).unpack('s<')[0]
+
+          raise RuntimeError, 'Negative header in DCA file! Your file is likely corrupted.' if header < 0
         rescue EOFError
           @bot.debug 'Finished DCA parsing'
           break
