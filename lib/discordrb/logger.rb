@@ -21,12 +21,6 @@ module Discordrb
 
     FORMAT_RESET = "\u001B[0m".freeze
 
-    # Writes a debug message to the console.
-    # @param important [true, false] Whether this message should be printed regardless of debug mode being on or off.
-    def debug(message, important = false)
-      puts "[DEBUG : #{Thread.current[:discordrb_name]} @ #{Time.now.strftime(LOG_TIMESTAMP_FORMAT)}] #{message}" if @debug || important
-    end
-
     MODES.each do |mode, hash|
       define_method(mode) do |message|
         write(message, hash)
