@@ -500,8 +500,14 @@ module Discordrb
 
   # A Discord channel, including data like the topic
   class Channel
+    # The type string that stands for a text channel
+    # @see Channel#type
     TEXT_TYPE = 'text'.freeze
+
+    # The type string that stands for a voice channel
+    # @see Channel#type
     VOICE_TYPE = 'voice'.freeze
+
     include IDObject
 
     # @return [String] this channel's name.
