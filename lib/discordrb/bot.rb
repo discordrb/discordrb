@@ -457,8 +457,8 @@ module Discordrb
     end
 
     # @see Logger#debug
-    def debug(message, important = false)
-      LOGGER.debug(message, important)
+    def debug(message)
+      LOGGER.debug(message)
     end
 
     # @see Logger#log_exception
