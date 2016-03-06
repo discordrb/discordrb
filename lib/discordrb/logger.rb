@@ -20,6 +20,7 @@ module Discordrb
     }.freeze
 
     FORMAT_RESET = "\u001B[0m".freeze
+    FORMAT_BOLD = "\u001B[1m".freeze
 
     MODES.each do |mode, hash|
       define_method(mode) do |message|
@@ -48,7 +49,7 @@ module Discordrb
     end
 
     def fancy_write(message, mode, thread_name, timestamp)
-      puts "#{timestamp} #{thread_name.ljust(16)} #{mode[:format_code]}#{mode[:short]}#{FORMAT_RESET} #{message}"
+      puts "#{timestamp} #{FORMAT_BOLD}#{thread_name.ljust(16)}#{FORMAT_RESET} #{mode[:format_code]}#{mode[:short]}#{FORMAT_RESET} #{message}"
     end
 
     def simple_write(message, mode, thread_name, timestamp)
