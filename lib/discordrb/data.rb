@@ -241,6 +241,7 @@ module Discordrb
       end
     end
 
+    # The inspect method is overwritten to give more useful output
     def inspect
       "<User username=#{@username} id=#{@id} discriminator=#{@discriminator}>"
     end
@@ -302,6 +303,7 @@ module Discordrb
       @avatar_id = new_data[:avatar_id] || @avatar_id
     end
 
+    # The inspect method is overwritten to give more useful output
     def inspect
       "<Profile email=#{@email} user=#{super}>"
     end
@@ -417,6 +419,7 @@ module Discordrb
       @server.delete_role(@id)
     end
 
+    # The inspect method is overwritten to give more useful output
     def inspect
       "<Role name=#{@name} permissions=#{@permissions.inspect} hoist=#{@hoist} colour=#{@colour.inspect} server=#{@server.inspect}>"
     end
@@ -493,6 +496,7 @@ module Discordrb
 
     alias_method :revoke, :delete
 
+    # The inspect method is overwritten to give more useful output
     def inspect
       "<Invite code=#{@code} channel=#{@channel} uses=#{@uses} temporary=#{@temporary} revoked=#{@revoked} xkcd=#{@xkcd}>"
     end
@@ -723,6 +727,7 @@ module Discordrb
     alias_method :message, :send_message
     alias_method :invite, :make_invite
 
+    # The inspect method is overwritten to give more useful output
     def inspect
       "<Channel name=#{@name} id=#{@id} topic=\"#{@topic}\" type=#{@type} position=#{@position} server=#{@server}>"
     end
@@ -801,6 +806,7 @@ module Discordrb
       @author.bot?
     end
 
+    # The inspect method is overwritten to give more useful output
     def inspect
       "<Message content=\"#{@content}\" id=#{@id} timestamp=#{@timestamp} author=#{@author} channel=#{@channel}>"
     end
@@ -1036,6 +1042,7 @@ module Discordrb
       @afk_channel = @bot.channel(@afk_channel_id) if @afk_channel_id != 0 && (!@afk_channel || @afk_channel_id != @afk_channel.id)
     end
 
+    # The inspect method is overwritten to give more useful output
     def inspect
       "<Server name=#{@name} id=#{@id} large=#{@large} region=#{@region} owner=#{@owner} afk_channel_id=#{@afk_channel_id} afk_timeout=#{@afk_timeout}>"
     end
