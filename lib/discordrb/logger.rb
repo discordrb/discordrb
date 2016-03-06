@@ -43,7 +43,7 @@ module Discordrb
     #  * :normal logs useful information, warnings and errors
     #  * :quiet only logs warnings and errors
     #  * :silent logs nothing
-    # @param mode [Symbol] What logging mode to use
+    # @param value [Symbol] What logging mode to use
     def mode=(value)
       case value
       when :debug
