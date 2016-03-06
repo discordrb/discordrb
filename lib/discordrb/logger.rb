@@ -27,6 +27,12 @@ module Discordrb
       puts "[DEBUG : #{Thread.current[:discordrb_name]} @ #{Time.now.strftime(LOG_TIMESTAMP_FORMAT)}] #{message}" if @debug || important
     end
 
+    MODES.each do |mode, hash|
+      define_method(mode) do |message|
+        write(message, hash)
+      end
+    end
+
     # Logs an exception to the console.
     # @param e [Exception] The exception to log.
     # @param important [true, false] Whether this exception should be printed regardless of debug mode being on or off.
