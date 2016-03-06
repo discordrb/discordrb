@@ -1,5 +1,5 @@
 module Discordrb
-  LOG_TIMESTAMP_FORMAT = '%Y-%m-%d %H:%M:%S.%L %z'.freeze
+  LOG_TIMESTAMP_FORMAT = '%Y-%m-%d %H:%M:%S.%L'.freeze
 
   # Logs debug messages
   class Logger
