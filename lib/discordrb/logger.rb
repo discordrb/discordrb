@@ -34,5 +34,25 @@ module Discordrb
       debug("Exception: #{e.inspect}", important)
       e.backtrace.each { |line| debug(line, important) }
     end
+
+    private
+
+    def write(message, mode)
+      thread_name = Thread.current[:discordrb_name]
+      timestamp = Time.now.strftime(LOG_TIMESTAMP_FORMAT)
+      if @fancy
+        fancy_write(message, mode, thread_name, timestamp)
+      else
+        simple_write(message, mode, thread_name, timestamp)
+      end
+    end
+
+    def fancy_write(message, mode, thread_name, timestamp)
+      puts "#{timestamp} #{thread_name.ljust(16)} #{mode[:format_code]}#{mode[:short]}#{FORMAT_RESET} #{message}"
+    end
+
+    def simple_write(message, mode, thread_name, timestamp)
+      puts "[#{mode[:long]} : #{thread_name} @ #{timestamp}] #{message}"
+    end
   end
 end
