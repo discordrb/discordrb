@@ -549,6 +549,11 @@ module Discordrb
       @server.nil?
     end
 
+    # @return [String] a string that will mention the channel as a clickable link on Discord.
+    def mention
+      "<##{@id}>"
+    end
+
     # @!visibility private
     def initialize(data, bot, server = nil)
       @bot = bot
