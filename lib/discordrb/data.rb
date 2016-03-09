@@ -47,6 +47,8 @@ module Discordrb
 
     # @return [String] this user's discriminator which is used internally to identify users with identical usernames.
     attr_reader :discriminator
+    alias_method :tag, :discriminator
+    alias_method :discord_tag, :discriminator
 
     # @return [String] the ID of this user's current avatar, can be used to generate an avatar URL.
     # @see #avatar_url
