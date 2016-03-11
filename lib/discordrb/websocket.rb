@@ -30,6 +30,8 @@ module Discordrb
       end
     end
 
+    # Send data over this WebSocket
+    # @param data [String] What to send
     def send(data)
       @client.send(data)
     end
