@@ -934,8 +934,12 @@ module Discordrb
       when :TYPING_START
         start_typing(data)
 
-        event = TypingEvent.new(data, self)
-        raise_event(event)
+        begin
+          event = TypingEvent.new(data, self)
+          raise_event(event)
+        rescue Discordrb::Errors::NoPermission
+          debug 'Typing started in channel the bot has no access to, ignoring'
+        end
       when :PRESENCE_UPDATE
         now_playing = data['game']
         presence_user = user(data['user']['id'].to_i)
