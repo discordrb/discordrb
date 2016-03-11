@@ -373,6 +373,8 @@ module Discordrb
     #   * `:frankfurt`
     #   * `:us-east`
     #   * `:us-west`
+    #   * `:us-south`
+    #   * `:us-central`
     #   * `:singapore`
     #   * `:sydney`
     # @return [Server] The server that was created.
