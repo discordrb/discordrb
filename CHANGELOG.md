@@ -1,5 +1,21 @@
 # Changelog
 
+## 1.8.0
+* The built-in logger has been somewhat redone.
+  * It now has a fancy mode, settable using `Discordrb::LOGGER.fancy = true/false`, that makes use of ANSI escape codes to prettify the log output.
+  * It now supports more things than just `debug`, there's also `warn`, `error`, `good`, `info`, `in`, and `out`.
+  * You now have finer control over what gets output, using `Discordrb::LOGGER.mode=` which accepts one of `:debug`, `:verbose`, `:normal`, `:quiet`, `:silent`.
+* You can now log in with just a token by setting the email parameter to `:token` and the password to the token you want to log in with.
+* DCA playback now supports `DCA1`.
+* All data classes (now generalized using the `IDObject` mixin) have a `creation_date` parameter that specifies when the object was created.
+* `Channel#mention` was added that mentions a channel analogous to `User#mention`.
+* The aliases `tag` and `discord_tag` have been added to the discriminator because that's what Discord calls them now.
+
+### Bugfixes
+* A problem some users had where voice playback would leak FFmpeg processes has been fixed.
+* The VWS internal thread now has a name in debug messages (`vws-i`)
+* Users' voice channels should now always be set if they are in one
+
 ## 1.7.5
 * `Channel#send_message` and `Bot#send_message` now have an extra `tts` parameter (false by default) to specify whether the message should use TTS.
 
