@@ -21,5 +21,9 @@ module Discordrb
         ws.on(:error) { |err| instance.error_handler.call(err) }
       end
     end
+
+    def send(data)
+      @client.send(data)
+    end
   end
 end
