@@ -70,7 +70,7 @@ module Discordrb
     # @param debug [Boolean] Whether or not the bug should run in debug mode, which gives increased console output.
     def initialize(email, password, debug = false)
       # Make sure people replace the login details in the example files...
-      if email.end_with? 'example.com'
+      if email.is_a?(String) && email.end_with?('example.com')
         puts 'You have to replace the login details in the example files with your own!'
         exit
       end
