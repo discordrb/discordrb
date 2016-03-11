@@ -25,5 +25,9 @@ module Discordrb
     def send(data)
       @client.send(data)
     end
+
+    def close
+      @client.close
+    end
   end
 end
