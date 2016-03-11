@@ -91,6 +91,9 @@ module Discordrb
       @channels = {}
       @users = {}
 
+      # Channels the bot has no permission to, for internal tracking
+      @restricted_channels = []
+
       @event_threads = []
       @current_thread = 0
     end
@@ -171,12 +174,21 @@ module Discordrb
     # @return [Channel] The channel identified by the ID.
     def channel(id)
       id = id.resolve_id
+
+      raise Discordrb::Errors::NoPermission if @restricted_channels.include? id
+
       debug("Obtaining data for channel with id #{id}")
       return @channels[id] if @channels[id]
 
-      response = API.channel(token, id)
-      channel = Channel.new(JSON.parse(response), self)
-      @channels[id] = channel
+      begin
+        response = API.channel(token, id)
+        channel = Channel.new(JSON.parse(response), self)
+        @channels[id] = channel
+      rescue Discordrb::Errors::NoPermission
+        debug "Tried to get access to restricted channel #{id}, blacklisting it"
+        @restricted_channels << id
+        raise
+      end
     end
 
     # Creates a private channel for the given user ID, or if one exists already, returns that one.
