@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.8.1
+
+### Bugfixes
+* Fixed an error (caused by an undocumented API change) that would write a traceback to the console every time someone started typing in a channel invisible to the bot.
+
 ## 1.8.0
 * The built-in logger has been somewhat redone.
   * It now has a fancy mode, settable using `Discordrb::LOGGER.fancy = true/false`, that makes use of ANSI escape codes to prettify the log output.
