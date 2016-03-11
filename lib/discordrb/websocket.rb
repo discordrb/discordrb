@@ -36,6 +36,7 @@ module Discordrb
       @client.send(data)
     end
 
+    # Close the WebSocket connection
     def close
       @client.close
     end
