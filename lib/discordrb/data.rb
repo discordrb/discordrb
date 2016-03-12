@@ -197,7 +197,7 @@ module Discordrb
     alias_method :creation_time, :joined_at
 
     # @return [Array<Role>] the roles this member has.
-    alias_method :roles
+    attr_reader :roles
 
     # @!visibility private
     def initialize(data, server, bot)
