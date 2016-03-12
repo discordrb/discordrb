@@ -114,14 +114,6 @@ module Discordrb
       end
     end
 
-    # Changes a user's voice channel.
-    # @note For internal use only
-    # @!visibility private
-    def move(to_channel)
-      return if to_channel && to_channel.type != 'voice'
-      @voice_channel = to_channel
-    end
-
     # Set the user's name
     # @note for internal use only
     # @!visibility private
