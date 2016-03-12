@@ -904,8 +904,8 @@ module Discordrb
     # Removes a member from the member cache.
     # @note For internal use only
     # @!visibility private
-    def delete_member(member_id)
-      @members.reject! { |e| e.id == member_id }.length
+    def delete_member(user_id)
+      @members.reject! { |e| e.id == user_id }.length
       @member_count -= 1
     end
 
