@@ -251,7 +251,7 @@ module Discordrb
 
   # A member is a user on a server. It differs from regular users in that it has roles, voice statuses and things like
   # that.
-  class Member < User
+  class Member
 
   end
 
