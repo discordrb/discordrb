@@ -491,18 +491,11 @@ module Discordrb
 
     # Internal handler for GUILD_MEMBER_UPDATE
     def update_guild_member(data)
-      user_id = data['user']['id'].to_i
-      user = @users[user_id]
-
       server_id = data['guild_id'].to_i
-      server = @servers[server_id]
+      server = self.server(server_id)
 
-      roles = []
-      data['roles'].each do |element|
-        role_id = element.to_i
-        roles << server.roles.find { |r| r.id == role_id }
-      end
-      user.update_roles(server, roles)
+      member = server.member(data['user']['id'].to_i)
+      member.update_roles(data['roles'])
     end
 
     # Internal handler for GUILD_MEMBER_DELETE
