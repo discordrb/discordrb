@@ -44,7 +44,11 @@ module Discordrb
     # @return [User, nil] The user identified by the ID, or `nil` if it couldn't be found.
     def user(id)
       id = id.resolve_id
-      @users[id]
+      return @users[id] if @users[id]
+
+      response = API.user(token, id)
+      user = User.new(JSON.parse(response), self)
+      @users[id] = user
     end
 
     # Gets a server by its ID.
