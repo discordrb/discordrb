@@ -476,7 +476,7 @@ module Discordrb
     def delete_channel(data)
       channel = Channel.new(data, self)
       server = channel.server
-      @channels[channel.id] = nil
+      @channels.delete(channel.id)
       server.channels.reject! { |c| c.id == channel.id }
     end
 
