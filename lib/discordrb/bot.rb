@@ -1045,6 +1045,9 @@ module Discordrb
       LOGGER.error(" (Code: #{event.code})")
       raise_event(DisconnectEvent.new)
       EM.stop
+    rescue => e
+      LOGGER.log_exception e
+      raise
     end
 
     def websocket_open(_)
