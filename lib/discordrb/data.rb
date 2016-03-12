@@ -940,6 +940,13 @@ module Discordrb
       @member_count -= 1
     end
 
+    # Checks whether a member is cached
+    # @note For internal use only
+    # @!visibility private
+    def member_cached?(user_id)
+      @members.any? { |e| e.id == user_id }
+    end
+
     # Creates a channel on this server with the given name.
     # @return [Channel] the created channel.
     def create_channel(name)
