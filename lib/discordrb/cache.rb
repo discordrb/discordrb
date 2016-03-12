@@ -38,6 +38,24 @@ module Discordrb
       end
     end
 
+    # Gets a user by its ID.
+    # @note This can only resolve users known by the bot (i.e. that share a server with the bot).
+    # @param id [Integer] The user ID that should be resolved.
+    # @return [User, nil] The user identified by the ID, or `nil` if it couldn't be found.
+    def user(id)
+      id = id.resolve_id
+      @users[id]
+    end
+
+    # Gets a server by its ID.
+    # @note This can only resolve servers the bot is currently in.
+    # @param id [Integer] The server ID that should be resolved.
+    # @return [Server, nil] The server identified by the ID, or `nil` if it couldn't be found.
+    def server(id)
+      id = id.resolve_id
+      @servers[id]
+    end
+
     # Creates a private channel for the given user ID, or if one exists already, returns that one.
     # It is recommended that you use {User#pm} instead, as this is mainly for internal use. However,
     # usage of this method may be unavoidable if only the user ID is known.
@@ -74,24 +92,6 @@ module Discordrb
     def invite(invite)
       code = resolve_invite_code(invite)
       Invite.new(JSON.parse(API.resolve_invite(token, code)), self)
-    end
-
-    # Gets a user by its ID.
-    # @note This can only resolve users known by the bot (i.e. that share a server with the bot).
-    # @param id [Integer] The user ID that should be resolved.
-    # @return [User, nil] The user identified by the ID, or `nil` if it couldn't be found.
-    def user(id)
-      id = id.resolve_id
-      @users[id]
-    end
-
-    # Gets a server by its ID.
-    # @note This can only resolve servers the bot is currently in.
-    # @param id [Integer] The server ID that should be resolved.
-    # @return [Server, nil] The server identified by the ID, or `nil` if it couldn't be found.
-    def server(id)
-      id = id.resolve_id
-      @servers[id]
     end
 
     # Finds a channel given its name and optionally the name of the server it is in.
