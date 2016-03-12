@@ -25,7 +25,7 @@ module Discordrb
 
       @client = ::WebSocket::Client::Simple.connect(endpoint) do |ws|
         ws.on(:open) { instance.open_handler.call }
-        ws.on(:message) { |msg| instance.message_handler.call(msg) }
+        ws.on(:message) { |msg| instance.message_handler.call(msg.data) }
         ws.on(:close) { |err| instance.close_handler.call(err) }
         ws.on(:error) { |err| instance.error_handler.call(err) }
       end
