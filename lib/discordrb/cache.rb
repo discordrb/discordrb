@@ -64,6 +64,19 @@ module Discordrb
       @servers[id] = server
     end
 
+    # Gets a member by both IDs
+    def member(server_id, user_id)
+      server_id = server_id.resolve_id
+      user_id = user_id.resolve_id
+
+      server = self.server(server_id)
+      return server.member(user_id) if server.member_cached?(user_id)
+
+      response = API.member(token, server_id, user_id)
+      member = Member.new(JSON.parse(response), self)
+      server.cache_member(member)
+    end
+
     # Creates a private channel for the given user ID, or if one exists already, returns that one.
     # It is recommended that you use {User#pm} instead, as this is mainly for internal use. However,
     # usage of this method may be unavoidable if only the user ID is known.
