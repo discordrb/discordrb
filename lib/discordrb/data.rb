@@ -54,9 +54,6 @@ module Discordrb
     # @see #avatar_url
     attr_reader :avatar_id
 
-    # @return [Channel, nil] the voice channel this user is on currently.
-    attr_reader :voice_channel
-
     # @return [Hash<Integer => Array<Role>>] the roles this user has, grouped by server ID.
     attr_reader :roles
 
