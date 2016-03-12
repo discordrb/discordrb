@@ -244,12 +244,6 @@ module Discordrb
       API.delete_invite(token, invite)
     end
 
-    # @deprecated Use {#find_channel} instead
-    def find(channel_name, server_name = nil)
-      debug('Attempted to use bot.find - this method is deprecated! Use find_channel for the same functionality')
-      find_channel(channel_name, server_name)
-    end
-
     # Sends a text message to a channel given its ID and the message's content.
     # @param channel_id [Integer] The ID that identifies the channel to send something to.
     # @param content [String] The text that should be sent as a message. It is limited to 2000 characters (Discord imposed).
