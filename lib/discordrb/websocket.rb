@@ -41,5 +41,10 @@ module Discordrb
     def close
       @client.close
     end
+
+    # @return [Thread] the internal WSCS thread
+    def thread
+      @client.thread
+    end
   end
 end
