@@ -122,59 +122,11 @@ module Discordrb
       @voice_channel = to_channel
     end
 
-    # Adds a role to this user on the specified server.
-    # @param server [Server] The server on which to add the role.
-    # @param role [Role] The role to add.
-    def add_role(server, role)
-      user_roles = @roles[server.id] || []
-      user_roles << role
-      ids = user_roles.map(&:id)
-      API.update_user_roles(@bot.token, server.id, @id, ids)
-    end
-
-    # Removes a role from this user on the specified server.
-    # @param server [Server] The server on which to remove the role.
-    # @param role [Role] The role to remove.
-    def remove_role(server, role)
-      user_roles = @roles[server.id] || []
-
-      # If the given role has an ID (i.e. is a Role object), then check whether its ID is equal, otherwise check whether it's equal directly
-      user_roles.delete_if { |e| e == role }
-      ids = user_roles.map(&:id)
-      API.update_user_roles(@bot.token, server.id, @id, ids)
-    end
-
-    # Set this user's roles in the cache
-    # @note For internal use only
-    # @!visibility private
-    def update_roles(server, roles)
-      @roles ||= {}
-      @roles[server.id] = roles
-    end
-
     # Set the user's name
     # @note for internal use only
     # @!visibility private
     def update_username(username)
       @username = username
-    end
-
-    # Merge this user's roles with the roles from another instance of this user (from another server)
-    # @note For internal use only
-    # @!visibility private
-    def merge_roles(server, roles)
-      @roles[server.id] = if @roles[server.id]
-                            (@roles[server.id] + roles).uniq
-                          else
-                            roles
-                          end
-    end
-
-    # Delete a specific server from the roles (in case a user leaves a server)
-    # @note For internal use only
-    # @!visibility private
-    def delete_roles(server_id)
-      @roles.delete(server_id)
     end
 
     # Add an await for a message from this user. Specifically, this adds a global await for a MessageEvent with this
