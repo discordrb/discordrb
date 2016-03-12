@@ -820,14 +820,14 @@ module Discordrb
 
     def websocket_message(event)
       # Parse packet
-      packet = JSON.parse(event.data)
+      packet = JSON.parse(event)
 
       if @prevent_ready && packet['t'] == 'READY'
         debug('READY packet was received and suppressed')
       elsif @prevent_ready && packet['t'] == 'GUILD_MEMBERS_CHUNK'
         # Ignore chunks as they will be handled later anyway
       else
-        LOGGER.in(event.data.to_s)
+        LOGGER.in(event.to_s)
       end
 
       raise 'Invalid Packet' unless packet['op'] == 0 # TODO
