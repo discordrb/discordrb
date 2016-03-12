@@ -10,7 +10,7 @@ require 'base64'
 # Discordrb module
 module Discordrb
   # The unix timestamp Discord IDs are based on
-  DISCORD_EPOCH = 1420070400000
+  DISCORD_EPOCH = 1_420_070_400_000
 
   # Compares two objects based on IDs - either the objects' IDs are equal, or one object is equal to the other's ID.
   def self.id_compare(one_id, other)
