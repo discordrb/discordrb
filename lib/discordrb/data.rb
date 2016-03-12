@@ -266,6 +266,9 @@ module Discordrb
     # Alias the creation_time because Members are not IDObjects as they don't technically have IDs
     alias_method :creation_time, :joined_at
 
+    # @return [Array<Role>] the roles this member has.
+    alias_method :roles
+
     # @!visibility private
     def initialize(data, server, bot)
       @bot = bot
