@@ -199,6 +199,9 @@ module Discordrb
     # @return [Array<Role>] the roles this member has.
     attr_reader :roles
 
+    # @return [Server] the server this member is on.
+    attr_reader :server
+
     # @!visibility private
     def initialize(data, server, bot)
       @bot = bot
