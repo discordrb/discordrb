@@ -1,6 +1,4 @@
 require 'rest-client'
-require 'faye/websocket'
-require 'eventmachine'
 
 require 'discordrb/events/message'
 require 'discordrb/events/typing'

@@ -19,7 +19,6 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
-  spec.add_dependency 'faye-websocket'
   spec.add_dependency 'rest-client'
   spec.add_dependency 'activesupport'
   spec.add_dependency 'opus-ruby'
