@@ -252,7 +252,23 @@ module Discordrb
   # A member is a user on a server. It differs from regular users in that it has roles, voice statuses and things like
   # that.
   class Member
+    def initialize(data, server, bot)
+      @bot = bot
+      @user = bot.ensure_user(data['user'])
 
+      # Somehow, Discord doesn't send the server ID in the standard member format...
+      raise ArgumentError, 'Cannot create a member without any information about the server!' if server.nil? && data['guild_id'].nil?
+      @server = server || bot.server(data['guild_id'].to_i)
+
+      # Initialize the roles by getting the roles from the server one-by-one
+      @roles = data['roles'].map do |role_id|
+        @server.role(role_id.to_i)
+      end
+
+      @deaf = data['deaf']
+      @mute = data['mute']
+      @joined_at = Time.parse(data['joined_at'])
+    end
   end
 
   # This class is a special variant of User that represents the bot's user profile (things like email addresses and the avatar).
