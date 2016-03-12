@@ -815,6 +815,7 @@ module Discordrb
         method(:websocket_close)
       )
 
+      @ws.thread[:discordrb_name] = 'gateway'
       @ws.thread.join
     end
 
