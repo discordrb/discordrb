@@ -23,6 +23,7 @@ require 'discordrb/await'
 require 'discordrb/token_cache'
 require 'discordrb/container'
 require 'discordrb/websocket'
+require 'discordrb/cache'
 
 require 'discordrb/voice/voice_bot'
 
@@ -62,6 +63,7 @@ module Discordrb
     attr_accessor :name
 
     include EventContainer
+    include Cache
 
     # Makes a new bot with the given email and password. It will be ready to be added event handlers to and can eventually be run with {#run}.
     # @param email [String] The email for your (or the bot's) Discord account.
