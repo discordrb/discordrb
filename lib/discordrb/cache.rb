@@ -2,6 +2,9 @@ require 'discordrb/api'
 require 'discordrb/data'
 
 module Discordrb
+  # This mixin module does caching stuff for the library. It conveniently separates the logic behind
+  # the caching (like, storing the user hashes or making API calls to retrieve things) from the Bot that
+  # actually uses it.
   module Cache
     # Initializes this cache
     def init_cache
