@@ -387,23 +387,6 @@ module Discordrb
     ##    ## ##     ## ##    ## ##     ## ##
     #######  ##     ##  ######  ##     ## ########
 
-    def add_server(data)
-      server = Server.new(data, self)
-      @servers[server.id] = server
-
-      # Initialize users
-      server.members.each do |member|
-        if @users[member.id]
-          # If the user is already cached, just add the new roles
-          @users[member.id].merge_roles(server, member.roles[server.id])
-        else
-          @users[member.id] = member
-        end
-      end
-
-      server
-    end
-
     ### ##    ## ######## ######## ########  ##    ##    ###    ##        ######
     ##  ###   ##    ##    ##       ##     ## ###   ##   ## ##   ##       ##    ##
     ##  ####  ##    ##    ##       ##     ## ####  ##  ##   ##  ##       ##
