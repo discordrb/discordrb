@@ -176,7 +176,5 @@ module Discordrb
     def find_user(username)
       @users.values.find_all { |e| e.username == username }
     end
-
-    private
   end
 end
