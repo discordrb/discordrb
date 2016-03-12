@@ -816,6 +816,8 @@ module Discordrb
         proc { |e| LOGGER.error "Gateway error: #{e}" },
         method(:websocket_close)
       )
+
+      @ws.thread.join
     end
 
     def websocket_message(event)
