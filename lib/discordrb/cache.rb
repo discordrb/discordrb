@@ -117,6 +117,17 @@ module Discordrb
       end
     end
 
+    # Ensures a given channel object is cached and if not, cache it from the given data hash.
+    # @param data [Hash] A data hash representing a channel.
+    # @return [User] the channel represented by the data hash.
+    def ensure_channel(data)
+      if @channels.include?(data['id'].to_i)
+        @channels[data['id'].to_i]
+      else
+        @channels[data['id'].to_i] = Channel.new(data, self)
+      end
+    end
+
     # Gets the code for an invite.
     # @param invite [String, Invite] The invite to get the code for. Possible formats are:
     #
