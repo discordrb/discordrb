@@ -167,21 +167,6 @@ module Discordrb
       @ws_thread.kill
     end
 
-    # Creates a private channel for the given user ID, or if one exists already, returns that one.
-    # It is recommended that you use {User#pm} instead, as this is mainly for internal use. However,
-    # usage of this method may be unavoidable if only the user ID is known.
-    # @param id [Integer] The user ID to generate a private channel for.
-    # @return [Channel] A private channel for that user.
-    def private_channel(id)
-      id = id.resolve_id
-      debug("Creating private channel with user id #{id}")
-      return @private_channels[id] if @private_channels[id]
-
-      response = API.create_private(token, @bot_user.id, id)
-      channel = Channel.new(JSON.parse(response), self)
-      @private_channels[id] = channel
-    end
-
     # Gets the code for an invite.
     # @param invite [String, Invite] The invite to get the code for. Possible formats are:
     #
