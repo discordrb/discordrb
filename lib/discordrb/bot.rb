@@ -503,7 +503,7 @@ module Discordrb
       server_id = data['guild_id'].to_i
       server = self.server(server_id)
 
-      user_id = data['user']['id']
+      user_id = data['user']['id'].to_i
       server.delete_member(user_id)
     end
 
