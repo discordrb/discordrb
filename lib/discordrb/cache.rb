@@ -1,4 +1,5 @@
 require 'discordrb/api'
+require 'discordrb/data'
 
 module Discordrb
   module Cache
