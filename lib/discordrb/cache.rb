@@ -51,5 +51,13 @@ module Discordrb
       channel = Channel.new(JSON.parse(response), self)
       @private_channels[id] = channel
     end
+
+    # Gets information about an invite.
+    # @param invite [String, Invite] The invite to join. For possible formats see {#resolve_invite_code}.
+    # @return [Invite] The invite with information about the given invite URL.
+    def invite(invite)
+      code = resolve_invite_code(invite)
+      Invite.new(JSON.parse(API.resolve_invite(token, code)), self)
+    end
   end
 end
