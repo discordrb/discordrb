@@ -57,7 +57,11 @@ module Discordrb
     # @return [Server, nil] The server identified by the ID, or `nil` if it couldn't be found.
     def server(id)
       id = id.resolve_id
-      @servers[id]
+      return @servers[id] if @servers[id]
+
+      response = API.server(token, id)
+      server = Server.new(JSON.parse(response), self)
+      @servers[id] = server
     end
 
     # Creates a private channel for the given user ID, or if one exists already, returns that one.
