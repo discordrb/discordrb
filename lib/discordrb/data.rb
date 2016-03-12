@@ -222,6 +222,15 @@ module Discordrb
       @mute = data['mute']
       @joined_at = Time.parse(data['joined_at'])
     end
+
+    # Update this member's roles
+    # @note For internal use only.
+    # @!visibility private
+    def update_roles(roles)
+      @roles = roles.map do |role_id|
+        @server.role(role_id.to_i)
+      end
+    end
   end
 
   # This class is a special variant of User that represents the bot's user profile (things like email addresses and the avatar).
