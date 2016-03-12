@@ -1,3 +1,5 @@
+require 'discordrb/api'
+
 module Discordrb
   module Cache
     # Initializes this cache
