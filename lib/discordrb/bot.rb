@@ -1051,7 +1051,7 @@ module Discordrb
       raise
     end
 
-    def websocket_open(_)
+    def websocket_open
       # Send the initial packet
       packet = {
         op: 2,    # Packet identifier
