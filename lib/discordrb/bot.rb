@@ -809,7 +809,7 @@ module Discordrb
         end
       when :PRESENCE_UPDATE
         now_playing = data['game']
-        presence_user = user(data['user']['id'].to_i)
+        presence_user = @users[data['user']['id'].to_i]
         played_before = presence_user.nil? ? nil : presence_user.game
         update_presence(data)
 
