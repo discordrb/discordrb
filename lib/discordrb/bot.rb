@@ -717,17 +717,15 @@ module Discordrb
         # Initialize servers
         @servers = {}
         data['guilds'].each do |element|
-          add_server(element)
+          ensure_server(element)
 
           # Save the bot user
           @bot_user = @users[bot_user_id]
         end
 
         # Add private channels
-        @private_channels = {}
         data['private_channels'].each do |element|
-          channel = Channel.new(element, self)
-          @channels[channel.id] = channel
+          channel = ensure_channel(element)
           @private_channels[channel.recipient.id] = channel
         end
 
