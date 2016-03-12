@@ -210,6 +210,15 @@ module Discordrb::API
     )
   end
 
+  # Get a server's data
+  def server(token, server_id)
+    request(
+      :get,
+      "#{APIBASE}/guilds/#{server_id}",
+      Authorization: token
+    )
+  end
+
   # Get a member's data
   def member(token, server_id, user_id)
     request(
