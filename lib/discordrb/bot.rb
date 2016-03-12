@@ -1041,6 +1041,7 @@ module Discordrb
 
     def websocket_close(event)
       LOGGER.error('Disconnected from WebSocket!')
+      LOGGER.log_exception event
       LOGGER.error(" (Reason: #{event.reason})")
       LOGGER.error(" (Code: #{event.code})")
       raise_event(DisconnectEvent.new)
