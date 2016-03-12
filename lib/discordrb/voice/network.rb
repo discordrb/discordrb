@@ -3,6 +3,8 @@ require 'resolv'
 require 'socket'
 require 'json'
 
+require 'discordrb/websocket'
+
 begin
   require 'rbnacl'
   RBNACL_AVAILABLE = true
@@ -285,15 +287,17 @@ module Discordrb::Voice
     def init_ws
       host = "wss://#{@endpoint}:443"
       @bot.debug("Connecting VWS to host: #{host}")
-      @client = WebSocket::Client::Simple.connect(host)
 
-      # Change some instance to local variables for the blocks
-      instance = self
+      # Connect the WS
+      @client = Discordrb::WebSocket.new(
+        host,
+        method(:websocket_open),
+        method(:websocket_message),
+        proc { |e| puts "VWS error: #{e}" },
+        proc { |e| puts "VWS close: #{e}" }
+      )
 
-      @client.on(:open) { instance.websocket_open }
-      @client.on(:message) { |msg| instance.websocket_message(msg.data) }
-      @client.on(:error) { |e| puts "VWS error: #{e}" }
-      @client.on(:close) { |e| puts "VWS close: #{e}" }
+      @bot.debug('VWS connected')
 
       # Block any further execution
       heartbeat_loop
