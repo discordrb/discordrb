@@ -106,6 +106,17 @@ module Discordrb
       end
     end
 
+    # Ensures a given server object is cached and if not, cache it from the given data hash.
+    # @param data [Hash] A data hash representing a server.
+    # @return [User] the server represented by the data hash.
+    def ensure_server(data)
+      if @servers.include?(data['id'].to_i)
+        @servers[data['id'].to_i]
+      else
+        @servers[data['id'].to_i] = Server.new(data, self)
+      end
+    end
+
     # Gets the code for an invite.
     # @param invite [String, Invite] The invite to get the code for. Possible formats are:
     #
