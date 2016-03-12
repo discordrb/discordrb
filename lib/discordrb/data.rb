@@ -214,9 +214,7 @@ module Discordrb
       @server = server || bot.server(data['guild_id'].to_i)
 
       # Initialize the roles by getting the roles from the server one-by-one
-      @roles = data['roles'].map do |role_id|
-        @server.role(role_id.to_i)
-      end
+      update_roles(data['roles'])
 
       @deaf = data['deaf']
       @mute = data['mute']
