@@ -95,6 +95,17 @@ module Discordrb
       @private_channels[id] = channel
     end
 
+    # Ensures a given user object is cached and if not, cache it from the given data hash.
+    # @param data [Hash] A data hash representing a user.
+    # @return [User] the user represented by the data hash.
+    def ensure_user(data)
+      if @users.include?(data['id'].to_i)
+        @users[data['id'].to_i]
+      else
+        @users[data['id'].to_i] = User.new(data, self)
+      end
+    end
+
     # Gets the code for an invite.
     # @param invite [String, Invite] The invite to get the code for. Possible formats are:
     #
