@@ -249,6 +249,12 @@ module Discordrb
     end
   end
 
+  # A member is a user on a server. It differs from regular users in that it has roles, voice statuses and things like
+  # that.
+  class Member < User
+
+  end
+
   # This class is a special variant of User that represents the bot's user profile (things like email addresses and the avatar).
   # It can be accessed using {Bot#profile}.
   class Profile < User
