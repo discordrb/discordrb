@@ -74,5 +74,23 @@ module Discordrb
       code = resolve_invite_code(invite)
       Invite.new(JSON.parse(API.resolve_invite(token, code)), self)
     end
+
+    # Gets a user by its ID.
+    # @note This can only resolve users known by the bot (i.e. that share a server with the bot).
+    # @param id [Integer] The user ID that should be resolved.
+    # @return [User, nil] The user identified by the ID, or `nil` if it couldn't be found.
+    def user(id)
+      id = id.resolve_id
+      @users[id]
+    end
+
+    # Gets a server by its ID.
+    # @note This can only resolve servers the bot is currently in.
+    # @param id [Integer] The server ID that should be resolved.
+    # @return [Server, nil] The server identified by the ID, or `nil` if it couldn't be found.
+    def server(id)
+      id = id.resolve_id
+      @servers[id]
+    end
   end
 end
