@@ -482,25 +482,11 @@ module Discordrb
 
     # Internal handler for GUILD_MEMBER_ADD
     def add_guild_member(data)
-      user = User.new(data['user'], self)
       server_id = data['guild_id'].to_i
-      server = @servers[server_id]
+      server = self.server(server_id)
 
-      roles = []
-      data['roles'].each do |element|
-        role_id = element.to_i
-        roles << server.roles.find { |r| r.id == role_id }
-      end
-      user.update_roles(server, roles)
-
-      if @users[user.id]
-        # If the user is already cached, just add the new roles
-        @users[user.id].merge_roles(server, user.roles[server.id])
-      else
-        @users[user.id] = user
-      end
-
-      server.add_member(user)
+      member = Member.new(data, server, self)
+      server.add_member(member)
     end
 
     # Internal handler for GUILD_MEMBER_UPDATE
