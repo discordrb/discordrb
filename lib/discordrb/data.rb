@@ -54,9 +54,6 @@ module Discordrb
     # @see #avatar_url
     attr_reader :avatar_id
 
-    # @return [Hash<Integer => Array<Role>>] the roles this user has, grouped by server ID.
-    attr_reader :roles
-
     # @!attribute [r] status
     #   @return [Symbol] the current online status of the user (`:online`, `:offline` or `:idle`)
     attr_accessor :status
