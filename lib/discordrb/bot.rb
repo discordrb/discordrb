@@ -507,13 +507,10 @@ module Discordrb
 
     # Internal handler for GUILD_MEMBER_DELETE
     def delete_guild_member(data)
-      user_id = data['user']['id'].to_i
-      user = @users[user_id]
-
       server_id = data['guild_id'].to_i
-      server = @servers[server_id]
+      server = self.server(server_id)
 
-      user.delete_roles(server_id)
+      user_id = data['user']['id']
       server.delete_member(user_id)
     end
 
