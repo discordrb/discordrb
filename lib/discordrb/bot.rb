@@ -526,7 +526,7 @@ module Discordrb
       server = @servers[server_id]
 
       user.delete_roles(server_id)
-      server.delete_user(user_id)
+      server.delete_member(user_id)
     end
 
     # Internal handler for GUILD_CREATE

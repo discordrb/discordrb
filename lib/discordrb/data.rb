@@ -932,11 +932,11 @@ module Discordrb
       @member_count += 1
     end
 
-    # Removes a user from the user cache.
+    # Removes a member from the member cache.
     # @note For internal use only
     # @!visibility private
-    def delete_user(user_id)
-      @members.reject! { |member| member.id == user_id }.length
+    def delete_member(member_id)
+      @members.reject! { |e| e.id == member_id }.length
       @member_count -= 1
     end
 
