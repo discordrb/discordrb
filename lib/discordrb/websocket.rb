@@ -1,5 +1,6 @@
 require 'websocket-client-simple'
 
+puts "Using WSCS version: #{WebSocket::Client::Simple::VERSION}"
 module WebSocket::Client::Simple
   # Patch to the WSCS class to allow reading the internal thread
   class Client
@@ -22,7 +23,7 @@ module Discordrb
 
       instance = self # to work around WSCS's weird way of handling blocks
 
-      @client = WebSocket::Client::Simple.connect(endpoint) do |ws|
+      @client = ::WebSocket::Client::Simple.connect(endpoint) do |ws|
         ws.on(:open) { instance.open_handler.call }
         ws.on(:message) { |msg| instance.message_handler.call(msg) }
         ws.on(:close) { |err| instance.close_handler.call(err) }
