@@ -924,11 +924,11 @@ module Discordrb
       end
     end
 
-    # Adds a user to the user cache.
+    # Adds a member to the member cache.
     # @note For internal use only
     # @!visibility private
-    def add_user(user)
-      @members << user unless @members.include? user
+    def add_member(member)
+      @members << member unless @members.include? member
       @member_count += 1
     end
 
