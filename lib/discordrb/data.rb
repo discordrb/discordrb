@@ -260,6 +260,12 @@ module Discordrb
     attr_reader :deaf
     alias_method :deafened?, :deaf
 
+    # @return [Time] when this member joined the server.
+    attr_reader :joined_at
+
+    # Alias the creation_time because Members are not IDObjects as they don't technically have IDs
+    alias_method :creation_time, :joined_at
+
     # @!visibility private
     def initialize(data, server, bot)
       @bot = bot
