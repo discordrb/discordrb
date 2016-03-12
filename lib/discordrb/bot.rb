@@ -24,6 +24,7 @@ require 'discordrb/data'
 require 'discordrb/await'
 require 'discordrb/token_cache'
 require 'discordrb/container'
+require 'discordrb/websocket'
 
 require 'discordrb/voice/voice_bot'
 
@@ -808,17 +809,13 @@ module Discordrb
       debug("Success! Gateway URL is #{websocket_hub}.")
       debug('Now running bot')
 
-      EM.run do
-        @ws = Faye::WebSocket::Client.new(websocket_hub)
-
-        @ws.on(:open) { |event| websocket_open(event) }
-        @ws.on(:message) { |event| websocket_message(event) }
-        @ws.on(:error) { |event| debug(event.message) }
-        @ws.on :close do |event|
-          websocket_close(event)
-          @ws = nil
-        end
-      end
+      @ws = Discordrb::WebSocket.new(
+        websocket_hub,
+        method(:websocket_open),
+        method(:websocket_message),
+        proc { |e| LOGGER.error "Gateway error: #{e}" },
+        method(:websocket_close)
+      )
     end
 
     def websocket_message(event)
