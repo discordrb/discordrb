@@ -947,6 +947,13 @@ module Discordrb
       @members.any? { |e| e.id == user_id }
     end
 
+    # Adds a member to the cache
+    # @note For internal use only
+    # @!visibility private
+    def cache_member(member)
+      @members << member unless @members.include? member
+    end
+
     # Creates a channel on this server with the given name.
     # @return [Channel] the created channel.
     def create_channel(name)
