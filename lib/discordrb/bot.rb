@@ -167,21 +167,6 @@ module Discordrb
       @ws_thread.kill
     end
 
-    # Gets the code for an invite.
-    # @param invite [String, Invite] The invite to get the code for. Possible formats are:
-    #
-    #    * An {Invite} object
-    #    * The code for an invite
-    #    * A fully qualified invite URL (e. g. `https://discordapp.com/invite/0A37aN7fasF7n83q`)
-    #    * A short invite URL with protocol (e. g. `https://discord.gg/0A37aN7fasF7n83q`)
-    #    * A short invite URL without protocol (e. g. `discord.gg/0A37aN7fasF7n83q`)
-    # @return [String] Only the code for the invite.
-    def resolve_invite_code(invite)
-      invite = invite.code if invite.is_a? Discordrb::Invite
-      invite = invite[invite.rindex('/') + 1..-1] if invite.start_with?('http', 'discord.gg')
-      invite
-    end
-
     # Makes the bot join an invite to a server.
     # @param invite [String, Invite] The invite to join. For possible formats see {#resolve_invite_code}.
     def join(invite)
