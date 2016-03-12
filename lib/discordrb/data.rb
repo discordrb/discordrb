@@ -68,14 +68,6 @@ module Discordrb
     #   @return [String, nil] the game the user is currently playing, or `nil` if none is being played.
     attr_accessor :game
 
-    # @!attribute [r] self_mute
-    #   @return [true, false] whether or not the user is currently muted by the bot.
-    attr_accessor :self_mute
-
-    # @todo Fix these (server_mute and _deaf should be server specific, not sure about self_deaf or what it does anyway)
-    # @!visibility private
-    attr_accessor :server_mute, :server_deaf, :self_deaf
-
     alias_method :name, :username
 
     def initialize(data, bot)
