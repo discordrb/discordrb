@@ -251,7 +251,7 @@ module Discordrb
 
   # A member is a user on a server. It differs from regular users in that it has roles, voice statuses and things like
   # that.
-  class Member
+  class Member < DelegateClass(User)
     # @return [true, false] whether this member is muted server-wide.
     attr_reader :mute
     alias_method :muted?, :mute
@@ -269,7 +269,9 @@ module Discordrb
     # @!visibility private
     def initialize(data, server, bot)
       @bot = bot
+
       @user = bot.ensure_user(data['user'])
+      super @user # Initialize the delegate class
 
       # Somehow, Discord doesn't send the server ID in the standard member format...
       raise ArgumentError, 'Cannot create a member without any information about the server!' if server.nil? && data['guild_id'].nil?
