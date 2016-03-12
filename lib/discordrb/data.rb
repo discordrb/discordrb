@@ -252,6 +252,13 @@ module Discordrb
   # A member is a user on a server. It differs from regular users in that it has roles, voice statuses and things like
   # that.
   class Member
+    # @return [true, false] whether this member is muted server-wide.
+    attr_reader :mute
+    alias_method :muted?, :mute
+
+    # @return [true, false] whether this member is deafened server-wide.
+    attr_reader :deaf
+    alias_method :deafened?, :deaf
 
     # @!visibility private
     def initialize(data, server, bot)
