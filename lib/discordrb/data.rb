@@ -718,7 +718,6 @@ module Discordrb
     def update_from(other)
       @topic = other.topic
       @name = other.name
-      @is_private = other.is_private
       @recipient = other.recipient
       @permission_overwrites = other.permission_overwrites
     end
