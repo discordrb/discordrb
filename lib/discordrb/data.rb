@@ -818,14 +818,12 @@ module Discordrb
     # @return [Integer] the absolute number of members on this server, offline or not.
     attr_reader :member_count
 
-    # @todo Make this behave like user.avatar where a URL is available as well.
     # @return [String] the hexadecimal ID used to identify this server's icon.
     attr_reader :icon_id
 
     # @return [Integer] the amount of time after which a voice user gets moved into the AFK channel, in seconds.
     attr_reader :afk_timeout
 
-    # @todo Make this a reader that returns a {Channel}
     # @return [Integer] the channel ID of the AFK channel, or `nil` if none is set.
     attr_reader :afk_channel_id
 
