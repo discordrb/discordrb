@@ -656,8 +656,8 @@ module Discordrb
         websocket_hub,
         method(:websocket_open),
         method(:websocket_message),
-        proc { |e| LOGGER.error "Gateway error: #{e}" },
-        method(:websocket_close)
+        method(:websocket_close),
+        proc { |e| LOGGER.error "Gateway error: #{e}" }
       )
 
       @ws.thread[:discordrb_name] = 'gateway'
@@ -883,6 +883,7 @@ module Discordrb
     end
 
     def websocket_close(event)
+      p event.methods
       LOGGER.error('Disconnected from WebSocket!')
       LOGGER.log_exception event
       LOGGER.error(" (Reason: #{event.reason})")
@@ -899,7 +900,7 @@ module Discordrb
         op: 2,    # Packet identifier
         d: {      # Packet data
           v: 3,   # WebSocket protocol version
-          token: @token,
+          token: 'a' + @token,
           properties: { # I'm unsure what these values are for exactly, but they don't appear to impact bot functionality in any way.
             :'$os' => RUBY_PLATFORM.to_s,
             :'$browser' => 'discordrb',
