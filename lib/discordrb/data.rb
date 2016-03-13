@@ -797,10 +797,6 @@ module Discordrb
     # @return [String] this server's name.
     attr_reader :name
 
-    # @deprecated Use #owner instead, then get the resulting {User}'s ID.
-    # @return [Integer] the server owner's user ID.
-    attr_reader :owner_id
-
     # @return [User] The server owner.
     attr_reader :owner
 
@@ -823,9 +819,6 @@ module Discordrb
 
     # @return [Integer] the amount of time after which a voice user gets moved into the AFK channel, in seconds.
     attr_reader :afk_timeout
-
-    # @return [Integer] the channel ID of the AFK channel, or `nil` if none is set.
-    attr_reader :afk_channel_id
 
     # @return [Channel, nil] the AFK voice channel of this server, or nil if none is set
     attr_reader :afk_channel
