@@ -189,16 +189,6 @@ module Discordrb
       #   (2) if the user is allowed to do the action if the channel doesn't specify
       @roles.reduce(false) do |can_act, role|
         channel_allow = nil
-        if channel && channel.permission_overwrites[role.id]
-          allow = channel.permission_overwrites[role.id].allow
-          deny = channel.permission_overwrites[role.id].deny
-          if allow.instance_variable_get("@#{action}")
-            channel_allow = true
-          elsif deny.instance_variable_get("@#{action}")
-            channel_allow = false
-          end
-          # If the channel has nothing to say on the matter, we can defer to the role itself
-        end
         can_act = if channel_allow.nil?
                     role.permissions.instance_variable_get("@#{action}") || can_act
                   else
@@ -213,6 +203,18 @@ module Discordrb
 
       allow = channel.permission_overwrites[@id].allow
       deny = channel.permission_overwrites[@id].deny
+      if allow.instance_variable_get("@#{action}")
+        :allow
+      elsif deny.instance_variable_get("@#{action}")
+        :deny
+      end
+    end
+
+    def role_permission_override(action, channel, role)
+      return nil unless channel && channel.permission_overwrites[role.id]
+
+      allow = channel.permission_overwrites[role.id].allow
+      deny = channel.permission_overwrites[role.id].deny
       if allow.instance_variable_get("@#{action}")
         :allow
       elsif deny.instance_variable_get("@#{action}")
