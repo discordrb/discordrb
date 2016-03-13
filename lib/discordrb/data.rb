@@ -245,6 +245,9 @@ module Discordrb
   class Recipient < DelegateClass(User)
     include MemberAttributes
 
+    # @return [Channel] the private channel this recipient is the recipient of.
+    attr_reader :channel
+
     # @!visibility private
     def initialize(user, channel, bot)
       @bot = bot
