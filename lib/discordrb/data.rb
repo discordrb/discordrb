@@ -127,45 +127,6 @@ module Discordrb
       @bot.bot_user.id == @id
     end
 
-    # Determines whether this user has a specific permission on a server (and channel).
-    # @param action [Symbol] The permission that should be checked. See also {Permissions::Flags} for a list.
-    # @param server [Server] The server on which the permission should be checked.
-    # @param channel [Channel, nil] If channel overrides should be checked too, this channel specifies where the overrides should be checked.
-    # @return [true, false] whether or not this user has the permission.
-    def permission?(action, server, channel = nil)
-      # For each role, check if
-      #   (1) the channel explicitly allows or permits an action for the role and
-      #   (2) if the user is allowed to do the action if the channel doesn't specify
-      return false unless @roles[server.id]
-
-      @roles[server.id].reduce(false) do |can_act, role|
-        channel_allow = nil
-        if channel && channel.permission_overwrites[role.id]
-          allow = channel.permission_overwrites[role.id].allow
-          deny = channel.permission_overwrites[role.id].deny
-          if allow.instance_variable_get("@#{action}")
-            channel_allow = true
-          elsif deny.instance_variable_get("@#{action}")
-            channel_allow = false
-          end
-          # If the channel has nothing to say on the matter, we can defer to the role itself
-        end
-        can_act = if channel_allow.nil?
-                    role.permissions.instance_variable_get("@#{action}") || can_act
-                  else
-                    channel_allow
-                  end
-        can_act
-      end
-    end
-
-    # Define methods for querying permissions
-    Discordrb::Permissions::Flags.each_value do |flag|
-      define_method "can_#{flag}?" do |server, channel = nil|
-        permission? flag, server, channel
-      end
-    end
-
     # The inspect method is overwritten to give more useful output
     def inspect
       "<User username=#{@username} id=#{@id} discriminator=#{@discriminator}>"
@@ -217,6 +178,45 @@ module Discordrb
       @deaf = data['deaf']
       @mute = data['mute']
       @joined_at = Time.parse(data['joined_at'])
+    end
+
+    # Determines whether this user has a specific permission on a server (and channel).
+    # @param action [Symbol] The permission that should be checked. See also {Permissions::Flags} for a list.
+    # @param server [Server] The server on which the permission should be checked.
+    # @param channel [Channel, nil] If channel overrides should be checked too, this channel specifies where the overrides should be checked.
+    # @return [true, false] whether or not this user has the permission.
+    def permission?(action, server, channel = nil)
+      # For each role, check if
+      #   (1) the channel explicitly allows or permits an action for the role and
+      #   (2) if the user is allowed to do the action if the channel doesn't specify
+      return false unless @roles[server.id]
+
+      @roles[server.id].reduce(false) do |can_act, role|
+        channel_allow = nil
+        if channel && channel.permission_overwrites[role.id]
+          allow = channel.permission_overwrites[role.id].allow
+          deny = channel.permission_overwrites[role.id].deny
+          if allow.instance_variable_get("@#{action}")
+            channel_allow = true
+          elsif deny.instance_variable_get("@#{action}")
+            channel_allow = false
+          end
+          # If the channel has nothing to say on the matter, we can defer to the role itself
+        end
+        can_act = if channel_allow.nil?
+                    role.permissions.instance_variable_get("@#{action}") || can_act
+                  else
+                    channel_allow
+                  end
+        can_act
+      end
+    end
+
+    # Define methods for querying permissions
+    Discordrb::Permissions::Flags.each_value do |flag|
+      define_method "can_#{flag}?" do |server, channel = nil|
+        permission? flag, server, channel
+      end
     end
 
     # Update this member's roles
