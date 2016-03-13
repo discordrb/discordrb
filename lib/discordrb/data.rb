@@ -195,6 +195,9 @@ module Discordrb
     # @return [Server] the server this member is on.
     attr_reader :server
 
+    # @return [Channel] the voice channel the user is in.
+    attr_reader :voice_channel
+
     # @!visibility private
     def initialize(data, server, bot)
       @bot = bot
