@@ -8,6 +8,9 @@ module Discordrb::API
   # The base URL of the Discord REST API.
   APIBASE = 'https://discordapp.com/api'.freeze
 
+  # The base URL of the Discord image CDN
+  CDNBASE = 'https://cdn.discordapp.com'.freeze
+
   module_function
 
   # @return [String] the bot name, previously specified using #bot_name=.
