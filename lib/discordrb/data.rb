@@ -1009,10 +1009,15 @@ module Discordrb
     end
 
     # Sets the server's icon.
-    # @todo Make this behave in a similar way to User#avatar=.
-    # @param icon [String] The new icon, in base64-encoded JPG format.
+    # @param icon [String, #read] The new icon, in base64-encoded JPG format.
     def icon=(icon)
-      update_server_data(icon: icon)
+      if icon.respond_to? :read
+        icon_string = 'data:image/jpg;base64,'
+        icon_string += Base64.strict_encode64(icon.read)
+        update_server_data(icon: icon_string)
+      else
+        update_server_data(icon: icon)
+      end
     end
 
     # Sets the server's AFK channel.
