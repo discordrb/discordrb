@@ -167,17 +167,7 @@ module Discordrb
 
       # Once we have checked the role permission, we have to check the channel overrides for the
       # specific user
-      user_specific_override = nil
-
-      if channel && channel.permission_overwrites[@id]
-        allow = channel.permission_overwrites[@id].allow
-        deny = channel.permission_overwrites[@id].deny
-        if allow.instance_variable_get("@#{action}")
-          user_specific_override = :allow
-        elsif deny.instance_variable_get("@#{action}")
-          user_specific_override = :deny
-        end
-      end
+      user_specific_override = user_permission_override(action, channel)
 
       return role_permission unless user_specific_override
       return true if user_specific_override == :allow
@@ -215,6 +205,18 @@ module Discordrb
                     channel_allow
                   end
         can_act
+      end
+    end
+
+    def user_permission_override(action, channel)
+      return nil unless channel && channel.permission_overwrites[@id]
+
+      allow = channel.permission_overwrites[@id].allow
+      deny = channel.permission_overwrites[@id].deny
+      if allow.instance_variable_get("@#{action}")
+        :allow
+      elsif deny.instance_variable_get("@#{action}")
+        :deny
       end
     end
   end
