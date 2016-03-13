@@ -878,6 +878,7 @@ module Discordrb
         debug "Event #{packet['t']} has been received but is unsupported, ignoring"
       end
     rescue Exception => e
+      LOGGER.error('Gateway message error!')
       log_exception(e)
     end
 
