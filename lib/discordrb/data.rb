@@ -767,7 +767,7 @@ module Discordrb
       @mentions = []
 
       data['mentions'].each do |element|
-        @mentions << User.new(element, bot)
+        @mentions << bot.ensure_user(element)
       end
     end
 
