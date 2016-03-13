@@ -910,7 +910,7 @@ module Discordrb
     # @note For internal use only
     # @!visibility private
     def add_member(member)
-      @members << member unless @members.include? member
+      @members_by_id[member.id] = member
       @member_count += 1
     end
 
@@ -918,7 +918,7 @@ module Discordrb
     # @note For internal use only
     # @!visibility private
     def delete_member(user_id)
-      @members.reject! { |e| e.id == user_id }.length
+      @members_by_id.delete(user_id)
       @member_count -= 1
     end
 
