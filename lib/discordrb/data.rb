@@ -896,9 +896,9 @@ module Discordrb
     # @!visibility private
     def delete_role(role_id)
       @roles.reject! { |r| r.id == role_id }
-      @members.each do |user|
-        new_roles = user.roles[@id].reject { |r| r.id == role_id }
-        user.update_roles(self, new_roles)
+      @members_by_id.each do |_, member|
+        new_roles = member.roles.reject { |r| r.id == role_id }
+        member.update_roles(new_roles)
       end
       @channels.each do |channel|
         overwrites = channel.permission_overwrites.reject { |id, _| id == role_id }
