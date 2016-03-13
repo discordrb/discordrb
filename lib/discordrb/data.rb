@@ -827,7 +827,7 @@ module Discordrb
 
     # @todo Make this behave like user.avatar where a URL is available as well.
     # @return [String] the hexadecimal ID used to identify this server's icon.
-    attr_reader :icon
+    attr_reader :icon_id
 
     # @return [Integer] the amount of time after which a voice user gets moved into the AFK channel, in seconds.
     attr_reader :afk_timeout
