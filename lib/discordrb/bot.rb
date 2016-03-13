@@ -89,11 +89,7 @@ module Discordrb
       debug('Token cache created successfully')
       @token = login
 
-      @channels = {}
-      @users = {}
-
-      # Channels the bot has no permission to, for internal tracking
-      @restricted_channels = []
+      init_cache
 
       @event_threads = []
       @current_thread = 0
