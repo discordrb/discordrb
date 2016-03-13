@@ -450,6 +450,12 @@ module Discordrb
 
       token = data['token']
       endpoint = data['endpoint']
+
+      unless endpoint
+        debug('VOICE_SERVER_UPDATE sent with nil endpoint! Ignoring')
+        return
+      end
+
       channel = @voice_channel
 
       debug('Got data, now creating the bot.')
