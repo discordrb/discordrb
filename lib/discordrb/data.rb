@@ -264,6 +264,11 @@ module Discordrb
       @roles = []
       @joined_at = @channel.creation_time
     end
+
+    # Overwriting inspect for debug purposes
+    def inspect
+      "<Recipient user=#{@user.inspect} channel=#{@channel.inspect}>"
+    end
   end
 
   # This class is a special variant of User that represents the bot's user profile (things like email addresses and the avatar).
