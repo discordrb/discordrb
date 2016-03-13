@@ -871,6 +871,16 @@ module Discordrb
       @roles.find { |e| e.id == id }
     end
 
+    # Gets a member on this server based on user ID
+    # @param id [Integer] The user ID to look for
+    def member(id)
+      id = id.resolve_id
+      return @members_by_id[id] if member_cached?(id)
+
+      member = bot.member(@id, id)
+      @members_by_id[id] = member
+    end
+
     # Adds a role to the role cache
     # @note For internal use only
     # @!visibility private
