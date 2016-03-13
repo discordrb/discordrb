@@ -235,6 +235,12 @@ module Discordrb
     end
   end
 
+  # Private members are members on private channels - they exist for completeness purposes, but all
+  # the attributes will be empty.
+  class PrivateMember < User
+
+  end
+
   # This class is a special variant of User that represents the bot's user profile (things like email addresses and the avatar).
   # It can be accessed using {Bot#profile}.
   class Profile < User
