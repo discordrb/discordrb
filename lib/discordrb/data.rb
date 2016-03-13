@@ -543,8 +543,11 @@ module Discordrb
         @name = @recipient.username
       else
         @name = data['name']
-        @server = bot.server(data['guild_id'].to_i)
-        @server ||= server
+        @server = if server
+                    server
+                  else
+                    bot.server(data['guild_id'].to_i)
+                  end
       end
 
       # Populate permission overwrites
