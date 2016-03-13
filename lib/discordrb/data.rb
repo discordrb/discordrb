@@ -172,9 +172,8 @@ module Discordrb
     end
   end
 
-  # A member is a user on a server. It differs from regular users in that it has roles, voice statuses and things like
-  # that.
-  class Member < DelegateClass(User)
+  # Mixin for the attributes members and private members should have
+  module MemberAttributes
     # @return [true, false] whether this member is muted server-wide.
     attr_reader :mute
     alias_method :muted?, :mute
@@ -194,6 +193,12 @@ module Discordrb
 
     # @return [Channel] the voice channel the user is in.
     attr_reader :voice_channel
+  end
+
+  # A member is a user on a server. It differs from regular users in that it has roles, voice statuses and things like
+  # that.
+  class Member < DelegateClass(User)
+    include MemberAttributes
 
     # @!visibility private
     def initialize(data, server, bot)
