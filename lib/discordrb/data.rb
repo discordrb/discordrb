@@ -852,7 +852,7 @@ module Discordrb
       process_channels(data['channels'])
       process_voice_states(data['voice_states'])
 
-      @owner = self.member(@owner_id)
+      @owner = member(@owner_id)
     end
 
     # @return [Channel] The default channel on this server (usually called #general)
