@@ -203,8 +203,10 @@ module Discordrb
     end
 
     def permission_overwrite(action, channel, id)
+      # If no overwrites are defined, or no channel is set, no overwrite will be present
       return nil unless channel && channel.permission_overwrites[id]
 
+      # Otherwise, check the allow and deny objects
       allow = channel.permission_overwrites[id].allow
       deny = channel.permission_overwrites[id].deny
       if allow.instance_variable_get("@#{action}")
@@ -212,6 +214,8 @@ module Discordrb
       elsif deny.instance_variable_get("@#{action}")
         :deny
       end
+
+      # If there's no variable defined, nil will implicitly be returned
     end
   end
 
