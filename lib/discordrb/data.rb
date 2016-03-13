@@ -190,8 +190,7 @@ module Discordrb
       user_specific_override = permission_overwrite(action, channel, id) # Use the ID reader as members have no ID instance variable
 
       return role_permission unless user_specific_override
-      return true if user_specific_override == :allow
-      false
+      user_specific_override == :allow
     end
 
     # Define methods for querying permissions
