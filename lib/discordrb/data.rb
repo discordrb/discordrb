@@ -160,7 +160,6 @@ module Discordrb
   module PermissionCalculator
     # Determines whether this user has a specific permission on a server (and channel).
     # @param action [Symbol] The permission that should be checked. See also {Permissions::Flags} for a list.
-    # @param server [Server] The server on which the permission should be checked.
     # @param channel [Channel, nil] If channel overrides should be checked too, this channel specifies where the overrides should be checked.
     # @return [true, false] whether or not this user has the permission.
     def permission?(action, channel = nil)
