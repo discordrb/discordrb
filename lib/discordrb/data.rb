@@ -1082,13 +1082,11 @@ module Discordrb
     end
 
     def process_members(members)
-      @members = []
       @members_by_id = {}
 
       return unless members
       members.each do |element|
         member = Member.new(element, self, @bot)
-        @members << member
         @members_by_id[member.id] = member
       end
     end
