@@ -905,7 +905,7 @@ module Discordrb
         op: 2,    # Packet identifier
         d: {      # Packet data
           v: 3,   # WebSocket protocol version
-          token: 'a' + @token,
+          token: @token,
           properties: { # I'm unsure what these values are for exactly, but they don't appear to impact bot functionality in any way.
             :'$os' => RUBY_PLATFORM.to_s,
             :'$browser' => 'discordrb',
