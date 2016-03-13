@@ -885,6 +885,12 @@ module Discordrb
 
     alias_method :users, :members
 
+    # Utility function to get the URL for the icon image
+    # @return [String] the URL to the icon image
+    def icon_url
+      API.icon_url(@id, @icon)
+    end
+
     # Adds a role to the role cache
     # @note For internal use only
     # @!visibility private
