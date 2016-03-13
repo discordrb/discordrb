@@ -50,6 +50,10 @@ module Discordrb
     alias_method :tag, :discriminator
     alias_method :discord_tag, :discriminator
 
+    # @return [true, false] whether this user is a Discord bot account
+    attr_reader :bot_account
+    alias_method :bot_account?, :bot_account
+
     # @return [String] the ID of this user's current avatar, can be used to generate an avatar URL.
     # @see #avatar_url
     attr_reader :avatar_id
