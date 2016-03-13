@@ -251,6 +251,13 @@ module Discordrb
 
       @user = user
       super @user
+
+      # Member attributes
+      @mute = @deaf = @self_mute = @self_deaf = false
+      @voice_channel = nil
+      @server = nil
+      @roles = []
+      @joined_at = @channel.creation_time
     end
   end
 
