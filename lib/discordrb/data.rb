@@ -354,7 +354,7 @@ module Discordrb
 
     # Whether or not the user is the bot. The Profile can only ever be the bot user, so this always returns true.
     # @return [true]
-    def bot?
+    def current_bot?
       true
     end
 
