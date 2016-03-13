@@ -840,7 +840,6 @@ module Discordrb
     def initialize(data, bot)
       @bot = bot
       @owner_id = data['owner_id'].to_i
-      @owner = bot.user(@owner_id)
       @id = data['id'].to_i
       update_data(data)
 
@@ -852,6 +851,8 @@ module Discordrb
       process_presences(data['presences'])
       process_channels(data['channels'])
       process_voice_states(data['voice_states'])
+
+      @owner = self.member(@owner_id)
     end
 
     # @return [Channel] The default channel on this server (usually called #general)
