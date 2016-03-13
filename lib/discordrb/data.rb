@@ -1135,15 +1135,17 @@ module Discordrb
       return unless voice_states
       voice_states.each do |element|
         user_id = element['user_id'].to_i
-        user = @members[user_id]
-        next unless user
-        user.server_mute = element['mute']
-        user.server_deaf = element['deaf']
-        user.self_mute = element['self_mute']
-        user.self_mute = element['self_mute']
+        member = @members[user_id]
+        next unless member
         channel_id = element['channel_id'].to_i
         channel = channel_id ? @channels_by_id[channel_id] : nil
-        user.move(channel)
+
+        member.update_voice_state(
+          channel,
+          element['mute'],
+          element['deaf'],
+          element['self_mute'],
+          element['self_deaf'])
       end
     end
   end
