@@ -258,6 +258,8 @@ module Discordrb
       @self_deaf = self_deaf
     end
 
+    include PermissionCalculator
+
     # Overwriting inspect for debug purposes
     def inspect
       "<Member user=#{@user.inspect} server=#{@server.inspect} joined_at=#{@joined_at} roles=#{@roles.inspect} voice_channel=#{@voice_channel.inspect} mute=#{@mute} deaf=#{@deaf} self_mute=#{@self_mute} self_deaf=#{@self_deaf}>"
