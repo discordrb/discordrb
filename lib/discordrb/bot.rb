@@ -883,7 +883,6 @@ module Discordrb
     end
 
     def websocket_close(event)
-      p event.methods
       LOGGER.error('Disconnected from WebSocket!')
 
       # Handle actual close frames and errors separately
