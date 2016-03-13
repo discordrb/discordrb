@@ -507,13 +507,6 @@ module Discordrb
     # @return [String] the type of this channel (currently either 'text' or 'voice')
     attr_reader :type
 
-    # @note This data is sent by Discord and it's possible for this to falsely be true for certain kinds of integration
-    #   channels (like Twitch subscriber ones). This appears to be a Discord bug that I can't reproduce myself, due to
-    #   not having any integrations in place. If this occurs to you please tell me.
-    # @deprecated Use {#private?} instead, it's guaranteed to be accurate.
-    # @return [true, false] whether or not this channel is a private messaging channel.
-    attr_reader :is_private
-
     # @return [User, nil] the recipient of the private messages, or nil if this is not a PM channel
     attr_reader :recipient
 
