@@ -829,6 +829,9 @@ module Discordrb
     # @return [Integer] the channel ID of the AFK channel, or `nil` if none is set.
     attr_reader :afk_channel_id
 
+    # @return [Channel, nil] the AFK voice channel of this server, or nil if none is set
+    attr_reader :afk_channel
+
     # @!visibility private
     def initialize(data, bot)
       @bot = bot
