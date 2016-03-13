@@ -888,7 +888,7 @@ module Discordrb
 
       # Handle actual close frames and errors separately
       if event.respond_to? :code
-        LOGGER.error(" (Reason: #{event.reason})")
+        LOGGER.error(" (Reason: #{event.data})")
         LOGGER.error(" (Code: #{event.code})")
       else
         LOGGER.log_exception event
