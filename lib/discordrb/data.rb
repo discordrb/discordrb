@@ -1074,15 +1074,9 @@ module Discordrb
 
       return unless members
       members.each do |element|
-        user = User.new(element['user'], @bot)
-        @members << user
-        @members_by_id[user.id] = user
-        user_roles = []
-        element['roles'].each do |e|
-          role_id = e.to_i
-          user_roles << @roles_by_id[role_id]
-        end
-        user.update_roles(self, user_roles)
+        member = Member.new(element, self, @bot)
+        @members << member
+        @members_by_id[member.id] = member
       end
     end
 
