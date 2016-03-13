@@ -8,7 +8,7 @@ module Discordrb
       0 => :create_instant_invite, # 1
       1 => :kick_members,          # 2
       2 => :ban_members,           # 4
-      3 => :manage_roles,          # 8
+      3 => :manage_roles,          # 8, also Manage Permissions
       4 => :manage_channels,       # 16
       5 => :manage_server,         # 32
       # 6                          # 64
