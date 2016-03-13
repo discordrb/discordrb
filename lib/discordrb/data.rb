@@ -197,7 +197,7 @@ module Discordrb
       # For each role, check if
       #   (1) the channel explicitly allows or permits an action for the role and
       #   (2) if the user is allowed to do the action if the channel doesn't specify
-      role_permission = @roles.reduce(false) do |can_act, role|
+      @roles.reduce(false) do |can_act, role|
         channel_allow = nil
         if channel && channel.permission_overwrites[role.id]
           allow = channel.permission_overwrites[role.id].allow
