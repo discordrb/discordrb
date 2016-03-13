@@ -242,20 +242,20 @@ module Discordrb
     # Sets the bot's username.
     # @param username [String] The new username.
     def username=(username)
-      update_server_data(username: username)
+      update_profile_data(username: username)
     end
 
     # Sets the bot's email address. If you use this method, make sure that the login email in the script matches this
     # one afterwards, so the bot doesn't have any trouble logging in in the future.
     # @param email [String] The new email address.
     def email=(email)
-      update_server_data(email: email)
+      update_profile_data(email: email)
     end
 
     # Changes the bot's password. This will invalidate all tokens so you will have to relog the bot.
     # @param password [String] The new password.
     def password=(password)
-      update_server_data(new_password: password)
+      update_profile_data(new_password: password)
     end
 
     # Changes the bot's avatar.
@@ -265,9 +265,9 @@ module Discordrb
       if avatar.respond_to? :read
         avatar_string = 'data:image/jpg;base64,'
         avatar_string += Base64.strict_encode64(avatar.read)
-        update_server_data(avatar: avatar_string)
+        update_profile_data(avatar: avatar_string)
       else
-        update_server_data(avatar: avatar)
+        update_profile_data(avatar: avatar)
       end
     end
 
@@ -288,7 +288,7 @@ module Discordrb
 
     private
 
-    def update_server_data(new_data)
+    def update_profile_data(new_data)
       API.update_user(@bot.token,
                       new_data[:email] || @email,
                       @password,
