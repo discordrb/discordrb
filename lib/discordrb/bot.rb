@@ -885,9 +885,15 @@ module Discordrb
     def websocket_close(event)
       p event.methods
       LOGGER.error('Disconnected from WebSocket!')
-      LOGGER.log_exception event
-      LOGGER.error(" (Reason: #{event.reason})")
-      LOGGER.error(" (Code: #{event.code})")
+
+      # Handle actual close frames and errors separately
+      if event.respond_to? :code
+        LOGGER.error(" (Reason: #{event.reason})")
+        LOGGER.error(" (Code: #{event.code})")
+      else
+        LOGGER.log_exception event
+      end
+
       raise_event(DisconnectEvent.new)
     rescue => e
       LOGGER.log_exception e
