@@ -158,6 +158,11 @@ module Discordrb
 
   # Mixin to calculate resulting permissions from overrides etc.
   module PermissionCalculator
+    # Checks whether this user can do the particular action, regardless of whether it has the permission defined,
+    # through for example being the server owner or having the Manage Roles permission
+    # @param action [Symbol] The permission that should be checked. See also {Permissions::Flags} for a list.
+    # @param channel [Channel, nil] If channel overrides should be checked too, this channel specifies where the overrides should be checked.
+    # @return [true, false] whether or not this user has the permission.
     def permission?(action, channel = nil)
       # If the member is the server owner, it irrevocably has all permissions.
       return true if owner?
