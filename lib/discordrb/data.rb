@@ -76,13 +76,6 @@ module Discordrb
       @status = :offline
     end
 
-    # Gets the user's avatar ID.
-    # @deprecated Use {#avatar_id} instead.
-    def avatar
-      LOGGER.debug('Warning: Deprecated reader User.avatar was used! Use User.avatar_id (or User.avatar_url if you just want the URL) instead.', true)
-      @avatar_id
-    end
-
     # Utility function to mention users in messages
     # @return [String] the mention code in the form of <@id>
     def mention
