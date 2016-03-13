@@ -131,7 +131,7 @@ module Discordrb
 
     # Is the user the bot?
     # @return [true, false] whether this user is the bot
-    def bot?
+    def current_bot?
       @bot.bot_user.id == @id
     end
 
@@ -900,7 +900,7 @@ module Discordrb
 
     # @return [true, false] whether this message was sent by the current {Bot}.
     def from_bot?
-      @author.bot?
+      @author.current_bot?
     end
 
     # The inspect method is overwritten to give more useful output
