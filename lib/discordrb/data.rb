@@ -521,7 +521,7 @@ module Discordrb
     # @return [Hash<Integer => OpenStruct>] the channel's permission overwrites
     attr_reader :permission_overwrites
 
-    # @return [true, false] whether or not this channel is a PM channel, with more accuracy than {#is_private}.
+    # @return [true, false] whether or not this channel is a PM channel.
     def private?
       @server.nil?
     end
