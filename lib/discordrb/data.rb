@@ -255,6 +255,11 @@ module Discordrb
       @joined_at = Time.parse(data['joined_at'])
     end
 
+    # @return [true, false] whether this member is the server owner.
+    def owner?
+      @server.owner == self
+    end
+
     # Update this member's roles
     # @note For internal use only.
     # @!visibility private
