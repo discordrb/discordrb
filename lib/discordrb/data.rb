@@ -811,10 +811,6 @@ module Discordrb
     # @return [User] The server owner.
     attr_reader :owner
 
-    # @return [Array<User>] an array of all the users on this server.
-    attr_reader :members
-    alias_method :users, :members
-
     # @return [Array<Channel>] an array of all the channels (text and voice) on this server.
     attr_reader :channels
 
@@ -880,6 +876,13 @@ module Discordrb
       member = bot.member(@id, id)
       @members_by_id[id] = member
     end
+
+    # @return [Array<User>] an array of all the members on this server.
+    def members
+      @members_by_id.values
+    end
+
+    alias_method :users, :members
 
     # Adds a role to the role cache
     # @note For internal use only
