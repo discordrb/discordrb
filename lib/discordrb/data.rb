@@ -222,6 +222,17 @@ module Discordrb
         @server.role(role_id.to_i)
       end
     end
+
+    # Update this member's voice state
+    # @note For internal use only.
+    # @!visibility private
+    def update_voice_state(channel, mute, deaf, self_mute, self_deaf)
+      @voice_channel = channel
+      @mute = mute
+      @deaf = deaf
+      @self_mute = self_mute
+      @self_deaf = self_deaf
+    end
   end
 
   # This class is a special variant of User that represents the bot's user profile (things like email addresses and the avatar).
