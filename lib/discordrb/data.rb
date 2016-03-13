@@ -871,15 +871,15 @@ module Discordrb
     # @param id [Integer] The user ID to look for
     def member(id)
       id = id.resolve_id
-      return @members_by_id[id] if member_cached?(id)
+      return @members[id] if member_cached?(id)
 
       member = bot.member(@id, id)
-      @members_by_id[id] = member
+      @members[id] = member
     end
 
     # @return [Array<User>] an array of all the members on this server.
     def members
-      @members_by_id.values
+      @members.values
     end
 
     alias_method :users, :members
@@ -896,7 +896,7 @@ module Discordrb
     # @!visibility private
     def delete_role(role_id)
       @roles.reject! { |r| r.id == role_id }
-      @members_by_id.each do |_, member|
+      @members.each do |_, member|
         new_roles = member.roles.reject { |r| r.id == role_id }
         member.update_roles(new_roles)
       end
@@ -910,7 +910,7 @@ module Discordrb
     # @note For internal use only
     # @!visibility private
     def add_member(member)
-      @members_by_id[member.id] = member
+      @members[member.id] = member
       @member_count += 1
     end
 
@@ -918,7 +918,7 @@ module Discordrb
     # @note For internal use only
     # @!visibility private
     def delete_member(user_id)
-      @members_by_id.delete(user_id)
+      @members.delete(user_id)
       @member_count -= 1
     end
 
@@ -926,14 +926,14 @@ module Discordrb
     # @note For internal use only
     # @!visibility private
     def member_cached?(user_id)
-      @members_by_id.include?(user_id)
+      @members.include?(user_id)
     end
 
     # Adds a member to the cache
     # @note For internal use only
     # @!visibility private
     def cache_member(member)
-      @members_by_id[member.id] = member unless @members_by_id.include? member
+      @members[member.id] = member unless @members.include? member
     end
 
     # Creates a channel on this server with the given name.
@@ -1082,12 +1082,12 @@ module Discordrb
     end
 
     def process_members(members)
-      @members_by_id = {}
+      @members = {}
 
       return unless members
       members.each do |element|
         member = Member.new(element, self, @bot)
-        @members_by_id[member.id] = member
+        @members[member.id] = member
       end
     end
 
@@ -1097,7 +1097,7 @@ module Discordrb
       presences.each do |element|
         next unless element['user']
         user_id = element['user']['id'].to_i
-        user = @members_by_id[user_id]
+        user = @members[user_id]
         if user
           user.status = element['status'].to_sym
           user.game = element['game'] ? element['game']['name'] : nil
@@ -1121,7 +1121,7 @@ module Discordrb
       return unless voice_states
       voice_states.each do |element|
         user_id = element['user_id'].to_i
-        user = @members_by_id[user_id]
+        user = @members[user_id]
         next unless user
         user.server_mute = element['mute']
         user.server_deaf = element['deaf']
