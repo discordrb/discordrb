@@ -240,9 +240,9 @@ module Discordrb
     end
   end
 
-  # Private members are members on private channels - they exist for completeness purposes, but all
+  # Recipients are members on private channels - they exist for completeness purposes, but all
   # the attributes will be empty.
-  class PrivateMember < User
+  class Recipient < User
 
   end
 
