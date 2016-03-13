@@ -63,6 +63,11 @@ module Discordrb::API
     "#{APIBASE}/users/#{user_id}/avatars/#{avatar_id}.jpg"
   end
 
+  # Make an icon URL from server and icon IDs
+  def icon_url(server_id, icon_id)
+    "#{CDNBASE}/icons/#{server_id}/#{icon_id}.jpg"
+  end
+
   # Ban a user from a server and delete their messages from the last message_days days
   def ban_user(token, server_id, user_id, message_days)
     request(
