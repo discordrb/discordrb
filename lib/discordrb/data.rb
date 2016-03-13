@@ -183,12 +183,14 @@ module Discordrb
     # @param channel [Channel, nil] If channel overrides should be checked too, this channel specifies where the overrides should be checked.
     # @return [true, false] whether or not this user has the permission defined.
     def defined_permission?(action, channel = nil)
+      # Get the permission the user's roles have
       role_permission = defined_role_permission?(action, channel)
 
       # Once we have checked the role permission, we have to check the channel overrides for the
       # specific user
       user_specific_override = permission_overwrite(action, channel, id) # Use the ID reader as members have no ID instance variable
 
+      # Merge the two permissions - if an override is defined, it has to be allow, otherwise we only care about the role
       return role_permission unless user_specific_override
       user_specific_override == :allow
     end
