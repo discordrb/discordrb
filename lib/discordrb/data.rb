@@ -73,6 +73,9 @@ module Discordrb
       @avatar_id = data['avatar']
       @roles = {}
 
+      @bot_account = false
+      @bot_account = true if data['bot']
+
       @status = :offline
     end
 
