@@ -121,6 +121,14 @@ module Discordrb
       @bot.add_await(key, Discordrb::Events::MessageEvent, { from: @id }.merge(attributes), &block)
     end
 
+    # Gets the member this user is on a server
+    # @param server [Server] The server to get the member for
+    # @return [Member] this user as a member on a particular server
+    def on(server)
+      id = server.resolve_id
+      @bot.server(id).member(@id)
+    end
+
     # Is the user the bot?
     # @return [true, false] whether this user is the bot
     def bot?
