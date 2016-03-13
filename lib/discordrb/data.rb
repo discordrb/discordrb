@@ -926,7 +926,7 @@ module Discordrb
     # @note For internal use only
     # @!visibility private
     def member_cached?(user_id)
-      @members.any? { |e| e.id == user_id }
+      @members_by_id.include?(user_id)
     end
 
     # Adds a member to the cache
