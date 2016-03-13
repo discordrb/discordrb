@@ -243,6 +243,8 @@ module Discordrb
   # Recipients are members on private channels - they exist for completeness purposes, but all
   # the attributes will be empty.
   class Recipient < DelegateClass(User)
+    include MemberAttributes
+
     # @!visibility private
     def initialize(user, channel, bot)
       @bot = bot
