@@ -158,6 +158,17 @@ module Discordrb
 
   # Mixin to calculate resulting permissions from overrides etc.
   module PermissionCalculator
+    def permission?(action, channel = nil)
+      # First, check whether the user has Manage Roles defined.
+      # (Coincidentally, Manage Permissions is the same permission as Manage Roles, and a
+      # Manage Permissions deny overwrite will override Manage Roles, so we can just check for
+      # Manage Roles once and call it a day.)
+      return true if defined_permission?(:manage_roles, channel)
+
+      # Otherwise, defer to defined_permission
+      defined_permission?(action, channel)
+    end
+
     # Checks whether this user has a particular permission defined (i. e. not implicit, through for example
     # Manage Roles)
     # @param action [Symbol] The permission that should be checked. See also {Permissions::Flags} for a list.
