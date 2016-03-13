@@ -163,28 +163,7 @@ module Discordrb
     # @param channel [Channel, nil] If channel overrides should be checked too, this channel specifies where the overrides should be checked.
     # @return [true, false] whether or not this user has the permission.
     def permission?(action, channel = nil)
-      # For each role, check if
-      #   (1) the channel explicitly allows or permits an action for the role and
-      #   (2) if the user is allowed to do the action if the channel doesn't specify
-      role_permission = @roles.reduce(false) do |can_act, role|
-        channel_allow = nil
-        if channel && channel.permission_overwrites[role.id]
-          allow = channel.permission_overwrites[role.id].allow
-          deny = channel.permission_overwrites[role.id].deny
-          if allow.instance_variable_get("@#{action}")
-            channel_allow = true
-          elsif deny.instance_variable_get("@#{action}")
-            channel_allow = false
-          end
-          # If the channel has nothing to say on the matter, we can defer to the role itself
-        end
-        can_act = if channel_allow.nil?
-                    role.permissions.instance_variable_get("@#{action}") || can_act
-                  else
-                    channel_allow
-                  end
-        can_act
-      end
+      role_permission = defined_role_permission?(action, channel)
 
       # Once we have checked the role permission, we have to check the channel overrides for the
       # specific user
@@ -209,6 +188,33 @@ module Discordrb
     Discordrb::Permissions::Flags.each_value do |flag|
       define_method "can_#{flag}?" do |channel = nil|
         permission? flag, channel
+      end
+    end
+
+    private
+
+    def defined_role_permission?(action, channel)
+      # For each role, check if
+      #   (1) the channel explicitly allows or permits an action for the role and
+      #   (2) if the user is allowed to do the action if the channel doesn't specify
+      role_permission = @roles.reduce(false) do |can_act, role|
+        channel_allow = nil
+        if channel && channel.permission_overwrites[role.id]
+          allow = channel.permission_overwrites[role.id].allow
+          deny = channel.permission_overwrites[role.id].deny
+          if allow.instance_variable_get("@#{action}")
+            channel_allow = true
+          elsif deny.instance_variable_get("@#{action}")
+            channel_allow = false
+          end
+          # If the channel has nothing to say on the matter, we can defer to the role itself
+        end
+        can_act = if channel_allow.nil?
+                    role.permissions.instance_variable_get("@#{action}") || can_act
+                  else
+                    channel_allow
+                  end
+        can_act
       end
     end
   end
