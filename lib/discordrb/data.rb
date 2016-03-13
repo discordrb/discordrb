@@ -163,7 +163,7 @@ module Discordrb
     # @param server [Server] The server on which the permission should be checked.
     # @param channel [Channel, nil] If channel overrides should be checked too, this channel specifies where the overrides should be checked.
     # @return [true, false] whether or not this user has the permission.
-    def permission?(action, server, channel = nil)
+    def permission?(action, channel = nil)
       # For each role, check if
       #   (1) the channel explicitly allows or permits an action for the role and
       #   (2) if the user is allowed to do the action if the channel doesn't specify
@@ -208,8 +208,8 @@ module Discordrb
 
     # Define methods for querying permissions
     Discordrb::Permissions::Flags.each_value do |flag|
-      define_method "can_#{flag}?" do |server, channel = nil|
-        permission? flag, server, channel
+      define_method "can_#{flag}?" do |channel = nil|
+        permission? flag, channel
       end
     end
   end
