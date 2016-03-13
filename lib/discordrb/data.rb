@@ -156,30 +156,8 @@ module Discordrb
     attr_reader :voice_channel
   end
 
-  # A member is a user on a server. It differs from regular users in that it has roles, voice statuses and things like
-  # that.
-  class Member < DelegateClass(User)
-    include MemberAttributes
-
-    # @!visibility private
-    def initialize(data, server, bot)
-      @bot = bot
-
-      @user = bot.ensure_user(data['user'])
-      super @user # Initialize the delegate class
-
-      # Somehow, Discord doesn't send the server ID in the standard member format...
-      raise ArgumentError, 'Cannot create a member without any information about the server!' if server.nil? && data['guild_id'].nil?
-      @server = server || bot.server(data['guild_id'].to_i)
-
-      # Initialize the roles by getting the roles from the server one-by-one
-      update_roles(data['roles'])
-
-      @deaf = data['deaf']
-      @mute = data['mute']
-      @joined_at = Time.parse(data['joined_at'])
-    end
-
+  # Mixin to calculate resulting permissions from overrides etc.
+  module PermissionCalculator
     # Determines whether this user has a specific permission on a server (and channel).
     # @param action [Symbol] The permission that should be checked. See also {Permissions::Flags} for a list.
     # @param server [Server] The server on which the permission should be checked.
@@ -233,6 +211,31 @@ module Discordrb
       define_method "can_#{flag}?" do |server, channel = nil|
         permission? flag, server, channel
       end
+    end
+  end
+
+  # A member is a user on a server. It differs from regular users in that it has roles, voice statuses and things like
+  # that.
+  class Member < DelegateClass(User)
+    include MemberAttributes
+
+    # @!visibility private
+    def initialize(data, server, bot)
+      @bot = bot
+
+      @user = bot.ensure_user(data['user'])
+      super @user # Initialize the delegate class
+
+      # Somehow, Discord doesn't send the server ID in the standard member format...
+      raise ArgumentError, 'Cannot create a member without any information about the server!' if server.nil? && data['guild_id'].nil?
+      @server = server || bot.server(data['guild_id'].to_i)
+
+      # Initialize the roles by getting the roles from the server one-by-one
+      update_roles(data['roles'])
+
+      @deaf = data['deaf']
+      @mute = data['mute']
+      @joined_at = Time.parse(data['joined_at'])
     end
 
     # Update this member's roles
