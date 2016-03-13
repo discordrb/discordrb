@@ -182,7 +182,7 @@ module Discordrb
 
       # Once we have checked the role permission, we have to check the channel overrides for the
       # specific user
-      user_specific_override = permission_overwrite(action, channel, @id)
+      user_specific_override = permission_overwrite(action, channel, id) # Use the ID reader as members have no ID instance variable
 
       return role_permission unless user_specific_override
       return true if user_specific_override == :allow
