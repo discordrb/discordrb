@@ -198,23 +198,11 @@ module Discordrb
       end
     end
 
-    def user_permission_override(action, channel)
-      return nil unless channel && channel.permission_overwrites[@id]
+    def permission_override(action, channel, id)
+      return nil unless channel && channel.permission_overwrites[id]
 
-      allow = channel.permission_overwrites[@id].allow
-      deny = channel.permission_overwrites[@id].deny
-      if allow.instance_variable_get("@#{action}")
-        :allow
-      elsif deny.instance_variable_get("@#{action}")
-        :deny
-      end
-    end
-
-    def role_permission_override(action, channel, role)
-      return nil unless channel && channel.permission_overwrites[role.id]
-
-      allow = channel.permission_overwrites[role.id].allow
-      deny = channel.permission_overwrites[role.id].deny
+      allow = channel.permission_overwrites[id].allow
+      deny = channel.permission_overwrites[id].deny
       if allow.instance_variable_get("@#{action}")
         :allow
       elsif deny.instance_variable_get("@#{action}")
