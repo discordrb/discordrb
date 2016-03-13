@@ -159,6 +159,9 @@ module Discordrb
   # Mixin to calculate resulting permissions from overrides etc.
   module PermissionCalculator
     def permission?(action, channel = nil)
+      # If the member is the server owner, it irrevocably has all permissions.
+      return true if owner?
+
       # First, check whether the user has Manage Roles defined.
       # (Coincidentally, Manage Permissions is the same permission as Manage Roles, and a
       # Manage Permissions deny overwrite will override Manage Roles, so we can just check for
