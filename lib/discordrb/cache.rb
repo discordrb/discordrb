@@ -80,6 +80,7 @@ module Discordrb
       server = self.server(server_id)
       return server.member(user_id) if server.member_cached?(user_id)
 
+      LOGGER.out("Resolving member #{server_id} on server #{user_id}")
       response = API.member(token, server_id, user_id)
       member = Member.new(JSON.parse(response), server, self)
       server.cache_member(member)
