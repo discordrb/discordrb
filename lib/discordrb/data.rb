@@ -968,6 +968,9 @@ module Discordrb
       process_channels(data['channels'])
       process_voice_states(data['voice_states'])
 
+      # Whether this server's members have been chunked (resolved using op 8 and GUILD_MEMBERS_CHUNK) yet
+      @chunked = false
+
       @owner = member(@owner_id)
     end
 
