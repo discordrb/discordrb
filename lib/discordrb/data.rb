@@ -972,7 +972,6 @@ module Discordrb
       # Whether this server's members have been chunked (resolved using op 8 and GUILD_MEMBERS_CHUNK) yet
       @chunked = false
       @processed_chunk_members = 0
-      @added_members = nil
 
       @owner = member(@owner_id)
     end
@@ -1041,10 +1040,6 @@ module Discordrb
     def add_member(member)
       @members[member.id] = member
       @member_count += 1
-
-      # We need to keep track of this because in a rare edge case (specifically members added
-      # *while* a chunk request is being processed) the chunking would never terminate.
-      @added_members += 1 if @added_members
     end
 
     # Removes a member from the member cache.
@@ -1180,9 +1175,6 @@ module Discordrb
     # @note For internal use only
     # @!visibility private
     def process_chunk(members)
-      # If this is the first chunk, then we have to start tracking added members
-      @added_members = 0 unless @added_members
-
       process_members(members)
       @processed_chunk_members += members.length
 
@@ -1192,7 +1184,6 @@ module Discordrb
       # Reset everything to normal
       @chunked = true
       @processed_chunk_members = 0
-      @added_members = nil
     end
 
     # Updates the cached data with new data
