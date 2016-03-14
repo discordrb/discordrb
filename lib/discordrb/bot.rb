@@ -401,13 +401,14 @@ module Discordrb
         # due to large_threshold. Fortunately, Discord sends the entire member object in this case, and
         # not just a part of it - we can just cache this member directly
         member = Member.new(data, server, self)
+        debug("Implicitly adding presence-obtained member #{user_id} to #{server_id} cache")
 
         member_is_new = true
       end
 
       username = data['user']['username']
       if username && !member_is_new # Don't set the username for newly-cached members
-        debug "User changed username: #{member.username} #{username}"
+        debug "Implicitly updating presence-obtained information for member #{user_id}"
         member.update_username(username)
       end
 
