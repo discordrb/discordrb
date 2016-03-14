@@ -1001,7 +1001,7 @@ module Discordrb
 
     # @return [Array<User>] an array of all the members on this server.
     def members
-      @members.values
+      return @members.values if @chunked
     end
 
     alias_method :users, :members
