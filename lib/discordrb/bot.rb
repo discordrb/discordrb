@@ -389,31 +389,29 @@ module Discordrb
     def update_presence(data)
       user_id = data['user']['id'].to_i
       server_id = data['guild_id'].to_i
-      server = @servers[server_id]
+      server = server(server_id)
       return unless server
 
-      user = @users[user_id]
-      unless user
-        user = User.new(data['user'], self)
-        @users[user_id] = user
-      end
+      member_is_new = false
 
-      status = data['status'].to_sym
-      if status != :offline
-        unless server.members.find { |u| u.id == user.id }
-          server.members << user
-        end
+      unless server.member_cached?(user_id)
+        # If the member is not cached yet, it means that it just came online from not being cached at all
+        # due to large_threshold. Fortunately, Discord sends the entire member object in this case, and
+        # not just a part of it - we can just cache this member directly
+        member = Member.new(data, server, self)
+        server.cache_member(member)
+
+        member_is_new = true
       end
 
       username = data['user']['username']
-      if username
+      if username && !member_is_new # Don't set the username for newly-cached members
         debug "User changed username: #{user.username} #{username}"
         user.update_username(username)
       end
 
       user.status = status
       user.game = data['game'] ? data['game']['name'] : nil
-      user
     end
 
     # Internal handler for VOICE_STATUS_UPDATE
