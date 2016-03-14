@@ -411,7 +411,7 @@ module Discordrb
         user.update_username(username)
       end
 
-      member.status = status
+      member.status = data['status'].to_sym
       member.game = data['game'] ? data['game']['name'] : nil
 
       server.cache_member(member)
