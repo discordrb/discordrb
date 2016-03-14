@@ -63,6 +63,7 @@ module Discordrb
       id = id.resolve_id
       return @servers[id] if @servers[id]
 
+      LOGGER.out("Resolving server #{id}")
       response = API.server(token, id)
       server = Server.new(JSON.parse(response), self)
       @servers[id] = server
