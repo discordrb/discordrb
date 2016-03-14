@@ -1186,8 +1186,13 @@ module Discordrb
       process_members(members)
       @processed_chunk_members += members.length
 
-      # If we're sure all members have been chunked, then we can
-      @chunked = true if @processed_chunk_members == @member_count
+      # Don't bother with the rest of the method if it's not truly the last packet
+      return unless @processed_chunk_members == @member_count
+
+      # Reset everything to normal
+      @chunked = true
+      @processed_chunk_members = 0
+      @deleted_members = nil
     end
 
     # Updates the cached data with new data
