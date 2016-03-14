@@ -1177,7 +1177,9 @@ module Discordrb
     def process_chunk(members)
       process_members(members)
       @processed_chunk_members += members.length
-      @chunked = true
+
+      # If we're sure all members have been chunked, then we can
+      @chunked = true if @processed_chunk_members == @member_count
     end
 
     # Updates the cached data with new data
