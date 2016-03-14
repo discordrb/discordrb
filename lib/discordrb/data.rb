@@ -1003,6 +1003,7 @@ module Discordrb
     def members
       return @members.values if @chunked
 
+      @bot.debug("Members for server #{@id} not chunked yet - initiating")
       @bot.request_chunks(@id)
       sleep 0.05 until @chunked
       @members.values
