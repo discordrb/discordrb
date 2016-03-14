@@ -972,6 +972,7 @@ module Discordrb
       # Whether this server's members have been chunked (resolved using op 8 and GUILD_MEMBERS_CHUNK) yet
       @chunked = false
       @processed_chunk_members = 0
+      @deleted_members = nil
 
       @owner = member(@owner_id)
     end
@@ -1048,6 +1049,10 @@ module Discordrb
     def delete_member(user_id)
       @members.delete(user_id)
       @member_count -= 1
+
+      # We need to keep track of this because in a rare edge case (specifically members leaving
+      # *while* a chunk request is being processed) the chunking would never terminate.
+      @deleted_members += 1 if @deleted_members
     end
 
     # Checks whether a member is cached
