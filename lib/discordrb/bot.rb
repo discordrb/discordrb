@@ -394,12 +394,13 @@ module Discordrb
 
       member_is_new = false
 
-      unless server.member_cached?(user_id)
+      if server.member_cached?(user_id)
+        member = server.member(user_id)
+      else
         # If the member is not cached yet, it means that it just came online from not being cached at all
         # due to large_threshold. Fortunately, Discord sends the entire member object in this case, and
         # not just a part of it - we can just cache this member directly
         member = Member.new(data, server, self)
-        server.cache_member(member)
 
         member_is_new = true
       end
@@ -410,8 +411,10 @@ module Discordrb
         user.update_username(username)
       end
 
-      user.status = status
-      user.game = data['game'] ? data['game']['name'] : nil
+      member.status = status
+      member.game = data['game'] ? data['game']['name'] : nil
+
+      server.cache_member(member)
     end
 
     # Internal handler for VOICE_STATUS_UPDATE
