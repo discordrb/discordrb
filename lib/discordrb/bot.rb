@@ -407,8 +407,8 @@ module Discordrb
 
       username = data['user']['username']
       if username && !member_is_new # Don't set the username for newly-cached members
-        debug "User changed username: #{user.username} #{username}"
-        user.update_username(username)
+        debug "User changed username: #{member.username} #{username}"
+        member.update_username(username)
       end
 
       member.status = data['status'].to_sym
