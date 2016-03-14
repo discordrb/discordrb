@@ -971,6 +971,7 @@ module Discordrb
 
       # Whether this server's members have been chunked (resolved using op 8 and GUILD_MEMBERS_CHUNK) yet
       @chunked = false
+      @processed_chunk_members = 0
 
       @owner = member(@owner_id)
     end
@@ -1175,6 +1176,7 @@ module Discordrb
     # @!visibility private
     def process_chunk(members)
       process_members(members)
+      @processed_chunk_members += members.length
       @chunked = true
     end
 
