@@ -49,6 +49,7 @@ module Discordrb
       id = id.resolve_id
       return @users[id] if @users[id]
 
+      LOGGER.out("Resolving user #{id}")
       response = API.user(token, id)
       user = User.new(JSON.parse(response), self)
       @users[id] = user
