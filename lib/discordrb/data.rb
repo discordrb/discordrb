@@ -1003,7 +1003,7 @@ module Discordrb
     def members
       return @members.values if @chunked
 
-      @bot.request_chunk(@id)
+      @bot.request_chunks(@id)
       sleep 0.05 until @chunked
       @members.values
     end
