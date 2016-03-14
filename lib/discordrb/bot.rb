@@ -731,24 +731,8 @@ module Discordrb
         @ws_success = true
       when :GUILD_MEMBERS_CHUNK
         id = data['guild_id'].to_i
-        members = data['members']
-
-        start_time = Time.now
-
-        members.each do |member|
-          # Add the guild_id to the member so we can reuse add_guild_member
-          member['guild_id'] = id
-
-          add_guild_member(member)
-        end
-
-        duration = Time.now - start_time
-
-        if members.length < 1000
-          debug "Got final chunk for server #{id}, parsing took #{duration} seconds"
-        else
-          debug "Got one chunk for server #{id}, parsing took #{duration} seconds"
-        end
+        server = server(id)
+        server.process_chunk(data['members'])
       when :MESSAGE_CREATE
         create_message(data)
 
