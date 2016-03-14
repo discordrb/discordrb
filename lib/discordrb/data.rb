@@ -1180,6 +1180,9 @@ module Discordrb
     # @note For internal use only
     # @!visibility private
     def process_chunk(members)
+      # If this is the first chunk, then we have to start tracking deleted members
+      @deleted_members = 0 unless @deleted_members
+
       process_members(members)
       @processed_chunk_members += members.length
 
