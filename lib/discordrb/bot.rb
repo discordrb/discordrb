@@ -713,18 +713,6 @@ module Discordrb
 
         # Make sure to raise the event
         raise_event(ReadyEvent.new)
-
-        # Afterwards, send out a members request to get the chunk data
-        chunk_packet = {
-          op: 8,
-          d: {
-            guild_id: @servers.keys,
-            query: '',
-            limit: 0
-          }
-        }.to_json
-        @ws.send(chunk_packet)
-
         LOGGER.good 'Ready'
 
         # Tell the run method that everything was successful
