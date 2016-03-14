@@ -60,7 +60,7 @@ module Discordrb::API
 
   # Make an avatar URL from the user and avatar IDs
   def avatar_url(user_id, avatar_id)
-    "#{CDNBASE}/avatars/#{user_id}/#{avatar_id}.jpg"
+    "#{APIBASE}/users/#{user_id}/avatars/#{avatar_id}.jpg"
   end
 
   # Make an icon URL from server and icon IDs
