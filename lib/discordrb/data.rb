@@ -1169,6 +1169,14 @@ module Discordrb
       update_server_data(afk_timeout: afk_timeout)
     end
 
+    # Processes a GUILD_MEMBERS_CHUNK packet, specifically the members field
+    # @note For internal use only
+    # @!visibility private
+    def process_chunk(members)
+      process_members(members)
+      @chunked = true
+    end
+
     # Updates the cached data with new data
     # @note For internal use only
     # @!visibility private
