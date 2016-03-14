@@ -1177,9 +1177,12 @@ module Discordrb
     def process_chunk(members)
       process_members(members)
       @processed_chunk_members += members.length
+      LOGGER.debug("Processed one chunk on server #{@id} - length #{members.length}")
 
       # Don't bother with the rest of the method if it's not truly the last packet
       return unless @processed_chunk_members == @member_count
+
+      LOGGER.debug("Finished chunking server #{@id}")
 
       # Reset everything to normal
       @chunked = true
