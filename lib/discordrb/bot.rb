@@ -418,19 +418,21 @@ module Discordrb
     def update_voice_state(data)
       user_id = data['user_id'].to_i
       server_id = data['guild_id'].to_i
-      server = @servers[server_id]
+      server = server(server_id)
       return unless server
 
-      user = @users[user_id]
-      user.server_mute = data['mute']
-      user.server_deaf = data['deaf']
-      user.self_mute = data['self_mute']
-      user.self_deaf = data['self_deaf']
+      user = server.member(user_id)
 
       channel_id = data['channel_id']
       channel = nil
       channel = self.channel(channel_id.to_i) if channel_id
-      user.move(channel)
+
+      user.update_voice_state(
+        channel,
+        data['mute'],
+        data['deaf'],
+        data['self_mute'],
+        data['self_deaf'])
 
       @session_id = data['session_id']
     end
