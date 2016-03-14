@@ -1056,7 +1056,7 @@ module Discordrb
     # @note For internal use only
     # @!visibility private
     def cache_member(member)
-      @members[member.id] = member unless @members.include? member
+      @members[member.id] = member
     end
 
     # Creates a channel on this server with the given name.
