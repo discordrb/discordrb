@@ -961,6 +961,7 @@ module Discordrb
 
       @large = data['large']
       @member_count = data['member_count']
+      @members = {}
 
       process_roles(data['roles'])
       process_members(data['members'])
@@ -1221,8 +1222,6 @@ module Discordrb
     end
 
     def process_members(members)
-      @members = {}
-
       return unless members
       members.each do |element|
         member = Member.new(element, self, @bot)
