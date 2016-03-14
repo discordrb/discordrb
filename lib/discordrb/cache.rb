@@ -134,6 +134,20 @@ module Discordrb
       end
     end
 
+    # Requests member chunks for a given server ID.
+    # @param id [Integer] The server ID to request chunks for.
+    def request_chunks(id)
+      chunk_packet = {
+        op: 8,
+        d: {
+          guild_id: id,
+          query: '',
+          limit: 0
+        }
+      }.to_json
+      @ws.send(chunk_packet)
+    end
+
     # Gets the code for an invite.
     # @param invite [String, Invite] The invite to get the code for. Possible formats are:
     #
