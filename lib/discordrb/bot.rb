@@ -79,7 +79,12 @@ module Discordrb
         exit
       end
 
-      LOGGER.debug = debug
+      LOGGER.mode = if log_mode.is_a? TrueClass # Specifically check for `true` because people might not have updated yet
+                      :debug
+                    else
+                      log_mode
+                    end
+
       @should_parse_self = false
 
       @email = email
