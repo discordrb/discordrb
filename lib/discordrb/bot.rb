@@ -69,7 +69,11 @@ module Discordrb
     # @param email [String] The email for your (or the bot's) Discord account.
     # @param password [String] The valid password that should be used to log in to the account.
     # @param debug [Boolean] Whether or not the bug should run in debug mode, which gives increased console output.
-    def initialize(email, password, debug = false)
+    def initialize(
+        token: nil, application_id: nil,
+        email: nil, password: nil,
+        type: nil, name: nil,
+        log_mode: :normal, fancy_log: false, suppress_ready: false)
       # Make sure people replace the login details in the example files...
       if email.is_a?(String) && email.end_with?('example.com')
         puts 'You have to replace the login details in the example files with your own!'
