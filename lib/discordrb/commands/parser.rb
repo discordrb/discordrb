@@ -165,10 +165,10 @@ module Discordrb::Commands
         command = @attributes[:chain_delimiter] + command if first && @chain.start_with?(@attributes[:chain_delimiter])
         first = false
 
-        command.strip!
+        command = command.strip
 
         # Replace the hacky delimiter that was used inside quotes with actual delimiters
-        command.gsub! hacky_delim, @attributes[:chain_delimiter]
+        command = command.gsub hacky_delim, @attributes[:chain_delimiter]
 
         first_space = command.index ' '
         command_name = first_space ? command[0..first_space - 1] : command
@@ -176,10 +176,10 @@ module Discordrb::Commands
 
         # Append a previous sign if none is present
         arguments << @attributes[:previous] unless arguments.include? @attributes[:previous]
-        arguments.gsub! @attributes[:previous], prev
+        arguments = arguments.gsub @attributes[:previous], prev
 
         # Replace hacky previous signs with actual ones
-        arguments.gsub! hacky_prev, @attributes[:previous]
+        arguments = arguments.gsub hacky_prev, @attributes[:previous]
 
         arguments = arguments.split ' '
 
