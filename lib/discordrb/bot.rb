@@ -90,6 +90,9 @@ module Discordrb
       @email = email
       @password = password
 
+      @token = token
+      @application_id = application_id
+
       @name = ''
 
       debug('Creating token cache')
