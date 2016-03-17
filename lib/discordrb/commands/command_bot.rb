@@ -99,7 +99,8 @@ module Discordrb::Commands
           desc = command.attributes[:description] || '*No description available*'
           usage = command.attributes[:usage]
           result = "**`#{command_name}`**: #{desc}"
-          result << "\nUsage: `#{usage}`" if usage
+          result += "\nUsage: `#{usage}`" if usage
+          result
         else
           available_commands = @commands.values.reject { |c| !c.attributes[:help_available] }
           case available_commands.length
