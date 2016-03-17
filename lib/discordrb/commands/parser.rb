@@ -136,14 +136,14 @@ module Discordrb::Commands
           b_level += 1
         end
 
-        result << char if b_level <= 0
+        result += char if b_level <= 0
 
         next unless char == @attributes[:sub_chain_end] && !quoted
         b_level -= 1
         next unless b_level == 0
         nested = @chain[b_start + 1..index - 1]
         subchain = CommandChain.new(nested, @bot, true)
-        result << subchain.execute(event)
+        result += subchain.execute(event)
       end
 
       event.respond("Your subchains are mismatched! Make sure you don't have any extra #{@attributes[:sub_chain_start]}'s or #{@attributes[:sub_chain_end]}'s") unless b_level == 0
@@ -175,7 +175,7 @@ module Discordrb::Commands
         arguments = first_space ? command[first_space + 1..-1] : ''
 
         # Append a previous sign if none is present
-        arguments << @attributes[:previous] unless arguments.include? @attributes[:previous]
+        arguments += @attributes[:previous] unless arguments.include? @attributes[:previous]
         arguments = arguments.gsub @attributes[:previous], prev
 
         # Replace hacky previous signs with actual ones
@@ -214,7 +214,7 @@ module Discordrb::Commands
           executed_chain = divide_chain(old_chain).last
 
           arg[1].to_i.times do
-            new_result << CommandChain.new(executed_chain, @bot).execute(event)
+            new_result += CommandChain.new(executed_chain, @bot).execute(event)
           end
 
           result = new_result
