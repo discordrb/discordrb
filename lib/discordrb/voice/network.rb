@@ -44,7 +44,7 @@ module Discordrb::Voice
     def connect(endpoint, port, ssrc)
       @endpoint = endpoint
       @endpoint = @endpoint[6..-1] if @endpoint.start_with? 'wss://'
-      @endpoint.gsub!(':80', '') # The endpoint may contain a port, we don't want that
+      @endpoint = @endpoint.gsub(':80', '') # The endpoint may contain a port, we don't want that
       @endpoint = Resolv.getaddress @endpoint
 
       @port = port
@@ -128,8 +128,7 @@ module Discordrb::Voice
       @token = token
       @session = session
 
-      @endpoint = endpoint
-      @endpoint.gsub!(':80', '')
+      @endpoint = endpoint.gsub(':80', '')
 
       @udp = VoiceUDP.new
     end
