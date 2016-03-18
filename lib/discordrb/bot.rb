@@ -629,6 +629,8 @@ module Discordrb
 
       # If the type is not a user account at this point, it must be invalid
       raise ArgumentError, 'Invalid type specified! Use either :bot or :user' if type == :user
+
+      user_login(email, password, token_cache)
     end
 
     def process_token(type, token)
