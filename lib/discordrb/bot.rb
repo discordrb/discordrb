@@ -129,7 +129,7 @@ module Discordrb
       debug('Creating token cache')
       @token_cache = Discordrb::TokenCache.new
       debug('Token cache created successfully')
-      @token = login
+      @token = login(type, email, password, token, @token_cache)
 
       init_cache
 
