@@ -651,19 +651,15 @@ module Discordrb
       login_attempts ||= 0
 
       # Login
-      login_response = API.login(email, password)
-      raise Discordrb::Errors::HTTPStatusError, login_response.code if login_response.code >= 400
-
-      # Parse response
-      login_response_object = JSON.parse(login_response)
-      raise Discordrb::Errors::InvalidAuthenticationError unless login_response_object['token']
-
+      login_response = JSON.parse(API.login(email, password))
+      token = login_response['token']
+      raise Discordrb::Errors::InvalidAuthenticationError unless token
       debug('Received token from Discord!')
 
       # Cache the token
-      token_cache.store_token(email, password, login_response_object['token'])
+      token_cache.store_token(email, password, token)
 
-      login_response_object['token']
+      token
     rescue Exception => e
       response_code = login_response.nil? ? 0 : login_response.code ######## mackmm145
       if login_attempts < 100 && (e.inspect.include?('No such host is known.') || response_code == 523)
