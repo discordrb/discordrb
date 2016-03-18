@@ -621,25 +621,25 @@ module Discordrb
     ########  #######   ######   #### ##    ##
 
     def login(type, email, password, token, token_cache)
-      if @email == :token
+      if email == :token
         debug('Logging in using static token')
 
         # The password is the token!
-        return @password
+        return password
       end
 
       debug('Logging in')
       login_attempts ||= 0
 
       # First, attempt to get the token from the cache
-      token = @token_cache.token(@email, @password)
+      token = @token_cache.token(email, password)
       if token
         debug('Token successfully obtained from cache!')
         return token
       end
 
       # Login
-      login_response = API.login(@email, @password)
+      login_response = API.login(email, password)
       raise Discordrb::Errors::HTTPStatusError, login_response.code if login_response.code >= 400
 
       # Parse response
@@ -649,7 +649,7 @@ module Discordrb
       debug('Received token from Discord!')
 
       # Cache the token
-      @token_cache.store_token(@email, @password, login_response_object['token'])
+      @token_cache.store_token(email, password, login_response_object['token'])
 
       login_response_object['token']
     rescue Exception => e
