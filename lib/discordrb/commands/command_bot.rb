@@ -19,10 +19,10 @@ module Discordrb::Commands
     include CommandContainer
 
     # Creates a new CommandBot and logs in to Discord.
-    # @param prefix [String] The prefix that should trigger this bot's commands. Can be any string (including the empty
+    # @param attributes [Hash] The attributes to initialize the CommandBot with.
+    # @option attributes [String] :prefix The prefix that should trigger this bot's commands. Can be any string (including the empty
     #   string), but note that it will be literal - if the prefix is "hi" then the corresponding trigger string for
     #   a command called "test" would be "hitest". Don't forget to put spaces in if you need them!
-    # @param attributes [Hash] The attributes to initialize the CommandBot with.
     # @option attributes [true, false] :advanced_functionality Whether to enable advanced functionality (very powerful
     #   way to nest commands into chains, see https://github.com/meew0/discordrb/wiki/Commands#command-chain-syntax
     #   for info. Default is true.
