@@ -65,7 +65,20 @@ module Discordrb
     include EventContainer
     include Cache
 
-    # Makes a new bot with the given email and password. It will be ready to be added event handlers to and can eventually be run with {#run}.
+    # Makes a new bot with the given authentication data. It will be ready to be added event handlers to and can
+    # eventually be run with {#run}.
+    #
+    # Depending on the authentication information present, discordrb will deduce whether you're running on a user or a
+    # bot account. (Discord recommends using bot accounts whenever possible.) The following sets of authentication
+    # information are valid:
+    #  * token + application_id (bot account)
+    #  * email + password (user account)
+    #  * email + password + token (user account; the given token will be used for authentication instead of email
+    #    and password)
+    #
+    # Simply creating a bot won't be enough to start sending messages etc. with, only a limited set of methods can
+    # be used after logging in. If you want to do something when the bot has connected successfully, either do it in the
+    # {#ready} event, or use the {#run} method with the :async parameter and do the processing after that.
     # @param email [String] The email for your (or the bot's) Discord account.
     # @param password [String] The valid password that should be used to log in to the account.
     # @param log_mode [Symbol] The mode this bot should use for logging. See {Logger#mode=} for a list of modes.
