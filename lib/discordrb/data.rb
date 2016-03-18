@@ -276,7 +276,7 @@ module Discordrb
 
       @deaf = data['deaf']
       @mute = data['mute']
-      @joined_at = Time.parse(data['joined_at'])
+      @joined_at = data['joined_at'] ? Time.parse(data['joined_at']) : nil
     end
 
     # @return [true, false] whether this member is the server owner.
