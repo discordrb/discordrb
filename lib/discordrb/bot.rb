@@ -660,6 +660,9 @@ module Discordrb
       token_cache.store_token(email, password, token)
 
       token
+    rescue RestClient::BadRequest
+      LOGGER.error('User login failed due to an invalid email or password!')
+      raise
     end
 
     def retrieve_token(email, password, token_cache)
