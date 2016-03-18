@@ -69,6 +69,20 @@ module Discordrb
     # @param email [String] The email for your (or the bot's) Discord account.
     # @param password [String] The valid password that should be used to log in to the account.
     # @param log_mode [Symbol] The mode this bot should use for logging. See {Logger#mode=} for a list of modes.
+    # @param token [String] The token that should be used to log in. If your bot is a bot account, you have to specify
+    #   this. If you're logging in as a user, make sure to also set the account type to :user so discordrb doesn't think
+    #   you're trying to log in as a bot.
+    # @param application_id [Integer] If you're logging in as a bot, the bot's application ID.
+    # @param type [Symbol] This parameter lets you manually overwrite the account type. If this isn't specified, it will
+    #   be determined by checking what other attributes are there. The only use case for this is if you want to log in
+    #   as a user but only with a token. Valid values are :user and :bot.
+    # @param name [String] Your bot's name. This will be sent to Discord with any API requests, who will use this to
+    #   trace the source of excessive API requests; it's recommended to set this to something if you make bots that many
+    #   people will host on their servers separately.
+    # @param fancy_log [true, false] Whether the output log should be made extra fancy using ANSI escape codes. (Your
+    #   terminal may not support this.)
+    # @param suppress_ready [true, false] Whether the READY packet should be exempt from being printed to console.
+    #   Useful for very large bots running in debug or verbose log_mode.
     def initialize(
         email: nil, password: nil, log_mode: :normal,
         token: nil, application_id: nil,
