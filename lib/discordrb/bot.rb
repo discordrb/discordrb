@@ -623,7 +623,17 @@ module Discordrb
     def login(type, email, password, token, token_cache)
       # Don't bother with any login code if a token is already specified
       return process_token(type, token) if token
+    end
 
+    def process_token(type, token)
+      # Remove the "Bot " prefix if it exists
+      token = token[4..-1] if token.starts_with? 'Bot '
+
+      token = 'Bot ' + token unless type == :user
+      token
+    end
+
+    def user_login(email, password, token_cache)
       debug('Logging in')
       login_attempts ||= 0
 
@@ -664,14 +674,6 @@ module Discordrb
         log_exception(e)
         raise $ERROR_INFO
       end
-    end
-
-    def process_token(type, token)
-      # Remove the "Bot " prefix if it exists
-      token = token[4..-1] if token.starts_with? 'Bot '
-
-      token = 'Bot ' + token unless type == :user
-      token
     end
 
     def find_gateway
