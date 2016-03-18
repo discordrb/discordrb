@@ -121,7 +121,7 @@ module Discordrb
 
       @type = determine_account_type(type, email, password, token, application_id)
 
-      @name = ''
+      @name = name
 
       debug('Creating token cache')
       @token_cache = Discordrb::TokenCache.new
