@@ -90,7 +90,6 @@ module Discordrb
       @email = email
       @password = password
 
-      @token = token
       @application_id = application_id
 
       @type = determine_account_type(type, email, password, token, application_id)
