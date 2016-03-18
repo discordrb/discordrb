@@ -625,7 +625,7 @@ module Discordrb
       login_attempts ||= 0
 
       # First, attempt to get the token from the cache
-      token = @token_cache.token(email, password)
+      token = token_cache.token(email, password)
       if token
         debug('Token successfully obtained from cache!')
         return token
