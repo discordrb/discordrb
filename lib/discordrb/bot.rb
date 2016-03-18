@@ -123,6 +123,8 @@ module Discordrb
 
       @name = name
 
+      LOGGER.fancy = fancy_log
+
       debug('Creating token cache')
       @token_cache = Discordrb::TokenCache.new
       debug('Token cache created successfully')
