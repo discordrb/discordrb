@@ -50,7 +50,17 @@ module Discordrb::Commands
     # @option attributes [String] :quote_end Character that should end a quoted string (see
     #   :advanced_functionality). Default is '"'.
     def initialize(email, password, prefix, attributes = {}, debug = false)
-      super(email, password, debug)
+      super(
+        email: attributes[:email],
+        password: attributes[:password],
+        log_mode: attributes[:log_mode],
+        token: attributes[:token],
+        application_id: attributes[:application_id],
+        type: attributes[:type],
+        name: attributes[:name],
+        fancy_log: attributes[:fancy_log],
+        suppress_ready: attributes[:suppress_ready])
+
       @prefix = prefix
       @attributes = {
         # Whether advanced functionality such as command chains are enabled
