@@ -671,6 +671,7 @@ module Discordrb
       token = token[4..-1] if token.starts_with? 'Bot '
 
       token = 'Bot ' + token unless type == :user
+      token
     end
 
     def find_gateway
