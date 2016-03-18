@@ -666,6 +666,11 @@ module Discordrb
       end
     end
 
+    def process_token(type, token)
+      # Remove the "Bot " prefix if it exists
+      token = token[4..-1] if token.starts_with? 'Bot '
+    end
+
     def find_gateway
       # Get updated websocket_hub
       response = API.gateway(token)
