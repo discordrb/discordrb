@@ -649,7 +649,7 @@ module Discordrb
       debug('Received token from Discord!')
 
       # Cache the token
-      @token_cache.store_token(email, password, login_response_object['token'])
+      token_cache.store_token(email, password, login_response_object['token'])
 
       login_response_object['token']
     rescue Exception => e
