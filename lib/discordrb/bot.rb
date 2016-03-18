@@ -623,6 +623,9 @@ module Discordrb
     def login(type, email, password, token, token_cache)
       # Don't bother with any login code if a token is already specified
       return process_token(type, token) if token
+
+      # If a bot account attempts logging in without a token, throw an error
+      raise ArgumentError, 'Bot account detected (type == :bot) but no token was found! Please specify a token in the Bot initializer, or use a user account.' if type == :bot
     end
 
     def process_token(type, token)
