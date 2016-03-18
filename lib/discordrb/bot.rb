@@ -127,9 +127,9 @@ module Discordrb
       @prevent_ready = suppress_ready
 
       debug('Creating token cache')
-      @token_cache = Discordrb::TokenCache.new
+      token_cache = Discordrb::TokenCache.new
       debug('Token cache created successfully')
-      @token = login(type, email, password, token, @token_cache)
+      @token = login(type, email, password, token, token_cache)
 
       init_cache
 
