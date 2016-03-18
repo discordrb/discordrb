@@ -61,7 +61,7 @@ module Discordrb::Commands
         fancy_log: attributes[:fancy_log],
         suppress_ready: attributes[:suppress_ready])
 
-      @prefix = prefix
+      @prefix = attributes[:prefix]
       @attributes = {
         # Whether advanced functionality such as command chains are enabled
         advanced_functionality: attributes[:advanced_functionality].nil? ? true : attributes[:advanced_functionality],
