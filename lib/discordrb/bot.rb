@@ -626,6 +626,9 @@ module Discordrb
 
       # If a bot account attempts logging in without a token, throw an error
       raise ArgumentError, 'Bot account detected (type == :bot) but no token was found! Please specify a token in the Bot initializer, or use a user account.' if type == :bot
+
+      # If the type is not a user account at this point, it must be invalid
+      raise ArgumentError, 'Invalid type specified! Use either :bot or :user' if type == :user
     end
 
     def process_token(type, token)
