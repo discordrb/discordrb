@@ -388,6 +388,26 @@ module Discordrb
 
     private
 
+    # Determines the type of an account by checking which parameters are given
+    def determine_account_type(type, email, password, token, application_id)
+      # Case 1: if a type is already given, return it
+      return type if type
+
+      # Case 2: user accounts can't have application IDs so if one is given, return bot type
+      return :bot if application_id
+
+      # Case 3: bot accounts can't have emails and passwords so if either is given, assume user
+      return :user if email || password
+
+      # Case 4: If we're here and no token is given, throw an exception because that's impossible
+      raise ArgumentError, "Can't login because no authentication data was given! Specify at least a token" unless token
+
+      # Case 5: Only a token has been specified, we can assume it's a bot but we should tell the user
+      # to specify the application ID:
+      LOGGER.warn('The application ID is missing! Logging in as a bot will work but some OAuth-related functionality will be unavailable!')
+      :bot
+    end
+
     ### ##    ## ######## ######## ########  ##    ##    ###    ##        ######
     ##  ###   ##    ##    ##       ##     ## ###   ##   ## ##   ##       ##    ##
     ##  ####  ##    ##    ##       ##     ## ####  ##  ##   ##  ##       ##
