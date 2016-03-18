@@ -643,6 +643,11 @@ module Discordrb
 
     def user_login(email, password, token_cache)
       debug('Logging in')
+
+      # Attempt to retrieve the token from the cache
+      retrieved_token = retrieve_token(email, password, token_cache)
+      return retrieved_token if retrieved_token
+
       login_attempts ||= 0
 
       # Login
