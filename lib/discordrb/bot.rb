@@ -621,6 +621,9 @@ module Discordrb
     ########  #######   ######   #### ##    ##
 
     def login(type, email, password, token, token_cache)
+      # Don't bother with any login code if a token is already specified
+      return process_token(type, token) if token
+
       debug('Logging in')
       login_attempts ||= 0
 
