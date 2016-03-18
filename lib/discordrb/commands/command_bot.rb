@@ -20,6 +20,7 @@ module Discordrb::Commands
 
     # Creates a new CommandBot and logs in to Discord.
     # @param attributes [Hash] The attributes to initialize the CommandBot with.
+    # @see {Discordrb::Bot#initialize} for other attributes that should be used to create the underlying regular bot.
     # @option attributes [String] :prefix The prefix that should trigger this bot's commands. Can be any string (including the empty
     #   string), but note that it will be literal - if the prefix is "hi" then the corresponding trigger string for
     #   a command called "test" would be "hitest". Don't forget to put spaces in if you need them!
