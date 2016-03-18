@@ -68,7 +68,7 @@ module Discordrb
     # Makes a new bot with the given email and password. It will be ready to be added event handlers to and can eventually be run with {#run}.
     # @param email [String] The email for your (or the bot's) Discord account.
     # @param password [String] The valid password that should be used to log in to the account.
-    # @param debug [Boolean] Whether or not the bug should run in debug mode, which gives increased console output.
+    # @param log_mode [Symbol] The mode this bot should use for logging. See {Logger#mode=} for a list of modes.
     def initialize(
         email: nil, password: nil, log_mode: :normal,
         token: nil, application_id: nil,
