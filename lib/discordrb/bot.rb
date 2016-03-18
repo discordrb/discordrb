@@ -645,13 +645,6 @@ module Discordrb
       debug('Logging in')
       login_attempts ||= 0
 
-      # First, attempt to get the token from the cache
-      token = token_cache.token(email, password)
-      if token
-        debug('Token successfully obtained from cache!')
-        return token
-      end
-
       # Login
       login_response = API.login(email, password)
       raise Discordrb::Errors::HTTPStatusError, login_response.code if login_response.code >= 400
@@ -682,6 +675,13 @@ module Discordrb
         log_exception(e)
         raise $ERROR_INFO
       end
+    end
+
+    def retrieve_token(email, password, token_cache)
+      # First, attempt to get the token from the cache
+      token = token_cache.token(email, password)
+      debug('Token successfully obtained from cache!') if token
+      token
     end
 
     def find_gateway
