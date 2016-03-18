@@ -620,7 +620,7 @@ module Discordrb
     ##       ##     ## ##    ##   ##  ##   ###
     ########  #######   ######   #### ##    ##
 
-    def login
+    def login(type, email, password, token, token_cache)
       if @email == :token
         debug('Logging in using static token')
 
