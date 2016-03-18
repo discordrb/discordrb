@@ -145,6 +145,12 @@ module Discordrb
       @token
     end
 
+    # @return the raw token, without any prefix
+    # @see #token
+    def raw_token
+      @token.split(' ').last
+    end
+
     # Runs the bot, which logs into Discord and connects the WebSocket. This prevents all further execution unless it is executed with `async` = `:async`.
     # @param async [Symbol] If it is `:async`, then the bot will allow further execution.
     #   It doesn't necessarily have to be that, anything truthy will work,
