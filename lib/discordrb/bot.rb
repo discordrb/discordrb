@@ -660,22 +660,6 @@ module Discordrb
       token_cache.store_token(email, password, token)
 
       token
-    rescue Exception => e
-      response_code = login_response.nil? ? 0 : login_response.code ######## mackmm145
-      if login_attempts < 100 && (e.inspect.include?('No such host is known.') || response_code == 523)
-        debug("Login failed! Reattempting in 5 seconds. #{100 - login_attempts} attempts remaining.")
-        debug("Error was: #{e.inspect}")
-        sleep 5
-        login_attempts += 1
-        retry
-      else
-        debug("Login failed permanently after #{login_attempts + 1} attempts")
-
-        # Apparently we get a 400 if the password or username is incorrect. In that case, tell the user
-        debug("Are you sure you're using the correct username and password?") if e.class == RestClient::BadRequest
-        log_exception(e)
-        raise $ERROR_INFO
-      end
     end
 
     def retrieve_token(email, password, token_cache)
