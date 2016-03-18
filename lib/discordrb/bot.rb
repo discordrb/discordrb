@@ -663,6 +663,15 @@ module Discordrb
     rescue RestClient::BadRequest
       LOGGER.error('User login failed due to an invalid email or password!')
       raise
+    rescue SocketError, RestClient::RequestFailed => e # RequestFailed handles the 52x error codes Cloudflare sometimes sends that aren't covered by specific RestClient classes
+      if login_attempts && login_attempts > 100
+        LOGGER.error("User login failed permanently after #{login_attempts} attempts")
+        raise
+      else
+        LOGGER.error("User login failed! Trying again in 5 seconds, #{100 - login_attempts} remaining")
+        LOGGER.log_exception(e)
+        retry
+      end
     end
 
     def retrieve_token(email, password, token_cache)
