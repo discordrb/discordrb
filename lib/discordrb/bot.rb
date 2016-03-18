@@ -99,7 +99,7 @@ module Discordrb
     def initialize(
         email: nil, password: nil, log_mode: :normal,
         token: nil, application_id: nil,
-        type: nil, name: nil, fancy_log: false, suppress_ready: false)
+        type: nil, name: '', fancy_log: false, suppress_ready: false)
       # Make sure people replace the login details in the example files...
       if email.is_a?(String) && email.end_with?('example.com')
         puts 'You have to replace the login details in the example files with your own!'
