@@ -124,6 +124,7 @@ module Discordrb
       @name = name
 
       LOGGER.fancy = fancy_log
+      @prevent_ready = suppress_ready
 
       debug('Creating token cache')
       @token_cache = Discordrb::TokenCache.new
