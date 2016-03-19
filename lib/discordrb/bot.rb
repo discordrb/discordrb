@@ -220,6 +220,17 @@ module Discordrb
       API.join_server(token, resolved)
     end
 
+    # Creates an OAuth invite URL that can be used to invite this bot to a particular server.
+    # Requires the application ID to have been set during initialization.
+    # @param server [Server, nil] The server the bot should be invited to, or nil if a general invite should be created.
+    # @return [String] the OAuth invite URL.
+    def invite_url(server = nil)
+      raise 'No application ID has been set during initialization! Add one as the `application_id` named parameter while creating your bot.' unless @application_id
+
+      guild_id_str = server ? "&guild_id=#{server.id}" : ''
+      "https://discordapp.com/oauth2/authorize?&client_id=#{@application_id}#{guild_id_str}&scope=bot"
+    end
+
     attr_reader :voice
 
     # Connects to a voice channel, initializes network connections and returns the {Voice::VoiceBot} over which audio
