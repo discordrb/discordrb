@@ -594,7 +594,7 @@ module Discordrb
 
     # Internal handler for GUILD_CREATE
     def create_guild(data)
-      add_server(data)
+      ensure_server(data)
     end
 
     # Internal handler for GUILD_UPDATE
