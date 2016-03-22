@@ -61,7 +61,7 @@ module Discordrb::Commands
       @prefix = attributes[:prefix]
       @attributes = {
         # Whether advanced functionality such as command chains are enabled
-        advanced_functionality: attributes[:advanced_functionality].nil? ? true : attributes[:advanced_functionality],
+        advanced_functionality: attributes[:advanced_functionality].nil? ? false : attributes[:advanced_functionality],
 
         # The name of the help command (that displays information to other commands). Nil if none should exist
         help_command: attributes[:help_command] || :help,
