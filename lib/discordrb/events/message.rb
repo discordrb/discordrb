@@ -111,7 +111,8 @@ module Discordrb::Events
           if a.is_a? String
             e == a
           elsif a.is_a? Regexp
-            a.match(e) ? (e == (a.match(e)[0])) : false
+            match = a.match(e)
+            match ? (e == match[0]) : false
           end
         end,
         matches_all(@attributes[:after], event.timestamp) { |a, e| a > e },
