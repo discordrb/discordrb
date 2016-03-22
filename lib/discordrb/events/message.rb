@@ -107,7 +107,7 @@ module Discordrb::Events
             a == e
           end
         end,
-        matches_all(@attributes[:with_text] || @attributes[:content], event.content) do |a, e|
+        matches_all(@attributes[:with_text] || @attributes[:content] || @attributes[:exact_text], event.content) do |a, e|
           if a.is_a? String
             e == a
           elsif a.is_a? Regexp
