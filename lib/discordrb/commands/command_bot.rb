@@ -220,5 +220,10 @@ module Discordrb::Commands
         end
       end
     end
+
+    # Turns the object into a string, using to_s by default
+    def stringify(object)
+      object.to_s
+    end
   end
 end
