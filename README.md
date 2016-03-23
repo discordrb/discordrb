@@ -6,6 +6,7 @@ An implementation of the [Discord](https://discordapp.com/) API using Ruby.
 
 ## Quick links to sections
 
+* [Dependencies](https://github.com/meew0/discordrb#dependencies)
 * [Installation](https://github.com/meew0/discordrb#installation)
 * [Usage](https://github.com/meew0/discordrb#usage)
 * [Support](https://github.com/meew0/discordrb#support)
