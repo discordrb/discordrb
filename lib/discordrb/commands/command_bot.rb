@@ -144,7 +144,7 @@ module Discordrb::Commands
       if permission?(event.user, command.attributes[:permission_level], event.server)
         event.command = command
         result = command.call(event, arguments, chained)
-        result.to_s
+        stringify(result)
       else
         event.respond "You don't have permission to execute command `#{name}`!"
       end
