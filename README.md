@@ -14,6 +14,11 @@ An implementation of the [Discord](https://discordapp.com/) API using Ruby.
 
 See also: [Documentation](https://discord.gg/0SBTUU1wZTWfFQL2), [Tutorials](https://github.com/meew0/discordrb/wiki)
 
+## Dependencies
+
+* Ruby 2.1+
+* An installed build system for native extensions (on Windows, try the [DevKit](http://rubyinstaller.org/downloads/); installation instructions [here](https://github.com/oneclick/rubyinstaller/wiki/Development-Kit#quick-start))
+
 ## Installation
 
 ### Linux
