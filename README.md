@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/meew0/discordrb.svg?branch=master)](https://travis-ci.org/meew0/discordrb)
-
+[![Inline docs](http://inch-ci.org/github/meew0/discordrb.svg?branch=master&style=shields)](http://inch-ci.org/github/meew0/discordrb)
 # discordrb
 
 An implementation of the [Discord](https://discordapp.com/) API using Ruby.
