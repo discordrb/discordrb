@@ -19,6 +19,13 @@ See also: [Documentation](https://discord.gg/0SBTUU1wZTWfFQL2), [Tutorials](http
 * Ruby 2.1+
 * An installed build system for native extensions (on Windows, try the [DevKit](http://rubyinstaller.org/downloads/); installation instructions [here](https://github.com/oneclick/rubyinstaller/wiki/Development-Kit#quick-start))
 
+### Voice dependencies
+
+This section only applies to you if you want to use voice functionality.
+* [libsodium](https://github.com/meew0/discordrb/wiki/Installing-libsodium)
+* A compiled libopus distribution for your system, anywhere the script can find it
+* [FFmpeg](https://www.ffmpeg.org/download.html) installed and in your PATH
+
 ## Installation
 
 ### Linux
