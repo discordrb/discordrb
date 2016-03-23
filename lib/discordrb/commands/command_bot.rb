@@ -223,6 +223,8 @@ module Discordrb::Commands
 
     # Turns the object into a string, using to_s by default
     def stringify(object)
+      return '' if object.is_a? Message
+
       object.to_s
     end
   end
