@@ -741,6 +741,15 @@ module Discordrb
     #   green checkmark on Discord)
     # @param deny [#bits, Permissions, Integer] The permission sets that should receive a `deny` override (i. e. a red
     #   cross on Discord)
+    # @example Define a permission overwrite for a user that can then mention everyone and use TTS, but not create any invites
+    #   allow = Discordrb::Permissions.new
+    #   allow.can_mention_everyone = true
+    #   allow.can_send_tts_messages = true
+    #
+    #   deny = Discordrb::Permissions.new
+    #   deny.can_create_instant_invite = true
+    #
+    #   channel.define_overwrite(user, allow, deny)
     def define_overwrite(thing, allow, deny)
       allow_bits = allow.respond_to?(:bits) ? allow.bits : allow
       deny_bits = deny.respond_to?(:bits) ? deny.bits : deny
