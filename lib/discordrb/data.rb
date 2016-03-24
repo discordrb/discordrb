@@ -734,6 +734,13 @@ module Discordrb
       update_channel_data
     end
 
+    # Defines a permission overwrite for this channel that sets the specified thing to the specified allow and deny
+    # permission sets, or change an existing one.
+    # @param thing [User, Role] What to define an overwrite for.
+    # @param allow [#bits, Permissions, Integer] The permission sets that should receive an `allow` override (i. e. a
+    #   green checkmark on Discord)
+    # @param deny [#bits, Permissions, Integer] The permission sets that should receive a `deny` override (i. e. a red
+    #   cross on Discord)
     def define_overwrite(thing, allow, deny)
       allow_bits = allow.respond_to?(:bits) ? allow.bits : allow
       deny_bits = deny.respond_to?(:bits) ? deny.bits : deny
