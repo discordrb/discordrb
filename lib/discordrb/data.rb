@@ -734,6 +734,9 @@ module Discordrb
       update_channel_data
     end
 
+    def define_overwrite(thing, allow, deny)
+    end
+
     # Updates the cached data from another channel.
     # @note For internal use only
     # @!visibility private
