@@ -90,6 +90,12 @@ module Discordrb
       "<@#{@id}>"
     end
 
+    # Utility function to get Discord's distinct representation of a user, i. e. username + discriminator
+    # @return [String] distinct representation of user
+    def distinct
+      "#{@username}##{@discriminator}"
+    end
+
     # Utility function to get a user's avatar URL.
     # @return [String] the URL to the avatar image.
     def avatar_url
