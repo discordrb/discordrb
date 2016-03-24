@@ -191,7 +191,6 @@ module Discordrb
           websocket_connect
           debug("Disconnected! Attempting to reconnect in #{@falloff} seconds.")
           sleep @falloff
-          @token = login
 
           # Calculate new falloff
           @falloff *= 1.5
