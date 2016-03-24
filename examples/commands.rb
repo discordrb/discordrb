@@ -25,6 +25,8 @@ bot.command(:join, permission_level: 1, chain_usable: false) do |event, invite|
 end
 
 bot.command(:random, min_args: 0, max_args: 2, description: 'Generates a random number between 0 and 1, 0 and max or min and max.', usage: 'random [min/max] [max]') do |_event, min, max|
+  # The `if` statement returns one of multiple different things based on the condition. Its return value
+  # is then returned from the block and sent to the channel
   if max
     rand(min.to_i..max.to_i)
   elsif min
