@@ -153,6 +153,7 @@ module Discordrb::Voice
     def play(encoded_io)
       stop_playing if @playing
       @retry_attempts = 3
+      @first_packet = true
 
       play_internal do
         buf = nil
@@ -176,6 +177,8 @@ module Discordrb::Voice
 
         # Adjust volume
         buf = @encoder.adjust_volume(buf, @volume) if @volume != 1.0
+
+        @first_packet = false
 
         # Encode data
         @encoder.encode(buf)
