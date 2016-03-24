@@ -12,6 +12,7 @@ bot.command :user do |event|
 end
 
 bot.command :bold do |_event, *args|
+  # Again, the return value of the block is sent to the channel
   "**#{args.join(' ')}**"
 end
 
