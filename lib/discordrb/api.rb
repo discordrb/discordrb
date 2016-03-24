@@ -295,6 +295,8 @@ module Discordrb::API
       Authorization: token,
       content_type: :json
     )
+  rescue RestClient::BadRequest
+    raise 'Attempted to PM the bot itself!'
   end
 
   # Create an instant invite from a server or a channel id
