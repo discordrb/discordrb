@@ -48,3 +48,8 @@ Style/FrozenStringLiteralComment:
 # http://stackoverflow.com/questions/4763121/should-i-use-alias-or-alias-method
 Style/Alias:
   Enabled: false
+
+# So RuboCop doesn't complain about application IDs
+Style/NumericLiterals:
+  Exclude:
+    - examples/*
