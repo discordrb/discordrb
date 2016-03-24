@@ -21,8 +21,10 @@ module Discordrb
     # Gets a channel given its ID. This queries the internal channel cache, and if the channel doesn't
     # exist in there, it will get the data from Discord.
     # @param id [Integer] The channel ID for which to search for.
+    # @param server [Server] The server for which to search the channel for. If this isn't specified, it will be
+    #   inferred using the API
     # @return [Channel] The channel identified by the ID.
-    def channel(id)
+    def channel(id, server = nil)
       id = id.resolve_id
 
       raise Discordrb::Errors::NoPermission if @restricted_channels.include? id
@@ -32,7 +34,7 @@ module Discordrb
 
       begin
         response = API.channel(token, id)
-        channel = Channel.new(JSON.parse(response), self)
+        channel = Channel.new(JSON.parse(response), self, server)
         @channels[id] = channel
       rescue Discordrb::Errors::NoPermission
         debug "Tried to get access to restricted channel #{id}, blacklisting it"
