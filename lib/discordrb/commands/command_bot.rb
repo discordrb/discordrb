@@ -191,6 +191,8 @@ module Discordrb::Commands
     # Internal handler for MESSAGE_CREATE that is overwritten to allow for command handling
     def create_message(data)
       message = Discordrb::Message.new(data, self)
+      return if message.from_bot? && !@should_parse_self
+
       event = CommandEvent.new(message, self)
 
       return unless message.content.start_with? @prefix
