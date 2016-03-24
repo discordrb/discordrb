@@ -5,6 +5,9 @@ require 'discordrb'
 bot = Discordrb::Commands::CommandBot.new token: 'B0T.T0KEN.here', application_id: 160123456789876543, prefix: '!'
 
 bot.command :user do |event|
+  # Commands send whatever is returned from the block to the channel. This allows for compact commands like this,
+  # but you have to be aware of this so you don't accidentally return something you didn't intend to.
+  # To prevent the return value to be sent to the channel, you can just return `nil`.
   event.user.name
 end
 
