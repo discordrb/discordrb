@@ -45,6 +45,8 @@ bot.command :long do |event|
   event << 'It has multiple lines that are each sent by doing `event << line`.'
   event << 'This is an easy way to do such long messages, or to create lines that should only be sent conditionally.'
   event << 'Anyway, have a nice day.'
+
+  # Here we don't have to worry about the return value because the `event << line` statement automatically returns nil.
 end
 
 bot.run
