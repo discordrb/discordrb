@@ -96,10 +96,12 @@ module Discordrb
     #   terminal may not support this.)
     # @param suppress_ready [true, false] Whether the READY packet should be exempt from being printed to console.
     #   Useful for very large bots running in debug or verbose log_mode.
+    # @param parse_self [true, false] Whether the bot should react on its own messages. It's best to turn this off
+    #   unless you really need this so you don't inadvertently create infinite loops.
     def initialize(
         email: nil, password: nil, log_mode: :normal,
         token: nil, application_id: nil,
-        type: nil, name: '', fancy_log: false, suppress_ready: false)
+        type: nil, name: '', fancy_log: false, suppress_ready: false, parse_self: false)
       # Make sure people replace the login details in the example files...
       if email.is_a?(String) && email.end_with?('example.com')
         puts 'You have to replace the login details in the example files with your own!'
@@ -112,7 +114,7 @@ module Discordrb
                       log_mode
                     end
 
-      @should_parse_self = false
+      @should_parse_self = parse_self
 
       @email = email
       @password = password
