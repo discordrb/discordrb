@@ -735,6 +735,14 @@ module Discordrb
     end
 
     def define_overwrite(thing, allow, deny)
+      allow_bits = allow.respond_to?(:bits) ? allow.bits : allow
+      deny_bits = deny.respond_to?(:bits) ? deny.bits : deny
+
+      if thing.is_a? User
+        API.update_user_overrides(@bot.token, @id, thing.id, allow_bits, deny_bits)
+      elsif thing.is_a? Role
+        API.update_role_overrides(@bot.token, @id, thing.id, allow_bits, deny_bits)
+      end
     end
 
     # Updates the cached data from another channel.
