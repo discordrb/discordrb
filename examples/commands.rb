@@ -16,7 +16,7 @@ bot.command :bold do |_event, *args|
 end
 
 bot.command :italic do |_event, *args|
-  "**#{args.join(' ')}**"
+  "*#{args.join(' ')}*"
 end
 
 bot.command(:join, permission_level: 1, chain_usable: false) do |event, invite|
