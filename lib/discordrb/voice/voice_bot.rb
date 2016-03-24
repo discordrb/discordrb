@@ -162,6 +162,8 @@ module Discordrb::Voice
         begin
           buf = encoded_io.readpartial(DATA_LENGTH) if encoded_io
         rescue EOFError
+          raise IOError, 'File or stream not found!' if @first_packet
+
           @bot.debug('EOF while reading, breaking immediately')
           break
         end
