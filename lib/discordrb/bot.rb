@@ -778,6 +778,8 @@ module Discordrb
       type = packet['t'].intern
       case type
       when :READY
+        debug("Discord using gateway protocol version: #{data['v']}")
+
         # Activate the heartbeats
         @heartbeat_interval = data['heartbeat_interval'].to_f / 1000.0
         @heartbeat_active = true
