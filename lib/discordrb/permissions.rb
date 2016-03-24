@@ -36,17 +36,15 @@ module Discordrb
     Flags.each do |position, flag|
       attr_reader flag
       define_method "can_#{flag}=" do |value|
-        if @writer
-          new_bits = @bits
-          if value
-            new_bits |= (1 << position)
-          else
-            new_bits &= ~(1 << position)
-          end
-          @writer.write(new_bits)
-          @bits = new_bits
-          init_vars
+        new_bits = @bits
+        if value
+          new_bits |= (1 << position)
+        else
+          new_bits &= ~(1 << position)
         end
+        @writer.write(new_bits) if @writer
+        @bits = new_bits
+        init_vars
       end
     end
 
