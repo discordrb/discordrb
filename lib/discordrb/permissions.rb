@@ -65,7 +65,7 @@ module Discordrb
       end
     end
 
-    def initialize(bits, writer = nil)
+    def initialize(bits = 0, writer = nil)
       @writer = writer
       @bits = bits
       init_vars
