@@ -56,7 +56,8 @@ module Discordrb::Commands
         type: attributes[:type],
         name: attributes[:name],
         fancy_log: attributes[:fancy_log],
-        suppress_ready: attributes[:suppress_ready])
+        suppress_ready: attributes[:suppress_ready],
+        parse_self: attributes[:parse_self])
 
       @prefix = attributes[:prefix]
       @attributes = {
