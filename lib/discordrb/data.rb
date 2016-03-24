@@ -47,6 +47,7 @@ module Discordrb
 
     # @return [String] this user's discriminator which is used internally to identify users with identical usernames.
     attr_reader :discriminator
+    alias_method :discrim, :discriminator
     alias_method :tag, :discriminator
     alias_method :discord_tag, :discriminator
 
