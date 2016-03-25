@@ -247,7 +247,6 @@ module Discordrb
     # @return [Voice::VoiceBot] the initialized bot over which audio data can then be sent.
     def voice_connect(chan, encrypted = true)
       chan = channel(chan.resolve_id)
-      @voice_channel = chan
       @should_encrypt_voice = encrypted
 
       if @voices[chan.id]
@@ -256,13 +255,13 @@ module Discordrb
         @voices.delete(chan.id)
       end
 
-      debug("Got voice channel: #{@voice_channel}")
+      debug("Got voice channel: #{chan}")
 
       data = {
         op: 4,
         d: {
-          guild_id: @voice_channel.server.id.to_s,
-          channel_id: @voice_channel.id.to_s,
+          guild_id: chan.server.id.to_s,
+          channel_id: chan.id.to_s,
           self_mute: false,
           self_deaf: false
         }
