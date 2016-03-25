@@ -67,19 +67,19 @@ module Discordrb::API
 
   # Make an avatar URL from the user and avatar IDs
   def avatar_url(user_id, avatar_id)
-    "#{APIBASE}/users/#{user_id}/avatars/#{avatar_id}.jpg"
+    "#{api_base}/users/#{user_id}/avatars/#{avatar_id}.jpg"
   end
 
   # Make an icon URL from server and icon IDs
   def icon_url(server_id, icon_id)
-    "#{APIBASE}/guilds/#{server_id}/icons/#{icon_id}.jpg"
+    "#{api_base}/guilds/#{server_id}/icons/#{icon_id}.jpg"
   end
 
   # Ban a user from a server and delete their messages from the last message_days days
   def ban_user(token, server_id, user_id, message_days)
     request(
       :put,
-      "#{APIBASE}/guilds/#{server_id}/bans/#{user_id}?delete-message-days=#{message_days}",
+      "#{api_base}/guilds/#{server_id}/bans/#{user_id}?delete-message-days=#{message_days}",
       nil,
       Authorization: token
     )
@@ -89,7 +89,7 @@ module Discordrb::API
   def unban_user(token, server_id, user_id)
     request(
       :delete,
-      "#{APIBASE}/guilds/#{server_id}/bans/#{user_id}",
+      "#{api_base}/guilds/#{server_id}/bans/#{user_id}",
       Authorization: token
     )
   end
@@ -98,7 +98,7 @@ module Discordrb::API
   def kick_user(token, server_id, user_id)
     request(
       :delete,
-      "#{APIBASE}/guilds/#{server_id}/members/#{user_id}",
+      "#{api_base}/guilds/#{server_id}/members/#{user_id}",
       Authorization: token
     )
   end
@@ -107,7 +107,7 @@ module Discordrb::API
   def move_user(token, server_id, user_id, channel_id)
     request(
       :patch,
-      "#{APIBASE}/guilds/#{server_id}/members/#{user_id}",
+      "#{api_base}/guilds/#{server_id}/members/#{user_id}",
       { channel_id: channel_id }.to_json,
       Authorization: token,
       content_type: :json
@@ -118,7 +118,7 @@ module Discordrb::API
   def bans(token, server_id)
     request(
       :get,
-      "#{APIBASE}/guilds/#{server_id}/bans",
+      "#{api_base}/guilds/#{server_id}/bans",
       Authorization: token
     )
   end
@@ -127,7 +127,7 @@ module Discordrb::API
   def login(email, password)
     request(
       :post,
-      "#{APIBASE}/auth/login",
+      "#{api_base}/auth/login",
       email: email,
       password: password
     )
@@ -137,7 +137,7 @@ module Discordrb::API
   def logout(token)
     request(
       :post,
-      "#{APIBASE}/auth/logout",
+      "#{api_base}/auth/logout",
       nil,
       Authorization: token
     )
@@ -147,7 +147,7 @@ module Discordrb::API
   def create_oauth_application(token, name, redirect_uris)
     request(
       :post,
-      "#{APIBASE}/oauth2/applications",
+      "#{api_base}/oauth2/applications",
       { name: name, redirect_uris: redirect_uris }.to_json,
       Authorization: token,
       content_type: :json
@@ -158,7 +158,7 @@ module Discordrb::API
   def update_oauth_application(token, name, redirect_uris, description = '', icon = nil)
     request(
       :put,
-      "#{APIBASE}/oauth2/applications",
+      "#{api_base}/oauth2/applications",
       { name: name, redirect_uris: redirect_uris, description: description, icon: icon }.to_json,
       Authorization: token,
       content_type: :json
@@ -169,7 +169,7 @@ module Discordrb::API
   def create_server(token, name, region = :london)
     request(
       :post,
-      "#{APIBASE}/guilds",
+      "#{api_base}/guilds",
       { name: name, region: region.to_s }.to_json,
       Authorization: token,
       content_type: :json
@@ -180,7 +180,7 @@ module Discordrb::API
   def update_server(token, server_id, name, region, icon, afk_channel_id, afk_timeout)
     request(
       :patch,
-      "#{APIBASE}/guilds/#{server_id}",
+      "#{api_base}/guilds/#{server_id}",
       { name: name, region: region, icon: icon, afk_channel_id: afk_channel_id, afk_timeout: afk_timeout }.to_json,
       Authorization: token,
       content_type: :json
@@ -191,7 +191,7 @@ module Discordrb::API
   def transfer_ownership(token, server_id, user_id)
     request(
       :patch,
-      "#{APIBASE}/guilds/#{server_id}",
+      "#{api_base}/guilds/#{server_id}",
       { owner_id: user_id }.to_json,
       Authorization: token,
       content_type: :json
@@ -202,7 +202,7 @@ module Discordrb::API
   def delete_server(token, server_id)
     request(
       :delete,
-      "#{APIBASE}/guilds/#{server_id}",
+      "#{api_base}/guilds/#{server_id}",
       Authorization: token
     )
   end
@@ -211,7 +211,7 @@ module Discordrb::API
   def leave_server(token, server_id)
     request(
       :delete,
-      "#{APIBASE}/users/@me/guilds/#{server_id}",
+      "#{api_base}/users/@me/guilds/#{server_id}",
       Authorization: token
     )
   end
@@ -220,7 +220,7 @@ module Discordrb::API
   def channel(token, channel_id)
     request(
       :get,
-      "#{APIBASE}/channels/#{channel_id}",
+      "#{api_base}/channels/#{channel_id}",
       Authorization: token
     )
   end
@@ -229,7 +229,7 @@ module Discordrb::API
   def server(token, server_id)
     request(
       :get,
-      "#{APIBASE}/guilds/#{server_id}",
+      "#{api_base}/guilds/#{server_id}",
       Authorization: token
     )
   end
@@ -238,7 +238,7 @@ module Discordrb::API
   def member(token, server_id, user_id)
     request(
       :get,
-      "#{APIBASE}/guilds/#{server_id}/members/#{user_id}",
+      "#{api_base}/guilds/#{server_id}/members/#{user_id}",
       Authorization: token
     )
   end
@@ -247,7 +247,7 @@ module Discordrb::API
   def create_channel(token, server_id, name, type)
     request(
       :post,
-      "#{APIBASE}/guilds/#{server_id}/channels",
+      "#{api_base}/guilds/#{server_id}/channels",
       { name: name, type: type }.to_json,
       Authorization: token,
       content_type: :json
@@ -258,7 +258,7 @@ module Discordrb::API
   def update_channel(token, channel_id, name, topic, position = 0)
     request(
       :patch,
-      "#{APIBASE}/channels/#{channel_id}",
+      "#{api_base}/channels/#{channel_id}",
       { name: name, position: position, topic: topic }.to_json,
       Authorization: token,
       content_type: :json
@@ -269,7 +269,7 @@ module Discordrb::API
   def delete_channel(token, channel_id)
     request(
       :delete,
-      "#{APIBASE}/channels/#{channel_id}",
+      "#{api_base}/channels/#{channel_id}",
       Authorization: token
     )
   end
@@ -278,7 +278,7 @@ module Discordrb::API
   def join_server(token, invite_code)
     request(
       :post,
-      "#{APIBASE}/invite/#{invite_code}",
+      "#{api_base}/invite/#{invite_code}",
       nil,
       Authorization: token
     )
@@ -288,7 +288,7 @@ module Discordrb::API
   def resolve_invite(token, invite_code)
     request(
       :get,
-      "#{APIBASE}/invite/#{invite_code}",
+      "#{api_base}/invite/#{invite_code}",
       Authorization: token
     )
   end
@@ -297,7 +297,7 @@ module Discordrb::API
   def create_private(token, bot_user_id, user_id)
     request(
       :post,
-      "#{APIBASE}/users/#{bot_user_id}/channels",
+      "#{api_base}/users/#{bot_user_id}/channels",
       { recipient_id: user_id }.to_json,
       Authorization: token,
       content_type: :json
@@ -310,7 +310,7 @@ module Discordrb::API
   def create_invite(token, channel_id, max_age = 0, max_uses = 0, temporary = false, xkcd = false)
     request(
       :post,
-      "#{APIBASE}/channels/#{channel_id}/invites",
+      "#{api_base}/channels/#{channel_id}/invites",
       { max_age: max_age, max_uses: max_uses, temporary: temporary, xkcdpass: xkcd }.to_json,
       Authorization: token,
       content_type: :json
@@ -321,7 +321,7 @@ module Discordrb::API
   def delete_invite(token, code)
     request(
       :delete,
-      "#{APIBASE}/invites/#{code}",
+      "#{api_base}/invites/#{code}",
       Authorization: token
     )
   end
@@ -330,7 +330,7 @@ module Discordrb::API
   def send_message(token, channel_id, message, mentions = [], tts = false)
     request(
       :post,
-      "#{APIBASE}/channels/#{channel_id}/messages",
+      "#{api_base}/channels/#{channel_id}/messages",
       { content: message, mentions: mentions, tts: tts }.to_json,
       Authorization: token,
       content_type: :json
@@ -345,7 +345,7 @@ module Discordrb::API
   def delete_message(token, channel_id, message_id)
     request(
       :delete,
-      "#{APIBASE}/channels/#{channel_id}/messages/#{message_id}",
+      "#{api_base}/channels/#{channel_id}/messages/#{message_id}",
       Authorization: token
     )
   end
@@ -354,7 +354,7 @@ module Discordrb::API
   def edit_message(token, channel_id, message_id, message, mentions = [])
     request(
       :patch,
-      "#{APIBASE}/channels/#{channel_id}/messages/#{message_id}",
+      "#{api_base}/channels/#{channel_id}/messages/#{message_id}",
       { content: message, mentions: mentions }.to_json,
       Authorization: token,
       content_type: :json
@@ -367,7 +367,7 @@ module Discordrb::API
   def acknowledge_message(token, channel_id, message_id)
     request(
       :post,
-      "#{APIBASE}/channels/#{channel_id}/messages/#{message_id}/ack",
+      "#{api_base}/channels/#{channel_id}/messages/#{message_id}/ack",
       nil,
       Authorization: token
     )
@@ -377,7 +377,7 @@ module Discordrb::API
   def send_file(token, channel_id, file)
     request(
       :post,
-      "#{APIBASE}/channels/#{channel_id}/messages",
+      "#{api_base}/channels/#{channel_id}/messages",
       { file: file },
       Authorization: token
     )
@@ -387,7 +387,7 @@ module Discordrb::API
   def create_role(token, server_id)
     request(
       :post,
-      "#{APIBASE}/guilds/#{server_id}/roles",
+      "#{api_base}/guilds/#{server_id}/roles",
       nil,
       Authorization: token
     )
@@ -400,7 +400,7 @@ module Discordrb::API
   def update_role(token, server_id, role_id, name, colour, hoist = false, packed_permissions = 36_953_089)
     request(
       :patch,
-      "#{APIBASE}/guilds/#{server_id}/roles/#{role_id}",
+      "#{api_base}/guilds/#{server_id}/roles/#{role_id}",
       { color: colour, name: name, hoist: hoist, permissions: packed_permissions }.to_json,
       Authorization: token,
       content_type: :json
@@ -411,7 +411,7 @@ module Discordrb::API
   def delete_role(token, server_id, role_id)
     request(
       :delete,
-      "#{APIBASE}/guilds/#{server_id}/roles/#{role_id}",
+      "#{api_base}/guilds/#{server_id}/roles/#{role_id}",
       Authorization: token
     )
   end
@@ -420,7 +420,7 @@ module Discordrb::API
   def update_user_roles(token, server_id, user_id, roles)
     request(
       :patch,
-      "#{APIBASE}/guilds/#{server_id}/members/#{user_id}",
+      "#{api_base}/guilds/#{server_id}/members/#{user_id}",
       { roles: roles }.to_json,
       Authorization: token,
       content_type: :json
@@ -431,7 +431,7 @@ module Discordrb::API
   def update_user_overrides(token, channel_id, user_id, allow, deny)
     request(
       :put,
-      "#{APIBASE}/channels/#{channel_id}/permissions/#{user_id}",
+      "#{api_base}/channels/#{channel_id}/permissions/#{user_id}",
       { type: 'member', id: user_id, allow: allow, deny: deny }.to_json,
       Authorization: token,
       content_type: :json
@@ -442,7 +442,7 @@ module Discordrb::API
   def update_role_overrides(token, channel_id, role_id, allow, deny)
     request(
       :put,
-      "#{APIBASE}/channels/#{channel_id}/permissions/#{role_id}",
+      "#{api_base}/channels/#{channel_id}/permissions/#{role_id}",
       { type: 'role', id: role_id, allow: allow, deny: deny }.to_json,
       Authorization: token,
       content_type: :json
@@ -453,7 +453,7 @@ module Discordrb::API
   def gateway(token)
     request(
       :get,
-      "#{APIBASE}/gateway",
+      "#{api_base}/gateway",
       Authorization: token
     )
   end
@@ -462,7 +462,7 @@ module Discordrb::API
   def validate_token(token)
     request(
       :post,
-      "#{APIBASE}/auth/login",
+      "#{api_base}/auth/login",
       {}.to_json,
       Authorization: token,
       content_type: :json
@@ -473,7 +473,7 @@ module Discordrb::API
   def start_typing(token, channel_id)
     request(
       :post,
-      "#{APIBASE}/channels/#{channel_id}/typing",
+      "#{api_base}/channels/#{channel_id}/typing",
       nil,
       Authorization: token
     )
@@ -483,7 +483,7 @@ module Discordrb::API
   def user(token, user_id)
     request(
       :get,
-      "#{APIBASE}/users/#{user_id}",
+      "#{api_base}/users/#{user_id}",
       Authorization: token
     )
   end
@@ -492,7 +492,7 @@ module Discordrb::API
   def update_user(token, email, password, new_username, avatar, new_password = nil)
     request(
       :patch,
-      "#{APIBASE}/users/@me",
+      "#{api_base}/users/@me",
       { avatar: avatar, email: email, new_password: new_password, password: password, username: new_username }.to_json,
       Authorization: token,
       content_type: :json
@@ -503,7 +503,7 @@ module Discordrb::API
   def channel_log(token, channel_id, amount, before = nil, after = nil)
     request(
       :get,
-      "#{APIBASE}/channels/#{channel_id}/messages?limit=#{amount}#{"&before=#{before}" if before}#{"&after=#{after}" if after}",
+      "#{api_base}/channels/#{channel_id}/messages?limit=#{amount}#{"&before=#{before}" if before}#{"&after=#{after}" if after}",
       Authorization: token
     )
   end
