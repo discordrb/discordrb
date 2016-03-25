@@ -15,6 +15,11 @@ module Discordrb::API
     @api_base || APIBASE
   end
 
+  # Sets the API base URL to something.
+  def api_base=(value)
+    @api_base = value
+  end
+
   # @return [String] the bot name, previously specified using #bot_name=.
   def bot_name
     @bot_name
