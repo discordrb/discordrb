@@ -269,7 +269,7 @@ module Discordrb
       }
       debug("Voice channel init packet is: #{data.to_json}")
 
-      @should_connect_to_voice = true
+      @should_connect_to_voice[chan.id] = true
       @ws.send(data.to_json)
       debug('Voice channel init packet sent! Now waiting.')
 
