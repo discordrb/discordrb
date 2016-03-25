@@ -549,7 +549,7 @@ module Discordrb
       server_id = data['guild_id'].to_i
       channel = @should_connect_to_voice[server_id]
 
-      debug("Voice server update received! chan: #{chan.inspect}")
+      debug("Voice server update received! chan: #{channel.inspect}")
       return unless channel
       @should_connect_to_voice.delete(server_id)
       debug('Updating voice server!')
