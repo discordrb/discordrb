@@ -296,7 +296,9 @@ module Discordrb
       @voices[server_id]
     end
 
-    # Disconnects the client from all voice connections across Discord.
+    # Disconnects the client from a specific voice connection given the server ID. Usually it's more convenient to use
+    # {Discordrb::Voice::VoiceBot#destroy} rather than this.
+    # @param server_id [Integer] The ID of the server the voice connection is on.
     # @param destroy_vws [true, false] Whether or not the VWS should also be destroyed. If you're calling this method
     #   directly, you should leave it as true.
     def voice_destroy(server_id, destroy_vws = true)
