@@ -238,6 +238,23 @@ module Discordrb
     # @return [Hash<Integer => VoiceBot>] the voice connections this bot currently has, by the server ID to which they are connected.
     attr_reader :voices
 
+    # Gets the voice bot for a particular server or channel. You can connect to a new channel using the {#voice_connect}
+    # method.
+    # @param thing [Channel, Server, Integer] the server or channel you want to get the voice bot for, or its ID.
+    # @return [VoiceBot, nil] the VoiceBot for the thing you specified, or nil if there is no connection yet
+    def voice(thing)
+      id = thing.resolve_id
+      return @voices[id] if @voices[id]
+
+      channel = channel(id)
+      return nil unless channel
+
+      server_id = channel.server.id
+      return @voices[server_id] if @voices[server_id]
+
+      nil
+    end
+
     # Connects to a voice channel, initializes network connections and returns the {Voice::VoiceBot} over which audio
     # data can then be sent. After connecting, the bot can also be accessed using {#voice}. If the bot is already
     # connected to voice, the existing connection will be terminated - you don't have to call {VoiceBot#destroy}
