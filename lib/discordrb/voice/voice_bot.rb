@@ -1,5 +1,6 @@
 require 'discordrb/voice/encoder'
 require 'discordrb/voice/network'
+require 'discordrb/logger'
 
 # Voice support
 module Discordrb::Voice
@@ -85,6 +86,9 @@ module Discordrb::Voice
 
       @encoder = Encoder.new
       @ws.connect
+    rescue => e
+      Discordrb::LOGGER.log_exception(e)
+      raise
     end
 
     # @return [true, false] whether audio data sent will be encrypted.
