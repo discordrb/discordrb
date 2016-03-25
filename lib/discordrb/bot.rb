@@ -245,15 +245,15 @@ module Discordrb
     #   (uses an XSalsa20 stream cipher for encryption and Poly1305 for authentication)
     # @return [Voice::VoiceBot] the initialized bot over which audio data can then be sent.
     def voice_connect(chan, encrypted = true)
-      if @voice
-        debug('Voice bot exists already! Destroying it')
-        @voice.destroy
-        @voice = nil
-      end
-
       chan = channel(chan.resolve_id)
       @voice_channel = chan
       @should_encrypt_voice = encrypted
+
+      if @voices[chan.id]
+        debug('Voice bot exists already! Destroying it')
+        @voices[chan.id].destroy
+        @voices.delete(chan.id)
+      end
 
       debug("Got voice channel: #{@voice_channel}")
 
