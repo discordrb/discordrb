@@ -547,9 +547,10 @@ module Discordrb
     # Internal handler for VOICE_SERVER_UPDATE
     def update_voice_server(data)
       server_id = data['guild_id'].to_i
+      channel = @should_connect_to_voice[server_id]
 
-      debug("Voice server update received! should connect: #{@should_connect_to_voice[server_id]}")
-      return unless @should_connect_to_voice[server_id]
+      debug("Voice server update received! chan: #{chan.inspect}")
+      return unless channel
       @should_connect_to_voice.delete(server_id)
       debug('Updating voice server!')
 
@@ -560,9 +561,6 @@ module Discordrb
         debug('VOICE_SERVER_UPDATE sent with nil endpoint! Ignoring')
         return
       end
-
-      # Get the channel that was stored in this hash earlier
-      channel = @should_connect_to_voice[server_id]
 
       debug('Got data, now creating the bot.')
       @voices[server_id] = Discordrb::Voice::VoiceBot.new(channel, self, token, @session_id, endpoint, @should_encrypt_voice)
