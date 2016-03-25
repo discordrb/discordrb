@@ -10,6 +10,11 @@ module Discordrb::API
 
   module_function
 
+  # @return [String] the currently used API base URL.
+  def api_base
+    @api_base || APIBASE
+  end
+
   # @return [String] the bot name, previously specified using #bot_name=.
   def bot_name
     @bot_name
