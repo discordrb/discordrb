@@ -136,6 +136,7 @@ module Discordrb
       init_cache
 
       @voices = {}
+      @should_connect_to_voice = {}
 
       @event_threads = []
       @current_thread = 0
