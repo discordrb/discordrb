@@ -528,9 +528,10 @@ module Discordrb
 
     # Internal handler for VOICE_SERVER_UPDATE
     def update_voice_server(data)
-      debug("Voice server update received! should connect: #{@should_connect_to_voice}")
-      return unless @should_connect_to_voice
-      @should_connect_to_voice = false
+      channel_id = data['channel_id'].to_i
+      debug("Voice server update received! should connect: #{@should_connect_to_voice[channel_id]}")
+      return unless @should_connect_to_voice[channel_id]
+      @should_connect_to_voice[channel_id] = false
       debug('Updating voice server!')
 
       token = data['token']
