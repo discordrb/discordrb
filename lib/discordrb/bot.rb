@@ -545,7 +545,7 @@ module Discordrb
       channel = channel(channel_id)
 
       debug('Got data, now creating the bot.')
-      @voice = Discordrb::Voice::VoiceBot.new(channel, self, token, @session_id, endpoint, @should_encrypt_voice)
+      @voices[channel_id] = Discordrb::Voice::VoiceBot.new(channel, self, token, @session_id, endpoint, @should_encrypt_voice)
     end
 
     # Internal handler for CHANNEL_CREATE
