@@ -272,9 +272,9 @@ module Discordrb
       @ws.send(data.to_json)
       debug('Voice channel init packet sent! Now waiting.')
 
-      sleep(0.05) until @voice
+      sleep(0.05) until @voices[chan.id]
       debug('Voice connect succeeded!')
-      @voice
+      @voices[chan.id]
     end
 
     # Disconnects the client from all voice connections across Discord.
