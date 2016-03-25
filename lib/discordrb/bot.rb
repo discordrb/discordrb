@@ -235,7 +235,8 @@ module Discordrb
       "https://discordapp.com/oauth2/authorize?&client_id=#{@application_id}#{guild_id_str}&scope=bot"
     end
 
-    attr_reader :voice
+    # @return [Hash<Integer => VoiceBot>] the voice connections this bot currently has, by the server ID to which they are connected.
+    attr_reader :voices
 
     # Connects to a voice channel, initializes network connections and returns the {Voice::VoiceBot} over which audio
     # data can then be sent. After connecting, the bot can also be accessed using {#voice}. If the bot is already
