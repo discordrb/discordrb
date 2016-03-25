@@ -247,6 +247,7 @@ module Discordrb
     # @return [Voice::VoiceBot] the initialized bot over which audio data can then be sent.
     def voice_connect(chan, encrypted = true)
       chan = channel(chan.resolve_id)
+      server_id = chan.server.id
       @should_encrypt_voice = encrypted
 
       if @voices[chan.id]
@@ -260,7 +261,7 @@ module Discordrb
       data = {
         op: 4,
         d: {
-          guild_id: chan.server.id.to_s,
+          guild_id: server_id.to_s,
           channel_id: chan.id.to_s,
           self_mute: false,
           self_deaf: false
@@ -268,13 +269,13 @@ module Discordrb
       }
       debug("Voice channel init packet is: #{data.to_json}")
 
-      @should_connect_to_voice[chan.id] = true
+      @should_connect_to_voice[server_id] = true
       @ws.send(data.to_json)
       debug('Voice channel init packet sent! Now waiting.')
 
-      sleep(0.05) until @voices[chan.id]
+      sleep(0.05) until @voices[server_id]
       debug('Voice connect succeeded!')
-      @voices[chan.id]
+      @voices[server_id]
     end
 
     # Disconnects the client from all voice connections across Discord.
@@ -528,9 +529,11 @@ module Discordrb
     # Internal handler for VOICE_SERVER_UPDATE
     def update_voice_server(data)
       channel_id = data['channel_id'].to_i
-      debug("Voice server update received! should connect: #{@should_connect_to_voice[channel_id]}")
-      return unless @should_connect_to_voice[channel_id]
-      @should_connect_to_voice[channel_id] = false
+      server_id = data['guild_id'].to_i
+
+      debug("Voice server update received! should connect: #{@should_connect_to_voice[server_id]}")
+      return unless @should_connect_to_voice[server_id]
+      @should_connect_to_voice[server_id] = false
       debug('Updating voice server!')
 
       token = data['token']
@@ -544,7 +547,7 @@ module Discordrb
       channel = channel(channel_id)
 
       debug('Got data, now creating the bot.')
-      @voices[channel_id] = Discordrb::Voice::VoiceBot.new(channel, self, token, @session_id, endpoint, @should_encrypt_voice)
+      @voices[server_id] = Discordrb::Voice::VoiceBot.new(channel, self, token, @session_id, endpoint, @should_encrypt_voice)
     end
 
     # Internal handler for CHANNEL_CREATE
