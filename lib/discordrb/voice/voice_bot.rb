@@ -70,6 +70,8 @@ module Discordrb::Voice
 
     def initialize(channel, bot, token, session, endpoint, encrypted)
       @bot = bot
+      @channel = channel
+
       @ws = VoiceWS.new(channel, bot, token, session, endpoint)
       @udp = @ws.udp
       @udp.encrypted = encrypted
