@@ -287,7 +287,7 @@ module Discordrb
       }
       debug("Voice channel init packet is: #{data.to_json}")
 
-      @should_connect_to_voice[server_id] = true
+      @should_connect_to_voice[server_id] = chan
       @ws.send(data.to_json)
       debug('Voice channel init packet sent! Now waiting.')
 
@@ -546,12 +546,11 @@ module Discordrb
 
     # Internal handler for VOICE_SERVER_UPDATE
     def update_voice_server(data)
-      channel_id = data['channel_id'].to_i
       server_id = data['guild_id'].to_i
 
       debug("Voice server update received! should connect: #{@should_connect_to_voice[server_id]}")
       return unless @should_connect_to_voice[server_id]
-      @should_connect_to_voice[server_id] = false
+      @should_connect_to_voice.delete(server_id)
       debug('Updating voice server!')
 
       token = data['token']
@@ -562,7 +561,8 @@ module Discordrb
         return
       end
 
-      channel = channel(channel_id)
+      # Get the channel that was stored in this hash earlier
+      channel = @should_connect_to_voice[server_id]
 
       debug('Got data, now creating the bot.')
       @voices[server_id] = Discordrb::Voice::VoiceBot.new(channel, self, token, @session_id, endpoint, @should_encrypt_voice)
