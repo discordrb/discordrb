@@ -968,7 +968,7 @@ module Discordrb
     # Utility function to get the URL for the icon image
     # @return [String] the URL to the icon image
     def icon_url
-      API.icon_url(@id, @icon)
+      API.icon_url(@id, @icon_id)
     end
   end
 
@@ -1245,7 +1245,7 @@ module Discordrb
     def update_data(new_data)
       @name = new_data[:name] || new_data['name'] || @name
       @region = new_data[:region] || new_data['region'] || @region
-      @icon = new_data[:icon] || new_data['icon'] || @icon
+      @icon_id = new_data[:icon] || new_data['icon'] || @icon_id
       @afk_timeout = new_data[:afk_timeout] || new_data['afk_timeout'].to_i || @afk_timeout
 
       @afk_channel_id = new_data[:afk_channel_id] || new_data['afk_channel_id'].to_i || @afk_channel.id
@@ -1263,7 +1263,7 @@ module Discordrb
       API.update_server(@bot.token, @id,
                         new_data[:name] || @name,
                         new_data[:region] || @region,
-                        new_data[:icon] || @icon,
+                        new_data[:icon_id] || @icon_id,
                         new_data[:afk_channel_id] || @afk_channel_id,
                         new_data[:afk_timeout] || @afk_timeout)
       update_data(new_data)
