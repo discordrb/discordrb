@@ -510,6 +510,15 @@ module Discordrb::API
     )
   end
 
+  # Get the servers a user is connected to
+  def servers(token)
+    request(
+      :get,
+      "#{api_base}/users/@me/guilds",
+      Authorization: token
+    )
+  end
+
   # Get a list of messages from a channel's history
   def channel_log(token, channel_id, amount, before = nil, after = nil)
     request(
