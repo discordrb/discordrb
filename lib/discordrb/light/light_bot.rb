@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require 'discordrb/api'
+require 'discordrb/light/data'
+
 # This module contains classes to allow connections to bots without a connection to the gateway socket, i. e. bots
 # that only use the REST part of the API.
 module Discordrb::Light
@@ -11,6 +14,12 @@ module Discordrb::Light
     #   user account token.
     def initialize(token)
       @token = token
+    end
+
+    # @return [LightProfile] the details of the user this bot is connected to.
+    def profile
+      response = Discordrb::API.profile(@token)
+      LightProfile.new(response, self)
     end
   end
 end
