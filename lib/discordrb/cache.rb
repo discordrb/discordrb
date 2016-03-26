@@ -116,7 +116,7 @@ module Discordrb
 
     # Ensures a given server object is cached and if not, cache it from the given data hash.
     # @param data [Hash] A data hash representing a server.
-    # @return [User] the server represented by the data hash.
+    # @return [Server] the server represented by the data hash.
     def ensure_server(data)
       if @servers.include?(data['id'].to_i)
         @servers[data['id'].to_i]
