@@ -182,6 +182,11 @@ module Discordrb
     def find_channel(channel_name, server_name = nil, type: nil)
       results = []
 
+      if /<#(?<id>\d+)>?/ =~ channel_name
+        # Check for channel mentions separately
+        return [channel(id)]
+      end
+
       @servers.values.each do |server|
         server.channels.each do |channel|
           results << channel if channel.name == channel_name && (server_name || server.name) == server.name && (!type || (channel.type == type))
