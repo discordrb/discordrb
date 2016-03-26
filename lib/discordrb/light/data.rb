@@ -23,4 +23,8 @@ module Discordrb::Light
       @email = data['email']
     end
   end
+
+  # Represents a light server which only has a fraction of the properties of any other server.
+  class LightServer
+  end
 end
