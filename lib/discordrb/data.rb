@@ -1107,8 +1107,8 @@ module Discordrb
 
     # Creates a channel on this server with the given name.
     # @return [Channel] the created channel.
-    def create_channel(name)
-      response = API.create_channel(@bot.token, @id, name, 'text')
+    def create_channel(name, type = 'text')
+      response = API.create_channel(@bot.token, @id, name, type)
       Channel.new(JSON.parse(response), @bot)
     end
 
