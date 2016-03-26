@@ -836,7 +836,7 @@ module Discordrb
         end
 
         # Make sure to raise the event
-        raise_event(ReadyEvent.new)
+        raise_event(ReadyEvent.new(self))
         LOGGER.good 'Ready'
 
         # Tell the run method that everything was successful
