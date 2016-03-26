@@ -878,7 +878,7 @@ module Discordrb
     # @return [String] the content of this message.
     attr_reader :content
 
-    # @return [User] the user that sent this message.
+    # @return [Member] the user that sent this message.
     attr_reader :author
 
     # @return [Channel] the channel in which this message was sent.
