@@ -29,6 +29,9 @@ module Discordrb::Light
     include Discordrb::IDObject
     include Discordrb::ServerAttributes
 
+    attr_reader :bot_is_owner
+    alias_method :bot_is_owner?, :bot_is_owner
+
     # @!visibility private
     def initialize(data, bot)
       @bot = bot
