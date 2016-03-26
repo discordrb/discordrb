@@ -920,7 +920,7 @@ module Discordrb
 
       data['mentions'].each do |element|
         @mentions << bot.ensure_user(element)
-      end
+      end if data['mentions']
     end
 
     # Replies to this message with the specified content.
