@@ -1,6 +1,14 @@
 require 'discordrb/events/generic'
 
 module Discordrb::Events
+  # Common superclass for all lifetime events
+  class LifetimeEvent < Event
+    # @!visibility private
+    def initialize(bot)
+      @bot = bot
+    end
+  end
+
   # @see Discordrb::EventContainer#ready
   class ReadyEvent < Event; end
 
