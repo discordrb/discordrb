@@ -867,7 +867,10 @@ module Discordrb
       when :MESSAGE_UPDATE
         update_message(data)
 
-        event = MessageEditEvent.new(data, self)
+        message = Message.new(data, self)
+        return if message.from_bot? && !should_parse_self
+
+        event = MessageEditEvent.new(message, self)
         raise_event(event)
       when :MESSAGE_DELETE
         delete_message(data)
