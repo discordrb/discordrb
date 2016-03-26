@@ -26,5 +26,7 @@ module Discordrb::Light
 
   # Represents a light server which only has a fraction of the properties of any other server.
   class LightServer
+    include Discordrb::IDObject
+    include Discordrb::ServerAttributes
   end
 end
