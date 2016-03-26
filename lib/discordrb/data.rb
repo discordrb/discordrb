@@ -1035,7 +1035,7 @@ module Discordrb
       @members[id] = member
     end
 
-    # @return [Array<User>] an array of all the members on this server.
+    # @return [Array<Member>] an array of all the members on this server.
     def members
       return @members.values if @chunked
 
