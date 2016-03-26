@@ -28,5 +28,18 @@ module Discordrb::Light
   class LightServer
     include Discordrb::IDObject
     include Discordrb::ServerAttributes
+
+    # @!visibility private
+    def initialize(data, bot)
+      @bot = bot
+
+      @id = data['id'].to_i
+
+      @name = data['name']
+      @icon_id = data['icon']
+
+      @bot_is_owner = data['owner']
+      @bot_permissions = Discordrb::Permissions.new(data['permissions'])
+    end
   end
 end
