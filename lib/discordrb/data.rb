@@ -40,12 +40,11 @@ module Discordrb
     end
   end
 
-  # User on Discord, including internal data like discriminators
-  class User
-    include IDObject
-
+  # Mixin for the attributes users should have
+  module UserAttributes
     # @return [String] this user's username
     attr_reader :username
+    alias_method :name, :username
 
     # @return [String] this user's discriminator which is used internally to identify users with identical usernames.
     attr_reader :discriminator
@@ -60,31 +59,6 @@ module Discordrb
     # @return [String] the ID of this user's current avatar, can be used to generate an avatar URL.
     # @see #avatar_url
     attr_reader :avatar_id
-
-    # @!attribute [r] status
-    #   @return [Symbol] the current online status of the user (`:online`, `:offline` or `:idle`)
-    attr_accessor :status
-
-    # @!attribute [r] game
-    #   @return [String, nil] the game the user is currently playing, or `nil` if none is being played.
-    attr_accessor :game
-
-    alias_method :name, :username
-
-    def initialize(data, bot)
-      @bot = bot
-
-      @username = data['username']
-      @id = data['id'].to_i
-      @discriminator = data['discriminator']
-      @avatar_id = data['avatar']
-      @roles = {}
-
-      @bot_account = false
-      @bot_account = true if data['bot']
-
-      @status = :offline
-    end
 
     # Utility function to mention users in messages
     # @return [String] the mention code in the form of <@id>
@@ -102,6 +76,35 @@ module Discordrb
     # @return [String] the URL to the avatar image.
     def avatar_url
       API.avatar_url(@id, @avatar_id)
+    end
+  end
+
+  # User on Discord, including internal data like discriminators
+  class User
+    include IDObject
+    include UserAttributes
+
+    # @!attribute [r] status
+    #   @return [Symbol] the current online status of the user (`:online`, `:offline` or `:idle`)
+    attr_accessor :status
+
+    # @!attribute [r] game
+    #   @return [String, nil] the game the user is currently playing, or `nil` if none is being played.
+    attr_accessor :game
+
+    def initialize(data, bot)
+      @bot = bot
+
+      @username = data['username']
+      @id = data['id'].to_i
+      @discriminator = data['discriminator']
+      @avatar_id = data['avatar']
+      @roles = {}
+
+      @bot_account = false
+      @bot_account = true if data['bot']
+
+      @status = :offline
     end
 
     # Get a user's PM channel or send them a PM
