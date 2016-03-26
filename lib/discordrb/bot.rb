@@ -998,7 +998,7 @@ module Discordrb
         LOGGER.log_exception event
       end
 
-      raise_event(DisconnectEvent.new)
+      raise_event(DisconnectEvent.new(self))
     rescue => e
       LOGGER.log_exception e
       raise
