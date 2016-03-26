@@ -33,6 +33,9 @@ module Discordrb::Light
     attr_reader :bot_is_owner
     alias_method :bot_is_owner?, :bot_is_owner
 
+    # @return [Discordrb::Permissions] the permissions the LightBot has on this server
+    attr_reader :bot_permissions
+
     # @!visibility private
     def initialize(data, bot)
       @bot = bot
