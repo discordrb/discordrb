@@ -905,12 +905,14 @@ module Discordrb
       @content = data['content']
       @channel = bot.channel(data['channel_id'].to_i)
 
-      @author = if @channel.private?
-                  # Turn the message user into a recipient - we can't use the channel recipient
-                  # directly because the bot may also send messages to the channel
-                  Recipient.new(bot.user(data['author']['id'].to_i), @channel, bot)
-                else
-                  @channel.server.member(data['author']['id'].to_i)
+      @author = if data['author']
+                  if @channel.private?
+                    # Turn the message user into a recipient - we can't use the channel recipient
+                    # directly because the bot may also send messages to the channel
+                    Recipient.new(bot.user(data['author']['id'].to_i), @channel, bot)
+                  else
+                    @channel.server.member(data['author']['id'].to_i)
+                  end
                 end
 
       @timestamp = Time.parse(data['timestamp'])
