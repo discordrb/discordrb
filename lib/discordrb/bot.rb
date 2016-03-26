@@ -798,7 +798,10 @@ module Discordrb
         LOGGER.in(event.to_s)
       end
 
-      raise 'Invalid Packet' unless packet['op'] == 0 # TODO
+      if packet['op'] == 7
+        websocket_reconnect(packet['d']['url'])
+        return
+      end
 
       data = packet['d']
       type = packet['t'].intern
