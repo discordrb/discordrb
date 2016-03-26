@@ -18,7 +18,7 @@ module Discordrb::Events
 
     def init_user(data, _)
       user_id = data['user']['id'].to_i
-      @user = @server.members.find { |u| u.id == user_id }
+      @user = @server.member(user_id)
     end
 
     def init_roles(data, _)
