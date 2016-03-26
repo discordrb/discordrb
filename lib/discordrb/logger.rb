@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Discordrb
   # The format log timestamps should be in, in strftime format
   LOG_TIMESTAMP_FORMAT = '%Y-%m-%d %H:%M:%S.%L'.freeze

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Discordrb
   # Custom errors raised in various places
   module Errors

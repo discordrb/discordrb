@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Discordrb
   # List of permissions Discord uses
   class Permissions

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'websocket-client-simple'
 
 puts "Using WSCS version: #{WebSocket::Client::Simple::VERSION}"

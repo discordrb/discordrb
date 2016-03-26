@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'discordrb/voice/encoder'
 require 'discordrb/voice/network'
 require 'discordrb/logger'

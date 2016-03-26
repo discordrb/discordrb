@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'discordrb/events/message'
 require 'discordrb/events/typing'
 require 'discordrb/events/lifetime'

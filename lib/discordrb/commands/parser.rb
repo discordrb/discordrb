@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Discordrb::Commands
   # Command that can be called in a chain
   class Command

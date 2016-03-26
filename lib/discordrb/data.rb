@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # These classes hold relevant Discord data, such as messages or channels.
 
 require 'ostruct'

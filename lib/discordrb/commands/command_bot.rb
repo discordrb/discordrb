@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'discordrb/bot'
 require 'discordrb/data'
 require 'discordrb/commands/parser'
