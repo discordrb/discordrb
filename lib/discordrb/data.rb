@@ -779,7 +779,7 @@ module Discordrb
 
     # The list of users currently in this channel. This is mostly useful for a voice channel, for a text channel it will
     # just return the users on the server that are online.
-    # @return [Array<User>] the users in this channel
+    # @return [Array<Member>] the users in this channel
     def users
       if @type == 'text'
         @server.members.select { |u| u.status != :offline }
