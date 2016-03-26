@@ -786,6 +786,9 @@ module Discordrb
       @ws.thread.join
     end
 
+    def websocket_reconnect(url)
+    end
+
     def websocket_message(event)
       # Parse packet
       packet = JSON.parse(event)
