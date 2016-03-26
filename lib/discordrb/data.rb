@@ -627,7 +627,7 @@ module Discordrb
     # @return [String] the type of this channel (currently either 'text' or 'voice')
     attr_reader :type
 
-    # @return [User, nil] the recipient of the private messages, or nil if this is not a PM channel
+    # @return [Recipient, nil] the recipient of the private messages, or nil if this is not a PM channel
     attr_reader :recipient
 
     # @return [String] the channel's topic
