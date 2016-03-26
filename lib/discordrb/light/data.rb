@@ -29,6 +29,7 @@ module Discordrb::Light
     include Discordrb::IDObject
     include Discordrb::ServerAttributes
 
+    # @return [true, false] whether or not the LightBot this server belongs to is the owner of the server.
     attr_reader :bot_is_owner
     alias_method :bot_is_owner?, :bot_is_owner
 
