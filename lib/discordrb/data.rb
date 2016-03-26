@@ -962,7 +962,7 @@ module Discordrb
     # @return [String] this server's name.
     attr_reader :name
 
-    # @return [User] The server owner.
+    # @return [Member] The server owner.
     attr_reader :owner
 
     # @return [Array<Channel>] an array of all the channels (text and voice) on this server.
