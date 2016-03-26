@@ -490,6 +490,15 @@ module Discordrb::API
     )
   end
 
+  # Get profile data
+  def profile(token)
+    request(
+      :get,
+      "#{api_base}/users/@me",
+      Authorization: token
+    )
+  end
+
   # Update user data
   def update_user(token, email, password, new_username, avatar, new_password = nil)
     request(
