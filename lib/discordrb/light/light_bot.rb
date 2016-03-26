@@ -21,5 +21,11 @@ module Discordrb::Light
       response = Discordrb::API.profile(@token)
       LightProfile.new(JSON.parse(response), self)
     end
+
+    # @return [Array<LightServer>] the servers this bot is connected to.
+    def servers
+      response = Discordrb::API.servers(@token)
+      JSON.parse(response).map { |e| LightServer.new(e, self) }
+    end
   end
 end
