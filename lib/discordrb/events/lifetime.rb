@@ -10,13 +10,13 @@ module Discordrb::Events
   end
 
   # @see Discordrb::EventContainer#ready
-  class ReadyEvent < Event; end
+  class ReadyEvent < LifetimeEvent; end
 
   # Event handler for {ReadyEvent}
   class ReadyEventHandler < TrueEventHandler; end
 
   # @see Discordrb::EventContainer#disconnected
-  class DisconnectEvent < Event; end
+  class DisconnectEvent < LifetimeEvent; end
 
   # Event handler for {DisconnectEvent}
   class DisconnectEventHandler < TrueEventHandler; end
