@@ -957,15 +957,28 @@ module Discordrb
     end
   end
 
+  # Basic attributes a server should have
+  module ServerAttributes
+    # @return [String] this server's name.
+    attr_reader :name
+
+    # @return [String] the hexadecimal ID used to identify this server's icon.
+    attr_reader :icon_id
+
+    # Utility function to get the URL for the icon image
+    # @return [String] the URL to the icon image
+    def icon_url
+      API.icon_url(@id, @icon)
+    end
+  end
+
   # A server on Discord
   class Server
     include IDObject
+    include ServerAttributes
 
     # @return [String] the region the server is on (e. g. `amsterdam`).
     attr_reader :region
-
-    # @return [String] this server's name.
-    attr_reader :name
 
     # @return [Member] The server owner.
     attr_reader :owner
@@ -983,9 +996,6 @@ module Discordrb
 
     # @return [Integer] the absolute number of members on this server, offline or not.
     attr_reader :member_count
-
-    # @return [String] the hexadecimal ID used to identify this server's icon.
-    attr_reader :icon_id
 
     # @return [Integer] the amount of time after which a voice user gets moved into the AFK channel, in seconds.
     attr_reader :afk_timeout
@@ -1051,12 +1061,6 @@ module Discordrb
     end
 
     alias_method :users, :members
-
-    # Utility function to get the URL for the icon image
-    # @return [String] the URL to the icon image
-    def icon_url
-      API.icon_url(@id, @icon)
-    end
 
     # Adds a role to the role cache
     # @note For internal use only
