@@ -499,6 +499,15 @@ module Discordrb::API
     )
   end
 
+  # Get information about a user's connections
+  def connections(token)
+    request(
+      :get,
+      "#{api_base}/users/@me/connections",
+      Authorization: token
+    )
+  end
+
   # Update user data
   def update_user(token, email, password, new_username, avatar, new_password = nil)
     request(
