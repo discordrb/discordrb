@@ -47,5 +47,23 @@ module Discordrb::Light
 
     # @return [Connection] the connection integrated with the server (i. e. your connection)
     attr_reader :integrated_connection
+
+    # @!visibility private
+    def initialize(data, integrated, bot)
+      @bot = bot
+      @integrated_connection = integrated
+
+      @server = UltraLightServer.new(data['guild'], bot)
+
+      # Restructure the given data so we can reuse the Connection initializer
+      restructured = {}
+
+      restructured['type'] = data['type']
+      restructured['id'] = data['account']['id']
+      restructured['name'] = data['account']['name']
+      restructured['integrations'] = []
+
+      @server_connection = Connection.new(restructured, bot)
+    end
   end
 end
