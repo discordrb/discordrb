@@ -2,6 +2,7 @@
 
 require 'discordrb/api'
 require 'discordrb/light/data'
+require 'discordrb/light/integrations'
 
 # This module contains classes to allow connections to bots without a connection to the gateway socket, i. e. bots
 # that only use the REST part of the API.
@@ -33,6 +34,13 @@ module Discordrb::Light
     #   https://discord.gg/0cDvIgU2voWn4BaD)
     def join(code)
       Discordrb::API.join_server(@token, code)
+    end
+
+    # Gets the connections associated with this account.
+    # @return [Array<Connection>] this account's connections.
+    def connections
+      response = Discordrb::API.connections(@token)
+      JSON.parse(response).map { |e| Connection.new(e, self) }
     end
   end
 end
