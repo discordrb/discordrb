@@ -20,10 +20,13 @@ module Discordrb::Light
     # @!visibility private
     def initialize(data, bot)
       @bot = bot
+
       @revoked = data['revoked']
       @type = data['type']
       @name = data['name']
       @id = data['id']
+
+      @integrations = data['integrations'].map { |e| Integration.new(e, self, bot) }
     end
   end
 
