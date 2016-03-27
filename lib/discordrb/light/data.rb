@@ -24,6 +24,22 @@ module Discordrb::Light
     end
   end
 
+  # A server that only has an icon, a name, and an ID associated with it, like for example an integration's server.
+  class UltraLightServer
+    include Discordrb::IDObject
+    include Discordrb::ServerAttributes
+
+    # @!visibility private
+    def initialize(data, bot)
+      @bot = bot
+
+      @id = data['id'].to_i
+
+      @name = data['name']
+      @icon_id = data['icon']
+    end
+  end
+
   # Represents a light server which only has a fraction of the properties of any other server.
   class LightServer
     include Discordrb::IDObject
