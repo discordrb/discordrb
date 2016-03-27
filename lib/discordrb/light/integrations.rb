@@ -1,3 +1,4 @@
+require 'discordrb/data'
 require 'discordrb/light/data'
 
 module Discordrb::Light
@@ -35,6 +36,8 @@ module Discordrb::Light
   # An integration of a connection into a particular server, for example being a member of a subscriber-only Twitch
   # server.
   class Integration
+    include Discordrb::IDObject
+
     # @return [UltraLightServer] the server associated with this integration
     attr_reader :server
 
@@ -44,8 +47,5 @@ module Discordrb::Light
 
     # @return [Connection] the connection integrated with the server (i. e. your connection)
     attr_reader :integrated_connection
-
-    # @return [Integer] this integration's unique ID
-    attr_reader :id
   end
 end
