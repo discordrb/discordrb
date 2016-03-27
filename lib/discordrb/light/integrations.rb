@@ -13,5 +13,14 @@ module Discordrb::Light
 
     # @return [String] the ID of the connected account
     attr_reader :id
+
+    # @!visibility private
+    def initialize(data, bot)
+      @bot = bot
+      @revoked = data['revoked']
+      @type = data['type']
+      @name = data['name']
+      @id = data['id']
+    end
   end
 end
