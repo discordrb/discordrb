@@ -14,6 +14,9 @@ module Discordrb::Light
     # @return [String] the ID of the connected account
     attr_reader :id
 
+    # @return [Array<Integration>] the integrations associated with this connection
+    attr_reader :integrations
+
     # @!visibility private
     def initialize(data, bot)
       @bot = bot
