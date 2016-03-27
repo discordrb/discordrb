@@ -41,6 +41,8 @@ module Discordrb::Light
     # @return [UltraLightServer] the server associated with this integration
     attr_reader :server
 
+    # @note The connection returned by this method will have no integrations itself, as Discord doesn't provide that
+    #   data. Also, it will always be considered not revoked.
     # @return [Connection] the server's underlying connection (for a Twitch subscriber-only server, it would be the
     #   Twitch account connection of the server owner).
     attr_reader :server_connection
