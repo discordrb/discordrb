@@ -1,3 +1,5 @@
+require 'discordrb/light/data'
+
 module Discordrb::Light
   # A connection of your Discord account to a particular other service (currently, Twitch and YouTube)
   class Connection
@@ -33,5 +35,17 @@ module Discordrb::Light
   # An integration of a connection into a particular server, for example being a member of a subscriber-only Twitch
   # server.
   class Integration
+    # @return [UltraLightServer] the server associated with this integration
+    attr_reader :server
+
+    # @return [Connection] the server's underlying connection (for a Twitch subscriber-only server, it would be the
+    #   Twitch account connection of the server owner).
+    attr_reader :server_connection
+
+    # @return [Connection] the connection integrated with the server (i. e. your connection)
+    attr_reader :integrated_connection
+
+    # @return [Integer] this integration's unique ID
+    attr_reader :id
   end
 end
