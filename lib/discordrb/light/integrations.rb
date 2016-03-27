@@ -23,4 +23,9 @@ module Discordrb::Light
       @id = data['id']
     end
   end
+
+  # An integration of a connection into a particular server, for example being a member of a subscriber-only Twitch
+  # server.
+  class Integration
+  end
 end
