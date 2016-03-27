@@ -41,10 +41,7 @@ module Discordrb::Light
   end
 
   # Represents a light server which only has a fraction of the properties of any other server.
-  class LightServer
-    include Discordrb::IDObject
-    include Discordrb::ServerAttributes
-
+  class LightServer < UltraLightServer
     # @return [true, false] whether or not the LightBot this server belongs to is the owner of the server.
     attr_reader :bot_is_owner
     alias_method :bot_is_owner?, :bot_is_owner
@@ -54,12 +51,7 @@ module Discordrb::Light
 
     # @!visibility private
     def initialize(data, bot)
-      @bot = bot
-
-      @id = data['id'].to_i
-
-      @name = data['name']
-      @icon_id = data['icon']
+      super(data, bot)
 
       @bot_is_owner = data['owner']
       @bot_permissions = Discordrb::Permissions.new(data['permissions'])
