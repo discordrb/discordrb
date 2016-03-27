@@ -25,7 +25,7 @@ module Discordrb::Light
       @bot = bot
 
       @revoked = data['revoked']
-      @type = data['type']
+      @type = data['type'].to_sym
       @name = data['name']
       @id = data['id']
 
