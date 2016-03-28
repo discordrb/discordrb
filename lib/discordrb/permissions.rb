@@ -67,6 +67,10 @@ module Discordrb
       end
     end
 
+    # Create a new Permissions object either as a blank slate to add permissions to (for example for
+    #   {Channel#define_overwrite}) or from existing bit data to read out.
+    # @param bits [Integer] The permission bits that should be set from the beginning.
+    # @param writer [RoleWriter] The writer that should be used to update data when a permission is set.
     def initialize(bits = 0, writer = nil)
       @writer = writer
       @bits = bits
