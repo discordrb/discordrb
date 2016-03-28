@@ -942,6 +942,7 @@ module Discordrb
     # Deletes this message.
     def delete
       API.delete_message(@bot.token, @channel.id, @id)
+      nil
     end
 
     # Add an {Await} for a message with the same user and channel.
