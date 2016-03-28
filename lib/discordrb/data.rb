@@ -933,8 +933,10 @@ module Discordrb
 
     # Edits this message to have the specified content instead.
     # @param new_content [String] the new content the message should have.
+    # @return [Message] the resulting message.
     def edit(new_content)
-      API.edit_message(@bot.token, @channel.id, @id, new_content)
+      response = API.edit_message(@bot.token, @channel.id, @id, new_content)
+      Message.new(JSON.parse(response), @bot)
     end
 
     # Deletes this message.
