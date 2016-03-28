@@ -14,6 +14,11 @@ module Discordrb::Light
     # @param token [String] The token that should be used to authenticate to Discord. Can be an OAuth token or a regular
     #   user account token.
     def initialize(token)
+      if token.respond_to? :token
+        # Parse AccessTokens from the OAuth2 gem
+        token = token.token
+      end
+
       unless token.include? '.'
         # Discord user/bot tokens always contain two dots, so if there's none we can assume it's an OAuth token.
         token = "Bearer #{token}" # OAuth tokens have to be prefixed with 'Bearer' for Discord to be able to use them
