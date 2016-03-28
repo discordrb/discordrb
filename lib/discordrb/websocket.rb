@@ -17,6 +17,16 @@ module Discordrb
   class WebSocket
     attr_reader :open_handler, :message_handler, :close_handler, :error_handler
 
+    # Create a new WebSocket and connect to the given endpoint.
+    # @param endpoint [String] Where to connect to.
+    # @param open_handler [#call] The handler that should be called when the websocket has opened successfully.
+    # @param message_handler [#call] The handler that should be called when the websocket receives a message. The
+    #   handler can take one parameter which will have a `data` attribute for normal messages and `code` and `data` for
+    #   close frames.
+    # @param close_handler [#call] The handler that should be called when the websocket is closed due to an internal
+    #   error. The error will be passed as the first parameter to the handler.
+    # @param error_handler [#call] The handler that should be called when an error occurs in another handler. The error
+    #   will be passed as the first parameter to the handler.
     def initialize(endpoint, open_handler, message_handler, close_handler, error_handler)
       @open_handler = open_handler
       @message_handler = message_handler
