@@ -70,6 +70,7 @@ module Discordrb::Voice
     # @return [Float] the volume for audio playback, `1.0` by default.
     attr_accessor :volume
 
+    # @!visibility private
     def initialize(channel, bot, token, session, endpoint, encrypted)
       @bot = bot
       @channel = channel

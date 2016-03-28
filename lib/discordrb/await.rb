@@ -28,6 +28,7 @@ module Discordrb
     attr_reader :attributes
 
     # Makes a new await. For internal use only.
+    # @!visibility private
     def initialize(bot, key, type, attributes, block = nil)
       @bot = bot
       @key = key
