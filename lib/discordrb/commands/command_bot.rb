@@ -29,8 +29,9 @@ module Discordrb::Commands
     # @option attributes [true, false] :advanced_functionality Whether to enable advanced functionality (very powerful
     #   way to nest commands into chains, see https://github.com/meew0/discordrb/wiki/Commands#command-chain-syntax
     #   for info. Default is true.
-    # @option attributes [Symbol, Array<Symbol>] :help_command The name of the command that displays info for other
-    #   commands. Use an array if you want to have aliases. Default is "help".
+    # @option attributes [Symbol, Array<Symbol>, false] :help_command The name of the command that displays info for
+    #   other commands. Use an array if you want to have aliases. Default is "help". If none should be created, use
+    #   `false` as the value.
     # @option attributes [String] :command_doesnt_exist_message The message that should be displayed if a user attempts
     #   to use a command that does not exist. If none is specified, no message will be displayed. In the message, you
     #   can use the string '%command%' that will be replaced with the name of the command.
@@ -66,8 +67,8 @@ module Discordrb::Commands
         # Whether advanced functionality such as command chains are enabled
         advanced_functionality: attributes[:advanced_functionality].nil? ? false : attributes[:advanced_functionality],
 
-        # The name of the help command (that displays information to other commands). Nil if none should exist
-        help_command: attributes[:help_command] || :help,
+        # The name of the help command (that displays information to other commands). False if none should exist
+        help_command: (attributes[:help_command].is_a? FalseClass) ? nil : (attributes[:help_command] || :help),
 
         # The message to display for when a command doesn't exist, %command% to get the command name in question and nil for no message
         # No default value here because it may not be desired behaviour
