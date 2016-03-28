@@ -11,14 +11,6 @@ module Discordrb
       end
     end
 
-    # Raised when a HTTP status code indicates a failure
-    class HTTPStatusError < RuntimeError
-      attr_reader :status
-      def initialize(status)
-        @status = status
-      end
-    end
-
     # Raised when a message is over the character limit
     class MessageTooLong < RuntimeError; end
 
