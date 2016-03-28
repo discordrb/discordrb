@@ -9,6 +9,8 @@ module Discordrb
     # @return [true, false] whether this logger is in extra-fancy mode!
     attr_writer :fancy
 
+    # Creates a new logger.
+    # @param fancy [true, false] Whether this logger uses fancy mode (ANSI escape codes to make the output colourful)
     def initialize(fancy = false)
       @fancy = fancy
       self.mode = :normal
