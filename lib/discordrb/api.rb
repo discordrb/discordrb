@@ -358,7 +358,7 @@ module Discordrb::API
   # Send a message to a channel
   def send_message(token, channel_id, message, mentions = [], tts = false)
     request(
-      nil,
+      :message,
       :post,
       "#{api_base}/channels/#{channel_id}/messages",
       { content: message, mentions: mentions, tts: tts }.to_json,
@@ -384,7 +384,7 @@ module Discordrb::API
   # Edit a message
   def edit_message(token, channel_id, message_id, message, mentions = [])
     request(
-      nil,
+      :message,
       :patch,
       "#{api_base}/channels/#{channel_id}/messages/#{message_id}",
       { content: message, mentions: mentions }.to_json,
