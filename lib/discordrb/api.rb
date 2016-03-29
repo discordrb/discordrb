@@ -60,7 +60,11 @@ module Discordrb::API
   # Make an API request. Utility function to implement message queueing
   # in the future
   def request(key, type, *attributes)
-    attributes << key
+    if key
+      # Lock and unlock, i. e. wait for the mutex to unlock and don't do anything with it afterwards
+      @mutexes[key].lock
+      @mutexes[key].unlock
+    end
 
     # Add a custom user agent
     attributes.last[:user_agent] = user_agent if attributes.last.is_a? Hash
