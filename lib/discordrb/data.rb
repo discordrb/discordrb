@@ -946,6 +946,17 @@ module Discordrb
 
     # @return [String] the attachment's filename.
     attr_reader :filename
+
+    # @return [Integer, nil] the width of an image file, in pixels, or nil if the file is not an image.
+    attr_reader :width
+
+    # @return [Integer, nil] the height of an image file, in pixels, or nil if the file is not an image.
+    attr_reader :height
+
+    # @return [true, false] whether this file is an image file.
+    def image?
+      @width && @height
+    end
   end
 
   # A message on Discord that was sent to a text channel
