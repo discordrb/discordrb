@@ -591,3 +591,5 @@ module Discordrb::API
     )
   end
 end
+
+Discordrb::API.reset_mutexes
