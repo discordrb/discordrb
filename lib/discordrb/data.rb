@@ -956,6 +956,21 @@ module Discordrb
     # @return [Integer, nil] the height of an image file, in pixels, or nil if the file is not an image.
     attr_reader :height
 
+    # @!visibility private
+    def initialize(data, message, bot)
+      @bot = bot
+      @message = message
+
+      @url = data['url']
+      @proxy_url = data['proxy_url']
+      @filename = data['filename']
+
+      @size = data['size']
+
+      @width = data['width']
+      @height = data['height']
+    end
+
     # @return [true, false] whether this file is an image file.
     def image?
       @width && @height
