@@ -52,7 +52,9 @@ module Discordrb::API
 
   # Make an API request. Utility function to implement message queueing
   # in the future
-  def request(type, *attributes)
+  def request(key, type, *attributes)
+    attributes << key
+
     # Add a custom user agent
     attributes.last[:user_agent] = user_agent if attributes.last.is_a? Hash
     response = raw_request(type, attributes)
