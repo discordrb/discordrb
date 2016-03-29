@@ -71,10 +71,10 @@ module Discordrb::API
       end
 
       response = raw_request(type, attributes)
-    rescue RestClient::TooManyRequests
+    rescue RestClient::TooManyRequests => e
       raise "Got an HTTP 429 for an untracked API call! Please report this bug together with the following information: #{type} #{attributes}" unless key
 
-      wait_seconds = response[:retry_after].to_i / 1000.0
+      wait_seconds = e.response[:retry_after].to_i / 1000.0
       LOGGER.warn("Locking RL mutex (key: #{key}) for #{wait_seconds} seconds due to Discord rate limiting")
 
       # Wait the required time synchronized by the mutex (so other incoming requests have to wait) but only do it if
@@ -386,7 +386,8 @@ module Discordrb::API
   rescue RestClient::InternalServerError
     raise Discordrb::Errors::MessageTooLong, "Message over the character limit (#{message.length} > 2000)"
   rescue RestClient::BadGateway
-    raise Discordrb::Errors::CloudflareError, "Discord's Cloudflare system encountered an error! Usually you can ignore this error and retry the request."
+    LOGGER.warn('Got a 502 while sending a message! Not a big deal, retrying the request')
+    retry
   end
 
   # Delete a message
