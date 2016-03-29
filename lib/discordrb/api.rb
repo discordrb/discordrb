@@ -386,7 +386,7 @@ module Discordrb::API
   rescue RestClient::InternalServerError
     raise Discordrb::Errors::MessageTooLong, "Message over the character limit (#{message.length} > 2000)"
   rescue RestClient::BadGateway
-    LOGGER.warn('Got a 502 while sending a message! Not a big deal, retrying the request')
+    Discordrb::LOGGER.warn('Got a 502 while sending a message! Not a big deal, retrying the request')
     retry
   end
 
