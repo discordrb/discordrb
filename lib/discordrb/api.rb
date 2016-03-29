@@ -76,7 +76,7 @@ module Discordrb::API
 
       unless @mutexes[key].locked?
         response = JSON.parse(e.response)
-        wait_seconds = response[:retry_after].to_i / 1000.0
+        wait_seconds = response['retry_after'].to_i / 1000.0
         Discordrb::LOGGER.warn("Locking RL mutex (key: #{key}) for #{wait_seconds} seconds due to Discord rate limiting")
 
         # Wait the required time synchronized by the mutex (so other incoming requests have to wait) but only do it if
