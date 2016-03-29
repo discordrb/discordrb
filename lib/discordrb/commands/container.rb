@@ -36,8 +36,13 @@ module Discordrb::Commands
     def command(name, attributes = {}, &block)
       @commands ||= {}
       if name.is_a? Array
-        new_command = Command.new(name[0], attributes, &block)
-        name.each { |n| @commands[n] = new_command }
+        new_command = nil
+
+        name.each do |e|
+          new_command = Command.new(e, attributes, &block)
+          @commands[e] = new_command
+        end
+
         new_command
       else
         @commands[name] = Command.new(name, attributes, &block)
