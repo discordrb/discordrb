@@ -41,6 +41,13 @@ module Discordrb::API
     "rest-client/#{RestClient::VERSION} #{RUBY_ENGINE}/#{RUBY_VERSION}p#{RUBY_PATCHLEVEL} discordrb/#{Discordrb::VERSION} #{required} #{@bot_name}"
   end
 
+  # Resets all rate limit mutexes
+  def reset_mutexes
+    @mutexes = {
+      message: Mutex.new
+    }
+  end
+
   # Performs a RestClient request.
   # @param type [Symbol] The type of HTTP request to use.
   # @param attributes [Array] The attributes for the request.
