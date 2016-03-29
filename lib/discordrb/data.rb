@@ -1019,7 +1019,7 @@ module Discordrb
                   end
                 end
 
-      @timestamp = Time.parse(data['timestamp'])
+      @timestamp = Time.parse(data['timestamp']) if data['timestamp']
       @id = data['id'].to_i
 
       @mentions = []
