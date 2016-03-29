@@ -930,6 +930,10 @@ module Discordrb
     end
   end
 
+  # An attachment to a message
+  class Attachment
+  end
+
   # A message on Discord that was sent to a text channel
   class Message
     include IDObject
