@@ -947,6 +947,9 @@ module Discordrb
     # @return [String] the attachment's filename.
     attr_reader :filename
 
+    # @return [Integer] the attachment's file size in bytes.
+    attr_reader :size
+
     # @return [Integer, nil] the width of an image file, in pixels, or nil if the file is not an image.
     attr_reader :width
 
