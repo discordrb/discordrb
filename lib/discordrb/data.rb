@@ -932,6 +932,18 @@ module Discordrb
 
   # An attachment to a message
   class Attachment
+    # @return [Message] the message this attachment belongs to.
+    attr_reader :message
+
+    # @return [String] the CDN URL this attachment can be downloaded at.
+    attr_reader :url
+
+    # @return [String] the attachment's proxy URL - I'm not sure what exactly this does, but I think it has something to
+    #   do with CDNs
+    attr_reader :proxy_url
+
+    # @return [String] the attachment's filename.
+    attr_reader :filename
   end
 
   # A message on Discord that was sent to a text channel
