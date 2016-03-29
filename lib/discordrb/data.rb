@@ -973,7 +973,7 @@ module Discordrb
 
     # @return [true, false] whether this file is an image file.
     def image?
-      @width && @height
+      !(@width.nil? || @height.nil?)
     end
   end
 
