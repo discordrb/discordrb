@@ -932,6 +932,8 @@ module Discordrb
 
   # An attachment to a message
   class Attachment
+    include IDObject
+
     # @return [Message] the message this attachment belongs to.
     attr_reader :message
 
