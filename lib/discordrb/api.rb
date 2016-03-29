@@ -68,13 +68,14 @@ module Discordrb::API
 
     # Add a custom user agent
     attributes.last[:user_agent] = user_agent if attributes.last.is_a? Hash
-    response = raw_request(type, attributes)
 
-    while response.code == 429
+    begin
+      response = raw_request(type, attributes)
+    rescue RestClient::TooManyRequests
       wait_seconds = response[:retry_after].to_i / 1000.0
       LOGGER.debug("WARNING: Discord rate limiting will cause a delay of #{wait_seconds} seconds for the request: #{type} #{attributes}")
       sleep wait_seconds / 1000.0
-      response = raw_request(type, attributes)
+      retry
     end
 
     response
