@@ -996,6 +996,9 @@ module Discordrb
     # @return [Array<User>] the users that were mentioned in this message.
     attr_reader :mentions
 
+    # @return [Array<Attachment>] the files attached to this message.
+    attr_reader :attachments
+
     alias_method :user, :author
     alias_method :text, :content
     alias_method :to_s, :content
