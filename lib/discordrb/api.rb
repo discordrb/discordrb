@@ -75,7 +75,7 @@ module Discordrb::API
       raise "Got an HTTP 429 for an untracked API call! Please report this bug together with the following information: #{type} #{attributes}" unless key
 
       wait_seconds = e.response[:retry_after].to_i / 1000.0
-      LOGGER.warn("Locking RL mutex (key: #{key}) for #{wait_seconds} seconds due to Discord rate limiting")
+      Discordrb::LOGGER.warn("Locking RL mutex (key: #{key}) for #{wait_seconds} seconds due to Discord rate limiting")
 
       # Wait the required time synchronized by the mutex (so other incoming requests have to wait) but only do it if
       # the mutex isn't locked already so it will only ever wait once
