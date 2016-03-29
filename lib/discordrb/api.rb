@@ -77,7 +77,7 @@ module Discordrb::API
 
       # Wait the required time synchronized by the mutex (so other incoming requests have to wait) but only do it if
       # the mutex isn't locked already so it will only ever wait once
-      @mutexes[key].synchronize { sleep wait_seconds / 1000.0 } unless @mutexes[key].locked?
+      @mutexes[key].synchronize { sleep wait_seconds } unless @mutexes[key].locked?
 
       retry
     end
