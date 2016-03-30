@@ -9,6 +9,8 @@ module Discordrb::Events
     attr_reader :type, :topic, :position, :name, :id, :server
 
     def initialize(data, bot)
+      @channel = bot.channel(data['id'].to_i)
+
       @type = data['type']
       @topic = data['topic']
       @position = data['position']
