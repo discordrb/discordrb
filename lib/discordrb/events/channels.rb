@@ -6,6 +6,9 @@ require 'discordrb/data'
 module Discordrb::Events
   # Raised when a channel is created
   class ChannelCreateEvent < Event
+    # @return [Channel] the channel in question.
+    attr_reader :channel
+
     attr_reader :type, :topic, :position, :name, :id, :server
 
     def initialize(data, bot)
