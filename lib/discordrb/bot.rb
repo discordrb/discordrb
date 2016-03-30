@@ -953,17 +953,17 @@ module Discordrb
       when :GUILD_ROLE_UPDATE
         update_guild_role(data)
 
-        event = GuildRoleUpdateEvent.new(data, self)
+        event = ServerRoleUpdateEvent.new(data, self)
         raise_event(event)
       when :GUILD_ROLE_CREATE
         create_guild_role(data)
 
-        event = GuildRoleCreateEvent.new(data, self)
+        event = ServerRoleCreateEvent.new(data, self)
         raise_event(event)
       when :GUILD_ROLE_DELETE
         delete_guild_role(data)
 
-        event = GuildRoleDeleteEvent.new(data, self)
+        event = ServerRoleDeleteEvent.new(data, self)
         raise_event(event)
       when :GUILD_CREATE
         create_guild(data)

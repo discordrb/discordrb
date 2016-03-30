@@ -5,7 +5,7 @@ require 'discordrb/data'
 
 module Discordrb::Events
   # Raised when a role is created on a server
-  class GuildRoleCreateEvent < Event
+  class ServerRoleCreateEvent < Event
     attr_reader :role, :server
 
     def initialize(data, bot)
@@ -17,11 +17,11 @@ module Discordrb::Events
     end
   end
 
-  # Event handler for GuildRoleCreateEvent
-  class GuildRoleCreateEventHandler < EventHandler
+  # Event handler for ServerRoleCreateEvent
+  class ServerRoleCreateEventHandler < EventHandler
     def matches?(event)
       # Check for the proper event type
-      return false unless event.is_a? GuildRoleCreateEvent
+      return false unless event.is_a? ServerRoleCreateEvent
 
       [
         matches_all(@attributes[:name], event.name) do |a, e|

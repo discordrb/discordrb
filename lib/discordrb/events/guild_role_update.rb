@@ -5,7 +5,7 @@ require 'discordrb/data'
 
 module Discordrb::Events
   # Event raised when a role updates on a server
-  class GuildRoleUpdateEvent < Event
+  class ServerRoleUpdateEvent < Event
     attr_reader :role, :server
 
     def initialize(data, bot)
@@ -17,11 +17,11 @@ module Discordrb::Events
     end
   end
 
-  # Event handler for GuildRoleUpdateEvent
-  class GuildRoleUpdateEventHandler < EventHandler
+  # Event handler for ServerRoleUpdateEvent
+  class ServerRoleUpdateEventHandler < EventHandler
     def matches?(event)
       # Check for the proper event type
-      return false unless event.is_a? GuildRoleUpdateEvent
+      return false unless event.is_a? ServerRoleUpdateEvent
 
       [
         matches_all(@attributes[:name], event.name) do |a, e|

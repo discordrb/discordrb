@@ -5,7 +5,7 @@ require 'discordrb/data'
 
 module Discordrb::Events
   # Raised when a role is deleted from a server
-  class GuildRoleDeleteEvent < Event
+  class ServerRoleDeleteEvent < Event
     attr_reader :id, :server
 
     def initialize(data, bot)
@@ -18,11 +18,11 @@ module Discordrb::Events
     end
   end
 
-  # EventHandler for GuildRoleDeleteEvent
-  class GuildRoleDeleteEventHandler < EventHandler
+  # EventHandler for ServerRoleDeleteEvent
+  class ServerRoleDeleteEventHandler < EventHandler
     def matches?(event)
       # Check for the proper event type
-      return false unless event.is_a? GuildRoleDeleteEvent
+      return false unless event.is_a? ServerRoleDeleteEvent
 
       [
         matches_all(@attributes[:name], event.name) do |a, e|
