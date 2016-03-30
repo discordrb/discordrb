@@ -6,6 +6,7 @@ require 'discordrb/data'
 module Discordrb::Events
   # Generic subclass for server events (create/update/delete)
   class ServerEvent < Event
+    # @return [Server] the server in question.
     attr_reader :server
 
     def initialize(data, bot)
