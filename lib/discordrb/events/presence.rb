@@ -51,7 +51,14 @@ module Discordrb::Events
 
   # Event raised when a user starts or stops playing a game
   class PlayingEvent < Event
-    attr_reader :server, :user, :game
+    # @return [Server] the server on which the presence update happened.
+    attr_reader :server
+
+    # @return [User] the user whose status got updated.
+    attr_reader :user
+
+    # @return [String] the new game the user is playing.
+    attr_reader :game
 
     def initialize(data, bot)
       @user = bot.user(data['user']['id'].to_i)
