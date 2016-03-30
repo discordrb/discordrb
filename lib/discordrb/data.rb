@@ -1253,19 +1253,19 @@ module Discordrb
     # @param user [User] The user to ban.
     # @param message_days [Integer] How many days worth of messages sent by the user should be deleted.
     def ban(user, message_days = 0)
-      API.ban_user(@bot.token, @id, user.id, message_days)
+      API.ban_user(@bot.token, @id, user.resolve_id, message_days)
     end
 
     # Unbans a previously banned user from this server.
     # @param user [User] The user to unban.
     def unban(user)
-      API.unban_user(@bot.token, @id, user.id)
+      API.unban_user(@bot.token, @id, user.resolve_id)
     end
 
     # Kicks a user from this server.
     # @param user [User] The user to kick.
     def kick(user)
-      API.kick_user(@bot.token, @id, user.id)
+      API.kick_user(@bot.token, @id, user.resolve_id)
     end
 
     # Forcibly moves a user into a different voice channel. Only works if the bot has the permission needed.
