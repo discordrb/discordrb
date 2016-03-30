@@ -12,15 +12,8 @@ module Discordrb::Events
     delegate :type, :topic, :position, :name, :id, :server, to: :channel
 
     def initialize(data, bot)
+      @bot = bot
       @channel = bot.channel(data['id'].to_i)
-
-      @type = data['type']
-      @topic = data['topic']
-      @position = data['position']
-      @name = data['name']
-      @is_private = data['is_private']
-      @id = data['id']
-      @server = bot.server(data['guild_id'].to_i)
     end
   end
 
