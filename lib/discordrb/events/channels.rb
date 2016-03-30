@@ -18,6 +18,9 @@ module Discordrb::Events
     # @!attribute [r] position
     #   @return [Integer] the position of the channel in the channels list.
     #   @see Channel#position
+    # @!attribute [r] name
+    #   @return [String] the channel's name
+    #   @see Channel#name
     # @!attribute [r] id
     #   @return [Integer] the channel's unique ID.
     #   @see Channel#id
