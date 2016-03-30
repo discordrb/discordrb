@@ -928,17 +928,17 @@ module Discordrb
       when :GUILD_MEMBER_ADD
         add_guild_member(data)
 
-        event = GuildMemberAddEvent.new(data, self)
+        event = ServerMemberAddEvent.new(data, self)
         raise_event(event)
       when :GUILD_MEMBER_UPDATE
         update_guild_member(data)
 
-        event = GuildMemberUpdateEvent.new(data, self)
+        event = ServerMemberUpdateEvent.new(data, self)
         raise_event(event)
       when :GUILD_MEMBER_REMOVE
         delete_guild_member(data)
 
-        event = GuildMemberDeleteEvent.new(data, self)
+        event = ServerMemberDeleteEvent.new(data, self)
         raise_event(event)
       when :GUILD_BAN_ADD
         add_user_ban(data)
@@ -968,17 +968,17 @@ module Discordrb
       when :GUILD_CREATE
         create_guild(data)
 
-        event = GuildCreateEvent.new(data, self)
+        event = ServerCreateEvent.new(data, self)
         raise_event(event)
       when :GUILD_UPDATE
         update_guild(data)
 
-        event = GuildUpdateEvent.new(data, self)
+        event = ServerUpdateEvent.new(data, self)
         raise_event(event)
       when :GUILD_DELETE
         delete_guild(data)
 
-        event = GuildDeleteEvent.new(data, self)
+        event = ServerDeleteEvent.new(data, self)
         raise_event(event)
       else
         # another event that we don't support yet

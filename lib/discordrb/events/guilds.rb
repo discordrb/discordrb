@@ -5,7 +5,7 @@ require 'discordrb/data'
 
 module Discordrb::Events
   # Generic subclass for server events (create/update/delete)
-  class GuildEvent < Event
+  class ServerEvent < Event
     attr_reader :server
 
     def initialize(data, bot)
@@ -13,17 +13,17 @@ module Discordrb::Events
     end
 
     # Initializes this event with server data. Should be overwritten in case the server doesn't exist at the time
-    # of event creation (e. g. {GuildDeleteEvent})
+    # of event creation (e. g. {ServerDeleteEvent})
     def init_server(data, bot)
       @server = bot.server(data['id'].to_i)
     end
   end
 
   # Generic event handler for member events
-  class GuildEventHandler < EventHandler
+  class ServerEventHandler < EventHandler
     def matches?(event)
       # Check for the proper event type
-      return false unless event.is_a? GuildEvent
+      return false unless event.is_a? ServerEvent
 
       [
         matches_all(@attributes[:server], event.server) do |a, e|
@@ -41,27 +41,27 @@ module Discordrb::Events
 
   # Server is created
   # @see Discordrb::EventContainer#server_create
-  class GuildCreateEvent < GuildEvent; end
+  class ServerCreateEvent < ServerEvent; end
 
-  # Event handler for {GuildCreateEvent}
-  class GuildCreateEventHandler < GuildEventHandler; end
+  # Event handler for {ServerCreateEvent}
+  class ServerCreateEventHandler < ServerEventHandler; end
 
   # Server is updated (e.g. name changed)
   # @see Discordrb::EventContainer#server_update
-  class GuildUpdateEvent < GuildEvent; end
+  class ServerUpdateEvent < ServerEvent; end
 
-  # Event handler for {GuildUpdateEvent}
-  class GuildUpdateEventHandler < GuildEventHandler; end
+  # Event handler for {ServerUpdateEvent}
+  class ServerUpdateEventHandler < ServerEventHandler; end
 
   # Server is deleted
   # @see Discordrb::EventContainer#server_delete
-  class GuildDeleteEvent < GuildEvent
+  class ServerDeleteEvent < ServerEvent
     # Overide init_server to account for the deleted server
     def init_server(data, bot)
       @server = Discordrb::Server.new(data, bot)
     end
   end
 
-  # Event handler for {GuildDeleteEvent}
-  class GuildDeleteEventHandler < GuildEventHandler; end
+  # Event handler for {ServerDeleteEvent}
+  class ServerDeleteEventHandler < ServerEventHandler; end
 end

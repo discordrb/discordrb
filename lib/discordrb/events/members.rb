@@ -5,7 +5,7 @@ require 'discordrb/data'
 
 module Discordrb::Events
   # Generic subclass for server member events (add/update/delete)
-  class GuildMemberEvent < Event
+  class ServerMemberEvent < Event
     attr_reader :user, :roles, :server
     alias_method :member, :user
 
@@ -35,10 +35,10 @@ module Discordrb::Events
   end
 
   # Generic event handler for member events
-  class GuildMemberEventHandler < EventHandler
+  class ServerMemberEventHandler < EventHandler
     def matches?(event)
       # Check for the proper event type
-      return false unless event.is_a? GuildMemberEvent
+      return false unless event.is_a? ServerMemberEvent
 
       [
         matches_all(@attributes[:username], event.user.name) do |a, e|
@@ -54,27 +54,27 @@ module Discordrb::Events
 
   # Member joins
   # @see Discordrb::EventContainer#member_join
-  class GuildMemberAddEvent < GuildMemberEvent; end
+  class ServerMemberAddEvent < ServerMemberEvent; end
 
-  # Event handler for {GuildMemberAddEvent}
-  class GuildMemberAddEventHandler < GuildMemberEventHandler; end
+  # Event handler for {ServerMemberAddEvent}
+  class ServerMemberAddEventHandler < ServerMemberEventHandler; end
 
   # Member is updated (e.g. name changed)
   # @see Discordrb::EventContainer#member_update
-  class GuildMemberUpdateEvent < GuildMemberEvent; end
+  class ServerMemberUpdateEvent < ServerMemberEvent; end
 
-  # Event handler for {GuildMemberUpdateEvent}
-  class GuildMemberUpdateEventHandler < GuildMemberEventHandler; end
+  # Event handler for {ServerMemberUpdateEvent}
+  class ServerMemberUpdateEventHandler < ServerMemberEventHandler; end
 
   # Member leaves
   # @see Discordrb::EventContainer#member_leave
-  class GuildMemberDeleteEvent < GuildMemberEvent
+  class ServerMemberDeleteEvent < ServerMemberEvent
     # Overide init_user to account for the deleted user on the server
     def init_user(data, bot)
       @user = Discordrb::User.new(data['user'], bot)
     end
   end
 
-  # Event handler for {GuildMemberDeleteEvent}
-  class GuildMemberDeleteEventHandler < GuildMemberEventHandler; end
+  # Event handler for {ServerMemberDeleteEvent}
+  class ServerMemberDeleteEventHandler < ServerMemberEventHandler; end
 end

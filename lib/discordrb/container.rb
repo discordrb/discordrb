@@ -191,30 +191,30 @@ module Discordrb
     # @param attributes [Hash] The event's attributes.
     # @option attributes [String] :username Matches the username of the joined user.
     # @yield The block is executed when the event is raised.
-    # @yieldparam event [GuildMemberAddEvent] The event that was raised.
-    # @return [GuildMemberAddEventHandler] The event handler that was registered.
+    # @yieldparam event [ServerMemberAddEvent] The event that was raised.
+    # @return [ServerMemberAddEventHandler] The event handler that was registered.
     def member_join(attributes = {}, &block)
-      register_event(GuildMemberAddEvent, attributes, block)
+      register_event(ServerMemberAddEvent, attributes, block)
     end
 
     # This **event** is raised when a member update happens.
     # @param attributes [Hash] The event's attributes.
     # @option attributes [String] :username Matches the username of the updated user.
     # @yield The block is executed when the event is raised.
-    # @yieldparam event [GuildMemberUpdateEvent] The event that was raised.
-    # @return [GuildMemberUpdateEventHandler] The event handler that was registered.
+    # @yieldparam event [ServerMemberUpdateEvent] The event that was raised.
+    # @return [ServerMemberUpdateEventHandler] The event handler that was registered.
     def member_update(attributes = {}, &block)
-      register_event(GuildMemberUpdateEvent, attributes, block)
+      register_event(ServerMemberUpdateEvent, attributes, block)
     end
 
     # This **event** is raised when a member leaves a server.
     # @param attributes [Hash] The event's attributes.
     # @option attributes [String] :username Matches the username of the member.
     # @yield The block is executed when the event is raised.
-    # @yieldparam event [GuildMemberDeleteEvent] The event that was raised.
-    # @return [GuildMemberDeleteEventHandler] The event handler that was registered.
+    # @yieldparam event [ServerMemberDeleteEvent] The event that was raised.
+    # @return [ServerMemberDeleteEventHandler] The event handler that was registered.
     def member_leave(attributes = {}, &block)
-      register_event(GuildMemberDeleteEvent, attributes, block)
+      register_event(ServerMemberDeleteEvent, attributes, block)
     end
 
     # This **event** is raised when a user is banned from a server.
@@ -245,20 +245,20 @@ module Discordrb
     # @param attributes [Hash] The event's attributes.
     # @option attributes [String, Integer, Server] :server Matches the server that was created.
     # @yield The block is executed when the event is raised.
-    # @yieldparam event [GuildCreateEvent] The event that was raised.
-    # @return [GuildCreateEventHandler] The event handler that was registered.
+    # @yieldparam event [ServerCreateEvent] The event that was raised.
+    # @return [ServerCreateEventHandler] The event handler that was registered.
     def server_create(attributes = {}, &block)
-      register_event(GuildCreateEvent, attributes, block)
+      register_event(ServerCreateEvent, attributes, block)
     end
 
     # This **event** is raised when a server is updated, for example if the name or region has changed.
     # @param attributes [Hash] The event's attributes.
     # @option attributes [String, Integer, Server] :server Matches the server that was updated.
     # @yield The block is executed when the event is raised.
-    # @yieldparam event [GuildUpdateEvent] The event that was raised.
-    # @return [GuildUpdateEventHandler] The event handler that was registered.
+    # @yieldparam event [ServerUpdateEvent] The event that was raised.
+    # @return [ServerUpdateEventHandler] The event handler that was registered.
     def server_update(attributes = {}, &block)
-      register_event(GuildUpdateEvent, attributes, block)
+      register_event(ServerUpdateEvent, attributes, block)
     end
 
     # This **event** is raised when a server is deleted, or when the bot leaves a server. (These two cases are identical
@@ -266,10 +266,10 @@ module Discordrb
     # @param attributes [Hash] The event's attributes.
     # @option attributes [String, Integer, Server] :server Matches the server that was deleted.
     # @yield The block is executed when the event is raised.
-    # @yieldparam event [GuildDeleteEvent] The event that was raised.
-    # @return [GuildDeleteEventHandler] The event handler that was registered.
+    # @yieldparam event [ServerDeleteEvent] The event that was raised.
+    # @return [ServerDeleteEventHandler] The event handler that was registered.
     def server_delete(attributes = {}, &block)
-      register_event(GuildDeleteEvent, attributes, block)
+      register_event(ServerDeleteEvent, attributes, block)
     end
 
     # This **event** is raised when an {Await} is triggered. It provides an easy way to execute code
