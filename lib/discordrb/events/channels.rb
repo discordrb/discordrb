@@ -9,6 +9,21 @@ module Discordrb::Events
     # @return [Channel] the channel in question.
     attr_reader :channel
 
+    # @!attribute [r] type
+    #   @return [String] the channel's type.
+    #   @see Channel#type
+    # @!attribute [r] topic
+    #   @return [String] the channel's topic.
+    #   @see Channel#topic
+    # @!attribute [r] position
+    #   @return [Integer] the position of the channel in the channels list.
+    #   @see Channel#position
+    # @!attribute [r] id
+    #   @return [Integer] the channel's unique ID.
+    #   @see Channel#id
+    # @!attribute [r] server
+    #   @return [Server] the server the channel belongs to.
+    #   @see Channel#server
     delegate :type, :topic, :position, :name, :id, :server, to: :channel
 
     def initialize(data, bot)
