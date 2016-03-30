@@ -65,36 +65,36 @@ module Discordrb::Events
         end
       ].reduce(true, &:&)
     end
+  end
 
-    # Event raised when a role updates on a server
-    class ServerRoleUpdateEvent < Event
-      attr_reader :role, :server
+  # Event raised when a role updates on a server
+  class ServerRoleUpdateEvent < Event
+    attr_reader :role, :server
 
-      def initialize(data, bot)
-        @server = bot.server(data['guild_id'].to_i)
-        return unless @server
+    def initialize(data, bot)
+      @server = bot.server(data['guild_id'].to_i)
+      return unless @server
 
-        role_id = data['role']['id'].to_i
-        @role = @server.roles.find { |r| r.id == role_id }
-      end
+      role_id = data['role']['id'].to_i
+      @role = @server.roles.find { |r| r.id == role_id }
     end
+  end
 
-    # Event handler for ServerRoleUpdateEvent
-    class ServerRoleUpdateEventHandler < EventHandler
-      def matches?(event)
-        # Check for the proper event type
-        return false unless event.is_a? ServerRoleUpdateEvent
+  # Event handler for ServerRoleUpdateEvent
+  class ServerRoleUpdateEventHandler < EventHandler
+    def matches?(event)
+      # Check for the proper event type
+      return false unless event.is_a? ServerRoleUpdateEvent
 
-        [
-          matches_all(@attributes[:name], event.name) do |a, e|
-            a == if a.is_a? String
-                   e.to_s
-                 else
-                   e
-                 end
-          end
-        ].reduce(true, &:&)
-      end
+      [
+        matches_all(@attributes[:name], event.name) do |a, e|
+          a == if a.is_a? String
+                 e.to_s
+               else
+                 e
+               end
+        end
+      ].reduce(true, &:&)
     end
   end
 end
