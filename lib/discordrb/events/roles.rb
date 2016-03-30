@@ -37,7 +37,11 @@ module Discordrb::Events
 
   # Raised when a role is deleted from a server
   class ServerRoleDeleteEvent < Event
-    attr_reader :id, :server
+    # @return [Integer] the ID of the role that got deleted.
+    attr_reader :id
+
+    # @return [Server] the server on which a role got deleted.
+    attr_reader :server
 
     def initialize(data, bot)
       # The role should already be deleted from the server's list
