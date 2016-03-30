@@ -84,7 +84,7 @@ module Discordrb::Events
       @name = data['name']
       @is_private = data['is_private']
       @id = data['id'].to_i
-      @server = bot.server(data['guild_id'].to_i)
+      @server = bot.server(data['guild_id'].to_i) if data['guild_id']
     end
   end
 
