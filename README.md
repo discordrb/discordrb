@@ -76,7 +76,7 @@ You can make a simple bot like this:
 ```ruby
 require 'discordrb'
 
-bot = Discordrb::Bot.new "email@example.com", "hunter2"
+bot = Discordrb::Bot.new token: '<token here>'
 
 bot.message(with_text: "Ping!") do |event|
   event.respond "Pong!"
