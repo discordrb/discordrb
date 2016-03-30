@@ -9,7 +9,7 @@ module Discordrb::Events
     # @return [Channel] the channel in question.
     attr_reader :channel
 
-    attr_reader :type, :topic, :position, :name, :id, :server
+    delegate :type, :topic, :position, :name, :id, :server, to: :channel
 
     def initialize(data, bot)
       @channel = bot.channel(data['id'].to_i)
