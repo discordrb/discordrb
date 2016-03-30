@@ -67,7 +67,7 @@ module Discordrb::Events
   # Event handler for {ServerMemberAddEvent}
   class ServerMemberAddEventHandler < ServerMemberEventHandler; end
 
-  # Member is updated (e.g. name changed)
+  # Member is updated (roles added or deleted)
   # @see Discordrb::EventContainer#member_update
   class ServerMemberUpdateEvent < ServerMemberEvent; end
 
