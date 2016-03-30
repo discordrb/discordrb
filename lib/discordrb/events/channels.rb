@@ -59,7 +59,23 @@ module Discordrb::Events
 
   # Raised when a channel is deleted
   class ChannelDeleteEvent < Event
-    attr_reader :type, :topic, :position, :name, :id, :server
+    # @return [String] the channel's type (text or voice)
+    attr_reader :type
+
+    # @return [String] the channel's topic
+    attr_reader :topic
+
+    # @return [Integer] the position of the channel on the list
+    attr_reader :position
+
+    # @return [String] the channel's name
+    attr_reader :name
+
+    # @return [Integer] the channel's ID
+    attr_reader :id
+
+    # @return [Server] the channel's server
+    attr_reader :server
 
     def initialize(data, bot)
       @type = data['type']
