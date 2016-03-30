@@ -6,7 +6,15 @@ require 'discordrb/data'
 module Discordrb::Events
   # Generic subclass for server member events (add/update/delete)
   class ServerMemberEvent < Event
-    attr_reader :user, :roles, :server
+    # @return [Member] the member in question.
+    attr_reader :user
+
+    # @return [Array<Role>] the member's roles.
+    attr_reader :roles
+
+    # @return [Server] the server on which the event happened.
+    attr_reader :server
+
     alias_method :member, :user
 
     def initialize(data, bot)
