@@ -5,7 +5,11 @@ require 'discordrb/events/generic'
 module Discordrb::Events
   # Event raised when a text message is sent to a channel
   class MessageEvent < Event
-    attr_reader :message, :saved_message
+    # @return [Message] the message which triggered this event.
+    attr_reader :message
+
+    # @return [String] the message that has been saved by calls to {#<<} and will be sent to Discord upon completion.
+    attr_reader :saved_message
 
     # @!attribute [r] author
     #   @return [User] who sent this message.
