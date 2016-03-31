@@ -434,6 +434,13 @@ module Discordrb
       }.to_json)
     end
 
+    # Injects a resume packet (op 6) into the gateway. If this is done with a running connection, it will cause an
+    # error. It has no use outside of testing stuff that I know of, but if you want to use it anyway for some reason,
+    # here it is.
+    def inject_resume
+      resume(@sequence, raw_token, @session_id)
+    end
+
     # Sets debug mode. If debug mode is on, many things will be outputted to STDOUT.
     def debug=(new_debug)
       LOGGER.debug = new_debug
