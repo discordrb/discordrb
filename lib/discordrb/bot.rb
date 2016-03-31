@@ -908,6 +908,18 @@ module Discordrb
 
         # Tell the run method that everything was successful
         @ws_success = true
+      when :RESUMED
+        # The RESUMED event is received after a successful op 6 (resume). It does nothing except tell the bot the
+        # connection is initiated (like READY would) and set a new heartbeat interval.
+        debug('Connection resumed')
+
+        @heartbeat_interval = data['heartbeat_interval'].to_f / 1000.0
+
+        # Since we disabled it earlier so we don't send any heartbeats in between close and resume,, make sure to
+        # re-enable heartbeating
+        @heartbeat_active = true
+
+        debug("Desired heartbeat_interval: #{@heartbeat_interval}")
       when :GUILD_MEMBERS_CHUNK
         id = data['guild_id'].to_i
         server = server(id)
