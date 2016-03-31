@@ -803,7 +803,7 @@ module Discordrb
     ####  ###   ######     ########    ###    ######## ##    ##    ##     ######
 
     # Desired gateway version
-    GATEWAY_VERSION = 3
+    GATEWAY_VERSION = 4
 
     def websocket_connect
       debug('Attempting to get gateway URL...')
