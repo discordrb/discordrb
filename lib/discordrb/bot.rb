@@ -203,6 +203,8 @@ module Discordrb
 
           # Restart the loop, i. e. reconnect
         end
+
+        LOGGER.warn('The WS loop exited! Not sure if this is a good thing')
       end
 
       debug('WS thread created! Now waiting for confirmation that everything worked')
