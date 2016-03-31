@@ -1043,6 +1043,12 @@ module Discordrb
     end
 
     def websocket_open
+      # If we've already received packets (packet sequence > 0) resume an existing connection instead of identifying anew
+      if @sequence && @sequence > 0
+        resume(@sequence, raw_token, @session_id)
+        return
+      end
+
       identify(raw_token, 100, GATEWAY_VERSION)
     end
 
