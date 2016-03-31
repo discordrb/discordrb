@@ -828,10 +828,15 @@ module Discordrb
         LOGGER.in(event.to_s)
       end
 
-      if packet['op'] == 7
+      opcode = packet['op'].to_i
+      if opcode == 7
         websocket_reconnect(packet['d']['url'])
         return
       end
+
+      raise "Got an unexpected opcode (#{opcode}) in a gateway event!
+              Please report this issue along with the following information:
+              v3 #{packet}" unless opcode == 0
 
       data = packet['d']
       type = packet['t'].intern
