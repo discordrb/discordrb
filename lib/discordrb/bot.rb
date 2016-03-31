@@ -790,6 +790,9 @@ module Discordrb
     ##  ##  ## ##    ##    ##         ## ##   ##       ##   ###    ##    ##    ##
     ####  ###   ######     ########    ###    ######## ##    ##    ##     ######
 
+    # Desired gateway version
+    GATEWAY_VERSION = 3
+
     def websocket_connect
       debug('Attempting to get gateway URL...')
       gateway_url = find_gateway
@@ -836,7 +839,7 @@ module Discordrb
 
       raise "Got an unexpected opcode (#{opcode}) in a gateway event!
               Please report this issue along with the following information:
-              v3 #{packet}" unless opcode == 0
+              v#{GATEWAY_VERSION} #{packet}" unless opcode == 0
 
       data = packet['d']
       type = packet['t'].intern
@@ -1042,9 +1045,9 @@ module Discordrb
     def websocket_open
       # Send the initial packet
       packet = {
-        op: 2,    # Packet identifier
-        d: {      # Packet data
-          v: 3,   # WebSocket protocol version
+        op: 2,                # Opcode
+        d: {                  # Packet data
+          v: GATEWAY_VERSION, # WebSocket protocol version
           token: raw_token,
           properties: { # I'm unsure what these values are for exactly, but they don't appear to impact bot functionality in any way.
             :'$os' => RUBY_PLATFORM.to_s,
