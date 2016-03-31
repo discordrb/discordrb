@@ -753,7 +753,7 @@ module Discordrb
     end
 
     def find_gateway
-      # Get updated websocket_hub
+      # Get the correct gateway URL from Discord
       response = API.gateway(token)
       JSON.parse(response)['url']
     end
@@ -768,12 +768,12 @@ module Discordrb
 
     def websocket_connect
       debug('Attempting to get gateway URL...')
-      websocket_hub = find_gateway
-      debug("Success! Gateway URL is #{websocket_hub}.")
+      gateway_url = find_gateway
+      debug("Success! Gateway URL is #{gateway_url}.")
       debug('Now running bot')
 
       @ws = Discordrb::WebSocket.new(
-        websocket_hub,
+        gateway_url,
         method(:websocket_open),
         method(:websocket_message),
         method(:websocket_close),
