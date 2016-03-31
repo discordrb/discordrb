@@ -846,6 +846,7 @@ module Discordrb
           Please report the circumstances in which you got this message along with the following data:
           v#{GATEWAY_VERSION} #{packet}"
         invalidate_session
+        LOGGER.warn 'Session invalidated! All bets are off now.'
         return
       end
 
