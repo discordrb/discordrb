@@ -1028,7 +1028,8 @@ module Discordrb
         @mentions << bot.ensure_user(element)
       end if data['mentions']
 
-      @attachments = data['attachments'].map { |e| Attachment.new(e, self, @bot) }
+      @attachments = []
+      @attachments = data['attachments'].map { |e| Attachment.new(e, self, @bot) } if data['attachments']
     end
 
     # Replies to this message with the specified content.
