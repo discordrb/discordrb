@@ -816,6 +816,9 @@ module Discordrb
       @reconnect_url = url
       @ws.close
 
+      # Reset the packet sequence number so we don't try to resume the connection afterwards
+      @sequence = 0
+
       # Let's hope the reconnect handler reconnects us correctly...
     end
 
