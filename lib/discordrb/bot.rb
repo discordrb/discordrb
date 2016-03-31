@@ -1069,6 +1069,14 @@ module Discordrb
       end
 
       raise_event(DisconnectEvent.new(self))
+
+      # Safely close the WS connection and handle any errors that occur there
+      begin
+        @ws.close
+      rescue => e
+        LOGGER.warn 'Got the following exception while closing the WS after being disconnected:'
+        LOGGER.log_exception e
+      end
     rescue => e
       LOGGER.log_exception e
       raise
