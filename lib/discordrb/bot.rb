@@ -851,6 +851,9 @@ module Discordrb
       when :READY
         debug("Discord using gateway protocol version: #{data['v']}")
 
+        # Set the session ID in case we get disconnected and have to resume
+        @session_id = data['session_id']
+
         # Activate the heartbeats
         @heartbeat_interval = data['heartbeat_interval'].to_f / 1000.0
         @heartbeat_active = true
