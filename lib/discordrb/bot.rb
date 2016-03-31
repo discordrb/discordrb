@@ -1107,6 +1107,12 @@ module Discordrb
       @ws.send(data.to_json)
     end
 
+    # Invalidate the current session (whatever this means)
+    def invalidate_session
+      @sequence = 0
+      @session_id = nil
+    end
+
     # Separate method to wait an ever-increasing amount of time before reconnecting after being disconnected in an
     # unexpected way
     def wait_for_reconnect
