@@ -753,6 +753,14 @@ module Discordrb
     end
 
     def find_gateway
+      # If the reconnect URL is set, it means we got an op 7 earlier and should reconnect to the new URL
+      if @reconnect_url
+        debug("Reconnecting to URL #{@reconnect_url}")
+        url = @reconnect_url
+        @reconnect_url = nil # Unset the URL so we don't connect to the same URL again if the connection fails
+        return url
+      end
+
       # Get the correct gateway URL from Discord
       response = API.gateway(token)
       JSON.parse(response)['url']
