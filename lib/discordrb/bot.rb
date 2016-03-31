@@ -841,6 +841,10 @@ module Discordrb
               Please report this issue along with the following information:
               v#{GATEWAY_VERSION} #{packet}" unless opcode == 0
 
+      # Keep track of the packet sequence (continually incrementing number for every packet) so we can resume a
+      # connection if we disconnect
+      @sequence = packet['s'].to_i
+
       data = packet['d']
       type = packet['t'].intern
       case type
