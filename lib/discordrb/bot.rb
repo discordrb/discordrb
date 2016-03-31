@@ -1043,12 +1043,17 @@ module Discordrb
     end
 
     def websocket_open
+      identify(raw_token, 100, GATEWAY_VERSION)
+    end
+
+    # Identify the client to the gateway
+    def identify(token, large_threshold, version)
       # Send the initial packet
       packet = {
-        op: 2,                # Opcode
-        d: {                  # Packet data
-          v: GATEWAY_VERSION, # WebSocket protocol version
-          token: raw_token,
+        op: 2,        # Opcode
+        d: {          # Packet data
+          v: version, # WebSocket protocol version
+          token: token,
           properties: { # I'm unsure what these values are for exactly, but they don't appear to impact bot functionality in any way.
             :'$os' => RUBY_PLATFORM.to_s,
             :'$browser' => 'discordrb',
@@ -1056,7 +1061,7 @@ module Discordrb
             :'$referrer' => '',
             :'$referring_domain' => ''
           },
-          large_threshold: 100
+          large_threshold: large_threshold
         }
       }
 
