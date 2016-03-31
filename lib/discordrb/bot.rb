@@ -195,14 +195,10 @@ module Discordrb
             # We got an op 7! Don't wait before reconnecting
             debug('Got an op 7, reconnecting right away')
           else
-            # We disconnected in an unexpected way! Wait before reconnecting so we don't spam Discord's servers.
-            debug("Disconnected! Attempting to reconnect in #{@falloff} seconds.")
-            sleep @falloff
-
-            # Calculate new falloff
-            @falloff *= 1.5
-            @falloff = 115 + (rand * 10) if @falloff > 1 # Cap the falloff at 120 seconds and then add some random jitter
+            wait_for_reconnect
           end
+
+          # Restart the loop, i. e. reconnect
         end
       end
 
@@ -1057,6 +1053,18 @@ module Discordrb
       }
 
       @ws.send(packet.to_json)
+    end
+
+    # Separate method to wait an ever-increasing amount of time before reconnecting after being disconnected in an
+    # unexpected way
+    def wait_for_reconnect
+      # We disconnected in an unexpected way! Wait before reconnecting so we don't spam Discord's servers.
+      debug("Disconnected! Attempting to reconnect in #{@falloff} seconds.")
+      sleep @falloff
+
+      # Calculate new falloff
+      @falloff *= 1.5
+      @falloff = 115 + (rand * 10) if @falloff > 1 # Cap the falloff at 120 seconds and then add some random jitter
     end
 
     def send_heartbeat
