@@ -795,7 +795,7 @@ module Discordrb
     end
 
     def process_gateway
-      raw_url = gateway_url
+      raw_url = find_gateway
 
       # Append a slash in case it's not there (I'm not sure how well WSCS handles it otherwise)
       raw_url += '/' unless raw_url.end_with? '/'
