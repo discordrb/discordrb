@@ -874,7 +874,7 @@ module Discordrb
       type = packet['t'].intern
       case type
       when :READY
-        debug("Discord using gateway protocol version: #{data['v']}, requested: #{GATEWAY_VERSION}")
+        LOGGER.info("Discord using gateway protocol version: #{data['v']}, requested: #{GATEWAY_VERSION}")
 
         # Set the session ID in case we get disconnected and have to resume
         @session_id = data['session_id']
