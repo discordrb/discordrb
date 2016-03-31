@@ -418,6 +418,19 @@ module Discordrb
       name
     end
 
+    # Injects a reconnect event (op 7) into the event processor, causing Discord to reconnect to the given gateway URL.
+    # If the URL is set to nil, it will reconnect and get an entirely new gateway URL. This method has not much use
+    # outside of testing and implementing highly custom reconnect logic.
+    # @param url [String, nil] the URL to connect to or nil if one should be obtained from Discord.
+    def inject_reconnect(url)
+      websocket_message({
+        op: 7,
+        d: {
+          url: url
+        }
+      }.to_json)
+    end
+
     # Sets debug mode. If debug mode is on, many things will be outputted to STDOUT.
     def debug=(new_debug)
       LOGGER.debug = new_debug
