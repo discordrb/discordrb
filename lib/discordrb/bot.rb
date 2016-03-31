@@ -1014,6 +1014,9 @@ module Discordrb
     def websocket_close(event)
       LOGGER.error('Disconnected from WebSocket!')
 
+      # Don't handle nil events (for example if the disconnect came from our side)
+      return unless event
+
       # Handle actual close frames and errors separately
       if event.respond_to? :code
         LOGGER.error(" (Reason: #{event.data})")
