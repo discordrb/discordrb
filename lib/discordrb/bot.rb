@@ -840,6 +840,15 @@ module Discordrb
         return
       end
 
+      if opcode == 9
+        LOGGER.warn "This is important! We got an opcode 9 from Discord. I have no idea about the circumstances in which
+          this happens, so I'm trying to invalidate the session and hope it works!
+          Please report the circumstances in which you got this message along with the following data:
+          v#{GATEWAY_VERSION} #{packet}"
+        invalidate_session
+        return
+      end
+
       raise "Got an unexpected opcode (#{opcode}) in a gateway event!
               Please report this issue along with the following information:
               v#{GATEWAY_VERSION} #{packet}" unless opcode == 0
