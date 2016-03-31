@@ -831,6 +831,10 @@ module Discordrb
 
       @ws.thread[:discordrb_name] = 'gateway'
       @ws.thread.join
+    rescue => e
+      LOGGER.error 'Error while connecting to the gateway!'
+      LOGGER.log_exception e
+      raise
     end
 
     def websocket_reconnect(url)
