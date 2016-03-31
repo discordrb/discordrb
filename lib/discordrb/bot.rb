@@ -786,12 +786,22 @@ module Discordrb
         debug("Reconnecting to URL #{@reconnect_url}")
         url = @reconnect_url
         @reconnect_url = nil # Unset the URL so we don't connect to the same URL again if the connection fails
-        return url
+        url
+      else
+        # Get the correct gateway URL from Discord
+        response = API.gateway(token)
+        JSON.parse(response)['url']
       end
+    end
 
-      # Get the correct gateway URL from Discord
-      response = API.gateway(token)
-      JSON.parse(response)['url']
+    def process_gateway
+      raw_url = gateway_url
+
+      # Append a slash in case it's not there (I'm not sure how well WSCS handles it otherwise)
+      raw_url += '/' unless raw_url.end_with? '/'
+
+      # Add the parameters we want
+      raw_url + "?encoding=json&v=#{GATEWAY_VERSION}"
     end
 
     ##      ##  ######     ######## ##     ## ######## ##    ## ########  ######
@@ -807,7 +817,7 @@ module Discordrb
 
     def websocket_connect
       debug('Attempting to get gateway URL...')
-      gateway_url = find_gateway
+      gateway_url = process_gateway
       debug("Success! Gateway URL is #{gateway_url}.")
       debug('Now running bot')
 
