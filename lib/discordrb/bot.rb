@@ -1082,6 +1082,9 @@ module Discordrb
 
       raise_event(DisconnectEvent.new(self))
 
+      # Stop sending heartbeats
+      @heartbeat_active = false
+
       # Safely close the WS connection and handle any errors that occur there
       begin
         @ws.close
