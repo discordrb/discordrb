@@ -848,7 +848,7 @@ module Discordrb
 
       opcode = packet['op'].to_i
       if opcode == 7
-        websocket_reconnect(packet['d']['url'])
+        websocket_reconnect(packet['d'] ? packet['d']['url'] : nil)
         return
       end
 
