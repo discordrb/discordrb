@@ -785,6 +785,11 @@ module Discordrb
     end
 
     def websocket_reconnect(url)
+      # In here, we do nothing except set the reconnect URL and close the current connection.
+      @reconnect_url = url
+      @ws.close
+
+      # Let's hope the reconnect handler reconnects us correctly...
     end
 
     def websocket_message(event)
