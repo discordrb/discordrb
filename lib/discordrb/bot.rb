@@ -1063,6 +1063,20 @@ module Discordrb
       @ws.send(packet.to_json)
     end
 
+    # Resume a previous gateway connection when reconnecting to a different server
+    def resume(seq, token, session_id)
+      data = {
+        op: 6,
+        d: {
+          seq: seq,
+          token: token,
+          session_id: session_id
+        }
+      }
+
+      @ws.send(data.to_json)
+    end
+
     # Separate method to wait an ever-increasing amount of time before reconnecting after being disconnected in an
     # unexpected way
     def wait_for_reconnect
