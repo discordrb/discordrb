@@ -1183,11 +1183,12 @@ module Discordrb
       @falloff = 115 + (rand * 10) if @falloff > 120 # Cap the falloff at 120 seconds and then add some random jitter
     end
 
-    def send_heartbeat
-      LOGGER.out("Sending heartbeat with sequence #{@sequence}")
+    def send_heartbeat(sequence = nil)
+      sequence ||= @sequence
+      LOGGER.out("Sending heartbeat with sequence #{sequence}")
       data = {
         op: 1,
-        d: @sequence
+        d: sequence
       }
 
       @ws.send(data.to_json)
