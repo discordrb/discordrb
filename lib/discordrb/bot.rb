@@ -1184,11 +1184,10 @@ module Discordrb
     end
 
     def send_heartbeat
-      millis = Time.now.strftime('%s%L').to_i
-      LOGGER.out("Sending heartbeat at #{millis}")
+      LOGGER.out("Sending heartbeat with sequence #{@sequence}")
       data = {
         op: 1,
-        d: millis
+        d: @sequence
       }
 
       @ws.send(data.to_json)
