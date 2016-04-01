@@ -1060,7 +1060,7 @@ module Discordrb
 
     # @return [true, false] whether this message was sent by the current {Bot}.
     def from_bot?
-      @author.current_bot?
+      @author && @author.current_bot?
     end
 
     # The inspect method is overwritten to give more useful output
