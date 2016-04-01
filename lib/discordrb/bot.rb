@@ -912,6 +912,17 @@ module Discordrb
       end
 
       opcode = packet['op'].to_i
+
+      if opcode == Opcodes::HEARTBEAT
+        # If Discord sends us a heartbeat, simply reply with a heartbeat with the packet's sequence number
+        @sequence = packet['s'].to_i
+
+        LOGGER.info("Received an op1 (seq: #{@sequence})! This means another client connected while this one is already running. Replying with the same seq")
+        send_heartbeat
+
+        return
+      end
+
       if opcode == Opcodes::RECONNECT
         websocket_reconnect(packet['d'] ? packet['d']['url'] : nil)
         return
