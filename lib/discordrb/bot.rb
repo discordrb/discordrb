@@ -334,7 +334,7 @@ module Discordrb
       debug("Got voice channel: #{chan}")
 
       data = {
-        op: 4,
+        op: Opcodes::VOICE_STATE,
         d: {
           guild_id: server_id.to_s,
           channel_id: chan.id.to_s,
@@ -360,7 +360,7 @@ module Discordrb
     #   directly, you should leave it as true.
     def voice_destroy(server_id, destroy_vws = true)
       data = {
-        op: 4,
+        op: Opcodes::VOICE_STATE,
         d: {
           guild_id: server_id.to_s,
           channel_id: nil,
@@ -466,7 +466,7 @@ module Discordrb
       @game = name
 
       data = {
-        op: 3,
+        op: Opcodes::PRESENCE,
         d: {
           idle_since: nil,
           game: name ? { name: name } : nil
@@ -483,7 +483,7 @@ module Discordrb
     # @param url [String, nil] the URL to connect to or nil if one should be obtained from Discord.
     def inject_reconnect(url)
       websocket_message({
-        op: 7,
+        op: Opcodes::RECONNECT,
         d: {
           url: url
         }
@@ -1184,9 +1184,9 @@ module Discordrb
     def identify(token, large_threshold, version)
       # Send the initial packet
       packet = {
-        op: 2,        # Opcode
-        d: {          # Packet data
-          v: version, # WebSocket protocol version
+        op: Opcodes::IDENTIFY, # Opcode
+        d: {                   # Packet data
+          v: version,          # WebSocket protocol version
           token: token,
           properties: { # I'm unsure what these values are for exactly, but they don't appear to impact bot functionality in any way.
             :'$os' => RUBY_PLATFORM.to_s,
@@ -1205,7 +1205,7 @@ module Discordrb
     # Resume a previous gateway connection when reconnecting to a different server
     def resume(seq, token, session_id)
       data = {
-        op: 6,
+        op: Opcodes::RESUME,
         d: {
           seq: seq,
           token: token,
@@ -1238,7 +1238,7 @@ module Discordrb
       sequence ||= @sequence
       LOGGER.out("Sending heartbeat with sequence #{sequence}")
       data = {
-        op: 1,
+        op: Opcodes::HEARTBEAT,
         d: sequence
       }
 
