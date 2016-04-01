@@ -935,6 +935,10 @@ module Discordrb
           v#{GATEWAY_VERSION} #{packet}"
         invalidate_session
         LOGGER.warn 'Session invalidated! All bets are off now.'
+
+        LOGGER.debug 'Reconnecting with IDENTIFY'
+        websocket_open # Since we just invalidated the session, pretending we just opened the WS again will re-identify
+        LOGGER.debug "Re-identified! Let's hope everything works fine."
         return
       end
 
