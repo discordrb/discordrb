@@ -46,13 +46,14 @@ module Discordrb
     # necessary for a gateway client to behave correctly)
     PRESENCE = 3
 
-    # **Sent**: Packets with this opcode are used to change a user's voice state (mute/deaf/unmute/undeaf/etc.).
-    # (Sending this is never necessary for a gateway client to behave correctly)
+    # **Sent**: Packets with this opcode are used to change a user's voice state (mute/deaf/unmute/undeaf/etc.). It is
+    # also used to connect to a voice server in the first place. (Sending this is never necessary for a gateway client
+    # to behave correctly)
     VOICE_STATE = 4
 
-    # **Sent**: This opcode is used to connect to a voice server. (Sending this is never necessary for a gateway client
-    # to behave correctly)
-    VOICE_SERVER = 5
+    # **Sent**: This opcode is used to ping a voice server, whatever that means. The functionality of this opcode isn't
+    # known well but non-user clients should never send it.
+    VOICE_PING = 5
 
     # **Sent**: This is the other of two possible ways to initiate a gateway session (other than {IDENTIFY}). Rather
     # than starting an entirely new session, it resumes an existing session by replaying all events from a given
