@@ -912,12 +912,12 @@ module Discordrb
       end
 
       opcode = packet['op'].to_i
-      if opcode == 7
+      if opcode == Opcodes::RECONNECT
         websocket_reconnect(packet['d'] ? packet['d']['url'] : nil)
         return
       end
 
-      if opcode == 9
+      if opcode == Opcodes::INVALIDATE_SESSION
         LOGGER.warn "This is important! We got an opcode 9 from Discord. I have no idea about the circumstances in which
           this happens, so I'm trying to invalidate the session and hope it works!
           Please report the circumstances in which you got this message along with the following data:
@@ -929,7 +929,7 @@ module Discordrb
 
       raise "Got an unexpected opcode (#{opcode}) in a gateway event!
               Please report this issue along with the following information:
-              v#{GATEWAY_VERSION} #{packet}" unless opcode == 0
+              v#{GATEWAY_VERSION} #{packet}" unless opcode == Opcodes::DISPATCH
 
       # Keep track of the packet sequence (continually incrementing number for every packet) so we can resume a
       # connection if we disconnect
