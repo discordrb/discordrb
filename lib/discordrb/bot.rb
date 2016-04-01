@@ -26,6 +26,10 @@ require 'discordrb/cache'
 require 'discordrb/voice/voice_bot'
 
 module Discordrb
+  # Gateway packet opcodes
+  module Opcodes
+  end
+
   # Represents a Discord bot, including servers, users, etc.
   class Bot
     # The user that represents the bot itself. This version will always be identical to
