@@ -665,8 +665,14 @@ module Discordrb
     def delete_channel(data)
       channel = Channel.new(data, self)
       server = channel.server
-      @channels.delete(channel.id)
-      server.channels.reject! { |c| c.id == channel.id }
+
+      # Handle normal and private channels separately
+      if server
+        @channels.delete(channel.id)
+        server.channels.reject! { |c| c.id == channel.id }
+      else
+        @private_channels.delete(channel.id)
+      end
     end
 
     # Internal handler for GUILD_MEMBER_ADD
