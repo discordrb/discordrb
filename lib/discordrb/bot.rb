@@ -649,8 +649,14 @@ module Discordrb
     def create_channel(data)
       channel = Channel.new(data, self)
       server = channel.server
-      server.channels << channel
-      @channels[channel.id] = channel
+
+      # Handle normal and private channels separately
+      if server
+        server.channels << channel
+        @channels[channel.id] = channel
+      else
+        @private_channels[channel.id] = channel
+      end
     end
 
     # Internal handler for CHANNEL_UPDATE
