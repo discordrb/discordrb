@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'rest-client'
+require 'zlib'
 
 require 'discordrb/events/message'
 require 'discordrb/events/typing'
@@ -915,6 +916,11 @@ module Discordrb
     end
 
     def websocket_message(event)
+      if event.byteslice(0) == 'x'
+        # The message is encrypted
+        event = Zlib::Inflate.inflate(event)
+      end
+
       # Parse packet
       packet = JSON.parse(event)
 
