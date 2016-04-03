@@ -1231,7 +1231,8 @@ module Discordrb
             :'$referrer' => '',
             :'$referring_domain' => ''
           },
-          large_threshold: large_threshold
+          large_threshold: large_threshold,
+          compress: true
         }
       }
 
