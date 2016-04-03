@@ -49,6 +49,12 @@ module Discordrb::Events
       @message.user.id == @bot.bot_user.id
     end
 
+    # Utility method to get the voice bot for the current server
+    # @return [VoiceBot, nil] the voice bot connected to this message's server, or nil if there is none connected
+    def voice
+      @bot.voice(@message.channel.server.id)
+    end
+
     # Adds a string to be sent after the event has finished execution. Avoids problems with rate limiting because only
     # one message is ever sent. If it is used multiple times, the strings will bunch up into one message (separated by
     # newlines)
