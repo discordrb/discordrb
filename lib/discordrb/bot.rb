@@ -1067,6 +1067,9 @@ module Discordrb
           debug 'Typing started in channel the bot has no access to, ignoring'
         end
       when :PRESENCE_UPDATE
+        # Ignore friends list presences
+        return unless data['guild_id']
+
         now_playing = data['game']
         presence_user = @users[data['user']['id'].to_i]
         played_before = presence_user.nil? ? nil : presence_user.game
