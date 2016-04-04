@@ -1017,12 +1017,8 @@ module Discordrb
           @private_channels[channel.recipient.id] = channel
         end
 
-        # Make sure to raise the event
-        raise_event(ReadyEvent.new(self))
-        LOGGER.good 'Ready'
-
-        # Tell the run method that everything was successful
-        @ws_success = true
+        # We're ready!
+        notify_ready
       when :RESUMED
         # The RESUMED event is received after a successful op 6 (resume). It does nothing except tell the bot the
         # connection is initiated (like READY would) and set a new heartbeat interval.
@@ -1274,6 +1270,16 @@ module Discordrb
     def invalidate_session
       @sequence = 0
       @session_id = nil
+    end
+
+    # Notifies everything there is to be notified that the connection is now ready
+    def notify_ready
+      # Make sure to raise the event
+      raise_event(ReadyEvent.new(self))
+      LOGGER.good 'Ready'
+
+      # Tell the run method that everything was successful
+      @ws_success = true
     end
 
     # Separate method to wait an ever-increasing amount of time before reconnecting after being disconnected in an
