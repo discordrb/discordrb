@@ -991,7 +991,20 @@ module Discordrb
 
         # Initialize servers
         @servers = {}
+
+        # Count unavailable servers
+        @unavailable_servers = 0
+
         data['guilds'].each do |element|
+          # Check for true specifically because unavailable=false indicates that a previously unavailable server has
+          # come online
+          if element['unavailable'].is_a? TrueClass
+            @unavailable_servers += 1
+
+            # Ignore any unavailable servers
+            next
+          end
+
           ensure_server(element)
 
           # Save the bot user
