@@ -1159,6 +1159,13 @@ module Discordrb
       when :GUILD_CREATE
         create_guild(data)
 
+        # Check for false specifically (no data means the server has never been unavailable)
+        if data['unavailable'].is_a? FalseClass
+          @unavailable_servers -= 1
+
+          notify_ready if @unavailable_servers == 0
+        end
+
         event = ServerCreateEvent.new(data, self)
         raise_event(event)
       when :GUILD_UPDATE
