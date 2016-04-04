@@ -1322,11 +1322,6 @@ module Discordrb
       update_server_data(afk_channel_id: afk_channel.resolve_id)
     end
 
-    # @deprecated Use #afk_channel= with the ID instead.
-    def afk_channel_id=(afk_channel_id)
-      update_server_data(afk_channel_id: afk_channel_id)
-    end
-
     # Sets the amount of time after which a user gets moved into the AFK channel.
     # @param afk_timeout [Integer] The AFK timeout, in seconds.
     def afk_timeout=(afk_timeout)
