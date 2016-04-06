@@ -55,6 +55,9 @@ module Discordrb::API
     RestClient.send(type, *attributes)
   rescue RestClient::Forbidden
     raise Discordrb::Errors::NoPermission, "The bot doesn't have the required permission to do this!"
+  rescue RestClient::BadGateway
+    Discordrb::LOGGER.warn('Got a 502 while sending a request! Not a big deal, retrying the request')
+    retry
   end
 
   # Make an API request. Utility function to implement message queueing
@@ -388,9 +391,6 @@ module Discordrb::API
     )
   rescue RestClient::InternalServerError
     raise Discordrb::Errors::MessageTooLong, "Message over the character limit (#{message.length} > 2000)"
-  rescue RestClient::BadGateway
-    Discordrb::LOGGER.warn('Got a 502 while sending a message! Not a big deal, retrying the request')
-    retry
   end
 
   # Delete a message
