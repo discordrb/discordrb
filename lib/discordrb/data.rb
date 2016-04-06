@@ -193,7 +193,7 @@ module Discordrb
     # Is the user the bot?
     # @return [true, false] whether this user is the bot
     def current_bot?
-      @bot.bot_user.id == @id
+      @bot.profile.id == @id
     end
 
     # The inspect method is overwritten to give more useful output

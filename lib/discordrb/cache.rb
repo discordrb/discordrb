@@ -100,7 +100,7 @@ module Discordrb
       debug("Creating private channel with user id #{id}")
       return @private_channels[id] if @private_channels[id]
 
-      response = API.create_private(token, @bot_user.id, id)
+      response = API.create_private(token, @profile.id, id)
       channel = Channel.new(JSON.parse(response), self)
       @private_channels[id] = channel
     end

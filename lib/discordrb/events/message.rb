@@ -46,7 +46,7 @@ module Discordrb::Events
 
     # @return [true, false] whether or not this message was sent by the bot itself
     def from_bot?
-      @message.user.id == @bot.bot_user.id
+      @message.user.id == @bot.profile.id
     end
 
     # Utility method to get the voice bot for the current server
