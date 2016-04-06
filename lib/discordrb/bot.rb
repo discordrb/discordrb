@@ -986,7 +986,6 @@ module Discordrb
         @heartbeat_active = true
         debug("Desired heartbeat_interval: #{@heartbeat_interval}")
 
-        bot_user_id = data['user']['id'].to_i
         @profile = Profile.new(data['user'], self, @email, @password)
 
         # Initialize servers
@@ -1006,9 +1005,6 @@ module Discordrb
           end
 
           ensure_server(element)
-
-          # Save the bot user
-          @bot_user = @users[bot_user_id]
         end
 
         # Add private channels
@@ -1049,7 +1045,7 @@ module Discordrb
         event = MessageEvent.new(message, self)
         raise_event(event)
 
-        if message.mentions.any? { |user| user.id == @bot_user.id }
+        if message.mentions.any? { |user| user.id == @profile.id }
           event = MentionEvent.new(message, self)
           raise_event(event)
         end
