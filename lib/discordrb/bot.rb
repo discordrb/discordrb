@@ -80,11 +80,6 @@ module Discordrb
 
   # Represents a Discord bot, including servers, users, etc.
   class Bot
-    # The user that represents the bot itself. This version will always be identical to
-    # the user determined by {#user} called with the bot's ID.
-    # @return [User] The bot user.
-    attr_reader :bot_user
-
     # The list of users the bot shares a server with.
     # @return [Array<User>] The users.
     attr_reader :users
@@ -104,6 +99,7 @@ module Discordrb
     # to edit user data like the current username (see {Profile#username=}).
     # @return [Profile] The bot's profile that can be used to edit data.
     attr_reader :profile
+    alias_method :bot_user, :profile
 
     # Whether or not the bot should parse its own messages. Off by default.
     attr_accessor :should_parse_self
