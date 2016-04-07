@@ -35,6 +35,8 @@ module Discordrb::Commands
     # @option attributes [String] :command_doesnt_exist_message The message that should be displayed if a user attempts
     #   to use a command that does not exist. If none is specified, no message will be displayed. In the message, you
     #   can use the string '%command%' that will be replaced with the name of the command.
+    # @option attributes [true, false] :spaces_allowed Whether spaces are allowed to occur between the prefix and the
+    #   command. Default is false.
     # @option attributes [String] :previous Character that should designate the result of the previous command in
     #   a command chain (see :advanced_functionality). Default is '~'.
     # @option attributes [String] :chain_delimiter Character that should designate that a new command begins in the
@@ -73,6 +75,9 @@ module Discordrb::Commands
         # The message to display for when a command doesn't exist, %command% to get the command name in question and nil for no message
         # No default value here because it may not be desired behaviour
         command_doesnt_exist_message: attributes[:command_doesnt_exist_message],
+
+        # Spaces allowed between prefix and command
+        spaces_allowed: attributes[:spaces_allowed].nil? ? false : attributes[:spaces_allowed],
 
         # All of the following need to be one character
         # String to designate previous result in command chain
