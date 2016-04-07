@@ -162,8 +162,11 @@ module Discordrb::API
       nil,
       :post,
       "#{api_base}/auth/login",
-      email: email,
-      password: password
+      {
+        email: email,
+        password: password
+      }.to_json,
+      content_type: :json
     )
   end
 
