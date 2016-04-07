@@ -16,7 +16,7 @@ module LdashClient
 
     def connect(preset)
       RestClient.post(
-        LDASH_URL + '/session',
+        LDASH_URL + '/l-/session',
         { preset: preset }.to_json,
         content_type: :json
       )
