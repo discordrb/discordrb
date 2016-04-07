@@ -202,6 +202,12 @@ module Discordrb::Commands
       return unless message.content.start_with? @prefix
       chain = message.content[@prefix.length..-1]
 
+      # Don't allow spaces between the prefix and the command
+      if chain.start_with? ' '
+        debug('Chain starts with a space')
+        return
+      end
+
       if chain.strip.empty?
         debug('Chain is empty')
         return
