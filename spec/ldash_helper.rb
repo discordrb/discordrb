@@ -1,11 +1,14 @@
 require 'rest-client'
 require 'json'
 
+require 'discordrb'
+
 module LdashClient
   LDASH_URL = 'http://127.0.0.1:6601'.freeze
 
   class Session
     def initialize(preset)
+      Discordrb::API.api_base = LDASH_URL + '/api'
       connect(preset)
     end
 
