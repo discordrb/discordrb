@@ -144,10 +144,11 @@ module Discordrb
     #   Useful for very large bots running in debug or verbose log_mode.
     # @param parse_self [true, false] Whether the bot should react on its own messages. It's best to turn this off
     #   unless you really need this so you don't inadvertently create infinite loops.
+    # @param token_cache [true, false] Whether the bot should cache tokens for user logins. Default is true
     def initialize(
         email: nil, password: nil, log_mode: :normal,
         token: nil, application_id: nil,
-        type: nil, name: '', fancy_log: false, suppress_ready: false, parse_self: false)
+        type: nil, name: '', fancy_log: false, suppress_ready: false, parse_self: false, token_cache: true)
       # Make sure people replace the login details in the example files...
       if email.is_a?(String) && email.end_with?('example.com')
         puts 'You have to replace the login details in the example files with your own!'
@@ -174,9 +175,11 @@ module Discordrb
       LOGGER.fancy = fancy_log
       @prevent_ready = suppress_ready
 
-      debug('Creating token cache')
-      token_cache = Discordrb::TokenCache.new
-      debug('Token cache created successfully')
+      token_cache = if token_cache
+                      debug('Creating token cache')
+                      Discordrb::TokenCache.new
+                    end
+
       @token = login(type, email, password, token, token_cache)
 
       init_cache
@@ -838,6 +841,8 @@ module Discordrb
     end
 
     def retrieve_token(email, password, token_cache)
+      return nil unless token_cache
+
       # First, attempt to get the token from the cache
       token = token_cache.token(email, password)
       debug('Token successfully obtained from cache!') if token
