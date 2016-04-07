@@ -824,7 +824,7 @@ module Discordrb
       debug('Received token from Discord!')
 
       # Cache the token
-      token_cache.store_token(email, password, token)
+      token_cache.store_token(email, password, token) if token_cache
 
       token
     rescue RestClient::BadRequest
