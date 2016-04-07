@@ -9,6 +9,9 @@ module LdashClient
       connect(preset)
     end
 
+    def close
+    end
+
     private
 
     def connect(preset)
