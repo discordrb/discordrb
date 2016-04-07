@@ -208,7 +208,7 @@ module Discordrb::Commands
       chain = message.content[@prefix.length..-1]
 
       # Don't allow spaces between the prefix and the command
-      if chain.start_with? ' '
+      if chain.start_with?(' ') && !@attributes[:spaces_allowed]
         debug('Chain starts with a space')
         return
       end
