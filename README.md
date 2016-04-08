@@ -7,8 +7,6 @@
 
 An implementation of the [Discord](https://discordapp.com/) API using Ruby.
 
-**News**: Please help test version 2 of discordrb with a lot of changes! A preliminary changelog can be found [here](https://gist.github.com/meew0/ea120051da52604e7873b7cfaed4c40b). The code can be found on the `v2` branch; if you're using bundler you can change the gem reference to `gem 'discordrb', git: 'git://github.com/meew0/discordrb.git', branch: 'v2'`. A downloadable gem file for everybody else will follow here shortly.
-
 ## Quick links to sections
 
 * [Dependencies](https://github.com/meew0/discordrb#dependencies)
