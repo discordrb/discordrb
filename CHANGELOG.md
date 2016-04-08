@@ -1,5 +1,82 @@
 # Changelog
 
+## 2.0.0
+
+This is the first major update with some breaking changes! Those are highlighted in bold with migration advice after them. Ask in the Discord channel (see the README) if you have questions.
+
+- **Bot initializers now only use named parameters.** This shouldn't be a hard change to adjust to, but everyone will have to do it. Here's some examples:
+ ```rb
+ # Previously
+ bot = Discordrb::Bot.new 'email@example.com', 'hunter2', true
+
+ # Now
+ bot = Discordrb::Bot.new email: 'email@example.com', password: 'hunter2', log_mode: :debug
+ ```
+ ```rb
+ # Previously
+ bot = Discordrb::Bot.new :token, 'TOKEN HERE'
+
+ # Now
+ bot = Discordrb::Bot.new token: 'TOKEN HERE', application_id: 163456789123456789
+ ```
+ ```rb
+ # Previously
+ bot = Discordrb::Commands::CommandBot.new :token, 'TOKEN HERE', '!', nil, {advanced_functionality: false}
+
+ # Now
+ bot = Discordrb::Commands::CommandBot.new token: 'TOKEN HERE', application_id: 163456789123456789, prefix: '!', advanced_functionality: false
+ ```
+ - Connecting to multiple voice channels at once (only available with bot accounts) is now supported. **This means `bot.voice` now takes the server ID as the parameter**. For a seamless switch, the utility method `MessageEvent#voice` was added - simply replace `bot.voice` with `event.voice` in all instances.
+ - **The `Member` and `Recipient` classes were split off from `User`**. Members are users on servers and recipients are partners in private messages. Since both are delegates to `User`, most things will work as before, but most notably roles were changed to no longer be by ID (for example, instead of `event.author.roles(event.server.id)`, you'd just use `event.author.roles` instead).
+ - **All previously deprecated methods were removed.** This includes:
+   - `Server#afk_channel_id=` (use `afk_channel=`, it works with the ID too)
+   - `Channel#is_private` (use `private?` instead, it's more reliable with edge cases like Twitch subscriber-only channels)
+   - `Bot#find` (use `find_channel` instead, it does the exact same thing without confusion with `find_user`)
+ - **`Server` is now used instead of `Guild` in all external methods and classes.** Previously, all the events regarding roles and such were called `GuildRoleXYZEvent`, now they're all called `ServerRoleXYZEvent` for consistency with other attributes and methods.
+ - **`advanced_functionality` is now disabled by default.** If you absolutely need it, you can easily re-enable it by just setting that parameter in the CommandBot initializer, but for most people that didn't need it this will fix some bugs with mentions in commands and such.
+ - **`User#bot?` was renamed to `User#current_bot?`** with the addition of the `User#bot_account?` reader to check for bot account-ness (the "BOT" tag visible on Discord)
+ - Member chunks will no longer automatically be requested on startup, but rather once they're actually needed (`event.server.members`). This is both a performance change (much faster startup for large bots especially) and an important API compliance one - this is what the Discord devs have requested.
+ - Initial support for bots that have no WebSocket connection was started. This is useful for web apps that need to get information on something without having to run something in the background all the time. A tutorial on these will be coming soon, in the meantime, use this short example:
+```rb
+require 'discordrb'
+require 'discordrb/light'
+
+bot = Discordrb::Light::LightBot.new 'token here'
+puts bot.profile.username
+```
+ - OAuth bot accounts are now better supported using a method `Bot#invite_url` to get a bot's invite URL and sending tokens using the new `Bot` prefix.
+ - discordrb now fully uses [websocket-client-simple](https://github.com/shokai/websocket-client-simple) (a.k.a. WSCS) instead of Faye::WebSocket, this means that the annoying OpenSSL library thing won't have to be done anymore.
+ - The new version of the Discord gateway (v4) is supported and used by default. This should bring more stability and possibly slight performance improvements.
+ - Some older v3 features that weren't supported before are now:
+   - Compressed ready packets (should decrease network overhead for very large bots)
+ - Discord rate limits are now supported better - the client will never send a message if it knows it's going to be rate limited, instead it's going to wait for the correct time.
+ - Requests will now automatically be retried if a 502 (cloudflare error) is received.
+ - `MessageEditEvent`s now have a whole message instead of just the ID to allow for checking the content of edited messages.
+ - `Message`s now have an `attachments` array with files attached to the message.
+ - `ReadyEvent` and `DisconnectEvent` now have the bot as a readable attribute - useful for container-based bots that don't have a way to get them otherwise.
+ - `Bot#find_channel` can now parse channel mentions and search for specific types of channels (text or voice).
+ - `Server#create_channel` can now create voice channels.
+ - A utility function `User#distinct` was added to get the distinct representation of a user (i.e. name + discrim, for example "meew0#9811")
+ - The `User#discriminator` attribute now has more aliases (`#tag`, `#discord_tag`, `#discrim`)
+ - `Permission` objects can now be created or set even without a role writer, useful to quickly get byte representations of permissions
+ - Permission overwrites can now be defined more easily using the utility method `Channel#define_overwrite`
+ - `Message`s returned at the end of commands (for example using `User#pm` or `Message#edit`) will now no longer be sent ([#66](https://github.com/meew0/discordrb/issues/66))
+ - The `:with_text` event attribute is now aliased to `:exact_text` ([#65](https://github.com/meew0/discordrb/issues/65))
+ - Server icons (`Server#icon=`) can now be set just like avatars (`Profile#avatar=`)
+ - Lots of comments were added to the examples and some bugs fixed
+ - The overall performance and memory usage was improved, especially on Ruby 2.3 (using the new frozen string literal comment)
+ - The documentation was slightly improved.
+
+**Bugfixes**:
+ - A *lot* of latent bugs with caching were fixed. This doesn't really have a noticeable effect, it just means better stability and reliability as a whole.
+ - **Command bots no longer respond when there are spaces between the prefix and the command.** Because this behaviour may be desirable, a `spaces_allowed` attribute was added to the CommandBot initializer that can be set to true to re-enable this behaviour.
+ - Permission calculation (`User#permission?`) has been thoroughly rewritten and should now account for edge cases like server owners and Manage Permissions.
+ - The gateway reconnect logic now uses a correct falloff system - before it would start at 1 second between attempts and immediately jump to 120. Now the transition is more smooth.
+ - Commands with aliases now show up correctly in the auto-generated help command ([#72](https://github.com/meew0/discordrb/issues/72))
+ - The auto-generated help command can now actually be disabled by setting the corresponding attribute to nil ([#73](https://github.com/meew0/discordrb/issues/73))
+ - Including empty containers now does nothing instead of raising an error
+ - Command bots now obey `should_parse_self`
+
 ## 1.8.1
 
 ### Bugfixes
