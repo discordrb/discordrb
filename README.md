@@ -87,7 +87,7 @@ end
 bot.run
 ```
 
-This bot responds to every "Ping!" with a "Pong!". If you're unsure how to get a token, look [here](https://discordapp.com/developers/applications/me) - create an application (you don't need to set any redirect URIs), note down its ID for the `application_id` parameter, create a bot account for it and use that token.
+This bot responds to every "Ping!" with a "Pong!".
 
 ## Support
 
