@@ -947,12 +947,9 @@ module Discordrb
       end
 
       if opcode == Opcodes::INVALIDATE_SESSION
-        LOGGER.warn "This is important! We got an opcode 9 from Discord. I have no idea about the circumstances in which
-          this happens, so I'm trying to invalidate the session and hope it works!
-          Please report the circumstances in which you got this message along with the following data:
-          v#{GATEWAY_VERSION} #{packet}"
+        LOGGER.info "We got an opcode 9 from Discord! Invalidating the session. You probably don't have to worry about this."
         invalidate_session
-        LOGGER.warn 'Session invalidated! All bets are off now.'
+        LOGGER.debug 'Session invalidated!'
 
         LOGGER.debug 'Reconnecting with IDENTIFY'
         websocket_open # Since we just invalidated the session, pretending we just opened the WS again will re-identify
