@@ -41,10 +41,11 @@ Lint/RescueException:
 AllCops:
   TargetRubyVersion: 2.1
 
-# Apparently setting the target version to 2.1 is not enough to prevent this cop...
-Style/FrozenStringLiteralComment:
-  Enabled: false
-
 # http://stackoverflow.com/questions/4763121/should-i-use-alias-or-alias-method
 Style/Alias:
   Enabled: false
+
+# So RuboCop doesn't complain about application IDs
+Style/NumericLiterals:
+  Exclude:
+    - examples/*

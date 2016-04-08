@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Discordrb
   # List of permissions Discord uses
   class Permissions
@@ -8,7 +10,7 @@ module Discordrb
       0 => :create_instant_invite, # 1
       1 => :kick_members,          # 2
       2 => :ban_members,           # 4
-      3 => :manage_roles,          # 8
+      3 => :manage_roles,          # 8, also Manage Permissions
       4 => :manage_channels,       # 16
       5 => :manage_server,         # 32
       # 6                          # 64
@@ -36,17 +38,15 @@ module Discordrb
     Flags.each do |position, flag|
       attr_reader flag
       define_method "can_#{flag}=" do |value|
-        if @writer
-          new_bits = @bits
-          if value
-            new_bits |= (1 << position)
-          else
-            new_bits &= ~(1 << position)
-          end
-          @writer.write(new_bits)
-          @bits = new_bits
-          init_vars
+        new_bits = @bits
+        if value
+          new_bits |= (1 << position)
+        else
+          new_bits &= ~(1 << position)
         end
+        @writer.write(new_bits) if @writer
+        @bits = new_bits
+        init_vars
       end
     end
 
@@ -67,7 +67,11 @@ module Discordrb
       end
     end
 
-    def initialize(bits, writer = nil)
+    # Create a new Permissions object either as a blank slate to add permissions to (for example for
+    #   {Channel#define_overwrite}) or from existing bit data to read out.
+    # @param bits [Integer] The permission bits that should be set from the beginning.
+    # @param writer [RoleWriter] The writer that should be used to update data when a permission is set.
+    def initialize(bits = 0, writer = nil)
       @writer = writer
       @bits = bits
       init_vars

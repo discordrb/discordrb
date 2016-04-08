@@ -1,15 +1,28 @@
+# frozen_string_literal: true
+
 require 'discordrb/events/generic'
 
 module Discordrb::Events
   # Event raised when a user starts typing
   class TypingEvent < Event
-    attr_reader :channel, :user, :timestamp
+    # @return [Channel] the channel on which a user started typing.
+    attr_reader :channel
+
+    # @return [Member] the user that started typing.
+    attr_reader :user
+    alias_method :member, :user
+
+    # @return [Time] when the typing happened.
+    attr_reader :timestamp
 
     def initialize(data, bot)
       @user_id = data['user_id'].to_i
-      @user = bot.user(@user_id)
+
       @channel_id = data['channel_id'].to_i
       @channel = bot.channel(@channel_id)
+
+      @user = channel.private? ? channel.recipient : bot.member(@channel.server.id, @user_id)
+
       @timestamp = Time.at(data['timestamp'].to_i)
     end
   end

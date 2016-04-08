@@ -1,19 +1,16 @@
+# frozen_string_literal: true
+
 require 'rest-client'
-require 'faye/websocket'
-require 'eventmachine'
+require 'zlib'
 
 require 'discordrb/events/message'
 require 'discordrb/events/typing'
 require 'discordrb/events/lifetime'
 require 'discordrb/events/presence'
 require 'discordrb/events/voice_state_update'
-require 'discordrb/events/channel_create'
-require 'discordrb/events/channel_update'
-require 'discordrb/events/channel_delete'
+require 'discordrb/events/channels'
 require 'discordrb/events/members'
-require 'discordrb/events/guild_role_create'
-require 'discordrb/events/guild_role_delete'
-require 'discordrb/events/guild_role_update'
+require 'discordrb/events/roles'
 require 'discordrb/events/guilds'
 require 'discordrb/events/await'
 require 'discordrb/events/bans'
@@ -24,17 +21,65 @@ require 'discordrb/data'
 require 'discordrb/await'
 require 'discordrb/token_cache'
 require 'discordrb/container'
+require 'discordrb/websocket'
+require 'discordrb/cache'
 
 require 'discordrb/voice/voice_bot'
 
 module Discordrb
+  # Gateway packet opcodes
+  module Opcodes
+    # **Received** when Discord dispatches an event to the gateway (like MESSAGE_CREATE, PRESENCE_UPDATE or whatever).
+    # The vast majority of received packets will have this opcode.
+    DISPATCH = 0
+
+    # **Two-way**: The client has to send a packet with this opcode every ~40 seconds (actual interval specified in
+    # READY or RESUMED) and the current sequence number, otherwise it will be disconnected from the gateway. In certain
+    # cases Discord may also send one, specifically if two clients are connected at once.
+    HEARTBEAT = 1
+
+    # **Sent**: This is one of the two possible ways to initiate a session after connecting to the gateway. It
+    # should contain the authentication token along with other stuff the server has to know right from the start, such
+    # as large_threshold and, for older gateway versions, the desired version.
+    IDENTIFY = 2
+
+    # **Sent**: Packets with this opcode are used to change the user's status and played game. (Sending this is never
+    # necessary for a gateway client to behave correctly)
+    PRESENCE = 3
+
+    # **Sent**: Packets with this opcode are used to change a user's voice state (mute/deaf/unmute/undeaf/etc.). It is
+    # also used to connect to a voice server in the first place. (Sending this is never necessary for a gateway client
+    # to behave correctly)
+    VOICE_STATE = 4
+
+    # **Sent**: This opcode is used to ping a voice server, whatever that means. The functionality of this opcode isn't
+    # known well but non-user clients should never send it.
+    VOICE_PING = 5
+
+    # **Sent**: This is the other of two possible ways to initiate a gateway session (other than {IDENTIFY}). Rather
+    # than starting an entirely new session, it resumes an existing session by replaying all events from a given
+    # sequence number. It should be used to recover from a connection error or anything like that when the session is
+    # still valid - sending this with an invalid session will cause an error to occur.
+    RESUME = 6
+
+    # **Received**: Discord sends this opcode to indicate that the client should reconnect to a different gateway
+    # server because the old one is currently being decommissioned. Counterintuitively, this opcode also invalidates the
+    # session - the client has to create an entirely new session with the new gateway instead of resuming the old one.
+    RECONNECT = 7
+
+    # **Sent**: This opcode identifies packets used to retrieve a list of members from a particular server. There is
+    # also a REST endpoint available for this, but it is inconvenient to use because the client has to implement
+    # pagination itself, whereas sending this opcode lets Discord handle the pagination and the client can just add
+    # members when it receives them. (Sending this is never necessary for a gateway client to behave correctly)
+    REQUEST_MEMBERS = 8
+
+    # **Received**: The functionality of this opcode is less known than the others but it appears to specifically
+    # tell the client to invalidate its local session and continue by {IDENTIFY}ing.
+    INVALIDATE_SESSION = 9
+  end
+
   # Represents a Discord bot, including servers, users, etc.
   class Bot
-    # The user that represents the bot itself. This version will always be identical to
-    # the user determined by {#user} called with the bot's ID.
-    # @return [User] The bot user.
-    attr_reader :bot_user
-
     # The list of users the bot shares a server with.
     # @return [Array<User>] The users.
     attr_reader :users
@@ -54,6 +99,7 @@ module Discordrb
     # to edit user data like the current username (see {Profile#username=}).
     # @return [Profile] The bot's profile that can be used to edit data.
     attr_reader :profile
+    alias_method :bot_user, :profile
 
     # Whether or not the bot should parse its own messages. Off by default.
     attr_accessor :should_parse_self
@@ -63,36 +109,80 @@ module Discordrb
     attr_accessor :name
 
     include EventContainer
+    include Cache
 
-    # Makes a new bot with the given email and password. It will be ready to be added event handlers to and can eventually be run with {#run}.
+    # Makes a new bot with the given authentication data. It will be ready to be added event handlers to and can
+    # eventually be run with {#run}.
+    #
+    # Depending on the authentication information present, discordrb will deduce whether you're running on a user or a
+    # bot account. (Discord recommends using bot accounts whenever possible.) The following sets of authentication
+    # information are valid:
+    #  * token + application_id (bot account)
+    #  * email + password (user account)
+    #  * email + password + token (user account; the given token will be used for authentication instead of email
+    #    and password)
+    #
+    # Simply creating a bot won't be enough to start sending messages etc. with, only a limited set of methods can
+    # be used after logging in. If you want to do something when the bot has connected successfully, either do it in the
+    # {#ready} event, or use the {#run} method with the :async parameter and do the processing after that.
     # @param email [String] The email for your (or the bot's) Discord account.
     # @param password [String] The valid password that should be used to log in to the account.
-    # @param debug [Boolean] Whether or not the bug should run in debug mode, which gives increased console output.
-    def initialize(email, password, debug = false)
+    # @param log_mode [Symbol] The mode this bot should use for logging. See {Logger#mode=} for a list of modes.
+    # @param token [String] The token that should be used to log in. If your bot is a bot account, you have to specify
+    #   this. If you're logging in as a user, make sure to also set the account type to :user so discordrb doesn't think
+    #   you're trying to log in as a bot.
+    # @param application_id [Integer] If you're logging in as a bot, the bot's application ID.
+    # @param type [Symbol] This parameter lets you manually overwrite the account type. If this isn't specified, it will
+    #   be determined by checking what other attributes are there. The only use case for this is if you want to log in
+    #   as a user but only with a token. Valid values are :user and :bot.
+    # @param name [String] Your bot's name. This will be sent to Discord with any API requests, who will use this to
+    #   trace the source of excessive API requests; it's recommended to set this to something if you make bots that many
+    #   people will host on their servers separately.
+    # @param fancy_log [true, false] Whether the output log should be made extra fancy using ANSI escape codes. (Your
+    #   terminal may not support this.)
+    # @param suppress_ready [true, false] Whether the READY packet should be exempt from being printed to console.
+    #   Useful for very large bots running in debug or verbose log_mode.
+    # @param parse_self [true, false] Whether the bot should react on its own messages. It's best to turn this off
+    #   unless you really need this so you don't inadvertently create infinite loops.
+    def initialize(
+        email: nil, password: nil, log_mode: :normal,
+        token: nil, application_id: nil,
+        type: nil, name: '', fancy_log: false, suppress_ready: false, parse_self: false)
       # Make sure people replace the login details in the example files...
       if email.is_a?(String) && email.end_with?('example.com')
         puts 'You have to replace the login details in the example files with your own!'
         exit
       end
 
-      LOGGER.debug = debug
-      @should_parse_self = false
+      LOGGER.mode = if log_mode.is_a? TrueClass # Specifically check for `true` because people might not have updated yet
+                      :debug
+                    else
+                      log_mode
+                    end
+
+      @should_parse_self = parse_self
 
       @email = email
       @password = password
 
-      @name = ''
+      @application_id = application_id
+
+      @type = determine_account_type(type, email, password, token, application_id)
+
+      @name = name
+
+      LOGGER.fancy = fancy_log
+      @prevent_ready = suppress_ready
 
       debug('Creating token cache')
-      @token_cache = Discordrb::TokenCache.new
+      token_cache = Discordrb::TokenCache.new
       debug('Token cache created successfully')
-      @token = login
+      @token = login(type, email, password, token, token_cache)
 
-      @channels = {}
-      @users = {}
+      init_cache
 
-      # Channels the bot has no permission to, for internal tracking
-      @restricted_channels = []
+      @voices = {}
+      @should_connect_to_voice = {}
 
       @event_threads = []
       @current_thread = 0
@@ -104,6 +194,12 @@ module Discordrb
     def token
       API.bot_name = @name
       @token
+    end
+
+    # @return the raw token, without any prefix
+    # @see #token
+    def raw_token
+      @token.split(' ').last
     end
 
     # Runs the bot, which logs into Discord and connects the WebSocket. This prevents all further execution unless it is executed with `async` = `:async`.
@@ -142,14 +238,21 @@ module Discordrb
 
         loop do
           websocket_connect
-          debug("Disconnected! Attempting to reconnect in #{@falloff} seconds.")
-          sleep @falloff
-          @token = login
 
-          # Calculate new falloff
-          @falloff *= 1.5
-          @falloff = 115 + (rand * 10) if @falloff > 1 # Cap the falloff at 120 seconds and then add some random jitter
+          # websocket_connect is blocking so being in here means we're disconnected
+          LOGGER.warn('Oh dear, we got disconnected!')
+
+          if @reconnect_url
+            # We got an op 7! Don't wait before reconnecting
+            debug('Got an op 7, reconnecting right away')
+          else
+            wait_for_reconnect
+          end
+
+          # Restart the loop, i. e. reconnect
         end
+
+        LOGGER.warn('The WS loop exited! Not sure if this is a good thing')
       end
 
       debug('WS thread created! Now waiting for confirmation that everything worked')
@@ -168,67 +271,6 @@ module Discordrb
       @ws_thread.kill
     end
 
-    # Gets a channel given its ID. This queries the internal channel cache, and if the channel doesn't
-    # exist in there, it will get the data from Discord.
-    # @param id [Integer] The channel ID for which to search for.
-    # @return [Channel] The channel identified by the ID.
-    def channel(id)
-      id = id.resolve_id
-
-      raise Discordrb::Errors::NoPermission if @restricted_channels.include? id
-
-      debug("Obtaining data for channel with id #{id}")
-      return @channels[id] if @channels[id]
-
-      begin
-        response = API.channel(token, id)
-        channel = Channel.new(JSON.parse(response), self)
-        @channels[id] = channel
-      rescue Discordrb::Errors::NoPermission
-        debug "Tried to get access to restricted channel #{id}, blacklisting it"
-        @restricted_channels << id
-        raise
-      end
-    end
-
-    # Creates a private channel for the given user ID, or if one exists already, returns that one.
-    # It is recommended that you use {User#pm} instead, as this is mainly for internal use. However,
-    # usage of this method may be unavoidable if only the user ID is known.
-    # @param id [Integer] The user ID to generate a private channel for.
-    # @return [Channel] A private channel for that user.
-    def private_channel(id)
-      id = id.resolve_id
-      debug("Creating private channel with user id #{id}")
-      return @private_channels[id] if @private_channels[id]
-
-      response = API.create_private(token, @bot_user.id, id)
-      channel = Channel.new(JSON.parse(response), self)
-      @private_channels[id] = channel
-    end
-
-    # Gets the code for an invite.
-    # @param invite [String, Invite] The invite to get the code for. Possible formats are:
-    #
-    #    * An {Invite} object
-    #    * The code for an invite
-    #    * A fully qualified invite URL (e. g. `https://discordapp.com/invite/0A37aN7fasF7n83q`)
-    #    * A short invite URL with protocol (e. g. `https://discord.gg/0A37aN7fasF7n83q`)
-    #    * A short invite URL without protocol (e. g. `discord.gg/0A37aN7fasF7n83q`)
-    # @return [String] Only the code for the invite.
-    def resolve_invite_code(invite)
-      invite = invite.code if invite.is_a? Discordrb::Invite
-      invite = invite[invite.rindex('/') + 1..-1] if invite.start_with?('http', 'discord.gg')
-      invite
-    end
-
-    # Gets information about an invite.
-    # @param invite [String, Invite] The invite to join. For possible formats see {#resolve_invite_code}.
-    # @return [Invite] The invite with information about the given invite URL.
-    def invite(invite)
-      code = resolve_invite_code(invite)
-      Invite.new(JSON.parse(API.resolve_invite(token, code)), self)
-    end
-
     # Makes the bot join an invite to a server.
     # @param invite [String, Invite] The invite to join. For possible formats see {#resolve_invite_code}.
     def join(invite)
@@ -236,55 +278,88 @@ module Discordrb
       API.join_server(token, resolved)
     end
 
-    attr_reader :voice
+    # Creates an OAuth invite URL that can be used to invite this bot to a particular server.
+    # Requires the application ID to have been set during initialization.
+    # @param server [Server, nil] The server the bot should be invited to, or nil if a general invite should be created.
+    # @return [String] the OAuth invite URL.
+    def invite_url(server = nil)
+      raise 'No application ID has been set during initialization! Add one as the `application_id` named parameter while creating your bot.' unless @application_id
+
+      guild_id_str = server ? "&guild_id=#{server.id}" : ''
+      "https://discordapp.com/oauth2/authorize?&client_id=#{@application_id}#{guild_id_str}&scope=bot"
+    end
+
+    # @return [Hash<Integer => VoiceBot>] the voice connections this bot currently has, by the server ID to which they are connected.
+    attr_reader :voices
+
+    # Gets the voice bot for a particular server or channel. You can connect to a new channel using the {#voice_connect}
+    # method.
+    # @param thing [Channel, Server, Integer] the server or channel you want to get the voice bot for, or its ID.
+    # @return [VoiceBot, nil] the VoiceBot for the thing you specified, or nil if there is no connection yet
+    def voice(thing)
+      id = thing.resolve_id
+      return @voices[id] if @voices[id]
+
+      channel = channel(id)
+      return nil unless channel
+
+      server_id = channel.server.id
+      return @voices[server_id] if @voices[server_id]
+
+      nil
+    end
 
     # Connects to a voice channel, initializes network connections and returns the {Voice::VoiceBot} over which audio
-    # data can then be sent. After connecting, the bot can also be accessed using {#voice}.
+    # data can then be sent. After connecting, the bot can also be accessed using {#voice}. If the bot is already
+    # connected to voice, the existing connection will be terminated - you don't have to call {VoiceBot#destroy}
+    # before calling this method.
     # @param chan [Channel] The voice channel to connect to.
     # @param encrypted [true, false] Whether voice communication should be encrypted using RbNaCl's SecretBox
     #   (uses an XSalsa20 stream cipher for encryption and Poly1305 for authentication)
     # @return [Voice::VoiceBot] the initialized bot over which audio data can then be sent.
     def voice_connect(chan, encrypted = true)
-      if @voice
-        debug('Voice bot exists already! Destroying it')
-        @voice.destroy
-        @voice = nil
-      end
-
       chan = channel(chan.resolve_id)
-      @voice_channel = chan
+      server_id = chan.server.id
       @should_encrypt_voice = encrypted
 
-      debug("Got voice channel: #{@voice_channel}")
+      if @voices[chan.id]
+        debug('Voice bot exists already! Destroying it')
+        @voices[chan.id].destroy
+        @voices.delete(chan.id)
+      end
+
+      debug("Got voice channel: #{chan}")
 
       data = {
-        op: 4,
+        op: Opcodes::VOICE_STATE,
         d: {
-          guild_id: @voice_channel.server.id.to_s,
-          channel_id: @voice_channel.id.to_s,
+          guild_id: server_id.to_s,
+          channel_id: chan.id.to_s,
           self_mute: false,
           self_deaf: false
         }
       }
       debug("Voice channel init packet is: #{data.to_json}")
 
-      @should_connect_to_voice = true
+      @should_connect_to_voice[server_id] = chan
       @ws.send(data.to_json)
       debug('Voice channel init packet sent! Now waiting.')
 
-      sleep(0.05) until @voice
+      sleep(0.05) until @voices[server_id]
       debug('Voice connect succeeded!')
-      @voice
+      @voices[server_id]
     end
 
-    # Disconnects the client from all voice connections across Discord.
+    # Disconnects the client from a specific voice connection given the server ID. Usually it's more convenient to use
+    # {Discordrb::Voice::VoiceBot#destroy} rather than this.
+    # @param server_id [Integer] The ID of the server the voice connection is on.
     # @param destroy_vws [true, false] Whether or not the VWS should also be destroyed. If you're calling this method
     #   directly, you should leave it as true.
-    def voice_destroy(destroy_vws = true)
+    def voice_destroy(server_id, destroy_vws = true)
       data = {
-        op: 4,
+        op: Opcodes::VOICE_STATE,
         d: {
-          guild_id: nil,
+          guild_id: server_id.to_s,
           channel_id: nil,
           self_mute: false,
           self_deaf: false
@@ -294,8 +369,8 @@ module Discordrb
       debug("Voice channel destroy packet is: #{data.to_json}")
       @ws.send(data.to_json)
 
-      @voice.destroy if @voice && destroy_vws
-      @voice = nil
+      @voices[server_id].destroy if @voices[server_id] && destroy_vws
+      @voices.delete(server_id)
     end
 
     # Revokes an invite to a server. Will fail unless you have the *Manage Server* permission.
@@ -304,53 +379,6 @@ module Discordrb
     def delete_invite(code)
       invite = resolve_invite_code(code)
       API.delete_invite(token, invite)
-    end
-
-    # Gets a user by its ID.
-    # @note This can only resolve users known by the bot (i.e. that share a server with the bot).
-    # @param id [Integer] The user ID that should be resolved.
-    # @return [User, nil] The user identified by the ID, or `nil` if it couldn't be found.
-    def user(id)
-      id = id.resolve_id
-      @users[id]
-    end
-
-    # Gets a server by its ID.
-    # @note This can only resolve servers the bot is currently in.
-    # @param id [Integer] The server ID that should be resolved.
-    # @return [Server, nil] The server identified by the ID, or `nil` if it couldn't be found.
-    def server(id)
-      id = id.resolve_id
-      @servers[id]
-    end
-
-    # Finds a channel given its name and optionally the name of the server it is in.
-    # @param channel_name [String] The channel to search for.
-    # @param server_name [String] The server to search for, or `nil` if only the channel should be searched for.
-    # @return [Array<Channel>] The array of channels that were found. May be empty if none were found.
-    def find_channel(channel_name, server_name = nil)
-      results = []
-
-      @servers.values.each do |server|
-        server.channels.each do |channel|
-          results << channel if channel.name == channel_name && (server_name || server.name) == server.name
-        end
-      end
-
-      results
-    end
-
-    # Finds a user given its username.
-    # @param username [String] The username to look for.
-    # @return [Array<User>] The array of users that were found. May be empty if none were found.
-    def find_user(username)
-      @users.values.find_all { |e| e.username == username }
-    end
-
-    # @deprecated Use {#find_channel} instead
-    def find(channel_name, server_name = nil)
-      debug('Attempted to use bot.find - this method is deprecated! Use find_channel for the same functionality')
-      find_channel(channel_name, server_name)
     end
 
     # Sends a text message to a channel given its ID and the message's content.
@@ -435,7 +463,7 @@ module Discordrb
       @game = name
 
       data = {
-        op: 3,
+        op: Opcodes::PRESENCE,
         d: {
           idle_since: nil,
           game: name ? { name: name } : nil
@@ -444,6 +472,27 @@ module Discordrb
 
       @ws.send(data.to_json)
       name
+    end
+
+    # Injects a reconnect event (op 7) into the event processor, causing Discord to reconnect to the given gateway URL.
+    # If the URL is set to nil, it will reconnect and get an entirely new gateway URL. This method has not much use
+    # outside of testing and implementing highly custom reconnect logic.
+    # @param url [String, nil] the URL to connect to or nil if one should be obtained from Discord.
+    def inject_reconnect(url)
+      websocket_message({
+        op: Opcodes::RECONNECT,
+        d: {
+          url: url
+        }
+      }.to_json)
+    end
+
+    # Injects a resume packet (op 6) into the gateway. If this is done with a running connection, it will cause an
+    # error. It has no use outside of testing stuff that I know of, but if you want to use it anyway for some reason,
+    # here it is.
+    # @param seq [Integer, nil] The sequence ID to inject, or nil if the currently tracked one should be used.
+    def inject_resume(seq)
+      resume(seq || @sequence, raw_token, @session_id)
     end
 
     # Sets debug mode. If debug mode is on, many things will be outputted to STDOUT.
@@ -488,29 +537,24 @@ module Discordrb
 
     private
 
-    #######     ###     ######  ##     ## ########
-    ##    ##   ## ##   ##    ## ##     ## ##
-    ##        ##   ##  ##       ##     ## ##
-    ##       ##     ## ##       ######### ######
-    ##       ######### ##       ##     ## ##
-    ##    ## ##     ## ##    ## ##     ## ##
-    #######  ##     ##  ######  ##     ## ########
+    # Determines the type of an account by checking which parameters are given
+    def determine_account_type(type, email, password, token, application_id)
+      # Case 1: if a type is already given, return it
+      return type if type
 
-    def add_server(data)
-      server = Server.new(data, self)
-      @servers[server.id] = server
+      # Case 2: user accounts can't have application IDs so if one is given, return bot type
+      return :bot if application_id
 
-      # Initialize users
-      server.members.each do |member|
-        if @users[member.id]
-          # If the user is already cached, just add the new roles
-          @users[member.id].merge_roles(server, member.roles[server.id])
-        else
-          @users[member.id] = member
-        end
-      end
+      # Case 3: bot accounts can't have emails and passwords so if either is given, assume user
+      return :user if email || password
 
-      server
+      # Case 4: If we're here and no token is given, throw an exception because that's impossible
+      raise ArgumentError, "Can't login because no authentication data was given! Specify at least a token" unless token
+
+      # Case 5: Only a token has been specified, we can assume it's a bot but we should tell the user
+      # to specify the application ID:
+      LOGGER.warn('The application ID is missing! Logging in as a bot will work but some OAuth-related functionality will be unavailable!')
+      :bot
     end
 
     ### ##    ## ######## ######## ########  ##    ##    ###    ##        ######
@@ -523,77 +567,97 @@ module Discordrb
 
     # Internal handler for PRESENCE_UPDATE
     def update_presence(data)
+      # Friends list presences have no guild ID so ignore these to not cause an error
+      return unless data['guild_id']
+
       user_id = data['user']['id'].to_i
       server_id = data['guild_id'].to_i
-      server = @servers[server_id]
+      server = server(server_id)
       return unless server
 
-      user = @users[user_id]
-      unless user
-        user = User.new(data['user'], self)
-        @users[user_id] = user
-      end
+      member_is_new = false
 
-      status = data['status'].to_sym
-      if status != :offline
-        unless server.members.find { |u| u.id == user.id }
-          server.members << user
-        end
+      if server.member_cached?(user_id)
+        member = server.member(user_id)
+      else
+        # If the member is not cached yet, it means that it just came online from not being cached at all
+        # due to large_threshold. Fortunately, Discord sends the entire member object in this case, and
+        # not just a part of it - we can just cache this member directly
+        member = Member.new(data, server, self)
+        debug("Implicitly adding presence-obtained member #{user_id} to #{server_id} cache")
+
+        member_is_new = true
       end
 
       username = data['user']['username']
-      if username
-        debug "User changed username: #{user.username} #{username}"
-        user.update_username(username)
+      if username && !member_is_new # Don't set the username for newly-cached members
+        debug "Implicitly updating presence-obtained information for member #{user_id}"
+        member.update_username(username)
       end
 
-      user.status = status
-      user.game = data['game'] ? data['game']['name'] : nil
-      user
+      member.status = data['status'].to_sym
+      member.game = data['game'] ? data['game']['name'] : nil
+
+      server.cache_member(member)
     end
 
     # Internal handler for VOICE_STATUS_UPDATE
     def update_voice_state(data)
       user_id = data['user_id'].to_i
       server_id = data['guild_id'].to_i
-      server = @servers[server_id]
+      server = server(server_id)
       return unless server
 
-      user = @users[user_id]
-      user.server_mute = data['mute']
-      user.server_deaf = data['deaf']
-      user.self_mute = data['self_mute']
-      user.self_deaf = data['self_deaf']
+      user = server.member(user_id)
 
       channel_id = data['channel_id']
       channel = nil
       channel = self.channel(channel_id.to_i) if channel_id
-      user.move(channel)
+
+      user.update_voice_state(
+        channel,
+        data['mute'],
+        data['deaf'],
+        data['self_mute'],
+        data['self_deaf'])
 
       @session_id = data['session_id']
     end
 
     # Internal handler for VOICE_SERVER_UPDATE
     def update_voice_server(data)
-      debug("Voice server update received! should connect: #{@should_connect_to_voice}")
-      return unless @should_connect_to_voice
-      @should_connect_to_voice = false
+      server_id = data['guild_id'].to_i
+      channel = @should_connect_to_voice[server_id]
+
+      debug("Voice server update received! chan: #{channel.inspect}")
+      return unless channel
+      @should_connect_to_voice.delete(server_id)
       debug('Updating voice server!')
 
       token = data['token']
       endpoint = data['endpoint']
-      channel = @voice_channel
+
+      unless endpoint
+        debug('VOICE_SERVER_UPDATE sent with nil endpoint! Ignoring')
+        return
+      end
 
       debug('Got data, now creating the bot.')
-      @voice = Discordrb::Voice::VoiceBot.new(channel, self, token, @session_id, endpoint, @should_encrypt_voice)
+      @voices[server_id] = Discordrb::Voice::VoiceBot.new(channel, self, token, @session_id, endpoint, @should_encrypt_voice)
     end
 
     # Internal handler for CHANNEL_CREATE
     def create_channel(data)
       channel = Channel.new(data, self)
       server = channel.server
-      server.channels << channel
-      @channels[channel.id] = channel
+
+      # Handle normal and private channels separately
+      if server
+        server.channels << channel
+        @channels[channel.id] = channel
+      else
+        @private_channels[channel.id] = channel
+      end
     end
 
     # Internal handler for CHANNEL_UPDATE
@@ -608,64 +672,46 @@ module Discordrb
     def delete_channel(data)
       channel = Channel.new(data, self)
       server = channel.server
-      @channels[channel.id] = nil
-      server.channels.reject! { |c| c.id == channel.id }
+
+      # Handle normal and private channels separately
+      if server
+        @channels.delete(channel.id)
+        server.channels.reject! { |c| c.id == channel.id }
+      else
+        @private_channels.delete(channel.id)
+      end
     end
 
     # Internal handler for GUILD_MEMBER_ADD
     def add_guild_member(data)
-      user = User.new(data['user'], self)
       server_id = data['guild_id'].to_i
-      server = @servers[server_id]
+      server = self.server(server_id)
 
-      roles = []
-      data['roles'].each do |element|
-        role_id = element.to_i
-        roles << server.roles.find { |r| r.id == role_id }
-      end
-      user.update_roles(server, roles)
-
-      if @users[user.id]
-        # If the user is already cached, just add the new roles
-        @users[user.id].merge_roles(server, user.roles[server.id])
-      else
-        @users[user.id] = user
-      end
-
-      server.add_user(user)
+      member = Member.new(data, server, self)
+      server.add_member(member)
     end
 
     # Internal handler for GUILD_MEMBER_UPDATE
     def update_guild_member(data)
-      user_id = data['user']['id'].to_i
-      user = @users[user_id]
-
       server_id = data['guild_id'].to_i
-      server = @servers[server_id]
+      server = self.server(server_id)
 
-      roles = []
-      data['roles'].each do |element|
-        role_id = element.to_i
-        roles << server.roles.find { |r| r.id == role_id }
-      end
-      user.update_roles(server, roles)
+      member = server.member(data['user']['id'].to_i)
+      member.update_roles(data['roles'])
     end
 
     # Internal handler for GUILD_MEMBER_DELETE
     def delete_guild_member(data)
-      user_id = data['user']['id'].to_i
-      user = @users[user_id]
-
       server_id = data['guild_id'].to_i
-      server = @servers[server_id]
+      server = self.server(server_id)
 
-      user.delete_roles(server_id)
-      server.delete_user(user_id)
+      user_id = data['user']['id'].to_i
+      server.delete_member(user_id)
     end
 
     # Internal handler for GUILD_CREATE
     def create_guild(data)
-      add_server(data)
+      ensure_server(data)
     end
 
     # Internal handler for GUILD_UPDATE
@@ -738,60 +784,88 @@ module Discordrb
     ##       ##     ## ##    ##   ##  ##   ###
     ########  #######   ######   #### ##    ##
 
-    def login
-      if @email == :token
-        debug('Logging in using static token')
+    def login(type, email, password, token, token_cache)
+      # Don't bother with any login code if a token is already specified
+      return process_token(type, token) if token
 
-        # The password is the token!
-        return @password
-      end
+      # If a bot account attempts logging in without a token, throw an error
+      raise ArgumentError, 'Bot account detected (type == :bot) but no token was found! Please specify a token in the Bot initializer, or use a user account.' if type == :bot
 
+      # If the type is not a user account at this point, it must be invalid
+      raise ArgumentError, 'Invalid type specified! Use either :bot or :user' if type == :user
+
+      user_login(email, password, token_cache)
+    end
+
+    def process_token(type, token)
+      # Remove the "Bot " prefix if it exists
+      token = token[4..-1] if token.start_with? 'Bot '
+
+      token = 'Bot ' + token unless type == :user
+      token
+    end
+
+    def user_login(email, password, token_cache)
       debug('Logging in')
+
+      # Attempt to retrieve the token from the cache
+      retrieved_token = retrieve_token(email, password, token_cache)
+      return retrieved_token if retrieved_token
+
       login_attempts ||= 0
 
-      # First, attempt to get the token from the cache
-      token = @token_cache.token(@email, @password)
-      if token
-        debug('Token successfully obtained from cache!')
-        return token
-      end
-
       # Login
-      login_response = API.login(@email, @password)
-      raise Discordrb::Errors::HTTPStatusError, login_response.code if login_response.code >= 400
-
-      # Parse response
-      login_response_object = JSON.parse(login_response)
-      raise Discordrb::Errors::InvalidAuthenticationError unless login_response_object['token']
-
+      login_response = JSON.parse(API.login(email, password))
+      token = login_response['token']
+      raise Discordrb::Errors::InvalidAuthenticationError unless token
       debug('Received token from Discord!')
 
       # Cache the token
-      @token_cache.store_token(@email, @password, login_response_object['token'])
+      token_cache.store_token(email, password, token)
 
-      login_response_object['token']
-    rescue Exception => e
-      response_code = login_response.nil? ? 0 : login_response.code ######## mackmm145
-      if login_attempts < 100 && (e.inspect.include?('No such host is known.') || response_code == 523)
-        debug("Login failed! Reattempting in 5 seconds. #{100 - login_attempts} attempts remaining.")
-        debug("Error was: #{e.inspect}")
-        sleep 5
-        login_attempts += 1
-        retry
+      token
+    rescue RestClient::BadRequest
+      raise Discordrb::Errors::InvalidAuthenticationError
+    rescue SocketError, RestClient::RequestFailed => e # RequestFailed handles the 52x error codes Cloudflare sometimes sends that aren't covered by specific RestClient classes
+      if login_attempts && login_attempts > 100
+        LOGGER.error("User login failed permanently after #{login_attempts} attempts")
+        raise
       else
-        debug("Login failed permanently after #{login_attempts + 1} attempts")
-
-        # Apparently we get a 400 if the password or username is incorrect. In that case, tell the user
-        debug("Are you sure you're using the correct username and password?") if e.class == RestClient::BadRequest
-        log_exception(e)
-        raise $ERROR_INFO
+        LOGGER.error("User login failed! Trying again in 5 seconds, #{100 - login_attempts} remaining")
+        LOGGER.log_exception(e)
+        retry
       end
     end
 
+    def retrieve_token(email, password, token_cache)
+      # First, attempt to get the token from the cache
+      token = token_cache.token(email, password)
+      debug('Token successfully obtained from cache!') if token
+      token
+    end
+
     def find_gateway
-      # Get updated websocket_hub
-      response = API.gateway(token)
-      JSON.parse(response)['url']
+      # If the reconnect URL is set, it means we got an op 7 earlier and should reconnect to the new URL
+      if @reconnect_url
+        debug("Reconnecting to URL #{@reconnect_url}")
+        url = @reconnect_url
+        @reconnect_url = nil # Unset the URL so we don't connect to the same URL again if the connection fails
+        url
+      else
+        # Get the correct gateway URL from Discord
+        response = API.gateway(token)
+        JSON.parse(response)['url']
+      end
+    end
+
+    def process_gateway
+      raw_url = find_gateway
+
+      # Append a slash in case it's not there (I'm not sure how well WSCS handles it otherwise)
+      raw_url += '/' unless raw_url.end_with? '/'
+
+      # Add the parameters we want
+      raw_url + "?encoding=json&v=#{GATEWAY_VERSION}"
     end
 
     ##      ##  ######     ######## ##     ## ######## ##    ## ########  ######
@@ -802,106 +876,168 @@ module Discordrb
     ##  ##  ## ##    ##    ##         ## ##   ##       ##   ###    ##    ##    ##
     ####  ###   ######     ########    ###    ######## ##    ##    ##     ######
 
+    # Desired gateway version
+    GATEWAY_VERSION = 4
+
     def websocket_connect
       debug('Attempting to get gateway URL...')
-      websocket_hub = find_gateway
-      debug("Success! Gateway URL is #{websocket_hub}.")
+      gateway_url = process_gateway
+      debug("Success! Gateway URL is #{gateway_url}.")
       debug('Now running bot')
 
-      EM.run do
-        @ws = Faye::WebSocket::Client.new(websocket_hub)
+      @ws = Discordrb::WebSocket.new(
+        gateway_url,
+        method(:websocket_open),
+        method(:websocket_message),
+        method(:websocket_close),
+        proc { |e| LOGGER.error "Gateway error: #{e}" }
+      )
 
-        @ws.on(:open) { |event| websocket_open(event) }
-        @ws.on(:message) { |event| websocket_message(event) }
-        @ws.on(:error) { |event| debug(event.message) }
-        @ws.on :close do |event|
-          websocket_close(event)
-          @ws = nil
-        end
-      end
+      @ws.thread[:discordrb_name] = 'gateway'
+      @ws.thread.join
+    rescue => e
+      LOGGER.error 'Error while connecting to the gateway!'
+      LOGGER.log_exception e
+      raise
+    end
+
+    def websocket_reconnect(url)
+      # In here, we do nothing except set the reconnect URL and close the current connection.
+      @reconnect_url = url
+      @ws.close
+
+      # Reset the packet sequence number so we don't try to resume the connection afterwards
+      @sequence = 0
+
+      # Let's hope the reconnect handler reconnects us correctly...
     end
 
     def websocket_message(event)
+      if event.byteslice(0) == 'x'
+        # The message is encrypted
+        event = Zlib::Inflate.inflate(event)
+      end
+
       # Parse packet
-      packet = JSON.parse(event.data)
+      packet = JSON.parse(event)
 
       if @prevent_ready && packet['t'] == 'READY'
         debug('READY packet was received and suppressed')
       elsif @prevent_ready && packet['t'] == 'GUILD_MEMBERS_CHUNK'
         # Ignore chunks as they will be handled later anyway
       else
-        LOGGER.in(event.data.to_s)
+        LOGGER.in(event.to_s)
       end
 
-      raise 'Invalid Packet' unless packet['op'] == 0 # TODO
+      opcode = packet['op'].to_i
+
+      if opcode == Opcodes::HEARTBEAT
+        # If Discord sends us a heartbeat, simply reply with a heartbeat with the packet's sequence number
+        @sequence = packet['s'].to_i
+
+        LOGGER.info("Received an op1 (seq: #{@sequence})! This means another client connected while this one is already running. Replying with the same seq")
+        send_heartbeat
+
+        return
+      end
+
+      if opcode == Opcodes::RECONNECT
+        websocket_reconnect(packet['d'] ? packet['d']['url'] : nil)
+        return
+      end
+
+      if opcode == Opcodes::INVALIDATE_SESSION
+        LOGGER.info "We got an opcode 9 from Discord! Invalidating the session. You probably don't have to worry about this."
+        invalidate_session
+        LOGGER.debug 'Session invalidated!'
+
+        LOGGER.debug 'Reconnecting with IDENTIFY'
+        websocket_open # Since we just invalidated the session, pretending we just opened the WS again will re-identify
+        LOGGER.debug "Re-identified! Let's hope everything works fine."
+        return
+      end
+
+      raise "Got an unexpected opcode (#{opcode}) in a gateway event!
+              Please report this issue along with the following information:
+              v#{GATEWAY_VERSION} #{packet}" unless opcode == Opcodes::DISPATCH
+
+      # Check whether there are still unavailable servers and there have been more than 10 seconds since READY
+      if @unavailable_servers && @unavailable_servers > 0 && (Time.now - @ready_time) > 10
+        # The server streaming timed out!
+        LOGGER.warn("Server streaming timed out with #{@unavailable_servers} servers remaining")
+        LOGGER.warn("This means some servers are unavailable due to an outage. Notifying ready now, we'll have to live without these servers")
+        notify_ready
+      end
+
+      # Keep track of the packet sequence (continually incrementing number for every packet) so we can resume a
+      # connection if we disconnect
+      @sequence = packet['s'].to_i
 
       data = packet['d']
       type = packet['t'].intern
       case type
       when :READY
+        LOGGER.info("Discord using gateway protocol version: #{data['v']}, requested: #{GATEWAY_VERSION}")
+
+        # Set the session ID in case we get disconnected and have to resume
+        @session_id = data['session_id']
+
         # Activate the heartbeats
         @heartbeat_interval = data['heartbeat_interval'].to_f / 1000.0
         @heartbeat_active = true
         debug("Desired heartbeat_interval: #{@heartbeat_interval}")
 
-        bot_user_id = data['user']['id'].to_i
         @profile = Profile.new(data['user'], self, @email, @password)
 
         # Initialize servers
         @servers = {}
-        data['guilds'].each do |element|
-          add_server(element)
 
-          # Save the bot user
-          @bot_user = @users[bot_user_id]
+        # Count unavailable servers
+        @unavailable_servers = 0
+
+        data['guilds'].each do |element|
+          # Check for true specifically because unavailable=false indicates that a previously unavailable server has
+          # come online
+          if element['unavailable'].is_a? TrueClass
+            @unavailable_servers += 1
+
+            # Ignore any unavailable servers
+            next
+          end
+
+          ensure_server(element)
         end
 
         # Add private channels
-        @private_channels = {}
         data['private_channels'].each do |element|
-          channel = Channel.new(element, self)
-          @channels[channel.id] = channel
+          channel = ensure_channel(element)
           @private_channels[channel.recipient.id] = channel
         end
 
-        # Make sure to raise the event
-        raise_event(ReadyEvent.new)
+        # Don't notify yet if there are unavailable servers because they need to get available before the bot truly has
+        # all the data
+        if @unavailable_servers == 0
+          # No unavailable servers - we're ready!
+          notify_ready
+        end
 
-        # Afterwards, send out a members request to get the chunk data
-        chunk_packet = {
-          op: 8,
-          d: {
-            guild_id: @servers.keys,
-            query: '',
-            limit: 0
-          }
-        }.to_json
-        @ws.send(chunk_packet)
+        @ready_time = Time.now
+      when :RESUMED
+        # The RESUMED event is received after a successful op 6 (resume). It does nothing except tell the bot the
+        # connection is initiated (like READY would) and set a new heartbeat interval.
+        debug('Connection resumed')
 
-        LOGGER.good 'Ready'
+        @heartbeat_interval = data['heartbeat_interval'].to_f / 1000.0
 
-        # Tell the run method that everything was successful
-        @ws_success = true
+        # Since we disabled it earlier so we don't send any heartbeats in between close and resume,, make sure to
+        # re-enable heartbeating
+        @heartbeat_active = true
+
+        debug("Desired heartbeat_interval: #{@heartbeat_interval}")
       when :GUILD_MEMBERS_CHUNK
         id = data['guild_id'].to_i
-        members = data['members']
-
-        start_time = Time.now
-
-        members.each do |member|
-          # Add the guild_id to the member so we can reuse add_guild_member
-          member['guild_id'] = id
-
-          add_guild_member(member)
-        end
-
-        duration = Time.now - start_time
-
-        if members.length < 1000
-          debug "Got final chunk for server #{id}, parsing took #{duration} seconds"
-        else
-          debug "Got one chunk for server #{id}, parsing took #{duration} seconds"
-        end
+        server = server(id)
+        server.process_chunk(data['members'])
       when :MESSAGE_CREATE
         create_message(data)
 
@@ -912,7 +1048,7 @@ module Discordrb
         event = MessageEvent.new(message, self)
         raise_event(event)
 
-        if message.mentions.any? { |user| user.id == @bot_user.id }
+        if message.mentions.any? { |user| user.id == @profile.id }
           event = MentionEvent.new(message, self)
           raise_event(event)
         end
@@ -924,7 +1060,10 @@ module Discordrb
       when :MESSAGE_UPDATE
         update_message(data)
 
-        event = MessageEditEvent.new(data, self)
+        message = Message.new(data, self)
+        return if message.from_bot? && !should_parse_self
+
+        event = MessageEditEvent.new(message, self)
         raise_event(event)
       when :MESSAGE_DELETE
         delete_message(data)
@@ -941,8 +1080,11 @@ module Discordrb
           debug 'Typing started in channel the bot has no access to, ignoring'
         end
       when :PRESENCE_UPDATE
+        # Ignore friends list presences
+        return unless data['guild_id']
+
         now_playing = data['game']
-        presence_user = user(data['user']['id'].to_i)
+        presence_user = @users[data['user']['id'].to_i]
         played_before = presence_user.nil? ? nil : presence_user.game
         update_presence(data)
 
@@ -980,17 +1122,17 @@ module Discordrb
       when :GUILD_MEMBER_ADD
         add_guild_member(data)
 
-        event = GuildMemberAddEvent.new(data, self)
+        event = ServerMemberAddEvent.new(data, self)
         raise_event(event)
       when :GUILD_MEMBER_UPDATE
         update_guild_member(data)
 
-        event = GuildMemberUpdateEvent.new(data, self)
+        event = ServerMemberUpdateEvent.new(data, self)
         raise_event(event)
       when :GUILD_MEMBER_REMOVE
         delete_guild_member(data)
 
-        event = GuildMemberDeleteEvent.new(data, self)
+        event = ServerMemberDeleteEvent.new(data, self)
         raise_event(event)
       when :GUILD_BAN_ADD
         add_user_ban(data)
@@ -1005,56 +1147,106 @@ module Discordrb
       when :GUILD_ROLE_UPDATE
         update_guild_role(data)
 
-        event = GuildRoleUpdateEvent.new(data, self)
+        event = ServerRoleUpdateEvent.new(data, self)
         raise_event(event)
       when :GUILD_ROLE_CREATE
         create_guild_role(data)
 
-        event = GuildRoleCreateEvent.new(data, self)
+        event = ServerRoleCreateEvent.new(data, self)
         raise_event(event)
       when :GUILD_ROLE_DELETE
         delete_guild_role(data)
 
-        event = GuildRoleDeleteEvent.new(data, self)
+        event = ServerRoleDeleteEvent.new(data, self)
         raise_event(event)
       when :GUILD_CREATE
         create_guild(data)
 
-        event = GuildCreateEvent.new(data, self)
+        # Check for false specifically (no data means the server has never been unavailable)
+        if data['unavailable'].is_a? FalseClass
+          @unavailable_servers -= 1
+
+          notify_ready if @unavailable_servers == 0
+        end
+
+        event = ServerCreateEvent.new(data, self)
         raise_event(event)
       when :GUILD_UPDATE
         update_guild(data)
 
-        event = GuildUpdateEvent.new(data, self)
+        event = ServerUpdateEvent.new(data, self)
         raise_event(event)
       when :GUILD_DELETE
         delete_guild(data)
 
-        event = GuildDeleteEvent.new(data, self)
+        event = ServerDeleteEvent.new(data, self)
         raise_event(event)
       else
         # another event that we don't support yet
         debug "Event #{packet['t']} has been received but is unsupported, ignoring"
       end
     rescue Exception => e
+      LOGGER.error('Gateway message error!')
       log_exception(e)
     end
 
     def websocket_close(event)
       LOGGER.error('Disconnected from WebSocket!')
-      LOGGER.error(" (Reason: #{event.reason})")
-      LOGGER.error(" (Code: #{event.code})")
-      raise_event(DisconnectEvent.new)
-      EM.stop
+
+      # Don't handle nil events (for example if the disconnect came from our side)
+      return unless event
+
+      # Handle actual close frames and errors separately
+      if event.respond_to? :code
+        LOGGER.error(" (Reason: #{event.data})")
+        LOGGER.error(" (Code: #{event.code})")
+      else
+        LOGGER.log_exception event
+      end
+
+      if event.code.to_i == 4006
+        # If we got disconnected with a 4006, it means we sent a resume when Discord wanted an identify. To battle this,
+        # we invalidate the local session so we'll just send an identify next time
+        debug('Apparently we just sent the wrong type of initiation packet (resume rather than identify) to Discord. (Sorry!)
+                Invalidating session so this is fixed next time')
+        invalidate_session
+      end
+
+      raise_event(DisconnectEvent.new(self))
+
+      # Stop sending heartbeats
+      @heartbeat_active = false
+
+      # Safely close the WS connection and handle any errors that occur there
+      begin
+        @ws.close
+      rescue => e
+        LOGGER.warn 'Got the following exception while closing the WS after being disconnected:'
+        LOGGER.log_exception e
+      end
+    rescue => e
+      LOGGER.log_exception e
+      raise
     end
 
-    def websocket_open(_)
+    def websocket_open
+      # If we've already received packets (packet sequence > 0) resume an existing connection instead of identifying anew
+      if @sequence && @sequence > 0
+        resume(@sequence, raw_token, @session_id)
+        return
+      end
+
+      identify(raw_token, 100, GATEWAY_VERSION)
+    end
+
+    # Identify the client to the gateway
+    def identify(token, large_threshold, version)
       # Send the initial packet
       packet = {
-        op: 2,    # Packet identifier
-        d: {      # Packet data
-          v: 3,   # WebSocket protocol version
-          token: @token,
+        op: Opcodes::IDENTIFY, # Opcode
+        d: {                   # Packet data
+          v: version,          # WebSocket protocol version
+          token: token,
           properties: { # I'm unsure what these values are for exactly, but they don't appear to impact bot functionality in any way.
             :'$os' => RUBY_PLATFORM.to_s,
             :'$browser' => 'discordrb',
@@ -1062,19 +1254,62 @@ module Discordrb
             :'$referrer' => '',
             :'$referring_domain' => ''
           },
-          large_threshold: 100
+          large_threshold: large_threshold,
+          compress: true
         }
       }
 
       @ws.send(packet.to_json)
     end
 
-    def send_heartbeat
-      millis = Time.now.strftime('%s%L').to_i
-      LOGGER.out("Sending heartbeat at #{millis}")
+    # Resume a previous gateway connection when reconnecting to a different server
+    def resume(seq, token, session_id)
       data = {
-        op: 1,
-        d: millis
+        op: Opcodes::RESUME,
+        d: {
+          seq: seq,
+          token: token,
+          session_id: session_id
+        }
+      }
+
+      @ws.send(data.to_json)
+    end
+
+    # Invalidate the current session (whatever this means)
+    def invalidate_session
+      @sequence = 0
+      @session_id = nil
+    end
+
+    # Notifies everything there is to be notified that the connection is now ready
+    def notify_ready
+      # Make sure to raise the event
+      raise_event(ReadyEvent.new(self))
+      LOGGER.good 'Ready'
+
+      # Tell the run method that everything was successful
+      @ws_success = true
+    end
+
+    # Separate method to wait an ever-increasing amount of time before reconnecting after being disconnected in an
+    # unexpected way
+    def wait_for_reconnect
+      # We disconnected in an unexpected way! Wait before reconnecting so we don't spam Discord's servers.
+      debug("Disconnected! Attempting to reconnect in #{@falloff} seconds.")
+      sleep @falloff
+
+      # Calculate new falloff
+      @falloff *= 1.5
+      @falloff = 115 + (rand * 10) if @falloff > 120 # Cap the falloff at 120 seconds and then add some random jitter
+    end
+
+    def send_heartbeat(sequence = nil)
+      sequence ||= @sequence
+      LOGGER.out("Sending heartbeat with sequence #{sequence}")
+      data = {
+        op: Opcodes::HEARTBEAT,
+        d: sequence
       }
 
       @ws.send(data.to_json)

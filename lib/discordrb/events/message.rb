@@ -1,9 +1,15 @@
+# frozen_string_literal: true
+
 require 'discordrb/events/generic'
 
 module Discordrb::Events
   # Event raised when a text message is sent to a channel
   class MessageEvent < Event
-    attr_reader :message, :saved_message
+    # @return [Message] the message which triggered this event.
+    attr_reader :message
+
+    # @return [String] the message that has been saved by calls to {#<<} and will be sent to Discord upon completion.
+    attr_reader :saved_message
 
     # @!attribute [r] author
     #   @return [User] who sent this message.
@@ -40,7 +46,13 @@ module Discordrb::Events
 
     # @return [true, false] whether or not this message was sent by the bot itself
     def from_bot?
-      @message.user.id == @bot.bot_user.id
+      @message.user.id == @bot.profile.id
+    end
+
+    # Utility method to get the voice bot for the current server
+    # @return [VoiceBot, nil] the voice bot connected to this message's server, or nil if there is none connected
+    def voice
+      @bot.voice(@message.channel.server.id)
     end
 
     # Adds a string to be sent after the event has finished execution. Avoids problems with rate limiting because only
@@ -102,16 +114,17 @@ module Discordrb::Events
           elsif a.is_a? Fixnum
             a == e.id
           elsif a == :bot
-            e.bot?
+            e.current_bot?
           else
             a == e
           end
         end,
-        matches_all(@attributes[:with_text] || @attributes[:content], event.content) do |a, e|
+        matches_all(@attributes[:with_text] || @attributes[:content] || @attributes[:exact_text], event.content) do |a, e|
           if a.is_a? String
             e == a
           elsif a.is_a? Regexp
-            a.match(e) ? (e == (a.match(e)[0])) : false
+            match = a.match(e)
+            match ? (e == match[0]) : false
           end
         end,
         matches_all(@attributes[:after], event.timestamp) { |a, e| a > e },
@@ -180,10 +193,10 @@ module Discordrb::Events
 
   # Raised when a message is edited
   # @see Discordrb::EventContainer#message_edit
-  class MessageEditEvent < MessageIDEvent; end
+  class MessageEditEvent < MessageEvent; end
 
   # Event handler for {MessageEditEvent}
-  class MessageEditEventHandler < MessageIDEventHandler; end
+  class MessageEditEventHandler < MessageEventHandler; end
 
   # Raised when a message is deleted
   # @see Discordrb::EventContainer#message_delete

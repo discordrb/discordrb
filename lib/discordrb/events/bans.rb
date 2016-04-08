@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'discordrb/events/generic'
 
 module Discordrb::Events
@@ -30,7 +32,7 @@ module Discordrb::Events
           elsif a.is_a? Integer
             a == e.id
           elsif a == :bot
-            e.bot?
+            e.current_bot?
           else
             a == e
           end

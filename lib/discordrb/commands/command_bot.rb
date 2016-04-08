@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'discordrb/bot'
 require 'discordrb/data'
 require 'discordrb/commands/parser'
@@ -19,22 +21,22 @@ module Discordrb::Commands
     include CommandContainer
 
     # Creates a new CommandBot and logs in to Discord.
-    # @param email [String] The email to use to log in.
-    # @param password [String] The password corresponding to the email.
-    # @param prefix [String] The prefix that should trigger this bot's commands. Can be any string (including the empty
+    # @param attributes [Hash] The attributes to initialize the CommandBot with.
+    # @see {Discordrb::Bot#initialize} for other attributes that should be used to create the underlying regular bot.
+    # @option attributes [String] :prefix The prefix that should trigger this bot's commands. Can be any string (including the empty
     #   string), but note that it will be literal - if the prefix is "hi" then the corresponding trigger string for
     #   a command called "test" would be "hitest". Don't forget to put spaces in if you need them!
-    # @param attributes [Hash] The attributes to initialize the CommandBot with.
-    # @param debug [true, false] Whether or not debug mode should be used - debug mode logs tons of extra stuff to the
-    #   console that may be useful in development.
     # @option attributes [true, false] :advanced_functionality Whether to enable advanced functionality (very powerful
     #   way to nest commands into chains, see https://github.com/meew0/discordrb/wiki/Commands#command-chain-syntax
     #   for info. Default is true.
-    # @option attributes [Symbol, Array<Symbol>] :help_command The name of the command that displays info for other
-    #   commands. Use an array if you want to have aliases. Default is "help".
+    # @option attributes [Symbol, Array<Symbol>, false] :help_command The name of the command that displays info for
+    #   other commands. Use an array if you want to have aliases. Default is "help". If none should be created, use
+    #   `false` as the value.
     # @option attributes [String] :command_doesnt_exist_message The message that should be displayed if a user attempts
     #   to use a command that does not exist. If none is specified, no message will be displayed. In the message, you
     #   can use the string '%command%' that will be replaced with the name of the command.
+    # @option attributes [true, false] :spaces_allowed Whether spaces are allowed to occur between the prefix and the
+    #   command. Default is false.
     # @option attributes [String] :previous Character that should designate the result of the previous command in
     #   a command chain (see :advanced_functionality). Default is '~'.
     # @option attributes [String] :chain_delimiter Character that should designate that a new command begins in the
@@ -49,19 +51,33 @@ module Discordrb::Commands
     #   :advanced_functionality). Default is '"'.
     # @option attributes [String] :quote_end Character that should end a quoted string (see
     #   :advanced_functionality). Default is '"'.
-    def initialize(email, password, prefix, attributes = {}, debug = false)
-      super(email, password, debug)
-      @prefix = prefix
+    def initialize(attributes = {})
+      super(
+        email: attributes[:email],
+        password: attributes[:password],
+        log_mode: attributes[:log_mode],
+        token: attributes[:token],
+        application_id: attributes[:application_id],
+        type: attributes[:type],
+        name: attributes[:name],
+        fancy_log: attributes[:fancy_log],
+        suppress_ready: attributes[:suppress_ready],
+        parse_self: attributes[:parse_self])
+
+      @prefix = attributes[:prefix]
       @attributes = {
         # Whether advanced functionality such as command chains are enabled
-        advanced_functionality: attributes[:advanced_functionality].nil? ? true : attributes[:advanced_functionality],
+        advanced_functionality: attributes[:advanced_functionality].nil? ? false : attributes[:advanced_functionality],
 
-        # The name of the help command (that displays information to other commands). Nil if none should exist
-        help_command: attributes[:help_command] || :help,
+        # The name of the help command (that displays information to other commands). False if none should exist
+        help_command: (attributes[:help_command].is_a? FalseClass) ? nil : (attributes[:help_command] || :help),
 
         # The message to display for when a command doesn't exist, %command% to get the command name in question and nil for no message
         # No default value here because it may not be desired behaviour
         command_doesnt_exist_message: attributes[:command_doesnt_exist_message],
+
+        # Spaces allowed between prefix and command
+        spaces_allowed: attributes[:spaces_allowed].nil? ? false : attributes[:spaces_allowed],
 
         # All of the following need to be one character
         # String to designate previous result in command chain
@@ -99,7 +115,8 @@ module Discordrb::Commands
           desc = command.attributes[:description] || '*No description available*'
           usage = command.attributes[:usage]
           result = "**`#{command_name}`**: #{desc}"
-          result << "\nUsage: `#{usage}`" if usage
+          result += "\nUsage: `#{usage}`" if usage
+          result
         else
           available_commands = @commands.values.reject { |c| !c.attributes[:help_available] }
           case available_commands.length
@@ -133,10 +150,10 @@ module Discordrb::Commands
         event.respond @attributes[:command_doesnt_exist_message].gsub('%command%', name.to_s) if @attributes[:command_doesnt_exist_message]
         return
       end
-      if permission?(user(event.user.id), command.attributes[:permission_level], event.server)
+      if permission?(event.user, command.attributes[:permission_level], event.server)
         event.command = command
         result = command.call(event, arguments, chained)
-        result.to_s
+        stringify(result)
       else
         event.respond "You don't have permission to execute command `#{name}`!"
       end
@@ -172,7 +189,7 @@ module Discordrb::Commands
     # @param server [Server] The server on which to check
     # @return [true, false] whether or not the user has the given permission
     def permission?(user, level, server)
-      determined_level = server.nil? ? 0 : user.roles[server.id].each.reduce(0) do |memo, role|
+      determined_level = server.nil? ? 0 : user.roles.reduce(0) do |memo, role|
         [@permissions[:roles][role.id] || 0, memo].max
       end
       [@permissions[:users][user.id] || 0, determined_level].max >= level
@@ -183,10 +200,18 @@ module Discordrb::Commands
     # Internal handler for MESSAGE_CREATE that is overwritten to allow for command handling
     def create_message(data)
       message = Discordrb::Message.new(data, self)
+      return if message.from_bot? && !@should_parse_self
+
       event = CommandEvent.new(message, self)
 
       return unless message.content.start_with? @prefix
       chain = message.content[@prefix.length..-1]
+
+      # Don't allow spaces between the prefix and the command
+      if chain.start_with?(' ') && !@attributes[:spaces_allowed]
+        debug('Chain starts with a space')
+        return
+      end
 
       if chain.strip.empty?
         debug('Chain is empty')
@@ -211,6 +236,13 @@ module Discordrb::Commands
           @event_threads.delete(t)
         end
       end
+    end
+
+    # Turns the object into a string, using to_s by default
+    def stringify(object)
+      return '' if object.is_a? Discordrb::Message
+
+      object.to_s
     end
   end
 end

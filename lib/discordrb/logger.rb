@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Discordrb
   # The format log timestamps should be in, in strftime format
   LOG_TIMESTAMP_FORMAT = '%Y-%m-%d %H:%M:%S.%L'.freeze
@@ -7,6 +9,8 @@ module Discordrb
     # @return [true, false] whether this logger is in extra-fancy mode!
     attr_writer :fancy
 
+    # Creates a new logger.
+    # @param fancy [true, false] Whether this logger uses fancy mode (ANSI escape codes to make the output colourful)
     def initialize(fancy = false)
       @fancy = fancy
       self.mode = :normal

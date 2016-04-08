@@ -1,10 +1,19 @@
+# frozen_string_literal: true
+
 require 'discordrb/events/generic'
 require 'discordrb/data'
 
 module Discordrb::Events
   # Event raised when a user's presence state updates (idle or online)
   class PresenceEvent < Event
-    attr_reader :server, :user, :status
+    # @return [Server] the server on which the presence update happened.
+    attr_reader :server
+
+    # @return [User] the user whose status got updated.
+    attr_reader :user
+
+    # @return [String] the new status.
+    attr_reader :status
 
     def initialize(data, bot)
       @user = bot.user(data['user']['id'].to_i)
@@ -42,7 +51,14 @@ module Discordrb::Events
 
   # Event raised when a user starts or stops playing a game
   class PlayingEvent < Event
-    attr_reader :server, :user, :game
+    # @return [Server] the server on which the presence update happened.
+    attr_reader :server
+
+    # @return [User] the user whose status got updated.
+    attr_reader :user
+
+    # @return [String] the new game the user is playing.
+    attr_reader :game
 
     def initialize(data, bot)
       @user = bot.user(data['user']['id'].to_i)

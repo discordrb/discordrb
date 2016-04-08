@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'base64'
 require 'json'
 require 'openssl'
@@ -10,6 +12,7 @@ module Discordrb
 
   # Represents a cached token with encryption data
   class CachedToken
+    # Parse the cached token from the JSON data read from the file.
     def initialize(data = nil)
       if data
         @verify_salt = Base64.decode64(data['verify_salt'])

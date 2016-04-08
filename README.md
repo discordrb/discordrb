@@ -1,5 +1,8 @@
+[![Gem](https://img.shields.io/gem/v/discordrb.svg)](https://rubygems.org/gems/discordrb)
+[![Gem](https://img.shields.io/gem/dt/discordrb.svg)](https://rubygems.org/gems/discordrb)
 [![Build Status](https://travis-ci.org/meew0/discordrb.svg?branch=master)](https://travis-ci.org/meew0/discordrb)
-
+[![Inline docs](http://inch-ci.org/github/meew0/discordrb.svg?branch=master&style=shields)](http://inch-ci.org/github/meew0/discordrb)
+[![Join Discord](https://img.shields.io/badge/discord-join-7289DA.svg)](https://discord.gg/0SBTUU1wZTWfFQL2)
 # discordrb
 
 An implementation of the [Discord](https://discordapp.com/) API using Ruby.
@@ -8,13 +11,26 @@ An implementation of the [Discord](https://discordapp.com/) API using Ruby.
 
 ## Quick links to sections
 
+* [Dependencies](https://github.com/meew0/discordrb#dependencies)
 * [Installation](https://github.com/meew0/discordrb#installation)
 * [Usage](https://github.com/meew0/discordrb#usage)
 * [Support](https://github.com/meew0/discordrb#support)
 * [Development](https://github.com/meew0/discordrb#development), [Contributing](https://github.com/meew0/discordrb#contributing)
 * [License](https://github.com/meew0/discordrb#license)
 
-See also: [Documentation](https://discord.gg/0SBTUU1wZTWfFQL2), [Tutorials](https://github.com/meew0/discordrb/wiki)
+See also: [Documentation](http://www.rubydoc.info/gems/discordrb), [Tutorials](https://github.com/meew0/discordrb/wiki)
+
+## Dependencies
+
+* Ruby 2.1+
+* An installed build system for native extensions (on Windows, try the [DevKit](http://rubyinstaller.org/downloads/); installation instructions [here](https://github.com/oneclick/rubyinstaller/wiki/Development-Kit#quick-start))
+
+### Voice dependencies
+
+This section only applies to you if you want to use voice functionality.
+* [libsodium](https://github.com/meew0/discordrb/wiki/Installing-libsodium)
+* A compiled libopus distribution for your system, anywhere the script can find it (on Windows, make sure it's named `opus.dll`)
+* [FFmpeg](https://www.ffmpeg.org/download.html) installed and in your PATH
 
 ## Installation
 
@@ -51,16 +67,6 @@ Then reinstall discordrb:
     gem uninstall discordrb
     gem install discordrb
 
-**If you get an error like this when running the example**:
-
-    terminate called after throwing an instance of 'std::runtime_error'
-      what():  Encryption not available on this event-machine
-
-You're missing the OpenSSL libraries that EventMachine, a dependency of discordrb, needs to be built with to use encrypted connections (which Discord requires). Download the OpenSSL libraries from [here](https://slproweb.com/download/Win32OpenSSL-1_0_2g.exe), install them to their default location and reinstall EventMachine using these libraries:
-
-    gem uninstall eventmachine
-    gem install eventmachine -- --with-ssl-dir=C:/OpenSSL-Win32
-
 **If you're having trouble getting voice playback to work**:
 
 Look here: https://github.com/meew0/discordrb/wiki/Voice-sending#troubleshooting
@@ -72,10 +78,10 @@ You can make a simple bot like this:
 ```ruby
 require 'discordrb'
 
-bot = Discordrb::Bot.new "email@example.com", "hunter2"
+bot = Discordrb::Bot.new token: '<token here>'
 
-bot.message(with_text: "Ping!") do |event|
-  event.respond "Pong!"
+bot.message(with_text: 'Ping!') do |event|
+  event.respond 'Pong!'
 end
 
 bot.run

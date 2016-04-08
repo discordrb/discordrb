@@ -1,5 +1,8 @@
+# frozen_string_literal: true
+
 require 'discordrb/voice/encoder'
 require 'discordrb/voice/network'
+require 'discordrb/logger'
 
 # Voice support
 module Discordrb::Voice
@@ -67,8 +70,11 @@ module Discordrb::Voice
     # @return [Float] the volume for audio playback, `1.0` by default.
     attr_accessor :volume
 
+    # @!visibility private
     def initialize(channel, bot, token, session, endpoint, encrypted)
       @bot = bot
+      @channel = channel
+
       @ws = VoiceWS.new(channel, bot, token, session, endpoint)
       @udp = @ws.udp
       @udp.encrypted = encrypted
@@ -85,6 +91,9 @@ module Discordrb::Voice
 
       @encoder = Encoder.new
       @ws.connect
+    rescue => e
+      Discordrb::LOGGER.log_exception(e)
+      raise
     end
 
     # @return [true, false] whether audio data sent will be encrypted.
@@ -141,7 +150,7 @@ module Discordrb::Voice
     # Permanently disconnects from the voice channel; to reconnect you will have to call {Bot#voice_connect} again.
     def destroy
       stop_playing
-      @bot.voice_destroy(false)
+      @bot.voice_destroy(@channel.server.id, false)
       @ws.destroy
     end
 
@@ -153,6 +162,7 @@ module Discordrb::Voice
     def play(encoded_io)
       stop_playing if @playing
       @retry_attempts = 3
+      @first_packet = true
 
       play_internal do
         buf = nil
@@ -161,6 +171,8 @@ module Discordrb::Voice
         begin
           buf = encoded_io.readpartial(DATA_LENGTH) if encoded_io
         rescue EOFError
+          raise IOError, 'File or stream not found!' if @first_packet
+
           @bot.debug('EOF while reading, breaking immediately')
           break
         end
@@ -177,12 +189,23 @@ module Discordrb::Voice
         # Adjust volume
         buf = @encoder.adjust_volume(buf, @volume) if @volume != 1.0
 
+        @first_packet = false
+
         # Encode data
         @encoder.encode(buf)
       end
 
       # If the stream is a process, kill it
-      Process.kill('TERM', encoded_io.pid) if encoded_io.respond_to? :pid
+      if encoded_io.respond_to? :pid
+        Discordrb::LOGGER.info("Killing ffmpeg process with pid #{encoded_io.pid.inspect}")
+
+        begin
+          Process.kill('TERM', encoded_io.pid)
+        rescue => e
+          Discordrb::LOGGER.warn('Failed to kill ffmpeg process! You *might* have a process leak now.')
+          Discordrb::LOGGER.warn("Reason: #{e}")
+        end
+      end
 
       # Close the stream
       encoded_io.close
@@ -225,7 +248,7 @@ module Discordrb::Voice
           # Read header
           header = input_stream.read(2).unpack('s<')[0]
 
-          raise RuntimeError, 'Negative header in DCA file! Your file is likely corrupted.' if header < 0
+          raise 'Negative header in DCA file! Your file is likely corrupted.' if header < 0
         rescue EOFError
           @bot.debug 'Finished DCA parsing'
           break

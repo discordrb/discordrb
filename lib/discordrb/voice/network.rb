@@ -1,11 +1,15 @@
+# frozen_string_literal: true
+
 require 'websocket-client-simple'
 require 'resolv'
 require 'socket'
 require 'json'
 
+require 'discordrb/websocket'
+
 begin
   RBNACL_AVAILABLE = false
-  unless ENV::has_key?('DISCORDRB_NONACL')
+  unless ENV.key?('DISCORDRB_NONACL')
     require 'rbnacl'
     RBNACL_AVAILABLE = true
   end
@@ -44,7 +48,7 @@ module Discordrb::Voice
     def connect(endpoint, port, ssrc)
       @endpoint = endpoint
       @endpoint = @endpoint[6..-1] if @endpoint.start_with? 'wss://'
-      @endpoint.gsub!(':80', '') # The endpoint may contain a port, we don't want that
+      @endpoint = @endpoint.gsub(':80', '') # The endpoint may contain a port, we don't want that
       @endpoint = Resolv.getaddress @endpoint
 
       @port = port
@@ -128,8 +132,7 @@ module Discordrb::Voice
       @token = token
       @session = session
 
-      @endpoint = endpoint
-      @endpoint.gsub!(':80', '')
+      @endpoint = endpoint.gsub(':80', '')
 
       @udp = VoiceUDP.new
     end
@@ -200,7 +203,7 @@ module Discordrb::Voice
       Thread.current[:discordrb_name] = 'vws-i'
 
       # Send the init packet
-      send_init(@channel.server.id, @bot.bot_user.id, @session, @token)
+      send_init(@channel.server.id, @bot.profile.id, @session, @token)
     end
 
     # @!visibility private
@@ -287,15 +290,17 @@ module Discordrb::Voice
     def init_ws
       host = "wss://#{@endpoint}:443"
       @bot.debug("Connecting VWS to host: #{host}")
-      @client = WebSocket::Client::Simple.connect(host)
 
-      # Change some instance to local variables for the blocks
-      instance = self
+      # Connect the WS
+      @client = Discordrb::WebSocket.new(
+        host,
+        method(:websocket_open),
+        method(:websocket_message),
+        proc { |e| puts "VWS error: #{e}" },
+        proc { |e| puts "VWS close: #{e}" }
+      )
 
-      @client.on(:open) { instance.websocket_open }
-      @client.on(:message) { |msg| instance.websocket_message(msg.data) }
-      @client.on(:error) { |e| puts "VWS error: #{e}" }
-      @client.on(:close) { |e| puts "VWS close: #{e}" }
+      @bot.debug('VWS connected')
 
       # Block any further execution
       heartbeat_loop

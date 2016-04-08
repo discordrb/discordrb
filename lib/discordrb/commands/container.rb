@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'discordrb/container'
 require 'discordrb/commands/rate_limiter'
 
@@ -34,8 +36,13 @@ module Discordrb::Commands
     def command(name, attributes = {}, &block)
       @commands ||= {}
       if name.is_a? Array
-        new_command = Command.new(name[0], attributes, &block)
-        name.each { |n| @commands[n] = new_command }
+        new_command = nil
+
+        name.each do |e|
+          new_command = Command.new(e, attributes, &block)
+          @commands[e] = new_command
+        end
+
         new_command
       else
         @commands[name] = Command.new(name, attributes, &block)
@@ -53,6 +60,8 @@ module Discordrb::Commands
     # @param container [Module] A module that `extend`s {CommandContainer} from which the commands will be added.
     def include_commands(container)
       handlers = container.instance_variable_get '@commands'
+      return unless handlers
+
       @commands ||= {}
       @commands.merge! handlers
     end
