@@ -341,13 +341,7 @@ module Discordrb
     # Adds one or more roles to this member.
     # @param role [Role, Array<Role>] The role(s) to add.
     def add_role(role)
-      # Get the list of role IDs to add to
-      role_ids = if role.is_a? Array
-                   [role.resolve_id]
-                 else
-                   role.map(&:resolve_id)
-                 end
-
+      role_ids = role_id_array(role)
       old_role_ids = @roles.map(&:id)
       new_role_ids = (old_role_ids + role_ids).uniq
 
@@ -358,14 +352,7 @@ module Discordrb
     # @param role [Role, Array<Role>] The role(s) to remove.
     def remove_role(role)
       old_role_ids = @roles.map(&:id)
-
-      # Get the list of role IDs to remove
-      role_ids = if role.is_a? Array
-                   [role.resolve_id]
-                 else
-                   role.map(&:resolve_id)
-                 end
-
+      role_ids = role_id_array(role)
       new_role_ids = old_role_ids.reject { |i| role_ids.include?(i) }
 
       API.update_user_roles(@bot.token, @server.id, @user.id, new_role_ids)
@@ -396,6 +383,17 @@ module Discordrb
     # Overwriting inspect for debug purposes
     def inspect
       "<Member user=#{@user.inspect} server=#{@server.inspect} joined_at=#{@joined_at} roles=#{@roles.inspect} voice_channel=#{@voice_channel.inspect} mute=#{@mute} deaf=#{@deaf} self_mute=#{@self_mute} self_deaf=#{@self_deaf}>"
+    end
+
+    private
+
+    # Utility method to get a list of role IDs from one role or an array of roles
+    def role_id_array(role)
+      if role.is_a? Array
+        [role.resolve_id]
+      else
+        role.map(&:resolve_id)
+      end
     end
   end
 
