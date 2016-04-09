@@ -50,7 +50,7 @@ module Discordrb::Voice
     end
 
     # One frame of complete silence Opus encoded
-    OPUS_SILENCE = [0xF8, 0xFF, 0xFE].freeze
+    OPUS_SILENCE = [0xF8, 0xFF, 0xFE].pack('C*').freeze
 
     # Adjusts the volume of a given buffer of s16le PCM data.
     # @param buf [String] An unencoded PCM (s16le) buffer.
