@@ -10,6 +10,8 @@ module Discordrb::Events
     attr_reader :server
 
     def initialize(data, bot)
+      @bot = bot
+
       init_server(data, bot)
     end
 

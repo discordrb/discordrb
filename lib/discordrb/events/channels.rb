@@ -81,6 +81,8 @@ module Discordrb::Events
     attr_reader :server
 
     def initialize(data, bot)
+      @bot = bot
+
       @type = data['type']
       @topic = data['topic']
       @position = data['position']

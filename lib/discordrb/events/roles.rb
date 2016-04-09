@@ -13,6 +13,8 @@ module Discordrb::Events
     attr_reader :server
 
     def initialize(data, bot)
+      @bot = bot
+
       @server = bot.server(data['guild_id'].to_i)
       return unless @server
 
@@ -48,6 +50,8 @@ module Discordrb::Events
     attr_reader :server
 
     def initialize(data, bot)
+      @bot = bot
+
       # The role should already be deleted from the server's list
       # by the time we create this event, so we'll create a temporary
       # role object for event consumers to use.

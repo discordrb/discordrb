@@ -9,6 +9,8 @@ module Discordrb::Events
     attr_reader :user, :token, :suppress, :session_id, :self_mute, :self_deaf, :mute, :deaf, :server, :channel
 
     def initialize(data, bot)
+      @bot = bot
+
       @token = data['token']
       @suppress = data['suppress']
       @session_id = data['session_id']

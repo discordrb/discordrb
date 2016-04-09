@@ -16,6 +16,8 @@ module Discordrb::Events
     attr_reader :status
 
     def initialize(data, bot)
+      @bot = bot
+
       @user = bot.user(data['user']['id'].to_i)
       @status = data['status'].to_sym
       @server = bot.server(data['guild_id'].to_i)
@@ -61,10 +63,10 @@ module Discordrb::Events
     attr_reader :game
 
     def initialize(data, bot)
+      @bot = bot
+
       @user = bot.user(data['user']['id'].to_i)
-
       @game = data['game'] ? data['game']['name'] : nil
-
       @server = bot.server(data['guild_id'].to_i)
     end
   end

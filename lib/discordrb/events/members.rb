@@ -18,6 +18,8 @@ module Discordrb::Events
     alias_method :member, :user
 
     def initialize(data, bot)
+      @bot = bot
+
       @server = bot.server(data['guild_id'].to_i)
       return unless @server
 
