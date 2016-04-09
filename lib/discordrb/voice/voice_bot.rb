@@ -341,7 +341,7 @@ module Discordrb::Voice
         @udp.send_audio(Encoder::OPUS_SILENCE, @sequence, @time)
 
         # Length adjustments don't matter here, we can just wait 20 ms since nobody is going to hear it anyway
-        sleep IDEAL_LENGTH
+        sleep IDEAL_LENGTH / 1000.0
       end
 
       @bot.debug('Performing final cleanup after stream ended')
