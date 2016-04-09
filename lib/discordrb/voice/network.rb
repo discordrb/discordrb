@@ -264,7 +264,7 @@ module Discordrb::Voice
       @bot.debug('Waiting for op 4 now')
 
       # Wait for op 4, then finish
-      sleep 0.05 until @op_4_received
+      sleep 0.05 until @ready
     end
 
     # Disconnects the websocket and kills the thread
