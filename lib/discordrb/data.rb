@@ -354,6 +354,23 @@ module Discordrb
       API.update_user_roles(@bot.token, @server.id, @user.id, new_role_ids)
     end
 
+    # Removes one or more roles from this member.
+    # @param role [Role, Array<Role>] The role(s) to remove.
+    def remove_role(role)
+      old_role_ids = @roles.map(&:id)
+
+      # Get the list of role IDs to remove
+      role_ids = if role.is_a? Array
+                   [role.resolve_id]
+                 else
+                   role.map(&:resolve_id)
+                 end
+
+      new_role_ids = old_role_ids.reject { |i| role_ids.include?(i) }
+
+      API.update_user_roles(@bot.token, @server.id, @user.id, new_role_ids)
+    end
+
     # Update this member's roles
     # @note For internal use only.
     # @!visibility private
