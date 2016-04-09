@@ -227,6 +227,9 @@ module Discordrb::Voice
 
     # Plays a stream of audio data in the DCA format. This format has the advantage that no recoding has to be
     # done - the file contains the data exactly as Discord needs it.
+    # @note DCA playback will not be affected by the volume modifier ({volume=}) because the modifier operates on raw
+    #   PCM, not opus data. Modifying the volume of DCA data would involve decoding it, multiplying the samples and
+    #   re-encoding it, which defeats its entire purpose (no recoding).
     # @see https://github.com/bwmarrin/dca
     # @see #play
     def play_dca(file)
