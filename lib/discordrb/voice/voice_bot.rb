@@ -338,7 +338,7 @@ module Discordrb::Voice
 
       5.times do
         increment_packet_headers
-        @udp.send_audio(buf, @sequence, @time)
+        @udp.send_audio(Encoder::OPUS_SILENCE, @sequence, @time)
 
         # Length adjustments don't matter here, we can just wait 20 ms since nobody is going to hear it anyway
         sleep IDEAL_LENGTH
