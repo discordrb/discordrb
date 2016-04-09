@@ -334,6 +334,16 @@ module Discordrb::Voice
         sleep @length / 1000.0
       end
 
+      @bot.debug('Sending five silent frames to clear out buffers')
+
+      5.times do
+        increment_packet_headers
+        @udp.send_audio(buf, @sequence, @time)
+
+        # Length adjustments don't matter here, we can just wait 20 ms since nobody is going to hear it anyway
+        sleep IDEAL_LENGTH
+      end
+
       @bot.debug('Performing final cleanup after stream ended')
 
       # Final cleanup
