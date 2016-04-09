@@ -966,6 +966,10 @@ module Discordrb
         # The server streaming timed out!
         LOGGER.warn("Server streaming timed out with #{@unavailable_servers} servers remaining")
         LOGGER.warn("This means some servers are unavailable due to an outage. Notifying ready now, we'll have to live without these servers")
+
+        # Unset the unavailable server count so this doesn't get triggered again
+        @unavailable_servers = nil
+
         notify_ready
       end
 
