@@ -390,9 +390,9 @@ module Discordrb
     # Utility method to get a list of role IDs from one role or an array of roles
     def role_id_array(role)
       if role.is_a? Array
-        [role.resolve_id]
-      else
         role.map(&:resolve_id)
+      else
+        [role.resolve_id]
       end
     end
   end
