@@ -260,6 +260,11 @@ module Discordrb::Voice
 
       # Send UDP init packet with received UDP data
       send_udp_connection(ip, port, @udp_mode)
+
+      @bot.debug('Waiting for op 4 now')
+
+      # Wait for op 4, then finish
+      sleep 0.05 until @op_4_received
     end
 
     # Disconnects the websocket and kills the thread
