@@ -338,6 +338,19 @@ module Discordrb
       @server.owner == self
     end
 
+    def add_role(role)
+      # Get the list of role IDs to add to
+      role_ids = if role.is_a? Array
+                   [role.resolve_id]
+                 else
+                   role.map(&:resolve_id)
+                 end
+
+      old_role_ids = @roles.map(&:id)
+
+      API.update_user_roles(@bot.token, @server.id, @user.id, old_role_ids + role_ids)
+    end
+
     # Update this member's roles
     # @note For internal use only.
     # @!visibility private
