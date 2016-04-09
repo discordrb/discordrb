@@ -349,8 +349,9 @@ module Discordrb
                  end
 
       old_role_ids = @roles.map(&:id)
+      new_role_ids = (old_role_ids + role_ids).uniq
 
-      API.update_user_roles(@bot.token, @server.id, @user.id, old_role_ids + role_ids)
+      API.update_user_roles(@bot.token, @server.id, @user.id, new_role_ids)
     end
 
     # Update this member's roles
