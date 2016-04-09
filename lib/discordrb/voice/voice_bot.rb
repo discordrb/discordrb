@@ -290,8 +290,7 @@ module Discordrb::Voice
 
         # Track packet count, sequence and time (Discord requires this)
         count += 1
-        (@sequence + 10 < 65_535) ? @sequence += 1 : @sequence = 0
-        (@time + 9600 < 4_294_967_295) ? @time += 960 : @time = 0
+        increment_packet_headers
 
         # Get packet data
         buf = yield
@@ -339,6 +338,12 @@ module Discordrb::Voice
 
       # Final cleanup
       stop_playing
+    end
+
+    # Increment sequence and time
+    def increment_packet_headers
+      (@sequence + 10 < 65_535) ? @sequence += 1 : @sequence = 0
+      (@time + 9600 < 4_294_967_295) ? @time += 960 : @time = 0
     end
   end
 end
