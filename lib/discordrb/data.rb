@@ -338,6 +338,8 @@ module Discordrb
       @server.owner == self
     end
 
+    # Adds one or more roles to this member.
+    # @param role [Role, Array<Role>] The role(s) to add.
     def add_role(role)
       # Get the list of role IDs to add to
       role_ids = if role.is_a? Array
