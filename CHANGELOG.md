@@ -1,5 +1,19 @@
 # Changelog
 
+## 2.0.1
+
+- Added some more examples ([#75](https://github.com/meew0/discordrb/pull/75), thanks @greenbigfrog)
+- Users can now be ignored from messages at gateway level (`Bot#ignore_user`, `Bot#unignore_user`)
+- `Member#add_role` and `Member#remove_role` were re-added from User - they were missing before
+
+
+### Bugfixes
+
+- Fixed some typos in the documentation
+- If a server is actually unavailable it will no longer spam the console with timeout messages
+- VoiceBot now sends five frames of silence after finishing a track. This fixes an issue where the sound from the last track would bleed over into the new one due to interpolation.
+- Fixed a bug where playing something right after connecting to voice would sometimes cause the encryption key to not be set
+
 ## 2.0.0
 
 This is the first major update with some breaking changes! Those are highlighted in bold with migration advice after them. Ask in the Discord channel (see the README) if you have questions.
