@@ -196,6 +196,12 @@ module Discordrb
       @bot.profile.id == @id
     end
 
+    [:offline, :idle, :online].each do |e|
+      define_method(e.to_s + '?') do
+        @status.to_sym == e
+      end
+    end
+
     # The inspect method is overwritten to give more useful output
     def inspect
       "<User username=#{@username} id=#{@id} discriminator=#{@discriminator}>"
