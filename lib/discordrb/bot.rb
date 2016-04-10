@@ -184,6 +184,8 @@ module Discordrb
       @voices = {}
       @should_connect_to_voice = {}
 
+      @ignored_ids = []
+
       @event_threads = []
       @current_thread = 0
     end
