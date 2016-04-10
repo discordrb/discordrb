@@ -534,6 +534,12 @@ module Discordrb
       @ignored_ids << user.resolve_id
     end
 
+    # Remove a user from the ignore list.
+    # @param user [User, Integer, #resolve_id] The user, or its ID, to be unignored.
+    def unignore_user(user)
+      @ignored_ids.delete(user.resolve_id)
+    end
+
     # @see Logger#debug
     def debug(message)
       LOGGER.debug(message)
