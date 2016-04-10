@@ -1203,6 +1203,8 @@ module Discordrb
       @members.values
     end
 
+    alias_method :users, :members
+
     # @return [Array<Channel>] an array of text channels on this server
     def text_channels
       @channels.select(&:text?)
@@ -1212,8 +1214,6 @@ module Discordrb
     def voice_channels
       @channels.select(&:voice?)
     end
-
-    alias_method :users, :members
 
     # Adds a role to the role cache
     # @note For internal use only
