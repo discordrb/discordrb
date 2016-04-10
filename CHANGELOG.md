@@ -1,11 +1,26 @@
 # Changelog
 
+## 2.0.2
+
+- Added `Server#text_channels` and `#voice_channels` ([#79](https://github.com/meew0/discordrb/issues/79))
+- Added `Server#online_users` ([#80](https://github.com/meew0/discordrb/issues/80))
+- Added `Member#role?` ([#83](https://github.com/meew0/discordrb/issues/83))
+- Added three utility methods `User#online?`, `#offline?`, and `#idle?`
+- `Bot#send_message` can now take channel objects as well as the ID
+
+### Bugfixes
+
+- Removing the bot from a server will no longer result in a gateway message error
+- Fixed an exception raised if a previously unavailable guild goes online after the stream timeout
+- `server_create` will no longer be raised for newly available guilds
+- Fixed the annoying message about constant reassignment at startup
+- Fixed an error where rarely a server's owner wouldn't be initialized correctly
+
 ## 2.0.1
 
 - Added some more examples ([#75](https://github.com/meew0/discordrb/pull/75), thanks @greenbigfrog)
 - Users can now be ignored from messages at gateway level (`Bot#ignore_user`, `Bot#unignore_user`)
 - `Member#add_role` and `Member#remove_role` were re-added from User - they were missing before
-
 
 ### Bugfixes
 
