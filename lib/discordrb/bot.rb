@@ -86,7 +86,7 @@ module Discordrb
     attr_reader :users
 
     # The list of servers the bot is currently in.
-    # @return [Array<Server>] The servers.
+    # @return [Hash<Integer => Server>] The servers by ID.
     attr_reader :servers
 
     # The list of currently running threads used to parse and call events.
