@@ -739,11 +739,6 @@ module Discordrb
     # Internal handler for GUILD_DELETE
     def delete_guild(data)
       id = data['id'].to_i
-
-      @users.each do |_, user|
-        user.delete_roles(id)
-      end
-
       @servers.delete(id)
     end
 
