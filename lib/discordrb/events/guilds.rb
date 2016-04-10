@@ -61,7 +61,7 @@ module Discordrb::Events
   class ServerDeleteEvent < ServerEvent
     # Overide init_server to account for the deleted server
     def init_server(data, bot)
-      @server = Discordrb::Server.new(data, bot)
+      @server = Discordrb::Server.new(data, bot, false)
     end
   end
 
