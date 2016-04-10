@@ -1188,6 +1188,9 @@ module Discordrb
           @unavailable_servers -= 1
 
           notify_ready if @unavailable_servers == 0
+
+          # Return here so the event doesn't get triggered
+          return
         end
 
         event = ServerCreateEvent.new(data, self)
