@@ -82,7 +82,7 @@ module Discordrb
   # Represents a Discord bot, including servers, users, etc.
   class Bot
     # The list of users the bot shares a server with.
-    # @return [Array<User>] The users.
+    # @return [Hash<Integer => User>] The users by ID.
     attr_reader :users
 
     # The list of servers the bot is currently in.
