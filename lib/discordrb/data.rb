@@ -1211,6 +1211,11 @@ module Discordrb
 
     alias_method :users, :members
 
+    # @return [Array<Member>] an array of online members on this server.
+    def online_members
+      @members.values.select(&:online?)
+    end
+
     # @return [Array<Channel>] an array of text channels on this server
     def text_channels
       @channels.select(&:text?)
