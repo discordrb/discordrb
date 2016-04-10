@@ -2,6 +2,7 @@
 
 require 'rest-client'
 require 'zlib'
+require 'set'
 
 require 'discordrb/events/message'
 require 'discordrb/events/typing'
@@ -184,7 +185,7 @@ module Discordrb
       @voices = {}
       @should_connect_to_voice = {}
 
-      @ignored_ids = []
+      @ignored_ids = Set.new
 
       @event_threads = []
       @current_thread = 0
