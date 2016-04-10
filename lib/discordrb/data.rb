@@ -1153,7 +1153,7 @@ module Discordrb
     attr_reader :afk_channel
 
     # @!visibility private
-    def initialize(data, bot)
+    def initialize(data, bot, exists = true)
       @bot = bot
       @owner_id = data['owner_id'].to_i
       @id = data['id'].to_i
@@ -1173,7 +1173,8 @@ module Discordrb
       @chunked = false
       @processed_chunk_members = 0
 
-      @owner = member(@owner_id)
+      # Only get the owner of the server actually exists (i. e. not for ServerDeleteEvent)
+      @owner = member(@owner_id) if exists
     end
 
     # @return [Channel] The default channel on this server (usually called #general)
