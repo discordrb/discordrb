@@ -5,9 +5,8 @@ require 'discordrb'
 bot = Discordrb::Commands::CommandBot.new 'email@example.com', 'hunter2'
 
 bot.command(:eval, help_available: false) do |event, code|
-  unless event.user.id == 0000 # Replace number with your ID
-    break
-  end
+  break if event.user.id == 000000 # Replace number with your ID
+
   begin
     eval(code)
   rescue
