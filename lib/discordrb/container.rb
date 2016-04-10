@@ -26,7 +26,6 @@ module Discordrb
     # @option attributes [String, Integer, Channel] :in Matches the channel the message was sent in.
     # @option attributes [String, Integer, User] :from Matches the user that sent the message.
     # @option attributes [String] :content Exactly matches the entire content of the message.
-    # @option attributes [String] :content Exactly matches the entire content of the message.
     # @option attributes [Time] :after Matches a time after the time the message was sent at.
     # @option attributes [Time] :before Matches a time before the time the message was sent at.
     # @option attributes [Boolean] :private Matches whether or not the channel is private.
@@ -123,7 +122,6 @@ module Discordrb
     # @option attributes [String, Regexp] :contains Matches a string the message contains.
     # @option attributes [String, Integer, Channel] :in Matches the channel the message was sent in.
     # @option attributes [String, Integer, User] :from Matches the user that sent the message.
-    # @option attributes [String] :content Exactly matches the entire content of the message.
     # @option attributes [String] :content Exactly matches the entire content of the message.
     # @option attributes [Time] :after Matches a time after the time the message was sent at.
     # @option attributes [Time] :before Matches a time before the time the message was sent at.
@@ -287,7 +285,6 @@ module Discordrb
     # @option attributes [String, Regexp] :contains Matches a string the message contains.
     # @option attributes [String, Integer, Channel] :in Matches the channel the message was sent in.
     # @option attributes [String, Integer, User] :from Matches the user that sent the message.
-    # @option attributes [String] :content Exactly matches the entire content of the message.
     # @option attributes [String] :content Exactly matches the entire content of the message.
     # @option attributes [Time] :after Matches a time after the time the message was sent at.
     # @option attributes [Time] :before Matches a time before the time the message was sent at.
