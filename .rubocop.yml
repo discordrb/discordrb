@@ -48,3 +48,8 @@ Style/FrozenStringLiteralComment:
 # http://stackoverflow.com/questions/4763121/should-i-use-alias-or-alias-method
 Style/Alias:
   Enabled: false
+
+# Ignore `eval` in the examples folder
+Lint/Eval:
+  Exclude:
+    - examples/*
