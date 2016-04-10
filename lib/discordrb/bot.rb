@@ -528,6 +528,12 @@ module Discordrb
       @awaits[key] = await
     end
 
+    # Add a user to the list of ignored users. Those users will be ignored in message events at event processing level.
+    # @param user [User, Integer, #resolve_id] The user, or its ID, to be ignored.
+    def ignore_user(user)
+      @ignored_ids << user.resolve_id
+    end
+
     # @see Logger#debug
     def debug(message)
       LOGGER.debug(message)
