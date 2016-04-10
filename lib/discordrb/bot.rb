@@ -529,6 +529,8 @@ module Discordrb
     end
 
     # Add a user to the list of ignored users. Those users will be ignored in message events at event processing level.
+    # @note Ignoring a user only prevents any message events (including mentions, commands etc.) from them! Typing and
+    #   presence and any other events will still be received.
     # @param user [User, Integer, #resolve_id] The user, or its ID, to be ignored.
     def ignore_user(user)
       @ignored_ids << user.resolve_id
