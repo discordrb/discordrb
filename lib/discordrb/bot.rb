@@ -1060,6 +1060,11 @@ module Discordrb
         server = server(id)
         server.process_chunk(data['members'])
       when :MESSAGE_CREATE
+        if @ignored_ids.include?(data['author']['id'].to_i)
+          debug("Ignored author with ID #{data['author']['id']}")
+          return
+        end
+
         create_message(data)
 
         message = Message.new(data, self)
