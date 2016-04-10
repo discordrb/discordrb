@@ -1220,6 +1220,8 @@ module Discordrb
       end
     end
 
+    alias_method :online_users, :online_members
+
     # @return [Array<Channel>] an array of text channels on this server
     def text_channels
       @channels.select(&:text?)
