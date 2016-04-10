@@ -1185,7 +1185,7 @@ module Discordrb
 
         # Check for false specifically (no data means the server has never been unavailable)
         if data['unavailable'].is_a? FalseClass
-          @unavailable_servers -= 1
+          @unavailable_servers -= 1 if @unavailable_servers
 
           notify_ready if @unavailable_servers == 0
 
