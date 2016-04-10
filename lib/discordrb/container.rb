@@ -157,7 +157,7 @@ module Discordrb
       register_event(ChannelUpdateEvent, attributes, block)
     end
 
-    # This **event** is raised when a channel is updated.
+    # This **event** is raised when a channel is deleted.
     # @param attributes [Hash] The event's attributes.
     # @option attributes [String] :type Matches the type of channel that is being deleted (text or voice)
     # @option attributes [String] :name Matches the name of the deleted channel.
