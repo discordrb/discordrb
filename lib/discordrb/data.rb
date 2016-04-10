@@ -1189,7 +1189,7 @@ module Discordrb
       id = id.resolve_id
       return @members[id] if member_cached?(id)
 
-      member = bot.member(@id, id)
+      member = @bot.member(@id, id)
       @members[id] = member
     end
 
