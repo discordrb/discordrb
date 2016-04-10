@@ -1211,9 +1211,13 @@ module Discordrb
 
     alias_method :users, :members
 
+    # @param include_idle [true, false] Whether to count idle members as online.
+    # @param include_bots [true, false] Whether to include bot accounts in the count.
     # @return [Array<Member>] an array of online members on this server.
-    def online_members
-      @members.values.select(&:online?)
+    def online_members(include_idle: false, include_bots: true)
+      @members.values.select do |e|
+        ((include_idle ? e.idle? : false) || e.online?) && (include_bots ? true : !e.bot_account?)
+      end
     end
 
     # @return [Array<Channel>] an array of text channels on this server
