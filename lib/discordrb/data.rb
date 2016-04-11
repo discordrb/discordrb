@@ -42,7 +42,7 @@ module Discordrb
     tri = [*0..(lines.length - 1)].map { |i| lines.combination(i + 1).first }
 
     # Join the individual elements together to get an array of strings with consecutively more lines
-    joined = tri.map { |e| e.join }
+    joined = tri.map(&:join)
 
     # Find the largest element that is still below the character limit, or if none such element exists return the first
     ideal = joined.max_by { |e| e.length > CHARACTER_LIMIT ? -1 : e.length }
