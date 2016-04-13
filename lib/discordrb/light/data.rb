@@ -62,12 +62,22 @@ module Discordrb::Light
 
   # Represents a light channel which only has a fraction of the properties of any other server.
   class LightChannel
+    attr_reader :id
     attr_reader :name
     attr_reader :server
     attr_reader :type
 
+    # @return [Discordrb::Permissions] the permissions that LightBot has in this channel (may be overridden from the server permissions)
+    attr_reader :bot_permissions
+
     def initialize(data, bot)
-      super(data, bot)
+      @bot = bot
+
+      @id = data['id'].to_i
+      @server_id = data['server_id'].to_i
+
+      @name = data['name']
+      @type = data['type']
 
       @bot_permissions = Discordrb::Permissions.new(data['permissions'])
     end
