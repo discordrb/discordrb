@@ -39,7 +39,9 @@ module Discordrb::Light
       JSON.parse(response).map { |e| LightServer.new(e, self) }
     end
 
-    def channels
+    # @param server_id [Integer] The numeric ID of the server to retrieve channels for.
+    # @return [Array<LightChannels>] the channels within the specified server.
+    def channels(server_id)
       response = Discordrb::API.list_channels(@token, server_id)
       JSON.parse(response).map { |e| LightChannel.new(e, self) }
     end
