@@ -293,7 +293,7 @@ module Discordrb::API
     request(
       nil,
       :get,
-      "#{api_base}/guides/#{server_id}/channels",
+      "#{api_base}/guilds/#{server_id}/channels",
       Authorization: token
     )
   end
