@@ -39,6 +39,11 @@ module Discordrb::Light
       JSON.parse(response).map { |e| LightServer.new(e, self) }
     end
 
+    def channels
+      response = Discordrb::API.list_channels(@token, server_id)
+      JSON.parse(response).map { |e| LightChannel.new(e, self) }
+    end
+
     # Joins a server using an instant invite.
     # @param code [String] The code part of the invite (for example 0cDvIgU2voWn4BaD if the invite URL is
     #   https://discord.gg/0cDvIgU2voWn4BaD)

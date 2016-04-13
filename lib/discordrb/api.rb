@@ -288,6 +288,16 @@ module Discordrb::API
     )
   end
 
+  # List Channels for a Server
+  def list_channels(token, server_id)
+    request(
+      nil,
+      :get,
+      "#{api_base}/guides/#{server_id}/channels",
+      Authorization: token
+    )
+  end
+
   # Create a channel
   def create_channel(token, server_id, name, type)
     request(

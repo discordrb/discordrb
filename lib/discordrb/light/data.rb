@@ -59,4 +59,17 @@ module Discordrb::Light
       @bot_permissions = Discordrb::Permissions.new(data['permissions'])
     end
   end
+
+  # Represents a light channel which only has a fraction of the properties of any other server.
+  class LightChannel
+    attr_reader :name
+    attr_reader :server
+    attr_reader :type
+
+    def initialize(data, bot)
+      super(data, bot)
+
+      @bot_permissions = Discordrb::Permissions.new(data['permissions'])
+    end
+  end
 end
