@@ -697,26 +697,40 @@ module Discordrb
     end
   end
 
-  # A Discord channel, including data like the topic
-  class Channel
-    # The type string that stands for a text channel
-    # @see Channel#type
-    TEXT_TYPE = 'text'.freeze
-
-    # The type string that stands for a voice channel
-    # @see Channel#type
-    VOICE_TYPE = 'voice'.freeze
-
-    include IDObject
-
+  # The most basic attributes a channel should have
+  module ChannelAttributes
     # @return [String] this channel's name.
     attr_reader :name
 
-    # @return [Server, nil] the server this channel is on. If this channel is a PM channel, it will be nil.
-    attr_reader :server
-
     # @return [String] the type of this channel (currently either 'text' or 'voice')
     attr_reader :type
+
+    # The type string that stands for a text channel
+    # @see ChannelAttributes#type
+    TEXT_TYPE = 'text'.freeze
+
+    # The type string that stands for a voice channel
+    # @see ChannelAttributes#type
+    VOICE_TYPE = 'voice'.freeze
+
+    # @return [true, false] whether or not this channel is a text channel
+    def text?
+      @type == TEXT_TYPE
+    end
+
+    # @return [true, false] whether or not this channel is a voice channel
+    def voice?
+      @type == VOICE_TYPE
+    end
+  end
+
+  # A Discord channel, including data like the topic
+  class Channel
+    include IDObject
+    include ChannelAttributes
+
+    # @return [Server, nil] the server this channel is on. If this channel is a PM channel, it will be nil.
+    attr_reader :server
 
     # @return [Recipient, nil] the recipient of the private messages, or nil if this is not a PM channel
     attr_reader :recipient
@@ -779,16 +793,6 @@ module Discordrb
         @permission_overwrites[role_id].deny = deny
         @permission_overwrites[role_id].allow = allow
       end
-    end
-
-    # @return [true, false] whether or not this channel is a text channel
-    def text?
-      @type == TEXT_TYPE
-    end
-
-    # @return [true, false] whether or not this channel is a voice channel
-    def voice?
-      @type == VOICE_TYPE
     end
 
     # Sends a message to this channel.
