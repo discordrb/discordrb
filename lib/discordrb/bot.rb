@@ -1216,8 +1216,6 @@ module Discordrb
     end
 
     def websocket_close(event)
-      LOGGER.error('Disconnected from WebSocket!')
-
       # Don't handle nil events (for example if the disconnect came from our side)
       return unless event
 
