@@ -2,7 +2,7 @@
 
 require 'discordrb'
 
-bot = Discordrb::Commands::CommandBot.new 'email@example.com', 'hunter2'
+bot = Discordrb::Commands::CommandBot.new email: 'email@example.com', password: 'hunter2', prefix: '!'
 
 bot.command(:ping) do |event|
   m = event.respond('Pong!')
