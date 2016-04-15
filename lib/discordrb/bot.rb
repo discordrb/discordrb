@@ -1223,8 +1223,7 @@ module Discordrb
 
       # Handle actual close frames and errors separately
       if event.respond_to? :code
-        LOGGER.error(" (Reason: #{event.data})")
-        LOGGER.error(" (Code: #{event.code})")
+        LOGGER.error(%(Disconnected from WebSocket - code #{event.code} with reason: "#{event.data}"))
       else
         LOGGER.log_exception event
       end
