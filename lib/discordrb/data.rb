@@ -1199,9 +1199,11 @@ module Discordrb
 
     # Gets a member on this server based on user ID
     # @param id [Integer] The user ID to look for
-    def member(id)
+    # @param request [true, false] Whether the member should be requested from Discord if it's not cached
+    def member(id, request = true)
       id = id.resolve_id
       return @members[id] if member_cached?(id)
+      return nil unless request
 
       member = @bot.member(@id, id)
       @members[id] = member
