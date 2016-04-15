@@ -247,7 +247,7 @@ module Discordrb
 
           if @reconnect_url
             # We got an op 7! Don't wait before reconnecting
-            debug('Got an op 7, reconnecting right away')
+            LOGGER.info('Got an op 7, reconnecting right away')
           else
             wait_for_reconnect
           end
