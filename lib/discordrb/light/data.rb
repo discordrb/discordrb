@@ -60,15 +60,10 @@ module Discordrb::Light
     end
   end
 
-  # Represents a light channel which only has a fraction of the properties of any other server.
-  class LightChannel
-    attr_reader :id
-    attr_reader :name
-    attr_reader :server_id
-    attr_reader :type
-
-    # @return [Discordrb::Permissions] the permissions that LightBot has in this channel (may be overridden from the server permissions)
-    #attr_reader :bot_permissions
+  # A channel that only as  name, type, parent server ID, and channel ID associated with it.
+  class UltraLightChannel
+    include Discordrb::IDObject
+    include Discordrb::ChannelAttributes
 
     def initialize(data, bot)
       @bot = bot
@@ -78,8 +73,25 @@ module Discordrb::Light
 
       @name = data['name']
       @type = data['type']
+    end
+  end
 
-      #@bot_permissions = Discordrb::Permissions.new(data['permissions'])
+  # Represents a light channel which only has a fraction of the properties of any other channel.
+  class LightChannel < UltraLightChannel
+    # @return [Discordrb::Permissions] the specific overrides for the user in this channel
+    attr_reader :permission_overwrites
+
+    # @return [true, false] whether or not this channel is the server's default (usually "#general") channel.
+    def default_channel
+      @id == @server_id
+    end
+    alias_method :default_channel?, :default_channel
+
+    # @!visibility private
+    def initialize(data, bot)
+      super(data, bot)
+
+      @bot_permissions = Discordrb::Permissions.new(data['permission_overwrites'])
     end
   end
 end
