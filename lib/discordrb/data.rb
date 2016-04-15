@@ -1059,7 +1059,7 @@ module Discordrb
                     # directly because the bot may also send messages to the channel
                     Recipient.new(bot.user(data['author']['id'].to_i), @channel, bot)
                   else
-                    @channel.server.member(data['author']['id'].to_i)
+                    @channel.server.member(data['author']['id'].to_i, false)
                   end
                 end
 
