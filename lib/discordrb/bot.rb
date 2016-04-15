@@ -1316,7 +1316,7 @@ module Discordrb
     # unexpected way
     def wait_for_reconnect
       # We disconnected in an unexpected way! Wait before reconnecting so we don't spam Discord's servers.
-      debug("Disconnected! Attempting to reconnect in #{@falloff} seconds.")
+      debug("Attempting to reconnect in #{@falloff} seconds.")
       sleep @falloff
 
       # Calculate new falloff
