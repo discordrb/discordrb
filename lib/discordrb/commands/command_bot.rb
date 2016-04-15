@@ -155,7 +155,8 @@ module Discordrb::Commands
         result = command.call(event, arguments, chained)
         stringify(result)
       else
-        event.respond "You don't have permission to execute command `#{name}`!"
+        event.respond command.attributes[:permission_message].gsub('%name%', name.to_s) if command.attributes[:permission_message]
+        return
       end
     end
 
