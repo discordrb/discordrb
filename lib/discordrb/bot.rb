@@ -540,6 +540,13 @@ module Discordrb
       @ignored_ids.delete(user.resolve_id)
     end
 
+    # Checks whether a user is being ignored.
+    # @param user [User, Integer, #resolve_id] The user, or its ID, to check.
+    # @return [true, false] whether or not the user is ignored.
+    def ignored?(user)
+      @ignored_ids.include?(user.resolve_id)
+    end
+
     # @see Logger#debug
     def debug(message)
       LOGGER.debug(message)
@@ -1053,7 +1060,7 @@ module Discordrb
         server = server(id)
         server.process_chunk(data['members'])
       when :MESSAGE_CREATE
-        if @ignored_ids.include?(data['author']['id'].to_i)
+        if ignored?(data['author']['id'].to_i)
           debug("Ignored author with ID #{data['author']['id']}")
           return
         end
