@@ -1,5 +1,18 @@
 # Changelog
 
+## 2.0.3
+
+- All examples now fully use v2 ([#92](https://github.com/meew0/discordrb/pull/92), thanks @snapcase)
+- The message that occurs when a command is missing permission can now be changed or disabled ([#94](https://github.com/meew0/discordrb/pull/94), thanks @snapcase)
+- The log message that occurs when you disconnect from the WebSocket is now more compact ([#90](https://github.com/meew0/discordrb/issues/90))
+- `Bot#ignored?` now exists to check whether a user is ignored
+
+### Bugfixes
+
+- A problem where getting channel history would sometimes cause an exception has been fixed ([#88](https://github.com/meew0/discordrb/issues/88))
+- `split_message` should now behave correctly in a specific edge case ([#85](https://github.com/meew0/discordrb/pull/85), thanks @AnhNhan)
+- DCA playback should no longer cause an error when playback ends due to a specific reason
+
 ## 2.0.2
 
 - Added `Server#text_channels` and `#voice_channels` ([#79](https://github.com/meew0/discordrb/issues/79))
