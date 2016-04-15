@@ -14,6 +14,9 @@ module Discordrb::Commands
     # @param attributes [Hash] The attributes to initialize the command with.
     # @option attributes [Integer] :permission_level The minimum permission level that can use this command, inclusive.
     #   See {CommandBot#set_user_permission} and {CommandBot#set_role_permission}.
+    # @option attributes [String, false] :permission_message Message to display when a user does not have sufficient
+    #   permissions to execute a command. %name% in the message will be replaced with the name of the command. Disable
+    #   the message by setting this option to false.
     # @option attributes [true, false] :chain_usable Whether this command is able to be used inside of a command chain
     #   or sub-chain. Typically used for administrative commands that shouldn't be done carelessly.
     # @option attributes [true, false] :help_available Whether this command is visible in the help command. See the
