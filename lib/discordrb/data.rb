@@ -706,11 +706,11 @@ module Discordrb
     attr_reader :type
 
     # The type string that stands for a text channel
-    # @see ChannelAttributes#type
+    # @see Channel#type
     TEXT_TYPE = 'text'.freeze
 
     # The type string that stands for a voice channel
-    # @see ChannelAttributes#type
+    # @see Channel#type
     VOICE_TYPE = 'voice'.freeze
 
     # @return [true, false] whether or not this channel is a text channel
