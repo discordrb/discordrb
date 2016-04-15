@@ -242,9 +242,6 @@ module Discordrb
         loop do
           websocket_connect
 
-          # websocket_connect is blocking so being in here means we're disconnected
-          LOGGER.warn('Oh dear, we got disconnected!')
-
           if @reconnect_url
             # We got an op 7! Don't wait before reconnecting
             LOGGER.info('Got an op 7, reconnecting right away')
