@@ -2,13 +2,13 @@
 
 require 'discordrb'
 
-bot = Discordrb::Commands::CommandBot.new 'email@example.com', 'hunter2'
+bot = Discordrb::Commands::CommandBot.new token: 'B0T.T0KEN.here', application_id: 160123456789876543, prefix: '!'
 
-bot.command(:eval, help_available: false) do |event, code|
-  break if event.user.id == 000000 # Replace number with your ID
+bot.command(:eval, help_available: false) do |event, *code|
+  break unless event.user.id == 000000 # Replace number with your ID
 
   begin
-    eval(code)
+    eval code.join(' ')
   rescue
     "An error occured 😞"
   end
