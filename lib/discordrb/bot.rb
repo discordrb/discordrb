@@ -1225,6 +1225,7 @@ module Discordrb
       if event.respond_to? :code
         LOGGER.error(%(Disconnected from WebSocket - code #{event.code} with reason: "#{event.data}"))
       else
+        LOGGER.error('Disconnected from WebSocket due to an exception!')
         LOGGER.log_exception event
       end
 
