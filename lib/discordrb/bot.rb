@@ -228,8 +228,12 @@ module Discordrb
       @heartbeat_thread = Thread.new do
         Thread.current[:discordrb_name] = 'heartbeat'
         loop do
-          sleep @heartbeat_interval
-          send_heartbeat if @heartbeat_active
+          if @heartbeat_active
+            send_heartbeat
+            sleep @heartbeat_interval
+          else
+            sleep 1
+          end
         end
       end
 
