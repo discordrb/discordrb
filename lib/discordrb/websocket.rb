@@ -56,6 +56,12 @@ module Discordrb
       @client.send(data)
     end
 
+    # Send binary data over this WebSocket
+    # @param data [String] Binary data to send
+    def send_binary(data)
+      @client.send(data, type: :binary)
+    end
+
     # Close the WebSocket connection
     def close
       @client.close
