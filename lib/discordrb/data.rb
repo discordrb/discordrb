@@ -695,6 +695,11 @@ module Discordrb
     def inspect
       "<Invite code=#{@code} channel=#{@channel} uses=#{@uses} temporary=#{@temporary} revoked=#{@revoked} xkcd=#{@xkcd}>"
     end
+
+    # Creates an invite URL.
+    def url
+      "https://discord.gg/#{@code}"
+    end
   end
 
   # A Discord channel, including data like the topic
