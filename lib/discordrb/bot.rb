@@ -1294,7 +1294,8 @@ module Discordrb
             :'$referring_domain' => ''
           },
           large_threshold: large_threshold,
-          compress: true
+          compress: true,
+          shard: @shard_key
         }
       }
 
