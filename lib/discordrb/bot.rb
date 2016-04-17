@@ -950,7 +950,7 @@ module Discordrb
       end
 
       # Parse packet
-      packet = JSON.parse(event)
+      packet = BERT.decode(event)
 
       if @prevent_ready && packet['t'] == 'READY'
         debug('READY packet was received and suppressed')
