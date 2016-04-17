@@ -109,6 +109,9 @@ module Discordrb
     # same codebase. Not required but I recommend setting it anyway.
     attr_accessor :name
 
+    # @return [Array(Integer, Integer)] the current shard key
+    attr_reader :shard_key
+
     include EventContainer
     include Cache
 
