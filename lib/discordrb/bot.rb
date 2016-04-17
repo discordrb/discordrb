@@ -1340,6 +1340,9 @@ module Discordrb
       }
 
       @ws.send(data.to_json)
+    rescue => e
+      LOGGER.error('Got an error while sending a heartbeat! Carrying on anyway because heartbeats are vital for the connection to stay alive')
+      LOGGER.log_exception(e)
     end
 
     def raise_event(event)
