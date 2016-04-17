@@ -3,6 +3,7 @@
 require 'rest-client'
 require 'zlib'
 require 'set'
+require 'bert'
 
 require 'discordrb/events/message'
 require 'discordrb/events/typing'
