@@ -896,7 +896,7 @@ module Discordrb
       raw_url += '/' unless raw_url.end_with? '/'
 
       # Add the parameters we want
-      raw_url + "?encoding=json&v=#{GATEWAY_VERSION}"
+      raw_url + "?encoding=etf&v=#{GATEWAY_VERSION}"
     end
 
     ##      ##  ######     ######## ##     ## ######## ##    ## ########  ######
