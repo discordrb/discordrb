@@ -1011,6 +1011,7 @@ module Discordrb
         @heartbeat_interval = data['heartbeat_interval'].to_f / 1000.0
         @heartbeat_active = true
         debug("Desired heartbeat_interval: #{@heartbeat_interval}")
+        send_heartbeat
 
         @profile = Profile.new(data['user'], self, @email, @password)
 
