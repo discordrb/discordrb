@@ -145,6 +145,10 @@ module Discordrb
     #   Useful for very large bots running in debug or verbose log_mode.
     # @param parse_self [true, false] Whether the bot should react on its own messages. It's best to turn this off
     #   unless you really need this so you don't inadvertently create infinite loops.
+    # @param shard_id [Integer] The number of the shard this bot should handle. See
+    #   https://github.com/hammerandchisel/discord-api-docs/issues/17 for how to do sharding.
+    # @param num_shards [Integer] The total number of shards that should be running. See
+    #   https://github.com/hammerandchisel/discord-api-docs/issues/17 for how to do sharding.
     def initialize(
         email: nil, password: nil, log_mode: :normal,
         token: nil, application_id: nil,
