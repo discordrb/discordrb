@@ -148,7 +148,8 @@ module Discordrb
     def initialize(
         email: nil, password: nil, log_mode: :normal,
         token: nil, application_id: nil,
-        type: nil, name: '', fancy_log: false, suppress_ready: false, parse_self: false)
+        type: nil, name: '', fancy_log: false, suppress_ready: false, parse_self: false,
+        shard_id: nil, num_shards: nil)
       # Make sure people replace the login details in the example files...
       if email.is_a?(String) && email.end_with?('example.com')
         puts 'You have to replace the login details in the example files with your own!'
@@ -171,6 +172,8 @@ module Discordrb
       @type = determine_account_type(type, email, password, token, application_id)
 
       @name = name
+
+      @shard_key = num_shards ? [shard_id, num_shards] : nil
 
       LOGGER.fancy = fancy_log
       @prevent_ready = suppress_ready
