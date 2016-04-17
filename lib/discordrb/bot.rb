@@ -357,7 +357,7 @@ module Discordrb
       debug("Voice channel init packet is: #{data.to_json}")
 
       @should_connect_to_voice[server_id] = chan
-      @ws.send(BERT.encode(data))
+      @ws.send_binary(BERT.encode(data))
       debug('Voice channel init packet sent! Now waiting.')
 
       sleep(0.05) until @voices[server_id]
@@ -382,7 +382,7 @@ module Discordrb
       }
 
       debug("Voice channel destroy packet is: #{data.to_json}")
-      @ws.send(BERT.encode(data))
+      @ws.send_binary(BERT.encode(data))
 
       @voices[server_id].destroy if @voices[server_id] && destroy_vws
       @voices.delete(server_id)
@@ -486,7 +486,7 @@ module Discordrb
         }
       }
 
-      @ws.send(BERT.encode(data))
+      @ws.send_binary(BERT.encode(data))
       name
     end
 
@@ -1302,7 +1302,7 @@ module Discordrb
         }
       }
 
-      @ws.send(BERT.encode(packet))
+      @ws.send_binary(BERT.encode(packet))
     end
 
     # Resume a previous gateway connection when reconnecting to a different server
@@ -1316,7 +1316,7 @@ module Discordrb
         }
       }
 
-      @ws.send(BERT.encode(data))
+      @ws.send_binary(BERT.encode(data))
     end
 
     # Invalidate the current session (whatever this means)
@@ -1355,7 +1355,7 @@ module Discordrb
         d: sequence
       }
 
-      @ws.send(BERT.encode(data))
+      @ws.send_binary(BERT.encode(data))
     rescue => e
       LOGGER.error('Got an error while sending a heartbeat! Carrying on anyway because heartbeats are vital for the connection to stay alive')
       LOGGER.log_exception(e)
