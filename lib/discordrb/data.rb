@@ -218,6 +218,14 @@ module Discordrb
     attr_reader :deaf
     alias_method :deafened?, :deaf
 
+    # @return [true, false] whether this member has muted themselves.
+    attr_reader :self_mute
+    alias_method :self_muted?, :self_mute
+
+    # @return [true, false] whether this member has deafened themselves.
+    attr_reader :self_deaf
+    alias_method :self_deafened?, :self_deaf
+
     # @return [Time] when this member joined the server.
     attr_reader :joined_at
 
