@@ -1466,6 +1466,17 @@ module Discordrb
       return unless members
       members.each do |element|
         member = Member.new(element, self, @bot)
+        if @members[member.id] && @members[member.id].voice_channel
+          @bot.debug("Preserving voice state of member #{member.id} while chunking")
+          old_member = @members[member.id]
+          member.update_voice_state(
+            old_member.voice_channel,
+            old_member.mute,
+            old_member.deaf,
+            old_member.self_mute,
+            old_member.self_deaf
+          )
+        end
         @members[member.id] = member
       end
     end
