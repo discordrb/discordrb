@@ -488,6 +488,9 @@ module Discordrb
     #  something readable (e. g. File) or as a data URL.
     def avatar=(avatar)
       if avatar.respond_to? :read
+        # Set the file to binary mode if supported, so we don't get problems with Windows
+        avatar.binmode if avatar.respond_to?(:binmode)
+
         avatar_string = 'data:image/jpg;base64,'
         avatar_string += Base64.strict_encode64(avatar.read)
         update_profile_data(avatar: avatar_string)
