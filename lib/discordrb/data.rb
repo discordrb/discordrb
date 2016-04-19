@@ -682,10 +682,10 @@ module Discordrb
 
   # A Discord invite to a channel
   class Invite
-    # @return [Channel] the channel this invite references.
+    # @return [InviteChannel] the channel this invite references.
     attr_reader :channel
 
-    # @return [Server] the server this invite references.
+    # @return [InviteServer] the server this invite references.
     attr_reader :server
 
     # @return [Integer] the amount of uses left on this invite.
