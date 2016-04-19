@@ -659,6 +659,10 @@ module Discordrb
     end
   end
 
+  # A server referenced to by an invite
+  class InviteServer
+  end
+
   # A Discord invite to a channel
   class Invite
     # @return [Channel] the channel this invite references.
