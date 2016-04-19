@@ -643,6 +643,12 @@ module Discordrb
   class InviteChannel
     include IDObject
 
+    # @return [String] this channel's name.
+    attr_reader :name
+
+    # @return [String] this channel's type (text or voice)
+    attr_reader :type
+
     # @!visibility private
     def initialize(bot, data)
       @bot = bot
