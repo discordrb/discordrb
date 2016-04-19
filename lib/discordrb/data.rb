@@ -650,7 +650,7 @@ module Discordrb
     attr_reader :type
 
     # @!visibility private
-    def initialize(bot, data)
+    def initialize(data, bot)
       @bot = bot
 
       @id = data['id'].to_i
@@ -671,7 +671,7 @@ module Discordrb
     attr_reader :splash_hash
 
     # @!visibility private
-    def initialize(bot, data)
+    def initialize(data, bot)
       @bot = bot
 
       @id = data['id'].to_i
