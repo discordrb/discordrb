@@ -1553,7 +1553,7 @@ module Discordrb
 
       return unless channels
       channels.each do |element|
-        channel = Channel.new(element, @bot, self)
+        channel = @bot.ensure_channel(element, self)
         @channels << channel
         @channels_by_id[channel.id] = channel
       end
