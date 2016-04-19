@@ -661,6 +661,14 @@ module Discordrb
 
   # A server referenced to by an invite
   class InviteServer
+    # @!visibility private
+    def initialize(bot, data)
+      @bot = bot
+
+      @id = data['id'].to_i
+      @name = data['name']
+      @splash_hash = data['splash_hash']
+    end
   end
 
   # A Discord invite to a channel
