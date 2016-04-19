@@ -661,6 +661,15 @@ module Discordrb
 
   # A server referenced to by an invite
   class InviteServer
+    include IDObject
+
+    # @return [String] this server's name.
+    attr_reader :name
+
+    # @return [String, nil] the hash of the server's invite splash screen (for partnered servers) or nil if none is
+    #   present
+    attr_reader :splash_hash
+
     # @!visibility private
     def initialize(bot, data)
       @bot = bot
