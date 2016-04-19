@@ -1,5 +1,18 @@
 # Changelog
 
+## 2.0.4
+
+- Added a utility method `Invite#url` ([#86](https://github.com/meew0/discordrb/issues/86)/[#101](https://github.com/meew0/discordrb/pull/101), thanks @PoVa)
+
+### Bugfixes
+
+- Fix a caching inconsistency where a server's channels and a bot's channels wouldn't be identical. This caused server channels to not update properly ([#105](https://github.com/meew0/discordrb/issues/105))
+- Setting avatars should now work again on Windows ([#96](https://github.com/meew0/discordrb/issues/96))
+- Message edit events should no longer be raised with nil authors ([#95](https://github.com/meew0/discordrb/issues/95))
+- Invites can now be created again ([#87](https://github.com/meew0/discordrb/issues/87))
+- Voice states are now preserved for chunked members, fixes an issue where a voice channel's users would ignore all voice states that occurred before the call ([#103](https://github.com/meew0/discordrb/issues/103))
+- Fixed some possible problems with heartbeats not being sent with unstable connections
+
 ## 2.0.3
 
 - All examples now fully use v2 ([#92](https://github.com/meew0/discordrb/pull/92), thanks @snapcase)

@@ -3,5 +3,5 @@
 # Discordrb and all its functionality, in this case only the version.
 module Discordrb
   # The current version of discordrb.
-  VERSION = '2.0.3'.freeze
+  VERSION = '2.0.4'.freeze
 end
