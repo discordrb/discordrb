@@ -717,8 +717,8 @@ module Discordrb
     def initialize(data, bot)
       @bot = bot
 
-      @channel = Channel.new(data['channel'], bot)
-      @server = Server.new(data['guild'], bot)
+      @channel = InviteChannel.new(data['channel'], bot)
+      @server = InviteServer.new(data['guild'], bot)
       @uses = data['uses']
       @inviter = data['inviter'] ? (@bot.user(data['inviter']['id'].to_i) || User.new(data['inviter'], bot)) : nil
       @temporary = data['temporary']
