@@ -129,12 +129,13 @@ module Discordrb
 
     # Ensures a given channel object is cached and if not, cache it from the given data hash.
     # @param data [Hash] A data hash representing a channel.
+    # @param server [Server, nil] The server the channel is on, if known.
     # @return [Channel] the channel represented by the data hash.
-    def ensure_channel(data)
+    def ensure_channel(data, server = nil)
       if @channels.include?(data['id'].to_i)
         @channels[data['id'].to_i]
       else
-        @channels[data['id'].to_i] = Channel.new(data, self)
+        @channels[data['id'].to_i] = Channel.new(data, self, server)
       end
     end
 
