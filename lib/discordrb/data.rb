@@ -641,6 +641,14 @@ module Discordrb
 
   # A channel referenced by an invite. It has less data than regular channels, so it's a separate class
   class InviteChannel
+    # @!visibility private
+    def initialize(bot, data)
+      @bot = bot
+
+      @id = data['id'].to_i
+      @name = data['name']
+      @type = data['type']
+    end
   end
 
   # A Discord invite to a channel
