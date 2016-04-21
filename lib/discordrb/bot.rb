@@ -433,7 +433,7 @@ module Discordrb
     end
 
     # Creates a new application to do OAuth authorization with. This allows you to use OAuth to authorize users using
-    # Discord. For information how to use this, see this example: https://github.com/vishnevskiy/discord-oauth2-example
+    # Discord. For information how to use this, see the docs: https://discordapp.com/developers/docs/topics/oauth2
     # @param name [String] What your application should be called.
     # @param redirect_uris [Array<String>] URIs that Discord should redirect your users to after authorizing.
     # @return [Array(String, String)] your applications' client ID and client secret to be used in OAuth authorization.
