@@ -43,10 +43,7 @@ module Discordrb::API
 
   # Resets all rate limit mutexes
   def reset_mutexes
-    @mutexes = {
-      message: Mutex.new,
-      update_user_roles: Mutex.new
-    }
+    @mutexes = {}
   end
 
   # Performs a RestClient request.
