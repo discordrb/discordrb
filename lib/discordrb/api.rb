@@ -479,7 +479,7 @@ module Discordrb::API
   # Update a user's roles
   def update_user_roles(token, server_id, user_id, roles)
     request(
-      :update_user_roles,
+      __method__,
       :patch,
       "#{api_base}/guilds/#{server_id}/members/#{user_id}",
       { roles: roles }.to_json,
