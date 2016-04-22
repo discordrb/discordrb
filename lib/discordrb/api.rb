@@ -44,7 +44,8 @@ module Discordrb::API
   # Resets all rate limit mutexes
   def reset_mutexes
     @mutexes = {
-      message: Mutex.new
+      message: Mutex.new,
+      update_user_roles: Mutex.new
     }
   end
 
@@ -478,7 +479,7 @@ module Discordrb::API
   # Update a user's roles
   def update_user_roles(token, server_id, user_id, roles)
     request(
-      nil,
+      :update_user_roles,
       :patch,
       "#{api_base}/guilds/#{server_id}/members/#{user_id}",
       { roles: roles }.to_json,
