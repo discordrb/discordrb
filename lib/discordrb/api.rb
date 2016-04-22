@@ -68,6 +68,8 @@ module Discordrb::API
 
     begin
       if key
+        @mutexes[key] = Mutex.new unless @mutexes[key]
+
         # Lock and unlock, i. e. wait for the mutex to unlock and don't do anything with it afterwards
         @mutexes[key].lock
         @mutexes[key].unlock
