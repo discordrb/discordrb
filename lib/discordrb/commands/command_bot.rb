@@ -224,10 +224,12 @@ module Discordrb::Commands
 
     # Check whether a message should trigger command execution, and if it does, return the raw chain
     def trigger?(message)
-      if @prefix.is_a? String
-        return nil unless message.content.start_with? @prefix
-        message.content[@prefix.length..-1]
-      end
+      standard_prefix_trigger(message, @prefix) if @prefix.is_a? String
+    end
+
+    def standard_prefix_trigger(message, prefix)
+      return nil unless message.content.start_with? prefix
+      message.content[prefix.length..-1]
     end
 
     def execute_chain(chain, event)
