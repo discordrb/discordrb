@@ -205,8 +205,8 @@ module Discordrb::Commands
 
       event = CommandEvent.new(message, self)
 
-      raw_chain = trigger?(message.content)
-      return unless raw_chain
+      chain = trigger?(message.content)
+      return unless chain
 
       # Don't allow spaces between the prefix and the command
       if chain.start_with?(' ') && !@attributes[:spaces_allowed]
