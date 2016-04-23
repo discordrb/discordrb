@@ -224,8 +224,11 @@ module Discordrb::Commands
 
     # Check whether a message should trigger command execution, and if it does, return the raw chain
     def trigger?(message)
-      return nil unless message.content.start_with? @prefix
-      message.content[@prefix.length..-1]
+      case @prefix
+      when String
+        return nil unless message.content.start_with? @prefix
+        message.content[@prefix.length..-1]
+      end
     end
 
     def execute_chain(chain, event)
