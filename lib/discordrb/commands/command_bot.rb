@@ -222,6 +222,10 @@ module Discordrb::Commands
       execute_chain(chain, event)
     end
 
+    # Check whether a message should trigger command execution, and if it does, return the raw chain
+    def trigger?(message)
+    end
+
     def execute_chain(chain, event)
       t = Thread.new do
         @event_threads << t
