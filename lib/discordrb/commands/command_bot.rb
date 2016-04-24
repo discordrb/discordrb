@@ -228,6 +228,8 @@ module Discordrb::Commands
         standard_prefix_trigger(message, @prefix)
       elsif @prefix.is_a? Array
         @prefix.map { |e| standard_prefix_trigger(message, e) }.reduce { |a, e| a || e }
+      elsif @prefix.respond_to? :call
+        @prefix.call(message)
       end
     end
 
