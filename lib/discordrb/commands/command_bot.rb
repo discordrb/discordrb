@@ -234,8 +234,8 @@ module Discordrb::Commands
     end
 
     def standard_prefix_trigger(message, prefix)
-      return nil unless message.content.start_with? prefix
-      message.content[prefix.length..-1]
+      return nil unless message.start_with? prefix
+      message[prefix.length..-1]
     end
 
     def execute_chain(chain, event)
