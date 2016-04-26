@@ -48,8 +48,13 @@ module Discordrb::Light
     attr_reader :bot_is_owner
     alias_method :bot_is_owner?, :bot_is_owner
 
-    # @return [Discordrb::Permissions] the permissions the LightBot has on this server
+    # @return [Discordrb::Permissions] the permissions the LightBot has on this server.
     attr_reader :bot_permissions
+
+    # @return [Array<LightChannel>] the channels within the specified server.
+    def channels
+      @bot.channels(self.id)
+    end
 
     # @!visibility private
     def initialize(data, bot)
@@ -90,8 +95,6 @@ module Discordrb::Light
     # @!visibility private
     def initialize(data, bot)
       super(data, bot)
-
-      @bot_permissions = Discordrb::Permissions.new(data['permission_overwrites'])
     end
   end
 end
