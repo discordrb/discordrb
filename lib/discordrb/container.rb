@@ -56,6 +56,21 @@ module Discordrb
       register_event(DisconnectEvent, attributes, block)
     end
 
+    # This **event** is raised every time the bot sends a heartbeat over the galaxy. This happens roughly every 40
+    # seconds, but may happen at a lower rate should Discord change their interval. It may also happen more quickly for
+    # periods of time, especially for unstable connections, since discordrb rather sends a heartbeat than not if there's
+    # a choice. (You shouldn't rely on all this to be accurately timed.)
+    #
+    # All this makes this event useful to periodically trigger something, like doing some API request every hour,
+    # setting some kind of uptime variable or whatever else. The only limit is yourself.
+    # @param attributes [Hash] Event attributes, none in this particular case
+    # @yield The block is executed when the event is raised.
+    # @yieldparam event [HeartbeatEvent] The event that was raised.
+    # @return [HeartbeatEventHandler] The event handler that was registered.
+    def heartbeat(attributes = {}, &block)
+      register_event(HeartbeatEvent, attributes, block)
+    end
+
     # This **event** is raised when somebody starts typing in a channel the bot is also in. The official Discord
     # client would display the typing indicator for five seconds after receiving this event. If the user continues
     # typing after five seconds, the event will be re-raised.
