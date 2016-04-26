@@ -1343,6 +1343,9 @@ module Discordrb
 
     def send_heartbeat(sequence = nil)
       sequence ||= @sequence
+
+      raise_event(HeartbeatEvent.new(self))
+
       LOGGER.out("Sending heartbeat with sequence #{sequence}")
       data = {
         op: Opcodes::HEARTBEAT,
