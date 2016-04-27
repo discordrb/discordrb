@@ -1095,7 +1095,7 @@ module Discordrb
         return if message.from_bot? && !should_parse_self
 
         unless message.author
-          LOGGER.warn("Edited a message with nil author! Content: #{message.content.inspect}, channel: #{message.channel.inspect}")
+          LOGGER.debug("Edited a message with nil author! Content: #{message.content.inspect}, channel: #{message.channel.inspect}")
           return
         end
 
