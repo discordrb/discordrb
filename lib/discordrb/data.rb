@@ -597,7 +597,10 @@ module Discordrb
       @permissions = Permissions.new(data['permissions'], RoleWriter.new(self, @bot.token))
       @name = data['name']
       @id = data['id'].to_i
+
       @hoist = data['hoist']
+      @mentionable = data['mentionable']
+
       @colour = ColourRGB.new(data['color'])
     end
 
