@@ -457,7 +457,7 @@ module Discordrb
     # @return [User] The user identified by the mention, or `nil` if none exists.
     def parse_mention(mention)
       # Mention format: <@id>
-      return nil unless /<@(?<id>\d+)>?/ =~ mention
+      return nil unless /<@!?(?<id>\d+)>?/ =~ mention
       user(id.to_i)
     end
 
