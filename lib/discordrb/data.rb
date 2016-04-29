@@ -397,6 +397,7 @@ module Discordrb
 
     alias_method :nickname=, :nick=
 
+    # @return [String] the name the user displays as (nickname if they have one, username otherwise)
     def display_name
       nickname || username
     end
