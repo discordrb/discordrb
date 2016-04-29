@@ -229,6 +229,9 @@ module Discordrb
     # @return [Time] when this member joined the server.
     attr_reader :joined_at
 
+    # @return [String, nil] the nickname this member has, or nil if it has none.
+    attr_reader :nick
+
     # @return [Array<Role>] the roles this member has.
     attr_reader :roles
 
