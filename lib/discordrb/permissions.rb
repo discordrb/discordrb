@@ -32,7 +32,9 @@ module Discordrb
       22 => :mute_members,         # 4194304
       23 => :deafen_members,       # 8388608
       24 => :move_members,         # 16777216
-      25 => :use_voice_activity    # 33554432
+      25 => :use_voice_activity,   # 33554432
+      26 => :change_nickname,      # 67108864
+      27 => :manage_nicknames      # 134217728
     }.freeze
 
     Flags.each do |position, flag|
