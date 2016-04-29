@@ -150,7 +150,8 @@ module Discordrb::Commands
         event.respond @attributes[:command_doesnt_exist_message].gsub('%command%', name.to_s) if @attributes[:command_doesnt_exist_message]
         return
       end
-      if permission?(event.user, command.attributes[:permission_level], event.server)
+      if permission?(event.user, command.attributes[:permission_level], event.server) &&
+         required_permissions?(event.author, command.attributes[:required_permissions], event.channel)
         event.command = command
         result = command.call(event, arguments, chained)
         stringify(result)
