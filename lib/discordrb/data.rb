@@ -389,6 +389,8 @@ module Discordrb
       API.change_nickname(@bot.token, @server.id, @user.id, nick)
     end
 
+    alias_method :nick=, :nickname=
+
     # Update this member's roles
     # @note For internal use only.
     # @!visibility private
