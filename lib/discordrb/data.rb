@@ -379,6 +379,10 @@ module Discordrb
       API.update_user_roles(@bot.token, @server.id, @user.id, new_role_ids)
     end
 
+    def nickname=(nick)
+      API.change_nickname(@bot.token, @server.id, @user.id, nick)
+    end
+
     # Update this member's roles
     # @note For internal use only.
     # @!visibility private
