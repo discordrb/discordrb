@@ -231,6 +231,7 @@ module Discordrb
 
     # @return [String, nil] the nickname this member has, or nil if it has none.
     attr_reader :nick
+    alias_method :nickname, :nick
 
     # @return [Array<Role>] the roles this member has.
     attr_reader :roles
