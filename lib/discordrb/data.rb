@@ -601,6 +601,11 @@ module Discordrb
       @colour = ColourRGB.new(data['color'])
     end
 
+    # @return [String] a string that will mention this role, if it is mentionable.
+    def mention
+      "<@&#{@id}>"
+    end
+
     # Updates the data cache from another Role object
     # @note For internal use only
     # @!visibility private
