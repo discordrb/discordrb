@@ -1173,6 +1173,7 @@ module Discordrb
 
       @role_mentions = []
 
+      # Role mentions can only happen on public servers so make sure we only parse them there
       unless @channel.private?
         data['mention_roles'].each do |element|
           @role_mentions << @channel.server.role(element.to_i)
