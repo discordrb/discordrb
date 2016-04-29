@@ -963,9 +963,11 @@ module Discordrb
       JSON.parse(logs).map { |message| Message.new(message, @bot) }
     end
 
-    # Deletes the last N messages on this channel.
-    # @note Each delete request is performed in a separate thread for performance reasons, so if a large number of
-    #   messages are pruned, many threads will be created.
+    # Deletes the last N messages on this channel. Each delete request is performed in a separate thread for performance
+    # reasons, so if a large number of messages are pruned, many threads will be created.
+    # @note As of the April 29 update, the message delete request is rate limited, which means this method will take
+    #   a long time. It will eventually be updated to use batch deletes once those are released, but that will be in the
+    #   far future.
     # @param amount [Integer] How many messages to delete. Must be 100 or less (Discord limitation)
     # @raise [ArgumentError] if more than 100 messages are requested.
     def prune(amount)
