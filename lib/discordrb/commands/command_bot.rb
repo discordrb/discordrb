@@ -222,6 +222,12 @@ module Discordrb::Commands
       execute_chain(chain, event)
     end
 
+    def required_permissions?(member, required, channel = nil)
+      required.reduce(true) do |a, action|
+        a && member.permission?(action, channel)
+      end
+    end
+
     def execute_chain(chain, event)
       t = Thread.new do
         @event_threads << t
