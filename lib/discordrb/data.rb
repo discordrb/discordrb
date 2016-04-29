@@ -572,6 +572,7 @@ module Discordrb
 
     # @return [true, false] whether this role can be mentioned using a role mention
     attr_reader :mentionable
+    alias_method :mentionable?, :mentionable
 
     # @return [ColourRGB] the role colour
     attr_reader :colour
