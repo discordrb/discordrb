@@ -379,6 +379,9 @@ module Discordrb
       API.update_user_roles(@bot.token, @server.id, @user.id, new_role_ids)
     end
 
+    # Sets or resets this member's nickname. Requires the Change Nickname permission for the bot itself and Manage
+    # Nicknames for other users.
+    # @param nick [String, nil] The string to set the nickname to, or nil if it should be reset.
     def nickname=(nick)
       # Discord uses the empty string to signify 'no nickname' so we convert nil into that
       nick ||= ''
