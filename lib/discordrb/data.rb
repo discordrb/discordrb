@@ -380,6 +380,9 @@ module Discordrb
     end
 
     def nickname=(nick)
+      # Discord uses the empty string to signify 'no nickname' so we convert nil into that
+      nick ||= ''
+
       API.change_nickname(@bot.token, @server.id, @user.id, nick)
     end
 
