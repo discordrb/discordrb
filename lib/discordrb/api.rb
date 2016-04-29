@@ -151,7 +151,7 @@ module Discordrb::API
     request(
       __method__,
       :patch,
-      "#{api_base}/guilds/#{server_id}/members/#{user_id}/nick",
+      "#{api_base}/guilds/#{server_id}/members/#{user_id}",
       { nick: nick }.to_json,
       Authorization: token,
       content_type: :json
