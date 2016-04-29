@@ -397,6 +397,10 @@ module Discordrb
 
     alias_method :nickname=, :nick=
 
+    def display_name
+      nickname || username
+    end
+
     # Update this member's roles
     # @note For internal use only.
     # @!visibility private
