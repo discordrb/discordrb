@@ -570,6 +570,9 @@ module Discordrb
     # @return [true, false] whether or not this role should be displayed separately from other users
     attr_reader :hoist
 
+    # @return [true, false] whether this role can be mentioned using a role mention
+    attr_reader :mentionable
+
     # @return [ColourRGB] the role colour
     attr_reader :colour
 
