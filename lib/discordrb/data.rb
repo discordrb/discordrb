@@ -387,14 +387,14 @@ module Discordrb
     # Sets or resets this member's nickname. Requires the Change Nickname permission for the bot itself and Manage
     # Nicknames for other users.
     # @param nick [String, nil] The string to set the nickname to, or nil if it should be reset.
-    def nickname=(nick)
+    def nick=(nick)
       # Discord uses the empty string to signify 'no nickname' so we convert nil into that
       nick ||= ''
 
       API.change_nickname(@bot.token, @server.id, @user.id, nick)
     end
 
-    alias_method :nick=, :nickname=
+    alias_method :nickname=, :nick=
 
     # Update this member's roles
     # @note For internal use only.
