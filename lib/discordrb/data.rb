@@ -406,6 +406,13 @@ module Discordrb
       end
     end
 
+    # Update this member's nick
+    # @note For internal use only.
+    # @!visibility private
+    def update_nick(nick)
+      @nick = nick
+    end
+
     # Update this member's voice state
     # @note For internal use only.
     # @!visibility private
