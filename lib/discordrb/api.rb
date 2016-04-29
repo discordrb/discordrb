@@ -146,6 +146,18 @@ module Discordrb::API
     )
   end
 
+  # Change a user's nickname on a server
+  def change_nickname(token, server_id, user_id, nick)
+    request(
+      __method__,
+      :patch,
+      "#{api_base}/guilds/#{server_id}/members/#{user_id}/nick",
+      { nick: nick }.to_json,
+      Authorization: token,
+      content_type: :json
+    )
+  end
+
   # Get a server's banned users
   def bans(token, server_id)
     request(
