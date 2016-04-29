@@ -1171,6 +1171,14 @@ module Discordrb
         @mentions << bot.ensure_user(element)
       end if data['mentions']
 
+      @role_mentions = []
+
+      unless @channel.private?
+        data['mention_roles'].each do |element|
+          @role_mentions << @channel.server.role(element.to_i)
+        end if data['mention_roles']
+      end
+
       @attachments = []
       @attachments = data['attachments'].map { |e| Attachment.new(e, self, @bot) } if data['attachments']
     end
