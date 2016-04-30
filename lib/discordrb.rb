@@ -1,12 +1,5 @@
 # frozen_string_literal: true
 
-unless ENV['DISCORDRB_V2_MESSAGE']
-  puts "You're using version 2 of discordrb which has some breaking changes!"
-  puts "Don't worry if your bot crashes, you can find a list and migration advice here:"
-  puts ' https://github.com/meew0/discordrb/blob/master/CHANGELOG.md#200'
-  puts 'This message will go away in version 2.1 or can be disabled by setting the DISCORDRB_V2_MESSAGE environment variable.'
-end
-
 require 'discordrb/version'
 require 'discordrb/bot'
 require 'discordrb/commands/command_bot'
