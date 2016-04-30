@@ -1,5 +1,19 @@
 # Changelog
 
+## 2.1.0
+
+- API support for the April 29 Discord update, which was the first feature update in a while with more than a few additions to the API, was added. This includes: ([#111](https://github.com/meew0/discordrb/pull/111))
+  - Members' nicknames can now be set and read (`Member#nick`) and updates to them are being tracked.
+  - Roles now have a `mentionable?` property and a `mention` utility method.
+  - `Message` now tracks a message's role mentions.
+- The internal REST rate limit handler was updated:
+  - It now tracks message rate limits server wide to properly handle new bot account rate limits. ([#100](https://github.com/meew0/discordrb/issues/100))
+  - It now keeps track of all requests, even those that are known not to be rate limited (it just won't do anything to them). This allows for more flexibility should future rate limits be added.
+- Guild sharding is now supported using the optional `shard_id` and `num_shards` to bot initializers. Read about it here: https://github.com/hammerandchisel/discord-api-docs/issues/17 ([#98](https://github.com/meew0/discordrb/issues/98))
+- Commands can now require users to have specific action permissions to be able to execute them using the `:required_permissions` attribute. ([#104](https://github.com/meew0/discordrb/issues/104) / [#112](https://github.com/meew0/discordrb/pull/112))
+- A `heartbeat` event was added that gets triggered every now and then to allow for roughly periodic actions. ([#110](https://github.com/meew0/discordrb/pull/110))
+- Prefixes are now more flexible in the format they can have - arrays and callables are now allowed as well. Read the documentation for more info.([#107](https://github.com/meew0/discordrb/issues/107) / [#109](https://github.com/meew0/discordrb/pull/109))
+
 ## 2.0.4
 
 - Added a utility method `Invite#url` ([#86](https://github.com/meew0/discordrb/issues/86)/[#101](https://github.com/meew0/discordrb/pull/101), thanks @PoVa)
