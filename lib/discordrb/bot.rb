@@ -404,7 +404,7 @@ module Discordrb
       channel_id = channel_id.resolve_id
       debug("Sending message to #{channel_id} with content '#{content}'")
 
-      response = API.send_message(token, channel_id, content, [], tts, nil, server_id)
+      response = API.send_message(token, channel_id, content, [], tts, server_id)
       Message.new(JSON.parse(response), self)
     end
 
