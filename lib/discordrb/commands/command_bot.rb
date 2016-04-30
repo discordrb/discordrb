@@ -159,7 +159,8 @@ module Discordrb::Commands
         event.respond @attributes[:command_doesnt_exist_message].gsub('%command%', name.to_s) if @attributes[:command_doesnt_exist_message]
         return
       end
-      if permission?(event.user, command.attributes[:permission_level], event.server)
+      if permission?(event.user, command.attributes[:permission_level], event.server) &&
+         required_permissions?(event.author, command.attributes[:required_permissions], event.channel)
         event.command = command
         result = command.call(event, arguments, chained)
         stringify(result)
@@ -245,6 +246,12 @@ module Discordrb::Commands
     def standard_prefix_trigger(message, prefix)
       return nil unless message.start_with? prefix
       message[prefix.length..-1]
+    end
+
+    def required_permissions?(member, required, channel = nil)
+      required.reduce(true) do |a, action|
+        a && member.permission?(action, channel)
+      end
     end
 
     def execute_chain(chain, event)

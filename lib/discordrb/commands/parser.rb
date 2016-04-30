@@ -19,6 +19,9 @@ module Discordrb::Commands
         # Message to display when a user does not have sufficient permissions to execute a command
         permission_message: (attributes[:permission_message].is_a? FalseClass) ? nil : (attributes[:permission_message] || "You don't have permission to execute command %name%!"),
 
+        # Discord action permissions required to use this command
+        required_permissions: attributes[:required_permissions] || [],
+
         # Whether this command is usable in a command chain
         chain_usable: attributes[:chain_usable].nil? ? true : attributes[:chain_usable],
 
