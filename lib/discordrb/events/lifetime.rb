@@ -22,4 +22,10 @@ module Discordrb::Events
 
   # Event handler for {DisconnectEvent}
   class DisconnectEventHandler < TrueEventHandler; end
+
+  # @see Discordrb::EventContainer#heartbeat
+  class HeartbeatEvent < LifetimeEvent; end
+
+  # Event handler for {HeartbeatEvent}
+  class HeartbeatEventHandler < TrueEventHandler; end
 end
