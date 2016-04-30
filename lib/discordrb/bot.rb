@@ -457,7 +457,7 @@ module Discordrb
     # @return [User] The user identified by the mention, or `nil` if none exists.
     def parse_mention(mention)
       # Mention format: <@id>
-      return nil unless /<@(?<id>\d+)>?/ =~ mention
+      return nil unless /<@!?(?<id>\d+)>?/ =~ mention
       user(id.to_i)
     end
 
@@ -724,6 +724,7 @@ module Discordrb
 
       member = server.member(data['user']['id'].to_i)
       member.update_roles(data['roles'])
+      member.update_nick(data['nick'])
     end
 
     # Internal handler for GUILD_MEMBER_DELETE

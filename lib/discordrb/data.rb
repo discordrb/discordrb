@@ -229,6 +229,10 @@ module Discordrb
     # @return [Time] when this member joined the server.
     attr_reader :joined_at
 
+    # @return [String, nil] the nickname this member has, or nil if it has none.
+    attr_reader :nick
+    alias_method :nickname, :nick
+
     # @return [Array<Role>] the roles this member has.
     attr_reader :roles
 
@@ -342,6 +346,8 @@ module Discordrb
       # Initialize the roles by getting the roles from the server one-by-one
       update_roles(data['roles'])
 
+      @nick = data['nick']
+
       @deaf = data['deaf']
       @mute = data['mute']
       @joined_at = data['joined_at'] ? Time.parse(data['joined_at']) : nil
@@ -379,6 +385,23 @@ module Discordrb
       API.update_user_roles(@bot.token, @server.id, @user.id, new_role_ids)
     end
 
+    # Sets or resets this member's nickname. Requires the Change Nickname permission for the bot itself and Manage
+    # Nicknames for other users.
+    # @param nick [String, nil] The string to set the nickname to, or nil if it should be reset.
+    def nick=(nick)
+      # Discord uses the empty string to signify 'no nickname' so we convert nil into that
+      nick ||= ''
+
+      API.change_nickname(@bot.token, @server.id, @user.id, nick)
+    end
+
+    alias_method :nickname=, :nick=
+
+    # @return [String] the name the user displays as (nickname if they have one, username otherwise)
+    def display_name
+      nickname || username
+    end
+
     # Update this member's roles
     # @note For internal use only.
     # @!visibility private
@@ -386,6 +409,13 @@ module Discordrb
       @roles = roles.map do |role_id|
         @server.role(role_id.to_i)
       end
+    end
+
+    # Update this member's nick
+    # @note For internal use only.
+    # @!visibility private
+    def update_nick(nick)
+      @nick = nick
     end
 
     # Update this member's voice state
@@ -540,6 +570,10 @@ module Discordrb
     # @return [true, false] whether or not this role should be displayed separately from other users
     attr_reader :hoist
 
+    # @return [true, false] whether this role can be mentioned using a role mention
+    attr_reader :mentionable
+    alias_method :mentionable?, :mentionable
+
     # @return [ColourRGB] the role colour
     attr_reader :colour
 
@@ -567,8 +601,16 @@ module Discordrb
       @permissions = Permissions.new(data['permissions'], RoleWriter.new(self, @bot.token))
       @name = data['name']
       @id = data['id'].to_i
+
       @hoist = data['hoist']
+      @mentionable = data['mentionable']
+
       @colour = ColourRGB.new(data['color'])
+    end
+
+    # @return [String] a string that will mention this role, if it is mentionable.
+    def mention
+      "<@&#{@id}>"
     end
 
     # Updates the data cache from another Role object
@@ -1099,6 +1141,9 @@ module Discordrb
     # @return [Array<User>] the users that were mentioned in this message.
     attr_reader :mentions
 
+    # @return [Array<Role>] the roles that were mentioned in this message.
+    attr_reader :role_mentions
+
     # @return [Array<Attachment>] the files attached to this message.
     attr_reader :attachments
 
@@ -1130,6 +1175,15 @@ module Discordrb
       data['mentions'].each do |element|
         @mentions << bot.ensure_user(element)
       end if data['mentions']
+
+      @role_mentions = []
+
+      # Role mentions can only happen on public servers so make sure we only parse them there
+      unless @channel.private?
+        data['mention_roles'].each do |element|
+          @role_mentions << @channel.server.role(element.to_i)
+        end if data['mention_roles']
+      end
 
       @attachments = []
       @attachments = data['attachments'].map { |e| Attachment.new(e, self, @bot) } if data['attachments']
