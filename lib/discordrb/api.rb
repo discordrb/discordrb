@@ -380,9 +380,9 @@ module Discordrb::API
   end
 
   # Send a message to a channel
-  def send_message(token, channel_id, message, mentions = [], tts = false)
+  def send_message(token, channel_id, message, mentions = [], tts = false, guild_id = nil)
     request(
-      :message,
+      "message-#{guild_id}".to_sym,
       :post,
       "#{api_base}/channels/#{channel_id}/messages",
       { content: message, mentions: mentions, tts: tts }.to_json,
