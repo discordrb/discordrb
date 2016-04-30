@@ -400,11 +400,11 @@ module Discordrb
     # @param content [String] The text that should be sent as a message. It is limited to 2000 characters (Discord imposed).
     # @param tts [true, false] Whether or not this message should be sent using Discord text-to-speech.
     # @return [Message] The message that was sent.
-    def send_message(channel_id, content, tts = false)
+    def send_message(channel_id, content, tts = false, server_id = nil)
       channel_id = channel_id.resolve_id
       debug("Sending message to #{channel_id} with content '#{content}'")
 
-      response = API.send_message(token, channel_id, content, [], tts)
+      response = API.send_message(token, channel_id, content, [], tts, nil, server_id)
       Message.new(JSON.parse(response), self)
     end
 
