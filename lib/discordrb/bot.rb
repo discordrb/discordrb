@@ -109,6 +109,9 @@ module Discordrb
     # same codebase. Not required but I recommend setting it anyway.
     attr_accessor :name
 
+    # @return [Array(Integer, Integer)] the current shard key
+    attr_reader :shard_key
+
     include EventContainer
     include Cache
 
@@ -145,10 +148,15 @@ module Discordrb
     #   Useful for very large bots running in debug or verbose log_mode.
     # @param parse_self [true, false] Whether the bot should react on its own messages. It's best to turn this off
     #   unless you really need this so you don't inadvertently create infinite loops.
+    # @param shard_id [Integer] The number of the shard this bot should handle. See
+    #   https://github.com/hammerandchisel/discord-api-docs/issues/17 for how to do sharding.
+    # @param num_shards [Integer] The total number of shards that should be running. See
+    #   https://github.com/hammerandchisel/discord-api-docs/issues/17 for how to do sharding.
     def initialize(
         email: nil, password: nil, log_mode: :normal,
         token: nil, application_id: nil,
-        type: nil, name: '', fancy_log: false, suppress_ready: false, parse_self: false)
+        type: nil, name: '', fancy_log: false, suppress_ready: false, parse_self: false,
+        shard_id: nil, num_shards: nil)
       # Make sure people replace the login details in the example files...
       if email.is_a?(String) && email.end_with?('example.com')
         puts 'You have to replace the login details in the example files with your own!'
@@ -171,6 +179,8 @@ module Discordrb
       @type = determine_account_type(type, email, password, token, application_id)
 
       @name = name
+
+      @shard_key = num_shards ? [shard_id, num_shards] : nil
 
       LOGGER.fancy = fancy_log
       @prevent_ready = suppress_ready
@@ -390,11 +400,11 @@ module Discordrb
     # @param content [String] The text that should be sent as a message. It is limited to 2000 characters (Discord imposed).
     # @param tts [true, false] Whether or not this message should be sent using Discord text-to-speech.
     # @return [Message] The message that was sent.
-    def send_message(channel_id, content, tts = false)
+    def send_message(channel_id, content, tts = false, server_id = nil)
       channel_id = channel_id.resolve_id
       debug("Sending message to #{channel_id} with content '#{content}'")
 
-      response = API.send_message(token, channel_id, content, [], tts)
+      response = API.send_message(token, channel_id, content, [], tts, server_id)
       Message.new(JSON.parse(response), self)
     end
 
@@ -1296,6 +1306,9 @@ module Discordrb
           compress: true
         }
       }
+
+      # Discord is very strict about the existence of the shard parameter, so only add it if it actually exists
+      packet[:d][:shard] = @shard_key if @shard_key
 
       @ws.send(packet.to_json)
     end

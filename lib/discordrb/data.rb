@@ -895,7 +895,7 @@ module Discordrb
     # @param tts [true, false] Whether or not this message should be sent using Discord text-to-speech.
     # @return [Message] the message that was sent.
     def send_message(content, tts = false)
-      @bot.send_message(@id, content, tts)
+      @bot.send_message(@id, content, tts, @server && @server.id)
     end
 
     # Sends multiple messages to a channel
