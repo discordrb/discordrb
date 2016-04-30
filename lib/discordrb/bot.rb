@@ -1297,10 +1297,12 @@ module Discordrb
             :'$referring_domain' => ''
           },
           large_threshold: large_threshold,
-          compress: true,
-          shard: @shard_key
+          compress: true
         }
       }
+
+      # Discord is very strict about the existence of the shard parameter, so only add it if it actually exists
+      packet[:d][:shard] = @shard_key if @shard_key
 
       @ws.send(packet.to_json)
     end
