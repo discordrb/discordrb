@@ -23,9 +23,18 @@ module Discordrb::Commands
     # Creates a new CommandBot and logs in to Discord.
     # @param attributes [Hash] The attributes to initialize the CommandBot with.
     # @see {Discordrb::Bot#initialize} for other attributes that should be used to create the underlying regular bot.
-    # @option attributes [String] :prefix The prefix that should trigger this bot's commands. Can be any string (including the empty
-    #   string), but note that it will be literal - if the prefix is "hi" then the corresponding trigger string for
-    #   a command called "test" would be "hitest". Don't forget to put spaces in if you need them!
+    # @option attributes [String, Array<String>, #call] :prefix The prefix that should trigger this bot's commands. It
+    #   can be:
+    #
+    #   * Any string (including the empty string). This has the effect that if a message starts with the prefix, the
+    #     prefix will be stripped and the rest of the chain will be parsed as a command chain. Note that it will be
+    #     literal - if the prefix is "hi" then the corresponding trigger string for a command called "test" would be
+    #     "hitest". Don't forget to put spaces in if you need them!
+    #   * An array of prefixes. Those will behave similarly to setting one string as a prefix, but instead of only one
+    #     string, any of the strings in the array can be used.
+    #   * Something Proc-like (responds to :call) that takes a string as an argument (the message) and returns either
+    #     the command chain in raw form or `nil` if the given string shouldn't be parsed. This can be used to make more
+    #     complicated dynamic prefixes, or even something else entirely (suffixes, or most adventurous, infixes).
     # @option attributes [true, false] :advanced_functionality Whether to enable advanced functionality (very powerful
     #   way to nest commands into chains, see https://github.com/meew0/discordrb/wiki/Commands#command-chain-syntax
     #   for info. Default is true.
@@ -205,8 +214,8 @@ module Discordrb::Commands
 
       event = CommandEvent.new(message, self)
 
-      return unless message.content.start_with? @prefix
-      chain = message.content[@prefix.length..-1]
+      chain = trigger?(message.content)
+      return unless chain
 
       # Don't allow spaces between the prefix and the command
       if chain.start_with?(' ') && !@attributes[:spaces_allowed]
@@ -220,6 +229,22 @@ module Discordrb::Commands
       end
 
       execute_chain(chain, event)
+    end
+
+    # Check whether a message should trigger command execution, and if it does, return the raw chain
+    def trigger?(message)
+      if @prefix.is_a? String
+        standard_prefix_trigger(message, @prefix)
+      elsif @prefix.is_a? Array
+        @prefix.map { |e| standard_prefix_trigger(message, e) }.reduce { |a, e| a || e }
+      elsif @prefix.respond_to? :call
+        @prefix.call(message)
+      end
+    end
+
+    def standard_prefix_trigger(message, prefix)
+      return nil unless message.start_with? prefix
+      message[prefix.length..-1]
     end
 
     def execute_chain(chain, event)
