@@ -215,6 +215,11 @@ module Discordrb::Commands
       message = Discordrb::Message.new(data, self)
       return if message.from_bot? && !@should_parse_self
 
+      unless message.author
+        Discordrb::LOGGER.warn("Received a message (#{message.inspect}) with nil author! Ignoring, please report this if you can")
+        return
+      end
+
       event = CommandEvent.new(message, self)
 
       chain = trigger?(message.content)
