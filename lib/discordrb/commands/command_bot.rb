@@ -168,7 +168,7 @@ module Discordrb::Commands
         stringify(result)
       else
         event.respond command.attributes[:permission_message].gsub('%name%', name.to_s) if command.attributes[:permission_message]
-        return
+        nil
       end
     end
 
