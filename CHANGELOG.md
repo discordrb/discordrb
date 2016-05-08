@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.1.1
+
+*Bugfix-only release.*
+
+### Bugfixes
+
+- Fixed a caching error that occurred when deleting roles ([#113](https://github.com/meew0/discordrb/issues/113))
+- Commands should no longer be triggered with nil authors ([#114](https://github.com/meew0/discordrb/issues/114))
+
 ## 2.1.0
 
 - API support for the April 29 Discord update, which was the first feature update in a while with more than a few additions to the API, was added. This includes: ([#111](https://github.com/meew0/discordrb/pull/111))
