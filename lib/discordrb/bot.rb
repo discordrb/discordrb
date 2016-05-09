@@ -1059,6 +1059,7 @@ module Discordrb
         end
 
         @ready_time = Time.now
+        @unavailable_timeout_time = Time.now
       when :RESUMED
         # The RESUMED event is received after a successful op 6 (resume). It does nothing except tell the bot the
         # connection is initiated (like READY would) and set a new heartbeat interval.
