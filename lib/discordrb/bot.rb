@@ -994,7 +994,7 @@ module Discordrb
               v#{GATEWAY_VERSION} #{packet}" unless opcode == Opcodes::DISPATCH
 
       # Check whether there are still unavailable servers and there have been more than 10 seconds since READY
-      if @unavailable_servers && @unavailable_servers > 0 && (Time.now - @ready_time) > 10
+      if @unavailable_servers && @unavailable_servers > 0 && (Time.now - @unavailable_timeout_time) > 10
         # The server streaming timed out!
         LOGGER.warn("Server streaming timed out with #{@unavailable_servers} servers remaining")
         LOGGER.warn("This means some servers are unavailable due to an outage. Notifying ready now, we'll have to live without these servers")
@@ -1212,6 +1212,7 @@ module Discordrb
         # Check for false specifically (no data means the server has never been unavailable)
         if data['unavailable'].is_a? FalseClass
           @unavailable_servers -= 1 if @unavailable_servers
+          @unavailable_timeout_time = Time.now
 
           notify_ready if @unavailable_servers == 0
 
