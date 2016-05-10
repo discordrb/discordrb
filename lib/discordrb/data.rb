@@ -1163,7 +1163,9 @@ module Discordrb
                     # directly because the bot may also send messages to the channel
                     Recipient.new(bot.user(data['author']['id'].to_i), @channel, bot)
                   else
-                    @channel.server.member(data['author']['id'].to_i, false)
+                    member = @channel.server.member(data['author']['id'].to_i, false)
+                    Discordrb::LOGGER.warn("Member with ID #{data['author']['id']} not cached even though it should be.") unless member
+                    member
                   end
                 end
 
