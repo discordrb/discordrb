@@ -415,6 +415,18 @@ module Discordrb::API
     )
   end
 
+  # Delete messages in bulk
+  def bulk_delete(token, channel_id, messages = [])
+    request(
+      __method__,
+      :post,
+      "#{api_base}/channels/#{channel_id}/messages/bulk_delete",
+      { messages: messages }.to_json,
+      Authorization: token,
+      content_type: :json
+    )
+  end
+
   # Edit a message
   def edit_message(token, channel_id, message_id, message, mentions = [])
     request(
