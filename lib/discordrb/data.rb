@@ -1006,16 +1006,13 @@ module Discordrb
     end
 
     # Delete the last N messages on this channel.
-    # @param amount [Integer] How many messages to delete. Must be a value between 1 and 100 (Discord limitation)
-    # @raise [ArgumentError] if more than 100 messages are requested.
-    # @raise [ArgumentError] if 0 messages are requested.
+    # @param amount [Integer] How many messages to delete. Must be a value between 2 and 100 (Discord limitation)
+    # @raise [ArgumentError] if the amount of messages is not a value between 2 and 100
     def prune(amount)
-      raise ArgumentError, "Can't prune more than 100 messages!" if amount > 100
-      raise ArgumentError, "Can't prune 0 messages!" if amount.zero?
+      raise ArgumentError, 'Can only prune between 2 and 100 messages!' unless amount.between?(2, 100)
 
       messages = history(amount).map(&:id)
       API.bulk_delete(@bot.token, @id, messages)
-      nil
     end
 
     # Updates the cached permission overwrites
