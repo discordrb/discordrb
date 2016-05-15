@@ -374,7 +374,27 @@ module Discordrb
 
       API.update_user_roles(@bot.token, @server.id, @user.id, new_role_ids)
     end
-
+  
+    # Server deafens this member.
+    def server_deafen()
+      API.update_user_deafen(@bot.token, @server.id, @user.id, true)
+    end
+  
+    # Server undeafens this member.
+    def server_undeafen()
+      API.update_user_deafen(@bot.token, @server.id, @user.id, false)
+    end
+  
+    # Server mutes this member.
+    def server_mute()
+      API.update_user_mute(@bot.token, @server.id, @user.id, true)
+    end
+  
+    # Server undmutes this member.
+    def server_unmute()
+      API.update_user_mute(@bot.token, @server.id, @user.id, false)
+    end
+  
     # Removes one or more roles from this member.
     # @param role [Role, Array<Role>] The role(s) to remove.
     def remove_role(role)
