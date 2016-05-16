@@ -376,22 +376,22 @@ module Discordrb
     end
   
     # Server deafens this member.
-    def server_deafen()
+    def server_deafen
       API.update_user_deafen(@bot.token, @server.id, @user.id, true)
     end
   
     # Server undeafens this member.
-    def server_undeafen()
+    def server_undeafen
       API.update_user_deafen(@bot.token, @server.id, @user.id, false)
     end
   
     # Server mutes this member.
-    def server_mute()
+    def server_mute
       API.update_user_mute(@bot.token, @server.id, @user.id, true)
     end
   
     # Server undmutes this member.
-    def server_unmute()
+    def server_unmute
       API.update_user_mute(@bot.token, @server.id, @user.id, false)
     end
   
