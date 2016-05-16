@@ -37,7 +37,7 @@ module Discordrb
       begin
         begin
           response = API.channel(token, id)
-        rescue
+        rescue RestClient::ResourceNotFound
           return nil
         end
         channel = Channel.new(JSON.parse(response), self, server)
@@ -60,7 +60,7 @@ module Discordrb
       LOGGER.out("Resolving user #{id}")
       begin
         response = API.user(token, id)
-      rescue
+      rescue RestClient::ResourceNotFound
         return nil
       end
       user = User.new(JSON.parse(response), self)
@@ -78,7 +78,7 @@ module Discordrb
       LOGGER.out("Resolving server #{id}")
       begin
         response = API.server(token, id)
-      rescue
+      rescue RestClient::ResourceNotFound
         return nil
       end
       server = Server.new(JSON.parse(response), self)
@@ -97,7 +97,11 @@ module Discordrb
       return server.member(user_id) if server.member_cached?(user_id)
 
       LOGGER.out("Resolving member #{server_id} on server #{user_id}")
-      response = API.member(token, server_id, user_id)
+      begin
+        response = API.member(token, server_id, user_id)
+      rescue RestClient::ResourceNotFound
+        return nil
+      end
       member = Member.new(JSON.parse(response), server, self)
       server.cache_member(member)
     end
