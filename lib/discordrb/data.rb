@@ -652,7 +652,7 @@ module Discordrb
       if position.nil? || position.is_a?(Number) && position > 1
         update_role_data(position: position)
       else
-        raise "Role number can't be less than or equal to 1!"
+        raise ArgumentError, "Role number can't be less than or equal to 1!"
       end
     end
 
