@@ -649,7 +649,7 @@ module Discordrb
     # Changes role position
     # @param position [Integer] The value it should be changed to
     def position=(position)
-      update_role_data(positton: position)
+      update_role_data(position: position)
     end
 
     # Sets the role colour to something new
