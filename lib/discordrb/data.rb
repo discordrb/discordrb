@@ -390,7 +390,7 @@ module Discordrb
       API.update_user_mute(@bot.token, @server.id, @user.id, true)
     end
 
-    # Server undmutes this member.
+    # Server unmutes this member.
     def server_unmute
       API.update_user_mute(@bot.token, @server.id, @user.id, false)
     end
