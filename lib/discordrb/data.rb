@@ -375,7 +375,6 @@ module Discordrb
       API.update_user_roles(@bot.token, @server.id, @user.id, new_role_ids)
     end
 
-
     # Removes one or more roles from this member.
     # @param role [Role, Array<Role>] The role(s) to remove.
     def remove_role(role)
