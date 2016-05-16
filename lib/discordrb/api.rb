@@ -498,7 +498,7 @@ module Discordrb::API
       content_type: :json
     )
   end
-  
+
   # Update a user's server deafened state
   def update_user_deafen(token, server_id, user_id, state)
     request(
@@ -510,7 +510,7 @@ module Discordrb::API
       content_type: :json
     )
   end
-  
+
   # Update a user's server muted state
   def update_user_mute(token, server_id, user_id, state)
     request(
