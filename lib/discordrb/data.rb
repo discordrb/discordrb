@@ -620,6 +620,7 @@ module Discordrb
       @server = server
       @permissions = Permissions.new(data['permissions'], RoleWriter.new(self, @bot.token))
       @name = data['name']
+      @position = data['position']
       @id = data['id'].to_i
 
       @hoist = data['hoist']
@@ -665,6 +666,12 @@ module Discordrb
       update_role_data(hoist: hoist)
     end
 
+    # Changes role position
+    # @param position [Integer] The value it should be changed to
+    def position=(position)
+      update_role_data(positton: position)
+    end
+
     # Sets the role colour to something new
     # @param colour [ColourRGB] The new colour
     def colour=(colour)
@@ -699,6 +706,7 @@ module Discordrb
                       new_data[:name] || @name,
                       (new_data[:colour] || @colour).combined,
                       new_data[:hoist].nil? ? false : !@hoist.nil?,
+                      new_data[:position] || @position,
                       new_data[:permissions] || @permissions.bits)
       update_data(new_data)
     end
