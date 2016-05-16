@@ -649,7 +649,11 @@ module Discordrb
     # Changes role position
     # @param position [Integer] The value it should be changed to
     def position=(position)
-      update_role_data(position: position)
+      if position == nil or position.is_a?(Number) and position > 1
+        update_role_data(position: position)
+      else
+        raise "Role number can't be less than or equal to 1!"
+      end
     end
 
     # Sets the role colour to something new
