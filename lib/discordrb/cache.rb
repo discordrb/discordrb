@@ -35,7 +35,11 @@ module Discordrb
       return @channels[id] if @channels[id]
 
       begin
-        response = API.channel(token, id)
+        begin
+          response = API.channel(token, id)
+        rescue
+          return nil
+        end
         channel = Channel.new(JSON.parse(response), self, server)
         @channels[id] = channel
       rescue Discordrb::Errors::NoPermission
@@ -54,7 +58,11 @@ module Discordrb
       return @users[id] if @users[id]
 
       LOGGER.out("Resolving user #{id}")
-      response = API.user(token, id)
+      begin
+        response = API.user(token, id)
+      rescue
+        return nil
+      end
       user = User.new(JSON.parse(response), self)
       @users[id] = user
     end
@@ -68,7 +76,11 @@ module Discordrb
       return @servers[id] if @servers[id]
 
       LOGGER.out("Resolving server #{id}")
-      response = API.server(token, id)
+      begin
+        response = API.server(token, id)
+      rescue
+        return nil
+      end
       server = Server.new(JSON.parse(response), self)
       @servers[id] = server
     end
