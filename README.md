@@ -4,7 +4,7 @@
 [![Inline docs](http://inch-ci.org/github/meew0/discordrb.svg?branch=master&style=shields)](http://inch-ci.org/github/meew0/discordrb)
 [![Join Discord](https://img.shields.io/badge/discord-join-7289DA.svg)](https://discord.gg/0SBTUU1wZTWfFQL2)
 # discordrb
-
+![discordrb](https://raw.github.com/meew0/discordrb/master/logo.png)
 An implementation of the [Discord](https://discordapp.com/) API using Ruby.
 
 ## Quick links to sections
