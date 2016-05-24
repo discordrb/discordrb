@@ -480,7 +480,7 @@ module Discordrb
       data = {
         op: Opcodes::PRESENCE,
         d: {
-          idle_since: nil,
+          idle_since: @idletime,
           game: name ? { name: name } : nil
         }
       }
@@ -496,17 +496,53 @@ module Discordrb
     # @return [String] The stream name that is being played now.
     def stream=(name, url, type)
       @game = name
+      @stream = name && url ? { name: name, url: url, type: type ? type : 1 } : nil
+
+      data = {
+        op: Opcodes::PRESENCE,
+        d: {
+          idle_since: @idletime,
+#          game: name && url ? { name: name, url: url, type: type ? type : 1 } : nil
+          game: name ? { name: name , url: url, type: type } : nil
+        }
+      }
+
+      begin
+      @ws.send(data.to_json)
+      rescue => e
+      puts e.inspect
+      end
+      "REQUESTED STREAM"
+    end
+
+    # Sets status to online.
+    def online
+      @idletime = nil
 
       data = {
         op: Opcodes::PRESENCE,
         d: {
           idle_since: nil,
-          game: name && url ? { name: name, url: url, type: type ? type : 1 } : nil
+          game: @stream ? @stream : { name: @game }
         }
       }
 
       @ws.send(data.to_json)
-      name
+    end
+
+    # Sets status to idle.
+    def idle
+      @idletime = (Time.now.to_f * 1000).floor
+
+      data = {
+        op: Opcodes::PRESENCE,
+        d: {
+          idle_since: @idletime,
+          game: @stream ? @stream : { name: @game }
+        }
+      }
+
+      @ws.send(data.to_json)
     end
 
     # Injects a reconnect event (op 7) into the event processor, causing Discord to reconnect to the given gateway URL.
