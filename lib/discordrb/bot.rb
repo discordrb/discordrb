@@ -489,6 +489,26 @@ module Discordrb
       name
     end
 
+    # Sets the currently online stream to the specified name and Twitch URL.
+    # @param name [String] The name of the stream to display.
+    # @param url [String] The stream URL to redirect to when clicked on stream status.
+    # @param type [Number, 1] It is unsure of what this does.
+    # @return [String] The stream name that is being played now.
+    def stream=(name, url, type)
+      @game = name
+
+      data = {
+        op: Opcodes::PRESENCE,
+        d: {
+          idle_since: nil,
+          game: name && url ? { name: name, url: url, type: type ? type : 1 } : nil
+        }
+      }
+
+      @ws.send(data.to_json)
+      name
+    end
+
     # Injects a reconnect event (op 7) into the event processor, causing Discord to reconnect to the given gateway URL.
     # If the URL is set to nil, it will reconnect and get an entirely new gateway URL. This method has not much use
     # outside of testing and implementing highly custom reconnect logic.
