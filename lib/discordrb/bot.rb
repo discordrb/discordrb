@@ -476,6 +476,7 @@ module Discordrb
     # @return [String] The game that is being played now.
     def game=(name)
       @game = name
+      @stream = nil
 
       data = {
         op: Opcodes::PRESENCE,
@@ -491,28 +492,21 @@ module Discordrb
 
     # Sets the currently online stream to the specified name and Twitch URL.
     # @param name [String] The name of the stream to display.
-    # @param url [String] The stream URL to redirect to when clicked on stream status.
-    # @param type [Number, 1] It is unsure of what this does.
     # @return [String] The stream name that is being played now.
-    def stream=(name, url, type)
+    def stream=(name)
       @game = name
-      @stream = name && url ? { name: name, url: url, type: type ? type : 1 } : nil
+      @stream = { name:name, url:"https://twitch.tv/monstercat/", type:1 }
 
       data = {
         op: Opcodes::PRESENCE,
         d: {
           idle_since: @idletime,
-#          game: name && url ? { name: name, url: url, type: type ? type : 1 } : nil
-          game: name ? { name: name , url: url, type: type } : nil
+          game: name ? { name:name, url:"https://twitch.tv/monstercat/", type:1 } : nil
         }
       }
 
-      begin
       @ws.send(data.to_json)
-      rescue => e
-      puts e.inspect
-      end
-      "REQUESTED STREAM"
+      name
     end
 
     # Sets status to online.
