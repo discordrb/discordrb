@@ -476,7 +476,6 @@ module Discordrb
     # @return [String] The game that is being played now.
     def game=(name)
       @game = name
-      @stream = nil
 
       data = {
         op: Opcodes::PRESENCE,
@@ -495,7 +494,6 @@ module Discordrb
     # @return [String] The stream name that is being played now.
     def stream=(name)
       @game = name
-      @stream = { name:name, url:"https://twitch.tv/monstercat/", type:1 }
 
       data = {
         op: Opcodes::PRESENCE,
@@ -517,7 +515,7 @@ module Discordrb
         op: Opcodes::PRESENCE,
         d: {
           idle_since: nil,
-          game: @stream ? @stream : { name: @game }
+          game: { name: @game }
         }
       }
 
@@ -532,7 +530,7 @@ module Discordrb
         op: Opcodes::PRESENCE,
         d: {
           idle_since: @idletime,
-          game: @stream ? @stream : { name: @game }
+          game: { name: @game }
         }
       }
 
