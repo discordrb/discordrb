@@ -499,7 +499,7 @@ module Discordrb
         op: Opcodes::PRESENCE,
         d: {
           idle_since: @idletime,
-          game: name ? { name:name, url:"https://twitch.tv/monstercat/", type:1 } : nil
+          game: name ? { name: name, url: 'https://twitch.tv/monstercat/', type: 1 } : nil
         }
       }
 
