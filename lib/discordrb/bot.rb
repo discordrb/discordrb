@@ -492,14 +492,14 @@ module Discordrb
     # Sets the currently online stream to the specified name and Twitch URL.
     # @param name [String] The name of the stream to display.
     # @return [String] The stream name that is being played now.
-    def stream=(name)
+    def stream(name, url)
       @game = name
 
       data = {
         op: Opcodes::PRESENCE,
         d: {
           idle_since: @idletime,
-          game: name ? { name: name, url: 'https://twitch.tv/monstercat/', type: 1 } : nil
+          game: name && url ? { name: name, url: url, type: 1 } : nil
         }
       }
 
