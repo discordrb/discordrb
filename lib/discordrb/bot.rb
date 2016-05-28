@@ -479,11 +479,12 @@ module Discordrb
       @game = game
       @idletime = idletime
       @streamurl = url
+      type = type: url ? 1 : nil
       data = {
         op: Opcodes::PRESENCE,
         d: {
           idle_since: idletime,
-          game: name || url ? { name: name, url: url, type: (if url; 1; else; nil; end) } : nil
+          game: name || url ? { name: name, url: url, type: type } : nil
         }
       }
       @ws.send(data.to_json)
