@@ -471,70 +471,50 @@ module Discordrb
       user(id.to_i)
     end
 
+    # Updates presence status.
+    # @param idletime [Number] The floating point of a Time object.
+    # @param game [String] The name of the game to be played. If url is not nil then it is the name of the stream to be streamed.
+    # @param url [Number] The Twitch URL to display as a stream.
+    def update_presence(idletime, game, url)
+      @game = game
+      data = {
+        op: Opcodes::PRESENCE,
+        d: {
+          idle_since: @idletime,
+          game: name || url ? { name: name, url: url, type: url ? 1 : nil } : nil
+        }
+      }
+      @ws.send(data.to_json)
+    end
+
     # Sets the currently playing game to the specified game.
     # @param name [String] The name of the game to be played.
     # @return [String] The game that is being played now.
     def game=(name)
       @game = name
-
-      data = {
-        op: Opcodes::PRESENCE,
-        d: {
-          idle_since: @idletime,
-          game: name ? { name: name } : nil
-        }
-      }
-
-      @ws.send(data.to_json)
+      update_presence(@idletime, @game, nil)
       name
     end
 
     # Sets the currently online stream to the specified name and Twitch URL.
     # @param name [String] The name of the stream to display.
-    # @return [String] The stream name that is being played now.
+    # @return [String] The stream name that is being displayed now.
     def stream(name, url)
       @game = name
-
-      data = {
-        op: Opcodes::PRESENCE,
-        d: {
-          idle_since: @idletime,
-          game: name && url ? { name: name, url: url, type: 1 } : nil
-        }
-      }
-
-      @ws.send(data.to_json)
+      update_presence(@idletime, @game, url)
       name
     end
 
     # Sets status to online.
     def online
       @idletime = nil
-
-      data = {
-        op: Opcodes::PRESENCE,
-        d: {
-          idle_since: nil,
-          game: { name: @game }
-        }
-      }
-
-      @ws.send(data.to_json)
+      update_presence(nil, @game, nil)
     end
 
     # Sets status to idle.
     def idle
       @idletime = (Time.now.to_f * 1000).floor
-
-      data = {
-        op: Opcodes::PRESENCE,
-        d: {
-          idle_since: @idletime,
-          game: { name: @game }
-        }
-      }
-
-      @ws.send(data.to_json)
+      update_presence(@idletime, @game, nil)
     end
 
     # Injects a reconnect event (op 7) into the event processor, causing Discord to reconnect to the given gateway URL.
