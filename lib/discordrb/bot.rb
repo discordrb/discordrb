@@ -475,14 +475,15 @@ module Discordrb
     # @param idletime [Number] The floating point of a Time object.
     # @param game [String] The name of the game to be played. If url is not nil then it is the name of the stream to be streamed.
     # @param url [Number] The Twitch URL to display as a stream.
-    def update_presence(idletime, game, url)
+    def update_status(idletime, game, url)
       @game = game
       @idletime = idletime
+      @streamurl = url
       data = {
         op: Opcodes::PRESENCE,
         d: {
           idle_since: idletime,
-          game: name || url ? { name: name, url: url, type: url ? 1 : nil } : nil
+          game: name || url ? { name: name, url: url, type: (if url; 1; else; nil; end) } : nil
         }
       }
       @ws.send(data.to_json)
@@ -492,7 +493,7 @@ module Discordrb
     # @param name [String] The name of the game to be played.
     # @return [String] The game that is being played now.
     def game=(name)
-      update_presence(@idletime, @game, nil)
+      update_status(@idletime, @game, nil)
       name
     end
 
@@ -500,19 +501,19 @@ module Discordrb
     # @param name [String] The name of the stream to display.
     # @return [String] The stream name that is being displayed now.
     def stream(name, url)
-      update_presence(@idletime, @game, url)
+      update_status(@idletime, @game, url)
       name
     end
 
     # Sets status to online.
     def online
-      update_presence(nil, @game, nil)
+      update_status(nil, @game, @streamurl)
     end
     alias_method :on, :online
 
     # Sets status to idle.
     def idle
-      update_presence(@idletime, @game, nil)
+      update_status(@idletime, @game, nil)
     end
     alias_method :away, :idle
 
