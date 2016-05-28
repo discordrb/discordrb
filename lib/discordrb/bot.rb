@@ -479,7 +479,7 @@ module Discordrb
       @game = game
       @idletime = idletime
       @streamurl = url
-      type = type: url ? 1 : nil
+      type = url ? 1 : nil
       data = {
         op: Opcodes::PRESENCE,
         d: {
