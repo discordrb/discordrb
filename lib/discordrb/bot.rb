@@ -477,10 +477,11 @@ module Discordrb
     # @param url [Number] The Twitch URL to display as a stream.
     def update_presence(idletime, game, url)
       @game = game
+      @idletime = idletime
       data = {
         op: Opcodes::PRESENCE,
         d: {
-          idle_since: @idletime,
+          idle_since: idletime,
           game: name || url ? { name: name, url: url, type: url ? 1 : nil } : nil
         }
       }
@@ -491,7 +492,6 @@ module Discordrb
     # @param name [String] The name of the game to be played.
     # @return [String] The game that is being played now.
     def game=(name)
-      @game = name
       update_presence(@idletime, @game, nil)
       name
     end
@@ -500,22 +500,21 @@ module Discordrb
     # @param name [String] The name of the stream to display.
     # @return [String] The stream name that is being displayed now.
     def stream(name, url)
-      @game = name
       update_presence(@idletime, @game, url)
       name
     end
 
     # Sets status to online.
     def online
-      @idletime = nil
       update_presence(nil, @game, nil)
     end
+    alias_method :on, :online
 
     # Sets status to idle.
     def idle
-      @idletime = (Time.now.to_f * 1000).floor
       update_presence(@idletime, @game, nil)
     end
+    alias_method :away, :idle
 
     # Injects a reconnect event (op 7) into the event processor, causing Discord to reconnect to the given gateway URL.
     # If the URL is set to nil, it will reconnect and get an entirely new gateway URL. This method has not much use
