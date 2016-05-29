@@ -19,5 +19,14 @@ module Discordrb
 
     # Raised when the bot gets a HTTP 502 error, which is usually caused by Cloudflare.
     class CloudflareError < RuntimeError; end
+
+    # Generic class for errors denoted by API error codes
+    class CodeError < RuntimeError
+      # Create a new error with a particular message (the code should be defined by the class instance variable)
+      # @param message [String] the message to use
+      def initialize(message)
+        @message = message
+      end
+    end
   end
 end
