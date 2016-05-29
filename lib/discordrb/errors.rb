@@ -37,6 +37,9 @@ module Discordrb
       def code
         self.class.code
       end
+
+      # @return [String] This error's represented message
+      attr_reader :message
     end
 
     # Create a new code error class
