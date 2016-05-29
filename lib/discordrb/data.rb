@@ -1322,6 +1322,8 @@ module Discordrb
 
       member = @bot.member(@id, id)
       @members[id] = member
+    rescue
+      nil
     end
 
     # @return [Array<Member>] an array of all the members on this server.
