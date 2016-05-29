@@ -24,7 +24,16 @@ module Discordrb
     class CodeError < RuntimeError
       class << self
         # @return [Integer] The error code represented by this error class.
-        attr_reader :code
+        def code
+          return @code if @code
+
+          # This class has no code, so search the superclasses
+          class_with_code = ancestors.find { |c| !c.code.nil? }
+          return class_with_code.code if class_with_code
+
+          # No superclass has a code for whatever reason
+          raise "Tried to get this error's code, but neither it nor any of its ancestors has one!"
+        end
       end
 
       # Create a new error with a particular message (the code should be defined by the class instance variable)
