@@ -22,6 +22,11 @@ module Discordrb
 
     # Generic class for errors denoted by API error codes
     class CodeError < RuntimeError
+      class << self
+        # @return [Integer] The error code represented by this error class.
+        attr_reader :code
+      end
+
       # Create a new error with a particular message (the code should be defined by the class instance variable)
       # @param message [String] the message to use
       def initialize(message)
