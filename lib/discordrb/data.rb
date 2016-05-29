@@ -1005,26 +1005,14 @@ module Discordrb
       JSON.parse(logs).map { |message| Message.new(message, @bot) }
     end
 
-    # Deletes the last N messages on this channel. Each delete request is performed in a separate thread for performance
-    # reasons, so if a large number of messages are pruned, many threads will be created.
-    # @note As of the April 29 update, the message delete request is rate limited, which means this method will take
-    #   a long time. It will eventually be updated to use batch deletes once those are released, but that will be in the
-    #   far future.
-    # @param amount [Integer] How many messages to delete. Must be 100 or less (Discord limitation)
-    # @raise [ArgumentError] if more than 100 messages are requested.
+    # Delete the last N messages on this channel.
+    # @param amount [Integer] How many messages to delete. Must be a value between 2 and 100 (Discord limitation)
+    # @raise [ArgumentError] if the amount of messages is not a value between 2 and 100
     def prune(amount)
-      raise ArgumentError, "Can't prune more than 100 messages!" if amount > 100
+      raise ArgumentError, 'Can only prune between 2 and 100 messages!' unless amount.between?(2, 100)
 
-      threads = []
-      history(amount).each do |message|
-        threads << Thread.new { message.delete }
-      end
-
-      # Make sure all requests have finished
-      threads.each(&:join)
-
-      # Delete the threads
-      threads.map! { nil }
+      messages = history(amount).map(&:id)
+      API.bulk_delete(@bot.token, @id, messages)
     end
 
     # Updates the cached permission overwrites
