@@ -32,6 +32,11 @@ module Discordrb
       def initialize(message)
         @message = message
       end
+
+      # @return [Integer] The error code represented by this error.
+      def code
+        self.class.code
+      end
     end
 
     # Create a new code error class
