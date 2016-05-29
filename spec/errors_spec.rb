@@ -18,14 +18,6 @@ describe Discordrb::Errors do
         error.code should eq(10_002)
         error.message should eq 'random message'
       end
-
-      it 'should be able to be inherited with the correct code' do
-        class SomeErrorClass < Discordrb::Errors.Code(10_003); end
-        SomeErrorClass.code should eq(10_003)
-        error = SomeErrorClass.new 'random message 2'
-        error.code should eq(10_003)
-        error.message should eq 'random message 2'
-      end
     end
   end
 end
