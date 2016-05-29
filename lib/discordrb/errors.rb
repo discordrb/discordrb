@@ -45,7 +45,7 @@ module Discordrb
 
     # Create a new code error class
     # rubocop:disable Style/MethodName
-    def Code(code)
+    def self.Code(code)
       classy = Class.new(CodeError)
       classy.instance_variable_set('@code', code)
       classy
