@@ -646,6 +646,11 @@ module Discordrb
 
       user = server.member(user_id)
 
+      unless user
+        warn "Invalid user for voice state update: #{user_id} on #{server_id}, ignoring"
+        return
+      end
+
       channel_id = data['channel_id']
       channel = nil
       channel = self.channel(channel_id.to_i) if channel_id
