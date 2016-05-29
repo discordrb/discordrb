@@ -112,6 +112,9 @@ module Discordrb
     # @return [Array(Integer, Integer)] the current shard key
     attr_reader :shard_key
 
+    # @return [Hash<Symbol => Await>] the list of registered {Await}s.
+    attr_reader :awaits
+
     include EventContainer
     include Cache
 
