@@ -328,8 +328,8 @@ module Discordrb
 
     # Connects to a voice channel, initializes network connections and returns the {Voice::VoiceBot} over which audio
     # data can then be sent. After connecting, the bot can also be accessed using {#voice}. If the bot is already
-    # connected to voice, the existing connection will be terminated - you don't have to call {VoiceBot#destroy}
-    # before calling this method.
+    # connected to voice, the existing connection will be terminated - you don't have to call
+    # {Discordrb::Voice::VoiceBot#destroy} before calling this method.
     # @param chan [Channel] The voice channel to connect to.
     # @param encrypted [true, false] Whether voice communication should be encrypted using RbNaCl's SecretBox
     #   (uses an XSalsa20 stream cipher for encryption and Poly1305 for authentication)
