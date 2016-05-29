@@ -1249,17 +1249,17 @@ module Discordrb
       # Handle actual close frames and errors separately
       if event.respond_to? :code
         LOGGER.error(%(Disconnected from WebSocket - code #{event.code} with reason: "#{event.data}"))
+
+        if event.code.to_i == 4006
+          # If we got disconnected with a 4006, it means we sent a resume when Discord wanted an identify. To battle this,
+          # we invalidate the local session so we'll just send an identify next time
+          debug('Apparently we just sent the wrong type of initiation packet (resume rather than identify) to Discord. (Sorry!)
+                Invalidating session so this is fixed next time')
+          invalidate_session
+        end
       else
         LOGGER.error('Disconnected from WebSocket due to an exception!')
         LOGGER.log_exception event
-      end
-
-      if event.code.to_i == 4006
-        # If we got disconnected with a 4006, it means we sent a resume when Discord wanted an identify. To battle this,
-        # we invalidate the local session so we'll just send an identify next time
-        debug('Apparently we just sent the wrong type of initiation packet (resume rather than identify) to Discord. (Sorry!)
-                Invalidating session so this is fixed next time')
-        invalidate_session
       end
 
       raise_event(DisconnectEvent.new(self))
