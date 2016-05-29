@@ -1,5 +1,19 @@
 # Changelog
 
+## 2.1.2
+
+- A reader was added (`Bot#awaits`) to read the hash of awaits, so ones that aren't necessary anymore can be deleted.
+- `Channel#prune` now uses the bulk delete endpoint which means it will be much faster and no longer rate limited ([#118](https://github.com/meew0/discordrb/pull/118), thanks @snapcase)
+
+### Bugfixes
+
+- A few unresolved links in the documentation were fixed.
+- The tracking of streamed servers was updated so that very long lists of servers should now all be processed.
+- Resolution methods now return nil if the object to resolve can't be found, which should alleviate some rare caching problems ([#124](https://github.com/meew0/discordrb/pull/124), thanks @Snazzah)
+- In the rare event that Discord sends a voice state update for a nonexistent member, there should no longer be a gateway error ([#125](https://github.com/meew0/discordrb/issues/125))
+- Network errors (`EPIPE` and the like) should no longer cause an exception while processing ([#127](https://github.com/meew0/discordrb/issues/127))
+- Uncached members in messages are now logged.
+
 ## 2.1.1
 
 *Bugfix-only release.*
