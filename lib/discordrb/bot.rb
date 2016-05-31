@@ -412,8 +412,10 @@ module Discordrb
     # @note This executes in a blocking way, so if you're sending long files, be wary of delays.
     # @param channel_id [Integer] The ID that identifies the channel to send something to.
     # @param file [File] The file that should be sent.
-    def send_file(channel_id, file)
-      response = API.send_file(token, channel_id, file)
+	# @param caption [string] The caption for the file.
+	# @param tts [true, false] Whether or not this file's caption should be sent using Discord text-to-speech.
+    def send_file(channel_id, file, caption = nil, tts = nil)
+      response = API.send_file(token, channel_id, file, caption, tts)
       Message.new(JSON.parse(response), self)
     end
 
