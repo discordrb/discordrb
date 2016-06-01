@@ -442,12 +442,12 @@ module Discordrb::API
 
   # Send a file as a message to a channel
   def send_file(token, channel_id, file, caption = nil, tts = nil)
-	tts = caption && tts == nil ? false : tts
+    tts = caption && tts == nil ? false : tts
     request(
       __method__,
       :post,
       "#{api_base}/channels/#{channel_id}/messages",
-      { file: file, content: caption, tts: tts},
+      { file: file, content: caption, tts: tts },
       Authorization: token
     )
   end
