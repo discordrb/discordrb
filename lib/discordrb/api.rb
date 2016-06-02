@@ -441,7 +441,7 @@ module Discordrb::API
   end
 
   # Send a file as a message to a channel
-  def send_file(token, channel_id, file, caption = nil, tts = nil)
+  def send_file(token, channel_id, file, caption: nil, tts: false)
     tts = caption && tts.nil? ? false : tts
     request(
       __method__,

@@ -914,7 +914,7 @@ module Discordrb
     # @param file [File] The file to send. There's no clear size limit for this, you'll have to attempt it for yourself (most non-image files are fine, large images may fail to embed)
     # @param caption [string] The caption for the file.
     # @param tts [true, false] Whether or not this file's caption should be sent using Discord text-to-speech.
-    def send_file(file, caption = nil, tts = nil)
+    def send_file(file, caption: nil, tts: false)
       @bot.send_file(@id, file, caption, tts)
     end
 

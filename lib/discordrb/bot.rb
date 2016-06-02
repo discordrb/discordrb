@@ -414,7 +414,7 @@ module Discordrb
     # @param file [File] The file that should be sent.
     # @param caption [string] The caption for the file.
     # @param tts [true, false] Whether or not this file's caption should be sent using Discord text-to-speech.
-    def send_file(channel_id, file, caption = nil, tts = nil)
+    def send_file(channel_id, file, caption: nil, tts: false)
       response = API.send_file(token, channel_id, file, caption, tts)
       Message.new(JSON.parse(response), self)
     end
