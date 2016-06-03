@@ -21,6 +21,13 @@ describe Discordrb::Errors do
     end
   end
 
+  describe 'error_class_for' do
+    it 'should return the correct class for code 40001' do
+      classy = Discordrb::Errors.error_class_for(40_001)
+      expect(classy).to be(Discordrb::Errors::Unauthorized)
+    end
+  end
+
   describe Discordrb::Errors::Unauthorized do
     it 'should exist' do
       expect(Discordrb::Errors::Unauthorized).to be_a(Class)
