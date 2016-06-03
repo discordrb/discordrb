@@ -82,6 +82,10 @@ module Discordrb
     # server can safely search for a session server to handle the connection without the connection being terminated.
     # As a side-effect, large bots are less likely to disconnect because of very large READY parse times.
     HELLO = 10
+
+    # **Received**: Returned after a heartbeat was sent to the server. This allows clients to identify and deal with
+    # zombie connections that don't dispatch any events anymore.
+    HEARTBEAT_ACK = 11
   end
 
   # Represents a Discord bot, including servers, users, etc.
