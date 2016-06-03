@@ -54,6 +54,12 @@ module Discordrb
       classy
     end
 
+    # @param code [Integer] The code to check
+    # @return [Class] the error class for the given code
+    def self.error_class_for(code)
+      @code_classes[code]
+    end
+
     # An API call wasn't authorized due to, for example, a token being invalid
     Unauthorized = Code(40_001)
   end
