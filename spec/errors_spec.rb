@@ -20,4 +20,15 @@ describe Discordrb::Errors do
       end
     end
   end
+
+  describe Discordrb::Errors::Unauthorized do
+    it 'should exist' do
+      expect(Discordrb::Errors::Unauthorized).to be_a(Class)
+    end
+
+    it 'should have the correct code' do
+      instance = Discordrb::Errors::Unauthorized.new('some message')
+      expect(instance.code).to eq(40_001)
+    end
+  end
 end
