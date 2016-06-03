@@ -47,6 +47,10 @@ module Discordrb
     def self.Code(code)
       classy = Class.new(CodeError)
       classy.instance_variable_set('@code', code)
+
+      @code_classes ||= {}
+      @code_classes[code] = classy
+
       classy
     end
   end
