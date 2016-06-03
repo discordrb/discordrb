@@ -53,5 +53,8 @@ module Discordrb
 
       classy
     end
+
+    # An API call wasn't authorized due to, for example, a token being invalid
+    Unauthorized = Code(40_001)
   end
 end
