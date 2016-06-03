@@ -77,6 +77,11 @@ module Discordrb
     # **Received**: The functionality of this opcode is less known than the others but it appears to specifically
     # tell the client to invalidate its local session and continue by {IDENTIFY}ing.
     INVALIDATE_SESSION = 9
+
+    # **Received**: Sent immediately for any opened connection; tells the client to start heartbeating early on, so the
+    # server can safely search for a session server to handle the connection without the connection being terminated.
+    # As a side-effect, large bots are less likely to disconnect because of very large READY parse times.
+    HELLO = 10
   end
 
   # Represents a Discord bot, including servers, users, etc.
