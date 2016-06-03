@@ -60,6 +60,9 @@ module Discordrb
       @code_classes[code]
     end
 
+    # Used when Discord doesn't provide a more specific code
+    UnknownError = Code(0)
+
     # Unknown Account
     UnknownAccount = Code(10_001)
 
