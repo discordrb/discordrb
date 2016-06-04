@@ -1001,7 +1001,7 @@ module Discordrb
         LOGGER.debug 'Hello!'
 
         # Activate the heartbeats
-        @heartbeat_interval = data['heartbeat_interval'].to_f / 1000.0
+        @heartbeat_interval = packet['d']['heartbeat_interval'].to_f / 1000.0
         @heartbeat_active = true
         debug("Desired heartbeat_interval: #{@heartbeat_interval}")
         send_heartbeat
