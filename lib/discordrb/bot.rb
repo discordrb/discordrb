@@ -917,7 +917,7 @@ module Discordrb
     ####  ###   ######     ########    ###    ######## ##    ##    ##     ######
 
     # Desired gateway version
-    GATEWAY_VERSION = 4
+    GATEWAY_VERSION = 5
 
     def websocket_connect
       debug('Attempting to get gateway URL...')
