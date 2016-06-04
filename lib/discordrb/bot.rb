@@ -1015,8 +1015,9 @@ module Discordrb
       end
 
       if opcode == Opcodes::HEARTBEAT_ACK
-        # Set this to true so when sending the next heartbeat it won't try to reconnect because it's set to false
-        @heartbeat_received = true
+        # Set this to false so when sending the next heartbeat it won't try to reconnect because it's still expecting
+        # an ACK
+        @awaiting_ack = false
       end
 
       raise "Got an unexpected opcode (#{opcode}) in a gateway event!
