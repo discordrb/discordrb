@@ -1377,6 +1377,7 @@ module Discordrb
         LOGGER.warn("No HEARTBEAT_ACK received between the last heartbeat and now! (seq: #{sequence}) Reconnecting
                      because the connection might be a zombie.")
         websocket_reconnect(nil)
+        return
       end
 
       LOGGER.out("Sending heartbeat with sequence #{sequence}")
