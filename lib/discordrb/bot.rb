@@ -1014,6 +1014,11 @@ module Discordrb
         return
       end
 
+      if opcode == Opcodes::HEARTBEAT_ACK
+        # Set this to true so when sending the next heartbeat it won't try to reconnect because it's set to false
+        @heartbeat_received = true
+      end
+
       raise "Got an unexpected opcode (#{opcode}) in a gateway event!
               Please report this issue along with the following information:
               v#{GATEWAY_VERSION} #{packet}" unless opcode == Opcodes::DISPATCH
