@@ -1000,6 +1000,9 @@ module Discordrb
       if opcode == Opcodes::HELLO
         LOGGER.debug 'Hello!'
 
+        # Initialize sequence with 0 so we can start heartbeating without being in a session
+        @sequence = 0
+
         # Activate the heartbeats
         @heartbeat_interval = packet['d']['heartbeat_interval'].to_f / 1000.0
         @heartbeat_active = true
