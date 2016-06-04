@@ -1370,6 +1370,15 @@ module Discordrb
 
     def send_heartbeat(sequence = nil)
       sequence ||= @sequence
+
+      if @awaiting_ack
+        # There has been no HEARTBEAT_ACK between the last heartbeat and now, so reconnect because the connection might
+        # be a zombie
+        LOGGER.warn("No HEARTBEAT_ACK received between the last heartbeat and now! (seq: #{sequence}) Reconnecting
+                     because the connection might be a zombie.")
+        websocket_reconnect(nil)
+      end
+
       LOGGER.out("Sending heartbeat with sequence #{sequence}")
       data = {
         op: Opcodes::HEARTBEAT,
