@@ -1000,6 +1000,12 @@ module Discordrb
       if opcode == Opcodes::HELLO
         LOGGER.debug 'Hello!'
 
+        # Activate the heartbeats
+        @heartbeat_interval = data['heartbeat_interval'].to_f / 1000.0
+        @heartbeat_active = true
+        debug("Desired heartbeat_interval: #{@heartbeat_interval}")
+        send_heartbeat
+
         return
       end
 
@@ -1031,12 +1037,6 @@ module Discordrb
 
         # Set the session ID in case we get disconnected and have to resume
         @session_id = data['session_id']
-
-        # Activate the heartbeats
-        @heartbeat_interval = data['heartbeat_interval'].to_f / 1000.0
-        @heartbeat_active = true
-        debug("Desired heartbeat_interval: #{@heartbeat_interval}")
-        send_heartbeat
 
         @profile = Profile.new(data['user'], self, @email, @password)
 
