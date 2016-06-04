@@ -1006,6 +1006,8 @@ module Discordrb
         debug("Desired heartbeat_interval: #{@heartbeat_interval} seconds")
         send_heartbeat
 
+        debug("Trace: #{packet['d']['_trace']}")
+
         return
       end
 
