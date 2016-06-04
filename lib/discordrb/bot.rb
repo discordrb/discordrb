@@ -1131,6 +1131,8 @@ module Discordrb
         event = MessageDeleteEvent.new(data, self)
         raise_event(event)
       when :MESSAGE_DELETE_BULK
+        debug("MESSAGE_DELETE_BULK will raise #{data['ids'].length} events")
+
         data['ids'].each do |single_id|
           # Form a data hash for a single ID so the methods get what they want
           single_data = {
