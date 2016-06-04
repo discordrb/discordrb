@@ -1000,7 +1000,7 @@ module Discordrb
       if opcode == Opcodes::HELLO
         LOGGER.debug 'Hello!'
 
-        # Heartbeat
+        return
       end
 
       raise "Got an unexpected opcode (#{opcode}) in a gateway event!
