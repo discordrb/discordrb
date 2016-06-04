@@ -1007,7 +1007,6 @@ module Discordrb
         @heartbeat_interval = packet['d']['heartbeat_interval'].to_f / 1000.0
         @heartbeat_active = true
         debug("Desired heartbeat_interval: #{@heartbeat_interval} seconds")
-        send_heartbeat
 
         debug("Trace: #{packet['d']['_trace']}")
 
