@@ -1130,6 +1130,20 @@ module Discordrb
 
         event = MessageDeleteEvent.new(data, self)
         raise_event(event)
+      when :MESSAGE_DELETE_BULK
+        data['ids'].each do |single_id|
+          # Form a data hash for a single ID so the methods get what they want
+          single_data = {
+            'id' => single_id,
+            'channel_id' => data['channel_id']
+          }
+
+          # Raise as normal
+          delete_message(single_data)
+
+          event = MessageDeleteEvent.new(single_data, self)
+          raise_event(event)
+        end
       when :TYPING_START
         start_typing(data)
 
