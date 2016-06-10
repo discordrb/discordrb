@@ -89,7 +89,6 @@ module Discordrb::Voice
 
       @volume = 1.0
       @playing = false
-      @length = nil
 
       @encoder = Encoder.new
       @ws.connect
