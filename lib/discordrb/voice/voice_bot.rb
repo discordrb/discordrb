@@ -88,6 +88,8 @@ module Discordrb::Voice
       @adjust_debug = true
 
       @volume = 1.0
+      @playing = false
+      @length = nil
 
       @encoder = Encoder.new
       @ws.connect
@@ -118,6 +120,18 @@ module Discordrb::Voice
     # negligible.)
     def pause
       @paused = true
+    end
+
+    # @see #playing=
+    # @return [true, false] Whether it is playing sound or not.
+    def playing?
+      @playing
+    end
+
+    # How long the sound file is
+    # @return [Integer] Sound length.
+    def length
+      @length
     end
 
     # Continue playback. This change may take up to 100 ms to take effect, which is usually negligible.
