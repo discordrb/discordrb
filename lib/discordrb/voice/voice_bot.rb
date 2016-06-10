@@ -121,13 +121,13 @@ module Discordrb::Voice
       @paused = true
     end
 
+    alias_method :playing?, :isplaying?
+
     # @see #playing=
     # @return [true, false] Whether it is playing sound or not.
     def playing?
       @playing
     end
-
-    alias_method :playing?, :isplaying?
 
     # Continue playback. This change may take up to 100 ms to take effect, which is usually negligible.
     def continue
