@@ -21,6 +21,9 @@ module Discordrb::Voice
   # should check the parameters and adjust them to your connection: {VoiceBot#adjust_interval},
   # {VoiceBot#adjust_offset}, and {VoiceBot#adjust_average}.
   class VoiceBot
+    # @return [Channel] the current voice channel
+    attr_reader :channel
+
     # @return [Integer, nil] the amount of time the stream has been playing, or `nil` if nothing has been played yet.
     attr_reader :stream_time
 
