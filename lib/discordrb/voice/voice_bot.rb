@@ -27,6 +27,9 @@ module Discordrb::Voice
     # @return [Encoder] the encoder used to encode audio files into the format required by Discord.
     attr_reader :encoder
 
+    # @return [Integer, nil] Sound length.
+    attr_reader :length
+
     # discordrb will occasionally measure the time it takes to send a packet, and adjust future delay times based
     # on that data. This makes voice playback more smooth, because if packets are sent too slowly, the audio will
     # sound patchy, and if they're sent too quickly, packets will "pile up" and occasionally skip some data or
@@ -126,12 +129,6 @@ module Discordrb::Voice
     # @return [true, false] Whether it is playing sound or not.
     def playing?
       @playing
-    end
-
-    # How long the sound file is
-    # @return [Integer] Sound length.
-    def length
-      @length
     end
 
     # Continue playback. This change may take up to 100 ms to take effect, which is usually negligible.
