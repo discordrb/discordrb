@@ -752,6 +752,8 @@ module Discordrb
 
       user_id = data['user']['id'].to_i
       server.delete_member(user_id)
+    rescue Discordrb::Errors::NoPermission
+      Discordrb::LOGGER.warn("delete_guild_member attempted to access a server for which the bot doesn't have permission! Not sure what happened here, ignoring")
     end
 
     # Internal handler for GUILD_CREATE
