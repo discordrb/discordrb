@@ -898,6 +898,14 @@ module Discordrb
       @bot.send_message(@id, content, tts, @server && @server.id)
     end
 
+    # Sends a temporary message to this channel.
+    # @param content [String] The content to send. Should not be longer than 2000 characters or it will result in an error.
+    # @param timeout [Float] The amount of time in seconds after which the message sent will be deleted.
+    # @param tts [true, false] Whether or not this message should be sent using Discord text-to-speech.
+    def send_temporary_message(content, timeout, tts = false)
+      @bot.send_temporary_message(@id, content, timeout, tts, @server && @server.id)
+    end
+
     # Sends multiple messages to a channel
     # @param content [Array<String>] The messages to send.
     def send_multiple(content)

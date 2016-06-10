@@ -44,6 +44,13 @@ module Discordrb::Events
       @message.channel.send_message(content)
     end
 
+    # Sends a temporary message to the channel this message was sent in, right now.
+    # @param content [String] The content to send. Should not be longer than 2000 characters or it will result in an error.
+    # @param timeout [Float] The amount of time in seconds after which the message sent will be deleted.
+    def send_temporary_message(content, timeout)
+      @message.channel.send_temporary_message(content, timeout)
+    end
+
     # @return [true, false] whether or not this message was sent by the bot itself
     def from_bot?
       @message.user.id == @bot.profile.id
@@ -68,6 +75,7 @@ module Discordrb::Events
     alias_method :text, :content
     alias_method :send, :send_message
     alias_method :respond, :send_message
+    alias_method :send_temp, :send_temporary_message
   end
 
   # Event handler for MessageEvent
