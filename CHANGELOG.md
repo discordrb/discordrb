@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.1.3
+
+*Bugfix-only release.*
+
+### Bugfixes
+
+- Various messages that were just printed to stdout that should have been using the `Logger` system now do ([#132](https://github.com/meew0/discordrb/issues/132) and [#133](https://github.com/meew0/discordrb/pull/133), thanks @PoVa)
+- A mistake in the documentation was fixed ([#140](https://github.com/meew0/discordrb/issues/140))
+- Handling of the `GUILD_MEMBER_DELETE` gateway event should now work even if, for whatever reason, Discord sends an invalid server ID ([#129](https://github.com/meew0/discordrb/issues/129))
+- If the processing of a particular voice packet takes too long, the user will now be warned instead of an error being raised ([#134](https://github.com/meew0/discordrb/issues/134))
+
 ## 2.1.2
 
 - A reader was added (`Bot#awaits`) to read the hash of awaits, so ones that aren't necessary anymore can be deleted.
