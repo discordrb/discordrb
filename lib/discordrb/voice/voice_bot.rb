@@ -340,8 +340,12 @@ module Discordrb::Voice
         # If paused, wait
         sleep 0.1 while @paused
 
-        # Wait `length` ms, then send the next packet
-        sleep @length / 1000.0
+        if @length > 0
+          # Wait `length` ms, then send the next packet
+          sleep @length / 1000.0
+        else
+          Discordrb::Logger.warn('Audio encoding and sending together took longer than Discord expects one packet to be (20 ms)! This may be indicative of network problems.')
+        end
       end
 
       @bot.debug('Sending five silent frames to clear out buffers')
