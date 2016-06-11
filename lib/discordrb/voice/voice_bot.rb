@@ -197,7 +197,7 @@ module Discordrb::Voice
 
       # If the stream is a process, kill it
       if encoded_io.respond_to? :pid
-        Discordrb::LOGGER.info("Killing ffmpeg process with pid #{encoded_io.pid.inspect}")
+        Discordrb::LOGGER.debug("Killing ffmpeg process with pid #{encoded_io.pid.inspect}")
 
         begin
           Process.kill('TERM', encoded_io.pid)
