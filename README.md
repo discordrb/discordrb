@@ -40,7 +40,7 @@ On Linux, it should be as simple as running:
 
 ### Windows
 
-On Windows, to install discordrb, run this in a shell:
+On Windows, to install discordrb, run this in a shell **(make sure you have the DevKit installed! See the [Dependencies](https://github.com/meew0/discordrb#dependencies) section)**:
 
     gem install discordrb --platform=ruby
 
