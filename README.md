@@ -42,7 +42,7 @@ On Linux, it should be as simple as running:
 
 On Windows, to install discordrb, run this in a shell:
 
-    gem install discordrb
+    gem install discordrb --platform=ruby
 
 Run the [ping example](https://github.com/meew0/discordrb/blob/master/examples/ping.rb) to verify that the installation works (make sure to replace the username and password in there with your own or your bots'!):
 
