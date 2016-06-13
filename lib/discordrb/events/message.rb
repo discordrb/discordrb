@@ -48,7 +48,7 @@ module Discordrb::Events
       @message.channel.send_message(content)
     end
 
-    # Sends file with a caption to the channel this message was sent in, right now. 
+    # Sends file with a caption to the channel this message was sent in, right now.
     # It is usually preferable to use {#<<} and {#attach_file} instead
     # because it avoids rate limiting problems
     # @param file [File] The file to send to the channel
