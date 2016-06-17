@@ -37,7 +37,7 @@ module Discordrb::Commands
     #     complicated dynamic prefixes, or even something else entirely (suffixes, or most adventurous, infixes).
     # @option attributes [true, false] :advanced_functionality Whether to enable advanced functionality (very powerful
     #   way to nest commands into chains, see https://github.com/meew0/discordrb/wiki/Commands#command-chain-syntax
-    #   for info. Default is true.
+    #   for info. Default is false.
     # @option attributes [Symbol, Array<Symbol>, false] :help_command The name of the command that displays info for
     #   other commands. Use an array if you want to have aliases. Default is "help". If none should be created, use
     #   `false` as the value.
