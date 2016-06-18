@@ -72,6 +72,16 @@ module Discordrb::Events
       nil
     end
 
+    # Drains the currently saved message into a result string. This prepends it before that string, clears the saved
+    # message and returns the concatenation.
+    # @param result [String] The result string to drain into.
+    # @return [String] a string formed by concatenating the saved message and the argument.
+    def drain_into(result)
+      result = @saved_message + (result || '')
+      drain
+      result
+    end
+
     alias_method :user, :author
     alias_method :text, :content
     alias_method :send, :send_message
