@@ -1141,6 +1141,9 @@ module Discordrb
 
     # @return [Array<Attachment>] the files attached to this message.
     attr_reader :attachments
+    
+    # @return [true, false] whether themesage is pinned or not.
+    attr_reader :pinned
 
     alias_method :user, :author
     alias_method :text, :content
@@ -1151,6 +1154,7 @@ module Discordrb
       @bot = bot
       @content = data['content']
       @channel = bot.channel(data['channel_id'].to_i)
+      @pinned = data['pinned']
 
       @author = if data['author']
                   if @channel.private?
@@ -1209,12 +1213,14 @@ module Discordrb
     # Pins this message
     def pin
       API.pin_message(@bot.token, @channel.id, @id)
+      @pinned = true
       nil
     end
 
     # Unpins this message
     def unpin
       API.unpin_message(@bot.token, @channel.id, @id)
+      @pinned = false
       nil
     end
 
