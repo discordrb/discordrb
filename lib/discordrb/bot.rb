@@ -1291,6 +1291,9 @@ module Discordrb
 
     def websocket_error(e)
       LOGGER.error "Gateway error: #{e}"
+      LOGGER.error 'Killing thread and reconnecting...'
+
+      Thread.current.kill
     end
 
     def websocket_open
