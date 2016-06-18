@@ -1005,6 +1005,13 @@ module Discordrb
       JSON.parse(logs).map { |message| Message.new(message, @bot) }
     end
 
+    # Requests all pinned messages of a channel.
+    # @return [Array<Message>] the received messages.
+    def pins
+      msgs = API.pins(@bot.token, @id)
+      JSON.parse(msgs).map { |msg| Message.new(msg, @bot) }
+    end
+
     # Delete the last N messages on this channel.
     # @param amount [Integer] How many messages to delete. Must be a value between 2 and 100 (Discord limitation)
     # @raise [ArgumentError] if the amount of messages is not a value between 2 and 100
@@ -1196,6 +1203,18 @@ module Discordrb
     # Deletes this message.
     def delete
       API.delete_message(@bot.token, @channel.id, @id)
+      nil
+    end
+
+    # Pins this message
+    def pin
+      API.pin_message(@bot.token, @channel.id, @id)
+      nil
+    end
+
+    # Unpins this message
+    def unpin
+      API.unpin_message(@bot.token, @channel.id, @id)
       nil
     end
 
