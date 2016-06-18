@@ -656,7 +656,7 @@ module Discordrb::API
     request(
       __method__,
       :get,
-      "#{api_base}/channels/#{channel_id}/pins"
+      "#{api_base}/channels/#{channel_id}/pins",
       Authorization: token
     )
   end
