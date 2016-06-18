@@ -1299,7 +1299,8 @@ module Discordrb
       LOGGER.error "Terminal gateway error: #{e}"
       LOGGER.error 'Killing thread and reconnecting...'
 
-      Thread.current.kill
+      # Kill the WSCS internal thread to ensure disconnection regardless of what error occurred
+      @ws.thread.kill
     end
 
     def websocket_open
