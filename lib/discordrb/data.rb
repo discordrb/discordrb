@@ -1145,6 +1145,7 @@ module Discordrb
     # @return [true, false] whether themesage is pinned or not.
     attr_reader :pinned
 
+    alias_method :pinned?, :pinned
     alias_method :user, :author
     alias_method :text, :content
     alias_method :to_s, :content
