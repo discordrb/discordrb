@@ -612,6 +612,13 @@ module Discordrb
     def mention
       "<@&#{@id}>"
     end
+    
+    # @return [Array<Member>] an array of members who have this role.
+    def members
+      @server.members.select { |m| m.role? role }
+    end
+    
+    alias_method :users, :members
 
     # Updates the data cache from another Role object
     # @note For internal use only
