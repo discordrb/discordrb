@@ -984,9 +984,9 @@ module Discordrb
     # @return [Array<Member>] the users in this channel
     def users
       if @type == 'text'
-        @server.members.select { |u| u.status != :offline }
+        @server.online_members(include_idle: true).select { |u| u.status != :offline }
       else
-        @server.members.select do |user|
+        @server.online_members(include_idle: true).select do |user|
           user.voice_channel.id == @id if user.voice_channel
         end
       end
