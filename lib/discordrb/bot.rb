@@ -932,7 +932,7 @@ module Discordrb
         method(:websocket_open),
         method(:websocket_message),
         method(:websocket_close),
-        proc { |e| LOGGER.error "Gateway error: #{e}" }
+        method(:websocket_error)
       )
 
       @ws.thread[:discordrb_name] = 'gateway'
@@ -1287,6 +1287,10 @@ module Discordrb
     rescue => e
       LOGGER.log_exception e
       raise
+    end
+
+    def websocket_error(e)
+      LOGGER.error "Gateway error: #{e}"
     end
 
     def websocket_open
