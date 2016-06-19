@@ -207,8 +207,8 @@ module Discordrb::Events
     def send_temporary_message(content, timeout)
       @channel.send_temporary_message(content, timeout)
     end
-    
-        # Adds a string to be sent after the event has finished execution. Avoids problems with rate limiting because only
+
+     # Adds a string to be sent after the event has finished execution. Avoids problems with rate limiting because only
     # one message is ever sent. If it is used multiple times, the strings will bunch up into one message (separated by
     # newlines)
     # @param message [String] The message to send to the channel
