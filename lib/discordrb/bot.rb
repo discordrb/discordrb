@@ -402,6 +402,7 @@ module Discordrb
     # @param channel_id [Integer] The ID that identifies the channel to send something to.
     # @param content [String] The text that should be sent as a message. It is limited to 2000 characters (Discord imposed).
     # @param tts [true, false] Whether or not this message should be sent using Discord text-to-speech.
+    # @param server_id [Integer] The ID that identifies the server to send something to.
     # @return [Message] The message that was sent.
     def send_message(channel_id, content, tts = false, server_id = nil)
       channel_id = channel_id.resolve_id
@@ -409,6 +410,25 @@ module Discordrb
 
       response = API.send_message(token, channel_id, content, [], tts, server_id)
       Message.new(JSON.parse(response), self)
+    end
+
+    # Sends a text message to a channel given its ID and the message's content,
+    # then deletes it after the specified timeout in seconds.
+    # @param channel_id [Integer] The ID that identifies the channel to send something to.
+    # @param content [String] The text that should be sent as a message. It is limited to 2000 characters (Discord imposed).
+    # @param timeout [Float] The amount of time in seconds after which the message sent will be deleted.
+    # @param tts [true, false] Whether or not this message should be sent using Discord text-to-speech.
+    # @param server_id [Integer] The ID that identifies the server to send something to.
+    def send_temporary_message(channel_id, content, timeout, tts = false, server_id = nil)
+      Thread.new do
+        message = send_message(channel_id, content, tts, server_id)
+
+        sleep(timeout)
+
+        message.delete
+      end
+
+      nil
     end
 
     # Sends a file to a channel. If it is an image, it will automatically be embedded.
