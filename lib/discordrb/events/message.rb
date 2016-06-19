@@ -64,6 +64,24 @@ module Discordrb::Events
       nil
     end
 
+    # Drains the currently saved message, which clears it out, resulting in everything being saved before being
+    # thrown away and nothing being sent to the channel (unless there is something saved after this).
+    # @see #<<
+    def drain
+      @saved_message = ''
+      nil
+    end
+
+    # Drains the currently saved message into a result string. This prepends it before that string, clears the saved
+    # message and returns the concatenation.
+    # @param result [String] The result string to drain into.
+    # @return [String] a string formed by concatenating the saved message and the argument.
+    def drain_into(result)
+      result = @saved_message + (result || '')
+      drain
+      result
+    end
+
     alias_method :user, :author
     alias_method :text, :content
     alias_method :send, :send_message
