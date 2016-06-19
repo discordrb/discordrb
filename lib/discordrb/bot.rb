@@ -533,6 +533,12 @@ module Discordrb
       resume(seq || @sequence, raw_token, @session_id)
     end
 
+    # Injects a terminal gateway error into the handler. Useful for testing the reconnect logic.
+    # @param e [Exception] The exception object to inject.
+    def inject_error(e)
+      websocket_error(e)
+    end
+
     # Sets debug mode. If debug mode is on, many things will be outputted to STDOUT.
     def debug=(new_debug)
       LOGGER.debug = new_debug
@@ -952,7 +958,7 @@ module Discordrb
         method(:websocket_open),
         method(:websocket_message),
         method(:websocket_close),
-        proc { |e| LOGGER.error "Gateway error: #{e}" }
+        method(:websocket_error)
       )
 
       @ws.thread[:discordrb_name] = 'gateway'
@@ -1307,6 +1313,14 @@ module Discordrb
     rescue => e
       LOGGER.log_exception e
       raise
+    end
+
+    def websocket_error(e)
+      LOGGER.error "Terminal gateway error: #{e}"
+      LOGGER.error 'Killing thread and reconnecting...'
+
+      # Kill the WSCS internal thread to ensure disconnection regardless of what error occurred
+      @ws.thread.kill
     end
 
     def websocket_open
