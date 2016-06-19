@@ -91,6 +91,7 @@ module Discordrb::Voice
       @adjust_debug = true
 
       @volume = 1.0
+      @playing = false
 
       @encoder = Encoder.new
       @ws.connect
@@ -122,6 +123,14 @@ module Discordrb::Voice
     def pause
       @paused = true
     end
+
+    # @see #play
+    # @return [true, false] Whether it is playing sound or not.
+    def playing?
+      @playing
+    end
+
+    alias_method :isplaying?, :playing?
 
     # Continue playback. This change may take up to 100 ms to take effect, which is usually negligible.
     def continue
