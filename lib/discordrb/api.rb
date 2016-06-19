@@ -439,6 +439,27 @@ module Discordrb::API
     )
   end
 
+  # Pin a message
+  def pin_message(token, channel_id, message_id)
+    request(
+      __method__,
+      :put,
+      "#{api_base}/channels/#{channel_id}/pins/#{message_id}",
+      nil,
+      Authorization: token
+    )
+  end
+
+  # Unpin a message
+  def unpin_message(token, channel_id, message_id)
+    request(
+      __method__,
+      :delete,
+      "#{api_base}/channels/#{channel_id}/pins/#{message_id}",
+      Authorization: token
+    )
+  end
+
   # Acknowledge that a message has been received
   # The last acknowledged message will be sent in the ready packet,
   # so this is an easy way to catch up on messages
@@ -626,6 +647,16 @@ module Discordrb::API
       __method__,
       :get,
       "#{api_base}/channels/#{channel_id}/messages?limit=#{amount}#{"&before=#{before}" if before}#{"&after=#{after}" if after}",
+      Authorization: token
+    )
+  end
+
+  # Get a list of pinned messages in a channel
+  def pins(token, channel_id)
+    request(
+      __method__,
+      :get,
+      "#{api_base}/channels/#{channel_id}/pins",
       Authorization: token
     )
   end

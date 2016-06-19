@@ -1013,6 +1013,13 @@ module Discordrb
       JSON.parse(logs).map { |message| Message.new(message, @bot) }
     end
 
+    # Requests all pinned messages of a channel.
+    # @return [Array<Message>] the received messages.
+    def pins
+      msgs = API.pins(@bot.token, @id)
+      JSON.parse(msgs).map { |msg| Message.new(msg, @bot) }
+    end
+
     # Delete the last N messages on this channel.
     # @param amount [Integer] How many messages to delete. Must be a value between 2 and 100 (Discord limitation)
     # @raise [ArgumentError] if the amount of messages is not a value between 2 and 100
@@ -1143,6 +1150,10 @@ module Discordrb
     # @return [Array<Attachment>] the files attached to this message.
     attr_reader :attachments
 
+    # @return [true, false] whether themesage is pinned or not.
+    attr_reader :pinned
+
+    alias_method :pinned?, :pinned
     alias_method :user, :author
     alias_method :text, :content
     alias_method :to_s, :content
@@ -1152,6 +1163,7 @@ module Discordrb
       @bot = bot
       @content = data['content']
       @channel = bot.channel(data['channel_id'].to_i)
+      @pinned = data['pinned']
 
       @author = if data['author']
                   if @channel.private?
@@ -1204,6 +1216,20 @@ module Discordrb
     # Deletes this message.
     def delete
       API.delete_message(@bot.token, @channel.id, @id)
+      nil
+    end
+
+    # Pins this message
+    def pin
+      API.pin_message(@bot.token, @channel.id, @id)
+      @pinned = true
+      nil
+    end
+
+    # Unpins this message
+    def unpin
+      API.unpin_message(@bot.token, @channel.id, @id)
+      @pinned = false
       nil
     end
 
