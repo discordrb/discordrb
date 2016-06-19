@@ -3,6 +3,7 @@
 require 'discordrb/events/generic'
 
 module Discordrb::Events
+  # Module to make sending messages easier with the presence of a text channel in an event
   module Respondable
     # @return [Channel] the channel in which this event occured
     attr_reader :channel
@@ -54,7 +55,7 @@ module Discordrb::Events
     alias_method :respond, :send_message
     alias_method :send_temp, :send_temporary_message
   end
-  
+
   # Event raised when a text message is sent to a channel
   class MessageEvent < Event
     include Respondable
