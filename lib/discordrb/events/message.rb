@@ -62,7 +62,7 @@ module Discordrb::Events
     # a caption.
     # @param file [File] The file to be attached
     def attach_file(file)
-      @file = file == File ? file : nil
+      @file = file.is_a(File) ? file : nil
       nil
     end
 
