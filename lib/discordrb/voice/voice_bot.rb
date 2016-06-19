@@ -121,7 +121,7 @@ module Discordrb::Voice
       @paused = true
     end
 
-    # @see #playing=
+    # @see #play
     # @return [true, false] Whether it is playing sound or not.
     def playing?
       @playing
