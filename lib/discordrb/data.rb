@@ -385,6 +385,16 @@ module Discordrb
       API.update_user_roles(@bot.token, @server.id, @user.id, new_role_ids)
     end
 
+    # Server deafens this member.
+    def server_deafen
+      API.update_user_deafen(@bot.token, @server.id, @user.id, true)
+    end
+
+    # Server undeafens this member.
+    def server_undeafen
+      API.update_user_deafen(@bot.token, @server.id, @user.id, false)
+    end
+
     # Sets or resets this member's nickname. Requires the Change Nickname permission for the bot itself and Manage
     # Nicknames for other users.
     # @param nick [String, nil] The string to set the nickname to, or nil if it should be reset.

@@ -532,6 +532,30 @@ module Discordrb::API
     )
   end
 
+  # Update a user's server deafened state
+  def update_user_deafen(token, server_id, user_id, state)
+    request(
+      __method__,
+      :patch,
+      "#{api_base}/guilds/#{server_id}/members/#{user_id}",
+      { deaf: state }.to_json,
+      Authorization: token,
+      content_type: :json
+    )
+  end
+
+  # Update a user's server muted state
+  def update_user_mute(token, server_id, user_id, state)
+    request(
+      __method__,
+      :patch,
+      "#{api_base}/guilds/#{server_id}/members/#{user_id}",
+      { mute: state }.to_json,
+      Authorization: token,
+      content_type: :json
+    )
+  end
+
   # Update a user's permission overrides in a channel
   def update_user_overrides(token, channel_id, user_id, allow, deny)
     request(
