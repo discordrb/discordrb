@@ -146,6 +146,18 @@ module Discordrb::API
     )
   end
 
+  # Change the current bot's nickname on a server
+  def change_own_nickname(token, server_id, nick)
+    request(
+      __method__,
+      :patch,
+      "#{api_base}/guilds/#{server_id}/members/@me/nick",
+      { nick: nick }.to_json,
+      Authorization: token,
+      content_type: :json
+    )
+  end
+
   # Change a user's nickname on a server
   def change_nickname(token, server_id, user_id, nick)
     request(
