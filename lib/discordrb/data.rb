@@ -412,7 +412,11 @@ module Discordrb
       # Discord uses the empty string to signify 'no nickname' so we convert nil into that
       nick ||= ''
 
-      API.change_nickname(@bot.token, @server.id, @user.id, nick)
+      if @user.current_bot?
+        API.change_own_nickname(@bot.token, @server.id, nick)
+      else
+        API.change_nickname(@bot.token, @server.id, @user.id, nick)
+      end
     end
 
     alias_method :nickname=, :nick=
