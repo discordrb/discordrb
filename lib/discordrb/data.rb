@@ -998,7 +998,8 @@ module Discordrb
       allow_bits = allow.respond_to?(:bits) ? allow.bits : allow
       deny_bits = deny.respond_to?(:bits) ? deny.bits : deny
 
-      if thing.is_a? User
+      # TODO: Be more flexible about what classes are allowed here
+      if thing.is_a?(User) || thing.is_a?(Member) || thing.is_a?(Recipient)
         API.update_user_overrides(@bot.token, @id, thing.id, allow_bits, deny_bits)
       elsif thing.is_a? Role
         API.update_role_overrides(@bot.token, @id, thing.id, allow_bits, deny_bits)
