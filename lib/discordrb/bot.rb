@@ -284,7 +284,7 @@ module Discordrb
     end
 
     # Kills the websocket thread, stopping all connections to Discord.
-    def stop
+    def kill
       @ws_thread.kill
     end
 
