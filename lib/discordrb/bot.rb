@@ -257,6 +257,7 @@ module Discordrb
         @falloff = 1.0
 
         loop do
+          @should_reconnect = true
           websocket_connect
 
           if @reconnect_url
