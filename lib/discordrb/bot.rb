@@ -291,6 +291,7 @@ module Discordrb
     #
     # If this method doesn't work or you're looking for something more drastic, use {#kill} instead.
     def stop
+      @should_reconnect = false
       @ws.close
     end
 
