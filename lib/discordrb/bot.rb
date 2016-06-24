@@ -260,6 +260,8 @@ module Discordrb
           @should_reconnect = true
           websocket_connect
 
+          break unless @should_reconnect
+
           if @reconnect_url
             # We got an op 7! Don't wait before reconnecting
             LOGGER.info('Got an op 7, reconnecting right away')
