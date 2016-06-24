@@ -77,6 +77,15 @@ module Discordrb
     # **Received**: The functionality of this opcode is less known than the others but it appears to specifically
     # tell the client to invalidate its local session and continue by {IDENTIFY}ing.
     INVALIDATE_SESSION = 9
+
+    # **Received**: Sent immediately for any opened connection; tells the client to start heartbeating early on, so the
+    # server can safely search for a session server to handle the connection without the connection being terminated.
+    # As a side-effect, large bots are less likely to disconnect because of very large READY parse times.
+    HELLO = 10
+
+    # **Received**: Returned after a heartbeat was sent to the server. This allows clients to identify and deal with
+    # zombie connections that don't dispatch any events anymore.
+    HEARTBEAT_ACK = 11
   end
 
   # Represents a Discord bot, including servers, users, etc.
@@ -917,7 +926,7 @@ module Discordrb
     ####  ###   ######     ########    ###    ######## ##    ##    ##     ######
 
     # Desired gateway version
-    GATEWAY_VERSION = 4
+    GATEWAY_VERSION = 5
 
     def websocket_connect
       debug('Attempting to get gateway URL...')
@@ -997,6 +1006,29 @@ module Discordrb
         return
       end
 
+      if opcode == Opcodes::HELLO
+        LOGGER.debug 'Hello!'
+
+        # Initialize sequence with 0 so we can start heartbeating without being in a session
+        @sequence = 0
+
+        # Activate the heartbeats
+        @heartbeat_interval = packet['d']['heartbeat_interval'].to_f / 1000.0
+        @heartbeat_active = true
+        debug("Desired heartbeat_interval: #{@heartbeat_interval} seconds")
+
+        debug("Trace: #{packet['d']['_trace']}")
+
+        return
+      end
+
+      if opcode == Opcodes::HEARTBEAT_ACK
+        # Set this to false so when sending the next heartbeat it won't try to reconnect because it's still expecting
+        # an ACK
+        @awaiting_ack = false
+        return
+      end
+
       raise "Got an unexpected opcode (#{opcode}) in a gateway event!
               Please report this issue along with the following information:
               v#{GATEWAY_VERSION} #{packet}" unless opcode == Opcodes::DISPATCH
@@ -1025,12 +1057,6 @@ module Discordrb
 
         # Set the session ID in case we get disconnected and have to resume
         @session_id = data['session_id']
-
-        # Activate the heartbeats
-        @heartbeat_interval = data['heartbeat_interval'].to_f / 1000.0
-        @heartbeat_active = true
-        debug("Desired heartbeat_interval: #{@heartbeat_interval}")
-        send_heartbeat
 
         @profile = Profile.new(data['user'], self, @email, @password)
 
@@ -1070,16 +1096,9 @@ module Discordrb
         @unavailable_timeout_time = Time.now
       when :RESUMED
         # The RESUMED event is received after a successful op 6 (resume). It does nothing except tell the bot the
-        # connection is initiated (like READY would) and set a new heartbeat interval.
+        # connection is initiated (like READY would). Starting with v5, it doesn't set a new heartbeat interval anymore
+        # since that is handled by op 10 (HELLO).
         debug('Connection resumed')
-
-        @heartbeat_interval = data['heartbeat_interval'].to_f / 1000.0
-
-        # Since we disabled it earlier so we don't send any heartbeats in between close and resume,, make sure to
-        # re-enable heartbeating
-        @heartbeat_active = true
-
-        debug("Desired heartbeat_interval: #{@heartbeat_interval}")
       when :GUILD_MEMBERS_CHUNK
         id = data['guild_id'].to_i
         server = server(id)
@@ -1126,6 +1145,22 @@ module Discordrb
 
         event = MessageDeleteEvent.new(data, self)
         raise_event(event)
+      when :MESSAGE_DELETE_BULK
+        debug("MESSAGE_DELETE_BULK will raise #{data['ids'].length} events")
+
+        data['ids'].each do |single_id|
+          # Form a data hash for a single ID so the methods get what they want
+          single_data = {
+            'id' => single_id,
+            'channel_id' => data['channel_id']
+          }
+
+          # Raise as normal
+          delete_message(single_data)
+
+          event = MessageDeleteEvent.new(single_data, self)
+          raise_event(event)
+        end
       when :TYPING_START
         start_typing(data)
 
@@ -1370,6 +1405,15 @@ module Discordrb
 
       raise_event(HeartbeatEvent.new(self))
 
+      if @awaiting_ack
+        # There has been no HEARTBEAT_ACK between the last heartbeat and now, so reconnect because the connection might
+        # be a zombie
+        LOGGER.warn("No HEARTBEAT_ACK received between the last heartbeat and now! (seq: #{sequence}) Reconnecting
+                     because the connection might be a zombie.")
+        websocket_reconnect(nil)
+        return
+      end
+
       LOGGER.out("Sending heartbeat with sequence #{sequence}")
       data = {
         op: Opcodes::HEARTBEAT,
@@ -1377,6 +1421,7 @@ module Discordrb
       }
 
       @ws.send(data.to_json)
+      @awaiting_ack = true
     rescue => e
       LOGGER.error('Got an error while sending a heartbeat! Carrying on anyway because heartbeats are vital for the connection to stay alive')
       LOGGER.log_exception(e)
