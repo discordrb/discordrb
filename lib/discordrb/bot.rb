@@ -283,6 +283,14 @@ module Discordrb
       @ws_thread.join
     end
 
+    # Stops the bot gracefully, disconnecting the websocket without immediately killing the thread. This means that
+    # Discord is immediately aware of the closed connetion and makes the bot appear offline instantly.
+    #
+    # If this method doesn't work or you're looking for something more drastic, use {#kill} instead.
+    def stop
+      @ws.close
+    end
+
     # Kills the websocket thread, stopping all connections to Discord.
     def kill
       @ws_thread.kill
