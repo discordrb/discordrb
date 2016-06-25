@@ -355,18 +355,22 @@ module Discordrb
   # A member is a user on a server. It differs from regular users in that it has roles, voice statuses and things like
   # that.
   class Member < DelegateClass(User)
+    # @return [true, false] whether this member is muted server-wide.
     def mute
       voice_state_attribute(:mute)
     end
 
+    # @return [true, false] whether this member is deafened server-wide.
     def deaf
       voice_state_attribute(:deaf)
     end
 
+    # @return [true, false] whether this member has muted themselves.
     def self_mute
       voice_state_attribute(:self_mute)
     end
 
+    # @return [true, false] whether this member has deafened themselves.
     def self_deaf
       voice_state_attribute(:self_deaf)
     end
