@@ -677,6 +677,12 @@ module Discordrb
       update_role_data(hoist: hoist)
     end
 
+    # Changes whether or not this role can be mentioned
+    # @param mentionable [true, false] The value it should be changed to
+    def mentionable=(mentionable)
+      update_role_data(mentionable: mentionable)
+    end
+
     # Sets the role colour to something new
     # @param colour [ColourRGB] The new colour
     def colour=(colour)
