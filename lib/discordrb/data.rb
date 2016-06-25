@@ -332,6 +332,17 @@ module Discordrb
     def initialize(user_id)
       @user_id = user_id
     end
+
+    # Update this voice state with new data from Discord
+    # @note For internal use only.
+    # @!visibility private
+    def update(channel, mute, deaf, self_mute, self_deaf)
+      @voice_channel = channel
+      @mute = mute
+      @deaf = deaf
+      @self_mute = self_mute
+      @self_deaf = self_deaf
+    end
   end
 
   # A member is a user on a server. It differs from regular users in that it has roles, voice statuses and things like
@@ -447,17 +458,6 @@ module Discordrb
     # @!visibility private
     def update_nick(nick)
       @nick = nick
-    end
-
-    # Update this member's voice state
-    # @note For internal use only.
-    # @!visibility private
-    def update_voice_state(channel, mute, deaf, self_mute, self_deaf)
-      @voice_channel = channel
-      @mute = mute
-      @deaf = deaf
-      @self_mute = self_mute
-      @self_deaf = self_deaf
     end
 
     include PermissionCalculator
