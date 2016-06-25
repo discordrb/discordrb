@@ -375,6 +375,11 @@ module Discordrb
       voice_state_attribute(:self_deaf)
     end
 
+    # @return [Channel] the voice channel this member is in.
+    def voice_channel
+      voice_state_attribute(:voice_channel)
+    end
+
     include MemberAttributes
 
     # @!visibility private
