@@ -355,6 +355,22 @@ module Discordrb
   # A member is a user on a server. It differs from regular users in that it has roles, voice statuses and things like
   # that.
   class Member < DelegateClass(User)
+    def mute
+      voice_state_attribute(:mute)
+    end
+
+    def deaf
+      voice_state_attribute(:deaf)
+    end
+
+    def self_mute
+      voice_state_attribute(:self_mute)
+    end
+
+    def self_deaf
+      voice_state_attribute(:self_deaf)
+    end
+
     include MemberAttributes
 
     # @!visibility private
