@@ -330,6 +330,9 @@ module Discordrb
   # A voice state represents the state of a member's connection to a voice channel. It includes data like the voice
   # channel the member is connected to and mute/deaf flags.
   class VoiceState
+    # @return [Integer] the ID of the user whose voice state is represented by this object.
+    attr_reader :user_id
+
     def initialize(user_id)
       @user_id = user_id
     end
