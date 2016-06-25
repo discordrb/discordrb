@@ -1712,18 +1712,7 @@ module Discordrb
     def process_voice_states(voice_states)
       return unless voice_states
       voice_states.each do |element|
-        user_id = element['user_id'].to_i
-        member = @members[user_id]
-        next unless member
-        channel_id = element['channel_id'].to_i
-        channel = channel_id ? @channels_by_id[channel_id] : nil
-
-        member.update_voice_state(
-          channel,
-          element['mute'],
-          element['deaf'],
-          element['self_mute'],
-          element['self_deaf'])
+        update_voice_state(element)
       end
     end
   end
