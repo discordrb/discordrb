@@ -689,28 +689,11 @@ module Discordrb
 
     # Internal handler for VOICE_STATUS_UPDATE
     def update_voice_state(data)
-      user_id = data['user_id'].to_i
       server_id = data['guild_id'].to_i
       server = server(server_id)
       return unless server
 
-      user = server.member(user_id)
-
-      unless user
-        warn "Invalid user for voice state update: #{user_id} on #{server_id}, ignoring"
-        return
-      end
-
-      channel_id = data['channel_id']
-      channel = nil
-      channel = self.channel(channel_id.to_i) if channel_id
-
-      user.update_voice_state(
-        channel,
-        data['mute'],
-        data['deaf'],
-        data['self_mute'],
-        data['self_deaf'])
+      server.update_voice_state(data)
 
       @session_id = data['session_id']
     end
