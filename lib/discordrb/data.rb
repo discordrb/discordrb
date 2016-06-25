@@ -314,19 +314,19 @@ module Discordrb
     # @return [Integer] the ID of the user whose voice state is represented by this object.
     attr_reader :user_id
 
-    # @return [true, false] whether this member is muted server-wide.
+    # @return [true, false] whether this voice state's member is muted server-wide.
     attr_reader :mute
 
-    # @return [true, false] whether this member is deafened server-wide.
+    # @return [true, false] whether this voice state's member is deafened server-wide.
     attr_reader :deaf
 
-    # @return [true, false] whether this member has muted themselves.
+    # @return [true, false] whether this voice state's member has muted themselves.
     attr_reader :self_mute
 
-    # @return [true, false] whether this member has deafened themselves.
+    # @return [true, false] whether this voice state's member has deafened themselves.
     attr_reader :self_deaf
 
-    # @return [Channel] the voice channel the user is in.
+    # @return [Channel] the voice channel this voice state's member is in.
     attr_reader :voice_channel
 
     def initialize(user_id)
