@@ -329,6 +329,7 @@ module Discordrb
     # @return [Channel] the voice channel this voice state's member is in.
     attr_reader :voice_channel
 
+    # @!visibility private
     def initialize(user_id)
       @user_id = user_id
     end
