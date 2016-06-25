@@ -1334,6 +1334,9 @@ module Discordrb
     # @return [Channel, nil] the AFK voice channel of this server, or nil if none is set
     attr_reader :afk_channel
 
+    # @return [Hash<Integer => VoiceState>] the hash (user ID => voice state) of voice states of members on this server
+    attr_reader :voice_states
+
     # @!visibility private
     def initialize(data, bot, exists = true)
       @bot = bot
