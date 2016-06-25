@@ -717,7 +717,7 @@ module Discordrb
                       new_data[:name] || @name,
                       (new_data[:colour] || @colour).combined,
                       new_data[:hoist].nil? ? false : !@hoist.nil?,
-                      new_data[:mentionable].nil? ? false : !@mentionable.nil?,
+                      new_data[:mentionable].nil? ? @mentionable : new_data[:mentionable],
                       new_data[:permissions] || @permissions.bits)
       update_data(new_data)
     end
