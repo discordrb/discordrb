@@ -481,6 +481,12 @@ module Discordrb
         [role.resolve_id]
       end
     end
+
+    # Utility method to get data out of this member's voice state
+    def voice_state_attribute(name)
+      voice_state = @server.voice_states[@user.id]
+      voice_state.send name if voice_state
+    end
   end
 
   # Recipients are members on private channels - they exist for completeness purposes, but all
