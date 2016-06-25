@@ -222,9 +222,6 @@ module Discordrb
 
     # @return [Server] the server this member is on.
     attr_reader :server
-
-    # @return [Channel] the voice channel the user is in.
-    attr_reader :voice_channel
   end
 
   # Mixin to calculate resulting permissions from overrides etc.
@@ -328,6 +325,9 @@ module Discordrb
 
     # @return [true, false] whether this member has deafened themselves.
     attr_reader :self_deaf
+
+    # @return [Channel] the voice channel the user is in.
+    attr_reader :voice_channel
 
     def initialize(user_id)
       @user_id = user_id
