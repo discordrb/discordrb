@@ -716,7 +716,7 @@ module Discordrb
       API.update_role(@bot.token, @server.id, @id,
                       new_data[:name] || @name,
                       (new_data[:colour] || @colour).combined,
-                      new_data[:hoist].nil? ? false : !@hoist.nil?,
+                      new_data[:hoist].nil? ? @hoist : new_data[:hoist],
                       new_data[:mentionable].nil? ? @mentionable : new_data[:mentionable],
                       new_data[:permissions] || @permissions.bits)
       update_data(new_data)
