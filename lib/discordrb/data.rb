@@ -1344,6 +1344,7 @@ module Discordrb
       @large = data['large']
       @member_count = data['member_count']
       @members = {}
+      @voice_states = {}
 
       process_roles(data['roles'])
       process_members(data['members'])
