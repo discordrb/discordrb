@@ -1701,7 +1701,8 @@ module Discordrb
     def process_members(members)
       return unless members
       members.each do |element|
-        @members[member.id] = Member.new(element, self, @bot)
+        member = Member.new(element, self, @bot)
+        @members[member.id] = member
       end
     end
 
