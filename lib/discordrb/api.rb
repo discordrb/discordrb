@@ -511,12 +511,12 @@ module Discordrb::API
   # Permissions are the Discord defaults; allowed: invite creation, reading/sending messages,
   # sending TTS messages, embedding links, sending files, reading the history, mentioning everybody,
   # connecting to voice, speaking and voice activity (push-to-talk isn't mandatory)
-  def update_role(token, server_id, role_id, name, colour, hoist = false, packed_permissions = 36_953_089)
+  def update_role(token, server_id, role_id, name, colour, hoist = false, mentionable = false, packed_permissions = 36_953_089)
     request(
       __method__,
       :patch,
       "#{api_base}/guilds/#{server_id}/roles/#{role_id}",
-      { color: colour, name: name, hoist: hoist, permissions: packed_permissions }.to_json,
+      { color: colour, name: name, hoist: hoist, mentionable: mentionable, permissions: packed_permissions }.to_json,
       Authorization: token,
       content_type: :json
     )
