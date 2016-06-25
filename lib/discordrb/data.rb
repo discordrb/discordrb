@@ -366,9 +366,6 @@ module Discordrb
       update_roles(data['roles'])
 
       @nick = data['nick']
-
-      @deaf = data['deaf']
-      @mute = data['mute']
       @joined_at = data['joined_at'] ? Time.parse(data['joined_at']) : nil
     end
 
