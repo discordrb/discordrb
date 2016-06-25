@@ -210,22 +210,6 @@ module Discordrb
 
   # Mixin for the attributes members and private members should have
   module MemberAttributes
-    # @return [true, false] whether this member is muted server-wide.
-    attr_reader :mute
-    alias_method :muted?, :mute
-
-    # @return [true, false] whether this member is deafened server-wide.
-    attr_reader :deaf
-    alias_method :deafened?, :deaf
-
-    # @return [true, false] whether this member has muted themselves.
-    attr_reader :self_mute
-    alias_method :self_muted?, :self_mute
-
-    # @return [true, false] whether this member has deafened themselves.
-    attr_reader :self_deaf
-    alias_method :self_deafened?, :self_deaf
-
     # @return [Time] when this member joined the server.
     attr_reader :joined_at
 
@@ -332,6 +316,22 @@ module Discordrb
   class VoiceState
     # @return [Integer] the ID of the user whose voice state is represented by this object.
     attr_reader :user_id
+
+    # @return [true, false] whether this member is muted server-wide.
+    attr_reader :mute
+    alias_method :muted?, :mute
+
+    # @return [true, false] whether this member is deafened server-wide.
+    attr_reader :deaf
+    alias_method :deafened?, :deaf
+
+    # @return [true, false] whether this member has muted themselves.
+    attr_reader :self_mute
+    alias_method :self_muted?, :self_mute
+
+    # @return [true, false] whether this member has deafened themselves.
+    attr_reader :self_deaf
+    alias_method :self_deafened?, :self_deaf
 
     def initialize(user_id)
       @user_id = user_id
