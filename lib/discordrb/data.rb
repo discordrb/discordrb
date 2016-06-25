@@ -1475,6 +1475,32 @@ module Discordrb
       @members[member.id] = member
     end
 
+    # Updates a member's voice state
+    # @note For internal use only
+    # @!visibility private
+    def update_voice_state(data)
+      user_id = data['user_id'].to_i
+
+      if data['channel_id']
+        unless @voice_states[user_id]
+          # Create a new voice state for the user
+          @voice_states[user_id] = VoiceState.new(user_id)
+        end
+
+        # Update the existing voice state (or the one we just created)
+        channel = @channels_by_id[data['channel_id'].to_i]
+        @voice_states[user_id].update(
+          channel,
+          data['mute'],
+          data['deaf'],
+          data['self_mute'],
+          data['self_deaf'])
+      else
+        # The user is not in a voice channel anymore, so delete its voice state
+        @voice_states.delete(user_id)
+      end
+    end
+
     # Creates a channel on this server with the given name.
     # @return [Channel] the created channel.
     def create_channel(name, type = 'text')
