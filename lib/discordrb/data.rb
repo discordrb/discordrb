@@ -222,6 +222,12 @@ module Discordrb
 
     # @return [Server] the server this member is on.
     attr_reader :server
+
+    # Aliases for the methods which will be implemented in Member/Recipient
+    alias_method :muted?, :mute
+    alias_method :deafened?, :deaf
+    alias_method :self_muted?, :self_mute
+    alias_method :self_deafened?, :self_deaf
   end
 
   # Mixin to calculate resulting permissions from overrides etc.
