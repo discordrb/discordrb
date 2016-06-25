@@ -46,7 +46,7 @@ module Discordrb::Events
     # @param result [String] The result string to drain into.
     # @return [String] a string formed by concatenating the saved message and the argument.
     def drain_into(result)
-      result = (@saved_message || '').to_s + (result || '').to_s
+      result = (@saved_message.nil? ? '' : @saved_message.to_s) + (result.nil? ? '' : result.to_s)
       drain
       result
     end
