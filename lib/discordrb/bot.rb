@@ -202,6 +202,8 @@ module Discordrb
 
       @event_threads = []
       @current_thread = 0
+
+      @idletime = nil
     end
 
     # The Discord API token received when logging in. Useful to explicitly call
@@ -506,23 +508,53 @@ module Discordrb
       user(id.to_i)
     end
 
+    # Updates presence status.
+    # @param idletime [Integer, nil] The floating point of a Time object that shows the last time the bot was on.
+    # @param game [String, nil] The name of the game to be played/stream name on the stream.
+    # @param url [String, nil] The Twitch URL to display as a stream. nil for no stream.
+    def update_status(idletime, game, url)
+      @game = game
+      @idletime = idletime
+      @streamurl = url
+      type = url ? 1 : nil
+      data = {
+        op: Opcodes::PRESENCE,
+        d: {
+          idle_since: idletime,
+          game: game || url ? { name: game, url: url, type: type } : nil
+        }
+      }
+      @ws.send(data.to_json)
+    end
+
     # Sets the currently playing game to the specified game.
     # @param name [String] The name of the game to be played.
     # @return [String] The game that is being played now.
     def game=(name)
-      @game = name
-
-      data = {
-        op: Opcodes::PRESENCE,
-        d: {
-          idle_since: nil,
-          game: name ? { name: name } : nil
-        }
-      }
-
-      @ws.send(data.to_json)
+      update_status(@idletime, name, nil)
       name
     end
+
+    # Sets the currently online stream to the specified name and Twitch URL.
+    # @param name [String] The name of the stream to display.
+    # @param url [String] The url of the current Twitch stream.
+    # @return [String] The stream name that is being displayed now.
+    def stream(name, url)
+      update_status(@idletime, @game, url)
+      name
+    end
+
+    # Sets status to online.
+    def online
+      update_status(nil, @game, @streamurl)
+    end
+    alias_method :on, :online
+
+    # Sets status to idle.
+    def idle
+      update_status((Time.now.to_f * 1000), @game, nil)
+    end
+    alias_method :away, :idle
 
     # Injects a reconnect event (op 7) into the event processor, causing Discord to reconnect to the given gateway URL.
     # If the URL is set to nil, it will reconnect and get an entirely new gateway URL. This method has not much use
