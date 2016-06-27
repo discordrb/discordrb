@@ -520,7 +520,7 @@ module Discordrb
       update_status((Time.now.to_f * 1000), @game, nil)
     end
     alias_method :away, :idle
-The 
+
     # Injects a reconnect event (op 7) into the event processor, causing Discord to reconnect to the given gateway URL.
     # If the URL is set to nil, it will reconnect and get an entirely new gateway URL. This method has not much use
     # outside of testing and implementing highly custom reconnect logic.
