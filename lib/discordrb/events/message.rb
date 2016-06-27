@@ -62,11 +62,8 @@ module Discordrb::Events
     # a caption.
     # @param file [File] The file to be attached
     def attach_file(file)
-      if file.is_a?(File)
-        @file = file
-      else
-        raise ArgumentError, "Argument is not a file!"
-      end
+      raise ArgumentError, "Argument is not a file!" unless file.is_a?(File)
+      @file = file
       nil
     end
 
