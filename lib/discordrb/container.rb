@@ -123,6 +123,7 @@ module Discordrb
     # @param attributes [Hash] The event's attributes.
     # @option attributes [String, Integer, User] :from Matches the user whose playing game changes.
     # @option attributes [String] :game Matches the game the user is now playing.
+    # @option attributes [Integer] :type Matches the type of game object (0 game, 1 Twitch stream)
     # @yield The block is executed when the event is raised.
     # @yieldparam event [PlayingEvent] The event that was raised.
     # @return [PlayingEventHandler] The event handler that was registered.
