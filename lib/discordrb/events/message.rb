@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'discordrb/events/generic'
+require 'discordrb/data'
 
 module Discordrb::Events
   # Module to make sending messages easier with the presence of a text channel in an event
@@ -46,6 +47,8 @@ module Discordrb::Events
     # @param result [String] The result string to drain into.
     # @return [String] a string formed by concatenating the saved message and the argument.
     def drain_into(result)
+      return if result.is_a?(Discordrb::Message)
+
       result = (@saved_message.nil? ? '' : @saved_message.to_s) + (result.nil? ? '' : result.to_s)
       drain
       result
