@@ -68,6 +68,9 @@ module Discordrb::Events
     # @return [String] the message that has been saved by calls to {#<<} and will be sent to Discord upon completion.
     attr_reader :saved_message
 
+    # @return [File] the file that have been saved by calls to {#attach_file} and will be sent to Discord upon completion.
+    attr_reader :file
+
     # @!attribute [r] author
     #   @return [User] who sent this message.
     #   @see Message#author
@@ -92,6 +95,40 @@ module Discordrb::Events
       @message = message
       @channel = message.channel
       @saved_message = ''
+      @file = nil
+    end
+
+    # Sends a message to the channel this message was sent in, right now. It is usually preferable to use {#<<} instead
+    # because it avoids rate limiting problems
+    # @param content [String] The message to send to the channel
+    # @return [Discordrb::Message] the message that was sent
+    def send_message(content)
+      @message.channel.send_message(content)
+    end
+
+    # Sends file with a caption to the channel this message was sent in, right now.
+    # It is usually preferable to use {#<<} and {#attach_file} instead
+    # because it avoids rate limiting problems
+    # @param file [File] The file to send to the channel
+    # @param caption [String] The caption attached to the file
+    # @return [Discordrb::Message] the message that was sent
+    def send_file(file, caption: nil)
+      @message.channel.send_file(file, caption: caption)
+    end
+
+    # Attaches a file to the message event and converts the message into
+    # a caption.
+    # @param file [File] The file to be attached
+    def attach_file(file)
+      raise ArgumentError, 'Argument is not a file!' unless file.is_a?(File)
+      @file = file
+      nil
+    end
+
+    # Detaches a file from the message event.
+    def detach_file
+      @file = nil
+      nil
     end
 
     # @return [true, false] whether or not this message was sent by the bot itself
@@ -174,7 +211,11 @@ module Discordrb::Events
 
     # @see EventHandler#after_call
     def after_call(event)
-      event.send_message(event.saved_message) unless event.saved_message.empty?
+      if event.file.nil?
+        event.send_message(event.saved_message) unless event.saved_message.empty?
+      else
+        event.send_file(event.file, caption: event.saved_message)
+      end
     end
   end
 
