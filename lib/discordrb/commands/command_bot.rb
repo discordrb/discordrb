@@ -269,7 +269,12 @@ module Discordrb::Commands
           debug("Parsing command chain #{chain}")
           result = (@attributes[:advanced_functionality]) ? CommandChain.new(chain, self).execute(event) : simple_execute(chain, event)
           result = event.drain_into(result)
-          event.respond result unless result.nil? || result.empty?
+
+          if event.file
+            event.send_file(event.file, caption: result)
+          else
+            event.respond result unless result.nil? || result.empty?
+          end
         rescue => e
           log_exception(e)
         ensure
