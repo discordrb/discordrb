@@ -164,7 +164,7 @@ module Discordrb::Events
 
     # @see EventHandler#after_call
     def after_call(event)
-      if @file.nil?
+      if event.file.nil?
         event.send_message(event.saved_message) unless event.saved_message.empty?
       else
         event.send_file(event.file, caption: event.saved_message)
