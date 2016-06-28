@@ -210,22 +210,6 @@ module Discordrb
 
   # Mixin for the attributes members and private members should have
   module MemberAttributes
-    # @return [true, false] whether this member is muted server-wide.
-    attr_reader :mute
-    alias_method :muted?, :mute
-
-    # @return [true, false] whether this member is deafened server-wide.
-    attr_reader :deaf
-    alias_method :deafened?, :deaf
-
-    # @return [true, false] whether this member has muted themselves.
-    attr_reader :self_mute
-    alias_method :self_muted?, :self_mute
-
-    # @return [true, false] whether this member has deafened themselves.
-    attr_reader :self_deaf
-    alias_method :self_deafened?, :self_deaf
-
     # @return [Time] when this member joined the server.
     attr_reader :joined_at
 
@@ -238,9 +222,6 @@ module Discordrb
 
     # @return [Server] the server this member is on.
     attr_reader :server
-
-    # @return [Channel] the voice channel the user is in.
-    attr_reader :voice_channel
   end
 
   # Mixin to calculate resulting permissions from overrides etc.
@@ -327,9 +308,77 @@ module Discordrb
     end
   end
 
+  # A voice state represents the state of a member's connection to a voice channel. It includes data like the voice
+  # channel the member is connected to and mute/deaf flags.
+  class VoiceState
+    # @return [Integer] the ID of the user whose voice state is represented by this object.
+    attr_reader :user_id
+
+    # @return [true, false] whether this voice state's member is muted server-wide.
+    attr_reader :mute
+
+    # @return [true, false] whether this voice state's member is deafened server-wide.
+    attr_reader :deaf
+
+    # @return [true, false] whether this voice state's member has muted themselves.
+    attr_reader :self_mute
+
+    # @return [true, false] whether this voice state's member has deafened themselves.
+    attr_reader :self_deaf
+
+    # @return [Channel] the voice channel this voice state's member is in.
+    attr_reader :voice_channel
+
+    # @!visibility private
+    def initialize(user_id)
+      @user_id = user_id
+    end
+
+    # Update this voice state with new data from Discord
+    # @note For internal use only.
+    # @!visibility private
+    def update(channel, mute, deaf, self_mute, self_deaf)
+      @voice_channel = channel
+      @mute = mute
+      @deaf = deaf
+      @self_mute = self_mute
+      @self_deaf = self_deaf
+    end
+  end
+
   # A member is a user on a server. It differs from regular users in that it has roles, voice statuses and things like
   # that.
   class Member < DelegateClass(User)
+    # @return [true, false] whether this member is muted server-wide.
+    def mute
+      voice_state_attribute(:mute)
+    end
+
+    # @return [true, false] whether this member is deafened server-wide.
+    def deaf
+      voice_state_attribute(:deaf)
+    end
+
+    # @return [true, false] whether this member has muted themselves.
+    def self_mute
+      voice_state_attribute(:self_mute)
+    end
+
+    # @return [true, false] whether this member has deafened themselves.
+    def self_deaf
+      voice_state_attribute(:self_deaf)
+    end
+
+    # @return [Channel] the voice channel this member is in.
+    def voice_channel
+      voice_state_attribute(:voice_channel)
+    end
+
+    alias_method :muted?, :mute
+    alias_method :deafened?, :deaf
+    alias_method :self_muted?, :self_mute
+    alias_method :self_deafened?, :self_deaf
+
     include MemberAttributes
 
     # @!visibility private
@@ -347,9 +396,6 @@ module Discordrb
       update_roles(data['roles'])
 
       @nick = data['nick']
-
-      @deaf = data['deaf']
-      @mute = data['mute']
       @joined_at = data['joined_at'] ? Time.parse(data['joined_at']) : nil
     end
 
@@ -442,17 +488,6 @@ module Discordrb
       @nick = nick
     end
 
-    # Update this member's voice state
-    # @note For internal use only.
-    # @!visibility private
-    def update_voice_state(channel, mute, deaf, self_mute, self_deaf)
-      @voice_channel = channel
-      @mute = mute
-      @deaf = deaf
-      @self_mute = self_mute
-      @self_deaf = self_deaf
-    end
-
     include PermissionCalculator
 
     # Overwriting inspect for debug purposes
@@ -469,6 +504,12 @@ module Discordrb
       else
         [role.resolve_id]
       end
+    end
+
+    # Utility method to get data out of this member's voice state
+    def voice_state_attribute(name)
+      voice_state = @server.voice_states[@user.id]
+      voice_state.send name if voice_state
     end
   end
 
@@ -1034,9 +1075,7 @@ module Discordrb
       if @type == 'text'
         @server.online_members(include_idle: true).select { |u| u.status != :offline }
       else
-        @server.online_members(include_idle: true).select do |user|
-          user.voice_channel.id == @id if user.voice_channel
-        end
+        @server.voice_states.map { |id, voice_state| @server.member(id) if voice_state.voice_channel.id == @id }.compact
       end
     end
 
@@ -1336,6 +1375,9 @@ module Discordrb
     # @return [Channel, nil] the AFK voice channel of this server, or nil if none is set
     attr_reader :afk_channel
 
+    # @return [Hash<Integer => VoiceState>] the hash (user ID => voice state) of voice states of members on this server
+    attr_reader :voice_states
+
     # @!visibility private
     def initialize(data, bot, exists = true)
       @bot = bot
@@ -1346,6 +1388,7 @@ module Discordrb
       @large = data['large']
       @member_count = data['member_count']
       @members = {}
+      @voice_states = {}
 
       process_roles(data['roles'])
       process_members(data['members'])
@@ -1471,6 +1514,32 @@ module Discordrb
     # @!visibility private
     def cache_member(member)
       @members[member.id] = member
+    end
+
+    # Updates a member's voice state
+    # @note For internal use only
+    # @!visibility private
+    def update_voice_state(data)
+      user_id = data['user_id'].to_i
+
+      if data['channel_id']
+        unless @voice_states[user_id]
+          # Create a new voice state for the user
+          @voice_states[user_id] = VoiceState.new(user_id)
+        end
+
+        # Update the existing voice state (or the one we just created)
+        channel = @channels_by_id[data['channel_id'].to_i]
+        @voice_states[user_id].update(
+          channel,
+          data['mute'],
+          data['deaf'],
+          data['self_mute'],
+          data['self_deaf'])
+      else
+        # The user is not in a voice channel anymore, so delete its voice state
+        @voice_states.delete(user_id)
+      end
     end
 
     # Creates a channel on this server with the given name.
@@ -1640,17 +1709,6 @@ module Discordrb
       return unless members
       members.each do |element|
         member = Member.new(element, self, @bot)
-        if @members[member.id] && @members[member.id].voice_channel
-          @bot.debug("Preserving voice state of member #{member.id} while chunking")
-          old_member = @members[member.id]
-          member.update_voice_state(
-            old_member.voice_channel,
-            old_member.mute,
-            old_member.deaf,
-            old_member.self_mute,
-            old_member.self_deaf
-          )
-        end
         @members[member.id] = member
       end
     end
@@ -1684,18 +1742,7 @@ module Discordrb
     def process_voice_states(voice_states)
       return unless voice_states
       voice_states.each do |element|
-        user_id = element['user_id'].to_i
-        member = @members[user_id]
-        next unless member
-        channel_id = element['channel_id'].to_i
-        channel = channel_id ? @channels_by_id[channel_id] : nil
-
-        member.update_voice_state(
-          channel,
-          element['mute'],
-          element['deaf'],
-          element['self_mute'],
-          element['self_deaf'])
+        update_voice_state(element)
       end
     end
   end
