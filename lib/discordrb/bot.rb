@@ -311,6 +311,11 @@ module Discordrb
       @ws_thread.kill
     end
 
+    # @return [true, false] whether or not the bot is currently connected to Discord.
+    def connected?
+      @ws_success
+    end
+
     # Makes the bot join an invite to a server.
     # @param invite [String, Invite] The invite to join. For possible formats see {#resolve_invite_code}.
     def join(invite)
