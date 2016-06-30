@@ -208,7 +208,6 @@ module Discordrb
     # @return [Hash<Integer => User>] The users by ID.
     def users
       gateway_check
-
       @users
     end
 
@@ -216,7 +215,6 @@ module Discordrb
     # @return [Hash<Integer => Server>] The servers by ID.
     def servers
       gateway_check
-
       @servers
     end
 
@@ -225,7 +223,6 @@ module Discordrb
     # @return [Profile] The bot's profile that can be used to edit data.
     def profile
       gateway_check
-
       @profile
     end
 
