@@ -105,12 +105,6 @@ module Discordrb
     # @return [Array<Thread>] The threads.
     attr_reader :event_threads
 
-    # The bot's user profile. This special user object can be used
-    # to edit user data like the current username (see {Profile#username=}).
-    # @return [Profile] The bot's profile that can be used to edit data.
-    attr_reader :profile
-    alias_method :bot_user, :profile
-
     # Whether or not the bot should parse its own messages. Off by default.
     attr_accessor :should_parse_self
 
@@ -217,6 +211,17 @@ module Discordrb
       # Whether the connection to the gateway has succeeded yet
       @ws_success = false
     end
+
+    # The bot's user profile. This special user object can be used
+    # to edit user data like the current username (see {Profile#username=}).
+    # @return [Profile] The bot's profile that can be used to edit data.
+    def profile
+      gateway_check
+
+      @profile
+    end
+
+    alias_method :bot_user, :profile
 
     # The Discord API token received when logging in. Useful to explicitly call
     # {API} methods.
