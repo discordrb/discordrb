@@ -569,6 +569,7 @@ module Discordrb
     # @param url [String] The url of the current Twitch stream.
     # @return [String] The stream name that is being displayed now.
     def stream(name, url)
+      gateway_check
       update_status(@idletime, name, url)
       name
     end
