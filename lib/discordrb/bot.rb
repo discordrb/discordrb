@@ -559,6 +559,7 @@ module Discordrb
     # @param name [String] The name of the game to be played.
     # @return [String] The game that is being played now.
     def game=(name)
+      gateway_check
       update_status(@idletime, name, nil)
       name
     end
