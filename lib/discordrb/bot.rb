@@ -213,6 +213,9 @@ module Discordrb
       @current_thread = 0
 
       @idletime = nil
+
+      # Whether the connection to the gateway has succeeded yet
+      @ws_success = false
     end
 
     # The Discord API token received when logging in. Useful to explicitly call
@@ -287,7 +290,6 @@ module Discordrb
       end
 
       debug('WS thread created! Now waiting for confirmation that everything worked')
-      @ws_success = false
       sleep(0.5) until @ws_success
       debug('Confirmation received! Exiting run.')
     end
