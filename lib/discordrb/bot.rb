@@ -90,14 +90,6 @@ module Discordrb
 
   # Represents a Discord bot, including servers, users, etc.
   class Bot
-    # The list of users the bot shares a server with.
-    # @return [Hash<Integer => User>] The users by ID.
-    attr_reader :users
-
-    # The list of servers the bot is currently in.
-    # @return [Hash<Integer => Server>] The servers by ID.
-    attr_reader :servers
-
     # The list of currently running threads used to parse and call events.
     # The threads will have a local variable `:discordrb_name` in the format of `et-1234`, where
     # "et" stands for "event thread" and the number is a continually incrementing number representing
@@ -210,6 +202,22 @@ module Discordrb
 
       # Whether the connection to the gateway has succeeded yet
       @ws_success = false
+    end
+
+    # The list of users the bot shares a server with.
+    # @return [Hash<Integer => User>] The users by ID.
+    def users
+      gateway_check
+
+      @users
+    end
+
+    # The list of servers the bot is currently in.
+    # @return [Hash<Integer => Server>] The servers by ID.
+    def servers
+      gateway_check
+
+      @servers
     end
 
     # The bot's user profile. This special user object can be used
