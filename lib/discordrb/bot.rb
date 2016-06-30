@@ -541,6 +541,8 @@ module Discordrb
     # @param game [String, nil] The name of the game to be played/stream name on the stream.
     # @param url [String, nil] The Twitch URL to display as a stream. nil for no stream.
     def update_status(idletime, game, url)
+      gateway_check
+
       @game = game
       @idletime = idletime
       @streamurl = url
