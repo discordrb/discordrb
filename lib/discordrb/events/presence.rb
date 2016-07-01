@@ -12,7 +12,7 @@ module Discordrb::Events
     # @return [User] the user whose status got updated.
     attr_reader :user
 
-    # @return [String] the new status.
+    # @return [Symbol] the new status.
     attr_reader :status
 
     def initialize(data, bot)

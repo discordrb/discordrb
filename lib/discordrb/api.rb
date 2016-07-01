@@ -415,6 +415,18 @@ module Discordrb::API
     )
   end
 
+  # Delete messages in bulk
+  def bulk_delete(token, channel_id, messages = [])
+    request(
+      __method__,
+      :post,
+      "#{api_base}/channels/#{channel_id}/messages/bulk_delete",
+      { messages: messages }.to_json,
+      Authorization: token,
+      content_type: :json
+    )
+  end
+
   # Edit a message
   def edit_message(token, channel_id, message_id, message, mentions = [])
     request(
@@ -424,6 +436,27 @@ module Discordrb::API
       { content: message, mentions: mentions }.to_json,
       Authorization: token,
       content_type: :json
+    )
+  end
+
+  # Pin a message
+  def pin_message(token, channel_id, message_id)
+    request(
+      __method__,
+      :put,
+      "#{api_base}/channels/#{channel_id}/pins/#{message_id}",
+      nil,
+      Authorization: token
+    )
+  end
+
+  # Unpin a message
+  def unpin_message(token, channel_id, message_id)
+    request(
+      __method__,
+      :delete,
+      "#{api_base}/channels/#{channel_id}/pins/#{message_id}",
+      Authorization: token
     )
   end
 
@@ -494,30 +527,6 @@ module Discordrb::API
       :patch,
       "#{api_base}/guilds/#{server_id}/members/#{user_id}",
       { roles: roles }.to_json,
-      Authorization: token,
-      content_type: :json
-    )
-  end
-
-  # Update a user's server deafened state
-  def update_user_deafen(token, server_id, user_id, state)
-    request(
-      __method__,
-      :patch,
-      "#{api_base}/guilds/#{server_id}/members/#{user_id}",
-      { deaf: state }.to_json,
-      Authorization: token,
-      content_type: :json
-    )
-  end
-
-  # Update a user's server muted state
-  def update_user_mute(token, server_id, user_id, state)
-    request(
-      __method__,
-      :patch,
-      "#{api_base}/guilds/#{server_id}/members/#{user_id}",
-      { mute: state }.to_json,
       Authorization: token,
       content_type: :json
     )
@@ -638,6 +647,16 @@ module Discordrb::API
       __method__,
       :get,
       "#{api_base}/channels/#{channel_id}/messages?limit=#{amount}#{"&before=#{before}" if before}#{"&after=#{after}" if after}",
+      Authorization: token
+    )
+  end
+
+  # Get a list of pinned messages in a channel
+  def pins(token, channel_id)
+    request(
+      __method__,
+      :get,
+      "#{api_base}/channels/#{channel_id}/pins",
       Authorization: token
     )
   end

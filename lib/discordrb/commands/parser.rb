@@ -82,7 +82,8 @@ module Discordrb::Commands
         return
       end
 
-      @block.call(event, *arguments)
+      result = @block.call(event, *arguments)
+      event.drain_into(result)
     rescue LocalJumpError # occurs when breaking
       nil
     end

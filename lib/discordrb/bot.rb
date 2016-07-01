@@ -112,6 +112,9 @@ module Discordrb
     # @return [Array(Integer, Integer)] the current shard key
     attr_reader :shard_key
 
+    # @return [Hash<Symbol => Await>] the list of registered {Await}s.
+    attr_reader :awaits
+
     include EventContainer
     include Cache
 
@@ -325,8 +328,8 @@ module Discordrb
 
     # Connects to a voice channel, initializes network connections and returns the {Voice::VoiceBot} over which audio
     # data can then be sent. After connecting, the bot can also be accessed using {#voice}. If the bot is already
-    # connected to voice, the existing connection will be terminated - you don't have to call {VoiceBot#destroy}
-    # before calling this method.
+    # connected to voice, the existing connection will be terminated - you don't have to call
+    # {Discordrb::Voice::VoiceBot#destroy} before calling this method.
     # @param chan [Channel] The voice channel to connect to.
     # @param encrypted [true, false] Whether voice communication should be encrypted using RbNaCl's SecretBox
     #   (uses an XSalsa20 stream cipher for encryption and Poly1305 for authentication)
@@ -399,6 +402,7 @@ module Discordrb
     # @param channel_id [Integer] The ID that identifies the channel to send something to.
     # @param content [String] The text that should be sent as a message. It is limited to 2000 characters (Discord imposed).
     # @param tts [true, false] Whether or not this message should be sent using Discord text-to-speech.
+    # @param server_id [Integer] The ID that identifies the server to send something to.
     # @return [Message] The message that was sent.
     def send_message(channel_id, content, tts = false, server_id = nil)
       channel_id = channel_id.resolve_id
@@ -406,6 +410,25 @@ module Discordrb
 
       response = API.send_message(token, channel_id, content, [], tts, server_id)
       Message.new(JSON.parse(response), self)
+    end
+
+    # Sends a text message to a channel given its ID and the message's content,
+    # then deletes it after the specified timeout in seconds.
+    # @param channel_id [Integer] The ID that identifies the channel to send something to.
+    # @param content [String] The text that should be sent as a message. It is limited to 2000 characters (Discord imposed).
+    # @param timeout [Float] The amount of time in seconds after which the message sent will be deleted.
+    # @param tts [true, false] Whether or not this message should be sent using Discord text-to-speech.
+    # @param server_id [Integer] The ID that identifies the server to send something to.
+    def send_temporary_message(channel_id, content, timeout, tts = false, server_id = nil)
+      Thread.new do
+        message = send_message(channel_id, content, tts, server_id)
+
+        sleep(timeout)
+
+        message.delete
+      end
+
+      nil
     end
 
     # Sends a file to a channel. If it is an image, it will automatically be embedded.
@@ -508,6 +531,12 @@ module Discordrb
     # @param seq [Integer, nil] The sequence ID to inject, or nil if the currently tracked one should be used.
     def inject_resume(seq)
       resume(seq || @sequence, raw_token, @session_id)
+    end
+
+    # Injects a terminal gateway error into the handler. Useful for testing the reconnect logic.
+    # @param e [Exception] The exception object to inject.
+    def inject_error(e)
+      websocket_error(e)
     end
 
     # Sets debug mode. If debug mode is on, many things will be outputted to STDOUT.
@@ -646,6 +675,11 @@ module Discordrb
 
       user = server.member(user_id)
 
+      unless user
+        warn "Invalid user for voice state update: #{user_id} on #{server_id}, ignoring"
+        return
+      end
+
       channel_id = data['channel_id']
       channel = nil
       channel = self.channel(channel_id.to_i) if channel_id
@@ -744,6 +778,8 @@ module Discordrb
 
       user_id = data['user']['id'].to_i
       server.delete_member(user_id)
+    rescue Discordrb::Errors::NoPermission
+      Discordrb::LOGGER.warn("delete_guild_member attempted to access a server for which the bot doesn't have permission! Not sure what happened here, ignoring")
     end
 
     # Internal handler for GUILD_CREATE
@@ -922,7 +958,7 @@ module Discordrb
         method(:websocket_open),
         method(:websocket_message),
         method(:websocket_close),
-        proc { |e| LOGGER.error "Gateway error: #{e}" }
+        method(:websocket_error)
       )
 
       @ws.thread[:discordrb_name] = 'gateway'
@@ -1249,17 +1285,17 @@ module Discordrb
       # Handle actual close frames and errors separately
       if event.respond_to? :code
         LOGGER.error(%(Disconnected from WebSocket - code #{event.code} with reason: "#{event.data}"))
+
+        if event.code.to_i == 4006
+          # If we got disconnected with a 4006, it means we sent a resume when Discord wanted an identify. To battle this,
+          # we invalidate the local session so we'll just send an identify next time
+          debug('Apparently we just sent the wrong type of initiation packet (resume rather than identify) to Discord. (Sorry!)
+                Invalidating session so this is fixed next time')
+          invalidate_session
+        end
       else
         LOGGER.error('Disconnected from WebSocket due to an exception!')
         LOGGER.log_exception event
-      end
-
-      if event.code.to_i == 4006
-        # If we got disconnected with a 4006, it means we sent a resume when Discord wanted an identify. To battle this,
-        # we invalidate the local session so we'll just send an identify next time
-        debug('Apparently we just sent the wrong type of initiation packet (resume rather than identify) to Discord. (Sorry!)
-                Invalidating session so this is fixed next time')
-        invalidate_session
       end
 
       raise_event(DisconnectEvent.new(self))
@@ -1277,6 +1313,14 @@ module Discordrb
     rescue => e
       LOGGER.log_exception e
       raise
+    end
+
+    def websocket_error(e)
+      LOGGER.error "Terminal gateway error: #{e}"
+      LOGGER.error 'Killing thread and reconnecting...'
+
+      # Kill the WSCS internal thread to ensure disconnection regardless of what error occurred
+      @ws.thread.kill
     end
 
     def websocket_open

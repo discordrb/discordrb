@@ -375,26 +375,6 @@ module Discordrb
       API.update_user_roles(@bot.token, @server.id, @user.id, new_role_ids)
     end
 
-    # Server deafens this member.
-    def server_deafen
-      API.update_user_deafen(@bot.token, @server.id, @user.id, true)
-    end
-
-    # Server undeafens this member.
-    def server_undeafen
-      API.update_user_deafen(@bot.token, @server.id, @user.id, false)
-    end
-
-    # Server mutes this member.
-    def server_mute
-      API.update_user_mute(@bot.token, @server.id, @user.id, true)
-    end
-
-    # Server unmutes this member.
-    def server_unmute
-      API.update_user_mute(@bot.token, @server.id, @user.id, false)
-    end
-
     # Removes one or more roles from this member.
     # @param role [Role, Array<Role>] The role(s) to remove.
     def remove_role(role)
@@ -632,6 +612,14 @@ module Discordrb
     def mention
       "<@&#{@id}>"
     end
+
+    # @return [Array<Member>] an array of members who have this role.
+    # @note This requests a member chunk if it hasn't for the server before, which may be slow initially
+    def members
+      @server.members.select { |m| m.role? role }
+    end
+
+    alias_method :users, :members
 
     # Updates the data cache from another Role object
     # @note For internal use only
@@ -918,6 +906,14 @@ module Discordrb
       @bot.send_message(@id, content, tts, @server && @server.id)
     end
 
+    # Sends a temporary message to this channel.
+    # @param content [String] The content to send. Should not be longer than 2000 characters or it will result in an error.
+    # @param timeout [Float] The amount of time in seconds after which the message sent will be deleted.
+    # @param tts [true, false] Whether or not this message should be sent using Discord text-to-speech.
+    def send_temporary_message(content, timeout, tts = false)
+      @bot.send_temporary_message(@id, content, timeout, tts, @server && @server.id)
+    end
+
     # Sends multiple messages to a channel
     # @param content [Array<String>] The messages to send.
     def send_multiple(content)
@@ -1004,9 +1000,9 @@ module Discordrb
     # @return [Array<Member>] the users in this channel
     def users
       if @type == 'text'
-        @server.members.select { |u| u.status != :offline }
+        @server.online_members(include_idle: true).select { |u| u.status != :offline }
       else
-        @server.members.select do |user|
+        @server.online_members(include_idle: true).select do |user|
           user.voice_channel.id == @id if user.voice_channel
         end
       end
@@ -1025,26 +1021,21 @@ module Discordrb
       JSON.parse(logs).map { |message| Message.new(message, @bot) }
     end
 
-    # Deletes the last N messages on this channel. Each delete request is performed in a separate thread for performance
-    # reasons, so if a large number of messages are pruned, many threads will be created.
-    # @note As of the April 29 update, the message delete request is rate limited, which means this method will take
-    #   a long time. It will eventually be updated to use batch deletes once those are released, but that will be in the
-    #   far future.
-    # @param amount [Integer] How many messages to delete. Must be 100 or less (Discord limitation)
-    # @raise [ArgumentError] if more than 100 messages are requested.
+    # Requests all pinned messages of a channel.
+    # @return [Array<Message>] the received messages.
+    def pins
+      msgs = API.pins(@bot.token, @id)
+      JSON.parse(msgs).map { |msg| Message.new(msg, @bot) }
+    end
+
+    # Delete the last N messages on this channel.
+    # @param amount [Integer] How many messages to delete. Must be a value between 2 and 100 (Discord limitation)
+    # @raise [ArgumentError] if the amount of messages is not a value between 2 and 100
     def prune(amount)
-      raise ArgumentError, "Can't prune more than 100 messages!" if amount > 100
+      raise ArgumentError, 'Can only prune between 2 and 100 messages!' unless amount.between?(2, 100)
 
-      threads = []
-      history(amount).each do |message|
-        threads << Thread.new { message.delete }
-      end
-
-      # Make sure all requests have finished
-      threads.each(&:join)
-
-      # Delete the threads
-      threads.map! { nil }
+      messages = history(amount).map(&:id)
+      API.bulk_delete(@bot.token, @id, messages)
     end
 
     # Updates the cached permission overwrites
@@ -1167,6 +1158,10 @@ module Discordrb
     # @return [Array<Attachment>] the files attached to this message.
     attr_reader :attachments
 
+    # @return [true, false] whether themesage is pinned or not.
+    attr_reader :pinned
+
+    alias_method :pinned?, :pinned
     alias_method :user, :author
     alias_method :text, :content
     alias_method :to_s, :content
@@ -1176,6 +1171,7 @@ module Discordrb
       @bot = bot
       @content = data['content']
       @channel = bot.channel(data['channel_id'].to_i)
+      @pinned = data['pinned']
 
       @author = if data['author']
                   if @channel.private?
@@ -1228,6 +1224,20 @@ module Discordrb
     # Deletes this message.
     def delete
       API.delete_message(@bot.token, @channel.id, @id)
+      nil
+    end
+
+    # Pins this message
+    def pin
+      API.pin_message(@bot.token, @channel.id, @id)
+      @pinned = true
+      nil
+    end
+
+    # Unpins this message
+    def unpin
+      API.unpin_message(@bot.token, @channel.id, @id)
+      @pinned = false
       nil
     end
 
@@ -1342,6 +1352,8 @@ module Discordrb
 
       member = @bot.member(@id, id)
       @members[id] = member
+    rescue
+      nil
     end
 
     # @return [Array<Member>] an array of all the members on this server.
