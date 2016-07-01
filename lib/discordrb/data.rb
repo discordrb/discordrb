@@ -825,9 +825,6 @@ module Discordrb
     # @return [true, false] whether this invite is still valid.
     attr_reader :revoked
 
-    # @return [true, false] whether this invite is in xkcd format (i. e. "Human readable" in the invite settings)
-    attr_reader :xkcd
-
     # @return [String] this invite's code
     attr_reader :code
 
@@ -836,7 +833,6 @@ module Discordrb
 
     alias_method :temporary?, :temporary
     alias_method :revoked?, :revoked
-    alias_method :xkcd?, :xkcd
 
     # @!visibility private
     def initialize(data, bot)
@@ -848,7 +844,6 @@ module Discordrb
       @inviter = data['inviter'] ? (@bot.user(data['inviter']['id'].to_i) || User.new(data['inviter'], bot)) : nil
       @temporary = data['temporary']
       @revoked = data['revoked']
-      @xkcd = data['xkcdpass']
 
       @code = data['code']
     end
@@ -867,7 +862,7 @@ module Discordrb
 
     # The inspect method is overwritten to give more useful output
     def inspect
-      "<Invite code=#{@code} channel=#{@channel} uses=#{@uses} temporary=#{@temporary} revoked=#{@revoked} xkcd=#{@xkcd}>"
+      "<Invite code=#{@code} channel=#{@channel} uses=#{@uses} temporary=#{@temporary} revoked=#{@revoked}>"
     end
 
     # Creates an invite URL.
@@ -1129,10 +1124,9 @@ module Discordrb
     # @param max_age [Integer] How many seconds this invite should last.
     # @param max_uses [Integer] How many times this invite should be able to be used.
     # @param temporary [true, false] Whether membership should be temporary (kicked after going offline).
-    # @param xkcd [true, false] Whether or not the invite should be human-readable.
     # @return [Invite] the created invite.
-    def make_invite(max_age = 0, max_uses = 0, temporary = false, xkcd = false)
-      response = API.create_invite(@bot.token, @id, max_age, max_uses, temporary, xkcd)
+    def make_invite(max_age = 0, max_uses = 0, temporary = false)
+      response = API.create_invite(@bot.token, @id, max_age, max_uses, temporary)
       Invite.new(JSON.parse(response), @bot)
     end
 
