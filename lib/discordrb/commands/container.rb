@@ -9,11 +9,11 @@ module Discordrb::Commands
   module CommandContainer
     include RateLimiter
 
-    # @return [Array<Command>] the list of commands this container has.
+    # @return [Hash<Symbol, Command>] hash of command names and commands this container has.
     attr_reader :commands
 
     # Adds a new command to the container.
-    # @param name [Symbol] The name of the command to add.
+    # @param name [Symbol, Array<Symbol>] The name of the command to add, or an array of multiple names for the command
     # @param attributes [Hash] The attributes to initialize the command with.
     # @option attributes [Integer] :permission_level The minimum permission level that can use this command, inclusive.
     #   See {CommandBot#set_user_permission} and {CommandBot#set_role_permission}.

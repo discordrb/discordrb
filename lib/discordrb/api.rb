@@ -146,6 +146,18 @@ module Discordrb::API
     )
   end
 
+  # Change the current bot's nickname on a server
+  def change_own_nickname(token, server_id, nick)
+    request(
+      __method__,
+      :patch,
+      "#{api_base}/guilds/#{server_id}/members/@me/nick",
+      { nick: nick }.to_json,
+      Authorization: token,
+      content_type: :json
+    )
+  end
+
   # Change a user's nickname on a server
   def change_nickname(token, server_id, user_id, nick)
     request(
@@ -415,6 +427,18 @@ module Discordrb::API
     )
   end
 
+  # Delete messages in bulk
+  def bulk_delete(token, channel_id, messages = [])
+    request(
+      __method__,
+      :post,
+      "#{api_base}/channels/#{channel_id}/messages/bulk_delete",
+      { messages: messages }.to_json,
+      Authorization: token,
+      content_type: :json
+    )
+  end
+
   # Edit a message
   def edit_message(token, channel_id, message_id, message, mentions = [])
     request(
@@ -424,6 +448,27 @@ module Discordrb::API
       { content: message, mentions: mentions }.to_json,
       Authorization: token,
       content_type: :json
+    )
+  end
+
+  # Pin a message
+  def pin_message(token, channel_id, message_id)
+    request(
+      __method__,
+      :put,
+      "#{api_base}/channels/#{channel_id}/pins/#{message_id}",
+      nil,
+      Authorization: token
+    )
+  end
+
+  # Unpin a message
+  def unpin_message(token, channel_id, message_id)
+    request(
+      __method__,
+      :delete,
+      "#{api_base}/channels/#{channel_id}/pins/#{message_id}",
+      Authorization: token
     )
   end
 
@@ -441,12 +486,12 @@ module Discordrb::API
   end
 
   # Send a file as a message to a channel
-  def send_file(token, channel_id, file)
+  def send_file(token, channel_id, file, caption: nil, tts: false)
     request(
       __method__,
       :post,
       "#{api_base}/channels/#{channel_id}/messages",
-      { file: file },
+      { file: file, content: caption, tts: tts },
       Authorization: token
     )
   end
@@ -466,12 +511,12 @@ module Discordrb::API
   # Permissions are the Discord defaults; allowed: invite creation, reading/sending messages,
   # sending TTS messages, embedding links, sending files, reading the history, mentioning everybody,
   # connecting to voice, speaking and voice activity (push-to-talk isn't mandatory)
-  def update_role(token, server_id, role_id, name, colour, hoist = false, packed_permissions = 36_953_089)
+  def update_role(token, server_id, role_id, name, colour, hoist = false, mentionable = false, packed_permissions = 36_953_089)
     request(
       __method__,
       :patch,
       "#{api_base}/guilds/#{server_id}/roles/#{role_id}",
-      { color: colour, name: name, hoist: hoist, permissions: packed_permissions }.to_json,
+      { color: colour, name: name, hoist: hoist, mentionable: mentionable, permissions: packed_permissions }.to_json,
       Authorization: token,
       content_type: :json
     )
@@ -494,6 +539,30 @@ module Discordrb::API
       :patch,
       "#{api_base}/guilds/#{server_id}/members/#{user_id}",
       { roles: roles }.to_json,
+      Authorization: token,
+      content_type: :json
+    )
+  end
+
+  # Update a user's server deafened state
+  def update_user_deafen(token, server_id, user_id, state)
+    request(
+      __method__,
+      :patch,
+      "#{api_base}/guilds/#{server_id}/members/#{user_id}",
+      { deaf: state }.to_json,
+      Authorization: token,
+      content_type: :json
+    )
+  end
+
+  # Update a user's server muted state
+  def update_user_mute(token, server_id, user_id, state)
+    request(
+      __method__,
+      :patch,
+      "#{api_base}/guilds/#{server_id}/members/#{user_id}",
+      { mute: state }.to_json,
       Authorization: token,
       content_type: :json
     )
@@ -614,6 +683,16 @@ module Discordrb::API
       __method__,
       :get,
       "#{api_base}/channels/#{channel_id}/messages?limit=#{amount}#{"&before=#{before}" if before}#{"&after=#{after}" if after}",
+      Authorization: token
+    )
+  end
+
+  # Get a list of pinned messages in a channel
+  def pins(token, channel_id)
+    request(
+      __method__,
+      :get,
+      "#{api_base}/channels/#{channel_id}/pins",
       Authorization: token
     )
   end

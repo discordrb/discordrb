@@ -21,6 +21,9 @@ module Discordrb::Voice
   # should check the parameters and adjust them to your connection: {VoiceBot#adjust_interval},
   # {VoiceBot#adjust_offset}, and {VoiceBot#adjust_average}.
   class VoiceBot
+    # @return [Channel] the current voice channel
+    attr_reader :channel
+
     # @return [Integer, nil] the amount of time the stream has been playing, or `nil` if nothing has been played yet.
     attr_reader :stream_time
 
@@ -88,6 +91,7 @@ module Discordrb::Voice
       @adjust_debug = true
 
       @volume = 1.0
+      @playing = false
 
       @encoder = Encoder.new
       @ws.connect
@@ -119,6 +123,14 @@ module Discordrb::Voice
     def pause
       @paused = true
     end
+
+    # @see #play
+    # @return [true, false] Whether it is playing sound or not.
+    def playing?
+      @playing
+    end
+
+    alias_method :isplaying?, :playing?
 
     # Continue playback. This change may take up to 100 ms to take effect, which is usually negligible.
     def continue
@@ -197,7 +209,7 @@ module Discordrb::Voice
 
       # If the stream is a process, kill it
       if encoded_io.respond_to? :pid
-        Discordrb::LOGGER.info("Killing ffmpeg process with pid #{encoded_io.pid.inspect}")
+        Discordrb::LOGGER.debug("Killing ffmpeg process with pid #{encoded_io.pid.inspect}")
 
         begin
           Process.kill('TERM', encoded_io.pid)
@@ -227,7 +239,7 @@ module Discordrb::Voice
 
     # Plays a stream of audio data in the DCA format. This format has the advantage that no recoding has to be
     # done - the file contains the data exactly as Discord needs it.
-    # @note DCA playback will not be affected by the volume modifier ({volume=}) because the modifier operates on raw
+    # @note DCA playback will not be affected by the volume modifier ({#volume}) because the modifier operates on raw
     #   PCM, not opus data. Modifying the volume of DCA data would involve decoding it, multiplying the samples and
     #   re-encoding it, which defeats its entire purpose (no recoding).
     # @see https://github.com/bwmarrin/dca
@@ -340,8 +352,12 @@ module Discordrb::Voice
         # If paused, wait
         sleep 0.1 while @paused
 
-        # Wait `length` ms, then send the next packet
-        sleep @length / 1000.0
+        if @length > 0
+          # Wait `length` ms, then send the next packet
+          sleep @length / 1000.0
+        else
+          Discordrb::Logger.warn('Audio encoding and sending together took longer than Discord expects one packet to be (20 ms)! This may be indicative of network problems.')
+        end
       end
 
       @bot.debug('Sending five silent frames to clear out buffers')
