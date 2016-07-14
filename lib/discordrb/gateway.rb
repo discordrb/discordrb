@@ -148,6 +148,7 @@ module Discordrb
       end
     end
 
+    # Create and connect a socket using a URI
     def obtain_socket(uri)
       if secure_uri?(uri)
         ctx = OpenSSL::SSL::SSLContext.new
@@ -167,10 +168,12 @@ module Discordrb
       socket
     end
 
+    # Whether the URI is secure (connection should be encrypted)
     def secure_uri?(uri)
       %w(https wss).include? uri.scheme
     end
 
+    # The port we should connect to, if the URI doesn't have one set.
     def socket_port(uri)
       secure_uri?(uri) ? 443 : 80
     end
@@ -200,7 +203,10 @@ module Discordrb
     end
 
     def connect
+      # Get the URI we should connect to and parse it
       gateway_uri = URI.parse(process_gateway)
+
+      # Connect to the obtained URI with a socket
       @socket = obtain_socket(gateway_uri)
     end
   end
