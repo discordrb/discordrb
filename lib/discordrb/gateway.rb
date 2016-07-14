@@ -233,20 +233,29 @@ module Discordrb
             frame << recv_data
             msg = frame.next
             while msg
-              emit :message, msg
+              handle_message(msg)
               msg = frame.next
             end
           else
             @handshake << recv_data
             if @handshake.finished?
               @handshaked = true
-              emit :open
+              handle_open
             end
           end
         rescue => e
-          emit :error, e
+          handle_error(e)
         end
       end
+    end
+
+    def handle_open
+    end
+
+    def handle_error(e)
+    end
+
+    def handle_message(msg)
     end
   end
 end
