@@ -279,7 +279,10 @@ module Discordrb
     def handle_message(msg)
     end
 
+    # Called when the websocket has been disconnected in some way - say due to a pipe error while sending
     def handle_internal_close(e)
+      close
+      emit :close, e
     end
 
     def send(data, type = :text)
