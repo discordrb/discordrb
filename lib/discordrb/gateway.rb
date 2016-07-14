@@ -285,10 +285,14 @@ module Discordrb
         raise 'Tried to send something to the websocket while not being connected!'
       end
 
+      # Create the frame we're going to send
       frame = ::WebSocket::Frame::Outgoing::Client.new(data: data, type: type, version: @handshake.version)
+
+      # Try to send it
       begin
         @socket.write frame.to_s
       rescue Errno::EPIPE => e
+        # There has been an error!
         @pipe_broken = true
         emit :__close, e
       end
