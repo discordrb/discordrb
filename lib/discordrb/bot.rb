@@ -196,49 +196,6 @@ module Discordrb
     # Runs the bot asynchronously. Equivalent to #run with the :async parameter.
     # @see #run
     def run_async
-      # Handle heartbeats
-      @heartbeat_interval = 1
-      @heartbeat_active = false
-      @heartbeat_thread = Thread.new do
-        Thread.current[:discordrb_name] = 'heartbeat'
-        loop do
-          if @heartbeat_active
-            send_heartbeat
-            sleep @heartbeat_interval
-          else
-            sleep 1
-          end
-        end
-      end
-
-      @ws_thread = Thread.new do
-        Thread.current[:discordrb_name] = 'websocket'
-
-        # Initialize falloff so we wait for more time before reconnecting each time
-        @falloff = 1.0
-
-        loop do
-          @should_reconnect = true
-          websocket_connect
-
-          break unless @should_reconnect
-
-          if @reconnect_url
-            # We got an op 7! Don't wait before reconnecting
-            LOGGER.info('Got an op 7, reconnecting right away')
-          else
-            wait_for_reconnect
-          end
-
-          # Restart the loop, i. e. reconnect
-        end
-
-        LOGGER.warn('The WS loop exited! Not sure if this is a good thing')
-      end
-
-      debug('WS thread created! Now waiting for confirmation that everything worked')
-      sleep(0.5) until @ws_success
-      debug('Confirmation received! Exiting run.')
     end
 
     # Prevents all further execution until the websocket thread stops (e. g. through a closed connection).
