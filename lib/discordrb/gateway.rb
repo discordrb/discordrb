@@ -108,6 +108,11 @@ module Discordrb
       debug('Confirmation received! Exiting run.')
     end
 
+    # Whether the WebSocket connection to the gateway is currently open
+    def open?
+      @handshake.finished? && !@closed
+    end
+
     private
 
     def setup_heartbeats
