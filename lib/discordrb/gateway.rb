@@ -70,6 +70,8 @@ module Discordrb
 
     # Connect to the gateway server in a separate thread
     def run_async
+      setup_heartbeats
+
       @ws_thread = Thread.new do
         Thread.current[:discordrb_name] = 'websocket'
         connect_loop
