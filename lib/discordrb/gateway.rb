@@ -279,12 +279,12 @@ module Discordrb
     def handle_message(msg)
     end
 
-    def send(data, opt = { type: :text })
+    def send(data, type = :text)
       unless @handshaked && !@closed
         # If we're not handshaked or closed, it means there's no connection to send anything to
         raise 'Tried to send something to the websocket while not being connected!'
       end
-      type = opt[:type]
+
       frame = ::WebSocket::Frame::Outgoing::Client.new(data: data, type: type, version: @handshake.version)
       begin
         @socket.write frame.to_s
