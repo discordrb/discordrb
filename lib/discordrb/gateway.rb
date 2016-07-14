@@ -239,16 +239,20 @@ module Discordrb
               msg = frame.next
             end
           else
-            @handshake << recv_data
-            if @handshake.finished?
-              @handshaked = true
-              handle_open
-            end
+            handle_handshake_data(recv_data)
           end
         rescue => e
           handle_error(e)
         end
       end
+    end
+
+    def handle_handshake_data(recv_data)
+      @handshake << recv_data
+      return unless @handshake.finished?
+
+      @handshaked = true
+      handle_open
     end
 
     def handle_open
