@@ -58,4 +58,8 @@ module Discordrb
     # zombie connections that don't dispatch any events anymore.
     HEARTBEAT_ACK = 11
   end
+
+  # Client for the Discord gateway protocol
+  class Gateway
+  end
 end
