@@ -133,7 +133,7 @@ module Discordrb
 
       loop do
         @should_reconnect = true
-        websocket_connect
+        connect
 
         break unless @should_reconnect
 
@@ -197,6 +197,11 @@ module Discordrb
 
       # Add the parameters we want
       raw_url + "?encoding=json&v=#{GATEWAY_VERSION}"
+    end
+
+    def connect
+      gateway_uri = URI.parse(process_gateway)
+      @socket = obtain_socket(gateway_uri)
     end
   end
 end
