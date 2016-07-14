@@ -323,7 +323,6 @@ module Discordrb
 
       # Make sure we do necessary things as soon as we're closed
       handle_close(nil)
-      Thread.kill @thread if @thread
     end
   end
 end
