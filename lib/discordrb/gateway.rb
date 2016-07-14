@@ -278,5 +278,17 @@ module Discordrb
 
     def handle_message(msg)
     end
+
+    def send(data, opt = { type: :text })
+      return if !@handshaked || @closed
+      type = opt[:type]
+      frame = ::WebSocket::Frame::Outgoing::Client.new(data: data, type: type, version: @handshake.version)
+      begin
+        @socket.write frame.to_s
+      rescue Errno::EPIPE => e
+        @pipe_broken = true
+        emit :__close, e
+      end
+    end
   end
 end
