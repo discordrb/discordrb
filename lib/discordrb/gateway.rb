@@ -222,6 +222,7 @@ module Discordrb
     end
 
     def websocket_loop
+      # Create a frame to handle received data
       frame = ::WebSocket::Frame::Incoming::Client.new
 
       until @closed
