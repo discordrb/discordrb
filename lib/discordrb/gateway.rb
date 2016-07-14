@@ -222,6 +222,9 @@ module Discordrb
     end
 
     def websocket_loop
+      # Send the handshake data that we have so far
+      @socket.write(@handshake.to_s)
+
       # Create a frame to handle received data
       frame = ::WebSocket::Frame::Incoming::Client.new
 
