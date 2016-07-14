@@ -226,19 +226,30 @@ module Discordrb
 
       until @closed
         begin
+          # Get some data from the socket
           recv_data = @socket.getc
+
+          # Check if we actually got data
           unless recv_data
+            # If we didn't, wait
             sleep 1
             next
           end
+
+          # Check whether the handshake has finished yet
           if @handshaked
+            # If it hasn't, add the received data to the current frame
             frame << recv_data
+
+            # Try to parse a message from the frame
             msg = frame.next
             while msg
+              # If there is one, handle it and try again
               handle_message(msg)
               msg = frame.next
             end
           else
+            # If the handshake hasn't finished, handle it
             handle_handshake_data(recv_data)
           end
         rescue => e
