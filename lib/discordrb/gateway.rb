@@ -150,8 +150,8 @@ module Discordrb
 
     def obtain_socket(uri)
       @socket = TCPSocket.new(uri.host,
-                              uri.port || (uri.scheme == 'wss' ? 443 : 80))
-      if %w(https wss).include? uri.scheme
+                              uri.port || (secure_uri? ? 443 : 80))
+      if secure_uri?(uri)
         ctx = OpenSSL::SSL::SSLContext.new
         ctx.ssl_version = 'SSLv23'
         ctx.verify_mode = OpenSSL::SSL::VERIFY_NONE # use VERIFY_PEER for verification
@@ -161,6 +161,10 @@ module Discordrb
         @socket = ::OpenSSL::SSL::SSLSocket.new(@socket, ctx)
         @socket.connect
       end
+    end
+
+    def secure_uri?(uri)
+      %w(https wss).include? uri.scheme
     end
   end
 end
