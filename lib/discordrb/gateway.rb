@@ -308,11 +308,19 @@ module Discordrb
     end
 
     def close
+      # If we're already closed, there's no need to do anything - return
       return if @closed
+
+      # Send a close frame (if we can)
       send nil, :close unless @pipe_broken
+
+      # We're officially closed, notify the main loop
       @closed = true
+
+      # Close the socket if possible
       @socket.close if @socket
       @socket = nil
+
       emit :__close
       Thread.kill @thread if @thread
     end
