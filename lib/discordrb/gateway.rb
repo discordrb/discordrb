@@ -280,7 +280,10 @@ module Discordrb
     end
 
     def send(data, opt = { type: :text })
-      return if !@handshaked || @closed
+      unless @handshaked && !@closed
+        # If we're not handshaked or closed, it means there's no connection to send anything to
+        raise 'Tried to send something to the websocket while not being connected!'
+      end
       type = opt[:type]
       frame = ::WebSocket::Frame::Outgoing::Client.new(data: data, type: type, version: @handshake.version)
       begin
