@@ -222,6 +222,8 @@ module Discordrb
     end
 
     def websocket_loop
+      frame = ::WebSocket::Frame::Incoming::Client.new
+
       until @closed
         begin
           recv_data = @socket.getc
