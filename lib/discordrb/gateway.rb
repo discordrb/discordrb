@@ -279,6 +279,9 @@ module Discordrb
     def handle_message(msg)
     end
 
+    def handle_internal_close(e)
+    end
+
     def send(data, type = :text)
       unless @handshaked && !@closed
         # If we're not handshaked or closed, it means there's no connection to send anything to
@@ -294,7 +297,7 @@ module Discordrb
       rescue Errno::EPIPE => e
         # There has been an error!
         @pipe_broken = true
-        emit :__close, e
+        handle_internal_close(e)
       end
     end
   end
