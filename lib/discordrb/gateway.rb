@@ -216,6 +216,37 @@ module Discordrb
       @handshake = ::WebSocket::Handshake::Client.new(url: url) # Represents the handshake between us and the server
       @handshaked = false # Whether the handshake has finished yet
       @pipe_broken = false # Whether we've received an EPIPE at any time
+
+      # We're done! Delegate to the websocket loop
+      websocket_loop
+    end
+
+    def websocket_loop
+      until @closed
+        begin
+          recv_data = @socket.getc
+          unless recv_data
+            sleep 1
+            next
+          end
+          if @handshaked
+            frame << recv_data
+            msg = frame.next
+            while msg
+              emit :message, msg
+              msg = frame.next
+            end
+          else
+            @handshake << recv_data
+            if @handshake.finished?
+              @handshaked = true
+              emit :open
+            end
+          end
+        rescue => e
+          emit :error, e
+        end
+      end
     end
   end
 end
