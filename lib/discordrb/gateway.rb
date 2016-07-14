@@ -72,26 +72,7 @@ module Discordrb
     def run_async
       @ws_thread = Thread.new do
         Thread.current[:discordrb_name] = 'websocket'
-
-        # Initialize falloff so we wait for more time before reconnecting each time
-        @falloff = 1.0
-
-        loop do
-          @should_reconnect = true
-          websocket_connect
-
-          break unless @should_reconnect
-
-          if @reconnect_url
-            # We got an op 7! Don't wait before reconnecting
-            LOGGER.info('Got an op 7, reconnecting right away')
-          else
-            wait_for_reconnect
-          end
-
-          # Restart the loop, i. e. reconnect
-        end
-
+        connect_loop
         LOGGER.warn('The WS loop exited! Not sure if this is a good thing')
       end
 
@@ -116,6 +97,27 @@ module Discordrb
             sleep 1
           end
         end
+      end
+    end
+
+    def connect_loop
+      # Initialize falloff so we wait for more time before reconnecting each time
+      @falloff = 1.0
+
+      loop do
+        @should_reconnect = true
+        websocket_connect
+
+        break unless @should_reconnect
+
+        if @reconnect_url
+          # We got an op 7! Don't wait before reconnecting
+          LOGGER.info('Got an op 7, reconnecting right away')
+        else
+          wait_for_reconnect
+        end
+
+        # Restart the loop, i. e. reconnect
       end
     end
   end
