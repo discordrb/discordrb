@@ -874,30 +874,6 @@ module Discordrb
       token
     end
 
-    def find_gateway
-      # If the reconnect URL is set, it means we got an op 7 earlier and should reconnect to the new URL
-      if @reconnect_url
-        debug("Reconnecting to URL #{@reconnect_url}")
-        url = @reconnect_url
-        @reconnect_url = nil # Unset the URL so we don't connect to the same URL again if the connection fails
-        url
-      else
-        # Get the correct gateway URL from Discord
-        response = API.gateway(token)
-        JSON.parse(response)['url']
-      end
-    end
-
-    def process_gateway
-      raw_url = find_gateway
-
-      # Append a slash in case it's not there (I'm not sure how well WSCS handles it otherwise)
-      raw_url += '/' unless raw_url.end_with? '/'
-
-      # Add the parameters we want
-      raw_url + "?encoding=json&v=#{GATEWAY_VERSION}"
-    end
-
     ##      ##  ######     ######## ##     ## ######## ##    ## ########  ######
     ##  ##  ## ##    ##    ##       ##     ## ##       ###   ##    ##    ##    ##
     ##  ##  ## ##          ##       ##     ## ##       ####  ##    ##    ##
