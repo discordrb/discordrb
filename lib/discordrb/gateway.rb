@@ -70,21 +70,6 @@ module Discordrb
 
     # Connect to the gateway server in a separate thread
     def run_async
-      # Handle heartbeats
-      @heartbeat_interval = 1
-      @heartbeat_active = false
-      @heartbeat_thread = Thread.new do
-        Thread.current[:discordrb_name] = 'heartbeat'
-        loop do
-          if @heartbeat_active
-            send_heartbeat
-            sleep @heartbeat_interval
-          else
-            sleep 1
-          end
-        end
-      end
-
       @ws_thread = Thread.new do
         Thread.current[:discordrb_name] = 'websocket'
 
@@ -113,6 +98,25 @@ module Discordrb
       debug('WS thread created! Now waiting for confirmation that everything worked')
       sleep(0.5) until @ws_success
       debug('Confirmation received! Exiting run.')
+    end
+
+    private
+
+    def setup_heartbeats
+      # Handle heartbeats
+      @heartbeat_interval = 1
+      @heartbeat_active = false
+      @heartbeat_thread = Thread.new do
+        Thread.current[:discordrb_name] = 'heartbeat'
+        loop do
+          if @heartbeat_active
+            send_heartbeat
+            sleep @heartbeat_interval
+          else
+            sleep 1
+          end
+        end
+      end
     end
   end
 end
