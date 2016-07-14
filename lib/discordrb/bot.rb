@@ -139,9 +139,6 @@ module Discordrb
       @current_thread = 0
 
       @idletime = nil
-
-      # Whether the connection to the gateway has succeeded yet
-      @ws_success = false
     end
 
     # The list of users the bot shares a server with.

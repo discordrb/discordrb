@@ -61,5 +61,11 @@ module Discordrb
 
   # Client for the Discord gateway protocol
   class Gateway
+    def initialize(token)
+      @token = token
+
+      # Whether the connection to the gateway has succeeded yet
+      @ws_success = false
+    end
   end
 end
