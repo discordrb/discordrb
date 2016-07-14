@@ -306,5 +306,15 @@ module Discordrb
         handle_internal_close(e)
       end
     end
+
+    def close
+      return if @closed
+      send nil, :close unless @pipe_broken
+      @closed = true
+      @socket.close if @socket
+      @socket = nil
+      emit :__close
+      Thread.kill @thread if @thread
+    end
   end
 end
