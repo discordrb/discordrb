@@ -203,11 +203,19 @@ module Discordrb
     end
 
     def connect
-      # Get the URI we should connect to and parse it
-      gateway_uri = URI.parse(process_gateway)
+      # Get the URI we should connect to
+      url = process_gateway
+
+      # Parse it
+      gateway_uri = URI.parse(url)
 
       # Connect to the obtained URI with a socket
       @socket = obtain_socket(gateway_uri)
+
+      # Initialise some properties
+      @handshake = ::WebSocket::Handshake::Client.new(url: url) # Represents the handshake between us and the server
+      @handshaked = false # Whether the handshake has finished yet
+      @pipe_broken = false # Whether we've received an EPIPE at any time
     end
   end
 end
