@@ -1,3 +1,28 @@
+# This file uses code from Websocket::Client::Simple, licensed under the following license:
+#
+# Copyright (c) 2013-2014 Sho Hashimoto
+#
+# MIT License
+#
+# Permission is hereby granted, free of charge, to any person obtaining
+# a copy of this software and associated documentation files (the
+# "Software"), to deal in the Software without restriction, including
+# without limitation the rights to use, copy, modify, merge, publish,
+#                                  distribute, sublicense, and/or sell copies of the Software, and to
+# permit persons to whom the Software is furnished to do so, subject to
+# the following conditions:
+#
+# The above copyright notice and this permission notice shall be
+# included in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+# LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+# OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+# WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
 module Discordrb
   # Gateway packet opcodes
   module Opcodes
@@ -120,6 +145,21 @@ module Discordrb
         end
 
         # Restart the loop, i. e. reconnect
+      end
+    end
+
+    def obtain_socket(uri)
+      @socket = TCPSocket.new(uri.host,
+                              uri.port || (uri.scheme == 'wss' ? 443 : 80))
+      if %w(https wss).include? uri.scheme
+        ctx = OpenSSL::SSL::SSLContext.new
+        ctx.ssl_version = options[:ssl_version] || 'SSLv23'
+        ctx.verify_mode = options[:verify_mode] || OpenSSL::SSL::VERIFY_NONE # use VERIFY_PEER for verification
+        cert_store = OpenSSL::X509::Store.new
+        cert_store.set_default_paths
+        ctx.cert_store = cert_store
+        @socket = ::OpenSSL::SSL::SSLSocket.new(@socket, ctx)
+        @socket.connect
       end
     end
   end
