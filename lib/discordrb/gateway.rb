@@ -321,7 +321,8 @@ module Discordrb
       @socket.close if @socket
       @socket = nil
 
-      emit :__close
+      # Make sure we do necessary things as soon as we're closed
+      handle_close(nil)
       Thread.kill @thread if @thread
     end
   end
