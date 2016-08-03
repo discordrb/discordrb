@@ -144,7 +144,9 @@ module Discordrb
       @heartbeat_thread = Thread.new do
         Thread.current[:discordrb_name] = 'heartbeat'
         loop do
-          if @heartbeat_active
+          # Send a heartbeat if heartbeats are active and either no session exists yet, or an existing session is
+          # suspended (e.g. after op7)
+          if @heartbeat_active && ((@session && !@session.suspended?) || !@session)
             send_heartbeat
             sleep @heartbeat_interval
           else
