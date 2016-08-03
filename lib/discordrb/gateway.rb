@@ -350,6 +350,15 @@ module Discordrb
       @bot.dispatch(type, data)
     end
 
+    # Op 10
+    def handle_hello(_)
+      if @session && @session.should_resume?
+        resume
+      else
+        identify
+      end
+    end
+
     # Op 7
     def handle_reconnect
       @instant_reconnect = true
