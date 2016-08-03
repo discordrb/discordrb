@@ -93,6 +93,7 @@ module Discordrb
     def initialize(session_id)
       @id = session_id
       @sequence = 0
+      @suspended = false
     end
 
     def suspend
