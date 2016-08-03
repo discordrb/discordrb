@@ -319,14 +319,17 @@ module Discordrb
 
     def handle_dispatch(packet)
       data = packet['d']
+      type = packet['t'].intern
 
-      case packet['t'].intern
+      case type
       when :READY
         LOGGER.info("Discord using gateway protocol version: #{data['v']}, requested: #{GATEWAY_VERSION}")
 
         @session = Session.new(data['session_id'])
         @session.sequence = 0
       end
+
+      @bot.dispatch(type, data)
     end
 
     # Called when the websocket has been disconnected in some way - say due to a pipe error while sending
