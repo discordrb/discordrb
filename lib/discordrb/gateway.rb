@@ -282,6 +282,13 @@ module Discordrb
     end
 
     def handle_message(msg)
+      if msg.byteslice(0) == 'x'
+        # The message is compressed, inflate it
+        msg = Zlib::Inflate.inflate(msg)
+      end
+
+      # Parse packet
+      JSON.parse(msg)
     end
 
     # Called when the websocket has been disconnected in some way - say due to a pipe error while sending
