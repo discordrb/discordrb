@@ -288,7 +288,20 @@ module Discordrb
       end
 
       # Parse packet
-      JSON.parse(msg)
+      packet = JSON.parse(msg)
+
+      case packet['op'].to_i
+      when Opcodes::DISPATCH
+        handle_dispatch(packet)
+      when Opcodes::HELLO
+        handle_hello(packet)
+      when Opcodes::RECONNECT
+        handle_reconnect(packet)
+      when Opcodes::INVALIDATE_SESSION
+        handle_invalidate_session
+      when Opcodes::HEARTBEAT_ACK
+        handle_heartbeat_ack(packet)
+      end
     end
 
     # Called when the websocket has been disconnected in some way - say due to a pipe error while sending
