@@ -99,6 +99,10 @@ module Discordrb
     def suspend
       @suspended = true
     end
+
+    def suspended?
+      @suspended
+    end
   end
 
   # Client for the Discord gateway protocol
