@@ -317,9 +317,14 @@ module Discordrb
     end
 
     def handle_dispatch(packet)
+      data = packet['d']
+
       case packet['t'].intern
       when :READY
         LOGGER.info("Discord using gateway protocol version: #{data['v']}, requested: #{GATEWAY_VERSION}")
+
+        @session = Session.new(data['session_id'])
+        @session.sequence = 0
       end
     end
 
