@@ -316,6 +316,13 @@ module Discordrb
       end
     end
 
+    def handle_dispatch(packet)
+      case packet['t'].intern
+      when :READY
+        LOGGER.info("Discord using gateway protocol version: #{data['v']}, requested: #{GATEWAY_VERSION}")
+      end
+    end
+
     # Called when the websocket has been disconnected in some way - say due to a pipe error while sending
     def handle_internal_close(e)
       close
