@@ -112,6 +112,10 @@ module Discordrb
     def invalid?
       @invalid
     end
+
+    def should_resume?
+      suspended? && !invalid?
+    end
   end
 
   # Client for the Discord gateway protocol
