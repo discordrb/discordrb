@@ -155,9 +155,10 @@ module Discordrb
 
         break unless @should_reconnect
 
-        if @reconnect_url
+        if @instant_reconnect
           # We got an op 7! Don't wait before reconnecting
           LOGGER.info('Got an op 7, reconnecting right away')
+          @instant_reconnect = false
         else
           wait_for_reconnect
         end
@@ -197,14 +198,7 @@ module Discordrb
     end
 
     def find_gateway
-      # If the reconnect URL is set, it means we got an op 7 earlier and should reconnect to the new URL
       if @reconnect_url
-        debug("Reconnecting to URL #{@reconnect_url}")
-        url = @reconnect_url
-        @reconnect_url = nil # Unset the URL so we don't connect to the same URL again if the connection fails
-        url
-      else
-        # Get the correct gateway URL from Discord
         response = API.gateway(token)
         JSON.parse(response)['url']
       end
@@ -309,7 +303,7 @@ module Discordrb
       when Opcodes::HELLO
         handle_hello(packet)
       when Opcodes::RECONNECT
-        handle_reconnect(packet)
+        handle_reconnect
       when Opcodes::INVALIDATE_SESSION
         handle_invalidate_session
       when Opcodes::HEARTBEAT_ACK
@@ -330,6 +324,15 @@ module Discordrb
       end
 
       @bot.dispatch(type, data)
+    end
+
+    # Op 7
+    def handle_reconnect
+      @instant_reconnect = true
+      close
+
+      # Suspend session so we resume afterwards
+      @session.suspend
     end
 
     # Called when the websocket has been disconnected in some way - say due to a pipe error while sending
