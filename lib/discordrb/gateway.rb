@@ -130,8 +130,6 @@ module Discordrb
 
     # Connect to the gateway server in a separate thread
     def run_async
-      setup_heartbeats
-
       @ws_thread = Thread.new do
         Thread.current[:discordrb_name] = 'websocket'
         connect_loop
@@ -150,16 +148,14 @@ module Discordrb
 
     private
 
-    def setup_heartbeats
-      # Handle heartbeats
-      @heartbeat_interval = 1
-      @heartbeat_active = false
+    def setup_heartbeats(interval)
+      @heartbeat_interval = interval
       @heartbeat_thread = Thread.new do
         Thread.current[:discordrb_name] = 'heartbeat'
         loop do
           # Send a heartbeat if heartbeats are active and either no session exists yet, or an existing session is
           # suspended (e.g. after op7)
-          if @heartbeat_active && ((@session && !@session.suspended?) || !@session)
+          if (@session && !@session.suspended?) || !@session
             send_heartbeat
             sleep @heartbeat_interval
           else
@@ -351,7 +347,15 @@ module Discordrb
     end
 
     # Op 10
-    def handle_hello(_)
+    def handle_hello(packet)
+      LOGGER.debug('Hello!')
+
+      # The heartbeat interval is given in ms, so divide it by 1000 to get seconds
+      interval = packet['d']['heartbeat_interval'].to_f / 1000.0
+      setup_heartbeats(interval)
+
+      LOGGER.debug("Trace: #{packet['d']['_trace']}")
+
       if @session && @session.should_resume?
         resume
       else
