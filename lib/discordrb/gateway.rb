@@ -94,6 +94,10 @@ module Discordrb
       @id = session_id
       @sequence = 0
     end
+
+    def suspend
+      @suspended = true
+    end
   end
 
   # Client for the Discord gateway protocol
