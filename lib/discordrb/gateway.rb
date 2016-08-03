@@ -84,6 +84,16 @@ module Discordrb
     HEARTBEAT_ACK = 11
   end
 
+  # This class stores the data of an active gateway session. Note that this is different from a websocket connection -
+  # there may be multiple sessions per connection or one session may persist over multiple connections.
+  class Session
+    attr_reader :session_id
+
+    def initialize(session_id)
+      @id = session_id
+    end
+  end
+
   # Client for the Discord gateway protocol
   class Gateway
     def initialize(token)
