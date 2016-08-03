@@ -88,9 +88,11 @@ module Discordrb
   # there may be multiple sessions per connection or one session may persist over multiple connections.
   class Session
     attr_reader :session_id
+    attr_accessor :sequence
 
     def initialize(session_id)
       @id = session_id
+      @sequence = 0
     end
   end
 
