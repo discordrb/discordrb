@@ -149,6 +149,9 @@ module Discordrb
     private
 
     def setup_heartbeats(interval)
+      # We don't want to have redundant heartbeat threads, so if one already exists, don't start a new one
+      return if @heartbeat_thread
+
       @heartbeat_interval = interval
       @heartbeat_thread = Thread.new do
         Thread.current[:discordrb_name] = 'heartbeat'
