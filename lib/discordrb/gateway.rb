@@ -94,6 +94,7 @@ module Discordrb
       @id = session_id
       @sequence = 0
       @suspended = false
+      @invalid = false
     end
 
     def suspend
@@ -102,6 +103,14 @@ module Discordrb
 
     def suspended?
       @suspended
+    end
+
+    def invalidate
+      @invalid = true
+    end
+
+    def invalid?
+      @invalid
     end
   end
 
