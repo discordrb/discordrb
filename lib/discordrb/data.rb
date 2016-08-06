@@ -170,9 +170,10 @@ module Discordrb
 
     # Send the user a file.
     # @param file [File] The file to send to the user
+    # @param caption [String] The caption of the file being sent
     # @return [Message] the message sent to this user.
-    def send_file(file)
-      pm.send_file(file)
+    def send_file(file, caption: nil)
+      pm.send_file(file, caption: caption)
     end
 
     # Set the user's name
