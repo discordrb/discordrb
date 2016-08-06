@@ -215,17 +215,22 @@ module Discordrb
     # @return [String] the application name
     attr_accessor :name
 
-    # @return [String] the application desctiption
+    # @return [String] the application description
     attr_accessor :description
 
-    # @return [String] the application id
+    # @return [String] the application ID
     attr_accessor :id
 
-    # @return [Array<String>]
+    # @return [Array<String>] the applications origins permitted to use RPC
     attr_accessor :rpc_origins
 
     # @return [Integer]
     attr_accessor :flags
+
+    # Gets the user object of the owner. May be limited to username, discriminator,
+    # ID and avatar if the bot cannot reach the owner.
+    # @return [User] the user object of the owner
+    attr_accessor :owner
 
     def initialize(data, bot)
       @bot = bot
@@ -236,20 +241,13 @@ module Discordrb
       @avatar_id = data['avatar']
       @rpc_origins = data['rpc_origins']
       @flags = data['flags']
-      @owner = data['owner']
+      @owner = @bot.ensure_user(data['owner']['id']) ? @bot.user(data['owner']['id']) : User.new(@bot, data['owner'])
     end
 
     # Utility function to get a user's avatar URL.
     # @return [String] the URL to the avatar image.
-    def avatar_url
+    def icon_url
       API.app_icon_url(@id, @avatar_id)
-    end
-
-    # Gets the user object of the owner. May be limited to username, discriminator,
-    # ID and avatar if the bot cannot reach the owner.
-    # @return [User] the user object of the owner
-    def owner
-      @bot.user(@owner['id']) ? @bot.user(@owner['id']) : User.new(@bot, @owner)
     end
 
     # The inspect method is overwritten to give more useful output

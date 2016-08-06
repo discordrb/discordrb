@@ -229,10 +229,10 @@ module Discordrb
     alias_method :bot_user, :profile
 
     # The bot's OAuth application.
-    # @return [Application, nil] The bot's applicatino info. Returns `nil` if bot is not a bot account.
+    # @return [Application, nil] The bot's application info. Returns `nil` if bot is not a bot account.
     def bot_application
       gateway_check
-      profile.bot_account? ? Cache.application(@application_id) : nil
+      @type == :bot ? application(@application_id) : nil
     end
 
     alias_method :bot_app, :bot_application

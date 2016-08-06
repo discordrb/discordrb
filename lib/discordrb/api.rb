@@ -232,11 +232,11 @@ module Discordrb::API
   end
 
   # Get an OAuth application's information
-  def get_oauth_application(token, app_id)
+  def oauth_application(token, app_id)
     request(
       __method__,
       :get,
-      "#{api_base}/oauth2/applications/"+app_id,
+      "#{api_base}/oauth2/applications/#{app_id}",
       Authorization: token
     )
   end
