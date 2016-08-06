@@ -76,9 +76,9 @@ module Discordrb
       id = id.resolve_id
       return @applications[id] if @applications[id]
 
-      LOGGER.out("Resolving user #{id}")
+      LOGGER.out("Resolving application #{id}")
       begin
-        response = API.get_oauth_application(token, id)
+        response = API.oauth_application(token, id)
       rescue RestClient::ResourceNotFound
         return nil
       end
