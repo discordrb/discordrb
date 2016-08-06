@@ -238,16 +238,16 @@ module Discordrb
       @name = data['name']
       @id = data['id'].to_i
       @description = data['description']
-      @avatar_id = data['avatar']
+      @icon_id = data['icon']
       @rpc_origins = data['rpc_origins']
       @flags = data['flags']
-      @owner = @bot.ensure_user(data['owner']['id']) ? @bot.user(data['owner']['id']) : User.new(@bot, data['owner'])
+      @owner = @bot.ensure_user(data['owner'])
     end
 
-    # Utility function to get a user's avatar URL.
-    # @return [String] the URL to the avatar image.
+    # Utility function to get a application's icon URL.
+    # @return [String] the URL to the icon image.
     def icon_url
-      API.app_icon_url(@id, @avatar_id)
+      API.app_icon_url(@id, @icon_id)
     end
 
     # The inspect method is overwritten to give more useful output
