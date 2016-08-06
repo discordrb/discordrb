@@ -208,6 +208,56 @@ module Discordrb
     end
   end
 
+  # OAuth Application information
+  class Application
+    include IDObject
+
+    # @return [String] the application name
+    attr_accessor :name
+
+    # @return [String] the application desctiption
+    attr_accessor :description
+
+    # @return [String] the application id
+    attr_accessor :id
+
+    # @return [Array<String>]
+    attr_accessor :rpc_origins
+
+    # @return [Integer]
+    attr_accessor :flags
+
+    def initialize(data, bot)
+      @bot = bot
+
+      @name = data['name']
+      @id = data['id'].to_i
+      @description = data['description']
+      @avatar_id = data['avatar']
+      @rpc_origins = data['rpc_origins']
+      @flags = data['flags']
+      @owner = data['owner']
+    end
+
+    # Utility function to get a user's avatar URL.
+    # @return [String] the URL to the avatar image.
+    def avatar_url
+      API.app_icon_url(@id, @avatar_id)
+    end
+
+    # Gets the user object of the owner. May be limited to username, discriminator,
+    # ID and avatar if the bot cannot reach the owner.
+    # @return [User] the user object of the owner
+    def owner
+      @bot.user(@owner['id']) ? @bot.user(@owner['id']) : User.new(@bot, @owner)
+    end
+
+    # The inspect method is overwritten to give more useful output
+    def inspect
+      "<Application name=#{@name} id=#{@id}>"
+    end
+  end
+
   # Mixin for the attributes members and private members should have
   module MemberAttributes
     # @return [Time] when this member joined the server.
