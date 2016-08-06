@@ -103,6 +103,11 @@ module Discordrb::API
     "#{api_base}/guilds/#{server_id}/icons/#{icon_id}.jpg"
   end
 
+  # Make an icon URL from application and icon IDs
+  def app_icon_url(app_id, icon_id)
+    "https://cdn.discordapp.com/app-icons/#{app_id}/#{icon_id}.jpg"
+  end
+
   # Ban a user from a server and delete their messages from the last message_days days
   def ban_user(token, server_id, user_id, message_days)
     request(
@@ -223,6 +228,16 @@ module Discordrb::API
       { name: name, redirect_uris: redirect_uris, description: description, icon: icon }.to_json,
       Authorization: token,
       content_type: :json
+    )
+  end
+
+  # Get an OAuth application's information
+  def get_oauth_application(token, app_id)
+    request(
+      __method__,
+      :get,
+      "#{api_base}/oauth2/applications/"+app_id,
+      Authorization: token
     )
   end
 
