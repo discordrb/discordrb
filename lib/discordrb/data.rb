@@ -230,7 +230,7 @@ module Discordrb
     # Gets the user object of the owner. May be limited to username, discriminator,
     # ID and avatar if the bot cannot reach the owner.
     # @return [User] the user object of the owner
-    attr_accessor :owner
+    attr_reader :owner
 
     def initialize(data, bot)
       @bot = bot
