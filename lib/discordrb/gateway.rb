@@ -120,6 +120,9 @@ module Discordrb
 
   # Client for the Discord gateway protocol
   class Gateway
+    # How many members there need to be in a server for it to count as "large"
+    LARGE_THRESHOLD = 100
+
     def initialize(bot, token)
       @token = token
       @bot = bot
@@ -376,6 +379,24 @@ module Discordrb
 
       # Suspend session so we resume afterwards
       @session.suspend
+    end
+
+    def identify
+      data = {
+        # Don't send a v anymore as it's entirely determined by the URL now
+        token: @token,
+        properties: {
+          :'$os' => RUBY_PLATFORM,
+          :'$browser' => 'discordrb',
+          :'$device' => 'discordrb',
+          :'$referrer' => '',
+          :'$referring_domain' => ''
+        },
+        compress: true,
+        large_threshold: 100
+      }
+
+      send(data.to_json)
     end
 
     # Called when the websocket has been disconnected in some way - say due to a pipe error while sending
