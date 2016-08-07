@@ -381,6 +381,11 @@ module Discordrb
       @session.suspend
     end
 
+    # Op 11
+    def handle_heartbeat_ack(packet)
+      LOGGER.debug("Received heartbeat ack for packet: #{packet.inspect}")
+    end
+
     def identify
       data = {
         # Don't send a v anymore as it's entirely determined by the URL now
