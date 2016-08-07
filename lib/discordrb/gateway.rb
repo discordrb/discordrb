@@ -387,6 +387,13 @@ module Discordrb
       LOGGER.debug("Received heartbeat ack for packet: #{packet.inspect}")
     end
 
+    # Op 9
+    def handle_invalidate_session
+      LOGGER.debug('Received op 9, invalidating session and reidentifying.')
+      @session.invalidate
+      identify
+    end
+
     def identify
       data = {
         # Don't send a v anymore as it's entirely determined by the URL now
