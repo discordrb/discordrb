@@ -70,8 +70,8 @@ module Discordrb
     end
 
     # Gets a OAuth application by its ID.
-    # @param id [Integer] The user ID that should be resolved.
-    # @return [Application, nil] The user identified by the ID, or `nil` if it couldn't be found.
+    # @param id [Integer] The application ID that should be resolved.
+    # @return [Application, nil] The application identified by the ID, or `nil` if it couldn't be found.
     def application(id)
       id = id.resolve_id
       return @applications[id] if @applications[id]
