@@ -213,19 +213,19 @@ module Discordrb
     include IDObject
 
     # @return [String] the application name
-    attr_accessor :name
+    attr_reader :name
 
     # @return [String] the application description
-    attr_accessor :description
+    attr_reader :description
 
     # @return [String] the application ID
-    attr_accessor :id
+    attr_reader :id
 
     # @return [Array<String>] the applications origins permitted to use RPC
-    attr_accessor :rpc_origins
+    attr_reader :rpc_origins
 
     # @return [Integer]
-    attr_accessor :flags
+    attr_reader :flags
 
     # Gets the user object of the owner. May be limited to username, discriminator,
     # ID and avatar if the bot cannot reach the owner.
