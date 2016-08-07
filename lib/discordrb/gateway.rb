@@ -340,6 +340,7 @@ module Discordrb
       end
     end
 
+    # Op 0
     def handle_dispatch(packet)
       data = packet['d']
       type = packet['t'].intern
