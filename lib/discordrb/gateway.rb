@@ -319,8 +319,9 @@ module Discordrb
 
       # Parse packet
       packet = JSON.parse(msg)
+      op = packet['op'].to_i
 
-      case packet['op'].to_i
+      case op
       when Opcodes::DISPATCH
         handle_dispatch(packet)
       when Opcodes::HELLO
@@ -331,6 +332,8 @@ module Discordrb
         handle_invalidate_session
       when Opcodes::HEARTBEAT_ACK
         handle_heartbeat_ack(packet)
+      else
+        LOGGER.warn("Received invalid opcode #{op} - please report with this information: #{msg}")
       end
     end
 
