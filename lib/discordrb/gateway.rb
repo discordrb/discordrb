@@ -139,9 +139,9 @@ module Discordrb
         LOGGER.warn('The WS loop exited! Not sure if this is a good thing')
       end
 
-      debug('WS thread created! Now waiting for confirmation that everything worked')
+      LOGGER.debug('WS thread created! Now waiting for confirmation that everything worked')
       sleep(0.5) until @ws_success
-      debug('Confirmation received! Exiting run.')
+      LOGGER.debug('Confirmation received! Exiting run.')
     end
 
     # Prevents all further execution until the websocket thread stops (e. g. through a closed connection).
@@ -376,7 +376,7 @@ module Discordrb
         # The RESUMED event is received after a successful op 6 (resume). It does nothing except tell the bot the
         # connection is initiated (like READY would). Starting with v5, it doesn't set a new heartbeat interval anymore
         # since that is handled by op 10 (HELLO).
-        debug('Connection resumed')
+        LOGGER.debug('Connection resumed')
         return
       end
 
