@@ -243,7 +243,7 @@ module Discordrb
     end
 
     def find_gateway
-      response = API.gateway(token)
+      response = API.gateway(@token)
       JSON.parse(response)['url']
     end
 
