@@ -1364,7 +1364,7 @@ module Discordrb
 
       @name = data['name']
       @id = data['id'].to_i
-      @roles = data['roles'].map do {|role| server.id(role)}
+      process_roles(data['roles'])
     end
 
     # @return [String] the layout to mention it (or have it used) in a message
@@ -1375,6 +1375,21 @@ module Discordrb
     # The inspect method is overwritten to give more useful output
     def inspect
       "<Emoji name=#{@name} id=#{@id}>"
+    end
+
+    private
+
+    def process_roles(roles)
+      # Create roles
+      @roles = []
+      @roles_by_id = {}
+
+      return unless roles
+      roles.each do |element|
+        role = Role.new(element, @bot, self)
+        @roles << role
+        @roles_by_id[role.id] = role
+      end
     end
   end
   # A server on Discord
@@ -1417,7 +1432,6 @@ module Discordrb
     # @!visibility private
     def initialize(data, bot, exists = true)
       @bot = bot
-      @emojis = data['emojis'].map {|emoji| Emoji.new(emoji, @bot, self) }
       @owner_id = data['owner_id'].to_i
       @id = data['id'].to_i
       update_data(data)
@@ -1428,6 +1442,7 @@ module Discordrb
       @voice_states = {}
 
       process_roles(data['roles'])
+      process_emojis(data['emojis'])
       process_members(data['members'])
       process_presences(data['presences'])
       process_channels(data['channels'])
@@ -1739,6 +1754,14 @@ module Discordrb
         role = Role.new(element, @bot, self)
         @roles << role
         @roles_by_id[role.id] = role
+      end
+    end
+
+    def process_emojis(emojis)
+      return unless emoji
+      emoji.each do |element|
+        member = Emoji.new(element, @bot, self)
+        @emojis[emoji.id] = emoji
       end
     end
 
