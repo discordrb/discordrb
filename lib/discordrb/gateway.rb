@@ -470,6 +470,8 @@ module Discordrb
     end
 
     def send(data, type = :text)
+      LOGGER.out(data)
+
       unless @handshaked && !@closed
         # If we're not handshaked or closed, it means there's no connection to send anything to
         raise 'Tried to send something to the websocket while not being connected!'
