@@ -882,42 +882,6 @@ module Discordrb
     ##  ##  ## ##    ##    ##         ## ##   ##       ##   ###    ##    ##    ##
     ####  ###   ######     ########    ###    ######## ##    ##    ##     ######
 
-    # Desired gateway version
-    GATEWAY_VERSION = 5
-
-    def websocket_connect
-      debug('Attempting to get gateway URL...')
-      gateway_url = process_gateway
-      debug("Success! Gateway URL is #{gateway_url}.")
-      debug('Now running bot')
-
-      @ws = Discordrb::WebSocket.new(
-        gateway_url,
-        method(:websocket_open),
-        method(:websocket_message),
-        method(:websocket_close),
-        method(:websocket_error)
-      )
-
-      @ws.thread[:discordrb_name] = 'gateway'
-      @ws.thread.join
-    rescue => e
-      LOGGER.error 'Error while connecting to the gateway!'
-      LOGGER.log_exception e
-      raise
-    end
-
-    def websocket_reconnect(url)
-      # In here, we do nothing except set the reconnect URL and close the current connection.
-      @reconnect_url = url
-      @ws.close
-
-      # Reset the packet sequence number so we don't try to resume the connection afterwards
-      @sequence = 0
-
-      # Let's hope the reconnect handler reconnects us correctly...
-    end
-
     def websocket_message(event)
       if event.byteslice(0) == 'x'
         # The message is encrypted
@@ -1242,107 +1206,6 @@ module Discordrb
       log_exception(e)
     end
 
-    def websocket_close(event)
-      # Don't handle nil events (for example if the disconnect came from our side)
-      return unless event
-
-      # Handle actual close frames and errors separately
-      if event.respond_to? :code
-        LOGGER.error(%(Disconnected from WebSocket - code #{event.code} with reason: "#{event.data}"))
-
-        if event.code.to_i == 4006
-          # If we got disconnected with a 4006, it means we sent a resume when Discord wanted an identify. To battle this,
-          # we invalidate the local session so we'll just send an identify next time
-          debug('Apparently we just sent the wrong type of initiation packet (resume rather than identify) to Discord. (Sorry!)
-                Invalidating session so this is fixed next time')
-          invalidate_session
-        end
-      else
-        LOGGER.error('Disconnected from WebSocket due to an exception!')
-        LOGGER.log_exception event
-      end
-
-      raise_event(DisconnectEvent.new(self))
-
-      # Stop sending heartbeats
-      @heartbeat_active = false
-
-      # Safely close the WS connection and handle any errors that occur there
-      begin
-        @ws.close
-      rescue => e
-        LOGGER.warn 'Got the following exception while closing the WS after being disconnected:'
-        LOGGER.log_exception e
-      end
-    rescue => e
-      LOGGER.log_exception e
-      raise
-    end
-
-    def websocket_error(e)
-      LOGGER.error "Terminal gateway error: #{e}"
-      LOGGER.error 'Killing thread and reconnecting...'
-
-      # Kill the WSCS internal thread to ensure disconnection regardless of what error occurred
-      @ws.thread.kill
-    end
-
-    def websocket_open
-      # If we've already received packets (packet sequence > 0) resume an existing connection instead of identifying anew
-      if @sequence && @sequence > 0
-        resume(@sequence, raw_token, @session_id)
-        return
-      end
-
-      identify(raw_token, 100, GATEWAY_VERSION)
-    end
-
-    # Identify the client to the gateway
-    def identify(token, large_threshold, version)
-      # Send the initial packet
-      packet = {
-        op: Opcodes::IDENTIFY, # Opcode
-        d: {                   # Packet data
-          v: version,          # WebSocket protocol version
-          token: token,
-          properties: { # I'm unsure what these values are for exactly, but they don't appear to impact bot functionality in any way.
-            :'$os' => RUBY_PLATFORM.to_s,
-            :'$browser' => 'discordrb',
-            :'$device' => 'discordrb',
-            :'$referrer' => '',
-            :'$referring_domain' => ''
-          },
-          large_threshold: large_threshold,
-          compress: true
-        }
-      }
-
-      # Discord is very strict about the existence of the shard parameter, so only add it if it actually exists
-      packet[:d][:shard] = @shard_key if @shard_key
-
-      @ws.send(packet.to_json)
-    end
-
-    # Resume a previous gateway connection when reconnecting to a different server
-    def resume(seq, token, session_id)
-      data = {
-        op: Opcodes::RESUME,
-        d: {
-          seq: seq,
-          token: token,
-          session_id: session_id
-        }
-      }
-
-      @ws.send(data.to_json)
-    end
-
-    # Invalidate the current session (whatever this means)
-    def invalidate_session
-      @sequence = 0
-      @session_id = nil
-    end
-
     # Notifies everything there is to be notified that the connection is now ready
     def notify_ready
       # Make sure to raise the event
@@ -1351,42 +1214,6 @@ module Discordrb
 
       # Tell the run method that everything was successful
       @ws_success = true
-    end
-
-    # Separate method to wait an ever-increasing amount of time before reconnecting after being disconnected in an
-    # unexpected way
-    def wait_for_reconnect
-      # We disconnected in an unexpected way! Wait before reconnecting so we don't spam Discord's servers.
-      debug("Attempting to reconnect in #{@falloff} seconds.")
-      sleep @falloff
-
-      # Calculate new falloff
-      @falloff *= 1.5
-      @falloff = 115 + (rand * 10) if @falloff > 120 # Cap the falloff at 120 seconds and then add some random jitter
-    end
-
-    def send_heartbeat(sequence = nil)
-      sequence ||= @sequence
-
-      raise_event(HeartbeatEvent.new(self))
-
-      if @awaiting_ack
-        # There has been no HEARTBEAT_ACK between the last heartbeat and now, so reconnect because the connection might
-        # be a zombie
-        LOGGER.warn("No HEARTBEAT_ACK received between the last heartbeat and now! (seq: #{sequence})")
-      end
-
-      LOGGER.out("Sending heartbeat with sequence #{sequence}")
-      data = {
-        op: Opcodes::HEARTBEAT,
-        d: sequence
-      }
-
-      @ws.send(data.to_json)
-      @awaiting_ack = true
-    rescue => e
-      LOGGER.error('Got an error while sending a heartbeat! Carrying on anyway because heartbeats are vital for the connection to stay alive')
-      LOGGER.log_exception(e)
     end
 
     def raise_event(event)
