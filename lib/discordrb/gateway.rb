@@ -338,6 +338,7 @@ module Discordrb
     end
 
     def handle_error(e)
+      LOGGER.error(e)
     end
 
     def handle_message(msg)
