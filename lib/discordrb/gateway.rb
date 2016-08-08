@@ -154,6 +154,11 @@ module Discordrb
       @handshake.finished? && !@closed
     end
 
+    # Kills the websocket thread, stopping all connections to Discord.
+    def kill
+      @ws_thread.kill
+    end
+
     private
 
     def setup_heartbeats(interval)

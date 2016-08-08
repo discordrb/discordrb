@@ -182,11 +182,6 @@ module Discordrb
       @ws.close
     end
 
-    # Kills the websocket thread, stopping all connections to Discord.
-    def kill
-      @ws_thread.kill
-    end
-
     # @return [true, false] whether or not the bot is currently connected to Discord.
     def connected?
       @ws_success
