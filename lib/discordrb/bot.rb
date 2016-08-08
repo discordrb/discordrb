@@ -880,14 +880,6 @@ module Discordrb
     end
 
     def handle_dispatch(type, data)
-      if @prevent_ready && type == :READY
-        debug('READY packet was received and suppressed')
-      elsif @prevent_ready && type == :GUILD_MEMBERS_CHUNK
-        # Ignore chunks as they will be handled later anyway
-      else
-        LOGGER.in(event.to_s)
-      end
-
       # Check whether there are still unavailable servers and there have been more than 10 seconds since READY
       if @unavailable_servers && @unavailable_servers > 0 && (Time.now - @unavailable_timeout_time) > 10
         # The server streaming timed out!
