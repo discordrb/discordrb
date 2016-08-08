@@ -572,6 +572,11 @@ module Discordrb
       LOGGER.log_exception(e)
     end
 
+    # Dispatches an event to this bot. Called by the gateway connection handler used internally.
+    def dispatch(type, data)
+      handle_dispatch(type, data)
+    end
+
     private
 
     # Determines the type of an account by checking which parameters are given
