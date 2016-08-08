@@ -656,12 +656,12 @@ module Discordrb::API
   end
 
   # Update user data
-  def update_user(token, email, password, new_username, avatar, new_password = nil)
+  def update_user(token, new_username, avatar)
     request(
       __method__,
       :patch,
       "#{api_base}/users/@me",
-      { avatar: avatar, email: email, new_password: new_password, password: password, username: new_username }.to_json,
+      { avatar: avatar, username: new_username }.to_json,
       Authorization: token,
       content_type: :json
     )
