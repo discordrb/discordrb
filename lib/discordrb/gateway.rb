@@ -443,7 +443,9 @@ module Discordrb
 
     # Op 1
     def heartbeat
-      send_packet(Opcodes::HEARTBEAT, @session.sequence)
+      # Send a heartbeat with the last received packet's seq (to acknowledge that we have received it and all packets
+      # before it), or if none have been received yet, with 0.
+      send_packet(Opcodes::HEARTBEAT, @session ? @session.sequence : 0)
     end
 
     # Op 2
