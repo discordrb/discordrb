@@ -469,6 +469,15 @@ module Discordrb
       end
     end
 
+    def send_packet(op, packet)
+      data = {
+        op: op,
+        d: packet
+      }
+
+      send(data.to_json)
+    end
+
     def send(data, type = :text)
       LOGGER.out(data)
 
