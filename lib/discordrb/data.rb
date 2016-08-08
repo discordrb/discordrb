@@ -1758,8 +1758,8 @@ module Discordrb
     def process_emoji(emoji)
       return unless emoji
       emoji.each do |element|
-        member = Emoji.new(element, @bot, self)
-        @emoji[emoji.id] = emoji
+        newemoji = Emoji.new(element, @bot, self)
+        @emoji[emoji.id] = newemoji
       end
     end
 
