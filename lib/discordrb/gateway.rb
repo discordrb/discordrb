@@ -315,7 +315,7 @@ module Discordrb
               # If the `code` method is defined on the message, it means it's a close frame.
               # Handle it accordingly
               if msg.respond_to? :code
-                handle_close(msg)
+                handle_internal_close(msg)
                 break
               end
 
