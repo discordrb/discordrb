@@ -887,77 +887,14 @@ module Discordrb
     ##  ##  ## ##    ##    ##         ## ##   ##       ##   ###    ##    ##    ##
     ####  ###   ######     ########    ###    ######## ##    ##    ##     ######
 
-    def websocket_message(event)
-      if event.byteslice(0) == 'x'
-        # The message is encrypted
-        event = Zlib::Inflate.inflate(event)
-      end
-
-      # Parse packet
-      packet = JSON.parse(event)
-
-      if @prevent_ready && packet['t'] == 'READY'
+    def handle_dispatch(type, data)
+      if @prevent_ready && type == :READY
         debug('READY packet was received and suppressed')
-      elsif @prevent_ready && packet['t'] == 'GUILD_MEMBERS_CHUNK'
+      elsif @prevent_ready && type == :GUILD_MEMBERS_CHUNK
         # Ignore chunks as they will be handled later anyway
       else
         LOGGER.in(event.to_s)
       end
-
-      opcode = packet['op'].to_i
-
-      if opcode == Opcodes::HEARTBEAT
-        # If Discord sends us a heartbeat, simply reply with a heartbeat with the packet's sequence number
-        @sequence = packet['s'].to_i
-
-        LOGGER.info("Received an op1 (seq: #{@sequence})! This means another client connected while this one is already running. Replying with the same seq")
-        send_heartbeat
-
-        return
-      end
-
-      if opcode == Opcodes::RECONNECT
-        websocket_reconnect(packet['d'] ? packet['d']['url'] : nil)
-        return
-      end
-
-      if opcode == Opcodes::INVALIDATE_SESSION
-        LOGGER.info "We got an opcode 9 from Discord! Invalidating the session. You probably don't have to worry about this."
-        invalidate_session
-        LOGGER.debug 'Session invalidated!'
-
-        LOGGER.debug 'Reconnecting with IDENTIFY'
-        websocket_open # Since we just invalidated the session, pretending we just opened the WS again will re-identify
-        LOGGER.debug "Re-identified! Let's hope everything works fine."
-        return
-      end
-
-      if opcode == Opcodes::HELLO
-        LOGGER.debug 'Hello!'
-
-        # Initialize sequence with 0 so we can start heartbeating without being in a session
-        @sequence = 0
-
-        # Activate the heartbeats
-        @heartbeat_interval = packet['d']['heartbeat_interval'].to_f / 1000.0
-        @heartbeat_active = true
-        debug("Desired heartbeat_interval: #{@heartbeat_interval} seconds")
-
-        debug("Trace: #{packet['d']['_trace']}")
-
-        return
-      end
-
-      if opcode == Opcodes::HEARTBEAT_ACK
-        # Set this to false so when sending the next heartbeat it won't try to reconnect because it's still expecting
-        # an ACK
-        @awaiting_ack = false
-        return
-      end
-
-      raise "Got an unexpected opcode (#{opcode}) in a gateway event!
-              Please report this issue along with the following information:
-              v#{GATEWAY_VERSION} #{packet}" unless opcode == Opcodes::DISPATCH
 
       # Check whether there are still unavailable servers and there have been more than 10 seconds since READY
       if @unavailable_servers && @unavailable_servers > 0 && (Time.now - @unavailable_timeout_time) > 10
@@ -971,19 +908,8 @@ module Discordrb
         notify_ready
       end
 
-      # Keep track of the packet sequence (continually incrementing number for every packet) so we can resume a
-      # connection if we disconnect
-      @sequence = packet['s'].to_i
-
-      data = packet['d']
-      type = packet['t'].intern
       case type
       when :READY
-        LOGGER.info("Discord using gateway protocol version: #{data['v']}, requested: #{GATEWAY_VERSION}")
-
-        # Set the session ID in case we get disconnected and have to resume
-        @session_id = data['session_id']
-
         @profile = Profile.new(data['user'], self, @email, @password)
 
         # Initialize servers
