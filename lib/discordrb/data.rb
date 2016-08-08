@@ -218,9 +218,6 @@ module Discordrb
     # @return [String] the application description
     attr_reader :description
 
-    # @return [String] the application ID
-    attr_reader :id
-
     # @return [Array<String>] the applications origins permitted to use RPC
     attr_reader :rpc_origins
 
