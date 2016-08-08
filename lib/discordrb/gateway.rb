@@ -123,6 +123,9 @@ module Discordrb
     # How many members there need to be in a server for it to count as "large"
     LARGE_THRESHOLD = 100
 
+    # The version of the gateway that's supposed to be used.
+    GATEWAY_VERSION = 5
+
     def initialize(bot, token)
       @token = token
       @bot = bot
