@@ -946,11 +946,6 @@ module Discordrb
 
         @ready_time = Time.now
         @unavailable_timeout_time = Time.now
-      when :RESUMED
-        # The RESUMED event is received after a successful op 6 (resume). It does nothing except tell the bot the
-        # connection is initiated (like READY would). Starting with v5, it doesn't set a new heartbeat interval anymore
-        # since that is handled by op 10 (HELLO).
-        debug('Connection resumed')
       when :GUILD_MEMBERS_CHUNK
         id = data['guild_id'].to_i
         server = server(id)
