@@ -462,6 +462,12 @@ module Discordrb
     end
 
     def handle_close(e)
+      if e.respond_to? :code
+        # It is a proper close frame we're dealing with, print reason and message to console
+        LOGGER.error('Websocket close frame received!')
+        LOGGER.error("Code: #{e.code}")
+        LOGGER.error("Message: #{e.data}")
+      end
     end
 
     def send(data, type = :text)
