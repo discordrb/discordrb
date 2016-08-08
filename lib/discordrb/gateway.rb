@@ -436,6 +436,11 @@ module Discordrb
       LOGGER.debug("Received heartbeat ack for packet: #{packet.inspect}")
     end
 
+    # Op 1
+    def heartbeat
+      send_packet(Opcodes::HEARTBEAT, @session.sequence)
+    end
+
     # Op 2
     def identify
       data = {
