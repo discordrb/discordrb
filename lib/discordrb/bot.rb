@@ -67,8 +67,6 @@ module Discordrb
     # Simply creating a bot won't be enough to start sending messages etc. with, only a limited set of methods can
     # be used after logging in. If you want to do something when the bot has connected successfully, either do it in the
     # {#ready} event, or use the {#run} method with the :async parameter and do the processing after that.
-    # @param email [String] The email for your (or the bot's) Discord account.
-    # @param password [String] The valid password that should be used to log in to the account.
     # @param log_mode [Symbol] The mode this bot should use for logging. See {Logger#mode=} for a list of modes.
     # @param token [String] The token that should be used to log in. If your bot is a bot account, you have to specify
     #   this. If you're logging in as a user, make sure to also set the account type to :user so discordrb doesn't think
@@ -91,15 +89,10 @@ module Discordrb
     # @param num_shards [Integer] The total number of shards that should be running. See
     #   https://github.com/hammerandchisel/discord-api-docs/issues/17 for how to do sharding.
     def initialize(
-        email: nil, password: nil, log_mode: :normal,
+        log_mode: :normal,
         token: nil, application_id: nil,
         type: nil, name: '', fancy_log: false, suppress_ready: false, parse_self: false,
         shard_id: nil, num_shards: nil)
-      # Make sure people replace the login details in the example files...
-      if email.is_a?(String) && email.end_with?('example.com')
-        puts 'You have to replace the login details in the example files with your own!'
-        exit
-      end
 
       LOGGER.mode = if log_mode.is_a? TrueClass # Specifically check for `true` because people might not have updated yet
                       :debug
@@ -109,13 +102,9 @@ module Discordrb
 
       @should_parse_self = parse_self
 
-      @email = email
-      @password = password
-
       @application_id = application_id
 
-      @type = determine_account_type(type, email, password, token, application_id)
-
+      @type = type || :bot
       @name = name
 
       @shard_key = num_shards ? [shard_id, num_shards] : nil
@@ -123,10 +112,7 @@ module Discordrb
       LOGGER.fancy = fancy_log
       @prevent_ready = suppress_ready
 
-      debug('Creating token cache')
-      token_cache = Discordrb::TokenCache.new
-      debug('Token cache created successfully')
-      @token = login(type, email, password, token, token_cache)
+      @token = process_token(@type, token)
 
       init_cache
 
@@ -579,26 +565,6 @@ module Discordrb
 
     private
 
-    # Determines the type of an account by checking which parameters are given
-    def determine_account_type(type, email, password, token, application_id)
-      # Case 1: if a type is already given, return it
-      return type if type
-
-      # Case 2: user accounts can't have application IDs so if one is given, return bot type
-      return :bot if application_id
-
-      # Case 3: bot accounts can't have emails and passwords so if either is given, assume user
-      return :user if email || password
-
-      # Case 4: If we're here and no token is given, throw an exception because that's impossible
-      raise ArgumentError, "Can't login because no authentication data was given! Specify at least a token" unless token
-
-      # Case 5: Only a token has been specified, we can assume it's a bot but we should tell the user
-      # to specify the application ID:
-      LOGGER.warn('The application ID is missing! Logging in as a bot will work but some OAuth-related functionality will be unavailable!')
-      :bot
-    end
-
     # Throws a useful exception if there's currently no gateway connection
     def gateway_check
       return if connected?
@@ -819,63 +785,11 @@ module Discordrb
     ##       ##     ## ##    ##   ##  ##   ###
     ########  #######   ######   #### ##    ##
 
-    def login(type, email, password, token, token_cache)
-      # Don't bother with any login code if a token is already specified
-      return process_token(type, token) if token
-
-      # If a bot account attempts logging in without a token, throw an error
-      raise ArgumentError, 'Bot account detected (type == :bot) but no token was found! Please specify a token in the Bot initializer, or use a user account.' if type == :bot
-
-      # If the type is not a user account at this point, it must be invalid
-      raise ArgumentError, 'Invalid type specified! Use either :bot or :user' if type == :user
-
-      user_login(email, password, token_cache)
-    end
-
     def process_token(type, token)
       # Remove the "Bot " prefix if it exists
       token = token[4..-1] if token.start_with? 'Bot '
 
       token = 'Bot ' + token unless type == :user
-      token
-    end
-
-    def user_login(email, password, token_cache)
-      debug('Logging in')
-
-      # Attempt to retrieve the token from the cache
-      retrieved_token = retrieve_token(email, password, token_cache)
-      return retrieved_token if retrieved_token
-
-      login_attempts ||= 0
-
-      # Login
-      login_response = JSON.parse(API.login(email, password))
-      token = login_response['token']
-      raise Discordrb::Errors::InvalidAuthenticationError unless token
-      debug('Received token from Discord!')
-
-      # Cache the token
-      token_cache.store_token(email, password, token)
-
-      token
-    rescue RestClient::BadRequest
-      raise Discordrb::Errors::InvalidAuthenticationError
-    rescue SocketError, RestClient::RequestFailed => e # RequestFailed handles the 52x error codes Cloudflare sometimes sends that aren't covered by specific RestClient classes
-      if login_attempts && login_attempts > 100
-        LOGGER.error("User login failed permanently after #{login_attempts} attempts")
-        raise
-      else
-        LOGGER.error("User login failed! Trying again in 5 seconds, #{100 - login_attempts} remaining")
-        LOGGER.log_exception(e)
-        retry
-      end
-    end
-
-    def retrieve_token(email, password, token_cache)
-      # First, attempt to get the token from the cache
-      token = token_cache.token(email, password)
-      debug('Token successfully obtained from cache!') if token
       token
     end
 
