@@ -312,9 +312,8 @@ module Discordrb
             # Try to parse a message from the frame
             msg = frame.next
             while msg
-              # If the `code` method is defined on the message, it means it's a close frame.
-              # Handle it accordingly
-              if msg.respond_to? :code
+              # Check whether the message is a close frame, and if it is, handle accordingly
+              if msg.respond_to?(:code) && msg.code
                 handle_internal_close(msg)
                 break
               end
