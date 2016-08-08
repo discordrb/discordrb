@@ -324,6 +324,8 @@ module Discordrb
       packet = JSON.parse(msg)
       op = packet['op'].to_i
 
+      LOGGER.in(packet)
+
       case op
       when Opcodes::DISPATCH
         handle_dispatch(packet)
