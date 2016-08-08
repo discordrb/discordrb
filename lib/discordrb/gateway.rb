@@ -313,7 +313,7 @@ module Discordrb
             msg = frame.next
             while msg
               # If there is one, handle it and try again
-              handle_message(msg)
+              handle_message(msg.data)
               msg = frame.next
             end
           else
@@ -338,7 +338,8 @@ module Discordrb
     end
 
     def handle_error(e)
-      LOGGER.error(e)
+      LOGGER.error('An error occurred in the main websocket loop!')
+      LOGGER.log_exception(e)
     end
 
     def handle_message(msg)
