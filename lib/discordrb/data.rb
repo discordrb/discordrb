@@ -1373,6 +1373,7 @@ module Discordrb
 
     def initialize(data, bot, server)
       @bot = bot
+      @roles = []
 
       @name = data['name']
       @id = data['id'].to_i
@@ -1392,15 +1393,10 @@ module Discordrb
     private
 
     def process_roles(roles)
-      # Create roles
-      @roles = []
-      @roles_by_id = {}
-
       return unless roles
       roles.each do |element|
-        role = Role.new(element, @bot, self)
+        role = Role.new(element, @bot, @server)
         @roles << role
-        @roles_by_id[role.id] = role
       end
     end
   end
