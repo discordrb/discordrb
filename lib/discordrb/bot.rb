@@ -55,13 +55,8 @@ module Discordrb
     # Makes a new bot with the given authentication data. It will be ready to be added event handlers to and can
     # eventually be run with {#run}.
     #
-    # Depending on the authentication information present, discordrb will deduce whether you're running on a user or a
-    # bot account. (Discord recommends using bot accounts whenever possible.) The following sets of authentication
-    # information are valid:
-    #  * token + application_id (bot account)
-    #  * email + password (user account)
-    #  * email + password + token (user account; the given token will be used for authentication instead of email
-    #    and password)
+    # As support for logging in using username and password has been removed in version 3.0.0, only a token login is
+    # possible. Be sure to specify the `type` parameter as `:user` if you're logging in as a user.
     #
     # Simply creating a bot won't be enough to start sending messages etc. with, only a limited set of methods can
     # be used after logging in. If you want to do something when the bot has connected successfully, either do it in the
@@ -71,9 +66,8 @@ module Discordrb
     #   this. If you're logging in as a user, make sure to also set the account type to :user so discordrb doesn't think
     #   you're trying to log in as a bot.
     # @param application_id [Integer] If you're logging in as a bot, the bot's application ID.
-    # @param type [Symbol] This parameter lets you manually overwrite the account type. If this isn't specified, it will
-    #   be determined by checking what other attributes are there. The only use case for this is if you want to log in
-    #   as a user but only with a token. Valid values are :user and :bot.
+    # @param type [Symbol] This parameter lets you manually overwrite the account type. This needs to be set when
+    #   logging in as a user, otherwise discordrb will treat you as a bot account. Valid values are `:user` and `:bot`.
     # @param name [String] Your bot's name. This will be sent to Discord with any API requests, who will use this to
     #   trace the source of excessive API requests; it's recommended to set this to something if you make bots that many
     #   people will host on their servers separately.
