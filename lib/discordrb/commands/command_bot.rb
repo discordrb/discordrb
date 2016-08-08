@@ -62,8 +62,6 @@ module Discordrb::Commands
     #   :advanced_functionality). Default is '"'.
     def initialize(attributes = {})
       super(
-        email: attributes[:email],
-        password: attributes[:password],
         log_mode: attributes[:log_mode],
         token: attributes[:token],
         application_id: attributes[:application_id],
