@@ -144,6 +144,11 @@ module Discordrb
       debug('Confirmation received! Exiting run.')
     end
 
+    # Prevents all further execution until the websocket thread stops (e. g. through a closed connection).
+    def sync
+      @ws_thread.join
+    end
+
     # Whether the WebSocket connection to the gateway is currently open
     def open?
       @handshake.finished? && !@closed
