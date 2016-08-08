@@ -1360,6 +1360,35 @@ module Discordrb
     end
   end
 
+
+  # Server emoji
+  class Emoji
+    include IDObject
+
+    # @return [String] the emoji name
+    attr_reader :name
+
+    # @return [Array<Role>] roles this emoji is active for
+    attr_reader :roles
+
+    def initialize(data, bot, server)
+      @bot = bot
+
+      @name = data['name']
+      @id = data['id'].to_i
+      @roles = data['roles'].map do {|role| server.id(role)}
+    end
+
+    # @return [String] the layout to mention it (or have it used) in a message
+    def mention
+      "<:#{@name}:#{@id}>"
+    end
+
+    # The inspect method is overwritten to give more useful output
+    def inspect
+      "<Emoji name=#{@name} id=#{@id}>"
+    end
+  end
   # A server on Discord
   class Server
     include IDObject
@@ -1376,6 +1405,9 @@ module Discordrb
 
     # @return [Array<Role>] an array of all the roles created on this server.
     attr_reader :roles
+
+    # @return [Array<Emoji>] an array of all the emojis available on this server.
+    attr_reader :emojis
 
     # @return [true, false] whether or not this server is large (members > 100). If it is,
     # it means the members list may be inaccurate for a couple seconds after starting up the bot.
@@ -1397,6 +1429,7 @@ module Discordrb
     # @!visibility private
     def initialize(data, bot, exists = true)
       @bot = bot
+      @emojis = data['emojis'].map {|emoji| Emoji.new(emoji, @bot, self) }
       @owner_id = data['owner_id'].to_i
       @id = data['id'].to_i
       update_data(data)
