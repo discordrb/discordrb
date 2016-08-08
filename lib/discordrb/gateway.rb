@@ -184,7 +184,7 @@ module Discordrb
           # Send a heartbeat if heartbeats are active and either no session exists yet, or an existing session is
           # suspended (e.g. after op7)
           if (@session && !@session.suspended?) || !@session
-            send_heartbeat
+            heartbeat
             sleep @heartbeat_interval
           else
             sleep 1
