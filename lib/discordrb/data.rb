@@ -1417,8 +1417,9 @@ module Discordrb
     # @return [Array<Role>] an array of all the roles created on this server.
     attr_reader :roles
 
-    # @return [Array<Emoji>] an array of all the emojis available on this server.
-    attr_reader :emojis
+    # @return [Array<Emoji>] an array of all the emoji available on this server.
+    attr_reader :emoji
+    alias_method :emojis, :emoji
 
     # @return [true, false] whether or not this server is large (members > 100). If it is,
     # it means the members list may be inaccurate for a couple seconds after starting up the bot.
@@ -1448,9 +1449,10 @@ module Discordrb
       @member_count = data['member_count']
       @members = {}
       @voice_states = {}
+      @emoji = {}
 
       process_roles(data['roles'])
-      process_emojis(data['emojis'])
+      process_emoji(data['emojis'])
       process_members(data['members'])
       process_presences(data['presences'])
       process_channels(data['channels'])
@@ -1766,11 +1768,11 @@ module Discordrb
       end
     end
 
-    def process_emojis(emojis)
+    def process_emoji(emoji)
       return unless emoji
       emoji.each do |element|
         member = Emoji.new(element, @bot, self)
-        @emojis[emoji.id] = emoji
+        @emoji[emoji.id] = emoji
       end
     end
 
