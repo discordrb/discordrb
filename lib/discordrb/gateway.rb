@@ -217,6 +217,8 @@ module Discordrb
 
     # Create and connect a socket using a URI
     def obtain_socket(uri)
+      socket = TCPSocket.new(uri.host, uri.port || socket_port(uri))
+
       if secure_uri?(uri)
         ctx = OpenSSL::SSL::SSLContext.new
         ctx.ssl_version = 'SSLv23'
@@ -228,8 +230,6 @@ module Discordrb
 
         socket = ::OpenSSL::SSL::SSLSocket.new(@socket, ctx)
         socket.connect
-      else
-        socket = TCPSocket.new(uri.host, uri.port || socket_port(uri))
       end
 
       socket
