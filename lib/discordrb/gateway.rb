@@ -383,6 +383,22 @@ module Discordrb
       @bot.dispatch(type, data)
     end
 
+    # Op 7
+    def handle_reconnect
+      @instant_reconnect = true
+      close
+
+      # Suspend session so we resume afterwards
+      @session.suspend
+    end
+
+    # Op 9
+    def handle_invalidate_session
+      LOGGER.debug('Received op 9, invalidating session and reidentifying.')
+      @session.invalidate
+      identify
+    end
+
     # Op 10
     def handle_hello(packet)
       LOGGER.debug('Hello!')
@@ -400,25 +416,9 @@ module Discordrb
       end
     end
 
-    # Op 7
-    def handle_reconnect
-      @instant_reconnect = true
-      close
-
-      # Suspend session so we resume afterwards
-      @session.suspend
-    end
-
     # Op 11
     def handle_heartbeat_ack(packet)
       LOGGER.debug("Received heartbeat ack for packet: #{packet.inspect}")
-    end
-
-    # Op 9
-    def handle_invalidate_session
-      LOGGER.debug('Received op 9, invalidating session and reidentifying.')
-      @session.invalidate
-      identify
     end
 
     def identify
