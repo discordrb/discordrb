@@ -801,7 +801,7 @@ module Discordrb
 
       case type
       when :READY
-        @profile = Profile.new(data['user'], self, @email, @password)
+        @profile = Profile.new(data['user'], self)
 
         # Initialize servers
         @servers = {}
