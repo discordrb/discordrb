@@ -180,17 +180,6 @@ module Discordrb::API
     )
   end
 
-  # Login to the server
-  def login(email, password)
-    request(
-      __method__,
-      :post,
-      "#{api_base}/auth/login",
-      email: email,
-      password: password
-    )
-  end
-
   # Logout from the server
   def logout(token)
     request(
