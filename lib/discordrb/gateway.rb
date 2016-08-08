@@ -243,10 +243,8 @@ module Discordrb
     end
 
     def find_gateway
-      if @reconnect_url
-        response = API.gateway(token)
-        JSON.parse(response)['url']
-      end
+      response = API.gateway(token)
+      JSON.parse(response)['url']
     end
 
     def process_gateway
