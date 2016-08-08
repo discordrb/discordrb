@@ -23,6 +23,7 @@ require 'discordrb/await'
 require 'discordrb/container'
 require 'discordrb/websocket'
 require 'discordrb/cache'
+require 'discordrb/gateway'
 
 require 'discordrb/voice/voice_bot'
 
