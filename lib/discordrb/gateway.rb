@@ -363,6 +363,10 @@ module Discordrb
       packet = JSON.parse(msg)
       op = packet['op'].to_i
 
+      # If the packet has a sequence defined (all dispatch packets have one), make sure to update that in the
+      # session so it will be acknowledged next heartbeat.
+      @session.sequence = packet['s'] if packet['s']
+
       LOGGER.in(packet)
 
       case op
