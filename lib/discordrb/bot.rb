@@ -173,15 +173,6 @@ module Discordrb
       @gateway.sync
     end
 
-    # Stops the bot gracefully, disconnecting the websocket without immediately killing the thread. This means that
-    # Discord is immediately aware of the closed connetion and makes the bot appear offline instantly.
-    #
-    # If this method doesn't work or you're looking for something more drastic, use {#kill} instead.
-    def stop
-      @should_reconnect = false
-      @ws.close
-    end
-
     # @return [true, false] whether or not the bot is currently connected to Discord.
     def connected?
       @ws_success
