@@ -451,7 +451,7 @@ module Discordrb
         large_threshold: 100
       }
 
-      send(data.to_json)
+      send_packet(Opcodes::IDENTIFY, data)
     end
 
     # Called when the websocket has been disconnected in some way - say due to a pipe error while sending
