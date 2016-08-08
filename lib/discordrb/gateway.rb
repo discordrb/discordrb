@@ -367,7 +367,10 @@ module Discordrb
 
       # If the packet has a sequence defined (all dispatch packets have one), make sure to update that in the
       # session so it will be acknowledged next heartbeat.
-      @session.sequence = packet['s'] if packet['s']
+      # Only do this, of course, if a session has been created already; for a READY dispatch (which has s=0 set but is
+      # the packet that starts the session in the first place) we need not do any handling since initialising the
+      # session will set it to 0 by default.
+      @session.sequence = packet['s'] if packet['s'] && @session
 
       case op
       when Opcodes::DISPATCH
