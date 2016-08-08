@@ -166,16 +166,11 @@ module Discordrb
     #   If the bot is run in async mode, make sure to eventually run {#sync} so
     #   the script doesn't stop prematurely.
     def run(async = false)
-      run_async
+      @gateway.run_async
       return if async
 
       debug('Oh wait! Not exiting yet as run was run synchronously.')
       sync
-    end
-
-    # Runs the bot asynchronously. Equivalent to #run with the :async parameter.
-    # @see #run
-    def run_async
     end
 
     # Prevents all further execution until the websocket thread stops (e. g. through a closed connection).
