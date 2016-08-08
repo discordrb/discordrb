@@ -228,7 +228,7 @@ module Discordrb
         cert_store.set_default_paths
         ctx.cert_store = cert_store
 
-        socket = ::OpenSSL::SSL::SSLSocket.new(@socket, ctx)
+        socket = ::OpenSSL::SSL::SSLSocket.new(socket, ctx)
         socket.connect
       end
 
