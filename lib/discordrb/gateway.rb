@@ -436,6 +436,7 @@ module Discordrb
       LOGGER.debug("Received heartbeat ack for packet: #{packet.inspect}")
     end
 
+    # Op 2
     def identify
       data = {
         # Don't send a v anymore as it's entirely determined by the URL now
