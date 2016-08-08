@@ -175,7 +175,7 @@ module Discordrb
 
     # @return [true, false] whether or not the bot is currently connected to Discord.
     def connected?
-      @ws_success
+      @gateway.open?
     end
 
     # Makes the bot join an invite to a server.
