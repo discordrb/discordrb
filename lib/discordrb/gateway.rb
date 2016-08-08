@@ -277,6 +277,9 @@ module Discordrb
 
       # We're done! Delegate to the websocket loop
       websocket_loop
+    rescue => e
+      LOGGER.error('An error occurred while connecting to the websocket!')
+      LOGGER.log_exception(e)
     end
 
     def websocket_loop
