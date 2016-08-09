@@ -162,7 +162,8 @@ module Discordrb::Commands
         return
       end
       if permission?(event.author, command.attributes[:permission_level], event.server) &&
-         required_permissions?(event.author, command.attributes[:required_permissions], event.channel)
+         required_permissions?(event.author, command.attributes[:required_permissions], event.channel) &&
+         required_roles?(event.author, command.attributes[:required_roles])
         event.command = command
         result = command.call(event, arguments, chained)
         stringify(result)
@@ -258,6 +259,16 @@ module Discordrb::Commands
     def required_permissions?(member, required, channel = nil)
       required.reduce(true) do |a, action|
         a && member.permission?(action, channel)
+      end
+    end
+
+    def required_roles?(member, required)
+      if required.is_a? Array
+        required.all? do |role|
+          member.role?(role)
+        end
+      else
+        member.role?(role)
       end
     end
 

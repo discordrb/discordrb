@@ -22,6 +22,9 @@ module Discordrb::Commands
         # Discord action permissions required to use this command
         required_permissions: attributes[:required_permissions] || [],
 
+        # Roles required to use this permission
+        required_roles: attributes[:required_roles] || [],
+
         # Whether this command is usable in a command chain
         chain_usable: attributes[:chain_usable].nil? ? true : attributes[:chain_usable],
 
