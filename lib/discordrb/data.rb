@@ -1360,7 +1360,6 @@ module Discordrb
     end
   end
 
-
   # Server emoji
   class Emoji
     include IDObject
@@ -1376,6 +1375,7 @@ module Discordrb
       @roles = []
 
       @name = data['name']
+      @server = server
       @id = data['id'].to_i
       process_roles(data['roles'])
     end
