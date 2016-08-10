@@ -171,6 +171,42 @@ module Discordrb
       @ws_thread.kill
     end
 
+    # Op 1
+    def heartbeat
+      # Send a heartbeat with the last received packet's seq (to acknowledge that we have received it and all packets
+      # before it), or if none have been received yet, with 0.
+      send_packet(Opcodes::HEARTBEAT, @session ? @session.sequence : 0)
+    end
+
+    # Op 2
+    def identify
+      data = {
+        # Don't send a v anymore as it's entirely determined by the URL now
+        token: @token,
+        properties: {
+          :'$os' => RUBY_PLATFORM,
+          :'$browser' => 'discordrb',
+          :'$device' => 'discordrb',
+          :'$referrer' => '',
+          :'$referring_domain' => ''
+        },
+        compress: true,
+        large_threshold: 100
+      }
+
+      send_packet(Opcodes::IDENTIFY, data)
+    end
+
+    # Op 3
+    def status_update(idle_since, game)
+      data = {
+        idle_since: idle_since,
+        game: game
+      }
+
+      send_packet(Opcodes::PRESENCE, data)
+    end
+
     private
 
     def setup_heartbeats(interval)
@@ -446,42 +482,6 @@ module Discordrb
     # Op 11
     def handle_heartbeat_ack(packet)
       LOGGER.debug("Received heartbeat ack for packet: #{packet.inspect}")
-    end
-
-    # Op 1
-    def heartbeat
-      # Send a heartbeat with the last received packet's seq (to acknowledge that we have received it and all packets
-      # before it), or if none have been received yet, with 0.
-      send_packet(Opcodes::HEARTBEAT, @session ? @session.sequence : 0)
-    end
-
-    # Op 2
-    def identify
-      data = {
-        # Don't send a v anymore as it's entirely determined by the URL now
-        token: @token,
-        properties: {
-          :'$os' => RUBY_PLATFORM,
-          :'$browser' => 'discordrb',
-          :'$device' => 'discordrb',
-          :'$referrer' => '',
-          :'$referring_domain' => ''
-        },
-        compress: true,
-        large_threshold: 100
-      }
-
-      send_packet(Opcodes::IDENTIFY, data)
-    end
-
-    # Op 3
-    def status_update(idle_since, game)
-      data = {
-        idle_since: idle_since,
-        game: game
-      }
-
-      send_packet(Opcodes::PRESENCE, data)
     end
 
     # Called when the websocket has been disconnected in some way - say due to a pipe error while sending
