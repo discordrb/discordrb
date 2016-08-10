@@ -177,7 +177,9 @@ module Discordrb
       send_heartbeat(@session ? @session.sequence : 0)
     end
 
-    # Op 1
+    # Sends a heartbeat packet (op 1). This tells Discord that the current connection is still active and that the last
+    # packets until the given sequence have been processed (in case of a resume).
+    # @param sequence [Integer] The sequence number for which to send a heartbeat.
     def send_heartbeat(sequence)
       send_packet(Opcodes::HEARTBEAT, sequence)
     end
