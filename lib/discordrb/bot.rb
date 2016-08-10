@@ -541,7 +541,7 @@ module Discordrb
       elsif /<:(?<name>\w+):(?<id>\d+):>?/ =~ mention
         return nil unless server
         server.emoji do |element|
-          return element unless element.name != name && element.id = id
+          return element unless element.name != name && element.id != id
         end
       else
         return nil
