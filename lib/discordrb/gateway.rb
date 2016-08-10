@@ -184,6 +184,7 @@ module Discordrb
       send_packet(Opcodes::HEARTBEAT, sequence)
     end
 
+    # Identifies to Discord with the default parameters.
     def identify
       send_identify(@token, {
                       :'$os' => RUBY_PLATFORM,
