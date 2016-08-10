@@ -10,7 +10,7 @@ module Discordrb
       0 => :create_instant_invite, # 1
       1 => :kick_members,          # 2
       2 => :ban_members,           # 4
-      3 => :manage_roles,          # 8, also Manage Permissions
+      3 => :administrate,          # 8
       4 => :manage_channels,       # 16
       5 => :manage_server,         # 32
       # 6                          # 64
@@ -25,7 +25,7 @@ module Discordrb
       15 => :attach_files,         # 32768
       16 => :read_message_history, # 65536
       17 => :mention_everyone,     # 131072
-      # 18                         # 262144
+      18 => :use_external_emoji,   # 262144
       # 19                         # 524288
       20 => :connect,              # 1048576
       21 => :speak,                # 2097152
@@ -34,7 +34,8 @@ module Discordrb
       24 => :move_members,         # 16777216
       25 => :use_voice_activity,   # 33554432
       26 => :change_nickname,      # 67108864
-      27 => :manage_nicknames      # 134217728
+      27 => :manage_nicknames,     # 134217728
+      28 => :manage_roles          # 268435456, also Manage Permissions
     }.freeze
 
     Flags.each do |position, flag|
