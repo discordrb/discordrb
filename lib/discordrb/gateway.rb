@@ -184,6 +184,16 @@ module Discordrb
       send_packet(Opcodes::HEARTBEAT, sequence)
     end
 
+    def identify
+      send_identify(@token, {
+                      :'$os' => RUBY_PLATFORM,
+                      :'$browser' => 'discordrb',
+                      :'$device' => 'discordrb',
+                      :'$referrer' => '',
+                      :'$referring_domain' => ''
+                    }, true, 100)
+    end
+
     # Op 2
     def send_identify(token, properties, compress, large_threshold)
       data = {
