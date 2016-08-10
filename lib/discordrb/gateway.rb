@@ -185,19 +185,13 @@ module Discordrb
     end
 
     # Op 2
-    def send_identify
+    def send_identify(token, properties, compress, large_threshold)
       data = {
         # Don't send a v anymore as it's entirely determined by the URL now
-        token: @token,
-        properties: {
-          :'$os' => RUBY_PLATFORM,
-          :'$browser' => 'discordrb',
-          :'$device' => 'discordrb',
-          :'$referrer' => '',
-          :'$referring_domain' => ''
-        },
-        compress: true,
-        large_threshold: 100
+        token: token,
+        properties: properties,
+        compress: compress,
+        large_threshold: large_threshold
       }
 
       send_packet(Opcodes::IDENTIFY, data)
