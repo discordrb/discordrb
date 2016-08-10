@@ -418,9 +418,9 @@ module Discordrb
       if role.is_a? Discordrb::Role
         @roles.include?(role)
       elsif role.is_a? String
-        @roles.any? { |e| e.name == role}
+        @roles.any? { |e| e.name == role }
       elsif role.is_a? Integer
-        @roles.any? { |e| e.id == role}
+        @roles.any? { |e| e.id == role }
       else
         raise ArgumentError
       end
