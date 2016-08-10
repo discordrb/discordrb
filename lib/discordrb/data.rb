@@ -247,7 +247,7 @@ module Discordrb
       # (Coincidentally, Manage Permissions is the same permission as Manage Roles, and a
       # Manage Permissions deny overwrite will override Manage Roles, so we can just check for
       # Manage Roles once and call it a day.)
-      return true if defined_permission?(:manage_roles, channel)
+      return true if defined_permission?(:administrate, channel)
 
       # Otherwise, defer to defined_permission
       defined_permission?(action, channel)
