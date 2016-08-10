@@ -474,6 +474,16 @@ module Discordrb
       send_packet(Opcodes::IDENTIFY, data)
     end
 
+    # Op 3
+    def status_update(idle_since, game)
+      data = {
+        idle_since: idle_since,
+        game: game
+      }
+
+      send_packet(Opcodes::PRESENCE, data)
+    end
+
     # Called when the websocket has been disconnected in some way - say due to a pipe error while sending
     def handle_internal_close(e)
       close
