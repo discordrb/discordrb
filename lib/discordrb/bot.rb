@@ -530,7 +530,7 @@ module Discordrb
     # Gets the user from a mention of the user.
     # @param mention [String] The mention, which should look like `<@12314873129>`, `<@&123456789>` or `<:Name:126328:>`.
     # @param server [Server, nil] The server of the associated mention. Required for role and emoji parsing.
-    # @return [User, Role] The user, role or emoji identified by the mention, or `nil` if none exists.
+    # @return [User, Role, Emoji] The user, role or emoji identified by the mention, or `nil` if none exists.
     def parse_mention(mention, server = nil)
       # Mention format: <@id>
       if /<@!?(?<id>\d+)>?/ =~ mention
