@@ -171,9 +171,9 @@ module Discordrb
       @ws_thread.kill
     end
 
+    # Sends a heartbeat with the last received packet's seq (to acknowledge that we have received it and all packets
+    # before it), or if none have been received yet, with 0.
     def heartbeat
-      # Send a heartbeat with the last received packet's seq (to acknowledge that we have received it and all packets
-      # before it), or if none have been received yet, with 0.
       send_heartbeat(@session ? @session.sequence : 0)
     end
 
