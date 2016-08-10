@@ -172,14 +172,14 @@ module Discordrb
     end
 
     # Op 1
-    def heartbeat
+    def send_heartbeat
       # Send a heartbeat with the last received packet's seq (to acknowledge that we have received it and all packets
       # before it), or if none have been received yet, with 0.
       send_packet(Opcodes::HEARTBEAT, @session ? @session.sequence : 0)
     end
 
     # Op 2
-    def identify
+    def send_identify
       data = {
         # Don't send a v anymore as it's entirely determined by the URL now
         token: @token,
@@ -198,7 +198,7 @@ module Discordrb
     end
 
     # Op 3
-    def status_update(idle_since, game)
+    def send_status_update(idle_since, game)
       data = {
         idle_since: idle_since,
         game: game
