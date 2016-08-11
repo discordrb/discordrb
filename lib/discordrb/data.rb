@@ -903,8 +903,18 @@ module Discordrb
     # @return [Recipient, nil] the recipient of the private messages, or nil if this is not a PM channel
     attr_reader :recipient
 
-    # @return [String] the channel's topic
+    # @return [String, nil] the channel's topic. `nil` if channel is voice
     attr_reader :topic
+
+    # @return [Message, nil] the last message sent to this channel. `nil` if channel is voice or no last message found
+    attr_reader :last_message
+
+    # @return [Integer, nil] the bitrate of the channel. `nil` if channel is text
+    attr_reader :bitrate
+
+    # @return [Integer, nil] the amount users that can be in the channel. `0` means it is unlimited. `nil` if channel is text
+    attr_reader :user_limit
+    alias_method :limit, :user_limit
 
     # @return [Integer] the channel's position on the channel list
     attr_reader :position
@@ -934,6 +944,9 @@ module Discordrb
       @id = data['id'].to_i
       @type = data['type'] || TEXT_TYPE
       @topic = data['topic']
+      @last_message = history(1).first # Make use of data['last_message_id'] later
+      @bitrate = data['bitrate']
+      @user_limit = data['user_limit']
       @position = data['position']
 
       @is_private = data['is_private']
@@ -1024,9 +1037,27 @@ module Discordrb
     # Sets this channel's topic.
     # @param topic [String] The new topic.
     def topic=(topic)
+      raise ArgumentError, 'This channel is not a text channel!' unless text?
       @topic = topic
       update_channel_data
     end
+
+    # Sets this channel's bitrate.
+    # @param bitrate [Integer] The new bitrate. Number has to be between 8-96
+    def bitrate=(topic)
+      raise ArgumentError, 'This channel is not a voice channel!' unless voice?
+      @bitrate = bitrate
+      update_channel_data
+    end
+
+    # Sets this channel's user limit.
+    # @param limit [Integer] The new user limit. `0` for unlimited, Has to be a number between 0-99
+    def user_limit=(limit)
+      raise ArgumentError, 'This channel is not a voice channel!' unless voice?
+      @user_limit = limit
+      update_channel_data
+    end
+    alias_method :limit=, :user_limit=
 
     # Sets this channel's position in the list.
     # @param position [Integer] The new position.
@@ -1157,7 +1188,7 @@ module Discordrb
     private
 
     def update_channel_data
-      API.update_channel(@bot.token, @id, @name, @topic, @position)
+      API.update_channel(@bot.token, @id, @name, @topic, @position, @bitrate, @user_limit)
     end
   end
 
