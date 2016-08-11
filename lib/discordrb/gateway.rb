@@ -255,6 +255,16 @@ module Discordrb
       send_packet(Opcodes::VOICE_STATE, data)
     end
 
+    def send_resume(token, session_id, seq)
+      data = {
+        token: token,
+        session_id: session_id,
+        seq: seq
+      }
+
+      send_packet(Opcodes::RESUME, data)
+    end
+
     private
 
     def setup_heartbeats(interval)
