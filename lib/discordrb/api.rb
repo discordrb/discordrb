@@ -325,7 +325,7 @@ module Discordrb::API
   end
 
   # Update a channel's data
-  def update_channel(token, channel_id, name, topic, position = 0, bitrate, user_limit)
+  def update_channel(token, channel_id, name, topic, position = 0, bitrate = nil, user_limit = nil)
     request(
       __method__,
       :patch,
