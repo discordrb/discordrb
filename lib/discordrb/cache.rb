@@ -128,8 +128,8 @@ module Discordrb
       return @users[id] if @users[id]
 
       LOGGER.out("Resolving emoji #{name}")
-      self.emoji.select do |emoji|
-        emoji.name == name
+      emoji.select do |element|
+        element.name == name
       end.first
     end
 

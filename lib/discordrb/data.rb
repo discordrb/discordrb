@@ -1371,10 +1371,10 @@ module Discordrb
 
       @name = data['name']
       @server = server
-      @attached = server != nil
+      @attached = !server.nil?
       @id = data['id'].to_i
 
-      process_roles(data['roles']) unless not @attached
+      process_roles(data['roles']) unless !@attached
     end
 
     # @return [String] the layout to mention it (or have it used) in a message
