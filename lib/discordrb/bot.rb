@@ -219,6 +219,21 @@ module Discordrb
       @servers
     end
 
+    # The list of emojis the bot can use.
+    # @return [Array<Emoji>] The emojis available.
+    def emoji
+      gateway_check
+      emojis = []
+      @servers.each do |_, server|
+        server.emoji.each do |emoji|
+          emojis.push(emoji.detach) unless emojis.any? {|element| element.name == emoji.name }
+        end
+      end
+      emojis
+    end
+
+    alias_method :emojis, :emoji
+
     # The bot's user profile. This special user object can be used
     # to edit user data like the current username (see {Profile#username=}).
     # @return [Profile] The bot's profile that can be used to edit data.
