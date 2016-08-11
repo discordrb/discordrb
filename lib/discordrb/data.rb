@@ -1044,7 +1044,7 @@ module Discordrb
 
     # Sets this channel's bitrate.
     # @param bitrate [Integer] The new bitrate. Number has to be between 8-96
-    def bitrate=(topic)
+    def bitrate=(bitrate)
       raise ArgumentError, 'This channel is not a voice channel!' unless voice?
       @bitrate = bitrate
       update_channel_data
