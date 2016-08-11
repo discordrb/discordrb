@@ -122,6 +122,18 @@ module Discordrb
       @private_channels[id] = channel
     end
 
+    # Gets a emoji by its name.
+    # @param id [String] The user ID that should be resolved.
+    # @return [Emoji, nil] The emoji identified by the name, or `nil` if it couldn't be found.
+    def get_emoji(name)
+      return @users[id] if @users[id]
+
+      LOGGER.out("Resolving emoji #{name}")
+      self.emoji.select do |emoji|
+        emoji.name == name
+      end.first
+    end
+
     # Ensures a given user object is cached and if not, cache it from the given data hash.
     # @param data [Hash] A data hash representing a user.
     # @return [User] the user represented by the data hash.
