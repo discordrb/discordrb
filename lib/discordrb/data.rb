@@ -1367,22 +1367,36 @@ module Discordrb
     # @return [String] the emoji name
     attr_reader :name
 
-    # @return [Array<Role>] roles this emoji is active for
+    # @return [Server, nil] the server attached to this emoji. `nil` if it is not attached
+    attr_reader :server
+
+    # @return [Array<Role>, nil] roles this emoji is active for, `nil` if nit attached to a server
     attr_reader :roles
+
+    # @return [true, false] whether a server is attached to this emoji
+    attr_reader :attached
+    alias_method :attached?, :attached
 
     def initialize(data, bot, server)
       @bot = bot
-      @roles = []
+      @roles = nil
 
       @name = data['name']
       @server = server
+      @attached = server != nil
       @id = data['id'].to_i
-      process_roles(data['roles'])
+
+      process_roles(data['roles']) unless not @attached
     end
 
     # @return [String] the layout to mention it (or have it used) in a message
     def mention
       "<:#{@name}:#{@id}>"
+    end
+
+    # The icon URL of the emoji
+    def icon_url
+      API.emoji_icon_url(@id)
     end
 
     # The inspect method is overwritten to give more useful output
@@ -1393,6 +1407,7 @@ module Discordrb
     private
 
     def process_roles(roles)
+      @roles = []
       return unless roles
       roles.each do |element|
         role = Role.new(element, @bot, @server)
