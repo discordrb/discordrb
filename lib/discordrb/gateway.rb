@@ -255,6 +255,12 @@ module Discordrb
       send_packet(Opcodes::VOICE_STATE, data)
     end
 
+    # Resumes the session from the last recorded point.
+    # @see #send_resume
+    def resume
+      send_resume(@token, @session.session_id, @session.sequence)
+    end
+
     # Sends a resume packet (op 6). This replays all events from a previous point specified by its packet sequence. This
     # will not work if the packet to resume from has already been acknowledged using a heartbeat, or if the session ID
     # belongs to a now invalid session.
