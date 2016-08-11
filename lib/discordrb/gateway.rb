@@ -195,7 +195,22 @@ module Discordrb
                     }, true, 100)
     end
 
-    # Op 2
+    # Sends an identify packet (op 2). This starts a new session on the current connection and tells Discord who we are.
+    # This can only be done once a connection.
+    # @param token [String] The token with which to authorise the session. If it belongs to a bot account, it must be
+    #   prefixed with "Bot ".
+    # @param properties [Hash<Symbol => String>] A list of properties for Discord to use in analytics. The following
+    #   keys are recognised:
+    #
+    #    - "$os" (recommended value: the operating system the bot is running on)
+    #    - "$browser" (recommended value: library name)
+    #    - "$device" (recommended value: library name)
+    #    - "$referrer" (recommended value: empty)
+    #    - "$referring_domain" (recommended value: empty)
+    #
+    # @param compress [true, false] Whether certain large packets should be compressed using zlib.
+    # @param large_threshold [Integer] The member threshold after which a server counts as large and will have to have
+    #   its member list chunked.
     def send_identify(token, properties, compress, large_threshold)
       data = {
         # Don't send a v anymore as it's entirely determined by the URL now
