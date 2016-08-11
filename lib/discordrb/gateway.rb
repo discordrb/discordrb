@@ -173,6 +173,7 @@ module Discordrb
 
     # Sends a heartbeat with the last received packet's seq (to acknowledge that we have received it and all packets
     # before it), or if none have been received yet, with 0.
+    # @see #send_heartbeat
     def heartbeat
       send_heartbeat(@session ? @session.sequence : 0)
     end
