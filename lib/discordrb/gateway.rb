@@ -237,6 +237,17 @@ module Discordrb
       send_packet(Opcodes::PRESENCE, data)
     end
 
+    def send_voice_state_update(guild_id, channel_id, self_mute, self_deaf)
+      data = {
+        guild_id: guild_id,
+        channel_id: channel_id,
+        self_mute: self_mute,
+        self_deaf: self_deaf
+      }
+
+      send_packet(Opcodes::VOICE_STATE, data)
+    end
+
     private
 
     def setup_heartbeats(interval)
