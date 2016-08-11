@@ -283,6 +283,16 @@ module Discordrb
       send_packet(Opcodes::RESUME, data)
     end
 
+    def send_request_members(server_id, query, limit)
+      data = {
+        guild_id: server_id,
+        query: query,
+        limit: limit
+      }
+
+      send_packet(Opcodes::REQUEST_MEMBERS, data)
+    end
+
     private
 
     def setup_heartbeats(interval)
