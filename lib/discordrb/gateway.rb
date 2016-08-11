@@ -255,6 +255,16 @@ module Discordrb
       send_packet(Opcodes::VOICE_STATE, data)
     end
 
+    # Sends a resume packet (op 6). This replays all events from a previous point specified by its packet sequence. This
+    # will not work if the packet to resume from has already been acknowledged using a heartbeat, or if the session ID
+    # belongs to a now invalid session.
+    #
+    # If this packet is sent at the beginning of a connection, it will act similarly to an {#identify} in that it
+    # creates a session on the current connection. Unlike identify however, this packet can also be sent in an existing
+    # session and will just replay some of the events.
+    # @param token [String] The token that was used to identify the session to resume.
+    # @param session_id [String] The session ID of the session to resume.
+    # @param seq [Integer] The packet sequence of the packet after which the events should be replayed.
     def send_resume(token, session_id, seq)
       data = {
         token: token,
