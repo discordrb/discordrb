@@ -1374,7 +1374,9 @@ module Discordrb
       @attached = !server.nil?
       @id = data['id'].to_i
 
-      process_roles(data['roles']) unless !@attached
+      if @attached
+        process_roles(data['roles'])
+      end
     end
 
     # @return [String] the layout to mention it (or have it used) in a message
