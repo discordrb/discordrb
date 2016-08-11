@@ -325,12 +325,12 @@ module Discordrb::API
   end
 
   # Update a channel's data
-  def update_channel(token, channel_id, name, topic, position = 0)
+  def update_channel(token, channel_id, name, topic, position = 0, bitrate, user_limit)
     request(
       __method__,
       :patch,
       "#{api_base}/channels/#{channel_id}",
-      { name: name, position: position, topic: topic }.to_json,
+      { name: name, position: position, topic: topic, user_limit: user_limit, bitrate: bitrate }.to_json,
       Authorization: token,
       content_type: :json
     )
