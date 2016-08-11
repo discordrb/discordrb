@@ -223,7 +223,11 @@ module Discordrb
       send_packet(Opcodes::IDENTIFY, data)
     end
 
-    # Op 3
+    # Sends a status update packet (op 3). This sets the bot user's status (online/idle) and game playing/streaming.
+    # @param idle_since [Integer] The unix timestamp in milliseconds when the user went idle, or `nil` if the user should
+    #   not be idle.
+    # @param game [Hash<Symbol => Object>, nil] `nil` if no game should be played, or a hash of `:game => "name"` if a
+    #   game should be played. The hash can also contain additional attributes for streaming statuses.
     def send_status_update(idle_since, game)
       data = {
         idle_since: idle_since,
