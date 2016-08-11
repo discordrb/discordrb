@@ -283,6 +283,13 @@ module Discordrb
       send_packet(Opcodes::RESUME, data)
     end
 
+    # Sends a request members packet (op 8). This will order Discord to gradually sent all requested members as dispatch
+    # events with type `GUILD_MEMBERS_CHUNK`. It is necessary to use this method in order to get all members of a large
+    # server (see `large_threshold` in {#send_identify}), however it can also be used for other purposes.
+    # @param server_id [Integer] The ID of the server whose members to query.
+    # @param query [String] If this string is not empty, only members whose username starts with this string will be
+    #   returned.
+    # @param limit [Integer] How many members to send at maximum, or `0` to send all members.
     def send_request_members(server_id, query, limit)
       data = {
         guild_id: server_id,
