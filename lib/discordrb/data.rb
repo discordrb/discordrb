@@ -1394,12 +1394,6 @@ module Discordrb
 
     private
 
-    def detach
-      @roles = nil
-      @server = nil
-      self
-    end
-
     def process_roles(roles)
       @roles = []
       return unless roles
