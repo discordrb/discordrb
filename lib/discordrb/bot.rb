@@ -226,7 +226,7 @@ module Discordrb
       emojis = []
       @servers.each do |_, server|
         server.emoji.each do |emoji|
-          emojis.push(emoji.detach) unless emojis.any? {|element| element.name == emoji.name }
+          emojis.push(emoji.detach) unless emojis.any? { |element| element.name == emoji.name }
         end
       end
       emojis
