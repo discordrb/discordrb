@@ -1386,7 +1386,7 @@ module Discordrb
       @attached = !server.nil?
       @id = data['id'].to_i
 
-      if @attached
+      unless !@attached
         process_roles(data['roles'])
       end
     end
