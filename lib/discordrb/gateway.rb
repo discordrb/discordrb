@@ -185,6 +185,7 @@ module Discordrb
     end
 
     # Identifies to Discord with the default parameters.
+    # @see #send_identify
     def identify
       send_identify(@token, {
                       :'$os' => RUBY_PLATFORM,
