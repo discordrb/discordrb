@@ -415,9 +415,6 @@ module Discordrb
       @handshaked = false # Whether the handshake has finished yet
       @pipe_broken = false # Whether we've received an EPIPE at any time
 
-      # Connecting was apparently successful, tell the run method this
-      @ws_success = true
-
       # We're done! Delegate to the websocket loop
       websocket_loop
     rescue => e
