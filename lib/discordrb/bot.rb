@@ -238,19 +238,9 @@ module Discordrb
 
       debug("Got voice channel: #{chan}")
 
-      data = {
-        op: Opcodes::VOICE_STATE,
-        d: {
-          guild_id: server_id.to_s,
-          channel_id: chan.id.to_s,
-          self_mute: false,
-          self_deaf: false
-        }
-      }
-      debug("Voice channel init packet is: #{data.to_json}")
-
       @should_connect_to_voice[server_id] = chan
-      @ws.send(data.to_json)
+      @gateway.send_voice_state_update(server_id.to_s, chan.id.to_s, false, false)
+
       debug('Voice channel init packet sent! Now waiting.')
 
       sleep(0.05) until @voices[server_id]
