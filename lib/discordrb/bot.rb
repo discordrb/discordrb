@@ -980,8 +980,7 @@ module Discordrb
       raise_event(ReadyEvent.new(self))
       LOGGER.good 'Ready'
 
-      # Tell the run method that everything was successful
-      @ws_success = true
+      @gateway.notify_ready
     end
 
     def raise_event(event)
