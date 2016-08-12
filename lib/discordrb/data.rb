@@ -1046,7 +1046,7 @@ module Discordrb
     end
 
     # Sets this channel's user limit.
-    # @param limit [Integer] The new user limit. `0` for unlimited, Has to be a number between 0-99
+    # @param limit [Integer] The new user limit. `0` for unlimited, has to be a number between 0-99
     def user_limit=(limit)
       @user_limit = limit
       update_channel_data
