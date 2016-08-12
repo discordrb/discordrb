@@ -117,6 +117,7 @@ module Discordrb
     # Utility function to get a user's avatar URL.
     # @return [String] the URL to the avatar image.
     def avatar_url
+      return nil unless @avatar_id
       API.avatar_url(@id, @avatar_id)
     end
   end
@@ -1375,6 +1376,7 @@ module Discordrb
     # Utility function to get the URL for the icon image
     # @return [String] the URL to the icon image
     def icon_url
+      return nil unless @icon_id
       API.icon_url(@id, @icon_id)
     end
   end
@@ -1401,6 +1403,14 @@ module Discordrb
     attr_reader :large
     alias_method :large?, :large
 
+    # @return [true, false] whether or not the server has widget enabled
+    attr_reader :embed
+    alias_method :embed?, :embed
+
+    # @return [true, false] whether or not the server has widget enabled
+    attr_reader :embed
+    alias_method :embed?, :embed
+
     # @return [Integer] the absolute number of members on this server, offline or not.
     attr_reader :member_count
 
@@ -1422,6 +1432,8 @@ module Discordrb
 
       @large = data['large']
       @member_count = data['member_count']
+      @splash = data['splash']
+      @embed = data['embed_enabled']
       @members = {}
       @voice_states = {}
 
@@ -1497,6 +1509,18 @@ module Discordrb
     # @return [Array<Channel>] an array of voice channels on this server
     def voice_channels
       @channels.select(&:voice?)
+    end
+
+    # @return [String, nil] The widget URL to the server. `nil` if it's not embed.
+    def widget_url
+      return nil unless @embed
+      API.widget_url(@id)
+    end
+
+    # @return [String, nil] The widget URL to the server. `nil` if there is no splash.
+    def splash_url
+      return nil unless @splash
+      return API.splash_url(@id, @splash)
     end
 
     # Adds a role to the role cache
