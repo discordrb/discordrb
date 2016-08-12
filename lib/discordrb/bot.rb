@@ -376,14 +376,9 @@ module Discordrb
       @idletime = idletime
       @streamurl = url
       type = url ? 1 : nil
-      data = {
-        op: Opcodes::PRESENCE,
-        d: {
-          idle_since: idletime,
-          game: game || url ? { name: game, url: url, type: type } : nil
-        }
-      }
-      @ws.send(data.to_json)
+
+      game_obj = game || url ? { name: game, url: url, type: type } : nil
+      @gateway.send_status_update(idletime, game_obj)
     end
 
     # Sets the currently playing game to the specified game.
