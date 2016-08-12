@@ -904,16 +904,13 @@ module Discordrb
     # @return [Recipient, nil] the recipient of the private messages, or nil if this is not a PM channel
     attr_reader :recipient
 
-    # @return [String, nil] the channel's topic. `nil` if channel is voice
+    # @return [String] the channel's topic
     attr_reader :topic
 
-    # @return [Message, nil] the last message sent to this channel. `nil` if channel is voice or no last message found
-    attr_reader :last_message
-
-    # @return [Integer, nil] the bitrate of the channel. `nil` if channel is text
+    # @return [Integer] the bitrate of the channel
     attr_reader :bitrate
 
-    # @return [Integer, nil] the amount users that can be in the channel. `0` means it is unlimited. `nil` if channel is text
+    # @return [Integer] the amount of users that can be in the channel. `0` means it is unlimited.
     attr_reader :user_limit
     alias_method :limit, :user_limit
 
@@ -945,7 +942,6 @@ module Discordrb
       @id = data['id'].to_i
       @type = data['type'] || TEXT_TYPE
       @topic = data['topic']
-      @last_message = history(1).first # Make use of data['last_message_id'] later
       @bitrate = data['bitrate']
       @user_limit = data['user_limit']
       @position = data['position']
@@ -1038,7 +1034,6 @@ module Discordrb
     # Sets this channel's topic.
     # @param topic [String] The new topic.
     def topic=(topic)
-      raise ArgumentError, 'This channel is not a text channel!' unless text?
       @topic = topic
       update_channel_data
     end
@@ -1046,7 +1041,6 @@ module Discordrb
     # Sets this channel's bitrate.
     # @param bitrate [Integer] The new bitrate. Number has to be between 8-96
     def bitrate=(bitrate)
-      raise ArgumentError, 'This channel is not a voice channel!' unless voice?
       @bitrate = bitrate
       update_channel_data
     end
@@ -1054,7 +1048,6 @@ module Discordrb
     # Sets this channel's user limit.
     # @param limit [Integer] The new user limit. `0` for unlimited, Has to be a number between 0-99
     def user_limit=(limit)
-      raise ArgumentError, 'This channel is not a voice channel!' unless voice?
       @user_limit = limit
       update_channel_data
     end
@@ -1398,7 +1391,7 @@ module Discordrb
     # @return [Array<Role>] an array of all the roles created on this server.
     attr_reader :roles
 
-    # @return [String] the hexadecimal ID used to identify this server's splash.
+    # @return [String] the hexadecimal ID used to identify this server's splash image for their VIP invite page.
     attr_reader :splash_id
 
     # @return [true, false] whether or not this server is large (members > 100). If it is,
@@ -1510,13 +1503,15 @@ module Discordrb
       @channels.select(&:voice?)
     end
 
-    # @return [String, nil] The widget URL to the server. `nil` if it's not embed.
+    # @return [String, nil] the widget URL to the server that displays the amount of online members in a
+    # stylish way. `nil` if it's not embed.
     def widget_url
       return nil unless @embed
       API.widget_url(@id)
     end
 
-    # @return [String, nil] The widget URL to the server. `nil` if there is no splash.
+    # @return [String, nil] the splash image URL for the server's VIP invite page.
+    # `nil` if there is no splash image.
     def splash_url
       return nil unless @splash
       API.splash_url(@id, @splash)
