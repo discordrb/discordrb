@@ -1410,10 +1410,6 @@ module Discordrb
     attr_reader :embed
     alias_method :embed?, :embed
 
-    # @return [true, false] whether or not the server has widget enabled
-    attr_reader :embed
-    alias_method :embed?, :embed
-
     # @return [Integer] the absolute number of members on this server, offline or not.
     attr_reader :member_count
 
