@@ -171,6 +171,12 @@ module Discordrb
       @ws_thread.kill
     end
 
+    # Notifies the {#run_async} method that everything is ready and the caller can now continue (i.e. with syncing,
+    # or with doing processing and then syncing)
+    def notify_ready
+      @ws_success = true
+    end
+
     # Sends a heartbeat with the last received packet's seq (to acknowledge that we have received it and all packets
     # before it), or if none have been received yet, with 0.
     # @see #send_heartbeat
