@@ -254,19 +254,7 @@ module Discordrb
     # @param destroy_vws [true, false] Whether or not the VWS should also be destroyed. If you're calling this method
     #   directly, you should leave it as true.
     def voice_destroy(server_id, destroy_vws = true)
-      data = {
-        op: Opcodes::VOICE_STATE,
-        d: {
-          guild_id: server_id.to_s,
-          channel_id: nil,
-          self_mute: false,
-          self_deaf: false
-        }
-      }
-
-      debug("Voice channel destroy packet is: #{data.to_json}")
-      @ws.send(data.to_json)
-
+      @gateway.send_voice_state_update(server_id.to_s, nil, false, false)
       @voices[server_id].destroy if @voices[server_id] && destroy_vws
       @voices.delete(server_id)
     end
