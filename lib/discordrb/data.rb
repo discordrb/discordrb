@@ -1398,6 +1398,9 @@ module Discordrb
     # @return [Array<Role>] an array of all the roles created on this server.
     attr_reader :roles
 
+    # @return [String] the hexadecimal ID used to identify this server's splash.
+    attr_reader :splash_id
+
     # @return [true, false] whether or not this server is large (members > 100). If it is,
     # it means the members list may be inaccurate for a couple seconds after starting up the bot.
     attr_reader :large
@@ -1520,7 +1523,7 @@ module Discordrb
     # @return [String, nil] The widget URL to the server. `nil` if there is no splash.
     def splash_url
       return nil unless @splash
-      return API.splash_url(@id, @splash)
+      API.splash_url(@id, @splash)
     end
 
     # Adds a role to the role cache
