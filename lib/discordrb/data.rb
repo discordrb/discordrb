@@ -1510,6 +1510,14 @@ module Discordrb
       API.widget_url(@id)
     end
 
+    # @param style_number [Integer] the style number of the widget pisture
+    # @return [String, nil] the widget banner  URL to the server that displays the amount of online members,
+    # server icon and server name in a stylish way. `nil` if it's not embed.
+    def widget_banner_url(style_number)
+      return nil unless @embed
+      API.widget_url(@id) + "?style=banner" + (style_number === Integer ? style_number.to_s : "1")
+    end
+
     # @return [String, nil] the splash image URL for the server's VIP invite page.
     # `nil` if there is no splash image.
     def splash_url
