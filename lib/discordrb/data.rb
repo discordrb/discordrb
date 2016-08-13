@@ -1515,7 +1515,7 @@ module Discordrb
     # server icon and server name in a stylish way. `nil` if it's not embed.
     def widget_banner_url(style_number)
       return nil unless @embed
-      API.widget_url(@id) + "?style=banner" + (style_number === Integer ? style_number.to_s : "1")
+      API.widget_url(@id) + '?style=banner' + (style_number == Integer ? style_number.to_s : '1')
     end
 
     # @return [String, nil] the splash image URL for the server's VIP invite page.
