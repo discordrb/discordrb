@@ -1374,6 +1374,66 @@ module Discordrb
     end
   end
 
+  # Server integration
+  class Integration
+    include IDObject
+
+    # @return [String] the integration name
+    attr_reader :name
+
+    # @return [Server] the server the integration is linked to
+    attr_reader :server
+
+    # @return [User] the user the integration is linked to
+    attr_reader :user
+
+    # @return [Role, nil] the role that this integration uses for "subscribers"
+    attr_reader :role
+
+    # @return [String] the integration type `youtube, twitch, etc.`
+    attr_reader :type
+
+    # @return [true, false] whether the integration is enabled
+    attr_reader :enabled
+
+    # @return [true, false] whether the integration is syncing
+    attr_reader :syncing
+
+    # @return [Hash] the integration account information, listing the `name` and `id` in the hash
+    attr_reader :account
+
+    # @return [Time] the time the integration was synced at
+    attr_reader :synced_at
+
+    # @return [Integer] the behavior of expiring subscribers
+    attr_reader :expire_behavior
+
+    # @return [Integer] the grace period before expiring subscribers
+    attr_reader :expire_grace_period
+
+    def initialize(data, bot, server)
+      @bot = bot
+
+      @name = data['name']
+      @server = server
+      @id = data['id'].to_i
+      @enabled = data['enabled']
+      @syncing = data['syncing']
+      @type = data['type']
+      @account = data['account']
+      @synced_at = Time.parse(data['synced_at'])
+      @expire_behavior = data['expire_behavior']
+      @expire_grace_period = data['expire_grace_period']
+      @user = @bot.ensure_user(data['user'])
+      @role = server.role(data['role_id']) || nil
+    end
+
+    # The inspect method is overwritten to give more useful output
+    def inspect
+      "<integration name=#{@name} id=#{@id} type=#{@type} enabled=#{@enabled}>"
+    end
+  end
+
   # A server on Discord
   class Server
     include IDObject
@@ -1427,7 +1487,7 @@ module Discordrb
 
       @large = data['large']
       @member_count = data['member_count']
-      @verification_level = [:none,:low,:medium,:high][data['verification_level']-1]
+      @verification_level = [:none, :low, :medium, :high][data['verification_level'] - 1]
       @splash = data['splash']
       @embed = data['embed_enabled']
       @members = {}
@@ -1482,6 +1542,11 @@ module Discordrb
       @bot.request_chunks(@id)
       sleep 0.05 until @chunked
       @members.values
+    end
+
+    # @return [Array<Integration>] an array of all the intergrations connected to this server.
+    def integrations
+      API.server_integration(@bot.token, @id).map { |element| Integration.new(element) }
     end
 
     alias_method :users, :members

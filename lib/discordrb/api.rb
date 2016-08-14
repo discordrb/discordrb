@@ -367,6 +367,16 @@ module Discordrb::API
     )
   end
 
+  # Get server integrations
+  def server_integrations(token, guild_id)
+    request(
+      __method__,
+      :get,
+      "#{api_base}/guilds/#{guild_id}/integrations",
+      Authorization: token
+    )
+  end
+
   # Resolve an invite
   def resolve_invite(token, invite_code)
     request(
