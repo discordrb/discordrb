@@ -1409,6 +1409,7 @@ module Discordrb
       end
     end
   end
+
   # A server on Discord
   class Server
     include IDObject
