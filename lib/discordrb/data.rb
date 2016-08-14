@@ -1406,6 +1406,9 @@ module Discordrb
     # @return [Integer] the absolute number of members on this server, offline or not.
     attr_reader :member_count
 
+    # @return [Symbol] the verification level of the server.
+    attr_reader :verification_level
+
     # @return [Integer] the amount of time after which a voice user gets moved into the AFK channel, in seconds.
     attr_reader :afk_timeout
 
@@ -1424,6 +1427,7 @@ module Discordrb
 
       @large = data['large']
       @member_count = data['member_count']
+      @verification_level = [:none,:low,:medium,:high][data['verification_level']-1]
       @splash = data['splash']
       @embed = data['embed_enabled']
       @members = {}
