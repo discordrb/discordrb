@@ -1080,7 +1080,7 @@ module Discordrb
       if @type == 'text'
         @server.online_members(include_idle: true).select { |u| u.status != :offline }
       else
-        @server.voice_states.map { |id, voice_state| @server.member(id) if voice_state.voice_channel.id == @id }.compact
+        @server.voice_states.map { |id, voice_state| @server.member(id) if !voice_state.voice_channel.nil? && voice_state.voice_channel.id == @id }.compact
       end
     end
 
