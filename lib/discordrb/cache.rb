@@ -123,7 +123,7 @@ module Discordrb
     end
 
     # Gets a emoji by its name.
-    # @param id [String] The user ID that should be resolved.
+    # @param name [String] The emoji name that should be resolved.
     # @return [Emoji, nil] The emoji identified by the name, or `nil` if it couldn't be found.
     def get_emoji(name)
       return @users[id] if @users[id]
