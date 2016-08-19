@@ -225,7 +225,7 @@ module Discordrb
       gateway_check
       emojis = []
       @servers.each do |_, server|
-        server.emoji.each do |emoji|
+        server.emoji.values.each do |emoji|
           emojis.push(emoji.detach) unless emojis.any? { |element| element.name == emoji.name }
         end
       end
