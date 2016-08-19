@@ -1392,14 +1392,14 @@ module Discordrb
       "<Emoji name=#{@name} id=#{@id}>"
     end
 
-    private
-
+    # @!visibility private
     def detach
       @roles = nil
       @server = nil
       self
     end
 
+    # @!visibility private
     def process_roles(roles)
       @roles = []
       return unless roles
