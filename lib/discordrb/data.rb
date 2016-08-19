@@ -1781,7 +1781,7 @@ module Discordrb
       return unless emoji
       emoji.each do |element|
         newemoji = Emoji.new(element, @bot, self)
-        @emoji[emoji.id] = newemoji
+        @emoji[newemoji.id] = newemoji
       end
     end
 
