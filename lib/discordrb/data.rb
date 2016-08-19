@@ -1039,7 +1039,7 @@ module Discordrb
     end
 
     # Sets this channel's bitrate.
-    # @param bitrate [Integer] The new bitrate. Number has to be between 8-96
+    # @param bitrate [Integer] The new bitrate. Number has to be between 8000-96000 (128000 for VIP servers)
     def bitrate=(bitrate)
       @bitrate = bitrate
       update_channel_data
