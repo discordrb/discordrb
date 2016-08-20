@@ -121,12 +121,10 @@ module Discordrb
       @private_channels[id] = channel
     end
 
-    # Gets a emoji by its name.
+    # Finds a emoji by its name.
     # @param name [String] The emoji name that should be resolved.
     # @return [Emoji, nil] The emoji identified by the name, or `nil` if it couldn't be found.
-    def get_emoji(name)
-      return @users[id] if @users[id]
-
+    def find_emoji(name)
       LOGGER.out("Resolving emoji #{name}")
       emoji.select do |element|
         element.name == name
