@@ -105,7 +105,7 @@ module Discordrb::API
 
   # Make an emoji icon URL from emoji IDs
   def emoji_icon_url(emoji_id)
-    "https://discordapp.com/api/emojis/#{emoji_id}.png"
+    "https://cdn.discordapp.com/emojis/#{emoji_id}.png"
   end
 
   # Ban a user from a server and delete their messages from the last message_days days
