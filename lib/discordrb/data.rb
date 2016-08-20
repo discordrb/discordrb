@@ -1729,6 +1729,11 @@ module Discordrb
       update_server_data(afk_timeout: afk_timeout)
     end
 
+    # @return [true, false] whether this server has any emoji or not.
+    def emoji?
+      @emoji.any?
+    end
+
     # Processes a GUILD_MEMBERS_CHUNK packet, specifically the members field
     # @note For internal use only
     # @!visibility private
