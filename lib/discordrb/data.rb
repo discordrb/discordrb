@@ -1463,6 +1463,9 @@ module Discordrb
     attr_reader :embed
     alias_method :embed?, :embed
 
+    # @return [Array<String>] the features of the server
+    attr_reader :features
+
     # @return [Integer] the absolute number of members on this server, offline or not.
     attr_reader :member_count
 
@@ -1490,6 +1493,7 @@ module Discordrb
       @verification_level = [:none, :low, :medium, :high][data['verification_level'] - 1]
       @splash = data['splash']
       @embed = data['embed_enabled']
+      @features = data['features']
       @members = {}
       @voice_states = {}
 
