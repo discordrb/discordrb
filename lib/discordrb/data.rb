@@ -1735,6 +1735,8 @@ module Discordrb
       @emoji.any?
     end
 
+    alias_method :has_emoji?, :emoji?
+
     # Processes a GUILD_MEMBERS_CHUNK packet, specifically the members field
     # @note For internal use only
     # @!visibility private
