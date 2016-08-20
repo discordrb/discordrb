@@ -1381,6 +1381,7 @@ module Discordrb
     def mention
       "<:#{@name}:#{@id}>"
     end
+    alias_method :use, :mention
 
     # The icon URL of the emoji
     def icon_url
