@@ -219,20 +219,20 @@ module Discordrb
     end
 
     # @overload emoji(id)
-    #   Return a emoji by it's ID
-    #   @param id [Integer] the emojis ID.
-    #   @return emoji [Object, Emoji] The Emoji Object.
+    #   Return a emoji by its ID
+    #   @param id [Integer] The emoji's ID.
+    #   @return emoji [Emoji] the emoji object.
     # @overload emoji
-    #   The list of emojis the bot can use.
-    #   @return [Array<Emoji>] The emojis available.
+    #   The list of emoji the bot can use.
+    #   @return [Array<Emoji>] the emoji available.
     def emoji(id = nil)
+      gateway_check
       if id
         @emoji = emoji
         @emoji.each do |emoji|
           return emoji if emoji.id == id
         end
       else
-        gateway_check
         emojis = []
         @servers.each do |_, server|
           server.emoji.values.each do |emoji|
@@ -555,7 +555,7 @@ module Discordrb
       API.update_oauth_application(@token, name, redirect_uris, description, icon)
     end
 
-    # Gets the user from a mention of the user.
+    # Gets the user or emoji from a mention of the user or emoji.
     # @param mention [String] The mention, which should look like `<@12314873129>`, `<@&123456789>` or `<:Name:126328:>`.
     # @param server [Server, nil] The server of the associated mention. Required for role and emoji parsing.
     # @return [User, Role, Emoji] The user, role or emoji identified by the mention, or `nil` if none exists.
