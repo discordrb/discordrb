@@ -568,10 +568,10 @@ module Discordrb
         return nil unless server
         server.role(id)
       elsif /<:(\w+):(?<id>\d+)>?/ =~ mention
-        return nil unless server
-        server.emoji do |element|
-          return element if element.id == id
+        emoji.each do |element|
+          return element if element.id.to_i == id.to_i
         end
+        return nil
       end
     end
 
