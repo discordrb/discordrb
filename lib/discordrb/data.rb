@@ -1748,11 +1748,12 @@ module Discordrb
     end
 
     # @return [true, false] whether this server has any emoji or not.
-    def emoji?
+    def any_emoji?
       @emoji.any?
     end
 
-    alias_method :has_emoji?, :emoji?
+    alias_method :has_emoji?, :any_emoji?
+    alias_method :emoji?, :any_emoji?
 
     # Processes a GUILD_MEMBERS_CHUNK packet, specifically the members field
     # @note For internal use only
