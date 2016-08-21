@@ -1463,7 +1463,7 @@ module Discordrb
     attr_reader :embed
     alias_method :embed?, :embed
 
-    # @return [Array<String>] the features of the server
+    # @return [Array<Symbol>] the features of the server
     attr_reader :features
 
     # @return [Integer] the absolute number of members on this server, offline or not.
