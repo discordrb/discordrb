@@ -1548,12 +1548,12 @@ module Discordrb
       @members.values
     end
 
+    alias_method :users, :members
+
     # @return [Array<Integration>] an array of all the intergrations connected to this server.
     def integrations
       API.server_integrations(@bot.token, @id).map { |element| Integration.new(element) }
     end
-
-    alias_method :users, :members
 
     # @param include_idle [true, false] Whether to count idle members as online.
     # @param include_bots [true, false] Whether to include bot accounts in the count.
