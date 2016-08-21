@@ -1239,6 +1239,9 @@ module Discordrb
     # @return [Array<User>] the users that were mentioned in this message.
     attr_reader :mentions
 
+    # @return [Array<Emoji>] the emotes that were used/mentioned in this message (Only returns Emoji the bot has access to, else nil).
+    attr_reader :emoji
+
     # @return [Array<Role>] the roles that were mentioned in this message.
     attr_reader :role_mentions
 
@@ -1274,6 +1277,14 @@ module Discordrb
 
       @timestamp = Time.parse(data['timestamp']) if data['timestamp']
       @id = data['id'].to_i
+
+      @emoji = []
+
+      emoji = data['content'].split
+      emoji = emoji.grep(/<:(?<name>\w+):(?<id>\d+)>?/)
+      emoji.each do |element|
+        @emoji << bot.parse_mention(element)
+      end
 
       @mentions = []
 
@@ -1337,6 +1348,12 @@ module Discordrb
     # @return [true, false] whether this message was sent by the current {Bot}.
     def from_bot?
       @author && @author.current_bot?
+    end
+
+    # Check if any emoji got used in this message
+    # @return [boolean] wether any emoji got used or not
+    def emoji?
+      return true unless @emoji.empty
     end
 
     # The inspect method is overwritten to give more useful output
