@@ -233,13 +233,13 @@ module Discordrb
           return emoji if emoji.id == id
         end
       else
-        emojis = []
+        emoji = []
         @servers.each do |_, server|
-          server.emoji.values.each do |emoji|
-            emojis.push(emoji.detach) unless emojis.any? { |element| element.name == emoji.name }
+          server.emoji.values.each do |element|
+            emoji.push(element.detach) unless emoji.any? { |somevalue| somevalue.name == element.name }
           end
         end
-        emojis
+        emoji
       end
     end
 
