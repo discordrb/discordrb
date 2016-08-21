@@ -229,7 +229,7 @@ module Discordrb
       gateway_check
       if id
         @emoji = emoji
-        @emoji.each do |emoji|
+        @emoji.find do |emoji|
           return emoji if emoji.id == id
         end
       else
