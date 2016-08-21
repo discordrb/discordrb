@@ -1341,7 +1341,7 @@ module Discordrb
     # Check if any emoji got used in this message
     # @return [boolean] wether any emoji got used or not
     def emoji?
-      return true unless @emoji.empty
+      return true unless @emoji.empty?
     end
 
     # The inspect method is overwritten to give more useful output
