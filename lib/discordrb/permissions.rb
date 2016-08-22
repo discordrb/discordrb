@@ -10,7 +10,7 @@ module Discordrb
       0 => :create_instant_invite, # 1
       1 => :kick_members,          # 2
       2 => :ban_members,           # 4
-      3 => :administrate,          # 8
+      3 => :administrator,         # 8
       4 => :manage_channels,       # 16
       5 => :manage_server,         # 32
       # 6                          # 64
@@ -52,6 +52,8 @@ module Discordrb
         init_vars
       end
     end
+
+    alias_method :can_administrate=, :can_administrator=
 
     attr_reader :bits
 

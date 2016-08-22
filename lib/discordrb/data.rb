@@ -278,6 +278,8 @@ module Discordrb
       end
     end
 
+    alias_method :can_administrate?, :can_administrator?
+
     private
 
     def defined_role_permission?(action, channel)
