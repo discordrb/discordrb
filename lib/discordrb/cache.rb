@@ -85,15 +85,16 @@ module Discordrb
       @servers[id] = server
     end
 
-    # Gets a member by both IDs
-    # @param server_id [Integer] The server ID for which a member should be resolved
+    # Gets a member by both IDs, or `Server` and user ID.
+    # @param server_or_id [Integer] The `Server` or server ID for which a member should be resolved
     # @param user_id [Integer] The ID of the user that should be resolved
     # @return [Member, nil] The member identified by the IDs, or `nil` if none could be found
-    def member(server_id, user_id)
-      server_id = server_id.resolve_id
+    def member(server_or_id, user_id)
+      server_id = server_or_id.resolve_id
       user_id = user_id.resolve_id
 
-      server = self.server(server_id)
+      server = server_or_id.is_a?(Server) ? server_or_id : self.server(server_id)
+
       return server.member(user_id) if server.member_cached?(user_id)
 
       LOGGER.out("Resolving member #{server_id} on server #{user_id}")
