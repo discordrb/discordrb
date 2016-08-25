@@ -457,6 +457,7 @@ module Discordrb
       @handshake = ::WebSocket::Handshake::Client.new(url: url) # Represents the handshake between us and the server
       @handshaked = false # Whether the handshake has finished yet
       @pipe_broken = false # Whether we've received an EPIPE at any time
+      @closed = false # Whether the websocket is currently closed
 
       # We're done! Delegate to the websocket loop
       websocket_loop
