@@ -174,6 +174,12 @@ module Discordrb
       @gateway.sync
     end
 
+    # Blocks execution until the websocket stops, which should only happen manually triggered
+    # or due to an error. This is necessary to have a continuously running bot.
+    def sync
+      @gateway.sync
+    end
+
     # @return [true, false] whether or not the bot is currently connected to Discord.
     def connected?
       @gateway.open?
