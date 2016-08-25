@@ -1429,7 +1429,7 @@ module Discordrb
       return @members[id] if member_cached?(id)
       return nil unless request
 
-      member = @bot.member(@id, id)
+      member = @bot.member(self, id)
       @members[id] = member
     rescue
       nil
