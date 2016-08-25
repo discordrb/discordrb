@@ -678,6 +678,9 @@ module Discordrb
       # If we're already closed, there's no need to do anything - return
       return if @closed
 
+      # Suspend the session so we don't send heartbeats
+      @session.suspend if @session
+
       # Send a close frame (if we can)
       send nil, :close unless @pipe_broken
 
