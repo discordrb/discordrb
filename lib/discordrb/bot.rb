@@ -50,6 +50,11 @@ module Discordrb
     # @return [Hash<Symbol => Await>] the list of registered {Await}s.
     attr_reader :awaits
 
+    # The gateway connection is an internal detail that is useless to most people. It is however essential while
+    # debugging or developing discordrb itself, or while writing very custom bots.
+    # @return [Gateway] the underlying {Gateway} object.
+    attr_reader :gateway
+
     include EventContainer
     include Cache
 
