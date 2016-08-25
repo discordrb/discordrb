@@ -635,6 +635,8 @@ module Discordrb
         # Log the exception
         LOGGER.error('The websocket connection has closed due to an error!')
         LOGGER.log_exception(e)
+      else
+        LOGGER.error("The websocket connection has closed due to an unspecified error: #{e.inspect}")
       end
     end
 
