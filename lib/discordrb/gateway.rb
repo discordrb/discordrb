@@ -182,7 +182,7 @@ module Discordrb
     # outside of testing and implementing highly custom reconnect logic.
     # @param url [String, nil] the URL to connect to or nil if one should be obtained from Discord.
     def inject_reconnect(url)
-      websocket_message({
+      handle_message({
         op: Opcodes::RECONNECT,
         d: {
           url: url
