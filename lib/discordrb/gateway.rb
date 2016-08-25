@@ -177,6 +177,19 @@ module Discordrb
       @ws_success = true
     end
 
+    # Injects a reconnect event (op 7) into the event processor, causing Discord to reconnect to the given gateway URL.
+    # If the URL is set to nil, it will reconnect and get an entirely new gateway URL. This method has not much use
+    # outside of testing and implementing highly custom reconnect logic.
+    # @param url [String, nil] the URL to connect to or nil if one should be obtained from Discord.
+    def inject_reconnect(url)
+      websocket_message({
+        op: Opcodes::RECONNECT,
+        d: {
+          url: url
+        }
+      }.to_json)
+    end
+
     # Sends a heartbeat with the last received packet's seq (to acknowledge that we have received it and all packets
     # before it), or if none have been received yet, with 0.
     # @see #send_heartbeat

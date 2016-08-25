@@ -414,19 +414,6 @@ module Discordrb
     end
     alias_method :away, :idle
 
-    # Injects a reconnect event (op 7) into the event processor, causing Discord to reconnect to the given gateway URL.
-    # If the URL is set to nil, it will reconnect and get an entirely new gateway URL. This method has not much use
-    # outside of testing and implementing highly custom reconnect logic.
-    # @param url [String, nil] the URL to connect to or nil if one should be obtained from Discord.
-    def inject_reconnect(url)
-      websocket_message({
-        op: Opcodes::RECONNECT,
-        d: {
-          url: url
-        }
-      }.to_json)
-    end
-
     # Injects a resume packet (op 6) into the gateway. If this is done with a running connection, it will cause an
     # error. It has no use outside of testing stuff that I know of, but if you want to use it anyway for some reason,
     # here it is.
