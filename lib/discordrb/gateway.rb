@@ -201,7 +201,7 @@ module Discordrb
     # Injects a terminal gateway error into the handler. Useful for testing the reconnect logic.
     # @param e [Exception] The exception object to inject.
     def inject_error(e)
-      websocket_error(e)
+      handle_internal_close(e)
     end
 
     # Sends a heartbeat with the last received packet's seq (to acknowledge that we have received it and all packets
