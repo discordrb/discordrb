@@ -23,6 +23,8 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+require 'thread'
+
 module Discordrb
   # Gateway packet opcodes
   module Opcodes
@@ -129,6 +131,8 @@ module Discordrb
     def initialize(bot, token)
       @token = token
       @bot = bot
+
+      @getc_mutex = Mutex.new
 
       # Whether the connection to the gateway has succeeded yet
       @ws_success = false
@@ -476,8 +480,10 @@ module Discordrb
 
       until @closed
         begin
-          # Get some data from the socket
-          recv_data = @socket.getc
+          recv_data = nil
+
+          # Get some data from the socket, synchronised so the socket can't be closed during this
+          @getc_mutex.synchronize { recv_data = @socket.getc }
 
           # Check if we actually got data
           unless recv_data
@@ -686,8 +692,11 @@ module Discordrb
       # Send a close frame (if we can)
       send nil, :close unless @pipe_broken
 
-      # We're officially closed, notify the main loop
-      @closed = true
+      # We're officially closed, notify the main loop.
+      # This needs to be synchronised with the getc mutex, so the notification, and especially the actual
+      # close afterwards, don't coincide with the main loop reading something from the SSL socket.
+      # This would cause a segfault due to (I suspect) Ruby bug #12292: https://bugs.ruby-lang.org/issues/12292
+      @getc_mutex.synchronize { @closed = true }
 
       # Close the socket if possible
       @socket.close if @socket
