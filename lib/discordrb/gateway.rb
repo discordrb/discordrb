@@ -382,6 +382,18 @@ module Discordrb
       end
     end
 
+    # Separate method to wait an ever-increasing amount of time before reconnecting after being disconnected in an
+    # unexpected way
+    def wait_for_reconnect
+      # We disconnected in an unexpected way! Wait before reconnecting so we don't spam Discord's servers.
+      debug("Attempting to reconnect in #{@falloff} seconds.")
+      sleep @falloff
+
+      # Calculate new falloff
+      @falloff *= 1.5
+      @falloff = 115 + (rand * 10) if @falloff > 120 # Cap the falloff at 120 seconds and then add some random jitter
+    end
+
     # Create and connect a socket using a URI
     def obtain_socket(uri)
       socket = TCPSocket.new(uri.host, uri.port || socket_port(uri))
