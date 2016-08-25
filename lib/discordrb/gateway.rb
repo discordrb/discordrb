@@ -631,7 +631,7 @@ module Discordrb
         LOGGER.error('Websocket close frame received!')
         LOGGER.error("Code: #{e.code}")
         LOGGER.error("Message: #{e.data}")
-      else
+      elsif e.is_a? Exception
         # Log the exception
         LOGGER.error('The websocket connection has closed due to an error!')
         LOGGER.log_exception(e)
