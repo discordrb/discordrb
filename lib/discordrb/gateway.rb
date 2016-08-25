@@ -190,6 +190,14 @@ module Discordrb
       }.to_json)
     end
 
+    # Injects a resume packet (op 6) into the gateway. If this is done with a running connection, it will cause an
+    # error. It has no use outside of testing stuff that I know of, but if you want to use it anyway for some reason,
+    # here it is.
+    # @param seq [Integer, nil] The sequence ID to inject, or nil if the currently tracked one should be used.
+    def inject_resume(seq)
+      resume(seq || @sequence, raw_token, @session_id)
+    end
+
     # Sends a heartbeat with the last received packet's seq (to acknowledge that we have received it and all packets
     # before it), or if none have been received yet, with 0.
     # @see #send_heartbeat

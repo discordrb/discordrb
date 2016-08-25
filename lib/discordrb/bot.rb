@@ -414,14 +414,6 @@ module Discordrb
     end
     alias_method :away, :idle
 
-    # Injects a resume packet (op 6) into the gateway. If this is done with a running connection, it will cause an
-    # error. It has no use outside of testing stuff that I know of, but if you want to use it anyway for some reason,
-    # here it is.
-    # @param seq [Integer, nil] The sequence ID to inject, or nil if the currently tracked one should be used.
-    def inject_resume(seq)
-      resume(seq || @sequence, raw_token, @session_id)
-    end
-
     # Injects a terminal gateway error into the handler. Useful for testing the reconnect logic.
     # @param e [Exception] The exception object to inject.
     def inject_error(e)
