@@ -181,7 +181,7 @@ module Discordrb
     # If the URL is set to nil, it will reconnect and get an entirely new gateway URL. This method has not much use
     # outside of testing and implementing highly custom reconnect logic.
     # @param url [String, nil] the URL to connect to or nil if one should be obtained from Discord.
-    def inject_reconnect(url)
+    def inject_reconnect(url = nil)
       handle_message({
         op: Opcodes::RECONNECT,
         d: {
