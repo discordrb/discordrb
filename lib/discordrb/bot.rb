@@ -731,6 +731,11 @@ module Discordrb
 
       case type
       when :READY
+        # As READY may be called multiple times over a single process lifetime, we here need to reset the cache entirely
+        # to prevent possible inconsistencies, like objects referencing old versions of other objects which have been
+        # replaced.
+        init_cache
+
         @profile = Profile.new(data['user'], self)
 
         # Initialize servers
