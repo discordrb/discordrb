@@ -440,14 +440,18 @@ module Discordrb
     end
 
     def connect
+      LOGGER.debug('Connecting')
+
       # Get the URI we should connect to
       url = process_gateway
+      LOGGER.debug("Gateway URL: #{url}")
 
       # Parse it
       gateway_uri = URI.parse(url)
 
       # Connect to the obtained URI with a socket
       @socket = obtain_socket(gateway_uri)
+      LOGGER.debug('Obtained socket')
 
       # Initialise some properties
       @handshake = ::WebSocket::Handshake::Client.new(url: url) # Represents the handshake between us and the server
