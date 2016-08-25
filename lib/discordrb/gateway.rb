@@ -195,7 +195,7 @@ module Discordrb
     # here it is.
     # @param seq [Integer, nil] The sequence ID to inject, or nil if the currently tracked one should be used.
     def inject_resume(seq)
-      resume(seq || @sequence, raw_token, @session_id)
+      send_resume(raw_token, @session_id, seq || @sequence)
     end
 
     # Sends a heartbeat with the last received packet's seq (to acknowledge that we have received it and all packets
