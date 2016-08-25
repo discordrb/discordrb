@@ -414,12 +414,6 @@ module Discordrb
     end
     alias_method :away, :idle
 
-    # Injects a terminal gateway error into the handler. Useful for testing the reconnect logic.
-    # @param e [Exception] The exception object to inject.
-    def inject_error(e)
-      websocket_error(e)
-    end
-
     # Sets debug mode. If debug mode is on, many things will be outputted to STDOUT.
     def debug=(new_debug)
       LOGGER.debug = new_debug

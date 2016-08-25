@@ -198,6 +198,12 @@ module Discordrb
       send_resume(raw_token, @session_id, seq || @sequence)
     end
 
+    # Injects a terminal gateway error into the handler. Useful for testing the reconnect logic.
+    # @param e [Exception] The exception object to inject.
+    def inject_error(e)
+      websocket_error(e)
+    end
+
     # Sends a heartbeat with the last received packet's seq (to acknowledge that we have received it and all packets
     # before it), or if none have been received yet, with 0.
     # @see #send_heartbeat
