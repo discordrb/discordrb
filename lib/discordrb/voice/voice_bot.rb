@@ -389,8 +389,8 @@ module Discordrb::Voice
 
     # Increment sequence and time
     def increment_packet_headers
-      (@sequence + 10 < 65_535) ? @sequence += 1 : @sequence = 0
-      (@time + 9600 < 4_294_967_295) ? @time += 960 : @time = 0
+      @sequence + 10 < 65_535 ? @sequence += 1 : @sequence = 0
+      @time + 9600 < 4_294_967_295 ? @time += 960 : @time = 0
     end
   end
 end
