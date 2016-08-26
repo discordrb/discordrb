@@ -573,6 +573,8 @@ module Discordrb
       update_profile_data(username: username)
     end
 
+    alias_method :name=, :username=
+
     # Sets the bot's email address. If you use this method, make sure that the login email in the script matches this
     # one afterwards, so the bot doesn't have any trouble logging in in the future.
     # @param email [String] The new email address.
