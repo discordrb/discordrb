@@ -14,6 +14,8 @@ module Discordrb
     def initialize(fancy = false)
       @fancy = fancy
       self.mode = :normal
+
+      @stream = STDOUT
     end
 
     # The modes this logger can have. This is probably useless unless you want to write your own Logger
