@@ -1547,7 +1547,8 @@ module Discordrb
           data['mute'],
           data['deaf'],
           data['self_mute'],
-          data['self_deaf'])
+          data['self_deaf']
+        )
       else
         # The user is not in a voice channel anymore, so delete its voice state
         @voice_states.delete(user_id)
