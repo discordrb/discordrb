@@ -1685,7 +1685,7 @@ module Discordrb
       @afk_timeout = new_data[:afk_timeout] || new_data['afk_timeout'].to_i || @afk_timeout
 
       @afk_channel_id = new_data[:afk_channel_id] || new_data['afk_channel_id'].to_i || @afk_channel.id
-      @afk_channel = @bot.channel(@afk_channel_id, self) if @afk_channel_id != 0 && (!@afk_channel || @afk_channel_id != @afk_channel.id)
+      @afk_channel = @bot.channel(@afk_channel_id, self) if @afk_channel_id.nonzero? && (!@afk_channel || @afk_channel_id != @afk_channel.id)
     end
 
     # The inspect method is overwritten to give more useful output
