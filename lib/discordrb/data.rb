@@ -742,9 +742,16 @@ module Discordrb
 
     alias_method :color=, :colour=
 
-    # Changes the internal packed permissions
-    # @note For internal use only
-    # @!visibility private
+    # Changes this role's permissions to a fixed bitfield. This allows setting multiple permissions at once with just
+    # one API call.
+    #
+    # Information on how this bitfield is structured can be found at
+    # https://discordapp.com/developers/docs/topics/permissions.
+    # @example Remove all permissions from a role
+    #   role.packed = 0
+    # @param packed [Integer] A bitfield with the desired permissions value.
+    # @param update_perms [true, false] Whether the internal data should also be updated. This should always be true
+    #   when calling externally.
     def packed=(packed, update_perms = true)
       update_role_data(permissions: packed)
       @permissions.bits = packed if update_perms
