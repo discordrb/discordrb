@@ -651,7 +651,6 @@ module Discordrb
 
     # @return [ColourRGB] the role colour
     attr_reader :colour
-
     alias_method :color, :colour
 
     # This class is used internally as a wrapper to a Role object that allows easy writing of permission data.
