@@ -8,14 +8,13 @@ module Discordrb::Events
   class ServerMemberEvent < Event
     # @return [Member] the member in question.
     attr_reader :user
+    alias_method :member, :user
 
     # @return [Array<Role>] the member's roles.
     attr_reader :roles
 
     # @return [Server] the server on which the event happened.
     attr_reader :server
-
-    alias_method :member, :user
 
     def initialize(data, bot)
       @bot = bot
