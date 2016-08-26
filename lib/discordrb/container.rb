@@ -313,6 +313,8 @@ module Discordrb
     end
 
     alias_method :private_message, :pm
+    alias_method :direct_message, :pm
+    alias_method :dm, :pm
 
     # Removes an event handler from this container. If you're looking for a way to do temporary events, I recommend
     # {Await}s instead of this.
