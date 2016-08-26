@@ -650,7 +650,6 @@ module Discordrb
 
     # @return [ColourRGB] the role colour
     attr_reader :colour
-
     alias_method :color, :colour
 
     # This class is used internally as a wrapper to a Role object that allows easy writing of permission data.
@@ -824,24 +823,22 @@ module Discordrb
 
     # @return [Integer] the amount of uses left on this invite.
     attr_reader :uses
+    alias_method :max_uses, :uses
 
     # @return [User, nil] the user that made this invite. May also be nil if the user can't be determined.
     attr_reader :inviter
+    alias_method :user, :inviter
 
     # @return [true, false] whether or not this invite is temporary.
     attr_reader :temporary
+    alias_method :temporary?, :temporary
 
     # @return [true, false] whether this invite is still valid.
     attr_reader :revoked
+    alias_method :revoked?, :revoked
 
     # @return [String] this invite's code
     attr_reader :code
-
-    alias_method :max_uses, :uses
-    alias_method :user, :inviter
-
-    alias_method :temporary?, :temporary
-    alias_method :revoked?, :revoked
 
     # @!visibility private
     def initialize(data, bot)
@@ -1051,6 +1048,7 @@ module Discordrb
       @user_limit = limit
       update_channel_data
     end
+
     alias_method :limit=, :user_limit=
 
     # Sets this channel's position in the list.
