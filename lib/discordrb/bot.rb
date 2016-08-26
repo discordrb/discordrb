@@ -1348,7 +1348,7 @@ module Discordrb
           @unavailable_servers -= 1 if @unavailable_servers
           @unavailable_timeout_time = Time.now
 
-          notify_ready if @unavailable_servers == 0
+          notify_ready if @unavailable_servers.zero?
 
           # Return here so the event doesn't get triggered
           return
