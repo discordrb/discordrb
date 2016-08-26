@@ -382,6 +382,9 @@ module Discordrb::Voice
 
       # Final cleanup
       stop_playing
+
+      # Notify any stop_playing methods running right now that we have actually stopped
+      @has_stopped_playing = true
     end
 
     # Increment sequence and time
