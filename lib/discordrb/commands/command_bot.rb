@@ -81,7 +81,7 @@ module Discordrb::Commands
         advanced_functionality: attributes[:advanced_functionality].nil? ? false : attributes[:advanced_functionality],
 
         # The name of the help command (that displays information to other commands). False if none should exist
-        help_command: (attributes[:help_command].is_a? FalseClass) ? nil : (attributes[:help_command] || :help),
+        help_command: attributes[:help_command].is_a?(FalseClass) ? nil : (attributes[:help_command] || :help),
 
         # The message to display for when a command doesn't exist, %command% to get the command name in question and nil for no message
         # No default value here because it may not be desired behaviour
