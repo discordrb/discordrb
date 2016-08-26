@@ -180,7 +180,7 @@ module Discordrb::Voice
     # methods in separate threads.
     # @param encoded_io [IO] A stream of raw PCM data (s16le)
     def play(encoded_io)
-      stop_playing if @playing
+      stop_playing(true) if @playing
       @retry_attempts = 3
       @first_packet = true
 
@@ -253,7 +253,7 @@ module Discordrb::Voice
     # @see https://github.com/bwmarrin/dca
     # @see #play
     def play_dca(file)
-      stop_playing if @playing
+      stop_playing(true) if @playing
 
       @bot.debug "Reading DCA file #{file}"
       input_stream = open(file)
