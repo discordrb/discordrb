@@ -152,11 +152,19 @@ module Discordrb::Voice
     end
 
     # Stops the current playback entirely.
-    def stop_playing
+    # @param wait_for_confirmation [true, false] Whether the method should wait for confirmation from the playback
+    #   method that the playback has actually stopped.
+    def stop_playing(wait_for_confirmation = true)
       @was_playing_before = @playing
       @speaking = false
       @playing = false
       sleep IDEAL_LENGTH / 1000.0 if @was_playing_before
+
+      if wait_for_confirmation
+        @has_stopped_playing = false
+        sleep IDEAL_LENGTH / 1000.0 until @has_stopped_playing
+        @has_stopped_playing = false
+      end
     end
 
     # Permanently disconnects from the voice channel; to reconnect you will have to call {Bot#voice_connect} again.
