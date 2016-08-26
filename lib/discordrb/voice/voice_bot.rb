@@ -200,7 +200,7 @@ module Discordrb::Voice
         # Check whether the buffer has enough data
         if !buf || buf.length != DATA_LENGTH
           @bot.debug("No data is available! Retrying #{@retry_attempts} more times")
-          break if @retry_attempts == 0
+          break if @retry_attempts.zero?
 
           @retry_attempts -= 1
           next
