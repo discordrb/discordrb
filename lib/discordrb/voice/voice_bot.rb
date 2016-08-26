@@ -154,7 +154,7 @@ module Discordrb::Voice
     # Stops the current playback entirely.
     # @param wait_for_confirmation [true, false] Whether the method should wait for confirmation from the playback
     #   method that the playback has actually stopped.
-    def stop_playing(wait_for_confirmation = true)
+    def stop_playing(wait_for_confirmation = false)
       @was_playing_before = @playing
       @speaking = false
       @playing = false
