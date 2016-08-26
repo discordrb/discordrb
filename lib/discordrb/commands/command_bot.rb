@@ -267,7 +267,7 @@ module Discordrb::Commands
         Thread.current[:discordrb_name] = "ct-#{@current_thread += 1}"
         begin
           debug("Parsing command chain #{chain}")
-          result = (@attributes[:advanced_functionality]) ? CommandChain.new(chain, self).execute(event) : simple_execute(chain, event)
+          result = @attributes[:advanced_functionality] ? CommandChain.new(chain, self).execute(event) : simple_execute(chain, event)
           result = event.drain_into(result)
 
           if event.file
