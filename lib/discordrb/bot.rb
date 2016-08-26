@@ -581,6 +581,7 @@ module Discordrb
       gateway_check
       update_status(nil, @game, @streamurl)
     end
+
     alias_method :on, :online
 
     # Sets status to idle.
