@@ -168,6 +168,8 @@ module Discordrb
       end
     end
 
+    alias_method :dm, :pm
+
     # Send the user a file.
     # @param file [File] The file to send to the user
     # @param caption [String] The caption of the file being sent
