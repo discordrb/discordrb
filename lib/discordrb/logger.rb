@@ -90,11 +90,11 @@ module Discordrb
     end
 
     def fancy_write(message, mode, thread_name, timestamp)
-      puts "#{timestamp} #{FORMAT_BOLD}#{thread_name.ljust(16)}#{FORMAT_RESET} #{mode[:format_code]}#{mode[:short]}#{FORMAT_RESET} #{message}"
+      @stream.puts "#{timestamp} #{FORMAT_BOLD}#{thread_name.ljust(16)}#{FORMAT_RESET} #{mode[:format_code]}#{mode[:short]}#{FORMAT_RESET} #{message}"
     end
 
     def simple_write(message, mode, thread_name, timestamp)
-      puts "[#{mode[:long]} : #{thread_name} @ #{timestamp}] #{message}"
+      @stream.puts "[#{mode[:long]} : #{thread_name} @ #{timestamp}] #{message}"
     end
   end
 end
