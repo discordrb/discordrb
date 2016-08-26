@@ -22,7 +22,7 @@ module Discordrb::Commands
     #   the message by setting this option to false.
     # @option attributes [Array<Symbol>] :required_permissions Discord action permissions (e.g. `:kick_members`) that
     #   should be required to use this command. See {Discordrb::Permissions::Flags} for a list.
-    # @option attributes [Array<Role>, Array<Integer>, Array<String>] :required_roles Roles that user should have to use this command.
+    # @option attributes [Array<Role>, Array<#resolve_id>] :required_roles Roles that user should have to use this command.
     # @option attributes [true, false] :chain_usable Whether this command is able to be used inside of a command chain
     #   or sub-chain. Typically used for administrative commands that shouldn't be done carelessly.
     # @option attributes [true, false] :help_available Whether this command is visible in the help command. See the
