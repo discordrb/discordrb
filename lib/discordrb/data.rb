@@ -1093,8 +1093,10 @@ module Discordrb
     # @param message_id [Integer] The ID of the message to retrieve.
     # @return [Message] the retrieved message.
     def load_message(message_id)
-      msg = JSON.parse(API.channel_message(@bot.token, @id, message_id))
-      Message.new(msg, @bot)
+      response = API.channel_message(@bot.token, @id, message_id)
+      return Message.new(JSON.parse(response), @bot)
+    rescue RestClient::ResourceNotFound
+      return nil
     end
 
     # Requests all pinned messages of a channel.
