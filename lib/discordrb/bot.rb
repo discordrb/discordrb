@@ -1177,7 +1177,7 @@ module Discordrb
 
         # Don't notify yet if there are unavailable servers because they need to get available before the bot truly has
         # all the data
-        if @unavailable_servers == 0
+        if @unavailable_servers.zero?
           # No unavailable servers - we're ready!
           notify_ready
         end
