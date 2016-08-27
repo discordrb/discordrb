@@ -1031,9 +1031,7 @@ module Discordrb
     # Sets this channel's topic.
     # @param topic [String] The new topic.
     def topic=(topic)
-      if voice?
-        raise "Voice channels don't have topics"
-      end
+      raise "Voice channels don't have topics" if voice?
       @topic = topic
       update_channel_data
     end
@@ -1041,9 +1039,7 @@ module Discordrb
     # Sets this channel's bitrate.
     # @param bitrate [Integer] The new bitrate. Number has to be between 8000-96000 (128000 for VIP servers)
     def bitrate=(bitrate)
-      if text?
-        raise "Tried to set bitrate on text channel"
-      end
+      raise 'Tried to set bitrate on text channel' if text?
       @bitrate = bitrate
       update_channel_data
     end
@@ -1051,9 +1047,7 @@ module Discordrb
     # Sets this channel's user limit.
     # @param limit [Integer] The new user limit. `0` for unlimited, has to be a number between 0-99
     def user_limit=(limit)
-      if text?
-        raise "Tried to set user_limit on text channel"
-      end
+      raise 'Tried to set user_limit on text channel' if text?
       @user_limit = limit
       update_channel_data
     end
