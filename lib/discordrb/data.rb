@@ -1557,6 +1557,7 @@ module Discordrb
     # @return [true, false] whether or not the server has widget enabled
     def embed?
       @embed = JSON.parse(API.server(@bot.token, @id))['embed_enabled'] if @embed.nil?
+      return @embed
     end
 
     # @param include_idle [true, false] Whether to count idle members as online.
