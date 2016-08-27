@@ -77,30 +77,25 @@ module Discordrb
     # **Received**: The functionality of this opcode is less known than the others but it appears to specifically
     # tell the client to invalidate its local session and continue by {IDENTIFY}ing.
     INVALIDATE_SESSION = 9
+
+    # **Received**: Sent immediately for any opened connection; tells the client to start heartbeating early on, so the
+    # server can safely search for a session server to handle the connection without the connection being terminated.
+    # As a side-effect, large bots are less likely to disconnect because of very large READY parse times.
+    HELLO = 10
+
+    # **Received**: Returned after a heartbeat was sent to the server. This allows clients to identify and deal with
+    # zombie connections that don't dispatch any events anymore.
+    HEARTBEAT_ACK = 11
   end
 
   # Represents a Discord bot, including servers, users, etc.
   class Bot
-    # The list of users the bot shares a server with.
-    # @return [Hash<Integer => User>] The users by ID.
-    attr_reader :users
-
-    # The list of servers the bot is currently in.
-    # @return [Hash<Integer => Server>] The servers by ID.
-    attr_reader :servers
-
     # The list of currently running threads used to parse and call events.
     # The threads will have a local variable `:discordrb_name` in the format of `et-1234`, where
     # "et" stands for "event thread" and the number is a continually incrementing number representing
     # how many events were executed before.
     # @return [Array<Thread>] The threads.
     attr_reader :event_threads
-
-    # The bot's user profile. This special user object can be used
-    # to edit user data like the current username (see {Profile#username=}).
-    # @return [Profile] The bot's profile that can be used to edit data.
-    attr_reader :profile
-    alias_method :bot_user, :profile
 
     # Whether or not the bot should parse its own messages. Off by default.
     attr_accessor :should_parse_self
@@ -159,7 +154,8 @@ module Discordrb
         email: nil, password: nil, log_mode: :normal,
         token: nil, application_id: nil,
         type: nil, name: '', fancy_log: false, suppress_ready: false, parse_self: false,
-        shard_id: nil, num_shards: nil)
+        shard_id: nil, num_shards: nil
+    )
       # Make sure people replace the login details in the example files...
       if email.is_a?(String) && email.end_with?('example.com')
         puts 'You have to replace the login details in the example files with your own!'
@@ -202,7 +198,36 @@ module Discordrb
 
       @event_threads = []
       @current_thread = 0
+
+      @idletime = nil
+
+      # Whether the connection to the gateway has succeeded yet
+      @ws_success = false
     end
+
+    # The list of users the bot shares a server with.
+    # @return [Hash<Integer => User>] The users by ID.
+    def users
+      gateway_check
+      @users
+    end
+
+    # The list of servers the bot is currently in.
+    # @return [Hash<Integer => Server>] The servers by ID.
+    def servers
+      gateway_check
+      @servers
+    end
+
+    # The bot's user profile. This special user object can be used
+    # to edit user data like the current username (see {Profile#username=}).
+    # @return [Profile] The bot's profile that can be used to edit data.
+    def profile
+      gateway_check
+      @profile
+    end
+
+    alias_method :bot_user, :profile
 
     # The Discord API token received when logging in. Useful to explicitly call
     # {API} methods.
@@ -257,7 +282,10 @@ module Discordrb
         @falloff = 1.0
 
         loop do
+          @should_reconnect = true
           websocket_connect
+
+          break unless @should_reconnect
 
           if @reconnect_url
             # We got an op 7! Don't wait before reconnecting
@@ -273,7 +301,6 @@ module Discordrb
       end
 
       debug('WS thread created! Now waiting for confirmation that everything worked')
-      @ws_success = false
       sleep(0.5) until @ws_success
       debug('Confirmation received! Exiting run.')
     end
@@ -283,9 +310,23 @@ module Discordrb
       @ws_thread.join
     end
 
-    # Kills the websocket thread, stopping all connections to Discord.
+    # Stops the bot gracefully, disconnecting the websocket without immediately killing the thread. This means that
+    # Discord is immediately aware of the closed connetion and makes the bot appear offline instantly.
+    #
+    # If this method doesn't work or you're looking for something more drastic, use {#kill} instead.
     def stop
+      @should_reconnect = false
+      @ws.close
+    end
+
+    # Kills the websocket thread, stopping all connections to Discord.
+    def kill
       @ws_thread.kill
+    end
+
+    # @return [true, false] whether or not the bot is currently connected to Discord.
+    def connected?
+      @ws_success
     end
 
     # Makes the bot join an invite to a server.
@@ -435,8 +476,10 @@ module Discordrb
     # @note This executes in a blocking way, so if you're sending long files, be wary of delays.
     # @param channel_id [Integer] The ID that identifies the channel to send something to.
     # @param file [File] The file that should be sent.
-    def send_file(channel_id, file)
-      response = API.send_file(token, channel_id, file)
+    # @param caption [string] The caption for the file.
+    # @param tts [true, false] Whether or not this file's caption should be sent using Discord text-to-speech.
+    def send_file(channel_id, file, caption: nil, tts: false)
+      response = API.send_file(token, channel_id, file, caption: caption, tts: tts)
       Message.new(JSON.parse(response), self)
     end
 
@@ -494,23 +537,61 @@ module Discordrb
       user(id.to_i)
     end
 
+    # Updates presence status.
+    # @param idletime [Integer, nil] The floating point of a Time object that shows the last time the bot was on.
+    # @param game [String, nil] The name of the game to be played/stream name on the stream.
+    # @param url [String, nil] The Twitch URL to display as a stream. nil for no stream.
+    def update_status(idletime, game, url)
+      gateway_check
+
+      @game = game
+      @idletime = idletime
+      @streamurl = url
+      type = url ? 1 : nil
+      data = {
+        op: Opcodes::PRESENCE,
+        d: {
+          idle_since: idletime,
+          game: game || url ? { name: game, url: url, type: type } : nil
+        }
+      }
+      @ws.send(data.to_json)
+    end
+
     # Sets the currently playing game to the specified game.
     # @param name [String] The name of the game to be played.
     # @return [String] The game that is being played now.
     def game=(name)
-      @game = name
-
-      data = {
-        op: Opcodes::PRESENCE,
-        d: {
-          idle_since: nil,
-          game: name ? { name: name } : nil
-        }
-      }
-
-      @ws.send(data.to_json)
+      gateway_check
+      update_status(@idletime, name, nil)
       name
     end
+
+    # Sets the currently online stream to the specified name and Twitch URL.
+    # @param name [String] The name of the stream to display.
+    # @param url [String] The url of the current Twitch stream.
+    # @return [String] The stream name that is being displayed now.
+    def stream(name, url)
+      gateway_check
+      update_status(@idletime, name, url)
+      name
+    end
+
+    # Sets status to online.
+    def online
+      gateway_check
+      update_status(nil, @game, @streamurl)
+    end
+
+    alias_method :on, :online
+
+    # Sets status to idle.
+    def idle
+      gateway_check
+      update_status((Time.now.to_f * 1000), @game, nil)
+    end
+
+    alias_method :away, :idle
 
     # Injects a reconnect event (op 7) into the event processor, causing Discord to reconnect to the given gateway URL.
     # If the URL is set to nil, it will reconnect and get an entirely new gateway URL. This method has not much use
@@ -622,6 +703,13 @@ module Discordrb
       :bot
     end
 
+    # Throws a useful exception if there's currently no gateway connection
+    def gateway_check
+      return if connected?
+
+      raise "A gateway connection is necessary to call this method! You'll have to do it inside any event (e.g. `ready`) or after `bot.run :async`."
+    end
+
     ### ##    ## ######## ######## ########  ##    ##    ###    ##        ######
     ##  ###   ##    ##    ##       ##     ## ###   ##   ## ##   ##       ##    ##
     ##  ####  ##    ##    ##       ##     ## ####  ##  ##   ##  ##       ##
@@ -668,28 +756,11 @@ module Discordrb
 
     # Internal handler for VOICE_STATUS_UPDATE
     def update_voice_state(data)
-      user_id = data['user_id'].to_i
       server_id = data['guild_id'].to_i
       server = server(server_id)
       return unless server
 
-      user = server.member(user_id)
-
-      unless user
-        warn "Invalid user for voice state update: #{user_id} on #{server_id}, ignoring"
-        return
-      end
-
-      channel_id = data['channel_id']
-      channel = nil
-      channel = self.channel(channel_id.to_i) if channel_id
-
-      user.update_voice_state(
-        channel,
-        data['mute'],
-        data['deaf'],
-        data['self_mute'],
-        data['self_deaf'])
+      server.update_voice_state(data)
 
       @session_id = data['session_id']
     end
@@ -945,7 +1016,7 @@ module Discordrb
     ####  ###   ######     ########    ###    ######## ##    ##    ##     ######
 
     # Desired gateway version
-    GATEWAY_VERSION = 4
+    GATEWAY_VERSION = 5
 
     def websocket_connect
       debug('Attempting to get gateway URL...')
@@ -1025,6 +1096,29 @@ module Discordrb
         return
       end
 
+      if opcode == Opcodes::HELLO
+        LOGGER.debug 'Hello!'
+
+        # Initialize sequence with 0 so we can start heartbeating without being in a session
+        @sequence = 0
+
+        # Activate the heartbeats
+        @heartbeat_interval = packet['d']['heartbeat_interval'].to_f / 1000.0
+        @heartbeat_active = true
+        debug("Desired heartbeat_interval: #{@heartbeat_interval} seconds")
+
+        debug("Trace: #{packet['d']['_trace']}")
+
+        return
+      end
+
+      if opcode == Opcodes::HEARTBEAT_ACK
+        # Set this to false so when sending the next heartbeat it won't try to reconnect because it's still expecting
+        # an ACK
+        @awaiting_ack = false
+        return
+      end
+
       raise "Got an unexpected opcode (#{opcode}) in a gateway event!
               Please report this issue along with the following information:
               v#{GATEWAY_VERSION} #{packet}" unless opcode == Opcodes::DISPATCH
@@ -1053,12 +1147,6 @@ module Discordrb
 
         # Set the session ID in case we get disconnected and have to resume
         @session_id = data['session_id']
-
-        # Activate the heartbeats
-        @heartbeat_interval = data['heartbeat_interval'].to_f / 1000.0
-        @heartbeat_active = true
-        debug("Desired heartbeat_interval: #{@heartbeat_interval}")
-        send_heartbeat
 
         @profile = Profile.new(data['user'], self, @email, @password)
 
@@ -1089,7 +1177,7 @@ module Discordrb
 
         # Don't notify yet if there are unavailable servers because they need to get available before the bot truly has
         # all the data
-        if @unavailable_servers == 0
+        if @unavailable_servers.zero?
           # No unavailable servers - we're ready!
           notify_ready
         end
@@ -1098,16 +1186,9 @@ module Discordrb
         @unavailable_timeout_time = Time.now
       when :RESUMED
         # The RESUMED event is received after a successful op 6 (resume). It does nothing except tell the bot the
-        # connection is initiated (like READY would) and set a new heartbeat interval.
+        # connection is initiated (like READY would). Starting with v5, it doesn't set a new heartbeat interval anymore
+        # since that is handled by op 10 (HELLO).
         debug('Connection resumed')
-
-        @heartbeat_interval = data['heartbeat_interval'].to_f / 1000.0
-
-        # Since we disabled it earlier so we don't send any heartbeats in between close and resume,, make sure to
-        # re-enable heartbeating
-        @heartbeat_active = true
-
-        debug("Desired heartbeat_interval: #{@heartbeat_interval}")
       when :GUILD_MEMBERS_CHUNK
         id = data['guild_id'].to_i
         server = server(id)
@@ -1154,6 +1235,22 @@ module Discordrb
 
         event = MessageDeleteEvent.new(data, self)
         raise_event(event)
+      when :MESSAGE_DELETE_BULK
+        debug("MESSAGE_DELETE_BULK will raise #{data['ids'].length} events")
+
+        data['ids'].each do |single_id|
+          # Form a data hash for a single ID so the methods get what they want
+          single_data = {
+            'id' => single_id,
+            'channel_id' => data['channel_id']
+          }
+
+          # Raise as normal
+          delete_message(single_data)
+
+          event = MessageDeleteEvent.new(single_data, self)
+          raise_event(event)
+        end
       when :TYPING_START
         start_typing(data)
 
@@ -1251,7 +1348,7 @@ module Discordrb
           @unavailable_servers -= 1 if @unavailable_servers
           @unavailable_timeout_time = Time.now
 
-          notify_ready if @unavailable_servers == 0
+          notify_ready if @unavailable_servers.zero?
 
           # Return here so the event doesn't get triggered
           return
@@ -1406,6 +1503,12 @@ module Discordrb
 
       raise_event(HeartbeatEvent.new(self))
 
+      if @awaiting_ack
+        # There has been no HEARTBEAT_ACK between the last heartbeat and now, so reconnect because the connection might
+        # be a zombie
+        LOGGER.warn("No HEARTBEAT_ACK received between the last heartbeat and now! (seq: #{sequence})")
+      end
+
       LOGGER.out("Sending heartbeat with sequence #{sequence}")
       data = {
         op: Opcodes::HEARTBEAT,
@@ -1413,6 +1516,7 @@ module Discordrb
       }
 
       @ws.send(data.to_json)
+      @awaiting_ack = true
     rescue => e
       LOGGER.error('Got an error while sending a heartbeat! Carrying on anyway because heartbeats are vital for the connection to stay alive')
       LOGGER.log_exception(e)

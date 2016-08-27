@@ -9,11 +9,16 @@ module Discordrb
     # @return [true, false] whether this logger is in extra-fancy mode!
     attr_writer :fancy
 
+    # @return [IO, #puts & #flush] the stream the logger should write to.
+    attr_accessor :stream
+
     # Creates a new logger.
     # @param fancy [true, false] Whether this logger uses fancy mode (ANSI escape codes to make the output colourful)
     def initialize(fancy = false)
       @fancy = fancy
       self.mode = :normal
+
+      @stream = STDOUT
     end
 
     # The modes this logger can have. This is probably useless unless you want to write your own Logger
@@ -88,11 +93,13 @@ module Discordrb
     end
 
     def fancy_write(message, mode, thread_name, timestamp)
-      puts "#{timestamp} #{FORMAT_BOLD}#{thread_name.ljust(16)}#{FORMAT_RESET} #{mode[:format_code]}#{mode[:short]}#{FORMAT_RESET} #{message}"
+      @stream.puts "#{timestamp} #{FORMAT_BOLD}#{thread_name.ljust(16)}#{FORMAT_RESET} #{mode[:format_code]}#{mode[:short]}#{FORMAT_RESET} #{message}"
+      @stream.flush
     end
 
     def simple_write(message, mode, thread_name, timestamp)
-      puts "[#{mode[:long]} : #{thread_name} @ #{timestamp}] #{message}"
+      @stream.puts "[#{mode[:long]} : #{thread_name} @ #{timestamp}] #{message}"
+      @stream.flush
     end
   end
 end

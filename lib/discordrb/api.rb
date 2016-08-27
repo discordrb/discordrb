@@ -146,6 +146,18 @@ module Discordrb::API
     )
   end
 
+  # Change the current bot's nickname on a server
+  def change_own_nickname(token, server_id, nick)
+    request(
+      __method__,
+      :patch,
+      "#{api_base}/guilds/#{server_id}/members/@me/nick",
+      { nick: nick }.to_json,
+      Authorization: token,
+      content_type: :json
+    )
+  end
+
   # Change a user's nickname on a server
   def change_nickname(token, server_id, user_id, nick)
     request(
@@ -370,12 +382,12 @@ module Discordrb::API
   end
 
   # Create an instant invite from a server or a channel id
-  def create_invite(token, channel_id, max_age = 0, max_uses = 0, temporary = false, xkcd = false)
+  def create_invite(token, channel_id, max_age = 0, max_uses = 0, temporary = false)
     request(
       __method__,
       :post,
       "#{api_base}/channels/#{channel_id}/invites",
-      { max_age: max_age, max_uses: max_uses, temporary: temporary, xkcdpass: xkcd }.to_json,
+      { max_age: max_age, max_uses: max_uses, temporary: temporary }.to_json,
       Authorization: token,
       content_type: :json
     )
@@ -474,12 +486,12 @@ module Discordrb::API
   end
 
   # Send a file as a message to a channel
-  def send_file(token, channel_id, file)
+  def send_file(token, channel_id, file, caption: nil, tts: false)
     request(
       __method__,
       :post,
       "#{api_base}/channels/#{channel_id}/messages",
-      { file: file },
+      { file: file, content: caption, tts: tts },
       Authorization: token
     )
   end
@@ -499,12 +511,12 @@ module Discordrb::API
   # Permissions are the Discord defaults; allowed: invite creation, reading/sending messages,
   # sending TTS messages, embedding links, sending files, reading the history, mentioning everybody,
   # connecting to voice, speaking and voice activity (push-to-talk isn't mandatory)
-  def update_role(token, server_id, role_id, name, colour, hoist = false, packed_permissions = 36_953_089)
+  def update_role(token, server_id, role_id, name, colour, hoist = false, mentionable = false, packed_permissions = 36_953_089)
     request(
       __method__,
       :patch,
       "#{api_base}/guilds/#{server_id}/roles/#{role_id}",
-      { color: colour, name: name, hoist: hoist, permissions: packed_permissions }.to_json,
+      { color: colour, name: name, hoist: hoist, mentionable: mentionable, permissions: packed_permissions }.to_json,
       Authorization: token,
       content_type: :json
     )
@@ -527,6 +539,30 @@ module Discordrb::API
       :patch,
       "#{api_base}/guilds/#{server_id}/members/#{user_id}",
       { roles: roles }.to_json,
+      Authorization: token,
+      content_type: :json
+    )
+  end
+
+  # Update a user's server deafened state
+  def update_user_deafen(token, server_id, user_id, state)
+    request(
+      __method__,
+      :patch,
+      "#{api_base}/guilds/#{server_id}/members/#{user_id}",
+      { deaf: state }.to_json,
+      Authorization: token,
+      content_type: :json
+    )
+  end
+
+  # Update a user's server muted state
+  def update_user_mute(token, server_id, user_id, state)
+    request(
+      __method__,
+      :patch,
+      "#{api_base}/guilds/#{server_id}/members/#{user_id}",
+      { mute: state }.to_json,
       Authorization: token,
       content_type: :json
     )

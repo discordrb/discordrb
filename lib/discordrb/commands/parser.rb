@@ -17,7 +17,7 @@ module Discordrb::Commands
         permission_level: attributes[:permission_level] || 0,
 
         # Message to display when a user does not have sufficient permissions to execute a command
-        permission_message: (attributes[:permission_message].is_a? FalseClass) ? nil : (attributes[:permission_message] || "You don't have permission to execute command %name%!"),
+        permission_message: attributes[:permission_message].is_a?(FalseClass) ? nil : (attributes[:permission_message] || "You don't have permission to execute command %name%!"),
 
         # Discord action permissions required to use this command
         required_permissions: attributes[:required_permissions] || [],
@@ -141,7 +141,7 @@ module Discordrb::Commands
         end
 
         if char == @attributes[:sub_chain_start] && !quoted
-          b_start = index if b_level == 0
+          b_start = index if b_level.zero?
           b_level += 1
         end
 
@@ -149,13 +149,13 @@ module Discordrb::Commands
 
         next unless char == @attributes[:sub_chain_end] && !quoted
         b_level -= 1
-        next unless b_level == 0
+        next unless b_level.zero?
         nested = @chain[b_start + 1..index - 1]
         subchain = CommandChain.new(nested, @bot, true)
         result += subchain.execute(event)
       end
 
-      event.respond("Your subchains are mismatched! Make sure you don't have any extra #{@attributes[:sub_chain_start]}'s or #{@attributes[:sub_chain_end]}'s") unless b_level == 0
+      event.respond("Your subchains are mismatched! Make sure you don't have any extra #{@attributes[:sub_chain_start]}'s or #{@attributes[:sub_chain_end]}'s") unless b_level.zero?
 
       @chain = result
 

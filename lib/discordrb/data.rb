@@ -49,7 +49,7 @@ module Discordrb
 
     # If it's still larger than the character limit (none was smaller than it) split it into slices with the length
     # being the character limit, otherwise just return an array with one element
-    ideal_ary = (ideal.length > CHARACTER_LIMIT) ? ideal.chars.each_slice(CHARACTER_LIMIT).map(&:join) : [ideal]
+    ideal_ary = ideal.length > CHARACTER_LIMIT ? ideal.chars.each_slice(CHARACTER_LIMIT).map(&:join) : [ideal]
 
     # Slice off the ideal part and strip newlines
     rest = msg[ideal.length..-1].strip
@@ -168,6 +168,16 @@ module Discordrb
       end
     end
 
+    alias_method :dm, :pm
+
+    # Send the user a file.
+    # @param file [File] The file to send to the user
+    # @param caption [String] The caption of the file being sent
+    # @return [Message] the message sent to this user.
+    def send_file(file, caption = nil)
+      pm.send_file(file, caption: caption)
+    end
+
     # Set the user's name
     # @note for internal use only
     # @!visibility private
@@ -210,22 +220,6 @@ module Discordrb
 
   # Mixin for the attributes members and private members should have
   module MemberAttributes
-    # @return [true, false] whether this member is muted server-wide.
-    attr_reader :mute
-    alias_method :muted?, :mute
-
-    # @return [true, false] whether this member is deafened server-wide.
-    attr_reader :deaf
-    alias_method :deafened?, :deaf
-
-    # @return [true, false] whether this member has muted themselves.
-    attr_reader :self_mute
-    alias_method :self_muted?, :self_mute
-
-    # @return [true, false] whether this member has deafened themselves.
-    attr_reader :self_deaf
-    alias_method :self_deafened?, :self_deaf
-
     # @return [Time] when this member joined the server.
     attr_reader :joined_at
 
@@ -238,9 +232,6 @@ module Discordrb
 
     # @return [Server] the server this member is on.
     attr_reader :server
-
-    # @return [Channel] the voice channel the user is in.
-    attr_reader :voice_channel
   end
 
   # Mixin to calculate resulting permissions from overrides etc.
@@ -258,7 +249,7 @@ module Discordrb
       # (Coincidentally, Manage Permissions is the same permission as Manage Roles, and a
       # Manage Permissions deny overwrite will override Manage Roles, so we can just check for
       # Manage Roles once and call it a day.)
-      return true if defined_permission?(:manage_roles, channel)
+      return true if defined_permission?(:administrator, channel)
 
       # Otherwise, defer to defined_permission
       defined_permission?(action, channel)
@@ -288,6 +279,8 @@ module Discordrb
         permission? flag, channel
       end
     end
+
+    alias_method :can_administrate?, :can_administrator?
 
     private
 
@@ -327,9 +320,77 @@ module Discordrb
     end
   end
 
+  # A voice state represents the state of a member's connection to a voice channel. It includes data like the voice
+  # channel the member is connected to and mute/deaf flags.
+  class VoiceState
+    # @return [Integer] the ID of the user whose voice state is represented by this object.
+    attr_reader :user_id
+
+    # @return [true, false] whether this voice state's member is muted server-wide.
+    attr_reader :mute
+
+    # @return [true, false] whether this voice state's member is deafened server-wide.
+    attr_reader :deaf
+
+    # @return [true, false] whether this voice state's member has muted themselves.
+    attr_reader :self_mute
+
+    # @return [true, false] whether this voice state's member has deafened themselves.
+    attr_reader :self_deaf
+
+    # @return [Channel] the voice channel this voice state's member is in.
+    attr_reader :voice_channel
+
+    # @!visibility private
+    def initialize(user_id)
+      @user_id = user_id
+    end
+
+    # Update this voice state with new data from Discord
+    # @note For internal use only.
+    # @!visibility private
+    def update(channel, mute, deaf, self_mute, self_deaf)
+      @voice_channel = channel
+      @mute = mute
+      @deaf = deaf
+      @self_mute = self_mute
+      @self_deaf = self_deaf
+    end
+  end
+
   # A member is a user on a server. It differs from regular users in that it has roles, voice statuses and things like
   # that.
   class Member < DelegateClass(User)
+    # @return [true, false] whether this member is muted server-wide.
+    def mute
+      voice_state_attribute(:mute)
+    end
+
+    # @return [true, false] whether this member is deafened server-wide.
+    def deaf
+      voice_state_attribute(:deaf)
+    end
+
+    # @return [true, false] whether this member has muted themselves.
+    def self_mute
+      voice_state_attribute(:self_mute)
+    end
+
+    # @return [true, false] whether this member has deafened themselves.
+    def self_deaf
+      voice_state_attribute(:self_deaf)
+    end
+
+    # @return [Channel] the voice channel this member is in.
+    def voice_channel
+      voice_state_attribute(:voice_channel)
+    end
+
+    alias_method :muted?, :mute
+    alias_method :deafened?, :deaf
+    alias_method :self_muted?, :self_mute
+    alias_method :self_deafened?, :self_deaf
+
     include MemberAttributes
 
     # @!visibility private
@@ -347,9 +408,6 @@ module Discordrb
       update_roles(data['roles'])
 
       @nick = data['nick']
-
-      @deaf = data['deaf']
-      @mute = data['mute']
       @joined_at = data['joined_at'] ? Time.parse(data['joined_at']) : nil
     end
 
@@ -385,6 +443,26 @@ module Discordrb
       API.update_user_roles(@bot.token, @server.id, @user.id, new_role_ids)
     end
 
+    # Server deafens this member.
+    def server_deafen
+      API.update_user_deafen(@bot.token, @server.id, @user.id, true)
+    end
+
+    # Server undeafens this member.
+    def server_undeafen
+      API.update_user_deafen(@bot.token, @server.id, @user.id, false)
+    end
+
+    # Server mutes this member.
+    def server_mute
+      API.update_user_mute(@bot.token, @server.id, @user.id, true)
+    end
+
+    # Server unmutes this member.
+    def server_unmute
+      API.update_user_mute(@bot.token, @server.id, @user.id, false)
+    end
+
     # Sets or resets this member's nickname. Requires the Change Nickname permission for the bot itself and Manage
     # Nicknames for other users.
     # @param nick [String, nil] The string to set the nickname to, or nil if it should be reset.
@@ -392,7 +470,11 @@ module Discordrb
       # Discord uses the empty string to signify 'no nickname' so we convert nil into that
       nick ||= ''
 
-      API.change_nickname(@bot.token, @server.id, @user.id, nick)
+      if @user.current_bot?
+        API.change_own_nickname(@bot.token, @server.id, nick)
+      else
+        API.change_nickname(@bot.token, @server.id, @user.id, nick)
+      end
     end
 
     alias_method :nickname=, :nick=
@@ -418,17 +500,6 @@ module Discordrb
       @nick = nick
     end
 
-    # Update this member's voice state
-    # @note For internal use only.
-    # @!visibility private
-    def update_voice_state(channel, mute, deaf, self_mute, self_deaf)
-      @voice_channel = channel
-      @mute = mute
-      @deaf = deaf
-      @self_mute = self_mute
-      @self_deaf = self_deaf
-    end
-
     include PermissionCalculator
 
     # Overwriting inspect for debug purposes
@@ -445,6 +516,12 @@ module Discordrb
       else
         [role.resolve_id]
       end
+    end
+
+    # Utility method to get data out of this member's voice state
+    def voice_state_attribute(name)
+      voice_state = @server.voice_states[@user.id]
+      voice_state.send name if voice_state
     end
   end
 
@@ -499,6 +576,8 @@ module Discordrb
     def username=(username)
       update_profile_data(username: username)
     end
+
+    alias_method :name=, :username=
 
     # Sets the bot's email address. If you use this method, make sure that the login email in the script matches this
     # one afterwards, so the bot doesn't have any trouble logging in in the future.
@@ -576,7 +655,6 @@ module Discordrb
 
     # @return [ColourRGB] the role colour
     attr_reader :colour
-
     alias_method :color, :colour
 
     # This class is used internally as a wrapper to a Role object that allows easy writing of permission data.
@@ -653,6 +731,12 @@ module Discordrb
       update_role_data(hoist: hoist)
     end
 
+    # Changes whether or not this role can be mentioned
+    # @param mentionable [true, false] The value it should be changed to
+    def mentionable=(mentionable)
+      update_role_data(mentionable: mentionable)
+    end
+
     # Sets the role colour to something new
     # @param colour [ColourRGB] The new colour
     def colour=(colour)
@@ -661,9 +745,16 @@ module Discordrb
 
     alias_method :color=, :colour=
 
-    # Changes the internal packed permissions
-    # @note For internal use only
-    # @!visibility private
+    # Changes this role's permissions to a fixed bitfield. This allows setting multiple permissions at once with just
+    # one API call.
+    #
+    # Information on how this bitfield is structured can be found at
+    # https://discordapp.com/developers/docs/topics/permissions.
+    # @example Remove all permissions from a role
+    #   role.packed = 0
+    # @param packed [Integer] A bitfield with the desired permissions value.
+    # @param update_perms [true, false] Whether the internal data should also be updated. This should always be true
+    #   when calling externally.
     def packed=(packed, update_perms = true)
       update_role_data(permissions: packed)
       @permissions.bits = packed if update_perms
@@ -686,7 +777,8 @@ module Discordrb
       API.update_role(@bot.token, @server.id, @id,
                       new_data[:name] || @name,
                       (new_data[:colour] || @colour).combined,
-                      new_data[:hoist].nil? ? false : !@hoist.nil?,
+                      new_data[:hoist].nil? ? @hoist : new_data[:hoist],
+                      new_data[:mentionable].nil? ? @mentionable : new_data[:mentionable],
                       new_data[:permissions] || @permissions.bits)
       update_data(new_data)
     end
@@ -753,9 +845,6 @@ module Discordrb
     # @return [true, false] whether this invite is still valid.
     attr_reader :revoked
 
-    # @return [true, false] whether this invite is in xkcd format (i. e. "Human readable" in the invite settings)
-    attr_reader :xkcd
-
     # @return [String] this invite's code
     attr_reader :code
 
@@ -764,7 +853,6 @@ module Discordrb
 
     alias_method :temporary?, :temporary
     alias_method :revoked?, :revoked
-    alias_method :xkcd?, :xkcd
 
     # @!visibility private
     def initialize(data, bot)
@@ -776,7 +864,6 @@ module Discordrb
       @inviter = data['inviter'] ? (@bot.user(data['inviter']['id'].to_i) || User.new(data['inviter'], bot)) : nil
       @temporary = data['temporary']
       @revoked = data['revoked']
-      @xkcd = data['xkcdpass']
 
       @code = data['code']
     end
@@ -795,7 +882,7 @@ module Discordrb
 
     # The inspect method is overwritten to give more useful output
     def inspect
-      "<Invite code=#{@code} channel=#{@channel} uses=#{@uses} temporary=#{@temporary} revoked=#{@revoked} xkcd=#{@xkcd}>"
+      "<Invite code=#{@code} channel=#{@channel} uses=#{@uses} temporary=#{@temporary} revoked=#{@revoked}>"
     end
 
     # Creates an invite URL.
@@ -928,8 +1015,10 @@ module Discordrb
 
     # Sends a file to this channel. If it is an image, it will be embedded.
     # @param file [File] The file to send. There's no clear size limit for this, you'll have to attempt it for yourself (most non-image files are fine, large images may fail to embed)
-    def send_file(file)
-      @bot.send_file(@id, file)
+    # @param caption [string] The caption for the file.
+    # @param tts [true, false] Whether or not this file's caption should be sent using Discord text-to-speech.
+    def send_file(file, caption: nil, tts: false)
+      @bot.send_file(@id, file, caption: caption, tts: tts)
     end
 
     # Permanently deletes this channel
@@ -978,7 +1067,8 @@ module Discordrb
       allow_bits = allow.respond_to?(:bits) ? allow.bits : allow
       deny_bits = deny.respond_to?(:bits) ? deny.bits : deny
 
-      if thing.is_a? User
+      # TODO: Be more flexible about what classes are allowed here
+      if thing.is_a?(User) || thing.is_a?(Member) || thing.is_a?(Recipient)
         API.update_user_overrides(@bot.token, @id, thing.id, allow_bits, deny_bits)
       elsif thing.is_a? Role
         API.update_role_overrides(@bot.token, @id, thing.id, allow_bits, deny_bits)
@@ -1002,9 +1092,7 @@ module Discordrb
       if @type == 'text'
         @server.online_members(include_idle: true).select { |u| u.status != :offline }
       else
-        @server.online_members(include_idle: true).select do |user|
-          user.voice_channel.id == @id if user.voice_channel
-        end
+        @server.voice_states.map { |id, voice_state| @server.member(id) if !voice_state.voice_channel.nil? && voice_state.voice_channel.id == @id }.compact
       end
     end
 
@@ -1056,10 +1144,9 @@ module Discordrb
     # @param max_age [Integer] How many seconds this invite should last.
     # @param max_uses [Integer] How many times this invite should be able to be used.
     # @param temporary [true, false] Whether membership should be temporary (kicked after going offline).
-    # @param xkcd [true, false] Whether or not the invite should be human-readable.
     # @return [Invite] the created invite.
-    def make_invite(max_age = 0, max_uses = 0, temporary = false, xkcd = false)
-      response = API.create_invite(@bot.token, @id, max_age, max_uses, temporary, xkcd)
+    def make_invite(max_age = 0, max_uses = 0, temporary = false)
+      response = API.create_invite(@bot.token, @id, max_age, max_uses, temporary)
       Invite.new(JSON.parse(response), @bot)
     end
 
@@ -1304,6 +1391,9 @@ module Discordrb
     # @return [Channel, nil] the AFK voice channel of this server, or nil if none is set
     attr_reader :afk_channel
 
+    # @return [Hash<Integer => VoiceState>] the hash (user ID => voice state) of voice states of members on this server
+    attr_reader :voice_states
+
     # @!visibility private
     def initialize(data, bot, exists = true)
       @bot = bot
@@ -1314,6 +1404,7 @@ module Discordrb
       @large = data['large']
       @member_count = data['member_count']
       @members = {}
+      @voice_states = {}
 
       process_roles(data['roles'])
       process_members(data['members'])
@@ -1350,7 +1441,7 @@ module Discordrb
       return @members[id] if member_cached?(id)
       return nil unless request
 
-      member = @bot.member(@id, id)
+      member = @bot.member(self, id)
       @members[id] = member
     rescue
       nil
@@ -1439,6 +1530,33 @@ module Discordrb
     # @!visibility private
     def cache_member(member)
       @members[member.id] = member
+    end
+
+    # Updates a member's voice state
+    # @note For internal use only
+    # @!visibility private
+    def update_voice_state(data)
+      user_id = data['user_id'].to_i
+
+      if data['channel_id']
+        unless @voice_states[user_id]
+          # Create a new voice state for the user
+          @voice_states[user_id] = VoiceState.new(user_id)
+        end
+
+        # Update the existing voice state (or the one we just created)
+        channel = @channels_by_id[data['channel_id'].to_i]
+        @voice_states[user_id].update(
+          channel,
+          data['mute'],
+          data['deaf'],
+          data['self_mute'],
+          data['self_deaf']
+        )
+      else
+        # The user is not in a voice channel anymore, so delete its voice state
+        @voice_states.delete(user_id)
+      end
     end
 
     # Creates a channel on this server with the given name.
@@ -1571,7 +1689,7 @@ module Discordrb
       @afk_timeout = new_data[:afk_timeout] || new_data['afk_timeout'].to_i || @afk_timeout
 
       @afk_channel_id = new_data[:afk_channel_id] || new_data['afk_channel_id'].to_i || @afk_channel.id
-      @afk_channel = @bot.channel(@afk_channel_id, self) if @afk_channel_id != 0 && (!@afk_channel || @afk_channel_id != @afk_channel.id)
+      @afk_channel = @bot.channel(@afk_channel_id, self) if @afk_channel_id.nonzero? && (!@afk_channel || @afk_channel_id != @afk_channel.id)
     end
 
     # The inspect method is overwritten to give more useful output
@@ -1608,17 +1726,6 @@ module Discordrb
       return unless members
       members.each do |element|
         member = Member.new(element, self, @bot)
-        if @members[member.id] && @members[member.id].voice_channel
-          @bot.debug("Preserving voice state of member #{member.id} while chunking")
-          old_member = @members[member.id]
-          member.update_voice_state(
-            old_member.voice_channel,
-            old_member.mute,
-            old_member.deaf,
-            old_member.self_mute,
-            old_member.self_deaf
-          )
-        end
         @members[member.id] = member
       end
     end
@@ -1652,18 +1759,7 @@ module Discordrb
     def process_voice_states(voice_states)
       return unless voice_states
       voice_states.each do |element|
-        user_id = element['user_id'].to_i
-        member = @members[user_id]
-        next unless member
-        channel_id = element['channel_id'].to_i
-        channel = channel_id ? @channels_by_id[channel_id] : nil
-
-        member.update_voice_state(
-          channel,
-          element['mute'],
-          element['deaf'],
-          element['self_mute'],
-          element['self_deaf'])
+        update_voice_state(element)
       end
     end
   end

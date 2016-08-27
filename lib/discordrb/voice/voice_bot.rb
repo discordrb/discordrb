@@ -152,11 +152,19 @@ module Discordrb::Voice
     end
 
     # Stops the current playback entirely.
-    def stop_playing
+    # @param wait_for_confirmation [true, false] Whether the method should wait for confirmation from the playback
+    #   method that the playback has actually stopped.
+    def stop_playing(wait_for_confirmation = false)
       @was_playing_before = @playing
       @speaking = false
       @playing = false
       sleep IDEAL_LENGTH / 1000.0 if @was_playing_before
+
+      if wait_for_confirmation
+        @has_stopped_playing = false
+        sleep IDEAL_LENGTH / 1000.0 until @has_stopped_playing
+        @has_stopped_playing = false
+      end
     end
 
     # Permanently disconnects from the voice channel; to reconnect you will have to call {Bot#voice_connect} again.
@@ -172,7 +180,7 @@ module Discordrb::Voice
     # methods in separate threads.
     # @param encoded_io [IO] A stream of raw PCM data (s16le)
     def play(encoded_io)
-      stop_playing if @playing
+      stop_playing(true) if @playing
       @retry_attempts = 3
       @first_packet = true
 
@@ -192,7 +200,7 @@ module Discordrb::Voice
         # Check whether the buffer has enough data
         if !buf || buf.length != DATA_LENGTH
           @bot.debug("No data is available! Retrying #{@retry_attempts} more times")
-          break if @retry_attempts == 0
+          break if @retry_attempts.zero?
 
           @retry_attempts -= 1
           next
@@ -245,7 +253,7 @@ module Discordrb::Voice
     # @see https://github.com/bwmarrin/dca
     # @see #play
     def play_dca(file)
-      stop_playing if @playing
+      stop_playing(true) if @playing
 
       @bot.debug "Reading DCA file #{file}"
       input_stream = open(file)
@@ -374,12 +382,15 @@ module Discordrb::Voice
 
       # Final cleanup
       stop_playing
+
+      # Notify any stop_playing methods running right now that we have actually stopped
+      @has_stopped_playing = true
     end
 
     # Increment sequence and time
     def increment_packet_headers
-      (@sequence + 10 < 65_535) ? @sequence += 1 : @sequence = 0
-      (@time + 9600 < 4_294_967_295) ? @time += 960 : @time = 0
+      @sequence + 10 < 65_535 ? @sequence += 1 : @sequence = 0
+      @time + 9600 < 4_294_967_295 ? @time += 960 : @time = 0
     end
   end
 end
