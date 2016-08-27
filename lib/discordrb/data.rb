@@ -1491,7 +1491,7 @@ module Discordrb
 
       @large = data['large']
       @member_count = data['member_count']
-      @verification_level = [:none, :low, :medium, :high][data['verification_level'] - 1]
+      @verification_level = [:none, :low, :medium, :high][data['verification_level']]
       @splash = data['splash']
       @embed = data['embed_enabled']
       @features = data['features'].map { |element| element.downcase.to_sym }
