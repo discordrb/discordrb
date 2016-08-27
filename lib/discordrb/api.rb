@@ -108,7 +108,7 @@ module Discordrb::API
     "#{api_base}/guilds/#{server_id}/widget.png"
   end
 
-  # Make an splash URL from server abd splash IDs
+  # Make an splash URL from server and splash IDs
   def splash_url(server_id, splash_id)
     "https://cdn.discordapp.com/splashes/#{server_id}/#{splash_id}.png"
   end
