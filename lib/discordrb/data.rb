@@ -1460,10 +1460,6 @@ module Discordrb
     attr_reader :large
     alias_method :large?, :large
 
-    # @return [true, false] whether or not the server has widget enabled
-    attr_reader :embed
-    alias_method :embed?, :embed
-
     # @return [Array<Symbol>] the features of the server
     attr_reader :features
 
@@ -1493,7 +1489,7 @@ module Discordrb
       @member_count = data['member_count']
       @verification_level = [:none, :low, :medium, :high][data['verification_level']]
       @splash = data['splash']
-      @embed = data['embed_enabled']
+      @embed = nil
       @features = data['features'].map { |element| element.downcase.to_sym }
       @members = {}
       @voice_states = {}
@@ -1557,6 +1553,13 @@ module Discordrb
       return nil if integration.empty?
       integration.map { |element| Integration.new(element) }
     end
+
+    # @return [true, false] whether or not the server has widget enabled
+    def embed
+      @embed = JSON.parse(API.server(@bot.token, @id))['embed_enabled'] if @embed.nil?
+    end
+
+    alias_method :embed?, :embed
 
     # @param include_idle [true, false] Whether to count idle members as online.
     # @param include_bots [true, false] Whether to include bot accounts in the count.
