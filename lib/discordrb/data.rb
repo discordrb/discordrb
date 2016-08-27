@@ -1551,9 +1551,11 @@ module Discordrb
 
     alias_method :users, :members
 
-    # @return [Array<Integration>] an array of all the intergrations connected to this server.
+    # @return [Array<Integration>, nil] an array of all the intergrations connected to this server (nil if there's no integration).
     def integrations
-      API.server_integrations(@bot.token, @id).map { |element| Integration.new(element) }
+      integration = JSON.parse(API.server_integrations(@bot.token, @id))
+      return nil if integration.empty?
+      integration.map { |element| Integration.new(element) }
     end
 
     # @param include_idle [true, false] Whether to count idle members as online.
