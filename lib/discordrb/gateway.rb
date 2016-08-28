@@ -158,7 +158,7 @@ module Discordrb
 
     # Whether the WebSocket connection to the gateway is currently open
     def open?
-      @handshake.finished? && !@closed
+      @handshake && @handshake.finished? && !@closed
     end
 
     # Stops the bot gracefully, disconnecting the websocket without immediately killing the thread. This means that
