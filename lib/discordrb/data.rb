@@ -1109,6 +1109,16 @@ module Discordrb
       JSON.parse(logs).map { |message| Message.new(message, @bot) }
     end
 
+    # Returns a single message from this channel's history by ID.
+    # @param message_id [Integer] The ID of the message to retrieve.
+    # @return [Message] the retrieved message.
+    def load_message(message_id)
+      response = API.channel_message(@bot.token, @id, message_id)
+      return Message.new(JSON.parse(response), @bot)
+    rescue RestClient::ResourceNotFound
+      return nil
+    end
+
     # Requests all pinned messages of a channel.
     # @return [Array<Message>] the received messages.
     def pins
