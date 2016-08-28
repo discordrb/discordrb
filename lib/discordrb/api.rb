@@ -53,6 +53,12 @@ module Discordrb::API
     mutex.synchronize { sleep time }
   end
 
+  # Wait for a specified mutex to unlock and do nothing with it afterwards.
+  def mutex_wait(mutex)
+    mutex.lock
+    mutex.unlock
+  end
+
   # Performs a RestClient request.
   # @param type [Symbol] The type of HTTP request to use.
   # @param attributes [Array] The attributes for the request.
@@ -74,14 +80,10 @@ module Discordrb::API
     mutex = @mutexes[key] ||= Mutex.new
 
     # Lock and unlock, i. e. wait for the mutex to unlock and don't do anything with it afterwards
-    mutex.lock
-    mutex.unlock
+    mutex_wait(mutex)
 
     # If the global mutex happens to be locked right now, wait for that as well.
-    if @global_mutex.locked?
-      @global_mutex.lock
-      @global_mutex.unlock
-    end
+    mutex_wait(@global_mutex) if @global_mutex.locked?
 
     begin
       response = raw_request(type, attributes)
