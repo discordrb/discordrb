@@ -64,13 +64,11 @@ module Discordrb::API
     attributes.last[:user_agent] = user_agent if attributes.last.is_a? Hash
 
     begin
-      if key
-        @mutexes[key] = Mutex.new unless @mutexes[key]
+      @mutexes[key] = Mutex.new unless @mutexes[key]
 
-        # Lock and unlock, i. e. wait for the mutex to unlock and don't do anything with it afterwards
-        @mutexes[key].lock
-        @mutexes[key].unlock
-      end
+      # Lock and unlock, i. e. wait for the mutex to unlock and don't do anything with it afterwards
+      @mutexes[key].lock
+      @mutexes[key].unlock
 
       response = raw_request(type, attributes)
     rescue RestClient::TooManyRequests => e
