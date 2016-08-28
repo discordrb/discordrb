@@ -2,6 +2,8 @@
 
 require 'rest-client'
 require 'json'
+require 'time'
+
 require 'discordrb/errors'
 
 # List of methods representing endpoints in Discord's API
@@ -45,6 +47,11 @@ module Discordrb::API
     @mutexes = {}
   end
 
+  # Wait a specified amount of time synchronised with the specified mutex.
+  def sync_wait(time, mutex)
+    mutex.synchronize { sleep time }
+  end
+
   # Performs a RestClient request.
   # @param type [Symbol] The type of HTTP request to use.
   # @param attributes [Array] The attributes for the request.
@@ -79,7 +86,7 @@ module Discordrb::API
 
         # Wait the required time synchronized by the mutex (so other incoming requests have to wait) but only do it if
         # the mutex isn't locked already so it will only ever wait once
-        mutex.synchronize { sleep wait_seconds }
+        sync_wait(wait_seconds, mutex)
       end
 
       retry
