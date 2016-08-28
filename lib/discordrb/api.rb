@@ -63,23 +63,23 @@ module Discordrb::API
     # Add a custom user agent
     attributes.last[:user_agent] = user_agent if attributes.last.is_a? Hash
 
-    @mutexes[key] ||= Mutex.new
+    mutex = @mutexes[key] ||= Mutex.new
 
     # Lock and unlock, i. e. wait for the mutex to unlock and don't do anything with it afterwards
-    @mutexes[key].lock
-    @mutexes[key].unlock
+    mutex.lock
+    mutex.unlock
 
     begin
       response = raw_request(type, attributes)
     rescue RestClient::TooManyRequests => e
-      unless @mutexes[key].locked?
+      unless mutex.locked?
         response = JSON.parse(e.response)
         wait_seconds = response['retry_after'].to_i / 1000.0
         Discordrb::LOGGER.warn("Locking RL mutex (key: #{key}) for #{wait_seconds} seconds due to Discord rate limiting")
 
         # Wait the required time synchronized by the mutex (so other incoming requests have to wait) but only do it if
         # the mutex isn't locked already so it will only ever wait once
-        @mutexes[key].synchronize { sleep wait_seconds }
+        mutex.synchronize { sleep wait_seconds }
       end
 
       retry
