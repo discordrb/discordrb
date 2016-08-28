@@ -1452,9 +1452,6 @@ module Discordrb
     # @return [Array<Role>] an array of all the roles created on this server.
     attr_reader :roles
 
-    # @return [String] the hexadecimal ID used to identify this server's splash image for their VIP invite page.
-    attr_reader :splash_id
-
     # @return [true, false] whether or not this server is large (members > 100). If it is,
     # it means the members list may be inaccurate for a couple seconds after starting up the bot.
     attr_reader :large
@@ -1488,7 +1485,7 @@ module Discordrb
       @large = data['large']
       @member_count = data['member_count']
       @verification_level = [:none, :low, :medium, :high][data['verification_level']]
-      @splash = data['splash']
+      @splash_id = nil
       @embed = nil
       @features = data['features'].map { |element| element.downcase.to_sym }
       @members = {}
@@ -1596,11 +1593,18 @@ module Discordrb
       API.widget_url(@id) + '?style=banner' + (style_number == Integer ? style_number.to_s : '1')
     end
 
+    # @return [String] the hexadecimal ID used to identify this server's splash image for their VIP invite page.
+    def splash_id
+      @splash_id = JSON.parse(API.server(@bot.token, @id))['splash'] if @splash_id.nil?
+      @splash_id
+    end
+
     # @return [String, nil] the splash image URL for the server's VIP invite page.
     # `nil` if there is no splash image.
     def splash_url
-      return nil unless @splash
-      API.splash_url(@id, @splash)
+      splash_id if @splash_id.nil?
+      return nil unless @splash_id
+      API.splash_url(@id, @splash_id)
     end
 
     # Adds a role to the role cache
