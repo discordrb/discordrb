@@ -687,6 +687,16 @@ module Discordrb::API
     )
   end
 
+  # Get a single message from a channel's history by id
+  def channel_message(token, channel_id, message_id)
+    request(
+      __method__,
+      :get,
+      "#{api_base}/channels/#{channel_id}/messages/#{message_id}",
+      Authorization: token
+    )
+  end
+
   # Get a list of pinned messages in a channel
   def pins(token, channel_id)
     request(
