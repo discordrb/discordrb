@@ -63,13 +63,13 @@ module Discordrb::API
     # Add a custom user agent
     attributes.last[:user_agent] = user_agent if attributes.last.is_a? Hash
 
+    @mutexes[key] ||= Mutex.new
+
+    # Lock and unlock, i. e. wait for the mutex to unlock and don't do anything with it afterwards
+    @mutexes[key].lock
+    @mutexes[key].unlock
+
     begin
-      @mutexes[key] ||= Mutex.new
-
-      # Lock and unlock, i. e. wait for the mutex to unlock and don't do anything with it afterwards
-      @mutexes[key].lock
-      @mutexes[key].unlock
-
       response = raw_request(type, attributes)
     rescue RestClient::TooManyRequests => e
       unless @mutexes[key].locked?
