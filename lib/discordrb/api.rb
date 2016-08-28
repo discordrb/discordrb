@@ -77,6 +77,12 @@ module Discordrb::API
     mutex.lock
     mutex.unlock
 
+    # If the global mutex happens to be locked right now, wait for that as well.
+    if @global_mutex.locked?
+      @global_mutex.lock
+      @global_mutex.unlock
+    end
+
     begin
       response = raw_request(type, attributes)
 
