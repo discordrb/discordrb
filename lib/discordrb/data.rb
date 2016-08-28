@@ -1406,10 +1406,10 @@ module Discordrb
     # @return [Time] the time the integration was synced at
     attr_reader :synced_at
 
-    # @return [Integer] the behavior of expiring subscribers
+    # @return [Integer] the behavior of expiring subscribers (0 = Remove User from role; 1 = Kick User from server)
     attr_reader :expire_behavior
 
-    # @return [Integer] the grace period before expiring subscribers
+    # @return [Integer] the grace period before expiring subscribers (in days)
     attr_reader :expire_grace_period
 
     def initialize(data, bot, server)
