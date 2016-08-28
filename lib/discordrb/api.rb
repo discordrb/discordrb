@@ -78,6 +78,18 @@ module Discordrb::API
 
     begin
       response = raw_request(type, attributes)
+
+      if response.headers[:x_ratelimit_remaining] == '0' && !mutex.locked?
+        Discordrb::LOGGER.debug "RL bucket depletion detected! Date: #{response.headers[:date]} Reset: #{response.headers[:x_ratelimit_reset]}"
+
+        now = Time.rfc2822(response.headers[:date])
+        reset = Time.at(response.headers[:x_ratelimit_reset].to_i)
+
+        delta = reset - now
+
+        Discordrb::LOGGER.warn("Locking RL mutex (key: #{key}) for #{delta} seconds preemptively")
+        sync_wait(delta, mutex)
+      end
     rescue RestClient::TooManyRequests => e
       unless mutex.locked?
         response = JSON.parse(e.response)
