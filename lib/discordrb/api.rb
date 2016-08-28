@@ -180,6 +180,16 @@ module Discordrb::API
     )
   end
 
+  # Get a server's channels list
+  def channels(token, server_id)
+    request(
+      __method__,
+      :get,
+      "#{api_base}/guilds/#{server_id}/channels",
+      Authorization: token
+    )
+  end
+
   # Login to the server
   def login(email, password)
     request(
