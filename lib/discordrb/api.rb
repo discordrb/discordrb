@@ -110,7 +110,7 @@ module Discordrb::API
 
   # Make an splash URL from server and splash IDs
   def splash_url(server_id, splash_id)
-    "https://cdn.discordapp.com/splashes/#{server_id}/#{splash_id}.png"
+    "https://cdn.discordapp.com/splashes/#{server_id}/#{splash_id}.jpg"
   end
 
   # Ban a user from a server and delete their messages from the last message_days days
