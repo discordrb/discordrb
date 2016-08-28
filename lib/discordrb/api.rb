@@ -45,6 +45,7 @@ module Discordrb::API
   # Resets all rate limit mutexes
   def reset_mutexes
     @mutexes = {}
+    @global_mutex = Mutex.new
   end
 
   # Wait a specified amount of time synchronised with the specified mutex.
