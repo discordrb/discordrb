@@ -64,7 +64,7 @@ module Discordrb::API
     attributes.last[:user_agent] = user_agent if attributes.last.is_a? Hash
 
     begin
-      @mutexes[key] = Mutex.new unless @mutexes[key]
+      @mutexes[key] ||= Mutex.new
 
       # Lock and unlock, i. e. wait for the mutex to unlock and don't do anything with it afterwards
       @mutexes[key].lock
