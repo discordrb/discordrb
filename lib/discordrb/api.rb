@@ -77,15 +77,15 @@ module Discordrb::API
     # Add a custom user agent
     attributes.last[:user_agent] = user_agent if attributes.last.is_a? Hash
 
-    mutex = @mutexes[key] ||= Mutex.new
-
-    # Lock and unlock, i. e. wait for the mutex to unlock and don't do anything with it afterwards
-    mutex_wait(mutex)
-
-    # If the global mutex happens to be locked right now, wait for that as well.
-    mutex_wait(@global_mutex) if @global_mutex.locked?
-
     begin
+      mutex = @mutexes[key] ||= Mutex.new
+
+      # Lock and unlock, i. e. wait for the mutex to unlock and don't do anything with it afterwards
+      mutex_wait(mutex)
+
+      # If the global mutex happens to be locked right now, wait for that as well.
+      mutex_wait(@global_mutex) if @global_mutex.locked?
+
       response = raw_request(type, attributes)
 
       if response.headers[:x_ratelimit_remaining] == '0' && !mutex.locked?
