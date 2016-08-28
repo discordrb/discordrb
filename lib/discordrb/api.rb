@@ -74,8 +74,6 @@ module Discordrb::API
 
       response = raw_request(type, attributes)
     rescue RestClient::TooManyRequests => e
-      raise "Got an HTTP 429 for an untracked API call! Please report this bug together with the following information: #{type} #{attributes}" unless key
-
       unless @mutexes[key].locked?
         response = JSON.parse(e.response)
         wait_seconds = response['retry_after'].to_i / 1000.0
