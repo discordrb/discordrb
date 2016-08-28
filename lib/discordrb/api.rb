@@ -100,6 +100,9 @@ module Discordrb::API
         sync_wait(delta, mutex)
       end
     rescue RestClient::TooManyRequests => e
+      # If the 429 is from the global RL, then we have to use the global mutex instead.
+      mutex = @global_mutex if e.response.headers[:x_ratelimit_global] == 'true'
+
       unless mutex.locked?
         response = JSON.parse(e.response)
         wait_seconds = response['retry_after'].to_i / 1000.0
