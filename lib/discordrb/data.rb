@@ -1391,6 +1391,10 @@ module Discordrb
     # @return [Role, nil] the role that this integration uses for "subscribers"
     attr_reader :role
 
+    # @return [true, false] wheter emoticons are enabled
+    attr_reader :emoticon
+    alias_method :emoticon?, :emoticon
+
     # @return [String] the integration type `youtube, twitch, etc.`
     attr_reader :type
 
@@ -1427,6 +1431,7 @@ module Discordrb
       @expire_grace_period = data['expire_grace_period']
       @user = @bot.ensure_user(data['user'])
       @role = server.role(data['role_id']) || nil
+      @emoticon = data['enable_emoticons']
     end
 
     # The inspect method is overwritten to give more useful output
