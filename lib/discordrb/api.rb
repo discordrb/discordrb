@@ -190,6 +190,7 @@ module Discordrb::API
     )
   end
 
+  # Get a channel's invite list
   def channel_invites(token, channel_id)
     request(
       __method__,
