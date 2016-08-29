@@ -1125,6 +1125,8 @@ module Discordrb
       return nil
     end
 
+    alias_method :message, :load_message
+
     # Requests all pinned messages of a channel.
     # @return [Array<Message>] the received messages.
     def pins
