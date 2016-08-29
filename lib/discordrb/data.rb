@@ -657,6 +657,9 @@ module Discordrb
     attr_reader :colour
     alias_method :color, :colour
 
+    # @return [Integer] the position of this role in the hierarchy
+    attr_reader :position
+
     # This class is used internally as a wrapper to a Role object that allows easy writing of permission data.
     class RoleWriter
       # @!visibility private
