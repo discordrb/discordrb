@@ -680,6 +680,8 @@ module Discordrb
       @name = data['name']
       @id = data['id'].to_i
 
+      @position = data['position']
+
       @hoist = data['hoist']
       @mentionable = data['mentionable']
 
