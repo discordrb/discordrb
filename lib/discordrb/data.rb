@@ -709,6 +709,7 @@ module Discordrb
       @name = other.name
       @hoist = other.hoist
       @colour = other.colour
+      @position = other.position
     end
 
     # Updates the data cache from a hash containing data
