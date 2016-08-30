@@ -175,7 +175,7 @@ module Discordrb::Commands
         nil
       end
     rescue NoPermission
-      event.respond @attributes[:no_permission_message] if @attributes[:no_permission_message]
+      event.respond @attributes[:no_permission_message].gsub('%invite_url%', invite_url) if @attributes[:no_permission_message]
       raise NoPermission
     end
 
