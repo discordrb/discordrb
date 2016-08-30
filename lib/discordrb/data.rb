@@ -242,8 +242,9 @@ module Discordrb
     end
 
     # Utility function to get a application's icon URL.
-    # @return [String] the URL to the icon image.
+    # @return [String, nil] the URL to the icon image (nil if no iamge is set).
     def icon_url
+      return nil if @icon_id.nil?
       API.app_icon_url(@id, @icon_id)
     end
 
