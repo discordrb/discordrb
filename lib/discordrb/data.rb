@@ -1125,6 +1125,8 @@ module Discordrb
       return nil
     end
 
+    alias_method :message, :load_message
+
     # Requests all pinned messages of a channel.
     # @return [Array<Message>] the received messages.
     def pins
@@ -1174,7 +1176,6 @@ module Discordrb
     end
 
     alias_method :send, :send_message
-    alias_method :message, :send_message
     alias_method :invite, :make_invite
 
     # The inspect method is overwritten to give more useful output
