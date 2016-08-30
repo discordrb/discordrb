@@ -44,6 +44,9 @@ module Discordrb::Commands
     # @option attributes [String] :command_doesnt_exist_message The message that should be displayed if a user attempts
     #   to use a command that does not exist. If none is specified, no message will be displayed. In the message, you
     #   can use the string '%command%' that will be replaced with the name of the command.
+    # @option attributes [String] :no_permission_message The message to be displayed when `NoPermission` error is raised.
+    #   You can use %invite_url# in the message to get bot's invite url (useful so the user can be informed to invite the 
+    #   the bot again, so he has all the permissions required to execute the command).
     # @option attributes [true, false] :spaces_allowed Whether spaces are allowed to occur between the prefix and the
     #   command. Default is false.
     # @option attributes [String] :previous Character that should designate the result of the previous command in
