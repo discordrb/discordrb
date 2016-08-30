@@ -174,9 +174,9 @@ module Discordrb::Commands
         event.respond command.attributes[:permission_message].gsub('%name%', name.to_s) if command.attributes[:permission_message]
         nil
       end
-    rescue NoPermission
+    rescue Discordrb::Errors::NoPermission
       event.respond @attributes[:no_permission_message].gsub('%invite_url%', invite_url) if @attributes[:no_permission_message]
-      raise NoPermission
+      raise Discordrb::Errors::NoPermission, "The bot doesn't have the required permission to do this!"
     end
 
     # Executes a command in a simple manner, without command chains or permissions.
