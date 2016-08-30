@@ -231,12 +231,12 @@ module Discordrb::API
     )
   end
 
-  # Get an OAuth application's information
-  def oauth_application(token, app_id)
+  # Get the bot's OAuth application's information
+  def oauth_application(token)
     request(
       __method__,
       :get,
-      "#{api_base}/oauth2/applications/#{app_id}",
+      "#{api_base}/oauth2/applications/@me",
       Authorization: token
     )
   end

@@ -232,7 +232,9 @@ module Discordrb
     # @return [Application, nil] The bot's application info. Returns `nil` if bot is not a bot account.
     def bot_application
       gateway_check
-      @type == :bot ? application(@application_id) : nil
+      return nil unless @type == :bot
+      response = API.oauth_application(token)
+      Application.new(JSON.parse(response), self)
     end
 
     alias_method :bot_app, :bot_application

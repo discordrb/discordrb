@@ -14,8 +14,6 @@ module Discordrb
 
       @servers = {}
 
-      @applications = {}
-
       @channels = {}
       @private_channels = {}
 
@@ -67,23 +65,6 @@ module Discordrb
       end
       user = User.new(JSON.parse(response), self)
       @users[id] = user
-    end
-
-    # Gets a OAuth application by its ID.
-    # @param id [Integer] The application ID that should be resolved.
-    # @return [Application, nil] The application identified by the ID, or `nil` if it couldn't be found.
-    def application(id)
-      id = id.resolve_id
-      return @applications[id] if @applications[id]
-
-      LOGGER.out("Resolving application #{id}")
-      begin
-        response = API.oauth_application(token, id)
-      rescue RestClient::ResourceNotFound
-        return nil
-      end
-      app = Application.new(JSON.parse(response), self)
-      @applications[id] = app
     end
 
     # Gets a server by its ID.
