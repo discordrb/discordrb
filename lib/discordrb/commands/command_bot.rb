@@ -127,6 +127,8 @@ module Discordrb::Commands
           usage = command.attributes[:usage]
           result = "**`#{command_name}`**: #{desc}"
           result += "\nUsage: `#{usage}`" if usage
+          result += "\nAccepted Parameters:" if parameters
+          parameters.each { |p| result += "\n    `#{p}`"} if parameters
           result
         else
           available_commands = @commands.values.reject { |c| !c.attributes[:help_available] }
