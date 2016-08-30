@@ -175,11 +175,8 @@ module Discordrb::Commands
         nil
       end
     rescue NoPermission
-      if @attributes[:no_permission_message]
-        event.respond @attributes[:no_permission_message]
-      else
-        raise NoPermission
-      end
+      event.respond @attributes[:no_permission_message] if @attributes[:no_permission_message]
+      raise NoPermission
     end
 
     # Executes a command in a simple manner, without command chains or permissions.
