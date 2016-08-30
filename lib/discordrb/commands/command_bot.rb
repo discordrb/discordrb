@@ -171,6 +171,12 @@ module Discordrb::Commands
         event.respond command.attributes[:permission_message].gsub('%name%', name.to_s) if command.attributes[:permission_message]
         nil
       end
+    rescue NoPermission
+      if @attributes[:no_permission_message]
+        event.respond @attributes[:no_permission_message]
+      else
+        raise NoPermission
+      end
     end
 
     # Executes a command in a simple manner, without command chains or permissions.
