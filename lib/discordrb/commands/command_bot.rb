@@ -175,7 +175,7 @@ module Discordrb::Commands
         nil
       end
     rescue Discordrb::Errors::NoPermission
-      event.respond @attributes[:no_permission_message].gsub('%invite_url%', invite_url) if @attributes[:no_permission_message]
+      event.respond @attributes[:no_permission_message].gsub('%invite_url%', invite_url) unless @attributes[:no_permission_message].nil?
       raise Discordrb::Errors::NoPermission, "The bot doesn't have the required permission to do this!"
     end
 
