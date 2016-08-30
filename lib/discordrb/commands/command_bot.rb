@@ -125,6 +125,7 @@ module Discordrb::Commands
           return "The command `#{command_name}` does not exist!" unless command
           desc = command.attributes[:description] || '*No description available*'
           usage = command.attributes[:usage]
+          parameters = command.attributes[:parameters]
           result = "**`#{command_name}`**: #{desc}"
           result += "\nUsage: `#{usage}`" if usage
           result += "\nAccepted Parameters:" if parameters
