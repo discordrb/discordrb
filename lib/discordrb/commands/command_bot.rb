@@ -88,7 +88,7 @@ module Discordrb::Commands
         command_doesnt_exist_message: attributes[:command_doesnt_exist_message],
 
         # The message to be displayed when `NoPermission` error is raised.
-        no_permission_message: attributes[:no_permission_message] ? attributes[:no_permission_message] : false,
+        no_permission_message: attributes[:no_permission_message],
 
         # Spaces allowed between prefix and command
         spaces_allowed: attributes[:spaces_allowed].nil? ? false : attributes[:spaces_allowed],
