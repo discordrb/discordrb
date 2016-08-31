@@ -218,6 +218,52 @@ module Discordrb
     end
   end
 
+  # OAuth Application information
+  class Application
+    include IDObject
+
+    # @return [String] the application name
+    attr_reader :name
+
+    # @return [String] the application description
+    attr_reader :description
+
+    # @return [Array<String>] the applications origins permitted to use RPC
+    attr_reader :rpc_origins
+
+    # @return [Integer]
+    attr_reader :flags
+
+    # Gets the user object of the owner. May be limited to username, discriminator,
+    # ID and avatar if the bot cannot reach the owner.
+    # @return [User] the user object of the owner
+    attr_reader :owner
+
+    def initialize(data, bot)
+      @bot = bot
+
+      @name = data['name']
+      @id = data['id'].to_i
+      @description = data['description']
+      @icon_id = data['icon']
+      @rpc_origins = data['rpc_origins']
+      @flags = data['flags']
+      @owner = @bot.ensure_user(data['owner'])
+    end
+
+    # Utility function to get a application's icon URL.
+    # @return [String, nil] the URL to the icon image (nil if no iamge is set).
+    def icon_url
+      return nil if @icon_id.nil?
+      API.app_icon_url(@id, @icon_id)
+    end
+
+    # The inspect method is overwritten to give more useful output
+    def inspect
+      "<Application name=#{@name} id=#{@id}>"
+    end
+  end
+
   # Mixin for the attributes members and private members should have
   module MemberAttributes
     # @return [Time] when this member joined the server.
@@ -657,6 +703,9 @@ module Discordrb
     attr_reader :colour
     alias_method :color, :colour
 
+    # @return [Integer] the position of this role in the hierarchy
+    attr_reader :position
+
     # This class is used internally as a wrapper to a Role object that allows easy writing of permission data.
     class RoleWriter
       # @!visibility private
@@ -679,6 +728,8 @@ module Discordrb
       @permissions = Permissions.new(data['permissions'], RoleWriter.new(self, @bot.token))
       @name = data['name']
       @id = data['id'].to_i
+
+      @position = data['position']
 
       @hoist = data['hoist']
       @mentionable = data['mentionable']
@@ -707,6 +758,7 @@ module Discordrb
       @name = other.name
       @hoist = other.hoist
       @colour = other.colour
+      @position = other.position
     end
 
     # Updates the data cache from a hash containing data
@@ -1119,6 +1171,8 @@ module Discordrb
       return nil
     end
 
+    alias_method :message, :load_message
+
     # Requests all pinned messages of a channel.
     # @return [Array<Message>] the received messages.
     def pins
@@ -1168,7 +1222,6 @@ module Discordrb
     end
 
     alias_method :send, :send_message
-    alias_method :message, :send_message
     alias_method :invite, :make_invite
 
     # The inspect method is overwritten to give more useful output

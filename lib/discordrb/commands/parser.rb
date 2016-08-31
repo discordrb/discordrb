@@ -37,6 +37,9 @@ module Discordrb::Commands
         # Usage description (for help command and error messages)
         usage: attributes[:usage] || nil,
 
+        # Parameter list (for help command and error messages)
+        parameters: attributes[:parameters] || nil,
+
         # Minimum number of arguments
         min_args: attributes[:min_args] || 0,
 
