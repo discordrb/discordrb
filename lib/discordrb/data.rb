@@ -1031,7 +1031,7 @@ module Discordrb
     # Sets this channel's topic.
     # @param topic [String] The new topic.
     def topic=(topic)
-      raise "Voice channels don't have topics" if voice?
+      raise "Tried to set topic on voice channel" if voice?
       @topic = topic
       update_channel_data
     end
