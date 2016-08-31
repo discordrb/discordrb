@@ -1410,8 +1410,9 @@ module Discordrb
     # @return [Time] the time the integration was synced at
     attr_reader :synced_at
 
-    # @return [Integer] the behavior of expiring subscribers (0 = Remove User from role; 1 = Kick User from server)
-    attr_reader :expire_behavior
+    # @return [Integer] the behaviour of expiring subscribers (:remove = Remove User from role; :kick = Kick User from server)
+    attr_reader :expire_behaviour
+    alias_method :expire_behavior, :expire_behaviour
 
     # @return [Integer] the grace period before subscribers expire (in days)
     attr_reader :expire_grace_period
@@ -1427,7 +1428,7 @@ module Discordrb
       @type = data['type']
       @account = data['account']
       @synced_at = Time.parse(data['synced_at'])
-      @expire_behavior = data['expire_behavior']
+      @expire_behaviour = [:remove, :kick][data['expire_behavior']]
       @expire_grace_period = data['expire_grace_period']
       @user = @bot.ensure_user(data['user'])
       @role = server.role(data['role_id']) || nil
