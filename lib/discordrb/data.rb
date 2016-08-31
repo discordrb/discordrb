@@ -1410,7 +1410,7 @@ module Discordrb
     # @return [Time] the time the integration was synced at
     attr_reader :synced_at
 
-    # @return [Integer] the behaviour of expiring subscribers (:remove = Remove User from role; :kick = Kick User from server)
+    # @return [Symbol] the behaviour of expiring subscribers (:remove = Remove User from role; :kick = Kick User from server)
     attr_reader :expire_behaviour
     alias_method :expire_behavior, :expire_behaviour
 
