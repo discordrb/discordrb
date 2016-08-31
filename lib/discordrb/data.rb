@@ -1391,11 +1391,11 @@ module Discordrb
     # @return [Role, nil] the role that this integration uses for "subscribers"
     attr_reader :role
 
-    # @return [true, false] wheter emoticons are enabled
+    # @return [true, false] whether emoticons are enabled
     attr_reader :emoticon
     alias_method :emoticon?, :emoticon
 
-    # @return [String] the integration type `youtube, twitch, etc.`
+    # @return [String] the integration type (Youtube, Twitch, etc.)
     attr_reader :type
 
     # @return [true, false] whether the integration is enabled
@@ -1413,7 +1413,7 @@ module Discordrb
     # @return [Integer] the behavior of expiring subscribers (0 = Remove User from role; 1 = Kick User from server)
     attr_reader :expire_behavior
 
-    # @return [Integer] the grace period before expiring subscribers (in days)
+    # @return [Integer] the grace period before subscribers expire (in days)
     attr_reader :expire_grace_period
 
     def initialize(data, bot, server)
@@ -1436,7 +1436,7 @@ module Discordrb
 
     # The inspect method is overwritten to give more useful output
     def inspect
-      "<integration name=#{@name} id=#{@id} type=#{@type} enabled=#{@enabled}>"
+      "<Integration name=#{@name} id=#{@id} type=#{@type} enabled=#{@enabled}>"
     end
   end
 
@@ -1584,15 +1584,15 @@ module Discordrb
     end
 
     # @return [String, nil] the widget URL to the server that displays the amount of online members in a
-    # stylish way. `nil` if it's not embed.
+    # stylish way. `nil` if the widget is not enabled.
     def widget_url
       return nil unless @embed
       API.widget_url(@id)
     end
 
     # @param style_number [Integer] the style number of the widget picture
-    # @return [String, nil] the widget banner  URL to the server that displays the amount of online members,
-    # server icon and server name in a stylish way. `nil` if it's not embed.
+    # @return [String, nil] the widget banner URL to the server that displays the amount of online members,
+    # server icon and server name in a stylish way. `nil` if the widget is not enabled.
     def widget_banner_url(style_number)
       return nil unless @embed
       API.widget_url(@id) + '?style=banner' + (style_number == Integer ? style_number.to_s : '1')
