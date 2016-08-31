@@ -904,7 +904,7 @@ module Discordrb
     # @return [String] the channel's topic
     attr_reader :topic
 
-    # @return [Integer] the bitrate of the channel
+    # @return [Integer] the bitrate (in bps) of the channel
     attr_reader :bitrate
 
     # @return [Integer] the amount of users that can be in the channel. `0` means it is unlimited.
@@ -1037,7 +1037,7 @@ module Discordrb
     end
 
     # Sets this channel's bitrate.
-    # @param bitrate [Integer] The new bitrate. Number has to be between 8000-96000 (128000 for VIP servers)
+    # @param bitrate [Integer] The new bitrate (in bps). Number has to be between 8000-96000 (128000 for VIP servers)
     def bitrate=(bitrate)
       raise 'Tried to set bitrate on text channel' if text?
       @bitrate = bitrate
