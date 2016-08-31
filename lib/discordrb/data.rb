@@ -1590,7 +1590,7 @@ module Discordrb
       API.widget_url(@id)
     end
 
-    # @param style_number [Integer] the style number of the widget picture
+    # @param style_number [Integer] the style number of the widget picture  (For the diffrent styles just try which looks how)
     # @return [String, nil] the widget banner URL to the server that displays the amount of online members,
     # server icon and server name in a stylish way. `nil` if the widget is not enabled.
     def widget_banner_url(style_number)
