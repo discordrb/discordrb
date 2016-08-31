@@ -229,6 +229,17 @@ module Discordrb
 
     alias_method :bot_user, :profile
 
+    # The bot's OAuth application.
+    # @return [Application, nil] The bot's application info. Returns `nil` if bot is not a bot account.
+    def bot_application
+      gateway_check
+      return nil unless @type == :bot
+      response = API.oauth_application(token)
+      Application.new(JSON.parse(response), self)
+    end
+
+    alias_method :bot_app, :bot_application
+
     # The Discord API token received when logging in. Useful to explicitly call
     # {API} methods.
     # @return [String] The API token.
