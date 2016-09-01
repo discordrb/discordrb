@@ -44,6 +44,7 @@ module Discordrb::Commands
     # @option attributes [String] :command_doesnt_exist_message The message that should be displayed if a user attempts
     #   to use a command that does not exist. If none is specified, no message will be displayed. In the message, you
     #   can use the string '%command%' that will be replaced with the name of the command.
+    # @option attributes [String] :no_permission_message The message to be displayed when `NoPermission` error is raised.
     # @option attributes [true, false] :spaces_allowed Whether spaces are allowed to occur between the prefix and the
     #   command. Default is false.
     # @option attributes [String] :previous Character that should designate the result of the previous command in
@@ -84,6 +85,9 @@ module Discordrb::Commands
         # The message to display for when a command doesn't exist, %command% to get the command name in question and nil for no message
         # No default value here because it may not be desired behaviour
         command_doesnt_exist_message: attributes[:command_doesnt_exist_message],
+
+        # The message to be displayed when `NoPermission` error is raised.
+        no_permission_message: attributes[:no_permission_message],
 
         # Spaces allowed between prefix and command
         spaces_allowed: attributes[:spaces_allowed].nil? ? false : attributes[:spaces_allowed],
@@ -174,6 +178,9 @@ module Discordrb::Commands
         event.respond command.attributes[:permission_message].gsub('%name%', name.to_s) if command.attributes[:permission_message]
         nil
       end
+    rescue Discordrb::Errors::NoPermission
+      event.respond @attributes[:no_permission_message] unless @attributes[:no_permission_message].nil?
+      raise
     end
 
     # Executes a command in a simple manner, without command chains or permissions.
