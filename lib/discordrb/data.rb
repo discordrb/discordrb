@@ -289,13 +289,13 @@ module Discordrb
         # Get the override defined for the role on the channel
         channel_allow = permission_overwrite(action, channel, role.id)
         can_act = if channel_allow
-          # If the channel has an override, check whether it is an allow - if yes,
-          # the user can act, if not, it can't
-          channel_allow == :allow
-        else
-          # Otherwise defer to the role
-          role.permissions.instance_variable_get("@#{action}") || can_act
-        end
+                    # If the channel has an override, check whether it is an allow - if yes,
+                    # the user can act, if not, it can't
+                    channel_allow == :allow
+                  else
+                    # Otherwise defer to the role
+                    role.permissions.instance_variable_get("@#{action}") || can_act
+                  end
         can_act
       end
     end
@@ -622,11 +622,11 @@ module Discordrb
 
     def update_profile_data(new_data)
       API.update_user(@bot.token,
-      new_data[:email] || @email,
-      @password,
-      new_data[:username] || @username,
-      new_data[:avatar],
-      new_data[:new_password] || nil)
+                      new_data[:email] || @email,
+                      @password,
+                      new_data[:username] || @username,
+                      new_data[:avatar],
+                      new_data[:new_password] || nil)
       update_data(new_data)
     end
   end
@@ -763,11 +763,11 @@ module Discordrb
 
     def update_role_data(new_data)
       API.update_role(@bot.token, @server.id, @id,
-      new_data[:name] || @name,
-      (new_data[:colour] || @colour).combined,
-      new_data[:hoist].nil? ? @hoist : new_data[:hoist],
-      new_data[:mentionable].nil? ? @mentionable : new_data[:mentionable],
-      new_data[:permissions] || @permissions.bits)
+                      new_data[:name] || @name,
+                      (new_data[:colour] || @colour).combined,
+                      new_data[:hoist].nil? ? @hoist : new_data[:hoist],
+                      new_data[:mentionable].nil? ? @mentionable : new_data[:mentionable],
+                      new_data[:permissions] || @permissions.bits)
       update_data(new_data)
     end
   end
@@ -951,10 +951,10 @@ module Discordrb
       else
         @name = data['name']
         @server = if server
-          server
-        else
-          bot.server(data['guild_id'].to_i)
-        end
+                    server
+                  else
+                    bot.server(data['guild_id'].to_i)
+                  end
       end
 
       # Populate permission overwrites
@@ -1275,16 +1275,16 @@ module Discordrb
       @pinned = data['pinned']
 
       @author = if data['author']
-        if @channel.private?
-          # Turn the message user into a recipient - we can't use the channel recipient
-          # directly because the bot may also send messages to the channel
-          Recipient.new(bot.user(data['author']['id'].to_i), @channel, bot)
-        else
-          member = @channel.server.member(data['author']['id'].to_i, false)
-          Discordrb::LOGGER.warn("Member with ID #{data['author']['id']} not cached even though it should be.") unless member
-          member
-        end
-      end
+                  if @channel.private?
+                    # Turn the message user into a recipient - we can't use the channel recipient
+                    # directly because the bot may also send messages to the channel
+                    Recipient.new(bot.user(data['author']['id'].to_i), @channel, bot)
+                  else
+                    member = @channel.server.member(data['author']['id'].to_i, false)
+                    Discordrb::LOGGER.warn("Member with ID #{data['author']['id']} not cached even though it should be.") unless member
+                    member
+                  end
+                end
 
       @timestamp = Time.parse(data['timestamp']) if data['timestamp']
       @id = data['id'].to_i
@@ -1707,11 +1707,11 @@ module Discordrb
         # Update the existing voice state (or the one we just created)
         channel = @channels_by_id[data['channel_id'].to_i]
         @voice_states[user_id].update(
-        channel,
-        data['mute'],
-        data['deaf'],
-        data['self_mute'],
-        data['self_deaf'])
+          channel,
+          data['mute'],
+          data['deaf'],
+          data['self_mute'],
+          data['self_deaf'])
       else
         # The user is not in a voice channel anymore, so delete its voice state
         @voice_states.delete(user_id)
@@ -1860,11 +1860,11 @@ module Discordrb
 
     def update_server_data(new_data)
       API.update_server(@bot.token, @id,
-      new_data[:name] || @name,
-      new_data[:region] || @region,
-      new_data[:icon_id] || @icon_id,
-      new_data[:afk_channel_id] || @afk_channel_id,
-      new_data[:afk_timeout] || @afk_timeout)
+                        new_data[:name] || @name,
+                        new_data[:region] || @region,
+                        new_data[:icon_id] || @icon_id,
+                        new_data[:afk_channel_id] || @afk_channel_id,
+                        new_data[:afk_timeout] || @afk_timeout)
       update_data(new_data)
     end
 
