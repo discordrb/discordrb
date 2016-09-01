@@ -100,12 +100,11 @@ module Discordrb::API::Server
 
   # Gets members from the server
   # https://discordapp.com/developers/docs/resources/guild#list-guild-members
-  def members(token, server_id, limit, after)
+  def members(token, server_id, limit, after = nil)
     Discordrb::API.request(
       __method__,
       :get,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}/members",
-      { limit: limit, after: after },
+      "#{Discordrb::API.api_base}/guilds/#{server_id}/members?limit=#{limit}#{"&after=#{after}" if after}",
       Authorization: token
     )
   end

@@ -194,16 +194,6 @@ module Discordrb::API
     )
   end
 
-  # Leave a server
-  def leave_server(token, server_id)
-    request(
-      __method__,
-      :delete,
-      "#{api_base}/users/@me/guilds/#{server_id}",
-      Authorization: token
-    )
-  end
-
   # Join a server using an invite
   def join_server(token, invite_code)
     request(
@@ -326,48 +316,6 @@ module Discordrb::API
       __method__,
       :get,
       "#{api_base}/users/#{user_id}",
-      Authorization: token
-    )
-  end
-
-  # Get profile data
-  def profile(token)
-    request(
-      __method__,
-      :get,
-      "#{api_base}/users/@me",
-      Authorization: token
-    )
-  end
-
-  # Get information about a user's connections
-  def connections(token)
-    request(
-      __method__,
-      :get,
-      "#{api_base}/users/@me/connections",
-      Authorization: token
-    )
-  end
-
-  # Update user data
-  def update_user(token, email, password, new_username, avatar, new_password = nil)
-    request(
-      __method__,
-      :patch,
-      "#{api_base}/users/@me",
-      { avatar: avatar, email: email, new_password: new_password, password: password, username: new_username }.to_json,
-      Authorization: token,
-      content_type: :json
-    )
-  end
-
-  # Get the servers a user is connected to
-  def servers(token)
-    request(
-      __method__,
-      :get,
-      "#{api_base}/users/@me/guilds",
       Authorization: token
     )
   end
