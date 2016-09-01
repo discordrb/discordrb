@@ -1122,7 +1122,7 @@ module Discordrb
     # @return [Array<Member>] the users in this channel
     def users
       if @type == 'text'
-        @server.online_members(include_idle: true).select { |u| u.status != :offline }
+        @server.online_members(include_idle: true).select { |u| u.can_read_messages? self }
       else
         @server.voice_states.map { |id, voice_state| @server.member(id) if !voice_state.voice_channel.nil? && voice_state.voice_channel.id == @id }.compact
       end
