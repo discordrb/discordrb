@@ -602,13 +602,11 @@ module Discordrb
     end
   end
 
-  # This class is a special variant of User that represents the bot's user profile (things like email addresses and the avatar).
+  # This class is a special variant of User that represents the bot's user profile (things like own username and the avatar).
   # It can be accessed using {Bot#profile}.
   class Profile < User
-    def initialize(data, bot, email, password)
+    def initialize(data, bot)
       super(data, bot)
-      @email = email
-      @password = password
     end
 
     # Whether or not the user is the bot. The Profile can only ever be the bot user, so this always returns true.
@@ -624,19 +622,6 @@ module Discordrb
     end
 
     alias_method :name=, :username=
-
-    # Sets the bot's email address. If you use this method, make sure that the login email in the script matches this
-    # one afterwards, so the bot doesn't have any trouble logging in in the future.
-    # @param email [String] The new email address.
-    def email=(email)
-      update_profile_data(email: email)
-    end
-
-    # Changes the bot's password. This will invalidate all tokens so you will have to relog the bot.
-    # @param password [String] The new password.
-    def password=(password)
-      update_profile_data(new_password: password)
-    end
 
     # Changes the bot's avatar.
     # @param avatar [String, #read] A JPG file to be used as the avatar, either
@@ -658,26 +643,21 @@ module Discordrb
     # @note For internal use only.
     # @!visibility private
     def update_data(new_data)
-      @email = new_data[:email] || @email
-      @password = new_data[:new_password] || @password
       @username = new_data[:username] || @username
       @avatar_id = new_data[:avatar_id] || @avatar_id
     end
 
     # The inspect method is overwritten to give more useful output
     def inspect
-      "<Profile email=#{@email} user=#{super}>"
+      "<Profile user=#{super}>"
     end
 
     private
 
     def update_profile_data(new_data)
       API.update_user(@bot.token,
-                      new_data[:email] || @email,
-                      @password,
                       new_data[:username] || @username,
-                      new_data[:avatar],
-                      new_data[:new_password] || nil)
+                      new_data[:avatar])
       update_data(new_data)
     end
   end
