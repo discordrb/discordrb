@@ -107,16 +107,6 @@ module Discordrb::API
     "https://cdn.discordapp.com/app-icons/#{app_id}/#{icon_id}.jpg"
   end
 
-  # Kick a user from a server
-  def kick_user(token, server_id, user_id)
-    request(
-      __method__,
-      :delete,
-      "#{api_base}/guilds/#{server_id}/members/#{user_id}",
-      Authorization: token
-    )
-  end
-
   # Move a user to a different voice channel
   def move_user(token, server_id, user_id, channel_id)
     request(
@@ -150,16 +140,6 @@ module Discordrb::API
       { nick: nick }.to_json,
       Authorization: token,
       content_type: :json
-    )
-  end
-
-  # Get a server's channels list
-  def channels(token, server_id)
-    request(
-      __method__,
-      :get,
-      "#{api_base}/guilds/#{server_id}/channels",
-      Authorization: token
     )
   end
 
@@ -229,30 +209,6 @@ module Discordrb::API
     )
   end
 
-  # Create a server
-  def create_server(token, name, region = :london)
-    request(
-      __method__,
-      :post,
-      "#{api_base}/guilds",
-      { name: name, region: region.to_s }.to_json,
-      Authorization: token,
-      content_type: :json
-    )
-  end
-
-  # Update a server
-  def update_server(token, server_id, name, region, icon, afk_channel_id, afk_timeout)
-    request(
-      __method__,
-      :patch,
-      "#{api_base}/guilds/#{server_id}",
-      { name: name, region: region, icon: icon, afk_channel_id: afk_channel_id, afk_timeout: afk_timeout }.to_json,
-      Authorization: token,
-      content_type: :json
-    )
-  end
-
   # Transfer server ownership
   def transfer_ownership(token, server_id, user_id)
     request(
@@ -262,16 +218,6 @@ module Discordrb::API
       { owner_id: user_id }.to_json,
       Authorization: token,
       content_type: :json
-    )
-  end
-
-  # Delete a server
-  def delete_server(token, server_id)
-    request(
-      __method__,
-      :delete,
-      "#{api_base}/guilds/#{server_id}",
-      Authorization: token
     )
   end
 
@@ -291,16 +237,6 @@ module Discordrb::API
       __method__,
       :get,
       "#{api_base}/channels/#{channel_id}",
-      Authorization: token
-    )
-  end
-
-  # Get a server's data
-  def server(token, server_id)
-    request(
-      __method__,
-      :get,
-      "#{api_base}/guilds/#{server_id}",
       Authorization: token
     )
   end
