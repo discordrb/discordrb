@@ -150,10 +150,10 @@ module Discordrb::API::Channel
   # Create an instant invite from a server or a channel id
   # https://discordapp.com/developers/docs/resources/channel#create-channel-invite
   def create_invite(token, channel_id, max_age = 0, max_uses = 0, temporary = false)
-    request(
+    Discordrb::API.request(
       __method__,
       :post,
-      "#{api_base}/channels/#{channel_id}/invites",
+      "#{Discordrb::API.api_base}/channels/#{channel_id}/invites",
       { max_age: max_age, max_uses: max_uses, temporary: temporary }.to_json,
       Authorization: token,
       content_type: :json
@@ -174,10 +174,10 @@ module Discordrb::API::Channel
   # Start typing (needs to be resent every 5 seconds to keep up the typing)
   # https://discordapp.com/developers/docs/resources/channel#trigger-typing-indicator
   def start_typing(token, channel_id)
-    request(
+    Discordrb::API.request(
       __method__,
       :post,
-      "#{api_base}/channels/#{channel_id}/typing",
+      "#{Discordrb::API.api_base}/channels/#{channel_id}/typing",
       nil,
       Authorization: token
     )
@@ -186,10 +186,10 @@ module Discordrb::API::Channel
   # Get a list of pinned messages in a channel
   # https://discordapp.com/developers/docs/resources/channel#get-pinned-messages
   def pins(token, channel_id)
-    request(
+    Discordrb::API.request(
       __method__,
       :get,
-      "#{api_base}/channels/#{channel_id}/pins",
+      "#{Discordrb::API.api_base}/channels/#{channel_id}/pins",
       Authorization: token
     )
   end
@@ -197,10 +197,10 @@ module Discordrb::API::Channel
   # Pin a message
   # https://discordapp.com/developers/docs/resources/channel#add-pinned-channel-message
   def pin_message(token, channel_id, message_id)
-    request(
+    Discordrb::API.request(
       __method__,
       :put,
-      "#{api_base}/channels/#{channel_id}/pins/#{message_id}",
+      "#{Discordrb::API.api_base}/channels/#{channel_id}/pins/#{message_id}",
       nil,
       Authorization: token
     )
@@ -209,10 +209,10 @@ module Discordrb::API::Channel
   # Unpin a message
   # https://discordapp.com/developers/docs/resources/channel#delete-pinned-channel-message
   def unpin_message(token, channel_id, message_id)
-    request(
+    Discordrb::API.request(
       __method__,
       :delete,
-      "#{api_base}/channels/#{channel_id}/pins/#{message_id}",
+      "#{Discordrb::API.api_base}/channels/#{channel_id}/pins/#{message_id}",
       Authorization: token
     )
   end
