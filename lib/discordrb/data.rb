@@ -1570,9 +1570,16 @@ module Discordrb
       integration.map { |element| Integration.new(element) }
     end
 
+    # Cache @embed
+    # @note For internal use only
+    # @!visibility private
+    def cache_embed
+      @embed = JSON.parse(API.server(@bot.token, @id))['embed_enabled'] if @embed.nil?
+    end
+
     # @return [true, false] whether or not the server has widget enabled
     def embed?
-      @embed = JSON.parse(API.server(@bot.token, @id))['embed_enabled'] if @embed.nil?
+      cache_embed if @embed.nil?
       @embed
     end
 
@@ -1600,6 +1607,7 @@ module Discordrb
     # @return [String, nil] the widget URL to the server that displays the amount of online members in a
     #   stylish way. `nil` if the widget is not enabled.
     def widget_url
+      cache_embed if @embed.nil?
       return nil unless @embed
       API.widget_url(@id)
     end
@@ -1614,6 +1622,7 @@ module Discordrb
     #   server icon and server name in a stylish way. `nil` if the widget is not enabled.
     def widget_banner_url(style)
       return nil unless @embed
+      cache_embed if @embed.nil?
       API.widget_url(@id, style)
     end
 
