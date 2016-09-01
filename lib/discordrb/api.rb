@@ -57,7 +57,7 @@ module Discordrb::API
     retry
   end
 
-  # Make an API request . Utility function to implement message queueing
+  # Make an API request. Utility function to implement message queueing
   # in the future
   def request(key, type, *attributes)
     # Add a custom user agent

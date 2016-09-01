@@ -224,6 +224,8 @@ module Discordrb::API::Server
     )
   end
 
+  # Get invites from server
+  # https://discordapp.com/developers/docs/resources/guild#get-guild-invites
   def invites(token, server_id)
     Discordrb::API.request(
       __method__,
