@@ -1117,8 +1117,8 @@ module Discordrb
       @permission_overwrites = other.permission_overwrites
     end
 
-    # The list of users currently in this channel. This is mostly useful for a voice channel, for a text channel it will
-    # just return the users on the server that are online.
+    # The list of users currently in this channel. For a voice channel, it will return all the members currently
+    # in that channel, for a text channel, it will return all online members that have permission to read it.
     # @return [Array<Member>] the users in this channel
     def users
       if @type == 'text'
