@@ -13,9 +13,20 @@ module Discordrb::API::User
     )
   end
 
+  # Get user data
+  # https://discordapp.com/developers/docs/resources/user#get-user
+  def resolve(token, user_id)
+    Discordrb::API.request(
+      __method__,
+      :get,
+      "#{Discordrb::API.api_base}/users/#{user_id}",
+      Authorization: token
+    )
+  end
+
   # Get profile data
   # https://discordapp.com/developers/docs/resources/user#get-current-user
-  def profile(token)
+  def resolve_current(token)
     Discordrb::API.request(
       __method__,
       :get,
@@ -24,9 +35,21 @@ module Discordrb::API::User
     )
   end
 
+  # Change the current bot's nickname on a server
+  def change_own_nickname(token, server_id, nick)
+    Discordrb::API.request(
+      __method__,
+      :patch,
+      "#{Discordrb::API.api_base}/guilds/#{server_id}/members/@me/nick",
+      { nick: nick }.to_json,
+      Authorization: token,
+      content_type: :json
+    )
+  end
+
   # Update user data
   # https://discordapp.com/developers/docs/resources/user#modify-current-user
-  def update_user(token, email, password, new_username, avatar, new_password = nil)
+  def update_current(token, email, password, new_username, avatar, new_password = nil)
     Discordrb::API.request(
       __method__,
       :patch,
@@ -72,7 +95,7 @@ module Discordrb::API::User
 
   # Create a DM to another user
   # https://discordapp.com/developers/docs/resources/user#create-dm
-  def user_create_dm(token, recipient_id)
+  def create_private(token, recipient_id)
     Discordrb::API.request(
       __method__,
       :post,

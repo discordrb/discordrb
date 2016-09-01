@@ -114,18 +114,6 @@ module Discordrb::API
     )
   end
 
-  # Change the current bot's nickname on a server
-  def change_own_nickname(token, server_id, nick)
-    request(
-      __method__,
-      :patch,
-      "#{api_base}/guilds/#{server_id}/members/@me/nick",
-      { nick: nick }.to_json,
-      Authorization: token,
-      content_type: :json
-    )
-  end
-
   # Login to the server
   def login(email, password)
     request(
@@ -194,27 +182,6 @@ module Discordrb::API
     )
   end
 
-  # Join a server using an invite
-  def join_server(token, invite_code)
-    request(
-      __method__,
-      :post,
-      "#{api_base}/invite/#{invite_code}",
-      nil,
-      Authorization: token
-    )
-  end
-
-  # Resolve an invite
-  def resolve_invite(token, invite_code)
-    request(
-      __method__,
-      :get,
-      "#{api_base}/invite/#{invite_code}",
-      Authorization: token
-    )
-  end
-
   # Create a private channel
   def create_private(token, bot_user_id, user_id)
     request(
@@ -229,16 +196,6 @@ module Discordrb::API
     raise 'Attempted to PM the bot itself!'
   end
 
-  # Delete an invite by code
-  def delete_invite(token, code)
-    request(
-      __method__,
-      :delete,
-      "#{api_base}/invites/#{code}",
-      Authorization: token
-    )
-  end
-
   # Acknowledge that a message has been received
   # The last acknowledged message will be sent in the ready packet,
   # so this is an easy way to catch up on messages
@@ -249,42 +206,6 @@ module Discordrb::API
       "#{api_base}/channels/#{channel_id}/messages/#{message_id}/ack",
       nil,
       Authorization: token
-    )
-  end
-
-  # Update a user's roles
-  def update_user_roles(token, server_id, user_id, roles)
-    request(
-      __method__,
-      :patch,
-      "#{api_base}/guilds/#{server_id}/members/#{user_id}",
-      { roles: roles }.to_json,
-      Authorization: token,
-      content_type: :json
-    )
-  end
-
-  # Update a user's server deafened state
-  def update_user_deafen(token, server_id, user_id, state)
-    request(
-      __method__,
-      :patch,
-      "#{api_base}/guilds/#{server_id}/members/#{user_id}",
-      { deaf: state }.to_json,
-      Authorization: token,
-      content_type: :json
-    )
-  end
-
-  # Update a user's server muted state
-  def update_user_mute(token, server_id, user_id, state)
-    request(
-      __method__,
-      :patch,
-      "#{api_base}/guilds/#{server_id}/members/#{user_id}",
-      { mute: state }.to_json,
-      Authorization: token,
-      content_type: :json
     )
   end
 
@@ -307,16 +228,6 @@ module Discordrb::API
       {}.to_json,
       Authorization: token,
       content_type: :json
-    )
-  end
-
-  # Get user data
-  def user(token, user_id)
-    request(
-      __method__,
-      :get,
-      "#{api_base}/users/#{user_id}",
-      Authorization: token
     )
   end
 end
