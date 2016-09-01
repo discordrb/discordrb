@@ -104,8 +104,8 @@ module Discordrb::API
   end
 
   # Make a widget picture URL from server ID
-  def widget_url(server_id)
-    "#{api_base}/guilds/#{server_id}/widget.png"
+  def widget_url(server_id, style = 'shield')
+    "#{api_base}/guilds/#{server_id}/widget.png?style=#{style}"
   end
 
   # Make a splash URL from server and splash IDs
