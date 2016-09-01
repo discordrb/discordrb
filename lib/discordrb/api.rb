@@ -57,7 +57,7 @@ module Discordrb::API
     retry
   end
 
-  # Make an API request. Utility function to implement message queueing
+  # Make an API request . Utility function to implement message queueing
   # in the future
   def request(key, type, *attributes)
     # Add a custom user agent
@@ -92,11 +92,6 @@ module Discordrb::API
     response
   end
 
-  # Make an avatar URL from the user and avatar IDs
-  def avatar_url(user_id, avatar_id)
-    "#{api_base}/users/#{user_id}/avatars/#{avatar_id}.jpg"
-  end
-
   # Make an icon URL from server and icon IDs
   def icon_url(server_id, icon_id)
     "#{api_base}/guilds/#{server_id}/icons/#{icon_id}.jpg"
@@ -125,18 +120,6 @@ module Discordrb::API
       __method__,
       :patch,
       "#{api_base}/guilds/#{server_id}/members/@me/nick",
-      { nick: nick }.to_json,
-      Authorization: token,
-      content_type: :json
-    )
-  end
-
-  # Change a user's nickname on a server
-  def change_nickname(token, server_id, user_id, nick)
-    request(
-      __method__,
-      :patch,
-      "#{api_base}/guilds/#{server_id}/members/#{user_id}",
       { nick: nick }.to_json,
       Authorization: token,
       content_type: :json
@@ -238,28 +221,6 @@ module Discordrb::API
       :get,
       "#{api_base}/channels/#{channel_id}",
       Authorization: token
-    )
-  end
-
-  # Get a member's data
-  def member(token, server_id, user_id)
-    request(
-      __method__,
-      :get,
-      "#{api_base}/guilds/#{server_id}/members/#{user_id}",
-      Authorization: token
-    )
-  end
-
-  # Create a channel
-  def create_channel(token, server_id, name, type)
-    request(
-      __method__,
-      :post,
-      "#{api_base}/guilds/#{server_id}/channels",
-      { name: name, type: type }.to_json,
-      Authorization: token,
-      content_type: :json
     )
   end
 
@@ -431,42 +392,6 @@ module Discordrb::API
       :post,
       "#{api_base}/channels/#{channel_id}/messages",
       { file: file, content: caption, tts: tts },
-      Authorization: token
-    )
-  end
-
-  # Create a role (parameters such as name and colour will have to be set by update_role afterwards)
-  def create_role(token, server_id)
-    request(
-      __method__,
-      :post,
-      "#{api_base}/guilds/#{server_id}/roles",
-      nil,
-      Authorization: token
-    )
-  end
-
-  # Update a role
-  # Permissions are the Discord defaults; allowed: invite creation, reading/sending messages,
-  # sending TTS messages, embedding links, sending files, reading the history, mentioning everybody,
-  # connecting to voice, speaking and voice activity (push-to-talk isn't mandatory)
-  def update_role(token, server_id, role_id, name, colour, hoist = false, mentionable = false, packed_permissions = 36_953_089)
-    request(
-      __method__,
-      :patch,
-      "#{api_base}/guilds/#{server_id}/roles/#{role_id}",
-      { color: colour, name: name, hoist: hoist, mentionable: mentionable, permissions: packed_permissions }.to_json,
-      Authorization: token,
-      content_type: :json
-    )
-  end
-
-  # Delete a role
-  def delete_role(token, server_id, role_id)
-    request(
-      __method__,
-      :delete,
-      "#{api_base}/guilds/#{server_id}/roles/#{role_id}",
       Authorization: token
     )
   end
