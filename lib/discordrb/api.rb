@@ -126,16 +126,6 @@ module Discordrb::API
     )
   end
 
-  # Get a channel's invite list
-  def channel_invites(token, channel_id)
-    request(
-      __method__,
-      :get,
-      "#{api_base}/channels/#{channel_id}/invites",
-      Authorization: token
-    )
-  end
-
   # Login to the server
   def login(email, password)
     request(
@@ -214,38 +204,6 @@ module Discordrb::API
     )
   end
 
-  # Get a channel's data
-  def channel(token, channel_id)
-    request(
-      __method__,
-      :get,
-      "#{api_base}/channels/#{channel_id}",
-      Authorization: token
-    )
-  end
-
-  # Update a channel's data
-  def update_channel(token, channel_id, name, topic, position = 0)
-    request(
-      __method__,
-      :patch,
-      "#{api_base}/channels/#{channel_id}",
-      { name: name, position: position, topic: topic }.to_json,
-      Authorization: token,
-      content_type: :json
-    )
-  end
-
-  # Delete a channel
-  def delete_channel(token, channel_id)
-    request(
-      __method__,
-      :delete,
-      "#{api_base}/channels/#{channel_id}",
-      Authorization: token
-    )
-  end
-
   # Join a server using an invite
   def join_server(token, invite_code)
     request(
@@ -281,93 +239,12 @@ module Discordrb::API
     raise 'Attempted to PM the bot itself!'
   end
 
-  # Create an instant invite from a server or a channel id
-  def create_invite(token, channel_id, max_age = 0, max_uses = 0, temporary = false)
-    request(
-      __method__,
-      :post,
-      "#{api_base}/channels/#{channel_id}/invites",
-      { max_age: max_age, max_uses: max_uses, temporary: temporary }.to_json,
-      Authorization: token,
-      content_type: :json
-    )
-  end
-
   # Delete an invite by code
   def delete_invite(token, code)
     request(
       __method__,
       :delete,
       "#{api_base}/invites/#{code}",
-      Authorization: token
-    )
-  end
-
-  # Send a message to a channel
-  def send_message(token, channel_id, message, mentions = [], tts = false, guild_id = nil)
-    request(
-      "message-#{guild_id}".to_sym,
-      :post,
-      "#{api_base}/channels/#{channel_id}/messages",
-      { content: message, mentions: mentions, tts: tts }.to_json,
-      Authorization: token,
-      content_type: :json
-    )
-  rescue RestClient::InternalServerError
-    raise Discordrb::Errors::MessageTooLong, "Message over the character limit (#{message.length} > 2000)"
-  end
-
-  # Delete a message
-  def delete_message(token, channel_id, message_id)
-    request(
-      __method__,
-      :delete,
-      "#{api_base}/channels/#{channel_id}/messages/#{message_id}",
-      Authorization: token
-    )
-  end
-
-  # Delete messages in bulk
-  def bulk_delete(token, channel_id, messages = [])
-    request(
-      __method__,
-      :post,
-      "#{api_base}/channels/#{channel_id}/messages/bulk_delete",
-      { messages: messages }.to_json,
-      Authorization: token,
-      content_type: :json
-    )
-  end
-
-  # Edit a message
-  def edit_message(token, channel_id, message_id, message, mentions = [])
-    request(
-      :message,
-      :patch,
-      "#{api_base}/channels/#{channel_id}/messages/#{message_id}",
-      { content: message, mentions: mentions }.to_json,
-      Authorization: token,
-      content_type: :json
-    )
-  end
-
-  # Pin a message
-  def pin_message(token, channel_id, message_id)
-    request(
-      __method__,
-      :put,
-      "#{api_base}/channels/#{channel_id}/pins/#{message_id}",
-      nil,
-      Authorization: token
-    )
-  end
-
-  # Unpin a message
-  def unpin_message(token, channel_id, message_id)
-    request(
-      __method__,
-      :delete,
-      "#{api_base}/channels/#{channel_id}/pins/#{message_id}",
       Authorization: token
     )
   end
@@ -381,17 +258,6 @@ module Discordrb::API
       :post,
       "#{api_base}/channels/#{channel_id}/messages/#{message_id}/ack",
       nil,
-      Authorization: token
-    )
-  end
-
-  # Send a file as a message to a channel
-  def send_file(token, channel_id, file, caption: nil, tts: false)
-    request(
-      __method__,
-      :post,
-      "#{api_base}/channels/#{channel_id}/messages",
-      { file: file, content: caption, tts: tts },
       Authorization: token
     )
   end
@@ -432,30 +298,6 @@ module Discordrb::API
     )
   end
 
-  # Update a user's permission overrides in a channel
-  def update_user_overrides(token, channel_id, user_id, allow, deny)
-    request(
-      __method__,
-      :put,
-      "#{api_base}/channels/#{channel_id}/permissions/#{user_id}",
-      { type: 'member', id: user_id, allow: allow, deny: deny }.to_json,
-      Authorization: token,
-      content_type: :json
-    )
-  end
-
-  # Update a role's permission overrides in a channel
-  def update_role_overrides(token, channel_id, role_id, allow, deny)
-    request(
-      __method__,
-      :put,
-      "#{api_base}/channels/#{channel_id}/permissions/#{role_id}",
-      { type: 'role', id: role_id, allow: allow, deny: deny }.to_json,
-      Authorization: token,
-      content_type: :json
-    )
-  end
-
   # Get the gateway to be used
   def gateway(token)
     request(
@@ -475,17 +317,6 @@ module Discordrb::API
       {}.to_json,
       Authorization: token,
       content_type: :json
-    )
-  end
-
-  # Start typing (needs to be resent every 5 seconds to keep up the typing)
-  def start_typing(token, channel_id)
-    request(
-      __method__,
-      :post,
-      "#{api_base}/channels/#{channel_id}/typing",
-      nil,
-      Authorization: token
     )
   end
 
@@ -537,36 +368,6 @@ module Discordrb::API
       __method__,
       :get,
       "#{api_base}/users/@me/guilds",
-      Authorization: token
-    )
-  end
-
-  # Get a list of messages from a channel's history
-  def channel_log(token, channel_id, amount, before = nil, after = nil)
-    request(
-      __method__,
-      :get,
-      "#{api_base}/channels/#{channel_id}/messages?limit=#{amount}#{"&before=#{before}" if before}#{"&after=#{after}" if after}",
-      Authorization: token
-    )
-  end
-
-  # Get a single message from a channel's history by id
-  def channel_message(token, channel_id, message_id)
-    request(
-      __method__,
-      :get,
-      "#{api_base}/channels/#{channel_id}/messages/#{message_id}",
-      Authorization: token
-    )
-  end
-
-  # Get a list of pinned messages in a channel
-  def pins(token, channel_id)
-    request(
-      __method__,
-      :get,
-      "#{api_base}/channels/#{channel_id}/pins",
       Authorization: token
     )
   end
