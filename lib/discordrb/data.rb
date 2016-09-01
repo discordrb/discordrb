@@ -1375,6 +1375,20 @@ module Discordrb
     end
   end
 
+  # Integration Account
+  class IntegrationAccount
+    # @return [String] this accounts's name.
+    attr_reader :name
+
+    # @return [Integer] this account's ID.
+    attr_reader :id
+
+    def initialize(data)
+      @name = data['name']
+      @id = data['id'].to_i
+    end
+  end
+
   # Server integration
   class Integration
     include IDObject
@@ -1404,7 +1418,7 @@ module Discordrb
     # @return [true, false] whether the integration is syncing
     attr_reader :syncing
 
-    # @return [Hash] the integration account information, listing the `name` and `id` in the hash
+    # @return [IntegrationAccount] the integration account information
     attr_reader :account
 
     # @return [Time] the time the integration was synced at
@@ -1426,7 +1440,7 @@ module Discordrb
       @enabled = data['enabled']
       @syncing = data['syncing']
       @type = data['type']
-      @account = data['account']
+      @account = IntegrationAccount.new(data['account'])
       @synced_at = Time.parse(data['synced_at'])
       @expire_behaviour = [:remove, :kick][data['expire_behavior']]
       @expire_grace_period = data['expire_grace_period']
