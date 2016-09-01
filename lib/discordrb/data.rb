@@ -1598,7 +1598,7 @@ module Discordrb
     end
 
     # @return [String, nil] the widget URL to the server that displays the amount of online members in a
-    # stylish way. `nil` if the widget is not enabled.
+    #   stylish way. `nil` if the widget is not enabled.
     def widget_url
       return nil unless @embed
       API.widget_url(@id)
@@ -1606,7 +1606,7 @@ module Discordrb
 
     # @param style_number [Integer] the style number of the widget picture  (For the diffrent styles just try which looks how)
     # @return [String, nil] the widget banner URL to the server that displays the amount of online members,
-    # server icon and server name in a stylish way. `nil` if the widget is not enabled.
+    #   server icon and server name in a stylish way. `nil` if the widget is not enabled.
     def widget_banner_url(style_number)
       return nil unless @embed
       API.widget_url(@id) + '?style=banner' + (style_number == Integer ? style_number.to_s : '1')
@@ -1619,7 +1619,7 @@ module Discordrb
     end
 
     # @return [String, nil] the splash image URL for the server's VIP invite page.
-    # `nil` if there is no splash image.
+    #   `nil` if there is no splash image.
     def splash_url
       splash_id if @splash_id.nil?
       return nil unless @splash_id
