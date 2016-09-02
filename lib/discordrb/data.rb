@@ -1243,6 +1243,99 @@ module Discordrb
     end
   end
 
+  # An Embed object that is contained in a message
+  class Embed
+    # @return [Message] the message this embed object is contained in.
+    attr_reader :message
+
+    # @return [String] the URL this embed object is based on.
+    attr_reader :url
+
+    # @return [String] the title of the embed object.
+    attr_reader :title
+
+    # @return [String] the description of the embed object.
+    attr_reader :description
+
+    # @return [String] the type of the embed object.
+    attr_reader :type
+
+    # @return [EmbedProvider] the provider of the embed object.
+    attr_reader :provider
+
+    # @return [Attachment] the thumbnail of the embed object. This is limited to `url`, `proxy_url`, `width` and `height`.
+    attr_reader :thumbnail
+
+    # @!visibility private
+    def initialize(data, message)
+      @bot = bot
+      @message = message
+
+      @url = data['url']
+      @title = data['title']
+      @type = data['type']
+      @description = data['description']
+      @provider = EmbedProvider.new(data['provider'], self)
+      @thumbnail = EmbedThumbnail.new(data['thumbnail'], self)
+    end
+
+    # @return [true, false] whether this file is an image file.
+    def image?
+      !(@width.nil? || @height.nil?)
+    end
+  end
+
+  # An Embed thumbnail for the embed object
+  class EmbedThumbnail
+    # @return [Embed] the embed object this is based on.
+    attr_reader :embed
+
+    # @return [String] the CDN URL this thumbnail can be downloaded at.
+    attr_reader :url
+
+    # @return [String] the thumbnail's proxy URL - I'm not sure what exactly this does, but I think it has something to
+    #   do with CDNs
+    attr_reader :proxy_url
+
+    # @return [Integer] the width of this thumbnail file, in pixels.
+    attr_reader :width
+
+    # @return [Integer] the height of this thumbnail file, in pixels.
+    attr_reader :height
+
+    # @!visibility private
+    def initialize(data, embed)
+      @bot = bot
+      @embed = embed
+
+      @url = data['url']
+      @proxy_url = data['proxy_url']
+      @width = data['width']
+      @height = data['height']
+    end
+  end
+
+  # An Embed provider for the embed object
+  class EmbedProvider
+    # @return [Embed] the embed object this is based on.
+    attr_reader :embed
+
+    # @return [String] the provider's name.
+    attr_reader :name
+
+    # @return [String] the URL of the provider.
+    attr_reader :url
+
+    # @!visibility private
+    def initialize(data, embed)
+      @bot = bot
+      @embed = embed
+
+      @name = data['name']
+      @url = data['url']
+    end
+  end
+
   # An attachment to a message
   class Attachment
     include IDObject
@@ -1296,9 +1389,13 @@ module Discordrb
 
     # @return [String] the content of this message.
     attr_reader :content
+    alias_method :text, :content
+    alias_method :to_s, :content
 
     # @return [Member] the user that sent this message.
     attr_reader :author
+    alias_method :user, :author
+    alias_method :writer, :author
 
     # @return [Channel] the channel in which this message was sent.
     attr_reader :channel
@@ -1315,13 +1412,12 @@ module Discordrb
     # @return [Array<Attachment>] the files attached to this message.
     attr_reader :attachments
 
+    # @return [Array<Embed>] the embed objects contained in this message.
+    attr_reader :embeds
+
     # @return [true, false] whether themesage is pinned or not.
     attr_reader :pinned
-
     alias_method :pinned?, :pinned
-    alias_method :user, :author
-    alias_method :text, :content
-    alias_method :to_s, :content
 
     # @!visibility private
     def initialize(data, bot)
@@ -1362,6 +1458,9 @@ module Discordrb
 
       @attachments = []
       @attachments = data['attachments'].map { |e| Attachment.new(e, self, @bot) } if data['attachments']
+
+      @embeds = []
+      @embeds = data['embeds'].map { |e| Embed.new(e, self) } if data['embeds']
     end
 
     # Replies to this message with the specified content.
