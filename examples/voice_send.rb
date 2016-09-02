@@ -36,6 +36,9 @@ end
 # A conversion utility that converts existing audio files to DCA can be found here: https://github.com/nstafie/dca-rs
 bot.command(:play_mp3) do |event|
   voice_bot = event.voice
+
+  # Since the DCA format is non-standard (i.e. ffmpeg doesn't support it), a separate method other than `play_file` has
+  # to be used to play DCA files back. `play_dca` fulfills that role.
   voice_bot.play_dca('data/music.dca')
 end
 
