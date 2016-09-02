@@ -11,6 +11,8 @@ bot.command(:connect) do |event|
   # construct can be used to exit a command prematurely, and even send a message while we're at it.
   next "You're not in any voice channel!" unless channel
 
+  # The `voice_connect` method does everything necessary for the bot to connect to a voice channel. Afterwards the bot
+  # will be connected and ready to play stuff back.
   bot.voice_connect(channel)
   "Connected to voice channel: #{channel.name}"
 end
