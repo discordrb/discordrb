@@ -235,6 +235,29 @@ module Discordrb::API::Server
     )
   end
 
+  # Get server prune count
+  # https://discordapp.com/developers/docs/resources/guild#get-guild-prune-count
+  def prune_count(token, server_id)
+    Discordrb::API.request(
+      __method__,
+      :get,
+      "#{Discordrb::API.api_base}/guilds/#{server_id}/prune",
+      Authorization: token
+    )
+  end
+
+  # Begin server prune
+  # https://discordapp.com/developers/docs/resources/guild#begin-guild-prune
+  def begin_prune(token, server_id, days)
+    Discordrb::API.request(
+      __method__,
+      :post,
+      "#{Discordrb::API.api_base}/guilds/#{server_id}/prune",
+      { days: days },
+      Authorization: token
+    )
+  end
+
   # Get invites from server
   # https://discordapp.com/developers/docs/resources/guild#get-guild-invites
   def invites(token, server_id)
@@ -242,6 +265,65 @@ module Discordrb::API::Server
       __method__,
       :get,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/invites",
+      Authorization: token
+    )
+  end
+
+  # Get server integrations
+  # https://discordapp.com/developers/docs/resources/guild#get-guild-integrations
+  def integrations(token, server_id)
+    Discordrb::API.request(
+      __method__,
+      :get,
+      "#{Discordrb::API.api_base}/guilds/#{server_id}/integrations",
+      Authorization: token
+    )
+  end
+
+  # Create a server integration
+  # https://discordapp.com/developers/docs/resources/guild#create-guild-integration
+  def create_integration(token, server_id, type, id)
+    Discordrb::API.request(
+      __method__,
+      :post,
+      "#{Discordrb::API.api_base}/guilds/#{server_id}/integrations",
+      { type: type, id: id },
+      Authorization: token
+    )
+  end
+
+  # Update integration from server
+  # https://discordapp.com/developers/docs/resources/guild#modify-guild-integration
+  def update_integration(token, server_id, integration_id, expire_behavior, expire_grace_period, enable_emoticons)
+    Discordrb::API.request(
+      __method__,
+      :patch,
+      "#{Discordrb::API.api_base}/guilds/#{server_id}/integrations/#{integration_id}",
+      { expire_behavior: expire_behavior, expire_grace_period: expire_grace_period, enable_emoticons: enable_emoticons }.to_json,
+      Authorization: token,
+      content_type: :json
+    )
+  end
+
+  # Delete a server integration
+  # https://discordapp.com/developers/docs/resources/guild#delete-guild-integration
+  def delete_integration(token, server_id, integration_id)
+    Discordrb::API.request(
+      __method__,
+      :delete,
+      "#{Discordrb::API.api_base}/guilds/#{server_id}/integrations/#{integration_id}",
+      Authorization: token
+    )
+  end
+
+  # Sync an integration
+  # https://discordapp.com/developers/docs/resources/guild#sync-guild-integration
+  def sync_integration(token, server_id, integration_id)
+    Discordrb::API.request(
+      __method__,
+      :post,
+      "#{Discordrb::API.api_base}/guilds/#{server_id}/integrations/#{integration_id}/sync",
+      nil,
       Authorization: token
     )
   end

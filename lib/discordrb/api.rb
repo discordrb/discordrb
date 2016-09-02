@@ -102,6 +102,11 @@ module Discordrb::API
     "https://cdn.discordapp.com/app-icons/#{app_id}/#{icon_id}.jpg"
   end
 
+  # Make a widget picture URL from server ID
+  def widget_url(server_id, style = 'shield')
+    "#{api_base}/guilds/#{server_id}/widget.png?style=#{style}"
+  end
+
   # Login to the server
   def login(email, password)
     request(
