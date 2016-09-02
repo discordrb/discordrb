@@ -4,6 +4,9 @@ require 'discordrb'
 
 bot = Discordrb::Commands::CommandBot.new token: 'B0T.T0KEN.here', application_id: 160123456789876543, prefix: '!'
 
+# Here we can see the `help_available` property used, which can determine whether a command shows up in the default
+# generated `help` command. It is true by default but it can be set to false to hide internal commands that only
+# specific people can use.
 bot.command(:exit, help_available: false) do |event|
   break unless event.user.id == 66237334693085184 # Replace number with your ID
 
