@@ -1,4 +1,5 @@
-# Pinging the bot will also tell you the time it takes the bot to send the message
+# This example is nearly the same as the normal ping example, but rather than simply responding with "Pong!", it also
+# responds with the time it took to send the message.
 
 require 'discordrb'
 
