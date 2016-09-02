@@ -831,11 +831,11 @@ module Discordrb
 
     def update_role_data(new_data)
       API::Server.update_role(@bot.token, @server.id, @id,
-                      new_data[:name] || @name,
-                      (new_data[:colour] || @colour).combined,
-                      new_data[:hoist].nil? ? @hoist : new_data[:hoist],
-                      new_data[:mentionable].nil? ? @mentionable : new_data[:mentionable],
-                      new_data[:permissions] || @permissions.bits)
+                              new_data[:name] || @name,
+                              (new_data[:colour] || @colour).combined,
+                              new_data[:hoist].nil? ? @hoist : new_data[:hoist],
+                              new_data[:mentionable].nil? ? @mentionable : new_data[:mentionable],
+                              new_data[:permissions] || @permissions.bits)
       update_data(new_data)
     end
   end
@@ -1768,11 +1768,11 @@ module Discordrb
 
     def update_server_data(new_data)
       API::Server.update(@bot.token, @id,
-                        new_data[:name] || @name,
-                        new_data[:region] || @region,
-                        new_data[:icon_id] || @icon_id,
-                        new_data[:afk_channel_id] || @afk_channel_id,
-                        new_data[:afk_timeout] || @afk_timeout)
+                         new_data[:name] || @name,
+                         new_data[:region] || @region,
+                         new_data[:icon_id] || @icon_id,
+                         new_data[:afk_channel_id] || @afk_channel_id,
+                         new_data[:afk_timeout] || @afk_timeout)
       update_data(new_data)
     end
 
