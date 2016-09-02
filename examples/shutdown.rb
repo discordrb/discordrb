@@ -1,4 +1,4 @@
-# This script allows you to shutdown the bot on command
+# This bot doesn't do anything except for letting a specifically authorised user shutdown the bot on command.
 
 require 'discordrb'
 
