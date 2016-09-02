@@ -158,18 +158,6 @@ module Discordrb::API
     )
   end
 
-  # Transfer server ownership
-  def transfer_ownership(token, server_id, user_id)
-    request(
-      __method__,
-      :patch,
-      "#{api_base}/guilds/#{server_id}",
-      { owner_id: user_id }.to_json,
-      Authorization: token,
-      content_type: :json
-    )
-  end
-
   # Create a private channel
   def create_private(token, bot_user_id, user_id)
     request(

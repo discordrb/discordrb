@@ -1689,7 +1689,7 @@ module Discordrb
     # Transfers server ownership to another user.
     # @param user [User] The user who should become the new owner.
     def owner=(user)
-      API.transfer_ownership(@bot.token, @id, user.id)
+      API::Server.transfer_ownership(@bot.token, @id, user.id)
     end
 
     # Sets the server's name.
