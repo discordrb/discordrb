@@ -19,6 +19,11 @@ end
 
 # A simple command that plays back an mp3 file.
 bot.command(:play_mp3) do |event|
+  # `event.voice` is a helper method that gets the correct voice bot on the server the bot is currently in. Since a
+  # bot may be connected to more than one voice channel (never more than one on the same server, though), this is
+  # necessary to allow the differentiation of servers.
+  #
+  # It returns a `VoiceBot` object that methods such as `play_file` can be called on.
   voice_bot = event.voice
   voice_bot.play_file('data/music.mp3')
 end
