@@ -18,6 +18,8 @@ bot = Discordrb::Bot.new token: 'B0T.T0KEN.here', application_id: 16012345678987
 puts "This bot's invite URL is #{bot.invite_url}."
 puts 'Click on it to invite it to your server.'
 
+# This method call adds an event handler that will be called on any message that exactly contains the string "Ping!".
+# The code inside it will be executed, and a "Pong!" response will be sent to the channel.
 bot.message(with_text: 'Ping!') do |event|
   event.respond 'Pong!'
 end
