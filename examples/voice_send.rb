@@ -1,3 +1,5 @@
+# discordrb can send music or other audio data to voice channels. This example exists to show that off.
+
 require 'discordrb'
 
 bot = Discordrb::Commands::CommandBot.new token: 'B0T.T0KEN.here', application_id: 160123456789876543, prefix: '!'
