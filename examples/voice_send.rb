@@ -1,4 +1,8 @@
 # discordrb can send music or other audio data to voice channels. This example exists to show that off.
+#
+# To avoid copyright infringement, the example music I will be using is a self-composed piece of highly debatable
+# quality. If you want something better you can replace the files in the data/ directory. Make sure to execute this
+# example from the appropriate place, so that it has access to the files in that directory.
 
 require 'discordrb'
 
