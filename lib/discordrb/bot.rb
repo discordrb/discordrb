@@ -19,6 +19,7 @@ require 'discordrb/events/bans'
 require 'discordrb/api'
 require 'discordrb/api/channel'
 require 'discordrb/api/server'
+require 'discordrb/api/invite'
 require 'discordrb/errors'
 require 'discordrb/data'
 require 'discordrb/await'
@@ -346,7 +347,7 @@ module Discordrb
     # @param invite [String, Invite] The invite to join. For possible formats see {#resolve_invite_code}.
     def join(invite)
       resolved = invite(invite).code
-      API.join_server(token, resolved)
+      API::Invite.accept(token, resolved)
     end
 
     # Creates an OAuth invite URL that can be used to invite this bot to a particular server.
@@ -449,7 +450,7 @@ module Discordrb
     # @param code [String, Invite] The invite to revoke. For possible formats see {#resolve_invite_code}.
     def delete_invite(code)
       invite = resolve_invite_code(code)
-      API.delete_invite(token, invite)
+      API::Invite.delete(token, invite)
     end
 
     # Sends a text message to a channel given its ID and the message's content.

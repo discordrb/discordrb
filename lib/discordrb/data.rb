@@ -7,6 +7,7 @@ require 'discordrb/permissions'
 require 'discordrb/api'
 require 'discordrb/api/channel'
 require 'discordrb/api/server'
+require 'discordrb/api/invite'
 require 'discordrb/events/message'
 require 'time'
 require 'base64'
@@ -929,7 +930,7 @@ module Discordrb
 
     # Deletes this invite
     def delete
-      API.delete_invite(@bot.token, @code)
+      API::Invite.delete(@bot.token, @code)
     end
 
     alias_method :revoke, :delete

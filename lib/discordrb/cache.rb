@@ -2,6 +2,7 @@
 
 require 'discordrb/api'
 require 'discordrb/api/server'
+require 'discordrb/api/invite'
 require 'discordrb/data'
 
 module Discordrb
@@ -191,7 +192,7 @@ module Discordrb
     # @return [Invite] The invite with information about the given invite URL.
     def invite(invite)
       code = resolve_invite_code(invite)
-      Invite.new(JSON.parse(API.resolve_invite(token, code)), self)
+      Invite.new(JSON.parse(API::Invite.resolve(token, code)), self)
     end
 
     # Finds a channel given its name and optionally the name of the server it is in.

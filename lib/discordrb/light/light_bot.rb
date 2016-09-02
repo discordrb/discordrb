@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'discordrb/api'
+require 'discordrb/api/invite'
 require 'discordrb/light/data'
 require 'discordrb/light/integrations'
 
@@ -43,7 +44,7 @@ module Discordrb::Light
     # @param code [String] The code part of the invite (for example 0cDvIgU2voWn4BaD if the invite URL is
     #   https://discord.gg/0cDvIgU2voWn4BaD)
     def join(code)
-      Discordrb::API.join_server(@token, code)
+      Discordrb::API::Invite.accept(@token, code)
     end
 
     # Gets the connections associated with this account.
