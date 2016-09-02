@@ -32,6 +32,8 @@ end
 # It represents the audio data exactly as Discord wants it in a format that is very simple to parse, so libraries can
 # very easily add support for it. It has the advantage that absolutely no transcoding has to be done, so it is very
 # light on CPU in comparison to `play_file`.
+#
+# A conversion utility that converts existing audio files to DCA can be found here: https://github.com/nstafie/dca-rs
 bot.command(:play_mp3) do |event|
   voice_bot = event.voice
   voice_bot.play_dca('data/music.dca')
