@@ -40,7 +40,7 @@ end
 # light on CPU in comparison to `play_file`.
 #
 # A conversion utility that converts existing audio files to DCA can be found here: https://github.com/nstafie/dca-rs
-bot.command(:play_mp3) do |event|
+bot.command(:play_dca) do |event|
   voice_bot = event.voice
 
   # Since the DCA format is non-standard (i.e. ffmpeg doesn't support it), a separate method other than `play_file` has
