@@ -3,12 +3,11 @@
 
 require 'discordrb'
 
-bot = Discordrb::Commands::CommandBot.new token: 'B0T.T0KEN.here', application_id: 160123456789876543, prefix: '!'
+bot = Discordrb::Bot.new token: 'B0T.T0KEN.here', application_id: 160123456789876543
 
-bot.command(:ping) do |event|
+bot.message(content: 'Ping!') do |event|
   m = event.respond('Pong!')
   m.edit "Pong! Time taken: #{Time.now - event.timestamp} seconds."
-  nil
 end
 
 bot.run
