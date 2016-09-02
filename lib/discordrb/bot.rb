@@ -18,6 +18,7 @@ require 'discordrb/events/bans'
 
 require 'discordrb/api'
 require 'discordrb/api/channel'
+require 'discordrb/api/server'
 require 'discordrb/errors'
 require 'discordrb/data'
 require 'discordrb/await'
@@ -512,7 +513,7 @@ module Discordrb
     #   * `:sydney`
     # @return [Server] The server that was created.
     def create_server(name, region = :london)
-      response = API.create_server(token, name, region)
+      response = API::Server.create(token, name, region)
       id = JSON.parse(response)['id'].to_i
       sleep 0.1 until @servers[id]
       server = @servers[id]

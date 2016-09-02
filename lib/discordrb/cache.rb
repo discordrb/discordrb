@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'discordrb/api'
+require 'discordrb/api/server'
 require 'discordrb/data'
 
 module Discordrb
@@ -77,7 +78,7 @@ module Discordrb
 
       LOGGER.out("Resolving server #{id}")
       begin
-        response = API.server(token, id)
+        response = API::Server.resolve(token, id)
       rescue RestClient::ResourceNotFound
         return nil
       end
@@ -99,7 +100,7 @@ module Discordrb
 
       LOGGER.out("Resolving member #{server_id} on server #{user_id}")
       begin
-        response = API.member(token, server_id, user_id)
+        response = API::Server.member(token, server_id, user_id)
       rescue RestClient::ResourceNotFound
         return nil
       end

@@ -6,6 +6,7 @@ require 'ostruct'
 require 'discordrb/permissions'
 require 'discordrb/api'
 require 'discordrb/api/channel'
+require 'discordrb/api/server'
 require 'discordrb/events/message'
 require 'time'
 require 'base64'
@@ -477,7 +478,7 @@ module Discordrb
       old_role_ids = @roles.map(&:id)
       new_role_ids = (old_role_ids + role_ids).uniq
 
-      API.update_user_roles(@bot.token, @server.id, @user.id, new_role_ids)
+      API::Server.update_user(@bot.token, @server.id, @user.id, roles: new_role_ids)
     end
 
     # Removes one or more roles from this member.
@@ -487,27 +488,27 @@ module Discordrb
       role_ids = role_id_array(role)
       new_role_ids = old_role_ids.reject { |i| role_ids.include?(i) }
 
-      API.update_user_roles(@bot.token, @server.id, @user.id, new_role_ids)
+      API::Server.update_user(@bot.token, @server.id, @user.id, roles: new_role_ids)
     end
 
     # Server deafens this member.
     def server_deafen
-      API.update_user_deafen(@bot.token, @server.id, @user.id, true)
+      API::Server.update_user(@bot.token, @server.id, @user.id, deaf: true)
     end
 
     # Server undeafens this member.
     def server_undeafen
-      API.update_user_deafen(@bot.token, @server.id, @user.id, false)
+      API::Server.update_user(@bot.token, @server.id, @user.id, deaf: false)
     end
 
     # Server mutes this member.
     def server_mute
-      API.update_user_mute(@bot.token, @server.id, @user.id, true)
+      API::Server.update_user(@bot.token, @server.id, @user.id, mute: true)
     end
 
     # Server unmutes this member.
     def server_unmute
-      API.update_user_mute(@bot.token, @server.id, @user.id, false)
+      API::Server.update_user(@bot.token, @server.id, @user.id, mute: false)
     end
 
     # Sets or resets this member's nickname. Requires the Change Nickname permission for the bot itself and Manage
@@ -815,7 +816,7 @@ module Discordrb
 
     # Delets this role. This cannot be undone without recreating the role!
     def delete
-      API.delete_role(@bot.token, @server.id, @id)
+      API::Server.delete_role(@bot.token, @server.id, @id)
       @server.delete_role(@id)
     end
 
@@ -827,7 +828,7 @@ module Discordrb
     private
 
     def update_role_data(new_data)
-      API.update_role(@bot.token, @server.id, @id,
+      API::Server.update_role(@bot.token, @server.id, @id,
                       new_data[:name] || @name,
                       (new_data[:colour] || @colour).combined,
                       new_data[:hoist].nil? ? @hoist : new_data[:hoist],
@@ -1626,7 +1627,7 @@ module Discordrb
     # Creates a channel on this server with the given name.
     # @return [Channel] the created channel.
     def create_channel(name, type = 'text')
-      response = API.create_channel(@bot.token, @id, name, type)
+      response = API::Server.create_channel(@bot.token, @id, name, type)
       Channel.new(JSON.parse(response), @bot)
     end
 
@@ -1635,7 +1636,7 @@ module Discordrb
     # colour is the default etc.
     # @return [Role] the created role.
     def create_role
-      response = API.create_role(@bot.token, @id)
+      response = API::Server.create_role(@bot.token, @id)
       role = Role.new(JSON.parse(response), @bot, self)
       @roles << role
       role
@@ -1643,7 +1644,7 @@ module Discordrb
 
     # @return [Array<User>] a list of banned users on this server.
     def bans
-      users = JSON.parse(API.bans(@bot.token, @id))
+      users = JSON.parse(API::Server.bans(@bot.token, @id))
       users.map { |e| User.new(e['user'], @bot) }
     end
 
@@ -1651,19 +1652,19 @@ module Discordrb
     # @param user [User, #resolve_id] The user to ban.
     # @param message_days [Integer] How many days worth of messages sent by the user should be deleted.
     def ban(user, message_days = 0)
-      API.ban_user(@bot.token, @id, user.resolve_id, message_days)
+      API::Server.ban_user(@bot.token, @id, user.resolve_id, message_days)
     end
 
     # Unbans a previously banned user from this server.
     # @param user [User, #resolve_id] The user to unban.
     def unban(user)
-      API.unban_user(@bot.token, @id, user.resolve_id)
+      API::Server.unban_user(@bot.token, @id, user.resolve_id)
     end
 
     # Kicks a user from this server.
     # @param user [User, #resolve_id] The user to kick.
     def kick(user)
-      API.kick_user(@bot.token, @id, user.resolve_id)
+      API::Server.remove_user(@bot.token, @id, user.resolve_id)
     end
 
     # Forcibly moves a user into a different voice channel. Only works if the bot has the permission needed.
@@ -1675,7 +1676,7 @@ module Discordrb
 
     # Deletes this server. Be aware that this is permanent and impossible to undo, so be careful!
     def delete
-      API.delete_server(@bot.token, @id)
+      API::Server.delete(@bot.token, @id)
     end
 
     # Leave the server
@@ -1764,7 +1765,7 @@ module Discordrb
     private
 
     def update_server_data(new_data)
-      API.update_server(@bot.token, @id,
+      API::Server.update(@bot.token, @id,
                         new_data[:name] || @name,
                         new_data[:region] || @region,
                         new_data[:icon_id] || @icon_id,
