@@ -1,4 +1,3 @@
-require "discordrb/api"
 # API calls for Server
 module Discordrb::API::Server
   module_function
