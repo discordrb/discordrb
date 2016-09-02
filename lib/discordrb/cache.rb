@@ -3,6 +3,7 @@
 require 'discordrb/api'
 require 'discordrb/api/server'
 require 'discordrb/api/invite'
+require 'discordrb/api/user'
 require 'discordrb/data'
 
 module Discordrb
@@ -61,7 +62,7 @@ module Discordrb
 
       LOGGER.out("Resolving user #{id}")
       begin
-        response = API.user(token, id)
+        response = API::API.resolve(token, id)
       rescue RestClient::ResourceNotFound
         return nil
       end
@@ -119,7 +120,7 @@ module Discordrb
       debug("Creating private channel with user id #{id}")
       return @private_channels[id] if @private_channels[id]
 
-      response = API.create_private(token, @profile.id, id)
+      response = API::User.create_private(token, @profile.id, id)
       channel = Channel.new(JSON.parse(response), self)
       @private_channels[id] = channel
     end

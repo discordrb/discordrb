@@ -8,6 +8,7 @@ require 'discordrb/api'
 require 'discordrb/api/channel'
 require 'discordrb/api/server'
 require 'discordrb/api/invite'
+require 'discordrb/api/user'
 require 'discordrb/events/message'
 require 'time'
 require 'base64'
@@ -120,7 +121,7 @@ module Discordrb
     # Utility function to get a user's avatar URL.
     # @return [String] the URL to the avatar image.
     def avatar_url
-      API.avatar_url(@id, @avatar_id)
+      API::User.avatar_url(@id, @avatar_id)
     end
   end
 
@@ -520,7 +521,7 @@ module Discordrb
       nick ||= ''
 
       if @user.current_bot?
-        API.change_own_nickname(@bot.token, @server.id, nick)
+        API::User.change_own_nickname(@bot.token, @server.id, nick)
       else
         API.change_nickname(@bot.token, @server.id, @user.id, nick)
       end
@@ -1682,7 +1683,7 @@ module Discordrb
 
     # Leave the server
     def leave
-      API.leave_server(@bot.token, @id)
+      API::User.leave_server(@bot.token, @id)
     end
 
     # Transfers server ownership to another user.
