@@ -26,7 +26,7 @@ module Discordrb::API::User
 
   # Get profile data
   # https://discordapp.com/developers/docs/resources/user#get-current-user
-  def resolve_current(token)
+  def profile(token)
     Discordrb::API.request(
       __method__,
       :get,
@@ -49,7 +49,7 @@ module Discordrb::API::User
 
   # Update user data
   # https://discordapp.com/developers/docs/resources/user#modify-current-user
-  def update_current(token, email, password, new_username, avatar, new_password = nil)
+  def update_profile(token, email, password, new_username, avatar, new_password = nil)
     Discordrb::API.request(
       __method__,
       :patch,

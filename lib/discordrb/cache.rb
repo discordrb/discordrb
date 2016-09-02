@@ -62,7 +62,7 @@ module Discordrb
 
       LOGGER.out("Resolving user #{id}")
       begin
-        response = API::API.resolve(token, id)
+        response = API::User.resolve(token, id)
       rescue RestClient::ResourceNotFound
         return nil
       end
@@ -102,7 +102,7 @@ module Discordrb
 
       LOGGER.out("Resolving member #{server_id} on server #{user_id}")
       begin
-        response = API::Server.member(token, server_id, user_id)
+        response = API::Server.resolve_member(token, server_id, user_id)
       rescue RestClient::ResourceNotFound
         return nil
       end

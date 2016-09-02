@@ -31,7 +31,7 @@ module Discordrb::Light
 
     # @return [LightProfile] the details of the user this bot is connected to.
     def profile
-      response = Discordrb::API::User.resolve_current(@token)
+      response = Discordrb::API::User.profile(@token)
       LightProfile.new(JSON.parse(response), self)
     end
 

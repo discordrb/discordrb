@@ -101,7 +101,7 @@ module Discordrb::API::Server
 
   # Get a member's data
   # https://discordapp.com/developers/docs/resources/guild#get-guild-member
-  def member(token, server_id, user_id)
+  def resolve_member(token, server_id, user_id)
     Discordrb::API.request(
       __method__,
       :get,
@@ -112,7 +112,7 @@ module Discordrb::API::Server
 
   # Gets members from the server
   # https://discordapp.com/developers/docs/resources/guild#list-guild-members
-  def members(token, server_id, limit, after = nil)
+  def resolve_members(token, server_id, limit, after = nil)
     Discordrb::API.request(
       __method__,
       :get,
@@ -123,7 +123,7 @@ module Discordrb::API::Server
 
   # Update a user properties
   # https://discordapp.com/developers/docs/resources/guild#modify-guild-member
-  def update_user(token, server_id, user_id, nick: nil, roles: nil, mute: nil, deaf: nil, channel_id: nil)
+  def update_member(token, server_id, user_id, nick: nil, roles: nil, mute: nil, deaf: nil, channel_id: nil)
     Discordrb::API.request(
       __method__,
       :patch,
@@ -141,7 +141,7 @@ module Discordrb::API::Server
 
   # Remove user from server
   # https://discordapp.com/developers/docs/resources/guild#remove-guild-member
-  def remove_user(token, server_id, user_id)
+  def remove_member(token, server_id, user_id)
     Discordrb::API.request(
       __method__,
       :delete,

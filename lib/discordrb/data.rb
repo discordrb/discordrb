@@ -1666,14 +1666,14 @@ module Discordrb
     # Kicks a user from this server.
     # @param user [User, #resolve_id] The user to kick.
     def kick(user)
-      API::Server.remove_user(@bot.token, @id, user.resolve_id)
+      API::Server.remove_member(@bot.token, @id, user.resolve_id)
     end
 
     # Forcibly moves a user into a different voice channel. Only works if the bot has the permission needed.
     # @param user [User] The user to move.
     # @param channel [Channel] The voice channel to move into.
     def move(user, channel)
-      API::Server.update_user(@bot.token, @id, user.id, channel_id: channel.id)
+      API::Server.update_member(@bot.token, @id, user.id, channel_id: channel.id)
     end
 
     # Deletes this server. Be aware that this is permanent and impossible to undo, so be careful!
