@@ -17,6 +17,7 @@ require 'discordrb/events/await'
 require 'discordrb/events/bans'
 
 require 'discordrb/api'
+require 'discordrb/api/channel'
 require 'discordrb/errors'
 require 'discordrb/data'
 require 'discordrb/await'
@@ -460,7 +461,7 @@ module Discordrb
       channel_id = channel_id.resolve_id
       debug("Sending message to #{channel_id} with content '#{content}'")
 
-      response = API.send_message(token, channel_id, content, [], tts, server_id)
+      response = API::Channel.create_message(token, channel_id, content, [], tts, server_id)
       Message.new(JSON.parse(response), self)
     end
 
@@ -490,7 +491,7 @@ module Discordrb
     # @param caption [string] The caption for the file.
     # @param tts [true, false] Whether or not this file's caption should be sent using Discord text-to-speech.
     def send_file(channel_id, file, caption: nil, tts: false)
-      response = API.send_file(token, channel_id, file, caption: caption, tts: tts)
+      response = API::Channel.upload_file(token, channel_id, file, caption: caption, tts: tts)
       Message.new(JSON.parse(response), self)
     end
 

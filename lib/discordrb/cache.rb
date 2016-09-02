@@ -36,7 +36,7 @@ module Discordrb
 
       begin
         begin
-          response = API.channel(token, id)
+          response = API::Channel.resolve(token, id)
         rescue RestClient::ResourceNotFound
           return nil
         end

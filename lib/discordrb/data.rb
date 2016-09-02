@@ -5,6 +5,7 @@
 require 'ostruct'
 require 'discordrb/permissions'
 require 'discordrb/api'
+require 'discordrb/api/channel'
 require 'discordrb/events/message'
 require 'time'
 require 'base64'
@@ -1075,7 +1076,7 @@ module Discordrb
 
     # Permanently deletes this channel
     def delete
-      API.delete_channel(@bot.token, @id)
+      API::Channel.delete(@bot.token, @id)
     end
 
     # Sets this channel's name. The name must be alphanumeric with dashes, unless this is a voice channel (then there are no limitations)
@@ -1121,9 +1122,9 @@ module Discordrb
 
       # TODO: Be more flexible about what classes are allowed here
       if thing.is_a?(User) || thing.is_a?(Member) || thing.is_a?(Recipient)
-        API.update_user_overrides(@bot.token, @id, thing.id, allow_bits, deny_bits)
+        API::Channel.update_user_overrides(@bot.token, @id, thing.id, allow_bits, deny_bits)
       elsif thing.is_a? Role
-        API.update_role_overrides(@bot.token, @id, thing.id, allow_bits, deny_bits)
+        API::Channel.update_role_overrides(@bot.token, @id, thing.id, allow_bits, deny_bits)
       end
     end
 
@@ -1157,7 +1158,7 @@ module Discordrb
     #   as soon as possible with the specified amount.
     # @return [Array<Message>] the retrieved messages.
     def history(amount, before_id = nil, after_id = nil)
-      logs = API.channel_log(@bot.token, @id, amount, before_id, after_id)
+      logs = API::Channel.messages(@bot.token, @id, amount, before_id, after_id)
       JSON.parse(logs).map { |message| Message.new(message, @bot) }
     end
 
@@ -1165,7 +1166,7 @@ module Discordrb
     # @param message_id [Integer] The ID of the message to retrieve.
     # @return [Message] the retrieved message.
     def load_message(message_id)
-      response = API.channel_message(@bot.token, @id, message_id)
+      response = API::Channel.message(@bot.token, @id, message_id)
       return Message.new(JSON.parse(response), @bot)
     rescue RestClient::ResourceNotFound
       return nil
@@ -1176,7 +1177,7 @@ module Discordrb
     # Requests all pinned messages of a channel.
     # @return [Array<Message>] the received messages.
     def pins
-      msgs = API.pins(@bot.token, @id)
+      msgs = API::Channel.pinned_messages(@bot.token, @id)
       JSON.parse(msgs).map { |msg| Message.new(msg, @bot) }
     end
 
@@ -1187,7 +1188,7 @@ module Discordrb
       raise ArgumentError, 'Can only prune between 2 and 100 messages!' unless amount.between?(2, 100)
 
       messages = history(amount).map(&:id)
-      API.bulk_delete(@bot.token, @id, messages)
+      API::Channel.bulk_delete_messages(@bot.token, @id, messages)
     end
 
     # Updates the cached permission overwrites
@@ -1210,7 +1211,7 @@ module Discordrb
     # @param temporary [true, false] Whether membership should be temporary (kicked after going offline).
     # @return [Invite] the created invite.
     def make_invite(max_age = 0, max_uses = 0, temporary = false)
-      response = API.create_invite(@bot.token, @id, max_age, max_uses, temporary)
+      response = API::Channel.create_invite(@bot.token, @id, max_age, max_uses, temporary)
       Invite.new(JSON.parse(response), @bot)
     end
 
@@ -1218,7 +1219,7 @@ module Discordrb
     # If you want to keep typing you'll have to resend this every five seconds. (An abstraction
     # for this will eventually be coming)
     def start_typing
-      API.start_typing(@bot.token, @id)
+      API::Channel.start_typing(@bot.token, @id)
     end
 
     alias_method :send, :send_message
@@ -1232,7 +1233,7 @@ module Discordrb
     private
 
     def update_channel_data
-      API.update_channel(@bot.token, @id, @name, @topic, @position)
+      API::Channel.update(@bot.token, @id, @name, @topic, @position)
     end
   end
 
@@ -1367,26 +1368,26 @@ module Discordrb
     # @param new_content [String] the new content the message should have.
     # @return [Message] the resulting message.
     def edit(new_content)
-      response = API.edit_message(@bot.token, @channel.id, @id, new_content)
+      response = API::Channel.edit_message(@bot.token, @channel.id, @id, new_content)
       Message.new(JSON.parse(response), @bot)
     end
 
     # Deletes this message.
     def delete
-      API.delete_message(@bot.token, @channel.id, @id)
+      API::Channel.delete_message(@bot.token, @channel.id, @id)
       nil
     end
 
     # Pins this message
     def pin
-      API.pin_message(@bot.token, @channel.id, @id)
+      API::Channel.pin_message(@bot.token, @channel.id, @id)
       @pinned = true
       nil
     end
 
     # Unpins this message
     def unpin
-      API.unpin_message(@bot.token, @channel.id, @id)
+      API::Channel.unpin_message(@bot.token, @channel.id, @id)
       @pinned = false
       nil
     end

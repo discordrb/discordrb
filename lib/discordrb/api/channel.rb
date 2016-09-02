@@ -15,7 +15,7 @@ module Discordrb::API::Channel
 
   # Update a channel's data
   # https://discordapp.com/developers/docs/resources/channel#modify-channel
-  def update_channel(token, channel_id, name, topic, position = 0)
+  def update(token, channel_id, name, topic, position = 0)
     Discordrb::API.request(
       __method__,
       :patch,
@@ -28,7 +28,7 @@ module Discordrb::API::Channel
 
   # Delete a channel
   # https://discordapp.com/developers/docs/resources/channel#deleteclose-channel
-  def delete_channel(token, channel_id)
+  def delete(token, channel_id)
     Discordrb::API.request(
       __method__,
       :delete,
@@ -39,7 +39,7 @@ module Discordrb::API::Channel
 
   # Get a list of messages from a channel's history
   # https://discordapp.com/developers/docs/resources/channel#get-channel-messages
-  def channel_log(token, channel_id, amount, before = nil, after = nil)
+  def messages(token, channel_id, amount, before = nil, after = nil)
     Discordrb::API.request(
       __method__,
       :get,
@@ -50,7 +50,7 @@ module Discordrb::API::Channel
 
   # Get a single message from a channel's history by id
   # https://discordapp.com/developers/docs/resources/channel#get-channel-message
-  def channel_message(token, channel_id, message_id)
+  def message(token, channel_id, message_id)
     Discordrb::API.request(
       __method__,
       :get,
@@ -61,7 +61,7 @@ module Discordrb::API::Channel
 
   # Send a message to a channel
   # https://discordapp.com/developers/docs/resources/channel#create-message
-  def send_message(token, channel_id, message, mentions = [], tts = false, guild_id = nil)
+  def create_message(token, channel_id, message, mentions = [], tts = false, guild_id = nil) # send message
     Discordrb::API.request(
       "message-#{guild_id}".to_sym,
       :post,
@@ -76,7 +76,7 @@ module Discordrb::API::Channel
 
   # Send a file as a message to a channel
   # https://discordapp.com/developers/docs/resources/channel#upload-file
-  def send_file(token, channel_id, file, caption: nil, tts: false)
+  def upload_file(token, channel_id, file, caption: nil, tts: false)
     Discordrb::API.request(
       __method__,
       :post,
@@ -112,7 +112,7 @@ module Discordrb::API::Channel
 
   # Delete messages in bulk
   # https://discordapp.com/developers/docs/resources/channel#bulk-delete-messages
-  def bulk_delete(token, channel_id, messages = [])
+  def bulk_delete_messages(token, channel_id, messages = [])
     Discordrb::API.request(
       __method__,
       :post,
@@ -125,7 +125,7 @@ module Discordrb::API::Channel
 
   # Update a channels permission for a role or member
   # https://discordapp.com/developers/docs/resources/channel#edit-channel-permissions
-  def update_channel_permission(token, channel_id, overwrite_id, allow, deny, type)
+  def update_permission(token, channel_id, overwrite_id, allow, deny, type)
     Discordrb::API.request(
       __method__,
       :put,
@@ -138,7 +138,7 @@ module Discordrb::API::Channel
 
   # Get a channel's invite list
   # https://discordapp.com/developers/docs/resources/channel#get-channel-invites
-  def channel_invites(token, channel_id)
+  def invites(token, channel_id)
     Discordrb::API.request(
       __method__,
       :get,
@@ -162,7 +162,7 @@ module Discordrb::API::Channel
 
   # Delete channel permission
   # https://discordapp.com/developers/docs/resources/channel#delete-channel-permission
-  def delete_channel_permission(token, channel_id, overwrite_id)
+  def delete_permission(token, channel_id, overwrite_id)
     Discordrb::API.request(
       __method__,
       :delete,
@@ -185,7 +185,7 @@ module Discordrb::API::Channel
 
   # Get a list of pinned messages in a channel
   # https://discordapp.com/developers/docs/resources/channel#get-pinned-messages
-  def pins(token, channel_id)
+  def pinned_messages(token, channel_id)
     Discordrb::API.request(
       __method__,
       :get,
@@ -219,11 +219,11 @@ module Discordrb::API::Channel
 
   # Update a user's permission overrides in a channel
   def update_user_overrides(token, channel_id, user_id, allow, deny)
-    update_channel_permission(token, channel_id, user_id, allow, deny, 'member')
+    update_permission(token, channel_id, user_id, allow, deny, 'member')
   end
 
   # Update a role's permission overrides in a channel
   def update_role_overrides(token, channel_id, role_id, allow, deny)
-    update_channel_permission(token, channel_id, role_id, allow, deny, 'role')
+    update_permission(token, channel_id, role_id, allow, deny, 'role')
   end
 end
