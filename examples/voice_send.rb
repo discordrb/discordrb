@@ -17,4 +17,10 @@ bot.command(:connect) do |event|
   "Connected to voice channel: #{channel.name}"
 end
 
+# A simple command that plays back an mp3 file.
+bot.command(:play_mp3) do |event|
+  voice_bot = event.voice
+  voice_bot.play_file('data/music.mp3')
+end
+
 bot.run
