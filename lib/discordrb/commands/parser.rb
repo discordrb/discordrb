@@ -22,6 +22,9 @@ module Discordrb::Commands
         # Discord action permissions required to use this command
         required_permissions: attributes[:required_permissions] || [],
 
+        # Roles required to use this command
+        required_roles: attributes[:required_roles] || [],
+
         # Whether this command is usable in a command chain
         chain_usable: attributes[:chain_usable].nil? ? true : attributes[:chain_usable],
 
@@ -33,6 +36,9 @@ module Discordrb::Commands
 
         # Usage description (for help command and error messages)
         usage: attributes[:usage] || nil,
+
+        # Parameter list (for help command and error messages)
+        parameters: attributes[:parameters] || nil,
 
         # Minimum number of arguments
         min_args: attributes[:min_args] || 0,

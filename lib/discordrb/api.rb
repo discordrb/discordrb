@@ -103,6 +103,21 @@ module Discordrb::API
     "#{api_base}/guilds/#{server_id}/icons/#{icon_id}.jpg"
   end
 
+  # Make an icon URL from application and icon IDs
+  def app_icon_url(app_id, icon_id)
+    "https://cdn.discordapp.com/app-icons/#{app_id}/#{icon_id}.jpg"
+  end
+
+  # Make a widget picture URL from server ID
+  def widget_url(server_id, style = 'shield')
+    "#{api_base}/guilds/#{server_id}/widget.png?style=#{style}"
+  end
+
+  # Make a splash URL from server and splash IDs
+  def splash_url(server_id, splash_id)
+    "https://cdn.discordapp.com/splashes/#{server_id}/#{splash_id}.jpg"
+  end
+
   # Ban a user from a server and delete their messages from the last message_days days
   def ban_user(token, server_id, user_id, message_days)
     request(
@@ -180,14 +195,23 @@ module Discordrb::API
     )
   end
 
-  # Login to the server
-  def login(email, password)
+  # Get a server's channels list
+  def channels(token, server_id)
     request(
       __method__,
-      :post,
-      "#{api_base}/auth/login",
-      email: email,
-      password: password
+      :get,
+      "#{api_base}/guilds/#{server_id}/channels",
+      Authorization: token
+    )
+  end
+
+  # Get a channel's invite list
+  def channel_invites(token, channel_id)
+    request(
+      __method__,
+      :get,
+      "#{api_base}/channels/#{channel_id}/invites",
+      Authorization: token
     )
   end
 
@@ -223,6 +247,16 @@ module Discordrb::API
       { name: name, redirect_uris: redirect_uris, description: description, icon: icon }.to_json,
       Authorization: token,
       content_type: :json
+    )
+  end
+
+  # Get the bot's OAuth application's information
+  def oauth_application(token)
+    request(
+      __method__,
+      :get,
+      "#{api_base}/oauth2/applications/@me",
+      Authorization: token
     )
   end
 
@@ -325,12 +359,12 @@ module Discordrb::API
   end
 
   # Update a channel's data
-  def update_channel(token, channel_id, name, topic, position = 0)
+  def update_channel(token, channel_id, name, topic, position = 0, bitrate = nil, user_limit = nil)
     request(
       __method__,
       :patch,
       "#{api_base}/channels/#{channel_id}",
-      { name: name, position: position, topic: topic }.to_json,
+      { name: name, position: position, topic: topic, user_limit: user_limit, bitrate: bitrate }.to_json,
       Authorization: token,
       content_type: :json
     )
@@ -353,6 +387,16 @@ module Discordrb::API
       :post,
       "#{api_base}/invite/#{invite_code}",
       nil,
+      Authorization: token
+    )
+  end
+
+  # Get server integrations
+  def server_integrations(token, guild_id)
+    request(
+      __method__,
+      :get,
+      "#{api_base}/guilds/#{guild_id}/integrations",
       Authorization: token
     )
   end
@@ -656,12 +700,12 @@ module Discordrb::API
   end
 
   # Update user data
-  def update_user(token, email, password, new_username, avatar, new_password = nil)
+  def update_user(token, new_username, avatar)
     request(
       __method__,
       :patch,
       "#{api_base}/users/@me",
-      { avatar: avatar, email: email, new_password: new_password, password: password, username: new_username }.to_json,
+      { avatar: avatar, username: new_username }.to_json,
       Authorization: token,
       content_type: :json
     )
@@ -683,6 +727,16 @@ module Discordrb::API
       __method__,
       :get,
       "#{api_base}/channels/#{channel_id}/messages?limit=#{amount}#{"&before=#{before}" if before}#{"&after=#{after}" if after}",
+      Authorization: token
+    )
+  end
+
+  # Get a single message from a channel's history by id
+  def channel_message(token, channel_id, message_id)
+    request(
+      __method__,
+      :get,
+      "#{api_base}/channels/#{channel_id}/messages/#{message_id}",
       Authorization: token
     )
   end

@@ -44,6 +44,7 @@ module Discordrb::Commands
     # @option attributes [String] :command_doesnt_exist_message The message that should be displayed if a user attempts
     #   to use a command that does not exist. If none is specified, no message will be displayed. In the message, you
     #   can use the string '%command%' that will be replaced with the name of the command.
+    # @option attributes [String] :no_permission_message The message to be displayed when `NoPermission` error is raised.
     # @option attributes [true, false] :spaces_allowed Whether spaces are allowed to occur between the prefix and the
     #   command. Default is false.
     # @option attributes [String] :previous Character that should designate the result of the previous command in
@@ -62,8 +63,6 @@ module Discordrb::Commands
     #   :advanced_functionality). Default is '"'.
     def initialize(attributes = {})
       super(
-        email: attributes[:email],
-        password: attributes[:password],
         log_mode: attributes[:log_mode],
         token: attributes[:token],
         application_id: attributes[:application_id],
@@ -86,6 +85,9 @@ module Discordrb::Commands
         # The message to display for when a command doesn't exist, %command% to get the command name in question and nil for no message
         # No default value here because it may not be desired behaviour
         command_doesnt_exist_message: attributes[:command_doesnt_exist_message],
+
+        # The message to be displayed when `NoPermission` error is raised.
+        no_permission_message: attributes[:no_permission_message],
 
         # Spaces allowed between prefix and command
         spaces_allowed: attributes[:spaces_allowed].nil? ? false : attributes[:spaces_allowed],
@@ -125,8 +127,13 @@ module Discordrb::Commands
           return "The command `#{command_name}` does not exist!" unless command
           desc = command.attributes[:description] || '*No description available*'
           usage = command.attributes[:usage]
+          parameters = command.attributes[:parameters]
           result = "**`#{command_name}`**: #{desc}"
           result += "\nUsage: `#{usage}`" if usage
+          if parameters
+            result += "\nAccepted Parameters:"
+            parameters.each { |p| result += "\n    `#{p}`" }
+          end
           result
         else
           available_commands = @commands.values.reject { |c| !c.attributes[:help_available] }
@@ -162,7 +169,8 @@ module Discordrb::Commands
         return
       end
       if permission?(event.author, command.attributes[:permission_level], event.server) &&
-         required_permissions?(event.author, command.attributes[:required_permissions], event.channel)
+         required_permissions?(event.author, command.attributes[:required_permissions], event.channel) &&
+         required_roles?(event.author, command.attributes[:required_roles])
         event.command = command
         result = command.call(event, arguments, chained)
         stringify(result)
@@ -170,6 +178,9 @@ module Discordrb::Commands
         event.respond command.attributes[:permission_message].gsub('%name%', name.to_s) if command.attributes[:permission_message]
         nil
       end
+    rescue Discordrb::Errors::NoPermission
+      event.respond @attributes[:no_permission_message] unless @attributes[:no_permission_message].nil?
+      raise
     end
 
     # Executes a command in a simple manner, without command chains or permissions.
@@ -258,6 +269,16 @@ module Discordrb::Commands
     def required_permissions?(member, required, channel = nil)
       required.reduce(true) do |a, action|
         a && member.permission?(action, channel)
+      end
+    end
+
+    def required_roles?(member, required)
+      if required.is_a? Array
+        required.all? do |role|
+          member.role?(role)
+        end
+      else
+        member.role?(role)
       end
     end
 

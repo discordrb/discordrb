@@ -157,7 +157,7 @@ module Discordrb::Events
           if a.is_a? String
             e.start_with? a
           elsif a.is_a? Regexp
-            (e =~ a).zero?
+            (e =~ a) && (e =~ a).zero?
           end
         end,
         matches_all(@attributes[:ending_with] || @attributes[:end_with], event.content) do |a, e|

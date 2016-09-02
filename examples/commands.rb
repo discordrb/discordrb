@@ -2,6 +2,8 @@
 
 require 'discordrb'
 
+# Here we instantiate a `CommandBot` instead of a regular `Bot`, which has the functionality to add commands using the
+# `command` method. We have to set a `prefix` here, which will be the character that triggers command execution.
 bot = Discordrb::Commands::CommandBot.new token: 'B0T.T0KEN.here', application_id: 160123456789876543, prefix: '!'
 
 bot.command :user do |event|
