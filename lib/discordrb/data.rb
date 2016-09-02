@@ -606,13 +606,11 @@ module Discordrb
     end
   end
 
-  # This class is a special variant of User that represents the bot's user profile (things like email addresses and the avatar).
+  # This class is a special variant of User that represents the bot's user profile (things like own username and the avatar).
   # It can be accessed using {Bot#profile}.
   class Profile < User
-    def initialize(data, bot, email, password)
+    def initialize(data, bot)
       super(data, bot)
-      @email = email
-      @password = password
     end
 
     # Whether or not the user is the bot. The Profile can only ever be the bot user, so this always returns true.
@@ -628,19 +626,6 @@ module Discordrb
     end
 
     alias_method :name=, :username=
-
-    # Sets the bot's email address. If you use this method, make sure that the login email in the script matches this
-    # one afterwards, so the bot doesn't have any trouble logging in in the future.
-    # @param email [String] The new email address.
-    def email=(email)
-      update_profile_data(email: email)
-    end
-
-    # Changes the bot's password. This will invalidate all tokens so you will have to relog the bot.
-    # @param password [String] The new password.
-    def password=(password)
-      update_profile_data(new_password: password)
-    end
 
     # Changes the bot's avatar.
     # @param avatar [String, #read] A JPG file to be used as the avatar, either
@@ -662,26 +647,21 @@ module Discordrb
     # @note For internal use only.
     # @!visibility private
     def update_data(new_data)
-      @email = new_data[:email] || @email
-      @password = new_data[:new_password] || @password
       @username = new_data[:username] || @username
       @avatar_id = new_data[:avatar_id] || @avatar_id
     end
 
     # The inspect method is overwritten to give more useful output
     def inspect
-      "<Profile email=#{@email} user=#{super}>"
+      "<Profile user=#{super}>"
     end
 
     private
 
     def update_profile_data(new_data)
       API.update_user(@bot.token,
-                      new_data[:email] || @email,
-                      @password,
                       new_data[:username] || @username,
-                      new_data[:avatar],
-                      new_data[:new_password] || nil)
+                      new_data[:avatar])
       update_data(new_data)
     end
   end
@@ -891,24 +871,22 @@ module Discordrb
 
     # @return [Integer] the amount of uses left on this invite.
     attr_reader :uses
+    alias_method :max_uses, :uses
 
     # @return [User, nil] the user that made this invite. May also be nil if the user can't be determined.
     attr_reader :inviter
+    alias_method :user, :inviter
 
     # @return [true, false] whether or not this invite is temporary.
     attr_reader :temporary
+    alias_method :temporary?, :temporary
 
     # @return [true, false] whether this invite is still valid.
     attr_reader :revoked
+    alias_method :revoked?, :revoked
 
     # @return [String] this invite's code
     attr_reader :code
-
-    alias_method :max_uses, :uses
-    alias_method :user, :inviter
-
-    alias_method :temporary?, :temporary
-    alias_method :revoked?, :revoked
 
     # @!visibility private
     def initialize(data, bot)
@@ -974,6 +952,13 @@ module Discordrb
     # @return [String] the channel's topic
     attr_reader :topic
 
+    # @return [Integer] the bitrate (in bps) of the channel
+    attr_reader :bitrate
+
+    # @return [Integer] the amount of users that can be in the channel. `0` means it is unlimited.
+    attr_reader :user_limit
+    alias_method :limit, :user_limit
+
     # @return [Integer] the channel's position on the channel list
     attr_reader :position
 
@@ -1002,6 +987,8 @@ module Discordrb
       @id = data['id'].to_i
       @type = data['type'] || TEXT_TYPE
       @topic = data['topic']
+      @bitrate = data['bitrate']
+      @user_limit = data['user_limit']
       @position = data['position']
 
       @is_private = data['is_private']
@@ -1092,9 +1079,28 @@ module Discordrb
     # Sets this channel's topic.
     # @param topic [String] The new topic.
     def topic=(topic)
+      raise 'Tried to set topic on voice channel' if voice?
       @topic = topic
       update_channel_data
     end
+
+    # Sets this channel's bitrate.
+    # @param bitrate [Integer] The new bitrate (in bps). Number has to be between 8000-96000 (128000 for VIP servers)
+    def bitrate=(bitrate)
+      raise 'Tried to set bitrate on text channel' if text?
+      @bitrate = bitrate
+      update_channel_data
+    end
+
+    # Sets this channel's user limit.
+    # @param limit [Integer] The new user limit. `0` for unlimited, has to be a number between 0-99
+    def user_limit=(limit)
+      raise 'Tried to set user_limit on text channel' if text?
+      @user_limit = limit
+      update_channel_data
+    end
+
+    alias_method :limit=, :user_limit=
 
     # Sets this channel's position in the list.
     # @param position [Integer] The new position.
@@ -1141,12 +1147,12 @@ module Discordrb
       @permission_overwrites = other.permission_overwrites
     end
 
-    # The list of users currently in this channel. This is mostly useful for a voice channel, for a text channel it will
-    # just return the users on the server that are online.
+    # The list of users currently in this channel. For a voice channel, it will return all the members currently
+    # in that channel, for a text channel, it will return all online members that have permission to read it.
     # @return [Array<Member>] the users in this channel
     def users
       if @type == 'text'
-        @server.online_members(include_idle: true).select { |u| u.status != :offline }
+        @server.online_members(include_idle: true).select { |u| u.can_read_messages? self }
       else
         @server.voice_states.map { |id, voice_state| @server.member(id) if !voice_state.voice_channel.nil? && voice_state.voice_channel.id == @id }.compact
       end
@@ -1236,7 +1242,7 @@ module Discordrb
     private
 
     def update_channel_data
-      API::Channel.update(@bot.token, @id, @name, @topic, @position)
+      API.update_channel(@bot.token, @id, @name, @topic, @position, @bitrate, @user_limit)
     end
   end
 
@@ -1423,7 +1429,88 @@ module Discordrb
     # Utility function to get the URL for the icon image
     # @return [String] the URL to the icon image
     def icon_url
+      return nil unless @icon_id
       API.icon_url(@id, @icon_id)
+    end
+  end
+
+  # Integration Account
+  class IntegrationAccount
+    # @return [String] this accounts's name.
+    attr_reader :name
+
+    # @return [Integer] this account's ID.
+    attr_reader :id
+
+    def initialize(data)
+      @name = data['name']
+      @id = data['id'].to_i
+    end
+  end
+
+  # Server integration
+  class Integration
+    include IDObject
+
+    # @return [String] the integration name
+    attr_reader :name
+
+    # @return [Server] the server the integration is linked to
+    attr_reader :server
+
+    # @return [User] the user the integration is linked to
+    attr_reader :user
+
+    # @return [Role, nil] the role that this integration uses for "subscribers"
+    attr_reader :role
+
+    # @return [true, false] whether emoticons are enabled
+    attr_reader :emoticon
+    alias_method :emoticon?, :emoticon
+
+    # @return [String] the integration type (Youtube, Twitch, etc.)
+    attr_reader :type
+
+    # @return [true, false] whether the integration is enabled
+    attr_reader :enabled
+
+    # @return [true, false] whether the integration is syncing
+    attr_reader :syncing
+
+    # @return [IntegrationAccount] the integration account information
+    attr_reader :account
+
+    # @return [Time] the time the integration was synced at
+    attr_reader :synced_at
+
+    # @return [Symbol] the behaviour of expiring subscribers (:remove = Remove User from role; :kick = Kick User from server)
+    attr_reader :expire_behaviour
+    alias_method :expire_behavior, :expire_behaviour
+
+    # @return [Integer] the grace period before subscribers expire (in days)
+    attr_reader :expire_grace_period
+
+    def initialize(data, bot, server)
+      @bot = bot
+
+      @name = data['name']
+      @server = server
+      @id = data['id'].to_i
+      @enabled = data['enabled']
+      @syncing = data['syncing']
+      @type = data['type']
+      @account = IntegrationAccount.new(data['account'])
+      @synced_at = Time.parse(data['synced_at'])
+      @expire_behaviour = [:remove, :kick][data['expire_behavior']]
+      @expire_grace_period = data['expire_grace_period']
+      @user = @bot.ensure_user(data['user'])
+      @role = server.role(data['role_id']) || nil
+      @emoticon = data['enable_emoticons']
+    end
+
+    # The inspect method is overwritten to give more useful output
+    def inspect
+      "<Integration name=#{@name} id=#{@id} type=#{@type} enabled=#{@enabled}>"
     end
   end
 
@@ -1449,8 +1536,14 @@ module Discordrb
     attr_reader :large
     alias_method :large?, :large
 
+    # @return [Array<Symbol>] the features of the server (eg. "INVITE_SPLASH")
+    attr_reader :features
+
     # @return [Integer] the absolute number of members on this server, offline or not.
     attr_reader :member_count
+
+    # @return [Symbol] the verification level of the server (:none = none, :low = 'Must have a verified email on their Discord account', :medium = 'Has to be registered with Discord for at least 5 minutes', :high = 'Has to be a member of this server for at least 10 minutes').
+    attr_reader :verification_level
 
     # @return [Integer] the amount of time after which a voice user gets moved into the AFK channel, in seconds.
     attr_reader :afk_timeout
@@ -1470,6 +1563,10 @@ module Discordrb
 
       @large = data['large']
       @member_count = data['member_count']
+      @verification_level = [:none, :low, :medium, :high][data['verification_level']]
+      @splash_id = nil
+      @embed = nil
+      @features = data['features'].map { |element| element.downcase.to_sym }
       @members = {}
       @voice_states = {}
 
@@ -1526,6 +1623,25 @@ module Discordrb
 
     alias_method :users, :members
 
+    # @return [Array<Integration>] an array of all the intergrations connected to this server.
+    def integrations
+      integration = JSON.parse(API.server_integrations(@bot.token, @id))
+      integration.map { |element| Integration.new(element) }
+    end
+
+    # Cache @embed
+    # @note For internal use only
+    # @!visibility private
+    def cache_embed
+      @embed = JSON.parse(API.server(@bot.token, @id))['embed_enabled'] if @embed.nil?
+    end
+
+    # @return [true, false] whether or not the server has widget enabled
+    def embed?
+      cache_embed if @embed.nil?
+      @embed
+    end
+
     # @param include_idle [true, false] Whether to count idle members as online.
     # @param include_bots [true, false] Whether to include bot accounts in the count.
     # @return [Array<Member>] an array of online members on this server.
@@ -1545,6 +1661,42 @@ module Discordrb
     # @return [Array<Channel>] an array of voice channels on this server
     def voice_channels
       @channels.select(&:voice?)
+    end
+
+    # @return [String, nil] the widget URL to the server that displays the amount of online members in a
+    #   stylish way. `nil` if the widget is not enabled.
+    def widget_url
+      cache_embed if @embed.nil?
+      return nil unless @embed
+      API.widget_url(@id)
+    end
+
+    # @param style [Symbol] The style the picture should have. Possible styles are:
+    #   * `:banner1` creates a rectangular image with the server name, member count and icon, a "Powered by Discord" message on the bottom and an arrow on the right.
+    #   * `:banner2` creates a less tall rectangular image that has the same information as `banner1`, but the Discord logo on the right - together with the arrow and separated by a diagonal separator.
+    #   * `:banner3` creates an image similar in size to `banner1`, but it has the arrow in the bottom part, next to the Discord logo and with a "Chat now" text.
+    #   * `:banner4` creates a tall, almost square, image that prominently features the Discord logo at the top and has a "Join my server" in a pill-style button on the bottom. The information about the server is in the same format as the other three `banner` styles.
+    #   * `:shield` creates a very small, long rectangle, of the style you'd find at the top of GitHub `README.md` files. It features a small version of the Discord logo at the left and the member count at the right.
+    # @return [String, nil] the widget banner URL to the server that displays the amount of online members,
+    #   server icon and server name in a stylish way. `nil` if the widget is not enabled.
+    def widget_banner_url(style)
+      return nil unless @embed
+      cache_embed if @embed.nil?
+      API.widget_url(@id, style)
+    end
+
+    # @return [String] the hexadecimal ID used to identify this server's splash image for their VIP invite page.
+    def splash_id
+      @splash_id = JSON.parse(API.server(@bot.token, @id))['splash'] if @splash_id.nil?
+      @splash_id
+    end
+
+    # @return [String, nil] the splash image URL for the server's VIP invite page.
+    #   `nil` if there is no splash image.
+    def splash_url
+      splash_id if @splash_id.nil?
+      return nil unless @splash_id
+      API.splash_url(@id, @splash_id)
     end
 
     # Adds a role to the role cache
