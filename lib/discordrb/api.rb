@@ -102,18 +102,6 @@ module Discordrb::API
     "https://cdn.discordapp.com/app-icons/#{app_id}/#{icon_id}.jpg"
   end
 
-  # Move a user to a different voice channel
-  def move_user(token, server_id, user_id, channel_id)
-    request(
-      __method__,
-      :patch,
-      "#{api_base}/guilds/#{server_id}/members/#{user_id}",
-      { channel_id: channel_id }.to_json,
-      Authorization: token,
-      content_type: :json
-    )
-  end
-
   # Login to the server
   def login(email, password)
     request(

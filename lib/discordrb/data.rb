@@ -1673,7 +1673,7 @@ module Discordrb
     # @param user [User] The user to move.
     # @param channel [Channel] The voice channel to move into.
     def move(user, channel)
-      API.move_user(@bot.token, @id, user.id, channel.id)
+      API::Server.update_user(@bot.token, @id, user.id, channel_id: channel.id)
     end
 
     # Deletes this server. Be aware that this is permanent and impossible to undo, so be careful!
