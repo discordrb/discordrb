@@ -1428,14 +1428,14 @@ module Discordrb
     alias_method :edited?, :edited
 
     # @return [true, false] whether the message mentioned everyone or not.
-    attr_reader :mentioned_everyone
-    alias_method :mentioned_everyone?, :mentioned_everyone
-    alias_method :mentioned_all, :mentioned_everyone
-    alias_method :mentioned_all?, :mentioned_everyone
-    alias_method :mention_everyone, :mentioned_everyone
-    alias_method :mention_everyone?, :mentioned_everyone
-    alias_method :mention_all, :mentioned_everyone
-    alias_method :mention_all?, :mentioned_everyone
+    attr_reader :mention_everyone
+    alias_method :mention_everyone?, :mention_everyone
+    alias_method :mentioned_all, :mention_everyone
+    alias_method :mentioned_all?, :mention_everyone
+    alias_method :mentioned_everyone, :mention_everyone
+    alias_method :mentioned_everyone?, :mention_everyone
+    alias_method :mention_all, :mention_everyone
+    alias_method :mention_all?, :mention_everyone
 
     # @return [true, false] whether the message is pinned or not.
     attr_reader :pinned
@@ -1448,7 +1448,7 @@ module Discordrb
       @channel = bot.channel(data['channel_id'].to_i)
       @pinned = data['pinned']
       @tts = data['tts']
-      @mentioned_everyone = data['mentioned_everyone']
+      @mention_everyone = data['mention_everyone']
 
       @author = if data['author']
                   if @channel.private?
