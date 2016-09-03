@@ -1263,7 +1263,7 @@ module Discordrb
     # @return [EmbedProvider] the provider of the embed object.
     attr_reader :provider
 
-    # @return [Attachment] the thumbnail of the embed object. This is limited to `url`, `proxy_url`, `width` and `height`.
+    # @return [EmbedThumbnail] the thumbnail of the embed object. This is limited to `url`, `proxy_url`, `width` and `height`.
     attr_reader :thumbnail
 
     # @!visibility private
