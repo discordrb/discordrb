@@ -11,9 +11,9 @@ bot.command(:eval, help_available: false) do |event, *code|
   break unless event.user.id == 66237334693085184 # Replace number with your ID
 
   begin
-    eval code.join(' ')
-  rescue
-    'An error occured 😞'
+    "```ruby/n#{eval code.join(' ')}```"
+  rescue => e
+    "```ruby/n#{e}```"
   end
 end
 
