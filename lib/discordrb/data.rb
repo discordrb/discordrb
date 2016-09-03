@@ -1403,6 +1403,10 @@ module Discordrb
     # @return [Time] the timestamp at which this message was sent.
     attr_reader :timestamp
 
+    # @return [Time] the timestamp at which this message was edited. `nil` if the message was never edited.
+    attr_reader :edited_timestamp
+    alias_method :edit_timestamp, :edited_timestamp
+
     # @return [Array<User>] the users that were mentioned in this message.
     attr_reader :mentions
 
@@ -1415,7 +1419,25 @@ module Discordrb
     # @return [Array<Embed>] the embed objects contained in this message.
     attr_reader :embeds
 
-    # @return [true, false] whether themesage is pinned or not.
+    # @return [true, false] whether the message used Text-To-Speech (TTS) or not.
+    attr_reader :tts
+    alias_method :tts?, :tts
+
+    # @return [true, false] whether the message was edited or not.
+    attr_reader :edited
+    alias_method :edited?, :edited
+
+    # @return [true, false] whether the message mentioned everyone or not.
+    attr_reader :mentioned_everyone
+    alias_method :mentioned_everyone?, :mentioned_everyone
+    alias_method :mentioned_all, :mentioned_everyone
+    alias_method :mentioned_all?, :mentioned_everyone
+    alias_method :mention_everyone, :mentioned_everyone
+    alias_method :mention_everyone?, :mentioned_everyone
+    alias_method :mention_all, :mentioned_everyone
+    alias_method :mention_all?, :mentioned_everyone
+
+    # @return [true, false] whether the message is pinned or not.
     attr_reader :pinned
     alias_method :pinned?, :pinned
 
@@ -1425,6 +1447,8 @@ module Discordrb
       @content = data['content']
       @channel = bot.channel(data['channel_id'].to_i)
       @pinned = data['pinned']
+      @tts = data['tts']
+      @mentioned_everyone = data['mentioned_everyone']
 
       @author = if data['author']
                   if @channel.private?
@@ -1439,6 +1463,8 @@ module Discordrb
                 end
 
       @timestamp = Time.parse(data['timestamp']) if data['timestamp']
+      @edited_timestamp = data['edited_timestamp'].nil? ? nil : Time.parse(data['edited_timestamp'])
+      @edited = !@edited_timestamp.nil?
       @id = data['id'].to_i
 
       @mentions = []
