@@ -1419,7 +1419,7 @@ module Discordrb
     # @return [Array<Embed>] the embed objects contained in this message.
     attr_reader :embeds
 
-    # @return [true, false] whether the message used Text-To-Speech (TTS) or not. 
+    # @return [true, false] whether the message used Text-To-Speech (TTS) or not.
     attr_reader :tts
     alias_method :tts?, :tts
 
