@@ -1244,7 +1244,6 @@ module Discordrb
   end
 
   # An Embed object that is contained in a message
-  # 
   # A freshly generated embed object will not appear in a message object
   # unless grabbed from its ID in a channel.
   class Embed
