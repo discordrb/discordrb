@@ -1244,6 +1244,9 @@ module Discordrb
   end
 
   # An Embed object that is contained in a message
+  # 
+  # A freshly generated embed object will not appear in a message object
+  # unless grabbed from its ID in a channel.
   class Embed
     # @return [Message] the message this embed object is contained in.
     attr_reader :message
@@ -1251,19 +1254,22 @@ module Discordrb
     # @return [String] the URL this embed object is based on.
     attr_reader :url
 
-    # @return [String] the title of the embed object.
+    # @return [String, nil] the title of the embed object. `nil` if there is no title
     attr_reader :title
 
-    # @return [String] the description of the embed object.
+    # @return [String, nil] the description of the embed object. `nil` if there is no description
     attr_reader :description
 
-    # @return [String] the type of the embed object.
+    # @return [Symbol] the type of the embed object.
     attr_reader :type
 
-    # @return [EmbedProvider] the provider of the embed object.
+    # @return [EmbedProvider, nil] the provider of the embed object. `nil` is there is no provider
     attr_reader :provider
 
-    # @return [EmbedThumbnail] the thumbnail of the embed object. This is limited to `url`, `proxy_url`, `width` and `height`.
+    # @return [EmbedThumbnail, nil] the thumbnail of the embed object. `nil` is there is no thumbnail
+    attr_reader :thumbnail
+
+    # @return [EmbedAuthor, nil] the author of the embed object. `nil` is there is no author
     attr_reader :thumbnail
 
     # @!visibility private
@@ -1273,10 +1279,11 @@ module Discordrb
 
       @url = data['url']
       @title = data['title']
-      @type = data['type']
+      @type = data['type'].to_sym
       @description = data['description']
-      @provider = EmbedProvider.new(data['provider'], self)
-      @thumbnail = EmbedThumbnail.new(data['thumbnail'], self)
+      @provider = data['provider'].nil? ? nil : EmbedProvider.new(data['provider'], self)
+      @thumbnail = data['thumbnail'].nil? ? nil : EmbedThumbnail.new(data['thumbnail'], self)
+      @thumbnail = data['author'].nil? ? nil : EmbedAuthor.new(data['author'], self)
     end
 
     # @return [true, false] whether this file is an image file.
@@ -1323,7 +1330,28 @@ module Discordrb
     # @return [String] the provider's name.
     attr_reader :name
 
-    # @return [String] the URL of the provider.
+    # @return [String, nil] the URL of the provider. `nil` is there is no URL
+    attr_reader :url
+
+    # @!visibility private
+    def initialize(data, embed)
+      @bot = bot
+      @embed = embed
+
+      @name = data['name']
+      @url = data['url']
+    end
+  end
+
+  # An Embed author for the embed object
+  class EmbedAuthor
+    # @return [Embed] the embed object this is based on.
+    attr_reader :embed
+
+    # @return [String] the author's name.
+    attr_reader :name
+
+    # @return [String, nil] the URL of the author's website. `nil` is there is no URL
     attr_reader :url
 
     # @!visibility private
