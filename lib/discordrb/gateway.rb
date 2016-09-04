@@ -162,12 +162,12 @@ module Discordrb
     end
 
     # Stops the bot gracefully, disconnecting the websocket without immediately killing the thread. This means that
-    # Discord is immediately aware of the closed connetion and makes the bot appear offline instantly.
+    # Discord is immediately aware of the closed connection and makes the bot appear offline instantly.
     #
     # If this method doesn't work or you're looking for something more drastic, use {#kill} instead.
     def stop
       @should_reconnect = false
-      @ws.close
+      close
     end
 
     # Kills the websocket thread, stopping all connections to Discord.
@@ -369,8 +369,8 @@ module Discordrb
       # Initialize falloff so we wait for more time before reconnecting each time
       @falloff = 1.0
 
+      @should_reconnect = true
       loop do
-        @should_reconnect = true
         connect
 
         break unless @should_reconnect
@@ -638,17 +638,19 @@ module Discordrb
     end
 
     def handle_close(e)
-      if e.respond_to? :code
-        # It is a proper close frame we're dealing with, print reason and message to console
-        LOGGER.error('Websocket close frame received!')
-        LOGGER.error("Code: #{e.code}")
-        LOGGER.error("Message: #{e.data}")
-      elsif e.is_a? Exception
-        # Log the exception
-        LOGGER.error('The websocket connection has closed due to an error!')
-        LOGGER.log_exception(e)
-      else
-        LOGGER.error("The websocket connection has closed due to an unspecified error: #{e.inspect}")
+      unless e.nil?
+        if e.respond_to? :code
+          # It is a proper close frame we're dealing with, print reason and message to console
+          LOGGER.error('Websocket close frame received!')
+          LOGGER.error("Code: #{e.code}")
+          LOGGER.error("Message: #{e.data}")
+        elsif e.is_a? Exception
+          # Log the exception
+          LOGGER.error('The websocket connection has closed due to an error!')
+          LOGGER.log_exception(e)
+        else
+          LOGGER.error("The websocket connection has closed due to an unspecified error: #{e.inspect}")
+        end
       end
     end
 
