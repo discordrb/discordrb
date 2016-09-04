@@ -824,7 +824,7 @@ module Discordrb
     # @return [String] this channel's name.
     attr_reader :name
 
-    # @return [String] this channel's type (text or voice)
+    # @return [Integer] this channel's type (0:text, 1:private, 2:voice, 3:group).
     attr_reader :type
 
     # @!visibility private
@@ -924,14 +924,6 @@ module Discordrb
 
   # A Discord channel, including data like the topic
   class Channel
-    # The type string that stands for a text channel
-    # @see Channel#type
-    TEXT_TYPE = 'text'.freeze
-
-    # The type string that stands for a voice channel
-    # @see Channel#type
-    VOICE_TYPE = 'voice'.freeze
-
     include IDObject
 
     # @return [String] this channel's name.
@@ -940,7 +932,7 @@ module Discordrb
     # @return [Server, nil] the server this channel is on. If this channel is a PM channel, it will be nil.
     attr_reader :server
 
-    # @return [String] the type of this channel (currently either 'text' or 'voice')
+    # @return [Integer] the type of this channel (0:text, 1:private, 2:voice, 3:group)
     attr_reader :type
 
     # @return [Recipient, nil] the recipient of the private messages, or nil if this is not a PM channel
@@ -964,11 +956,6 @@ module Discordrb
     # @return [Hash<Integer => OpenStruct>] the channel's permission overwrites
     attr_reader :permission_overwrites
 
-    # @return [true, false] whether or not this channel is a PM channel.
-    def private?
-      @server.nil?
-    end
-
     # @return [String] a string that will mention the channel as a clickable link on Discord.
     def mention
       "<##{@id}>"
@@ -982,7 +969,7 @@ module Discordrb
       data = data[-1] if data.is_a?(Array)
 
       @id = data['id'].to_i
-      @type = data['type'] || TEXT_TYPE
+      @type = data['type'] || 0
       @topic = data['topic']
       @bitrate = data['bitrate']
       @user_limit = data['user_limit']
@@ -1017,12 +1004,22 @@ module Discordrb
 
     # @return [true, false] whether or not this channel is a text channel
     def text?
-      @type == TEXT_TYPE
+      @type.zero?
     end
 
-    # @return [true, false] whether or not this channel is a voice channel
+    # @return [true, false] whether or not this channel is a PM channel.
+    def private?
+      @type == 1
+    end
+
+    # @return [true, false] whether or not this channel is a voice channel.
     def voice?
-      @type == VOICE_TYPE
+      @type == 2
+    end
+
+    # @return [true, false] whether or not this channel is a grouo channel.
+    def group?
+      @type == 3
     end
 
     # Sends a message to this channel.
@@ -1145,10 +1142,10 @@ module Discordrb
     end
 
     # The list of users currently in this channel. For a voice channel, it will return all the members currently
-    # in that channel, for a text channel, it will return all online members that have permission to read it.
+    # in that channel. For a text channel, it will return all online members that have permission to read it.
     # @return [Array<Member>] the users in this channel
     def users
-      if @type == 'text'
+      if text?
         @server.online_members(include_idle: true).select { |u| u.can_read_messages? self }
       else
         @server.voice_states.map { |id, voice_state| @server.member(id) if !voice_state.voice_channel.nil? && voice_state.voice_channel.id == @id }.compact
@@ -1777,7 +1774,7 @@ module Discordrb
 
     # Creates a channel on this server with the given name.
     # @return [Channel] the created channel.
-    def create_channel(name, type = 'text')
+    def create_channel(name, type = 0)
       response = API.create_channel(@bot.token, @id, name, type)
       Channel.new(JSON.parse(response), @bot)
     end
