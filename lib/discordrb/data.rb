@@ -1168,6 +1168,14 @@ module Discordrb
       JSON.parse(logs).map { |message| Message.new(message, @bot) }
     end
 
+    # Retrieves message history, but only message IDs for use with prune
+    # @note For internal use only
+    # @!visibility private
+    def history_ids(amount, before_id = nil, after_id = nil)
+      logs = API.channel_log(@bot.token, @id, amount, before_id, after_id)
+      JSON.parse(logs).map { |message| message['id'] }
+    end
+
     # Returns a single message from this channel's history by ID.
     # @param message_id [Integer] The ID of the message to retrieve.
     # @return [Message] the retrieved message.
@@ -1193,7 +1201,7 @@ module Discordrb
     def prune(amount)
       raise ArgumentError, 'Can only prune between 2 and 100 messages!' unless amount.between?(2, 100)
 
-      messages = history(amount).map(&:id)
+      messages = history_ids(amount)
       API.bulk_delete(@bot.token, @id, messages)
     end
 
@@ -1336,7 +1344,7 @@ module Discordrb
                     # directly because the bot may also send messages to the channel
                     Recipient.new(bot.user(data['author']['id'].to_i), @channel, bot)
                   else
-                    member = @channel.server.member(data['author']['id'].to_i, false)
+                    member = @channel.server.member(data['author']['id'].to_i)
                     Discordrb::LOGGER.warn("Member with ID #{data['author']['id']} not cached even though it should be.") unless member
                     member
                   end
