@@ -48,8 +48,13 @@ module Discordrb::Light
     attr_reader :bot_is_owner
     alias_method :bot_is_owner?, :bot_is_owner
 
-    # @return [Discordrb::Permissions] the permissions the LightBot has on this server
+    # @return [Discordrb::Permissions] the permissions the LightBot has on this server.
     attr_reader :bot_permissions
+
+    # @return [Array<LightChannel>] the channels within the specified server.
+    def channels
+      @bot.channels(self.id)
+    end
 
     # @!visibility private
     def initialize(data, bot)
@@ -57,6 +62,39 @@ module Discordrb::Light
 
       @bot_is_owner = data['owner']
       @bot_permissions = Discordrb::Permissions.new(data['permissions'])
+    end
+  end
+
+  # A channel that only as  name, type, parent server ID, and channel ID associated with it.
+  class UltraLightChannel
+    include Discordrb::IDObject
+    include Discordrb::ChannelAttributes
+
+    def initialize(data, bot)
+      @bot = bot
+
+      @id = data['id'].to_i
+      @server_id = data['guild_id'].to_i
+
+      @name = data['name']
+      @type = data['type']
+    end
+  end
+
+  # Represents a light channel which only has a fraction of the properties of any other channel.
+  class LightChannel < UltraLightChannel
+    # @return [Discordrb::Permissions] the specific overrides for the user in this channel
+    attr_reader :permission_overwrites
+
+    # @return [true, false] whether or not this channel is the server's default (usually "#general") channel.
+    def default_channel
+      @id == @server_id
+    end
+    alias_method :default_channel?, :default_channel
+
+    # @!visibility private
+    def initialize(data, bot)
+      super(data, bot)
     end
   end
 end
