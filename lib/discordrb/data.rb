@@ -982,7 +982,7 @@ module Discordrb
         recipient_user = bot.ensure_user(data['recipients'][0])
         @recipient = Recipient.new(recipient_user, self, bot)
         @name = @recipient.username
-      elsif !@type == 3
+      elsif @type.zero? || @type == 2
         @name = data['name']
         @server = if server
                     server

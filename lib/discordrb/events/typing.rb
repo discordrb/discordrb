@@ -22,7 +22,7 @@ module Discordrb::Events
 
       @channel_id = data['channel_id'].to_i
       @channel = bot.channel(@channel_id)
-
+      
       @user = channel.private? ? channel.recipient : bot.member(@channel.server.id, @user_id)
 
       @timestamp = Time.at(data['timestamp'].to_i)
