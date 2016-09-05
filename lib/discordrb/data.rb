@@ -1315,8 +1315,9 @@ module Discordrb
     # @return [Array<Attachment>] the files attached to this message.
     attr_reader :attachments
 
-    # @return [true, false] whether the message is pinned or not.
+    # @return [true, false] whether themesage is pinned or not.
     attr_reader :pinned
+
     alias_method :pinned?, :pinned
     alias_method :user, :author
     alias_method :text, :content
