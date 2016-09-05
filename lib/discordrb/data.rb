@@ -956,6 +956,11 @@ module Discordrb
     # @return [Hash<Integer => OpenStruct>] the channel's permission overwrites
     attr_reader :permission_overwrites
 
+    # @return [true, false] whether or not this channel has a server.
+    def server?
+      @server.nil?
+    end
+
     # @return [String] a string that will mention the channel as a clickable link on Discord.
     def mention
       "<##{@id}>"
@@ -964,7 +969,6 @@ module Discordrb
     # @!visibility private
     def initialize(data, bot, server = nil)
       @bot = bot
-
       # data is a sometimes a Hash and othertimes an array of Hashes, you only want the last one if it's an array
       data = data[-1] if data.is_a?(Array)
 
@@ -974,13 +978,11 @@ module Discordrb
       @bitrate = data['bitrate']
       @user_limit = data['user_limit']
       @position = data['position']
-
-      @is_private = data['is_private']
-      if @is_private
-        recipient_user = bot.ensure_user(data['recipient'])
+      if @type == 1
+        recipient_user = bot.ensure_user(data['recipients'][0])
         @recipient = Recipient.new(recipient_user, self, bot)
         @name = @recipient.username
-      else
+      elsif !@type == 3
         @name = data['name']
         @server = if server
                     server
@@ -1147,7 +1149,7 @@ module Discordrb
     def users
       if text?
         @server.online_members(include_idle: true).select { |u| u.can_read_messages? self }
-      else
+      elsif voice?
         @server.voice_states.map { |id, voice_state| @server.member(id) if !voice_state.voice_channel.nil? && voice_state.voice_channel.id == @id }.compact
       end
     end
@@ -1351,7 +1353,7 @@ module Discordrb
       @role_mentions = []
 
       # Role mentions can only happen on public servers so make sure we only parse them there
-      unless @channel.private?
+      if @channel.text?
         data['mention_roles'].each do |element|
           @role_mentions << @channel.server.role(element.to_i)
         end if data['mention_roles']
