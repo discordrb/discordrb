@@ -824,7 +824,7 @@ module Discordrb
     # @return [String] this channel's name.
     attr_reader :name
 
-    # @return [Integer] this channel's type (0:text, 1:private, 2:voice, 3:group).
+    # @return [Integer] this channel's type (0: text, 1: private, 2: voice, 3: group).
     attr_reader :type
 
     # @!visibility private
@@ -932,7 +932,7 @@ module Discordrb
     # @return [Server, nil] the server this channel is on. If this channel is a PM channel, it will be nil.
     attr_reader :server
 
-    # @return [Integer] the type of this channel (0:text, 1:private, 2:voice, 3:group)
+    # @return [Integer] the type of this channel (0: text, 1: private, 2: voice, 3: group)
     attr_reader :type
 
     # @return [Recipient, nil] the recipient of the private messages, or nil if this is not a PM channel
@@ -956,8 +956,8 @@ module Discordrb
     # @return [Hash<Integer => OpenStruct>] the channel's permission overwrites
     attr_reader :permission_overwrites
 
-    # @return [true, false] whether or not this channel has a server.
-    def server?
+    # @return [true, false] whether or not this channel is a PM or Group channel.
+    def private?
       @server.nil?
     end
 
@@ -1010,7 +1010,7 @@ module Discordrb
     end
 
     # @return [true, false] whether or not this channel is a PM channel.
-    def private?
+    def pm?
       @type == 1
     end
 

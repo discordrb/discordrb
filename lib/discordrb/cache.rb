@@ -188,7 +188,7 @@ module Discordrb
     # Finds a channel given its name and optionally the name of the server it is in.
     # @param channel_name [String] The channel to search for.
     # @param server_name [String] The server to search for, or `nil` if only the channel should be searched for.
-    # @param type [Integer, nil] The type of channel to search for (`0:text, 1:private, 2:voice, 3:group`), or `nil` if any type of
+    # @param type [Integer, nil] The type of channel to search for (0: text, 1: private, 2: voice, 3: group), or `nil` if any type of
     #   channel should be searched for
     # @return [Array<Channel>] The array of channels that were found. May be empty if none were found.
     def find_channel(channel_name, server_name = nil, type: nil)

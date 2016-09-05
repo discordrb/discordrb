@@ -10,7 +10,7 @@ module Discordrb::Events
     attr_reader :channel
 
     # @!attribute [r] type
-    #   @return [Integer] the channel's type (0:text, 1:private, 2:voice, 3:group).
+    #   @return [Integer] the channel's type (0: text, 1: private, 2: voice, 3: group).
     #   @see Channel#type
     # @!attribute [r] topic
     #   @return [String] the channel's topic.
@@ -62,7 +62,7 @@ module Discordrb::Events
 
   # Raised when a channel is deleted
   class ChannelDeleteEvent < Event
-    # @return [Integer] the channel's type (0:text, 1:private, 2:voice, 3:group).
+    # @return [Integer] the channel's type (0: text, 1: private, 2: voice, 3: group).
     attr_reader :type
 
     # @return [String] the channel's topic

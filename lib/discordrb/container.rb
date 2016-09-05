@@ -151,7 +151,7 @@ module Discordrb
 
     # This **event** is raised when a channel is created.
     # @param attributes [Hash] The event's attributes.
-    # @option attributes [Integer] :type Matches the type of channel that is being created (0:text, 1:private, 2:voice, 3:group)
+    # @option attributes [Integer] :type Matches the type of channel that is being created (0: text, 1: private, 2: voice, 3: group)
     # @option attributes [String] :name Matches the name of the created channel.
     # @yield The block is executed when the event is raised.
     # @yieldparam event [ChannelCreateEvent] The event that was raised.
@@ -162,7 +162,7 @@ module Discordrb
 
     # This **event** is raised when a channel is updated.
     # @param attributes [Hash] The event's attributes.
-    # @option attributes [Integer] :type Matches the type of channel that is being updated (0:text, 1:private, 2:voice, 3:group).
+    # @option attributes [Integer] :type Matches the type of channel that is being updated (0: text, 1: private, 2: voice, 3: group).
     # @option attributes [String] :name Matches the new name of the channel.
     # @yield The block is executed when the event is raised.
     # @yieldparam event [ChannelUpdateEvent] The event that was raised.
@@ -173,7 +173,7 @@ module Discordrb
 
     # This **event** is raised when a channel is deleted.
     # @param attributes [Hash] The event's attributes.
-    # @option attributes [Integer] :type Matches the type of channel that is being deleted (0:text, 1:private, 2:voice, 3:group).
+    # @option attributes [Integer] :type Matches the type of channel that is being deleted (0: text, 1: private, 2: voice, 3: group).
     # @option attributes [String] :name Matches the name of the deleted channel.
     # @yield The block is executed when the event is raised.
     # @yieldparam event [ChannelDeleteEvent] The event that was raised.
