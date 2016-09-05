@@ -399,7 +399,7 @@ module Discordrb
       @game = game
       @idletime = idletime
       @streamurl = url
-      type = [nil, :twitch, :youtube].indexOf(type) + 1
+      type = [nil, :twitch, :youtube].index(type) + 1
 
       game_obj = game || url ? { name: game, url: url, type: type } : nil
       @gateway.send_status_update(idletime, game_obj)
