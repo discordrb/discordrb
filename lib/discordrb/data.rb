@@ -1057,7 +1057,7 @@ module Discordrb
     # @param file [File] The file to send. There's no clear size limit for this, you'll have to attempt it for yourself (most non-image files are fine, large images may fail to embed)
     # @param caption [string] The caption for the file.
     # @param tts [true, false] Whether or not this file's caption should be sent using Discord text-to-speech.
-    def send_file(file, caption: nil, tts: false)
+    def send_file(file, caption = nil, tts = false)
       @bot.send_file(@id, file, caption: caption, tts: tts)
     end
 
@@ -1642,7 +1642,7 @@ module Discordrb
     # @param include_idle [true, false] Whether to count idle members as online.
     # @param include_bots [true, false] Whether to include bot accounts in the count.
     # @return [Array<Member>] an array of online members on this server.
-    def online_members(include_idle: false, include_bots: true)
+    def online_members(include_idle = false, include_bots = true)
       @members.values.select do |e|
         ((include_idle ? e.idle? : false) || e.online?) && (include_bots ? true : !e.bot_account?)
       end

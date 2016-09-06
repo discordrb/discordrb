@@ -112,7 +112,7 @@ module Discordrb::Events
     # @param file [File] The file to send to the channel
     # @param caption [String] The caption attached to the file
     # @return [Discordrb::Message] the message that was sent
-    def send_file(file, caption: nil)
+    def send_file(file, caption = nil)
       @message.channel.send_file(file, caption: caption)
     end
 
