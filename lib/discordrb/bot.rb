@@ -88,10 +88,10 @@ module Discordrb
     # @param num_shards [Integer] The total number of shards that should be running. See
     #   https://github.com/hammerandchisel/discord-api-docs/issues/17 for how to do sharding.
     def initialize(
-        log_mode: :normal,
-        token: nil, application_id: nil,
-        type: nil, name: '', fancy_log: false, suppress_ready: false, parse_self: false,
-        shard_id: nil, num_shards: nil
+        log_mode = :normal,
+        token = nil, application_id = nil,
+        type = nil, name = '', fancy_log = false, suppress_ready = false, parse_self = false,
+        shard_id = nil, num_shards = nil
     )
 
       LOGGER.mode = if log_mode.is_a? TrueClass # Specifically check for `true` because people might not have updated yet
@@ -329,7 +329,7 @@ module Discordrb
     # @param file [File] The file that should be sent.
     # @param caption [string] The caption for the file.
     # @param tts [true, false] Whether or not this file's caption should be sent using Discord text-to-speech.
-    def send_file(channel_id, file, caption: nil, tts: false)
+    def send_file(channel_id, file, caption = nil, tts = false)
       response = API.send_file(token, channel_id, file, caption: caption, tts: tts)
       Message.new(JSON.parse(response), self)
     end

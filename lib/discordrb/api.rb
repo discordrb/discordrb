@@ -530,7 +530,7 @@ module Discordrb::API
   end
 
   # Send a file as a message to a channel
-  def send_file(token, channel_id, file, caption: nil, tts: false)
+  def send_file(token, channel_id, file, caption = nil, tts = false)
     request(
       __method__,
       :post,
