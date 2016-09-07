@@ -985,7 +985,7 @@ module Discordrb
       elsif group?
         @recipients = []
         data['recipients'].each do |recipient|
-          recipient_user = bot.ensure_user(data['recipients'])
+          recipient_user = bot.ensure_user(recipient)
           @recipients << Recipient.new(recipient_user, self, bot)
         end
         @name = data['name']
