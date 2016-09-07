@@ -978,11 +978,19 @@ module Discordrb
       @bitrate = data['bitrate']
       @user_limit = data['user_limit']
       @position = data['position']
-      if @type == 1
-        recipient_user = bot.ensure_user(data['recipients'][0])
+      if pm?
+        recipient_user = bot.ensure_user(data['recipients'].first)
         @recipient = Recipient.new(recipient_user, self, bot)
         @name = @recipient.username
-      elsif @type.zero? || @type == 2
+      elsif group?
+        @recipients = []
+        data['recipients'].each do |recipient|
+          recipient_user = bot.ensure_user(data['recipients'])
+          @recipients << Recipient.new(recipient_user, self, bot)
+        end
+        @name = data['name']
+      else
+        text? || voice?
         @name = data['name']
         @server = if server
                     server
