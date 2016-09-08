@@ -935,8 +935,8 @@ module Discordrb
     # @return [Integer] the type of this channel (0: text, 1: private, 2: voice, 3: group)
     attr_reader :type
 
-    # @return [Recipient, nil] the recipient of the private messages, or nil if this is not a PM channel
-    attr_reader :recipient
+    # @return [Array, nil] An array of recipients of the private messages, or nil if this is not a Private channel
+    attr_reader :recipients
 
     # @return [String] the channel's topic
     attr_reader :topic
@@ -980,7 +980,7 @@ module Discordrb
       @position = data['position']
       if pm?
         recipient_user = bot.ensure_user(data['recipients'].first)
-        @recipient = Recipient.new(recipient_user, self, bot)
+        @recipients = [Recipient.new(recipient_user, self, bot)]
         @name = @recipient.username
       elsif group?
         @recipients = []
