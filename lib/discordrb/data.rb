@@ -5,6 +5,10 @@
 require 'ostruct'
 require 'discordrb/permissions'
 require 'discordrb/api'
+require 'discordrb/api/channel'
+require 'discordrb/api/server'
+require 'discordrb/api/invite'
+require 'discordrb/api/user'
 require 'discordrb/events/message'
 require 'time'
 require 'base64'
@@ -117,8 +121,7 @@ module Discordrb
     # Utility function to get a user's avatar URL.
     # @return [String] the URL to the avatar image.
     def avatar_url
-      return nil unless @avatar_id
-      API.avatar_url(@id, @avatar_id)
+      API::User.avatar_url(@id, @avatar_id)
     end
   end
 
@@ -477,7 +480,7 @@ module Discordrb
       old_role_ids = @roles.map(&:id)
       new_role_ids = (old_role_ids + role_ids).uniq
 
-      API.update_user_roles(@bot.token, @server.id, @user.id, new_role_ids)
+      API::Server.update_user(@bot.token, @server.id, @user.id, roles: new_role_ids)
     end
 
     # Removes one or more roles from this member.
@@ -487,27 +490,27 @@ module Discordrb
       role_ids = role_id_array(role)
       new_role_ids = old_role_ids.reject { |i| role_ids.include?(i) }
 
-      API.update_user_roles(@bot.token, @server.id, @user.id, new_role_ids)
+      API::Server.update_user(@bot.token, @server.id, @user.id, roles: new_role_ids)
     end
 
     # Server deafens this member.
     def server_deafen
-      API.update_user_deafen(@bot.token, @server.id, @user.id, true)
+      API::Server.update_user(@bot.token, @server.id, @user.id, deaf: true)
     end
 
     # Server undeafens this member.
     def server_undeafen
-      API.update_user_deafen(@bot.token, @server.id, @user.id, false)
+      API::Server.update_user(@bot.token, @server.id, @user.id, deaf: false)
     end
 
     # Server mutes this member.
     def server_mute
-      API.update_user_mute(@bot.token, @server.id, @user.id, true)
+      API::Server.update_user(@bot.token, @server.id, @user.id, mute: true)
     end
 
     # Server unmutes this member.
     def server_unmute
-      API.update_user_mute(@bot.token, @server.id, @user.id, false)
+      API::Server.update_user(@bot.token, @server.id, @user.id, mute: false)
     end
 
     # Sets or resets this member's nickname. Requires the Change Nickname permission for the bot itself and Manage
@@ -518,7 +521,7 @@ module Discordrb
       nick ||= ''
 
       if @user.current_bot?
-        API.change_own_nickname(@bot.token, @server.id, nick)
+        API::User.change_own_nickname(@bot.token, @server.id, nick)
       else
         API.change_nickname(@bot.token, @server.id, @user.id, nick)
       end
@@ -795,7 +798,7 @@ module Discordrb
 
     # Delets this role. This cannot be undone without recreating the role!
     def delete
-      API.delete_role(@bot.token, @server.id, @id)
+      API::Server.delete_role(@bot.token, @server.id, @id)
       @server.delete_role(@id)
     end
 
@@ -807,12 +810,12 @@ module Discordrb
     private
 
     def update_role_data(new_data)
-      API.update_role(@bot.token, @server.id, @id,
-                      new_data[:name] || @name,
-                      (new_data[:colour] || @colour).combined,
-                      new_data[:hoist].nil? ? @hoist : new_data[:hoist],
-                      new_data[:mentionable].nil? ? @mentionable : new_data[:mentionable],
-                      new_data[:permissions] || @permissions.bits)
+      API::Server.update_role(@bot.token, @server.id, @id,
+                              new_data[:name] || @name,
+                              (new_data[:colour] || @colour).combined,
+                              new_data[:hoist].nil? ? @hoist : new_data[:hoist],
+                              new_data[:mentionable].nil? ? @mentionable : new_data[:mentionable],
+                              new_data[:permissions] || @permissions.bits)
       update_data(new_data)
     end
   end
@@ -906,7 +909,7 @@ module Discordrb
 
     # Deletes this invite
     def delete
-      API.delete_invite(@bot.token, @code)
+      API::Invite.delete(@bot.token, @code)
     end
 
     alias_method :revoke, :delete
@@ -1063,7 +1066,7 @@ module Discordrb
 
     # Permanently deletes this channel
     def delete
-      API.delete_channel(@bot.token, @id)
+      API::Channel.delete(@bot.token, @id)
     end
 
     # Sets this channel's name. The name must be alphanumeric with dashes, unless this is a voice channel (then there are no limitations)
@@ -1128,9 +1131,9 @@ module Discordrb
 
       # TODO: Be more flexible about what classes are allowed here
       if thing.is_a?(User) || thing.is_a?(Member) || thing.is_a?(Recipient)
-        API.update_user_overrides(@bot.token, @id, thing.id, allow_bits, deny_bits)
+        API::Channel.update_user_overrides(@bot.token, @id, thing.id, allow_bits, deny_bits)
       elsif thing.is_a? Role
-        API.update_role_overrides(@bot.token, @id, thing.id, allow_bits, deny_bits)
+        API::Channel.update_role_overrides(@bot.token, @id, thing.id, allow_bits, deny_bits)
       end
     end
 
@@ -1164,7 +1167,7 @@ module Discordrb
     #   as soon as possible with the specified amount.
     # @return [Array<Message>] the retrieved messages.
     def history(amount, before_id = nil, after_id = nil)
-      logs = API.channel_log(@bot.token, @id, amount, before_id, after_id)
+      logs = API::Channel.messages(@bot.token, @id, amount, before_id, after_id)
       JSON.parse(logs).map { |message| Message.new(message, @bot) }
     end
 
@@ -1172,7 +1175,7 @@ module Discordrb
     # @note For internal use only
     # @!visibility private
     def history_ids(amount, before_id = nil, after_id = nil)
-      logs = API.channel_log(@bot.token, @id, amount, before_id, after_id)
+      logs = API::Channel.messages(@bot.token, @id, amount, before_id, after_id)
       JSON.parse(logs).map { |message| message['id'] }
     end
 
@@ -1180,7 +1183,7 @@ module Discordrb
     # @param message_id [Integer] The ID of the message to retrieve.
     # @return [Message] the retrieved message.
     def load_message(message_id)
-      response = API.channel_message(@bot.token, @id, message_id)
+      response = API::Channel.message(@bot.token, @id, message_id)
       return Message.new(JSON.parse(response), @bot)
     rescue RestClient::ResourceNotFound
       return nil
@@ -1191,7 +1194,7 @@ module Discordrb
     # Requests all pinned messages of a channel.
     # @return [Array<Message>] the received messages.
     def pins
-      msgs = API.pins(@bot.token, @id)
+      msgs = API::Channel.pinned_messages(@bot.token, @id)
       JSON.parse(msgs).map { |msg| Message.new(msg, @bot) }
     end
 
@@ -1202,7 +1205,7 @@ module Discordrb
       raise ArgumentError, 'Can only prune between 2 and 100 messages!' unless amount.between?(2, 100)
 
       messages = history_ids(amount)
-      API.bulk_delete(@bot.token, @id, messages)
+      API::Channel.bulk_delete_messages(@bot.token, @id, messages)
     end
 
     # Updates the cached permission overwrites
@@ -1225,7 +1228,7 @@ module Discordrb
     # @param temporary [true, false] Whether membership should be temporary (kicked after going offline).
     # @return [Invite] the created invite.
     def make_invite(max_age = 0, max_uses = 0, temporary = false)
-      response = API.create_invite(@bot.token, @id, max_age, max_uses, temporary)
+      response = API::Channel.create_invite(@bot.token, @id, max_age, max_uses, temporary)
       Invite.new(JSON.parse(response), @bot)
     end
 
@@ -1233,7 +1236,7 @@ module Discordrb
     # If you want to keep typing you'll have to resend this every five seconds. (An abstraction
     # for this will eventually be coming)
     def start_typing
-      API.start_typing(@bot.token, @id)
+      API::Channel.start_typing(@bot.token, @id)
     end
 
     alias_method :send, :send_message
@@ -1382,26 +1385,26 @@ module Discordrb
     # @param new_content [String] the new content the message should have.
     # @return [Message] the resulting message.
     def edit(new_content)
-      response = API.edit_message(@bot.token, @channel.id, @id, new_content)
+      response = API::Channel.edit_message(@bot.token, @channel.id, @id, new_content)
       Message.new(JSON.parse(response), @bot)
     end
 
     # Deletes this message.
     def delete
-      API.delete_message(@bot.token, @channel.id, @id)
+      API::Channel.delete_message(@bot.token, @channel.id, @id)
       nil
     end
 
     # Pins this message
     def pin
-      API.pin_message(@bot.token, @channel.id, @id)
+      API::Channel.pin_message(@bot.token, @channel.id, @id)
       @pinned = true
       nil
     end
 
     # Unpins this message
     def unpin
-      API.unpin_message(@bot.token, @channel.id, @id)
+      API::Channel.unpin_message(@bot.token, @channel.id, @id)
       @pinned = false
       nil
     end
@@ -1786,7 +1789,7 @@ module Discordrb
     # Creates a channel on this server with the given name.
     # @return [Channel] the created channel.
     def create_channel(name, type = 'text')
-      response = API.create_channel(@bot.token, @id, name, type)
+      response = API::Server.create_channel(@bot.token, @id, name, type)
       Channel.new(JSON.parse(response), @bot)
     end
 
@@ -1795,7 +1798,7 @@ module Discordrb
     # colour is the default etc.
     # @return [Role] the created role.
     def create_role
-      response = API.create_role(@bot.token, @id)
+      response = API::Server.create_role(@bot.token, @id)
       role = Role.new(JSON.parse(response), @bot, self)
       @roles << role
       role
@@ -1803,7 +1806,7 @@ module Discordrb
 
     # @return [Array<User>] a list of banned users on this server.
     def bans
-      users = JSON.parse(API.bans(@bot.token, @id))
+      users = JSON.parse(API::Server.bans(@bot.token, @id))
       users.map { |e| User.new(e['user'], @bot) }
     end
 
@@ -1811,42 +1814,42 @@ module Discordrb
     # @param user [User, #resolve_id] The user to ban.
     # @param message_days [Integer] How many days worth of messages sent by the user should be deleted.
     def ban(user, message_days = 0)
-      API.ban_user(@bot.token, @id, user.resolve_id, message_days)
+      API::Server.ban_user(@bot.token, @id, user.resolve_id, message_days)
     end
 
     # Unbans a previously banned user from this server.
     # @param user [User, #resolve_id] The user to unban.
     def unban(user)
-      API.unban_user(@bot.token, @id, user.resolve_id)
+      API::Server.unban_user(@bot.token, @id, user.resolve_id)
     end
 
     # Kicks a user from this server.
     # @param user [User, #resolve_id] The user to kick.
     def kick(user)
-      API.kick_user(@bot.token, @id, user.resolve_id)
+      API::Server.remove_member(@bot.token, @id, user.resolve_id)
     end
 
     # Forcibly moves a user into a different voice channel. Only works if the bot has the permission needed.
     # @param user [User] The user to move.
     # @param channel [Channel] The voice channel to move into.
     def move(user, channel)
-      API.move_user(@bot.token, @id, user.id, channel.id)
+      API::Server.update_member(@bot.token, @id, user.id, channel_id: channel.id)
     end
 
     # Deletes this server. Be aware that this is permanent and impossible to undo, so be careful!
     def delete
-      API.delete_server(@bot.token, @id)
+      API::Server.delete(@bot.token, @id)
     end
 
     # Leave the server
     def leave
-      API.leave_server(@bot.token, @id)
+      API::User.leave_server(@bot.token, @id)
     end
 
     # Transfers server ownership to another user.
     # @param user [User] The user who should become the new owner.
     def owner=(user)
-      API.transfer_ownership(@bot.token, @id, user.id)
+      API::Server.transfer_ownership(@bot.token, @id, user.id)
     end
 
     # Sets the server's name.
@@ -1924,12 +1927,12 @@ module Discordrb
     private
 
     def update_server_data(new_data)
-      API.update_server(@bot.token, @id,
-                        new_data[:name] || @name,
-                        new_data[:region] || @region,
-                        new_data[:icon_id] || @icon_id,
-                        new_data[:afk_channel_id] || @afk_channel_id,
-                        new_data[:afk_timeout] || @afk_timeout)
+      API::Server.update(@bot.token, @id,
+                         new_data[:name] || @name,
+                         new_data[:region] || @region,
+                         new_data[:icon_id] || @icon_id,
+                         new_data[:afk_channel_id] || @afk_channel_id,
+                         new_data[:afk_timeout] || @afk_timeout)
       update_data(new_data)
     end
 
