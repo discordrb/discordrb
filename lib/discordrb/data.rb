@@ -1450,6 +1450,9 @@ module Discordrb
     attr_reader :tts
     alias_method :tts?, :tts
 
+    # @return [String] used for validating a message was sent
+    attr_reader :nonce
+
     # @return [true, false] whether the message was edited or not.
     attr_reader :edited
     alias_method :edited?, :edited
@@ -1470,6 +1473,7 @@ module Discordrb
       @channel = bot.channel(data['channel_id'].to_i)
       @pinned = data['pinned']
       @tts = data['tts']
+      @nonce = data['nonce']
       @mention_everyone = data['mention_everyone']
 
       @author = if data['author']
