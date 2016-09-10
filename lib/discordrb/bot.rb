@@ -219,8 +219,8 @@ module Discordrb
     def invite_url(server = nil)
       raise 'No application ID has been set during initialization! Add one as the `application_id` named parameter while creating your bot.' unless @application_id
 
-      guild_id_str = server ? "&guild_id=#{server.id}" : ''
-      "https://discordapp.com/oauth2/authorize?&client_id=#{@application_id}#{guild_id_str}&scope=bot"
+      server_id_str = server ? "&guild_id=#{server.id}" : ''
+      "https://discordapp.com/oauth2/authorize?&client_id=#{@application_id}#{server_id_str}&scope=bot"
     end
 
     # @return [Hash<Integer => VoiceBot>] the voice connections this bot currently has, by the server ID to which they are connected.
