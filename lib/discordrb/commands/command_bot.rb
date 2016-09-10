@@ -233,7 +233,7 @@ module Discordrb::Commands
 
       event = CommandEvent.new(message, self)
 
-      chain = trigger?(message.content)
+      chain = trigger?(message)
       return unless chain
 
       # Don't allow spaces between the prefix and the command
@@ -253,9 +253,9 @@ module Discordrb::Commands
     # Check whether a message should trigger command execution, and if it does, return the raw chain
     def trigger?(message)
       if @prefix.is_a? String
-        standard_prefix_trigger(message, @prefix)
+        standard_prefix_trigger(message.content, @prefix)
       elsif @prefix.is_a? Array
-        @prefix.map { |e| standard_prefix_trigger(message, e) }.reduce { |a, e| a || e }
+        @prefix.map { |e| standard_prefix_trigger(message.content, e) }.reduce { |a, e| a || e }
       elsif @prefix.respond_to? :call
         @prefix.call(message)
       end
