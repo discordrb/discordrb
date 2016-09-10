@@ -72,7 +72,7 @@ module Discordrb::Events
     attr_reader :file
 
     # @!attribute [r] author
-    #   @return [User] who sent this message.
+    #   @return [Member] who sent this message.
     #   @see Message#author
     # @!attribute [r] channel
     #   @return [Channel] the channel in which this message was sent.
