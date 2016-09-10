@@ -1423,13 +1423,6 @@ module Discordrb
     end
 
     # @!visibility private
-    def detach
-      @roles = nil
-      @server = nil
-      self
-    end
-
-    # @!visibility private
     def process_roles(roles)
       @roles = []
       return unless roles
@@ -1437,6 +1430,59 @@ module Discordrb
         role = Role.new(element, @bot, @server)
         @roles << role
       end
+    end
+  end
+
+  # Emoji that is not tailored to a server
+  class GlobalEmoji
+    include IDObject
+
+    # @return [String] the emoji name
+    attr_reader :name
+
+    # @return [Hash<Integer => Array<Role>>] roles this emoji is active for in every server
+    attr_reader :role_associations
+
+    def initialize(data, bot)
+      @bot = bot
+      @roles = nil
+
+      @name = data.name
+      @id = data.id
+      @role_associations = []
+      @role_associations[data.server.id] = data.roles
+    end
+
+    # @return [String] the layout to mention it (or have it used) in a message
+    def mention
+      "<:#{@name}:#{@id}>"
+    end
+    alias_method :use, :mention
+
+    # The icon URL of the emoji
+    def icon_url
+      API.emoji_icon_url(@id)
+    end
+
+    # The inspect method is overwritten to give more useful output
+    def inspect
+      "<GlobalEmoji name=#{@name} id=#{@id}>"
+    end
+
+    # @!visibility private
+    def push_roles(emoji)
+      @role_associations[emoji.server.id] = emoji.roles
+    end
+
+    # @!visibility private
+    def process_roles(roles)
+      newroles = []
+      return unless roles
+      roles.each do |element|
+        role = Role.new(element, @bot, @server)
+        newroles << role
+      end
+      return newroles
     end
   end
 
