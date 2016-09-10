@@ -1457,12 +1457,7 @@ module Discordrb
     # @return [true, false] whether the message mentioned everyone or not.
     attr_reader :mention_everyone
     alias_method :mention_everyone?, :mention_everyone
-    alias_method :mentioned_all, :mention_everyone
-    alias_method :mentioned_all?, :mention_everyone
-    alias_method :mentioned_everyone, :mention_everyone
-    alias_method :mentioned_everyone?, :mention_everyone
-    alias_method :mention_all, :mention_everyone
-    alias_method :mention_all?, :mention_everyone
+    alias_method :mentions_everyone?, :mention_everyone
 
     # @return [true, false] whether the message is pinned or not.
     attr_reader :pinned
