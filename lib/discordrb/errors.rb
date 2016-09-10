@@ -72,8 +72,8 @@ module Discordrb
     # Unknown Channel
     UnknownChannel = Code(10_003)
 
-    # Unknown Guild
-    UnknownGuild = Code(10_004)
+    # Unknown Server
+    UnknownServer = Code(10_004)
 
     # Unknown Integration
     UnknownIntegration = Code(10_005)
