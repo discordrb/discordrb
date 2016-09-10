@@ -1634,7 +1634,7 @@ module Discordrb
     # @return [Array<Integration>] an array of all the intergrations connected to this server.
     def integrations
       integration = JSON.parse(API.server_integrations(@bot.token, @id))
-      integration.map { |element| Integration.new(element) }
+      integration.map { |element| Integration.new(element, @bot, self) }
     end
 
     # Cache @embed
