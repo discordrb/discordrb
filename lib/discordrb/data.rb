@@ -981,7 +981,7 @@ module Discordrb
       if pm?
         recipient_user = bot.ensure_user(data['recipients'].first)
         @recipients = [Recipient.new(recipient_user, self, bot)]
-        @name = @recipients.first.username
+        @name = @recipient.username
       elsif group?
         @recipients = []
         data['recipients'].each do |recipient|
