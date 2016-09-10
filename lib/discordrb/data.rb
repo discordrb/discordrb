@@ -626,7 +626,7 @@ module Discordrb
 
     # Changes the bot's avatar.
     # @param avatar [String, #read] A JPG file to be used as the avatar, either
-    #  something readable (e. g. File) or as a data URL.
+    #  something readable (e. g. File Object) or as a data URL.
     def avatar=(avatar)
       if avatar.respond_to? :read
         # Set the file to binary mode if supported, so we don't get problems with Windows
