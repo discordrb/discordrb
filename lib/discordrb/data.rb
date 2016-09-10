@@ -1253,27 +1253,30 @@ module Discordrb
     # @return [String] the URL this embed object is based on.
     attr_reader :url
 
-    # @return [String, nil] the title of the embed object. `nil` if there is no title
+    # @return [String, nil] the title of the embed object. `nil` if there is not a title
     attr_reader :title
 
-    # @return [String, nil] the description of the embed object. `nil` if there is no description
+    # @return [String, nil] the description of the embed object. `nil` if there is not a description
     attr_reader :description
 
-    # @return [Symbol] the type of the embed object.
+    # @return [Symbol] the type of the embed object. Possible types are:
+    #
+    #   * `:link`
+    #   * `:video`
+    #   * `:image`
     attr_reader :type
 
-    # @return [EmbedProvider, nil] the provider of the embed object. `nil` is there is no provider
+    # @return [EmbedProvider, nil] the provider of the embed object. `nil` is there is not a provider
     attr_reader :provider
 
-    # @return [EmbedThumbnail, nil] the thumbnail of the embed object. `nil` is there is no thumbnail
+    # @return [EmbedThumbnail, nil] the thumbnail of the embed object. `nil` is there is not a thumbnail
     attr_reader :thumbnail
 
-    # @return [EmbedAuthor, nil] the author of the embed object. `nil` is there is no author
-    attr_reader :thumbnail
+    # @return [EmbedAuthor, nil] the author of the embed object. `nil` is there is not an author
+    attr_reader :author
 
     # @!visibility private
     def initialize(data, message)
-      @bot = bot
       @message = message
 
       @url = data['url']
@@ -1282,12 +1285,7 @@ module Discordrb
       @description = data['description']
       @provider = data['provider'].nil? ? nil : EmbedProvider.new(data['provider'], self)
       @thumbnail = data['thumbnail'].nil? ? nil : EmbedThumbnail.new(data['thumbnail'], self)
-      @thumbnail = data['author'].nil? ? nil : EmbedAuthor.new(data['author'], self)
-    end
-
-    # @return [true, false] whether this file is an image file.
-    def image?
-      !(@width.nil? || @height.nil?)
+      @author = data['author'].nil? ? nil : EmbedAuthor.new(data['author'], self)
     end
   end
 
@@ -1311,7 +1309,6 @@ module Discordrb
 
     # @!visibility private
     def initialize(data, embed)
-      @bot = bot
       @embed = embed
 
       @url = data['url']
@@ -1334,7 +1331,6 @@ module Discordrb
 
     # @!visibility private
     def initialize(data, embed)
-      @bot = bot
       @embed = embed
 
       @name = data['name']
@@ -1355,7 +1351,6 @@ module Discordrb
 
     # @!visibility private
     def initialize(data, embed)
-      @bot = bot
       @embed = embed
 
       @name = data['name']
