@@ -1631,7 +1631,7 @@ module Discordrb
 
     alias_method :users, :members
 
-    # @return [Array<Integration>] an array of all the intergrations connected to this server.
+    # @return [Array<Integration>] an array of all the integrations connected to this server.
     def integrations
       integration = JSON.parse(API.server_integrations(@bot.token, @id))
       integration.map { |element| Integration.new(element, @bot, self) }
