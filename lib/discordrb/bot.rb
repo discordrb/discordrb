@@ -527,7 +527,7 @@ module Discordrb
 
     # Internal handler for PRESENCE_UPDATE
     def update_presence(data)
-      # Friends list presences have no guild ID so ignore these to not cause an error
+      # Friends list presences have no server ID so ignore these to not cause an error
       return unless data['guild_id']
 
       user_id = data['user']['id'].to_i
