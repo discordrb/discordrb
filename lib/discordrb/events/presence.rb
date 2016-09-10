@@ -79,7 +79,7 @@ module Discordrb::Events
       @game = data['game'] ? data['game']['name'] : nil
       @server = bot.server(data['guild_id'].to_i)
       @url = data['game'] ? data['game']['url'] : nil
-      @type = data['game'] ? [:game, :game, :twitch, :youtube][data['game']['type'].to_i] : nil
+      @type = data['game'] ? [:game, :twitch, :youtube][data['game']['type'].to_i] : nil
     end
   end
 
