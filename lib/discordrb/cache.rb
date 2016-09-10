@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 require 'discordrb/api'
+require 'discordrb/api/server'
+require 'discordrb/api/invite'
+require 'discordrb/api/user'
 require 'discordrb/data'
 
 module Discordrb
@@ -36,7 +39,7 @@ module Discordrb
 
       begin
         begin
-          response = API.channel(token, id)
+          response = API::Channel.resolve(token, id)
         rescue RestClient::ResourceNotFound
           return nil
         end
@@ -59,7 +62,7 @@ module Discordrb
 
       LOGGER.out("Resolving user #{id}")
       begin
-        response = API.user(token, id)
+        response = API::User.resolve(token, id)
       rescue RestClient::ResourceNotFound
         return nil
       end
@@ -77,7 +80,7 @@ module Discordrb
 
       LOGGER.out("Resolving server #{id}")
       begin
-        response = API.server(token, id)
+        response = API::Server.resolve(token, id)
       rescue RestClient::ResourceNotFound
         return nil
       end
@@ -99,7 +102,7 @@ module Discordrb
 
       LOGGER.out("Resolving member #{server_id} on server #{user_id}")
       begin
-        response = API.member(token, server_id, user_id)
+        response = API::Server.resolve_member(token, server_id, user_id)
       rescue RestClient::ResourceNotFound
         return nil
       end
@@ -117,7 +120,7 @@ module Discordrb
       debug("Creating private channel with user id #{id}")
       return @private_channels[id] if @private_channels[id]
 
-      response = API.create_private(token, @profile.id, id)
+      response = API::User.create_private(token, @profile.id, id)
       channel = Channel.new(JSON.parse(response), self)
       @private_channels[id] = channel
     end
@@ -182,7 +185,7 @@ module Discordrb
     # @return [Invite] The invite with information about the given invite URL.
     def invite(invite)
       code = resolve_invite_code(invite)
-      Invite.new(JSON.parse(API.resolve_invite(token, code)), self)
+      Invite.new(JSON.parse(API::Invite.resolve(token, code)), self)
     end
 
     # Finds a channel given its name and optionally the name of the server it is in.

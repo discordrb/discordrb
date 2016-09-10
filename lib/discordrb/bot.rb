@@ -17,6 +17,9 @@ require 'discordrb/events/await'
 require 'discordrb/events/bans'
 
 require 'discordrb/api'
+require 'discordrb/api/channel'
+require 'discordrb/api/server'
+require 'discordrb/api/invite'
 require 'discordrb/errors'
 require 'discordrb/data'
 require 'discordrb/await'
@@ -206,7 +209,7 @@ module Discordrb
     # @param invite [String, Invite] The invite to join. For possible formats see {#resolve_invite_code}.
     def join(invite)
       resolved = invite(invite).code
-      API.join_server(token, resolved)
+      API::Invite.accept(token, resolved)
     end
 
     # Creates an OAuth invite URL that can be used to invite this bot to a particular server.
@@ -287,7 +290,7 @@ module Discordrb
     # @param code [String, Invite] The invite to revoke. For possible formats see {#resolve_invite_code}.
     def delete_invite(code)
       invite = resolve_invite_code(code)
-      API.delete_invite(token, invite)
+      API::Invite.delete(token, invite)
     end
 
     # Sends a text message to a channel given its ID and the message's content.
@@ -300,7 +303,7 @@ module Discordrb
       channel_id = channel_id.resolve_id
       debug("Sending message to #{channel_id} with content '#{content}'")
 
-      response = API.send_message(token, channel_id, content, [], tts, server_id)
+      response = API::Channel.create_message(token, channel_id, content, [], tts, server_id)
       Message.new(JSON.parse(response), self)
     end
 
@@ -330,7 +333,7 @@ module Discordrb
     # @param caption [string] The caption for the file.
     # @param tts [true, false] Whether or not this file's caption should be sent using Discord text-to-speech.
     def send_file(channel_id, file, caption: nil, tts: false)
-      response = API.send_file(token, channel_id, file, caption: caption, tts: tts)
+      response = API::Channel.upload_file(token, channel_id, file, caption: caption, tts: tts)
       Message.new(JSON.parse(response), self)
     end
 
@@ -351,7 +354,7 @@ module Discordrb
     #   * `:sydney`
     # @return [Server] The server that was created.
     def create_server(name, region = :london)
-      response = API.create_server(token, name, region)
+      response = API::Server.create(token, name, region)
       id = JSON.parse(response)['id'].to_i
       sleep 0.1 until @servers[id]
       server = @servers[id]
