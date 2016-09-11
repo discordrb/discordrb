@@ -9,17 +9,17 @@ module Discordrb
     # @return [true, false] whether this logger is in extra-fancy mode!
     attr_writer :fancy
 
-    # @return [<Array>IO, <Array>#puts & <Array>#flush] the streams the logger should write to.
+    # @return [Array<IO>, Array<#puts & #flush>] the streams the logger should write to.
     attr_accessor :streams
 
     # Creates a new logger.
     # @param fancy [true, false] Whether this logger uses fancy mode (ANSI escape codes to make the output colourful)
-    # @param streams [<Array>IO, <Array>#puts & <Array>#flush] the streams the logger should write to.
-    def initialize(fancy = false, streams = nil)
+    # @param streams [Array<IO>, Array<#puts & #flush>] the streams the logger should write to.
+    def initialize(fancy = false, streams = [STDOUT])
       @fancy = fancy
       self.mode = :normal
 
-      @streams = streams ? [STDOUT] : streams
+      @streams = streams
     end
 
     # The modes this logger can have. This is probably useless unless you want to write your own Logger
