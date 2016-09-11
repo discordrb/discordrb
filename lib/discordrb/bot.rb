@@ -220,7 +220,7 @@ module Discordrb
       raise 'No application ID has been set during initialization! Add one as the `application_id` named parameter while creating your bot.' unless @application_id
 
       server_id_str = server ? "&guild_id=#{server.id}" : ''
-      permission_bits_str = permission_bits ? "&permissions=#{permissin_bits}" : ""
+      permission_bits_str = permission_bits ? "&permissions=#{permissin_bits}" : ''
       "https://discordapp.com/oauth2/authorize?&client_id=#{@application_id}#{server_id_str}#{permission_bits_str}&scope=bot"
     end
 
