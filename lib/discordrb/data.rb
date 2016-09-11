@@ -4,6 +4,7 @@
 
 require 'ostruct'
 require 'discordrb/permissions'
+require 'discordrb/errors'
 require 'discordrb/api'
 require 'discordrb/api/channel'
 require 'discordrb/api/server'
@@ -2062,7 +2063,13 @@ module Discordrb
       @afk_timeout = new_data[:afk_timeout] || new_data['afk_timeout'].to_i || @afk_timeout
 
       @afk_channel_id = new_data[:afk_channel_id] || new_data['afk_channel_id'].to_i || @afk_channel.id
-      @afk_channel = @bot.channel(@afk_channel_id, self) if @afk_channel_id.nonzero? && (!@afk_channel || @afk_channel_id != @afk_channel.id)
+
+      begin
+        @afk_channel = @bot.channel(@afk_channel_id, self) if @afk_channel_id.nonzero? && (!@afk_channel || @afk_channel_id != @afk_channel.id)
+      rescue Discordrb::Errors::NoPermission
+        LOGGER.debug("AFK channel #{@afk_channel_id} on server #{@id} is unreachable, setting to nil even though one exists")
+        @afk_channel = nil
+      end
     end
 
     # The inspect method is overwritten to give more useful output
