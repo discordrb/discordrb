@@ -216,11 +216,12 @@ module Discordrb
     # Requires the application ID to have been set during initialization.
     # @param server [Server, nil] The server the bot should be invited to, or nil if a general invite should be created.
     # @return [String] the OAuth invite URL.
-    def invite_url(server = nil)
+    def invite_url(server: nil, permission_bits: nil)
       raise 'No application ID has been set during initialization! Add one as the `application_id` named parameter while creating your bot.' unless @application_id
 
       server_id_str = server ? "&guild_id=#{server.id}" : ''
-      "https://discordapp.com/oauth2/authorize?&client_id=#{@application_id}#{server_id_str}&scope=bot"
+      permission_bits_str = permission_bits ? "&permissions=#{permissin_bits}" : ""
+      "https://discordapp.com/oauth2/authorize?&client_id=#{@application_id}#{server_id_str}#{permission_bits_str}&scope=bot"
     end
 
     # @return [Hash<Integer => VoiceBot>] the voice connections this bot currently has, by the server ID to which they are connected.
