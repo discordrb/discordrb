@@ -776,7 +776,7 @@ module Discordrb
           ensure_server(element)
         end
 
-        # Add private channels
+        # Add pm channels
         data['private_channels'].each do |element|
           channel = ensure_channel(element)
           @private_channels[channel.recipient.id] = channel
