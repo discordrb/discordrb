@@ -215,13 +215,13 @@ module Discordrb
     # Creates an OAuth invite URL that can be used to invite this bot to a particular server.
     # Requires the application ID to have been set during initialization.
     # @param server [Server, nil] The server the bot should be invited to, or nil if a general invite should be created.
-    # @param oermission_bits [Integer, String] Permission bits that should be appended to invite url.
+    # @param permission_bits [Integer, String] Permission bits that should be appended to invite url.
     # @return [String] the OAuth invite URL.
     def invite_url(server: nil, permission_bits: nil)
       raise 'No application ID has been set during initialization! Add one as the `application_id` named parameter while creating your bot.' unless @application_id
 
       server_id_str = server ? "&guild_id=#{server.id}" : ''
-      permission_bits_str = permission_bits ? "&permissions=#{permissin_bits}" : ''
+      permission_bits_str = permission_bits ? "&permissions=#{permission_bits}" : ''
       "https://discordapp.com/oauth2/authorize?&client_id=#{@application_id}#{server_id_str}#{permission_bits_str}&scope=bot"
     end
 
