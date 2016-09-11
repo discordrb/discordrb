@@ -1148,6 +1148,7 @@ module Discordrb
       @topic = other.topic
       @name = other.name
       @recipient = other.recipient
+      @recipients = other.recipients
       @permission_overwrites = other.permission_overwrites
     end
 
