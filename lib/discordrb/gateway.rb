@@ -165,9 +165,9 @@ module Discordrb
     # Discord is immediately aware of the closed connection and makes the bot appear offline instantly.
     #
     # If this method doesn't work or you're looking for something more drastic, use {#kill} instead.
-    def stop
+    def stop(no_sync = false)
       @should_reconnect = false
-      close
+      close(no_sync)
     end
 
     # Kills the websocket thread, stopping all connections to Discord.
@@ -638,19 +638,17 @@ module Discordrb
     end
 
     def handle_close(e)
-      unless e.nil?
-        if e.respond_to? :code
-          # It is a proper close frame we're dealing with, print reason and message to console
-          LOGGER.error('Websocket close frame received!')
-          LOGGER.error("Code: #{e.code}")
-          LOGGER.error("Message: #{e.data}")
-        elsif e.is_a? Exception
-          # Log the exception
-          LOGGER.error('The websocket connection has closed due to an error!')
-          LOGGER.log_exception(e)
-        else
-          LOGGER.error("The websocket connection has closed due to an unspecified error: #{e.inspect}")
-        end
+      if e.respond_to? :code
+        # It is a proper close frame we're dealing with, print reason and message to console
+        LOGGER.error('Websocket close frame received!')
+        LOGGER.error("Code: #{e.code}")
+        LOGGER.error("Message: #{e.data}")
+      elsif e.is_a? Exception
+        # Log the exception
+        LOGGER.error('The websocket connection has closed due to an error!')
+        LOGGER.log_exception(e)
+      else
+        LOGGER.error("The websocket connection has closed: #{e.inspect}")
       end
     end
 
@@ -684,7 +682,7 @@ module Discordrb
       end
     end
 
-    def close
+    def close(no_sync = false)
       # If we're already closed, there's no need to do anything - return
       return if @closed
 
@@ -698,7 +696,7 @@ module Discordrb
       # This needs to be synchronised with the getc mutex, so the notification, and especially the actual
       # close afterwards, don't coincide with the main loop reading something from the SSL socket.
       # This would cause a segfault due to (I suspect) Ruby bug #12292: https://bugs.ruby-lang.org/issues/12292
-      @getc_mutex.synchronize { @closed = true }
+      @getc_mutex.synchronize { @closed = true } unless no_sync
 
       # Close the socket if possible
       @socket.close if @socket
