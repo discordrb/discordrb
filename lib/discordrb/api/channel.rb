@@ -226,8 +226,8 @@ module Discordrb::API::Channel
   def update_role_overrides(token, channel_id, role_id, allow, deny)
     update_permission(token, channel_id, role_id, allow, deny, 'role')
   end
-  
-    # Create an empty group channel
+
+  # Create an empty group channel
   def create_empty_group(token, bot_user_id)
     request(
       __method__,
