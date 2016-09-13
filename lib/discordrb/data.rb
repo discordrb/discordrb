@@ -663,7 +663,7 @@ module Discordrb
       API::User.update_profile(@bot.token,
                                nil, nil,
                                new_data[:username] || @username,
-                               new_data[:avatar] || @avatar_id)
+                               new_data.key?(:avatar) ? new_data[:avatar] : @avatar_id)
       update_data(new_data)
     end
   end
