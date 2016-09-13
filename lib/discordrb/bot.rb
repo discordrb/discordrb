@@ -605,7 +605,7 @@ module Discordrb
       elsif channel.pm?
         @pm_channels[channel.id] = channel
       elsif channel.group?
-        @group_channels[channel.id] = channel
+        @channels[channel.id] = channel
       end
     end
 
@@ -629,7 +629,7 @@ module Discordrb
       elsif channel.pm?
         @pm_channels.delete(channel.recipient.id)
       elsif channel.group?
-        @group_channels.delete(channel.id)
+        @channels.delete(channel.id)
       end
     end
 

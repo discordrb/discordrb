@@ -974,6 +974,11 @@ module Discordrb
       "<##{@id}>"
     end
 
+    # @return [Recipient, nil] A PM Recipient or nil if it isn't a PM channel.
+    def recipient
+      @recipients.first if pm?
+    end
+
     # @!visibility private
     def initialize(data, bot, server = nil)
       @bot = bot
@@ -988,9 +993,8 @@ module Discordrb
       @position = data['position']
       if pm?
         recipient_user = bot.ensure_user(data['recipients'].first)
-        @recipient = Recipient.new(recipient_user, self, bot)
-        @recipients = [@recipient]
-        @name = @recipient.username
+        @recipients = [@Recipient.new(recipient_user, self, bot)]
+        @name = @recipients.first.username
       elsif group?
         @recipients = []
         data['recipients'].each do |recipient|
@@ -1158,7 +1162,6 @@ module Discordrb
     def update_from(other)
       @topic = other.topic
       @name = other.name
-      @recipient = other.recipient
       @recipients = other.recipients
       @permission_overwrites = other.permission_overwrites
     end

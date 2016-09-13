@@ -19,7 +19,6 @@ module Discordrb
 
       @channels = {}
       @pm_channels = {}
-      @group_channels = {}
 
       @restricted_channels = []
     end
@@ -111,7 +110,7 @@ module Discordrb
       server.cache_member(member)
     end
 
-    # Creates a private channel for the given user ID, or if one exists already, returns that one.
+    # Creates a PM channel for the given user ID, or if one exists already, returns that one.
     # It is recommended that you use {User#pm} instead, as this is mainly for internal use. However,
     # usage of this method may be unavoidable if only the user ID is known.
     # @param id [Integer] The user ID to generate a private channel for.
@@ -125,12 +124,14 @@ module Discordrb
       @pm_channels[id] = channel
     end
 
+    alias_method :private_channel, :pm_channel
+
     # Returns a group channel for the given channel ID
     # @param id [Integer] The channel ID.
     # @return [Channel] The channel for the given ID.
     def group_channel(id)
       id = id.resolve_id
-      return @group_channels[id] if @group_channels[id]
+      return @channels[id] if @channels[id]
       raise "Tried to get group channel that isn't cached!"
     end
 
