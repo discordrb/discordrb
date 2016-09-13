@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require 'discordrb/api'
+require 'discordrb/api/invite'
+require 'discordrb/api/user'
 require 'discordrb/light/data'
 require 'discordrb/light/integrations'
 
@@ -29,13 +31,13 @@ module Discordrb::Light
 
     # @return [LightProfile] the details of the user this bot is connected to.
     def profile
-      response = Discordrb::API.profile(@token)
+      response = Discordrb::API::User.profile(@token)
       LightProfile.new(JSON.parse(response), self)
     end
 
     # @return [Array<LightServer>] the servers this bot is connected to.
     def servers
-      response = Discordrb::API.servers(@token)
+      response = Discordrb::API::User.servers(@token)
       JSON.parse(response).map { |e| LightServer.new(e, self) }
     end
 
@@ -43,13 +45,13 @@ module Discordrb::Light
     # @param code [String] The code part of the invite (for example 0cDvIgU2voWn4BaD if the invite URL is
     #   https://discord.gg/0cDvIgU2voWn4BaD)
     def join(code)
-      Discordrb::API.join_server(@token, code)
+      Discordrb::API::Invite.accept(@token, code)
     end
 
     # Gets the connections associated with this account.
     # @return [Array<Connection>] this account's connections.
     def connections
-      response = Discordrb::API.connections(@token)
+      response = Discordrb::API::User.connections(@token)
       JSON.parse(response).map { |e| Connection.new(e, self) }
     end
   end

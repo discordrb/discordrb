@@ -72,8 +72,8 @@ module Discordrb
     # Unknown Channel
     UnknownChannel = Code(10_003)
 
-    # Unknown Guild
-    UnknownGuild = Code(10_004)
+    # Unknown Server
+    UnknownServer = Code(10_004)
 
     # Unknown Integration
     UnknownIntegration = Code(10_005)
@@ -108,7 +108,7 @@ module Discordrb
     # Only bots can use this endpoint
     EndpointOnlyForBots = Code(20_002)
 
-    # Maximum number of guilds reached (100)
+    # Maximum number of servers reached (100)
     ServerLimitReached = Code(30_001)
 
     # Maximum number of friends reached (1000)

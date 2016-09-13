@@ -278,15 +278,15 @@ module Discordrb
     end
 
     # Sends a voice state update packet (op 4). This packet can connect a user to a voice channel, update self mute/deaf
-    # status in an existing voice connection, move the user to a new voice channel on the same guild or disconnect an
+    # status in an existing voice connection, move the user to a new voice channel on the same server or disconnect an
     # existing voice connection.
-    # @param guild_id [Integer] The ID of the server on which this action should occur.
+    # @param server_id [Integer] The ID of the server on which this action should occur.
     # @param channel_id [Integer, nil] The channel ID to connect/move to, or `nil` to disconnect.
     # @param self_mute [true, false] Whether the user should itself be muted to everyone else.
     # @param self_deaf [true, false] Whether the user should be deaf towards other users.
-    def send_voice_state_update(guild_id, channel_id, self_mute, self_deaf)
+    def send_voice_state_update(server_id, channel_id, self_mute, self_deaf)
       data = {
-        guild_id: guild_id,
+        guild_id: server_id,
         channel_id: channel_id,
         self_mute: self_mute,
         self_deaf: self_deaf

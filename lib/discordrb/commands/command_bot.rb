@@ -32,9 +32,10 @@ module Discordrb::Commands
     #     "hitest". Don't forget to put spaces in if you need them!
     #   * An array of prefixes. Those will behave similarly to setting one string as a prefix, but instead of only one
     #     string, any of the strings in the array can be used.
-    #   * Something Proc-like (responds to :call) that takes a string as an argument (the message) and returns either
-    #     the command chain in raw form or `nil` if the given string shouldn't be parsed. This can be used to make more
-    #     complicated dynamic prefixes, or even something else entirely (suffixes, or most adventurous, infixes).
+    #   * Something Proc-like (responds to :call) that takes a {Message} object as an argument and returns either
+    #     the command chain in raw form or `nil` if the given message shouldn't be parsed. This can be used to make more
+    #     complicated dynamic prefixes (e. g. based on server), or even something else entirely (suffixes, or most
+    #     adventurous, infixes).
     # @option attributes [true, false] :advanced_functionality Whether to enable advanced functionality (very powerful
     #   way to nest commands into chains, see https://github.com/meew0/discordrb/wiki/Commands#command-chain-syntax
     #   for info. Default is false.
@@ -233,7 +234,7 @@ module Discordrb::Commands
 
       event = CommandEvent.new(message, self)
 
-      chain = trigger?(message.content)
+      chain = trigger?(message)
       return unless chain
 
       # Don't allow spaces between the prefix and the command
@@ -253,9 +254,9 @@ module Discordrb::Commands
     # Check whether a message should trigger command execution, and if it does, return the raw chain
     def trigger?(message)
       if @prefix.is_a? String
-        standard_prefix_trigger(message, @prefix)
+        standard_prefix_trigger(message.content, @prefix)
       elsif @prefix.is_a? Array
-        @prefix.map { |e| standard_prefix_trigger(message, e) }.reduce { |a, e| a || e }
+        @prefix.map { |e| standard_prefix_trigger(message.content, e) }.reduce { |a, e| a || e }
       elsif @prefix.respond_to? :call
         @prefix.call(message)
       end
