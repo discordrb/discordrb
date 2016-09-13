@@ -411,18 +411,58 @@ module Discordrb::API
     )
   end
 
-  # Create a private channel
-  def create_private(token, bot_user_id, user_id)
+  # Create a PM channel
+  def create_pm(token, bot_user_id, user_id)
     request(
       __method__,
       :post,
       "#{api_base}/users/#{bot_user_id}/channels",
-      { recipient_id: user_id }.to_json,
+      { recipient_id: [user_id] }.to_json,
       Authorization: token,
       content_type: :json
     )
   rescue RestClient::BadRequest
     raise 'Attempted to PM the bot itself!'
+  end
+
+  # Create an empty group channel
+  def create_empty_group(token, bot_user_id)
+    request(
+      __method__,
+      :post,
+      "#{api_base}/users/#{bot_user_id}/channels",
+      {}.to_json,
+      Authorization: token,
+      content_type: :json
+    )
+  end
+
+  # Create a group channel
+  def create_group(token, pm_channel_id, user_id)
+    request(
+      __method__,
+      :put,
+      "#{api_base}/channels/#{pm_channel_id}/recipients/#{user_id}",
+      { recipient_id: [user_id] }.to_json,
+      Authorization: token,
+      content_type: json
+    )
+  rescue RestClient::NoContent
+    raise 'Attempted to create a group channel with the PM channel recipient!'
+  rescue RestClient::Forbidden
+    raise 'Attempted to add a user to group channel without permission!'
+  end
+
+  # Add a user to a Group channel
+  def add_group_user(token, group_channel_id, user_id)
+    request(
+      __method__,
+      :put,
+      "#{api_base}/channels/#{group_channel_id}/recipients/#{user_id}",
+      {}.to_json,
+      Authorization: token,
+      content_type: json
+    )
   end
 
   # Create an instant invite from a server or a channel id

@@ -165,7 +165,7 @@ module Discordrb
         channel.send_message(content)
       else
         # If no message was specified, return the PM channel
-        @bot.private_channel(@id)
+        @bot.pm_channel(@id)
       end
     end
 
@@ -935,7 +935,10 @@ module Discordrb
     # @return [Integer] the type of this channel (0: text, 1: private, 2: voice, 3: group)
     attr_reader :type
 
-    # @return [Array<Recipient>, nil] An array of recipients of the private messages, or nil if this is not a Private channel
+    # @return [Recipient, nil] the recipient of the private messages, or nil if this is not a PM channel
+    attr_reader :recipient
+
+    # @return [Array<Recipient>, nil] the array of recipients of the private messages, or nil if this is not a Private channel
     attr_reader :recipients
 
     # @return [String] the channel's topic
@@ -969,7 +972,7 @@ module Discordrb
     # @!visibility private
     def initialize(data, bot, server = nil)
       @bot = bot
-      # data is a sometimes a Hash and othertimes an array of Hashes, you only want the last one if it's an array
+      # data is a sometimes a Hash and other times an array of Hashes, you only want the last one if it's an array
       data = data[-1] if data.is_a?(Array)
 
       @id = data['id'].to_i
@@ -980,8 +983,9 @@ module Discordrb
       @position = data['position']
       if pm?
         recipient_user = bot.ensure_user(data['recipients'].first)
-        @recipients = [Recipient.new(recipient_user, self, bot)]
-        @name = @recipients.first.username
+        @recipient = Recipient.new(recipient_user, self, bot)
+        @recipients = [@recipient]
+        @name = @recipient.username
       elsif group?
         @recipients = []
         data['recipients'].each do |recipient|
@@ -989,8 +993,8 @@ module Discordrb
           @recipients << Recipient.new(recipient_user, self, bot)
         end
         @name = data['name']
+        @owner_id = data['owner_id']
       else
-        text? || voice?
         @name = data['name']
         @server = if server
                     server
@@ -1039,6 +1043,8 @@ module Discordrb
     def send_message(content, tts = false)
       @bot.send_message(@id, content, tts, @server && @server.id)
     end
+
+    alias_method :send, :send_message
 
     # Sends a temporary message to this channel.
     # @param content [String] The content to send. Should not be longer than 2000 characters or it will result in an error.
@@ -1148,6 +1154,7 @@ module Discordrb
       @topic = other.topic
       @name = other.name
       @recipient = other.recipient
+      @recipients = other.recipients
       @permission_overwrites = other.permission_overwrites
     end
 
@@ -1236,6 +1243,8 @@ module Discordrb
       Invite.new(JSON.parse(response), @bot)
     end
 
+    alias_method :invite, :make_invite
+
     # Starts typing, which displays the typing indicator on the client for five seconds.
     # If you want to keep typing you'll have to resend this every five seconds. (An abstraction
     # for this will eventually be coming)
@@ -1243,8 +1252,27 @@ module Discordrb
       API.start_typing(@bot.token, @id)
     end
 
-    alias_method :send, :send_message
-    alias_method :invite, :make_invite
+    # Creates a Group channel
+    # @param user_ids [Array<Integer>] Array of user IDs to add to the new group channel (Excluding
+    # the recipient of the PM channel).
+    # @return [Channel] the created Channel
+    def create_group(user_ids)
+      raise 'Attempted to create group channel on a non-pm channel!' unless pm?
+      response = API.create_group(@bot.token, @id, user_ids.shift)
+      channel = Channel.new(JSON.parse(response), @bot)
+      channel.add_group_users(user_ids)
+    end
+
+    # Adds a user to a Group channel
+    # @param user_ids [Array<Integer>] Array of user IDs to add to the group channel.
+    # @return [Channel] the Group Channel
+    def add_group_users(user_ids)
+      raise 'Attempted to add a user to a non-group channel!' unless group?
+      user_ids.each do |user_id|
+        API.add_group_user(@bot.token, @id, user_id)
+      end
+      self
+    end
 
     # The inspect method is overwritten to give more useful output
     def inspect
@@ -1791,8 +1819,12 @@ module Discordrb
     end
 
     # Creates a channel on this server with the given name.
+    # @param name [String] Name of the channel to create
+    # @param type [Integer] Type of channel to create (0: text, 2: voice)
     # @return [Channel] the created channel.
+    # @raise [ArgumentError] if type is not 0 or 2
     def create_channel(name, type = 0)
+      raise ArgumentError, 'Channel type must be either 0 (text) or 2 (voice)!' unless [0, 2].include?(type)
       response = API.create_channel(@bot.token, @id, name, type)
       Channel.new(JSON.parse(response), @bot)
     end
