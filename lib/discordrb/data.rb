@@ -1816,7 +1816,7 @@ module Discordrb
     # @return [Channel] the created channel.
     # @raise [ArgumentError] if type is not 0 or 2
     def create_channel(name, type = 0)
-      raise ArgumentError, 'Channel type must be either 0 (text) or 2 (voice)!' unless [0,2].include?(type)
+      raise ArgumentError, 'Channel type must be either 0 (text) or 2 (voice)!' unless [0, 2].include?(type)
       response = API.create_channel(@bot.token, @id, name, type)
       Channel.new(JSON.parse(response), @bot)
     end

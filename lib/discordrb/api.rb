@@ -428,12 +428,12 @@ module Discordrb::API
   # Create an empty group channel
   def create_empty_group(token, bot_user_id)
     request(
-        __method__,
-        :post,
-        "#{api_base}/users/#{bot_user_id}/channels",
-        { }.to_json,
-        Authorization: token,
-        content_type: :json
+      __method__,
+      :post,
+      "#{api_base}/users/#{bot_user_id}/channels",
+      {}.to_json,
+      Authorization: token,
+      content_type: :json
     )
   end
 
@@ -459,7 +459,7 @@ module Discordrb::API
       __method__,
       :put,
       "#{api_base}/channels/#{group_channel_id}/recipients/#{user_id}",
-      { }.to_json,
+      {}.to_json,
       Authorization: token,
       content_type: json
     )
