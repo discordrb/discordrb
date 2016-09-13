@@ -417,7 +417,7 @@ module Discordrb::API
       __method__,
       :post,
       "#{api_base}/users/#{bot_user_id}/channels",
-      { recipient_id: user_id }.to_json,
+      { recipient_id: [user_id] }.to_json,
       Authorization: token,
       content_type: :json
     )
