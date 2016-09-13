@@ -15,7 +15,8 @@ module Discordrb
       @servers = {}
 
       @channels = {}
-      @private_channels = {}
+      @pm_channels = {}
+      @group_channels = {}
 
       @restricted_channels = []
     end
@@ -112,14 +113,23 @@ module Discordrb
     # usage of this method may be unavoidable if only the user ID is known.
     # @param id [Integer] The user ID to generate a private channel for.
     # @return [Channel] A private channel for that user.
-    def private_channel(id)
+    def pm_channel(id)
       id = id.resolve_id
-      debug("Creating private channel with user id #{id}")
-      return @private_channels[id] if @private_channels[id]
+      return @pm_channels[id] if @pm_channels[id]
 
-      response = API.create_private(token, @profile.id, id)
+      debug("Creating pm channel with user id #{id}")
+      response = API.create_pm(token, @profile.id, id)
       channel = Channel.new(JSON.parse(response), self)
-      @private_channels[id] = channel
+      @pm_channels[id] = channel
+    end
+
+    # Returns a group channel for the given channel ID
+    # @param id [Integer] The channel ID.
+    # @return [Channel] The channel for the given ID.
+    def group_channel(id)
+      id = id.resolve_id
+      return @group_channels[id] if @group_channels[id]
+      raise "Tried to get group channel that isn't cached!"
     end
 
     # Ensures a given user object is cached and if not, cache it from the given data hash.

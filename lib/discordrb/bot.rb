@@ -595,13 +595,14 @@ module Discordrb
     def create_channel(data)
       channel = Channel.new(data, self)
       server = channel.server
-
       # Handle normal and private channels separately
       if server
         server.channels << channel
         @channels[channel.id] = channel
-      else
-        @private_channels[channel.id] = channel
+      elsif channel.pm?
+        @pm_channels[channel.id] = channel
+      elsif channel.group?
+        @group_channels[channel.id] = channel
       end
     end
 
@@ -622,8 +623,10 @@ module Discordrb
       if server
         @channels.delete(channel.id)
         server.channels.reject! { |c| c.id == channel.id }
-      else
-        @private_channels.delete(channel.id)
+      elsif channel.pm?
+        @pm_channels.delete(channel.recipient.id)
+      elsif channel.group?
+        @group_channels.delete(channel.id)
       end
     end
 
@@ -779,7 +782,7 @@ module Discordrb
         # Add pm channels
         data['private_channels'].each do |element|
           channel = ensure_channel(element)
-          @private_channels[channel.recipient.id] = channel
+          @pm_channels[channel.recipient.id] = channel
         end
 
         # Don't notify yet if there are unavailable servers because they need to get available before the bot truly has
