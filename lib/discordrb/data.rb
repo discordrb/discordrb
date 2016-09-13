@@ -660,9 +660,9 @@ module Discordrb
     private
 
     def update_profile_data(new_data)
-      API.update_user(@bot.token,
-                      new_data[:username] || @username,
-                      new_data[:avatar])
+      API::User.update_profile(@bot.token,
+                               new_data[:username] || @username,
+                               new_data[:avatar])
       update_data(new_data)
     end
   end
