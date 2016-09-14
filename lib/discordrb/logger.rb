@@ -9,16 +9,17 @@ module Discordrb
     # @return [true, false] whether this logger is in extra-fancy mode!
     attr_writer :fancy
 
-    # @return [IO, #puts & #flush] the stream the logger should write to.
-    attr_accessor :stream
+    # @return [Array<IO>, Array<#puts & #flush>] the streams the logger should write to.
+    attr_accessor :streams
 
     # Creates a new logger.
     # @param fancy [true, false] Whether this logger uses fancy mode (ANSI escape codes to make the output colourful)
-    def initialize(fancy = false)
+    # @param streams [Array<IO>, Array<#puts & #flush>] the streams the logger should write to.
+    def initialize(fancy = false, streams = [STDOUT])
       @fancy = fancy
       self.mode = :normal
 
-      @stream = STDOUT
+      @streams = streams
     end
 
     # The modes this logger can have. This is probably useless unless you want to write your own Logger
@@ -85,21 +86,23 @@ module Discordrb
     def write(message, mode)
       thread_name = Thread.current[:discordrb_name]
       timestamp = Time.now.strftime(LOG_TIMESTAMP_FORMAT)
-      if @fancy
-        fancy_write(message, mode, thread_name, timestamp)
-      else
-        simple_write(message, mode, thread_name, timestamp)
+      @streams.each do |stream|
+        if @fancy && !stream.is_a?(File)
+          fancy_write(stream, message, mode, thread_name, timestamp)
+        else
+          simple_write(stream, message, mode, thread_name, timestamp)
+        end
       end
     end
 
-    def fancy_write(message, mode, thread_name, timestamp)
-      @stream.puts "#{timestamp} #{FORMAT_BOLD}#{thread_name.ljust(16)}#{FORMAT_RESET} #{mode[:format_code]}#{mode[:short]}#{FORMAT_RESET} #{message}"
-      @stream.flush
+    def fancy_write(stream, message, mode, thread_name, timestamp)
+      stream.puts "#{timestamp} #{FORMAT_BOLD}#{thread_name.ljust(16)}#{FORMAT_RESET} #{mode[:format_code]}#{mode[:short]}#{FORMAT_RESET} #{message}"
+      stream.flush
     end
 
-    def simple_write(message, mode, thread_name, timestamp)
-      @stream.puts "[#{mode[:long]} : #{thread_name} @ #{timestamp}] #{message}"
-      @stream.flush
+    def simple_write(stream, message, mode, thread_name, timestamp)
+      stream.puts "[#{mode[:long]} : #{thread_name} @ #{timestamp}] #{message}"
+      stream.flush
     end
   end
 end
