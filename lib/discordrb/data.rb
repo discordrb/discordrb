@@ -991,6 +991,7 @@ module Discordrb
       @bitrate = data['bitrate']
       @user_limit = data['user_limit']
       @position = data['position']
+
       if pm?
         recipient_user = bot.ensure_user(data['recipients'].first)
         @recipients = [@Recipient.new(recipient_user, self, bot)]

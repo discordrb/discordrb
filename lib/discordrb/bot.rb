@@ -598,6 +598,7 @@ module Discordrb
     def create_channel(data)
       channel = Channel.new(data, self)
       server = channel.server
+
       # Handle normal and private channels separately
       if server
         server.channels << channel
