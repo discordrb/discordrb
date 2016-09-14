@@ -168,8 +168,6 @@ module Discordrb
           server.emoji.values.each do |element|
             if emoji.any? { |somevalue| somevalue.name == element.name }
               emoji[element.name] = GlobalEmoji.new(element, self)
-            else
-              emoji[element.name].push_roles(element)
             end
           end
         end
