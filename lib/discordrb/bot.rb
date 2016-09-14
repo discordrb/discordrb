@@ -156,7 +156,7 @@ module Discordrb
       gateway_check
       if id
         @emoji = emoji
-        emoji = @emoji.find { |emoji| emoji.id == id }
+        emoji = @emoji.find { |sth| sth.id == id }
         return nil unless emoji
         return emoji
       else
