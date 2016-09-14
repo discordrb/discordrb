@@ -1922,6 +1922,10 @@ module Discordrb
     # @return [Array<Role>] an array of all the roles created on this server.
     attr_reader :roles
 
+    # @return [Array<Emoji>] an array of all the emoji available on this server.
+    attr_reader :emoji
+    alias_method :emojis, :emoji
+
     # @return [true, false] whether or not this server is large (members > 100). If it is,
     # it means the members list may be inaccurate for a couple seconds after starting up the bot.
     attr_reader :large
@@ -1960,8 +1964,10 @@ module Discordrb
       @features = data['features'].map { |element| element.downcase.to_sym }
       @members = {}
       @voice_states = {}
+      @emoji = {}
 
       process_roles(data['roles'])
+      process_emoji(data['emojis'])
       process_members(data['members'])
       process_presences(data['presences'])
       process_channels(data['channels'])
@@ -2275,6 +2281,14 @@ module Discordrb
       update_server_data(afk_timeout: afk_timeout)
     end
 
+    # @return [true, false] whether this server has any emoji or not.
+    def any_emoji?
+      @emoji.any?
+    end
+
+    alias_method :has_emoji?, :any_emoji?
+    alias_method :emoji?, :any_emoji?
+
     # Adds a new custom emoji to the server.
     # @param name [String] The name given to the new custom emoji.
     # @param emoji [String, #read] A JPG file to be used as the avatar, either something readable (e. g. File Object) or as a data URL.
@@ -2372,6 +2386,14 @@ module Discordrb
         role = Role.new(element, @bot, self)
         @roles << role
         @roles_by_id[role.id] = role
+      end
+    end
+
+    def process_emoji(emoji)
+      return unless emoji
+      emoji.each do |element|
+        newemoji = Emoji.new(element, @bot, self)
+        @emoji[newemoji.id] = newemoji
       end
     end
 
