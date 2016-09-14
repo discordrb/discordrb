@@ -992,25 +992,25 @@ module Discordrb
       @user_limit = data['user_limit']
       @position = data['position']
 
-      if pm?
-        recipient_user = bot.ensure_user(data['recipients'].first)
-        @recipients = [@Recipient.new(recipient_user, self, bot)]
-        @name = @recipients.first.username
-      elsif group?
-        @recipients = []
-        data['recipients'].each do |recipient|
-          recipient_user = bot.ensure_user(recipient)
-          @recipients << Recipient.new(recipient_user, self, bot)
-        end
-        @name = data['name']
-        @owner_id = data['owner_id']
-      else
+      if server?
         @name = data['name']
         @server = if server
                     server
                   else
                     bot.server(data['guild_id'].to_i)
                   end
+      else
+        @recipients = []
+        data['recipients'].each do |recipient|
+        recipient_user = bot.ensure_user(recipient)
+          @recipients << Recipient.new(recipient_user, self, bot)
+        end
+        if pm?
+          @name = @recipients.first.username
+        else
+          @name = data['name']
+          @owner_id = data['owner_id']
+        end
       end
 
       # Populate permission overwrites
