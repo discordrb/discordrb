@@ -126,6 +126,16 @@ module Discordrb
       @pm_channels[id] = channel
     end
 
+    # Finds a emoji by its name.
+    # @param name [String] The emoji name that should be resolved.
+    # @return [Emoji, nil] the emoji identified by the name, or `nil` if it couldn't be found.
+    def find_emoji(name)
+      LOGGER.out("Resolving emoji #{name}")
+      emoji.select do |element|
+        element.name == name
+      end.first
+    end
+
     alias_method :private_channel, :pm_channel
 
     # Ensures a given user object is cached and if not, cache it from the given data hash.
