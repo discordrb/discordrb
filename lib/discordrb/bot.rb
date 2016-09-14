@@ -414,13 +414,23 @@ module Discordrb
       API.update_oauth_application(@token, name, redirect_uris, description, icon)
     end
 
-    # Gets the user from a mention of the user.
-    # @param mention [String] The mention, which should look like <@12314873129>.
-    # @return [User] The user identified by the mention, or `nil` if none exists.
-    def parse_mention(mention)
+    # Gets the user or emoji from a mention of the user or emoji.
+    # @param mention [String] The mention, which should look like `<@12314873129>`, `<@&123456789>` or `<:Name:126328:>`.
+    # @param server [Server, nil] The server of the associated mention. Required for role and emoji parsing.
+    # @return [User, Role, Emoji] The user, role or emoji identified by the mention, or `nil` if none exists.
+    def parse_mention(mention, server = nil)
       # Mention format: <@id>
-      return nil unless /<@!?(?<id>\d+)>?/ =~ mention
-      user(id.to_i)
+      if /<@!?(?<id>\d+)>?/ =~ mention
+        user(id.to_i)
+      elsif /<@&(?<id>\d+)>?/ =~ mention
+        return nil unless server
+        server.role(id)
+      elsif /<:(\w+):(?<id>\d+)>?/ =~ mention
+        emoji.each do |element|
+          return element if element.id.to_i == id.to_i
+        end
+        return nil
+      end
     end
 
     # Updates presence status.
