@@ -1615,10 +1615,12 @@ module Discordrb
 
       @emoji = []
 
-      emoji = data['content'].split
-      emoji = emoji.grep(/<:(?<name>\w+):(?<id>\d+)>?/)
-      emoji.each do |element|
-        @emoji << bot.parse_mention(element)
+      unless data['content'].nil?
+        emoji = data['content'].split
+        emoji = emoji.grep(/<:(?<name>\w+):(?<id>\d+)>?/)
+        emoji.each do |element|
+          @emoji << bot.parse_mention(element)
+        end
       end
 
       @mentions = []
