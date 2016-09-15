@@ -696,7 +696,11 @@ module Discordrb
       # This needs to be synchronised with the getc mutex, so the notification, and especially the actual
       # close afterwards, don't coincide with the main loop reading something from the SSL socket.
       # This would cause a segfault due to (I suspect) Ruby bug #12292: https://bugs.ruby-lang.org/issues/12292
-      @getc_mutex.synchronize { @closed = true } unless no_sync
+      if no_sync
+        @closed = true
+      else
+        @getc_mutex.synchronize { @closed = true }
+      end
 
       # Close the socket if possible
       @socket.close if @socket
