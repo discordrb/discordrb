@@ -403,14 +403,15 @@ module Discordrb
     # Updates presence status.
     # @param idletime [Integer, nil] The floating point of a Time object that shows the last time the bot was on.
     # @param game [String, nil] The name of the game to be played/stream name on the stream.
-    # @param url [String, nil] The Twitch URL to display as a stream. nil for no stream.
-    def update_status(idletime, game, url)
+    # @param url [String, nil] The Stream URL to display as a stream. nil for no stream.
+    # @param type [Symbol, nil] The type of stream it is.
+    def update_status(idletime, game, url, type = nil)
       gateway_check
 
       @game = game
       @idletime = idletime
       @streamurl = url
-      type = url ? 1 : nil
+      type = [nil, :twitch, :youtube].index(type)
 
       game_obj = game || url ? { name: game, url: url, type: type } : nil
       @gateway.send_status_update(idletime, game_obj)
@@ -425,13 +426,17 @@ module Discordrb
       name
     end
 
-    # Sets the currently online stream to the specified name and Twitch URL.
+    # Sets the currently online stream to the specified name and Stream URL.
     # @param name [String] The name of the stream to display.
-    # @param url [String] The url of the current Twitch stream.
+    # @param url [String] The url of the current stream.
+    # @param type [Symbol] The type of stream it is. Possible stream types are:
+    #
+    #   * `:twitch`
+    #   * `:youtube`
     # @return [String] The stream name that is being displayed now.
-    def stream(name, url)
+    def stream(name, url, type = :twitch)
       gateway_check
-      update_status(@idletime, name, url)
+      update_status(@idletime, name, url, type)
       name
     end
 
