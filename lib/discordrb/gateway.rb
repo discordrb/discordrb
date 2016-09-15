@@ -162,12 +162,12 @@ module Discordrb
     end
 
     # Stops the bot gracefully, disconnecting the websocket without immediately killing the thread. This means that
-    # Discord is immediately aware of the closed connetion and makes the bot appear offline instantly.
+    # Discord is immediately aware of the closed connection and makes the bot appear offline instantly.
     #
     # If this method doesn't work or you're looking for something more drastic, use {#kill} instead.
-    def stop
+    def stop(no_sync = false)
       @should_reconnect = false
-      @ws.close
+      close(no_sync)
     end
 
     # Kills the websocket thread, stopping all connections to Discord.
@@ -369,8 +369,8 @@ module Discordrb
       # Initialize falloff so we wait for more time before reconnecting each time
       @falloff = 1.0
 
+      @should_reconnect = true
       loop do
-        @should_reconnect = true
         connect
 
         break unless @should_reconnect
@@ -648,7 +648,7 @@ module Discordrb
         LOGGER.error('The websocket connection has closed due to an error!')
         LOGGER.log_exception(e)
       else
-        LOGGER.error("The websocket connection has closed due to an unspecified error: #{e.inspect}")
+        LOGGER.error("The websocket connection has closed: #{e.inspect}")
       end
     end
 
@@ -682,7 +682,7 @@ module Discordrb
       end
     end
 
-    def close
+    def close(no_sync = false)
       # If we're already closed, there's no need to do anything - return
       return if @closed
 
@@ -696,7 +696,11 @@ module Discordrb
       # This needs to be synchronised with the getc mutex, so the notification, and especially the actual
       # close afterwards, don't coincide with the main loop reading something from the SSL socket.
       # This would cause a segfault due to (I suspect) Ruby bug #12292: https://bugs.ruby-lang.org/issues/12292
-      @getc_mutex.synchronize { @closed = true }
+      if no_sync
+        @closed = true
+      else
+        @getc_mutex.synchronize { @closed = true }
+      end
 
       # Close the socket if possible
       @socket.close if @socket
