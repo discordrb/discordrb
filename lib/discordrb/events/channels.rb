@@ -141,7 +141,7 @@ module Discordrb::Events
   end
 
   # Generic event handler for channel recipient events
-  class ChannelRecipientEventHandler
+  class ChannelRecipientEventHandler < EventHandler
     def matches?(event)
       # Check for the proper event type
       return false unless event.is_a? ChannelRecipientEvent
