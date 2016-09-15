@@ -478,7 +478,7 @@ module Discordrb
     # @param role [Role, Array<Role>] The role(s) to set.
     def roles=(role)
       role_ids = role_id_array(role)
-      API::Server.update_user(@bot.token, @server.id, @user.id, roles: role_ids)
+      API::Server.update_member(@bot.token, @server.id, @user.id, roles: role_ids)
     end
 
     # Adds and removes roles from a member.
@@ -490,7 +490,7 @@ module Discordrb
       old_role_ids = @roles.map(&:id)
       new_role_ids = (old_role_ids - remove_role_ids + add_role_ids).uniq
 
-      API::Server.update_user(@bot.token, @server.id, @user.id, roles: new_role_ids)
+      API::Server.update_member(@bot.token, @server.id, @user.id, roles: new_role_ids)
     end
 
     # Adds one or more roles to this member.
@@ -500,7 +500,7 @@ module Discordrb
       old_role_ids = @roles.map(&:id)
       new_role_ids = (old_role_ids + role_ids).uniq
 
-      API::Server.update_user(@bot.token, @server.id, @user.id, roles: new_role_ids)
+      API::Server.update_member(@bot.token, @server.id, @user.id, roles: new_role_ids)
     end
 
     # Removes one or more roles from this member.
@@ -510,27 +510,27 @@ module Discordrb
       role_ids = role_id_array(role)
       new_role_ids = old_role_ids.reject { |i| role_ids.include?(i) }
 
-      API::Server.update_user(@bot.token, @server.id, @user.id, roles: new_role_ids)
+      API::Server.update_member(@bot.token, @server.id, @user.id, roles: new_role_ids)
     end
 
     # Server deafens this member.
     def server_deafen
-      API::Server.update_user(@bot.token, @server.id, @user.id, deaf: true)
+      API::Server.update_member(@bot.token, @server.id, @user.id, deaf: true)
     end
 
     # Server undeafens this member.
     def server_undeafen
-      API::Server.update_user(@bot.token, @server.id, @user.id, deaf: false)
+      API::Server.update_member(@bot.token, @server.id, @user.id, deaf: false)
     end
 
     # Server mutes this member.
     def server_mute
-      API::Server.update_user(@bot.token, @server.id, @user.id, mute: true)
+      API::Server.update_member(@bot.token, @server.id, @user.id, mute: true)
     end
 
     # Server unmutes this member.
     def server_unmute
-      API::Server.update_user(@bot.token, @server.id, @user.id, mute: false)
+      API::Server.update_member(@bot.token, @server.id, @user.id, mute: false)
     end
 
     # Sets or resets this member's nickname. Requires the Change Nickname permission for the bot itself and Manage
