@@ -229,10 +229,10 @@ module Discordrb::API::Channel
 
   # Create an empty group channel
   def create_empty_group(token, bot_user_id)
-    request(
+    Discordrb::API.request(
       __method__,
       :post,
-      "#{api_base}/users/#{bot_user_id}/channels",
+      "#{Discordrb::API.api_base}/users/#{bot_user_id}/channels",
       {}.to_json,
       Authorization: token,
       content_type: :json
@@ -241,13 +241,13 @@ module Discordrb::API::Channel
 
   # Create a group channel
   def create_group(token, pm_channel_id, user_id)
-    request(
+    Discordrb::API.request(
       __method__,
       :put,
-      "#{api_base}/channels/#{pm_channel_id}/recipients/#{user_id}",
+      "#{Discordrb::API.api_base}/channels/#{pm_channel_id}/recipients/#{user_id}",
       { recipient_id: [user_id] }.to_json,
       Authorization: token,
-      content_type: json
+      content_type: :json
     )
   rescue RestClient::NoContent
     raise 'Attempted to create a group channel with the PM channel recipient!'
@@ -257,13 +257,34 @@ module Discordrb::API::Channel
 
   # Add a user to a Group channel
   def add_group_user(token, group_channel_id, user_id)
-    request(
+    Discordrb::API.request(
       __method__,
       :put,
-      "#{api_base}/channels/#{group_channel_id}/recipients/#{user_id}",
+      "#{Discordrb::API.api_base}/channels/#{group_channel_id}/recipients/#{user_id}",
       {}.to_json,
       Authorization: token,
-      content_type: json
+      content_type: :json
+    )
+  end
+
+  # Remove a user from a Group channel
+  def remove_group_user(token, group_channel_id, user_id)
+    Discordrb::API.request(
+      __method__,
+      :delete,
+      "#{Discordrb::API.api_base}/channels/#{group_channel_id}/recipients/#{user_id}",
+      Authorization: token,
+      content_type: :json
+    )
+  end
+
+  def leave_group(token, group_channel_id)
+    Discordrb::API.request(
+      __method__,
+      :delete,
+      "#{Discordrb::API.api_base}/channels/#{group_channel_id}",
+      Authorization: token,
+      content_type: :json
     )
   end
 end

@@ -128,15 +128,16 @@ module Discordrb::Events
     attr_reader :channel
     delegate :name, :server, :type, :owner_id, :recipients, :topic, :user_limit, :position, :permission_overwrites, to: :channel
 
-    # @return [User] The user that was added to the group
-    attr_reader :user
-    alias_method :member, :user
+    # @return [Recipient] The recipient that was added/removed from the group
+    attr_reader :recipient
 
-    def initialize(bot, data)
+    def initialize(data, bot)
       @bot = bot
 
       @channel = bot.channel(data['channel_id'].to_i)
-      @user = bot.user(data['user']['id'].to_i)
+      recipient = data['user']
+      recipient_user = bot.ensure_user(recipient)
+      @recipient = Discordrb::Recipient.new(recipient_user, @channel, bot)
     end
   end
 
@@ -163,7 +164,7 @@ module Discordrb::Events
         end
       ]
     end
-  end # TOTEST
+  end
 
   # Raised when a user is added to a private channel
   class ChannelRecipientAddEvent < ChannelRecipientEvent; end

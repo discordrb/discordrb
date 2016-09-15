@@ -508,6 +508,12 @@ module Discordrb
       handle_dispatch(type, data)
     end
 
+    def prune_empty_groups
+      @channels.each_value do |channel|
+        channel.leave_group if channel.group? && channel.recipients.empty?
+      end
+    end
+
     private
 
     # Throws a useful exception if there's currently no gateway connection
@@ -634,10 +640,24 @@ module Discordrb
       end
     end
 
-    def add_recipient(data) # Todo
+    # Internal handler for CHANNEL_RECIPIENT_ADD
+    def add_recipient(data)
+      channel_id = data['channel_id'].to_i
+      channel = self.channel(channel_id)
+
+      recipient_user = ensure_user(data['user'])
+      recipient = Recipient.new(recipient_user, channel, self)
+      channel.add_recipient(recipient)
     end
 
+    # Internal handler for CHANNEL_RECIPIENT_REMOVE
     def remove_recipient(data)
+      channel_id = data['channel_id'].to_i
+      channel = self.channel(channel_id)
+
+      recipient_user = ensure_user(data['user'])
+      recipient = Recipient.new(recipient_user, channel, self)
+      channel.remove_recipient(recipient)
     end
 
     # Internal handler for GUILD_MEMBER_ADD
@@ -789,10 +809,14 @@ module Discordrb
           ensure_server(element)
         end
 
-        # Add pm channels
+        # Add pm and group channels
         data['private_channels'].each do |element|
           channel = ensure_channel(element)
-          @pm_channels[channel.recipients.first.id] = channel
+          if channel.pm?
+            @pm_channels[channel.recipient.id] = channel
+          else
+            @channels[channel.id] = channel
+          end
         end
 
         # Don't notify yet if there are unavailable servers because they need to get available before the bot truly has

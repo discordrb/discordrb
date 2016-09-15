@@ -994,9 +994,11 @@ module Discordrb
 
       if private?
         @recipients = []
-        data['recipients'].each do |recipient|
-          recipient_user = bot.ensure_user(recipient)
-          @recipients << Recipient.new(recipient_user, self, bot)
+        if data['recipients']
+          data['recipients'].each do |recipient|
+            recipient_user = bot.ensure_user(recipient)
+            @recipients << Recipient.new(recipient_user, self, bot)
+          end
         end
         if pm?
           @name = @recipients.first.username
@@ -1163,7 +1165,6 @@ module Discordrb
     def update_from(other)
       @topic = other.topic
       @name = other.name
-      @recipients = other.recipients
       @permission_overwrites = other.permission_overwrites
     end
 
@@ -1283,9 +1284,50 @@ module Discordrb
       self
     end
 
+    # Removes a user from a Group channel
+    # @param user_ids [Array<Integer>] Array of user IDs to remove from the group channel.
+    # @return [Channel] the Group Channel
+    def remove_group_users(user_ids)
+      raise 'Attempted to remove a user from a non-group channel!' unless group?
+      user_ids.each do |user_id|
+        API::Channel.remove_group_user(@bot.token, @id, user_id)
+      end
+      self
+    end
+
+    # Leaves the group
+    def leave_group
+      raise 'Attempted to leave a non-group channel!' unless group?
+      API::Channel.leave_group(@bot.token, @id)
+    end
+    alias_method :leave, :leave_group
+
     # The inspect method is overwritten to give more useful output
     def inspect
       "<Channel name=#{@name} id=#{@id} topic=\"#{@topic}\" type=#{@type} position=#{@position} server=#{@server}>"
+    end
+
+    # Adds a recipient to a group channel.
+    # @param recipient [Recipient] the recipient to add to the group
+    # @raise [ArgumentError] if tried to add a non-recipient
+    # @note For internal use only
+    # @!visibility private
+    def add_recipient(recipient)
+      raise 'Tried to add recipient to a non-group channel' unless group?
+      raise ArgumentError, 'Tried to add a non-recipient to a group' unless recipient.is_a?(Recipient)
+      API::Channel.add_group_user(@bot.token, @id, recipient.id)
+      @recipients << recipient
+    end
+
+    # Removes a recipient from a group channel.
+    # @param recipient [Recipient] the recipient to remove from the group
+    # @raise [ArgumentError] if tried to remove a non-recipient
+    # @note For internal use only
+    # @!visibility private
+    def remove_recipient(recipient)
+      raise 'Tried to add recipient to a non-group channel' unless group?
+      raise ArgumentError, 'Tried to remove a non-recipient from a group' unless recipient.is_a?(Recipient)
+      @recipients.delete(recipient)
     end
 
     private
