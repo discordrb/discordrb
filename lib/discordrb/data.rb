@@ -1606,20 +1606,20 @@ module Discordrb
     # @return [Array<Role>, nil] roles this emoji is active for, `nil` if nit attached to a server
     attr_reader :roles
 
-    # @return [true, false] whether a server is attached to this emoji
-    attr_reader :attached
-    alias_method :attached?, :attached
-
     def initialize(data, bot, server)
       @bot = bot
       @roles = nil
 
       @name = data['name']
       @server = server
-      @attached = !server.nil?
       @id = data['id'].to_i
 
-      process_roles(data['roles']) if @attached
+      process_roles(data['roles']) if server
+    end
+
+    # @return [true, false] whether a server is attached to this emoji
+    def attached?
+      !@server.nil?
     end
 
     # @return [String] the layout to mention it (or have it used) in a message
@@ -1642,8 +1642,8 @@ module Discordrb
     def process_roles(roles)
       @roles = []
       return unless roles
-      roles.each do |element|
-        role = Role.new(element, @bot, @server)
+      roles.each do |role_id|
+        role = server.role(role_id)
         @roles << role
       end
     end
@@ -2246,7 +2246,7 @@ module Discordrb
     end
 
     def process_emoji(emoji)
-      return unless emoji
+      return if emoji.empty?
       emoji.each do |element|
         newemoji = Emoji.new(element, @bot, self)
         @emoji[newemoji.id] = newemoji
