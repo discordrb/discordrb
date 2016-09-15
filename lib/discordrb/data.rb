@@ -481,6 +481,18 @@ module Discordrb
       API::Server.update_user(@bot.token, @server.id, @user.id, roles: role_ids)
     end
 
+    # Adds and removes roles from a member.
+    # @param add [Role, Array<Role>] The role(s) to add.
+    # @param remove [Role, Array<Role>] The role(s) to remove.
+    def modify_roles(add, remove)
+      add_role_ids = role_id_array(add)
+      remove_role_ids = role_id_array(remove)
+      old_role_ids = @roles.map(&:id)
+      new_role_ids = (old_role_ids.reject { |i| remove_role_ids.include?(i) } + add_role_ids).uniq
+
+      API::Server.update_user(@bot.token, @server.id, @user.id, roles: new_role_ids)
+    end
+
     # Adds one or more roles to this member.
     # @param role [Role, Array<Role>] The role(s) to add.
     def add_role(role)
