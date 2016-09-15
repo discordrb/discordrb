@@ -474,7 +474,7 @@ module Discordrb
       @roles.any? { |e| e.id == role }
     end
 
-    # Bulk sets a user's roles.
+    # Bulk sets a member's roles.
     # @param role [Role, Array<Role>] The role(s) to set.
     def roles=(role)
       role_ids = role_id_array(role)
