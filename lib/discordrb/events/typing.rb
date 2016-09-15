@@ -26,7 +26,7 @@ module Discordrb::Events
       @user = if channel.pm?
                 channel.recipient
               elsif channel.group?
-                bot.user(@user_id) # WILL IT WORK
+                bot.user(@user_id)
               else
                 bot.member(@channel.server.id, @user_id)
               end
