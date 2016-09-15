@@ -1274,26 +1274,30 @@ module Discordrb
     end
 
     # Adds a user to a Group channel
-    # @param user_ids [Array<Integer>] Array of user IDs to add to the group channel.
+    # @param user_ids [Array<Integer>, Integer] user ID or Array of user IDs to add to the group channel.
     # @return [Channel] the Group Channel
     def add_group_users(user_ids)
       raise 'Attempted to add a user to a non-group channel!' unless group?
+      user_ids = user_ids.to_a if user_ids.is_a? Integer
       user_ids.each do |user_id|
         API::Channel.add_group_user(@bot.token, @id, user_id)
       end
       self
     end
+    alias_method :add_group_user, :add_group_users
 
     # Removes a user from a Group channel
-    # @param user_ids [Array<Integer>] Array of user IDs to remove from the group channel.
+    # @param user_ids [Array<Integer>, Integer] user ID or Array of user IDs to remove from the group channel.
     # @return [Channel] the Group Channel
     def remove_group_users(user_ids)
       raise 'Attempted to remove a user from a non-group channel!' unless group?
+      user_ids = user_ids.to_a if user_ids.is_a? Integer
       user_ids.each do |user_id|
         API::Channel.remove_group_user(@bot.token, @id, user_id)
       end
       self
     end
+    alias_method :remove_group_user, :remove_group_users
 
     # Leaves the group
     def leave_group
