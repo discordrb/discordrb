@@ -792,7 +792,7 @@ module Discordrb
         # Add pm channels
         data['private_channels'].each do |element|
           channel = ensure_channel(element)
-          @pm_channels[channel.recipient.id] = channel
+          @pm_channels[channel.recipients.first.id] = channel
         end
 
         # Don't notify yet if there are unavailable servers because they need to get available before the bot truly has
