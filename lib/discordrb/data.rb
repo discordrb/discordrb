@@ -488,7 +488,7 @@ module Discordrb
       add_role_ids = role_id_array(add)
       remove_role_ids = role_id_array(remove)
       old_role_ids = @roles.map(&:id)
-      new_role_ids = (old_role_ids.reject { |i| remove_role_ids.include?(i) } + add_role_ids).uniq
+      new_role_ids = (old_role_ids - remove_role_ids + add_role_ids).uniq
 
       API::Server.update_user(@bot.token, @server.id, @user.id, roles: new_role_ids)
     end
