@@ -634,6 +634,12 @@ module Discordrb
       end
     end
 
+    def add_recipient(data) # Todo
+    end
+
+    def remove_recipient(data)
+    end
+
     # Internal handler for GUILD_MEMBER_ADD
     def add_guild_member(data)
       server_id = data['guild_id'].to_i
@@ -908,6 +914,16 @@ module Discordrb
         delete_channel(data)
 
         event = ChannelDeleteEvent.new(data, self)
+        raise_event(event)
+      when :CHANNEL_RECIPIENT_ADD
+        add_recipient(data)
+
+        event = ChannelRecipientAddEvent.new(data, self)
+        raise_event(event)
+      when :CHANNEL_RECIPIENT_REMOVE
+        remove_recipient(data)
+
+        event = ChannelRecipientRemoveEvent.new(data, self)
         raise_event(event)
       when :GUILD_MEMBER_ADD
         add_guild_member(data)

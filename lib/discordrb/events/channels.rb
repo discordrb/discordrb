@@ -27,7 +27,7 @@ module Discordrb::Events
     # @!attribute [r] server
     #   @return [Server] the server the channel belongs to.
     #   @see Channel#server
-    delegate :type, :topic, :position, :name, :id, :server, to: :channel
+    delegate :name, :server, :type, :owner_id, :recipients, :topic, :user_limit, :position, :permission_overwrites, to: :channel
 
     def initialize(data, bot)
       @bot = bot
@@ -80,6 +80,9 @@ module Discordrb::Events
     # @return [Server] the channel's server
     attr_reader :server
 
+    # @return [Integer, nil] the channel's owner ID if this is a group channel
+    attr_reader :owner_id
+
     def initialize(data, bot)
       @bot = bot
 
@@ -90,6 +93,7 @@ module Discordrb::Events
       @is_private = data['is_private']
       @id = data['id'].to_i
       @server = bot.server(data['guild_id'].to_i) if data['guild_id']
+      @owner_id = bot.user(data['owner_id']) if @type == 3
     end
   end
 
@@ -117,6 +121,61 @@ module Discordrb::Events
       ].reduce(true, &:&)
     end
   end
+
+  # Generic subclass for recipient events (add/remove)
+  class ChannelRecipientEvent < Event
+    # @return [Channel] the channel in question.
+    attr_reader :channel
+    delegate :name, :server, :type, :owner_id, :recipients, :topic, :user_limit, :position, :permission_overwrites, to: :channel
+
+    # @return [User] The user that was added to the group
+    attr_reader :user
+    alias_method :member, :user
+
+    def initialize(bot, data)
+      @bot = bot
+
+      @channel = bot.channel(data['channel_id'].to_i)
+      @user = bot.user(data['user']['id'].to_i)
+    end
+  end
+
+  # Generic event handler for channel recipient events
+  class ChannelRecipientEventHandler
+    def matches?(event)
+      # Check for the proper event type
+      return false unless event.is_a? ChannelRecipientEvent
+
+      [
+        matches_all(@attributes[:type], event.type) do |a, e|
+          a == if a.is_a? String
+                 e.name
+               else
+                 e
+               end
+        end,
+        matches_all(@attributes[:name], event.name) do |a, e|
+          a == if a.is_a? String
+                 e.to_s
+               else
+                 e
+               end
+        end
+      ]
+    end
+  end # TOTEST
+
+  # Raised when a user is added to a private channel
+  class ChannelRecipientAddEvent < ChannelRecipientEvent; end
+
+  # Event handler for ChannelRecipientAddEvent
+  class ChannelRecipientAddEventHandler < ChannelRecipientEventHandler; end
+
+  # Raised when a recipient that isn't the bot leaves or is kicked from a group channel
+  class ChannelRecipientRemoveEvent < ChannelRecipientEvent; end
+
+  # Event handler for ChannelRecipientRemoveEvent
+  class ChannelRecipientRemoveEventHandler < ChannelRecipientEventHandler; end
 
   # Raised when a channel is updated (e.g. topic changes)
   class ChannelUpdateEvent < ChannelCreateEvent; end

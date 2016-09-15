@@ -182,6 +182,15 @@ module Discordrb
       register_event(ChannelDeleteEvent, attributes, block)
     end
 
+    # Todo
+    def channel_recipient_add(attributes = {}, &block)
+      register_event(ChannelRecipientAddEvent, attributes, block)
+    end
+
+    def channel_recipient_remove(attributes = {}, &block)
+      register_event(ChannelRecipientRemoveEvent, attributes, block)
+    end
+
     # This **event** is raised when a user's voice state changes.
     # @param attributes [Hash] The event's attributes.
     # @option attributes [String, Integer, User] :from Matches the user that sent the message.

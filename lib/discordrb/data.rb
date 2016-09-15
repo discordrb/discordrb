@@ -940,8 +940,8 @@ module Discordrb
     # @return [Integer] the type of this channel (0: text, 1: private, 2: voice, 3: group)
     attr_reader :type
 
-    # @return [Recipient, nil] the recipient of the private messages, or nil if this is not a PM channel
-    attr_reader :recipient
+    # @return [Integer, nil] the id of the owner of the group channel or nil if this is not a group channel.
+    attr_reader :owner_id
 
     # @return [Array<Recipient>, nil] the array of recipients of the private messages, or nil if this is not a Private channel
     attr_reader :recipients
@@ -974,7 +974,7 @@ module Discordrb
       "<##{@id}>"
     end
 
-    # @return [Recipient, nil] A PM Recipient or nil if it isn't a PM channel.
+    # @return [Recipient, nil] the recipient of the private messages, or nil if this is not a PM channel
     def recipient
       @recipients.first if pm?
     end
@@ -992,17 +992,10 @@ module Discordrb
       @user_limit = data['user_limit']
       @position = data['position']
 
-      if server?
-        @name = data['name']
-        @server = if server
-                    server
-                  else
-                    bot.server(data['guild_id'].to_i)
-                  end
-      else
+      if private?
         @recipients = []
         data['recipients'].each do |recipient|
-        recipient_user = bot.ensure_user(recipient)
+          recipient_user = bot.ensure_user(recipient)
           @recipients << Recipient.new(recipient_user, self, bot)
         end
         if pm?
@@ -1011,6 +1004,13 @@ module Discordrb
           @name = data['name']
           @owner_id = data['owner_id']
         end
+      else
+        @name = data['name']
+        @server = if server
+                    server
+                  else
+                    bot.server(data['guild_id'].to_i)
+                  end
       end
 
       # Populate permission overwrites
