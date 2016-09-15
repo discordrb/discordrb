@@ -966,7 +966,7 @@ module Discordrb
 
     # @return [true, false] whether or not this channel is a PM or Group channel.
     def private?
-      @server.nil?
+      pm? || group?
     end
 
     # @return [String] a string that will mention the channel as a clickable link on Discord.
