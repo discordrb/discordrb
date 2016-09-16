@@ -964,7 +964,7 @@ module Discordrb
     # @return [Hash<Integer => OpenStruct>] the channel's permission overwrites
     attr_reader :permission_overwrites
 
-    # @return [true, false] whether or not this channel is a PM or Group channel.
+    # @return [true, false] whether or not this channel is a PM or group channel.
     def private?
       pm? || group?
     end
@@ -1043,7 +1043,7 @@ module Discordrb
       @type == 2
     end
 
-    # @return [true, false] whether or not this channel is a grouo channel.
+    # @return [true, false] whether or not this channel is a group channel.
     def group?
       @type == 3
     end
@@ -1265,7 +1265,7 @@ module Discordrb
     # Creates a Group channel
     # @param user_ids [Array<Integer>] Array of user IDs to add to the new group channel (Excluding
     # the recipient of the PM channel).
-    # @return [Channel] the created Channel
+    # @return [Channel] the created channel.
     def create_group(user_ids)
       raise 'Attempted to create group channel on a non-pm channel!' unless pm?
       response = API::Channel.create_group(@bot.token, @id, user_ids.shift)
@@ -1274,29 +1274,31 @@ module Discordrb
     end
 
     # Adds a user to a Group channel
-    # @param user_ids [Array<Integer>, Integer] user ID or Array of user IDs to add to the group channel.
-    # @return [Channel] the Group Channel
+    # @param user_ids [Array<#resolve_id>, #resolve_id] User ID or array of user IDs to add to the group channel.
+    # @return [Channel] the group channel.
     def add_group_users(user_ids)
       raise 'Attempted to add a user to a non-group channel!' unless group?
-      user_ids = user_ids.to_a if user_ids.is_a? Integer
+      user_ids = [user_ids] unless user_ids.is_a? Array
       user_ids.each do |user_id|
-        API::Channel.add_group_user(@bot.token, @id, user_id)
+        API::Channel.add_group_user(@bot.token, @id, user_id.resolve_id)
       end
       self
     end
+
     alias_method :add_group_user, :add_group_users
 
-    # Removes a user from a Group channel
-    # @param user_ids [Array<Integer>, Integer] user ID or Array of user IDs to remove from the group channel.
-    # @return [Channel] the Group Channel
+    # Removes a user from a group channel.
+    # @param user_ids [Array<#resolve_id>, #resolve_id] User ID or array of user IDs to remove from the group channel.
+    # @return [Channel] the group channel.
     def remove_group_users(user_ids)
       raise 'Attempted to remove a user from a non-group channel!' unless group?
-      user_ids = user_ids.to_a if user_ids.is_a? Integer
+      user_ids = [user_ids] unless user_ids.is_a? Array
       user_ids.each do |user_id|
-        API::Channel.remove_group_user(@bot.token, @id, user_id)
+        API::Channel.remove_group_user(@bot.token, @id, user_id.resolve_id)
       end
       self
     end
+
     alias_method :remove_group_user, :remove_group_users
 
     # Leaves the group
@@ -1304,6 +1306,7 @@ module Discordrb
       raise 'Attempted to leave a non-group channel!' unless group?
       API::Channel.leave_group(@bot.token, @id)
     end
+
     alias_method :leave, :leave_group
 
     # The inspect method is overwritten to give more useful output
@@ -1319,7 +1322,6 @@ module Discordrb
     def add_recipient(recipient)
       raise 'Tried to add recipient to a non-group channel' unless group?
       raise ArgumentError, 'Tried to add a non-recipient to a group' unless recipient.is_a?(Recipient)
-      API::Channel.add_group_user(@bot.token, @id, recipient.id)
       @recipients << recipient
     end
 

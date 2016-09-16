@@ -809,7 +809,7 @@ module Discordrb
           ensure_server(element)
         end
 
-        # Add pm and group channels
+        # Add PM and group channels
         data['private_channels'].each do |element|
           channel = ensure_channel(element)
           if channel.pm?

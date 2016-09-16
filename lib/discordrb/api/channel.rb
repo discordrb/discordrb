@@ -227,7 +227,7 @@ module Discordrb::API::Channel
     update_permission(token, channel_id, role_id, allow, deny, 'role')
   end
 
-  # Create an empty group channel
+  # Create an empty group channel.
   def create_empty_group(token, bot_user_id)
     Discordrb::API.request(
       __method__,
@@ -239,7 +239,7 @@ module Discordrb::API::Channel
     )
   end
 
-  # Create a group channel
+  # Create a group channel.
   def create_group(token, pm_channel_id, user_id)
     Discordrb::API.request(
       __method__,
@@ -255,7 +255,7 @@ module Discordrb::API::Channel
     raise 'Attempted to add a user to group channel without permission!'
   end
 
-  # Add a user to a Group channel
+  # Add a user to a group channel.
   def add_group_user(token, group_channel_id, user_id)
     Discordrb::API.request(
       __method__,
@@ -267,7 +267,7 @@ module Discordrb::API::Channel
     )
   end
 
-  # Remove a user from a Group channel
+  # Remove a user from a group channel.
   def remove_group_user(token, group_channel_id, user_id)
     Discordrb::API.request(
       __method__,
@@ -278,6 +278,7 @@ module Discordrb::API::Channel
     )
   end
 
+  # Leave a group channel.
   def leave_group(token, group_channel_id)
     Discordrb::API.request(
       __method__,

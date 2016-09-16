@@ -128,7 +128,7 @@ module Discordrb::Events
     attr_reader :channel
     delegate :name, :server, :type, :owner_id, :recipients, :topic, :user_limit, :position, :permission_overwrites, to: :channel
 
-    # @return [Recipient] The recipient that was added/removed from the group
+    # @return [Recipient] the recipient that was added/removed from the group
     attr_reader :recipient
     delegate :id, to: :recipient
 
