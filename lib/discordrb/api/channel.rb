@@ -249,7 +249,7 @@ module Discordrb::API::Channel
       Authorization: token,
       content_type: :json
     )
-  rescue Rest:Client::InternalServerError
+  rescue RestClient::InternalServerError
     raise 'Attempted to add self as a new group channel recipient!'
   rescue RestClient::NoContent
     raise 'Attempted to create a group channel with the PM channel recipient!'
