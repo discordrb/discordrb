@@ -1695,7 +1695,7 @@ module Discordrb
       newroles = []
       return unless roles
       roles.each do |element|
-        role = Role.new(element, @bot, @server)
+        role = server.role(role_id)
         newroles << role
       end
       newroles
