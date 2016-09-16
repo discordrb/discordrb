@@ -245,10 +245,12 @@ module Discordrb::API::Channel
       __method__,
       :put,
       "#{Discordrb::API.api_base}/channels/#{pm_channel_id}/recipients/#{user_id}",
-      { recipient_id: [user_id] }.to_json,
+      {}.to_json,
       Authorization: token,
       content_type: :json
     )
+  rescue Rest:Client::InternalServerError
+    raise 'Attempted to add self as a new group channel recipient!'
   rescue RestClient::NoContent
     raise 'Attempted to create a group channel with the PM channel recipient!'
   rescue RestClient::Forbidden
