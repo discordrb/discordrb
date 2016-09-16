@@ -164,7 +164,6 @@ module Discordrb
         @servers.each do |_, server|
           server.emoji.values.each do |element|
             emoji[element.name] = GlobalEmoji.new(element, self)
-            emoji[element.name].process_roles(element)
           end
         end
         emoji.values

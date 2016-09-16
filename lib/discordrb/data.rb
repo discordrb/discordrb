@@ -1665,7 +1665,7 @@ module Discordrb
 
       @name = data.name
       @id = data.id
-      @role_associations = []
+      @role_associations = Hash.new([])
       @role_associations[data.server.id] = data.roles
     end
 
