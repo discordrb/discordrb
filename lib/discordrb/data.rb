@@ -1694,7 +1694,7 @@ module Discordrb
     def process_roles(roles)
       newroles = []
       return unless roles
-      roles.each do |element|
+      roles.each do
         role = server.role(role_id)
         newroles << role
       end
