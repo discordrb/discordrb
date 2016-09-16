@@ -130,6 +130,7 @@ module Discordrb::Events
 
     # @return [Recipient] The recipient that was added/removed from the group
     attr_reader :recipient
+    delegate :id, to: :recipient
 
     def initialize(data, bot)
       @bot = bot
@@ -148,12 +149,11 @@ module Discordrb::Events
       return false unless event.is_a? ChannelRecipientEvent
 
       [
-        matches_all(@attributes[:type], event.type) do |a, e|
-          a == if a.is_a? String
-                 e.name
-               else
-                 e
-               end
+        matches_all(@attributes[:owner_id], event.owner_id) do |a, e|
+          a.resolve_id == e.resolve_id
+        end,
+        matches_all(@attributes[:id], event.id) do |a, e|
+          a.resolve_id == e.resolve_id
         end,
         matches_all(@attributes[:name], event.name) do |a, e|
           a == if a.is_a? String

@@ -182,11 +182,26 @@ module Discordrb
       register_event(ChannelDeleteEvent, attributes, block)
     end
 
-    # Todo
+    # This **event** is raised when a recipient is added to a group channel.
+    # @param attributes [Hash] The event's attributes.
+    # @option attributes [String] :name Matches the name of the group channel that the recipient is added to.
+    # @option attributes [#resolve_id] :owner_id Matches the id of the group channel's owner.
+    # @option attributes [#resolve_id] :id Matches the id of the recipient added to the group channel.
+    # @yield The block is executed when the event is raised.
+    # @yieldparam event [ChannelRecipientAddEvent] The event that was raised.
+    # @return [ChannelRecipientAddHandler] The event handler that was registered.
     def channel_recipient_add(attributes = {}, &block)
       register_event(ChannelRecipientAddEvent, attributes, block)
     end
 
+    # This **event** is raised when a recipient is removed from a group channel.
+    # @param attributes [Hash] The event's attributes.
+    # @option attributes [String] :name Matches the name of the group channel that the recipient is added to.
+    # @option attributes [#resolve_id] :owner_id Matches the id of the group channel's owner.
+    # @option attributes [#resolve_id] :id Matches the id of the recipient removed from the group channel.
+    # @yield The block is executed when the event is raised.
+    # @yieldparam event [ChannelRecipientRemoveEvent] The event that was raised.
+    # @return [ChannelRecipientRemoveHandler] The event handler that was registered.
     def channel_recipient_remove(attributes = {}, &block)
       register_event(ChannelRecipientRemoveEvent, attributes, block)
     end
