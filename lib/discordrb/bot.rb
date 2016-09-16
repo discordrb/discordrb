@@ -166,9 +166,8 @@ module Discordrb
         emoji = {}
         @servers.each do |_, server|
           server.emoji.values.each do |element|
-            if emoji.any? { |somevalue| somevalue.name == element.name }
-              emoji[element.name] = GlobalEmoji.new(element, self)
-            end
+            emoji[element.name] = GlobalEmoji.new(element, self)
+            emoji[element.name].process_roles(element)
           end
         end
         emoji.values
