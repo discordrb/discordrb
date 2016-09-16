@@ -30,7 +30,6 @@ module Discordrb::Events
               else
                 bot.member(@channel.server.id, @user_id)
               end
-      puts @user.name if channel.group?
 
       @timestamp = Time.at(data['timestamp'].to_i)
     end
