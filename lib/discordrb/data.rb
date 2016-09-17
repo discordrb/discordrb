@@ -1590,7 +1590,7 @@ module Discordrb
     end
 
     # Check if any emoji got used in this message
-    # @return [boolean] whether or not any emoji got used
+    # @return [true, false] whether or not any emoji got used
     def emoji?
       emoji = scan_for_emoji
       return true unless emoji.empty?
