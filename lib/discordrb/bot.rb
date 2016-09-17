@@ -149,7 +149,7 @@ module Discordrb
     end
 
     # @overload emoji(id)
-    #   Return a emoji by its ID
+    #   Return an emoji by its ID
     #   @param id [Integer] The emoji's ID.
     #   @return emoji [GlobalEmoji, nil] the emoji object. `nil` if the emoji was not found.
     # @overload emoji
@@ -158,10 +158,7 @@ module Discordrb
     def emoji(id = nil)
       gateway_check
       if id
-        @emoji = emoji
         emoji = @emoji.find { |sth| sth.id == id }
-        return nil unless emoji
-        return emoji
       else
         emoji = {}
         @servers.each do |_, server|
@@ -175,6 +172,14 @@ module Discordrb
 
     alias_method :emojis, :emoji
     alias_method :all_emoji, :emoji
+
+    # Finds an emoji by its name.
+    # @param name [String] The emoji name that should be resolved.
+    # @return [Emoji, nil] the emoji identified by the name, or `nil` if it couldn't be found.
+    def find_emoji(name)
+      LOGGER.out("Resolving emoji #{name}")
+      emoji.find { |element| element.name == name }
+    end
 
     # The bot's user profile. This special user object can be used
     # to edit user data like the current username (see {Profile#username=}).
@@ -422,9 +427,9 @@ module Discordrb
       API.update_oauth_application(@token, name, redirect_uris, description, icon)
     end
 
-    # Gets the user or emoji from a mention of the user or emoji.
+    # Gets the user, role or emoji from a mention of the user, role or emoji.
     # @param mention [String] The mention, which should look like `<@12314873129>`, `<@&123456789>` or `<:Name:126328:>`.
-    # @param server [Server, nil] The server of the associated mention. Required for role and emoji parsing.
+    # @param server [Server, nil] The server of the associated mention. Required for role parsing.
     # @return [User, Role, Emoji] The user, role or emoji identified by the mention, or `nil` if none exists.
     def parse_mention(mention, server = nil)
       # Mention format: <@id>
@@ -434,9 +439,7 @@ module Discordrb
         return nil unless server
         server.role(id)
       elsif /<:(\w+):(?<id>\d+)>?/ =~ mention
-        emoji.each do |element|
-          return element if element.id.to_i == id.to_i
-        end
+        emoji.find { |element| return element if element.id.to_i == id.to_i }
         return nil
       end
     end
