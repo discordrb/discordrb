@@ -1445,9 +1445,6 @@ module Discordrb
     # @return [Array<User>] the users that were mentioned in this message.
     attr_reader :mentions
 
-    # @return [Array<Emoji>] the emotes that were used/mentioned in this message (Only returns Emoji the bot has access to, else nil).
-    attr_reader :emoji
-
     # @return [Array<Role>] the roles that were mentioned in this message.
     attr_reader :role_mentions
 
@@ -1505,14 +1502,6 @@ module Discordrb
       @id = data['id'].to_i
 
       @emoji = []
-
-      unless data['content'].nil?
-        emoji = data['content'].split
-        emoji = emoji.grep(/<:(?<name>\w+):(?<id>\d+)>?/)
-        emoji.each do |element|
-          @emoji << bot.parse_mention(element)
-        end
-      end
 
       @mentions = []
 
@@ -1581,10 +1570,24 @@ module Discordrb
       @author && @author.current_bot?
     end
 
+    # @return [Array<Emoji>] the emotes that were used/mentioned in this message (Only returns Emoji the bot has access to, else nil).
+    def emoji
+      return if @content.nil?
+
+      emoji = @content.split
+      emoji = emoji.grep(/<:(?<name>\w+):(?<id>\d+)>?/)
+      emoji.each do |element|
+        @emoji << @bot.parse_mention(element)
+      end
+      @emoji
+    end
+
     # Check if any emoji got used in this message
-    # @return [boolean] wether any emoji got used or not
+    # @return [boolean] whether any emoji got used or not
     def emoji?
-      return true unless @emoji.empty?
+      emoji = @content.split
+      emoji = emoji.grep(/<:(?<name>\w+):(?<id>\d+)>?/)
+      return true unless emoji.empty?
     end
 
     # The inspect method is overwritten to give more useful output
@@ -1617,18 +1620,14 @@ module Discordrb
       process_roles(data['roles']) if server
     end
 
-    # @return [true, false] whether a server is attached to this emoji
-    def attached?
-      !@server.nil?
-    end
-
     # @return [String] the layout to mention it (or have it used) in a message
     def mention
       "<:#{@name}:#{@id}>"
     end
+
     alias_method :use, :mention
 
-    # The icon URL of the emoji
+    # @return [String] the icon URL of the emoji
     def icon_url
       API.emoji_icon_url(@id)
     end
@@ -1673,9 +1672,10 @@ module Discordrb
     def mention
       "<:#{@name}:#{@id}>"
     end
+
     alias_method :use, :mention
 
-    # The icon URL of the emoji
+    # @return [String] the icon URL of the emoji
     def icon_url
       API.emoji_icon_url(@id)
     end
@@ -1683,11 +1683,6 @@ module Discordrb
     # The inspect method is overwritten to give more useful output
     def inspect
       "<GlobalEmoji name=#{@name} id=#{@id}>"
-    end
-
-    # @!visibility private
-    def push_roles(emoji)
-      @role_associations[emoji.server.id] = emoji.roles
     end
 
     # @!visibility private
