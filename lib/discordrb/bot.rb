@@ -417,15 +417,18 @@ module Discordrb
 
     # Gets the user, role or emoji from a mention of the user, role or emoji.
     # @param mention [String] The mention, which should look like `<@12314873129>`, `<@&123456789>` or `<:Name:126328:>`.
-    # @param server [Server, nil] The server of the associated mention. Required for role parsing.
+    # @param server [Server, nil] The server of the associated mention. (recommended for role parsing, to speed things up)
     # @return [User, Role, Emoji] The user, role or emoji identified by the mention, or `nil` if none exists.
     def parse_mention(mention, server = nil)
       # Mention format: <@id>
       if /<@!?(?<id>\d+)>?/ =~ mention
         user(id.to_i)
       elsif /<@&(?<id>\d+)>?/ =~ mention
-        return nil unless server
-        server.role(id)
+        return server.role(id) if server
+        servers.each do |element|
+          role = element.role(id)
+          return role unless role.nil?
+        end
       elsif /<:(\w+):(?<id>\d+)>?/ =~ mention
         emoji.find { |element| return element if element.id.to_i == id.to_i }
         return nil
