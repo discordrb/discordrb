@@ -1570,12 +1570,19 @@ module Discordrb
       @author && @author.current_bot?
     end
 
+    # @!visibility private
+    # @return [Array<String>] the emoji mentions found in the message
+    def scan_for_emoji
+      emoji = @content.split
+      emoji = emoji.grep(/<:(?<name>\w+):(?<id>\d+)>?/)
+      emoji
+    end
+
     # @return [Array<Emoji>] the emotes that were used/mentioned in this message (Only returns Emoji the bot has access to, else nil).
     def emoji
       return if @content.nil?
 
-      emoji = @content.split
-      emoji = emoji.grep(/<:(?<name>\w+):(?<id>\d+)>?/)
+      emoji = scan_for_emoji
       emoji.each do |element|
         @emoji << @bot.parse_mention(element)
       end
@@ -1583,10 +1590,9 @@ module Discordrb
     end
 
     # Check if any emoji got used in this message
-    # @return [boolean] whether any emoji got used or not
+    # @return [boolean] whether or not any emoji got used
     def emoji?
-      emoji = @content.split
-      emoji = emoji.grep(/<:(?<name>\w+):(?<id>\d+)>?/)
+      emoji = scan_for_emoji
       return true unless emoji.empty?
     end
 
@@ -1603,10 +1609,10 @@ module Discordrb
     # @return [String] the emoji name
     attr_reader :name
 
-    # @return [Server, nil] the server attached to this emoji. `nil` if it is not attached
+    # @return [Server] the server of this emoji
     attr_reader :server
 
-    # @return [Array<Role>, nil] roles this emoji is active for, `nil` if nit attached to a server
+    # @return [Array<Role>] roles this emoji is active for
     attr_reader :roles
 
     def initialize(data, bot, server)
