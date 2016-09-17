@@ -442,8 +442,7 @@ module Discordrb
           return role unless role.nil?
         end
       elsif /<:(\w+):(?<id>\d+)>?/ =~ mention
-        emoji.find { |element| return element if element.id.to_i == id.to_i }
-        return nil
+        emoji.find { |element| element.id.to_i == id.to_i }
       end
     end
 
