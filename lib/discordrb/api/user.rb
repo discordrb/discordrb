@@ -100,7 +100,7 @@ module Discordrb::API::User
       __method__,
       :post,
       "#{Discordrb::API.api_base}/users/@me/channels",
-      { recipient_id: recipient_id },
+      { recipient_id: recipient_id }.to_json,
       Authorization: token
     )
   end
