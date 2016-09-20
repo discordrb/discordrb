@@ -175,7 +175,7 @@ module Discordrb
 
     # Finds an emoji by its name.
     # @param name [String] The emoji name that should be resolved.
-    # @return [Emoji, nil] the emoji identified by the name, or `nil` if it couldn't be found.
+    # @return [GlobalEmoji, nil] the emoji identified by the name, or `nil` if it couldn't be found.
     def find_emoji(name)
       LOGGER.out("Resolving emoji #{name}")
       emoji.find { |element| element.name == name }
