@@ -517,6 +517,11 @@ module Discordrb
       handle_dispatch(type, data)
     end
 
+    # Raises a heartbeat event. Called by the gateway connection handler used internally.
+    def raise_heartbeat_event(event)
+      raise_event(event)
+    end
+
     private
 
     # Throws a useful exception if there's currently no gateway connection
