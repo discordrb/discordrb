@@ -518,8 +518,8 @@ module Discordrb
     end
 
     # Raises a heartbeat event. Called by the gateway connection handler used internally.
-    def raise_heartbeat_event(event)
-      raise_event(event)
+    def raise_heartbeat_event
+      raise_event(HeartbeatEvent.new(self))
     end
 
     private
