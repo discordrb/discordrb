@@ -546,6 +546,9 @@ module Discordrb
       packet = JSON.parse(msg)
       op = packet['op'].to_i
 
+      # Remove token from log
+      packet['d']['analytics_token'] = 'Redacted' if op.zero?
+
       LOGGER.in(packet)
 
       # If the packet has a sequence defined (all dispatch packets have one), make sure to update that in the
@@ -662,7 +665,14 @@ module Discordrb
     end
 
     def send(data, type = :text)
-      LOGGER.out(data)
+      if data
+        # Remove token from log
+        log_data = JSON.parse(data)
+        log_data['d']['token'] = 'Redacted' if log_data['d'].is_a?(Hash)
+        LOGGER.out(log_data)
+      else
+        LOGGER.out(data)
+      end
 
       unless @handshaked && !@closed
         # If we're not handshaked or closed, it means there's no connection to send anything to
