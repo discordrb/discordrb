@@ -177,7 +177,7 @@ module Discordrb::API
   # Change an OAuth application's properties
   def update_oauth_application(token, name, redirect_uris, description = '', icon = nil)
     request(
-      __method__,
+      :oauth2_applications,
       nil,
       :put,
       "#{api_base}/oauth2/applications",
