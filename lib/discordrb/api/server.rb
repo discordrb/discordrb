@@ -7,6 +7,7 @@ module Discordrb::API::Server
   def create(token, name, region = :london)
     Discordrb::API.request(
       :guilds,
+      nil,
       :post,
       "#{Discordrb::API.api_base}/guilds",
       { name: name, region: region.to_s }.to_json,
@@ -20,6 +21,7 @@ module Discordrb::API::Server
   def resolve(token, server_id)
     Discordrb::API.request(
       :guilds_sid,
+      server_id,
       :get,
       "#{Discordrb::API.api_base}/guilds/#{server_id}",
       Authorization: token
@@ -31,6 +33,7 @@ module Discordrb::API::Server
   def update(token, server_id, name, region, icon, afk_channel_id, afk_timeout)
     Discordrb::API.request(
       :guilds_sid,
+      server_id,
       :patch,
       "#{Discordrb::API.api_base}/guilds/#{server_id}",
       { name: name, region: region, icon: icon, afk_channel_id: afk_channel_id, afk_timeout: afk_timeout }.to_json,
@@ -43,6 +46,7 @@ module Discordrb::API::Server
   def transfer_ownership(token, server_id, user_id)
     Discordrb::API.request(
       :guilds_sid,
+      server_id,
       :patch,
       "#{Discordrb::API.api_base}/guilds/#{server_id}",
       { owner_id: user_id }.to_json,
@@ -56,6 +60,7 @@ module Discordrb::API::Server
   def delete(token, server_id)
     Discordrb::API.request(
       :guilds_sid,
+      server_id,
       :delete,
       "#{Discordrb::API.api_base}/guilds/#{server_id}",
       Authorization: token
@@ -67,6 +72,7 @@ module Discordrb::API::Server
   def channels(token, server_id)
     Discordrb::API.request(
       :guilds_sid_channels,
+      server_id,
       :get,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/channels",
       Authorization: token
@@ -78,6 +84,7 @@ module Discordrb::API::Server
   def create_channel(token, server_id, name, type)
     Discordrb::API.request(
       :guilds_sid_channels,
+      server_id,
       :post,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/channels",
       { name: name, type: type }.to_json,
@@ -91,6 +98,7 @@ module Discordrb::API::Server
   def update_channel(token, server_id, channel_id, position)
     Discordrb::API.request(
       :guilds_sid_channels,
+      server_id,
       :patch,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/channels",
       { id: channel_id, position: position }.to_json,
@@ -104,6 +112,7 @@ module Discordrb::API::Server
   def resolve_member(token, server_id, user_id)
     Discordrb::API.request(
       :guilds_sid_members_uid,
+      server_id,
       :get,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/members/#{user_id}",
       Authorization: token
@@ -115,6 +124,7 @@ module Discordrb::API::Server
   def resolve_members(token, server_id, limit, after = nil)
     Discordrb::API.request(
       :guilds_sid_members,
+      server_id,
       :get,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/members?limit=#{limit}#{"&after=#{after}" if after}",
       Authorization: token
@@ -126,6 +136,7 @@ module Discordrb::API::Server
   def update_member(token, server_id, user_id, nick: nil, roles: nil, mute: nil, deaf: nil, channel_id: nil)
     Discordrb::API.request(
       :guilds_sid_members_uid,
+      server_id,
       :patch,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/members/#{user_id}", {
         roles: roles,
@@ -144,6 +155,7 @@ module Discordrb::API::Server
   def remove_member(token, server_id, user_id)
     Discordrb::API.request(
       :guilds_sid_members_uid,
+      server_id,
       :delete,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/members/#{user_id}",
       Authorization: token,
@@ -156,6 +168,7 @@ module Discordrb::API::Server
   def bans(token, server_id)
     Discordrb::API.request(
       :guilds_sid_bans,
+      server_id,
       :get,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/bans",
       Authorization: token
@@ -167,6 +180,7 @@ module Discordrb::API::Server
   def ban_user(token, server_id, user_id, message_days)
     Discordrb::API.request(
       :guilds_sid_bans_uid,
+      server_id,
       :put,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/bans/#{user_id}?delete-message-days=#{message_days}",
       nil,
@@ -179,6 +193,7 @@ module Discordrb::API::Server
   def unban_user(token, server_id, user_id)
     Discordrb::API.request(
       :guilds_sid_bans_uid,
+      server_id,
       :delete,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/bans/#{user_id}",
       Authorization: token
@@ -190,6 +205,7 @@ module Discordrb::API::Server
   def roles(token, server_id)
     Discordrb::API.request(
       :guilds_sid_roles,
+      server_id,
       :get,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/roles",
       Authorization: token
@@ -201,6 +217,7 @@ module Discordrb::API::Server
   def create_role(token, server_id)
     Discordrb::API.request(
       :guilds_sid_roles,
+      server_id,
       :post,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/roles",
       nil,
@@ -216,6 +233,7 @@ module Discordrb::API::Server
   def update_role(token, server_id, role_id, name, colour, hoist = false, mentionable = false, packed_permissions = 36_953_089)
     Discordrb::API.request(
       :guilds_sid_roles_rid,
+      server_id,
       :patch,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/roles/#{role_id}",
       { color: colour, name: name, hoist: hoist, mentionable: mentionable, permissions: packed_permissions }.to_json,
@@ -229,6 +247,7 @@ module Discordrb::API::Server
   def delete_role(token, server_id, role_id)
     Discordrb::API.request(
       :guilds_sid_roles_rid,
+      server_id,
       :delete,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/roles/#{role_id}",
       Authorization: token
@@ -240,6 +259,7 @@ module Discordrb::API::Server
   def prune_count(token, server_id)
     Discordrb::API.request(
       :guilds_sid_prune,
+      server_id,
       :get,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/prune",
       Authorization: token
@@ -251,6 +271,7 @@ module Discordrb::API::Server
   def begin_prune(token, server_id, days)
     Discordrb::API.request(
       :guilds_sid_prune,
+      server_id,
       :post,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/prune",
       { days: days },
@@ -263,6 +284,7 @@ module Discordrb::API::Server
   def invites(token, server_id)
     Discordrb::API.request(
       :guilds_sid_invites,
+      server_id,
       :get,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/invites",
       Authorization: token
@@ -274,6 +296,7 @@ module Discordrb::API::Server
   def integrations(token, server_id)
     Discordrb::API.request(
       :guilds_sid_integrations,
+      server_id,
       :get,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/integrations",
       Authorization: token
@@ -285,6 +308,7 @@ module Discordrb::API::Server
   def create_integration(token, server_id, type, id)
     Discordrb::API.request(
       :guilds_sid_integrations,
+      server_id,
       :post,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/integrations",
       { type: type, id: id },
@@ -297,6 +321,7 @@ module Discordrb::API::Server
   def update_integration(token, server_id, integration_id, expire_behavior, expire_grace_period, enable_emoticons)
     Discordrb::API.request(
       :guilds_sid_integrations_iid,
+      server_id,
       :patch,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/integrations/#{integration_id}",
       { expire_behavior: expire_behavior, expire_grace_period: expire_grace_period, enable_emoticons: enable_emoticons }.to_json,
@@ -310,6 +335,7 @@ module Discordrb::API::Server
   def delete_integration(token, server_id, integration_id)
     Discordrb::API.request(
       :guilds_sid_integrations_iid,
+      server_id,
       :delete,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/integrations/#{integration_id}",
       Authorization: token
@@ -321,6 +347,7 @@ module Discordrb::API::Server
   def sync_integration(token, server_id, integration_id)
     Discordrb::API.request(
       :guilds_sid_integrations_iid_sync,
+      server_id,
       :post,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/integrations/#{integration_id}/sync",
       nil,
