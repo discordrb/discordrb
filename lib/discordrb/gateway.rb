@@ -353,6 +353,7 @@ module Discordrb
             # suspended (e.g. after op7)
             if (@session && !@session.suspended?) || !@session
               sleep @heartbeat_interval
+              @bot.raise_heartbeat_event
               heartbeat
             else
               sleep 1
