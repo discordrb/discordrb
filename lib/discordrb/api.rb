@@ -71,8 +71,7 @@ module Discordrb::API
     retry
   end
 
-  # Make an API request. Utility function to implement message queueing
-  # in the future
+  # Make an API request, including rate limit handling.
   def request(key, major_parameter, type, *attributes)
     # Add a custom user agent
     attributes.last[:user_agent] = user_agent if attributes.last.is_a? Hash
