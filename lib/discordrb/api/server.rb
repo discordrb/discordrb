@@ -6,7 +6,8 @@ module Discordrb::API::Server
   # https://discordapp.com/developers/docs/resources/guild#create-guild
   def create(token, name, region = :london)
     Discordrb::API.request(
-      __method__,
+      :guilds,
+      nil,
       :post,
       "#{Discordrb::API.api_base}/guilds",
       { name: name, region: region.to_s }.to_json,
@@ -19,7 +20,8 @@ module Discordrb::API::Server
   # https://discordapp.com/developers/docs/resources/guild#get-guild
   def resolve(token, server_id)
     Discordrb::API.request(
-      __method__,
+      :guilds_sid,
+      server_id,
       :get,
       "#{Discordrb::API.api_base}/guilds/#{server_id}",
       Authorization: token
@@ -30,7 +32,8 @@ module Discordrb::API::Server
   # https://discordapp.com/developers/docs/resources/guild#modify-guild
   def update(token, server_id, name, region, icon, afk_channel_id, afk_timeout)
     Discordrb::API.request(
-      __method__,
+      :guilds_sid,
+      server_id,
       :patch,
       "#{Discordrb::API.api_base}/guilds/#{server_id}",
       { name: name, region: region, icon: icon, afk_channel_id: afk_channel_id, afk_timeout: afk_timeout }.to_json,
@@ -42,7 +45,8 @@ module Discordrb::API::Server
   # Transfer server ownership
   def transfer_ownership(token, server_id, user_id)
     Discordrb::API.request(
-      __method__,
+      :guilds_sid,
+      server_id,
       :patch,
       "#{Discordrb::API.api_base}/guilds/#{server_id}",
       { owner_id: user_id }.to_json,
@@ -55,7 +59,8 @@ module Discordrb::API::Server
   # https://discordapp.com/developers/docs/resources/guild#delete-guild
   def delete(token, server_id)
     Discordrb::API.request(
-      __method__,
+      :guilds_sid,
+      server_id,
       :delete,
       "#{Discordrb::API.api_base}/guilds/#{server_id}",
       Authorization: token
@@ -66,7 +71,8 @@ module Discordrb::API::Server
   # https://discordapp.com/developers/docs/resources/guild#get-guild-channels
   def channels(token, server_id)
     Discordrb::API.request(
-      __method__,
+      :guilds_sid_channels,
+      server_id,
       :get,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/channels",
       Authorization: token
@@ -77,7 +83,8 @@ module Discordrb::API::Server
   # https://discordapp.com/developers/docs/resources/guild#create-guild-channel
   def create_channel(token, server_id, name, type)
     Discordrb::API.request(
-      __method__,
+      :guilds_sid_channels,
+      server_id,
       :post,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/channels",
       { name: name, type: type }.to_json,
@@ -90,7 +97,8 @@ module Discordrb::API::Server
   # https://discordapp.com/developers/docs/resources/guild#modify-guild-channel
   def update_channel(token, server_id, channel_id, position)
     Discordrb::API.request(
-      __method__,
+      :guilds_sid_channels,
+      server_id,
       :patch,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/channels",
       { id: channel_id, position: position }.to_json,
@@ -103,7 +111,8 @@ module Discordrb::API::Server
   # https://discordapp.com/developers/docs/resources/guild#get-guild-member
   def resolve_member(token, server_id, user_id)
     Discordrb::API.request(
-      __method__,
+      :guilds_sid_members_uid,
+      server_id,
       :get,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/members/#{user_id}",
       Authorization: token
@@ -114,7 +123,8 @@ module Discordrb::API::Server
   # https://discordapp.com/developers/docs/resources/guild#list-guild-members
   def resolve_members(token, server_id, limit, after = nil)
     Discordrb::API.request(
-      __method__,
+      :guilds_sid_members,
+      server_id,
       :get,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/members?limit=#{limit}#{"&after=#{after}" if after}",
       Authorization: token
@@ -125,7 +135,8 @@ module Discordrb::API::Server
   # https://discordapp.com/developers/docs/resources/guild#modify-guild-member
   def update_member(token, server_id, user_id, nick: nil, roles: nil, mute: nil, deaf: nil, channel_id: nil)
     Discordrb::API.request(
-      __method__,
+      :guilds_sid_members_uid,
+      server_id,
       :patch,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/members/#{user_id}", {
         roles: roles,
@@ -143,7 +154,8 @@ module Discordrb::API::Server
   # https://discordapp.com/developers/docs/resources/guild#remove-guild-member
   def remove_member(token, server_id, user_id)
     Discordrb::API.request(
-      __method__,
+      :guilds_sid_members_uid,
+      server_id,
       :delete,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/members/#{user_id}",
       Authorization: token,
@@ -155,7 +167,8 @@ module Discordrb::API::Server
   # https://discordapp.com/developers/docs/resources/guild#get-guild-bans
   def bans(token, server_id)
     Discordrb::API.request(
-      __method__,
+      :guilds_sid_bans,
+      server_id,
       :get,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/bans",
       Authorization: token
@@ -166,7 +179,8 @@ module Discordrb::API::Server
   # https://discordapp.com/developers/docs/resources/guild#create-guild-ban
   def ban_user(token, server_id, user_id, message_days)
     Discordrb::API.request(
-      __method__,
+      :guilds_sid_bans_uid,
+      server_id,
       :put,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/bans/#{user_id}?delete-message-days=#{message_days}",
       nil,
@@ -178,7 +192,8 @@ module Discordrb::API::Server
   # https://discordapp.com/developers/docs/resources/guild#remove-guild-ban
   def unban_user(token, server_id, user_id)
     Discordrb::API.request(
-      __method__,
+      :guilds_sid_bans_uid,
+      server_id,
       :delete,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/bans/#{user_id}",
       Authorization: token
@@ -189,7 +204,8 @@ module Discordrb::API::Server
   # https://discordapp.com/developers/docs/resources/guild#get-guild-roles
   def roles(token, server_id)
     Discordrb::API.request(
-      __method__,
+      :guilds_sid_roles,
+      server_id,
       :get,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/roles",
       Authorization: token
@@ -200,7 +216,8 @@ module Discordrb::API::Server
   # https://discordapp.com/developers/docs/resources/guild#get-guild-roles
   def create_role(token, server_id)
     Discordrb::API.request(
-      __method__,
+      :guilds_sid_roles,
+      server_id,
       :post,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/roles",
       nil,
@@ -215,7 +232,8 @@ module Discordrb::API::Server
   # https://discordapp.com/developers/docs/resources/guild#batch-modify-guild-role
   def update_role(token, server_id, role_id, name, colour, hoist = false, mentionable = false, packed_permissions = 36_953_089)
     Discordrb::API.request(
-      __method__,
+      :guilds_sid_roles_rid,
+      server_id,
       :patch,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/roles/#{role_id}",
       { color: colour, name: name, hoist: hoist, mentionable: mentionable, permissions: packed_permissions }.to_json,
@@ -228,7 +246,8 @@ module Discordrb::API::Server
   # https://discordapp.com/developers/docs/resources/guild#delete-guild-role
   def delete_role(token, server_id, role_id)
     Discordrb::API.request(
-      __method__,
+      :guilds_sid_roles_rid,
+      server_id,
       :delete,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/roles/#{role_id}",
       Authorization: token
@@ -239,7 +258,8 @@ module Discordrb::API::Server
   # https://discordapp.com/developers/docs/resources/guild#get-guild-prune-count
   def prune_count(token, server_id)
     Discordrb::API.request(
-      __method__,
+      :guilds_sid_prune,
+      server_id,
       :get,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/prune",
       Authorization: token
@@ -250,7 +270,8 @@ module Discordrb::API::Server
   # https://discordapp.com/developers/docs/resources/guild#begin-guild-prune
   def begin_prune(token, server_id, days)
     Discordrb::API.request(
-      __method__,
+      :guilds_sid_prune,
+      server_id,
       :post,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/prune",
       { days: days },
@@ -262,7 +283,8 @@ module Discordrb::API::Server
   # https://discordapp.com/developers/docs/resources/guild#get-guild-invites
   def invites(token, server_id)
     Discordrb::API.request(
-      __method__,
+      :guilds_sid_invites,
+      server_id,
       :get,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/invites",
       Authorization: token
@@ -273,7 +295,8 @@ module Discordrb::API::Server
   # https://discordapp.com/developers/docs/resources/guild#get-guild-integrations
   def integrations(token, server_id)
     Discordrb::API.request(
-      __method__,
+      :guilds_sid_integrations,
+      server_id,
       :get,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/integrations",
       Authorization: token
@@ -284,7 +307,8 @@ module Discordrb::API::Server
   # https://discordapp.com/developers/docs/resources/guild#create-guild-integration
   def create_integration(token, server_id, type, id)
     Discordrb::API.request(
-      __method__,
+      :guilds_sid_integrations,
+      server_id,
       :post,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/integrations",
       { type: type, id: id },
@@ -296,7 +320,8 @@ module Discordrb::API::Server
   # https://discordapp.com/developers/docs/resources/guild#modify-guild-integration
   def update_integration(token, server_id, integration_id, expire_behavior, expire_grace_period, enable_emoticons)
     Discordrb::API.request(
-      __method__,
+      :guilds_sid_integrations_iid,
+      server_id,
       :patch,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/integrations/#{integration_id}",
       { expire_behavior: expire_behavior, expire_grace_period: expire_grace_period, enable_emoticons: enable_emoticons }.to_json,
@@ -309,7 +334,8 @@ module Discordrb::API::Server
   # https://discordapp.com/developers/docs/resources/guild#delete-guild-integration
   def delete_integration(token, server_id, integration_id)
     Discordrb::API.request(
-      __method__,
+      :guilds_sid_integrations_iid,
+      server_id,
       :delete,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/integrations/#{integration_id}",
       Authorization: token
@@ -320,7 +346,8 @@ module Discordrb::API::Server
   # https://discordapp.com/developers/docs/resources/guild#sync-guild-integration
   def sync_integration(token, server_id, integration_id)
     Discordrb::API.request(
-      __method__,
+      :guilds_sid_integrations_iid_sync,
+      server_id,
       :post,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/integrations/#{integration_id}/sync",
       nil,

@@ -2,6 +2,8 @@
 
 require 'rest-client'
 require 'json'
+require 'time'
+
 require 'discordrb/errors'
 
 # List of methods representing endpoints in Discord's API
@@ -43,6 +45,18 @@ module Discordrb::API
   # Resets all rate limit mutexes
   def reset_mutexes
     @mutexes = {}
+    @global_mutex = Mutex.new
+  end
+
+  # Wait a specified amount of time synchronised with the specified mutex.
+  def sync_wait(time, mutex)
+    mutex.synchronize { sleep time }
+  end
+
+  # Wait for a specified mutex to unlock and do nothing with it afterwards.
+  def mutex_wait(mutex)
+    mutex.lock
+    mutex.unlock
   end
 
   # Performs a RestClient request.
@@ -57,33 +71,49 @@ module Discordrb::API
     retry
   end
 
-  # Make an API request. Utility function to implement message queueing
-  # in the future
-  def request(key, type, *attributes)
+  # Make an API request, including rate limit handling.
+  def request(key, major_parameter, type, *attributes)
     # Add a custom user agent
     attributes.last[:user_agent] = user_agent if attributes.last.is_a? Hash
 
-    begin
-      if key
-        @mutexes[key] = Mutex.new unless @mutexes[key]
+    # The most recent Discord rate limit requirements require the support of major parameters, where a particular route
+    # and major parameter combination (*not* the HTTP method) uniquely identifies a RL bucket.
+    key = [key, major_parameter].freeze
 
-        # Lock and unlock, i. e. wait for the mutex to unlock and don't do anything with it afterwards
-        @mutexes[key].lock
-        @mutexes[key].unlock
-      end
+    begin
+      mutex = @mutexes[key] ||= Mutex.new
+
+      # Lock and unlock, i. e. wait for the mutex to unlock and don't do anything with it afterwards
+      mutex_wait(mutex)
+
+      # If the global mutex happens to be locked right now, wait for that as well.
+      mutex_wait(@global_mutex) if @global_mutex.locked?
 
       response = raw_request(type, attributes)
-    rescue RestClient::TooManyRequests => e
-      raise "Got an HTTP 429 for an untracked API call! Please report this bug together with the following information: #{type} #{attributes}" unless key
 
-      unless @mutexes[key].locked?
+      if response.headers[:x_ratelimit_remaining] == '0' && !mutex.locked?
+        Discordrb::LOGGER.debug "RL bucket depletion detected! Date: #{response.headers[:date]} Reset: #{response.headers[:x_ratelimit_reset]}"
+
+        now = Time.rfc2822(response.headers[:date])
+        reset = Time.at(response.headers[:x_ratelimit_reset].to_i)
+
+        delta = reset - now
+
+        Discordrb::LOGGER.warn("Locking RL mutex (key: #{key}) for #{delta} seconds preemptively")
+        sync_wait(delta, mutex)
+      end
+    rescue RestClient::TooManyRequests => e
+      # If the 429 is from the global RL, then we have to use the global mutex instead.
+      mutex = @global_mutex if e.response.headers[:x_ratelimit_global] == 'true'
+
+      unless mutex.locked?
         response = JSON.parse(e.response)
         wait_seconds = response['retry_after'].to_i / 1000.0
         Discordrb::LOGGER.warn("Locking RL mutex (key: #{key}) for #{wait_seconds} seconds due to Discord rate limiting")
 
         # Wait the required time synchronized by the mutex (so other incoming requests have to wait) but only do it if
         # the mutex isn't locked already so it will only ever wait once
-        @mutexes[key].synchronize { sleep wait_seconds }
+        sync_wait(wait_seconds, mutex)
       end
 
       retry
@@ -110,7 +140,8 @@ module Discordrb::API
   # Login to the server
   def login(email, password)
     request(
-      __method__,
+      :auth_login,
+      nil,
       :post,
       "#{api_base}/auth/login",
       email: email,
@@ -121,7 +152,8 @@ module Discordrb::API
   # Logout from the server
   def logout(token)
     request(
-      __method__,
+      :auth_logout,
+      nil,
       :post,
       "#{api_base}/auth/logout",
       nil,
@@ -132,7 +164,8 @@ module Discordrb::API
   # Create an OAuth application
   def create_oauth_application(token, name, redirect_uris)
     request(
-      __method__,
+      :oauth2_applications,
+      nil,
       :post,
       "#{api_base}/oauth2/applications",
       { name: name, redirect_uris: redirect_uris }.to_json,
@@ -145,6 +178,7 @@ module Discordrb::API
   def update_oauth_application(token, name, redirect_uris, description = '', icon = nil)
     request(
       __method__,
+      nil,
       :put,
       "#{api_base}/oauth2/applications",
       { name: name, redirect_uris: redirect_uris, description: description, icon: icon }.to_json,
@@ -156,7 +190,8 @@ module Discordrb::API
   # Get the bot's OAuth application's information
   def oauth_application(token)
     request(
-      __method__,
+      :oauth2_applications_me,
+      nil,
       :get,
       "#{api_base}/oauth2/applications/@me",
       Authorization: token
@@ -168,7 +203,8 @@ module Discordrb::API
   # so this is an easy way to catch up on messages
   def acknowledge_message(token, channel_id, message_id)
     request(
-      __method__,
+      :channels_cid_messages_mid_ack,
+      nil, # This endpoint is unavailable for bot accounts and thus isn't subject to its rate limit requirements.
       :post,
       "#{api_base}/channels/#{channel_id}/messages/#{message_id}/ack",
       nil,
@@ -179,7 +215,8 @@ module Discordrb::API
   # Get the gateway to be used
   def gateway(token)
     request(
-      __method__,
+      :gateway,
+      nil,
       :get,
       "#{api_base}/gateway",
       Authorization: token
@@ -189,7 +226,8 @@ module Discordrb::API
   # Validate a token (this request will fail if the token is invalid)
   def validate_token(token)
     request(
-      __method__,
+      :auth_login,
+      nil,
       :post,
       "#{api_base}/auth/login",
       {}.to_json,

@@ -6,7 +6,8 @@ module Discordrb::API::Channel
   # https://discordapp.com/developers/docs/resources/channel#get-channel
   def resolve(token, channel_id)
     Discordrb::API.request(
-      __method__,
+      :channels_cid,
+      channel_id,
       :get,
       "#{Discordrb::API.api_base}/channels/#{channel_id}",
       Authorization: token
@@ -17,7 +18,8 @@ module Discordrb::API::Channel
   # https://discordapp.com/developers/docs/resources/channel#modify-channel
   def update(token, channel_id, name, topic, position = 0)
     Discordrb::API.request(
-      __method__,
+      :channels_cid,
+      channel_id,
       :patch,
       "#{Discordrb::API.api_base}/channels/#{channel_id}",
       { name: name, position: position, topic: topic }.to_json,
@@ -30,7 +32,8 @@ module Discordrb::API::Channel
   # https://discordapp.com/developers/docs/resources/channel#deleteclose-channel
   def delete(token, channel_id)
     Discordrb::API.request(
-      __method__,
+      :channels_cid,
+      channel_id,
       :delete,
       "#{Discordrb::API.api_base}/channels/#{channel_id}",
       Authorization: token
@@ -41,7 +44,8 @@ module Discordrb::API::Channel
   # https://discordapp.com/developers/docs/resources/channel#get-channel-messages
   def messages(token, channel_id, amount, before = nil, after = nil)
     Discordrb::API.request(
-      __method__,
+      :channels_cid_messages,
+      channel_id,
       :get,
       "#{Discordrb::API.api_base}/channels/#{channel_id}/messages?limit=#{amount}#{"&before=#{before}" if before}#{"&after=#{after}" if after}",
       Authorization: token
@@ -52,7 +56,8 @@ module Discordrb::API::Channel
   # https://discordapp.com/developers/docs/resources/channel#get-channel-message
   def message(token, channel_id, message_id)
     Discordrb::API.request(
-      __method__,
+      :channels_cid_messages_mid,
+      channel_id,
       :get,
       "#{Discordrb::API.api_base}/channels/#{channel_id}/messages/#{message_id}",
       Authorization: token
@@ -61,9 +66,10 @@ module Discordrb::API::Channel
 
   # Send a message to a channel
   # https://discordapp.com/developers/docs/resources/channel#create-message
-  def create_message(token, channel_id, message, mentions = [], tts = false, server_id = nil) # send message
+  def create_message(token, channel_id, message, mentions = [], tts = false, _server_id = nil) # send message
     Discordrb::API.request(
-      "message-#{server_id}".to_sym,
+      :channels_cid_messages_mid,
+      channel_id,
       :post,
       "#{Discordrb::API.api_base}/channels/#{channel_id}/messages",
       { content: message, mentions: mentions, tts: tts }.to_json,
@@ -78,7 +84,8 @@ module Discordrb::API::Channel
   # https://discordapp.com/developers/docs/resources/channel#upload-file
   def upload_file(token, channel_id, file, caption: nil, tts: false)
     Discordrb::API.request(
-      __method__,
+      :channels_cid_messages_mid,
+      channel_id,
       :post,
       "#{Discordrb::API.api_base}/channels/#{channel_id}/messages",
       { file: file, content: caption, tts: tts },
@@ -90,7 +97,8 @@ module Discordrb::API::Channel
   # https://discordapp.com/developers/docs/resources/channel#edit-message
   def edit_message(token, channel_id, message_id, message, mentions = [])
     Discordrb::API.request(
-      :message,
+      :channels_cid_messages_mid,
+      channel_id,
       :patch,
       "#{Discordrb::API.api_base}/channels/#{channel_id}/messages/#{message_id}",
       { content: message, mentions: mentions }.to_json,
@@ -103,7 +111,8 @@ module Discordrb::API::Channel
   # https://discordapp.com/developers/docs/resources/channel#delete-message
   def delete_message(token, channel_id, message_id)
     Discordrb::API.request(
-      __method__,
+      :channels_cid_messages_mid,
+      channel_id,
       :delete,
       "#{Discordrb::API.api_base}/channels/#{channel_id}/messages/#{message_id}",
       Authorization: token
@@ -114,7 +123,8 @@ module Discordrb::API::Channel
   # https://discordapp.com/developers/docs/resources/channel#bulk-delete-messages
   def bulk_delete_messages(token, channel_id, messages = [])
     Discordrb::API.request(
-      __method__,
+      :channels_cid_messages_bulk_delete,
+      channel_id,
       :post,
       "#{Discordrb::API.api_base}/channels/#{channel_id}/messages/bulk_delete",
       { messages: messages }.to_json,
@@ -127,7 +137,8 @@ module Discordrb::API::Channel
   # https://discordapp.com/developers/docs/resources/channel#edit-channel-permissions
   def update_permission(token, channel_id, overwrite_id, allow, deny, type)
     Discordrb::API.request(
-      __method__,
+      :channels_cid_permissions_oid,
+      channel_id,
       :put,
       "#{Discordrb::API.api_base}/channels/#{channel_id}/permissions/#{role_id}",
       { type: type, id: overwrite_id, allow: allow, deny: deny }.to_json,
@@ -140,7 +151,8 @@ module Discordrb::API::Channel
   # https://discordapp.com/developers/docs/resources/channel#get-channel-invites
   def invites(token, channel_id)
     Discordrb::API.request(
-      __method__,
+      :channels_cid_invites,
+      channel_id,
       :get,
       "#{Discordrb::API.api_base}/channels/#{channel_id}/invites",
       Authorization: token
@@ -151,7 +163,8 @@ module Discordrb::API::Channel
   # https://discordapp.com/developers/docs/resources/channel#create-channel-invite
   def create_invite(token, channel_id, max_age = 0, max_uses = 0, temporary = false)
     Discordrb::API.request(
-      __method__,
+      :channels_cid_invites,
+      channel_id,
       :post,
       "#{Discordrb::API.api_base}/channels/#{channel_id}/invites",
       { max_age: max_age, max_uses: max_uses, temporary: temporary }.to_json,
@@ -164,7 +177,8 @@ module Discordrb::API::Channel
   # https://discordapp.com/developers/docs/resources/channel#delete-channel-permission
   def delete_permission(token, channel_id, overwrite_id)
     Discordrb::API.request(
-      __method__,
+      :channels_cid_permissions_oid,
+      channel_id,
       :delete,
       "#{Discordrb::API.api_base}/channels/#{channel_id}/permissions/#{overwrite_id}",
       Authorization: token
@@ -175,7 +189,8 @@ module Discordrb::API::Channel
   # https://discordapp.com/developers/docs/resources/channel#trigger-typing-indicator
   def start_typing(token, channel_id)
     Discordrb::API.request(
-      __method__,
+      :channels_cid_typing,
+      channel_id,
       :post,
       "#{Discordrb::API.api_base}/channels/#{channel_id}/typing",
       nil,
@@ -187,7 +202,8 @@ module Discordrb::API::Channel
   # https://discordapp.com/developers/docs/resources/channel#get-pinned-messages
   def pinned_messages(token, channel_id)
     Discordrb::API.request(
-      __method__,
+      :channels_cid_pins,
+      channel_id,
       :get,
       "#{Discordrb::API.api_base}/channels/#{channel_id}/pins",
       Authorization: token
@@ -198,7 +214,8 @@ module Discordrb::API::Channel
   # https://discordapp.com/developers/docs/resources/channel#add-pinned-channel-message
   def pin_message(token, channel_id, message_id)
     Discordrb::API.request(
-      __method__,
+      :channels_cid_pins_mid,
+      channel_id,
       :put,
       "#{Discordrb::API.api_base}/channels/#{channel_id}/pins/#{message_id}",
       nil,
@@ -210,7 +227,8 @@ module Discordrb::API::Channel
   # https://discordapp.com/developers/docs/resources/channel#delete-pinned-channel-message
   def unpin_message(token, channel_id, message_id)
     Discordrb::API.request(
-      __method__,
+      :channels_cid_pins_mid,
+      channel_id,
       :delete,
       "#{Discordrb::API.api_base}/channels/#{channel_id}/pins/#{message_id}",
       Authorization: token
