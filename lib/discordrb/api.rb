@@ -142,6 +142,7 @@ module Discordrb::API
   def login(email, password)
     request(
       :auth_login,
+      nil,
       :post,
       "#{api_base}/auth/login",
       email: email,
@@ -153,6 +154,7 @@ module Discordrb::API
   def logout(token)
     request(
       :auth_logout,
+      nil,
       :post,
       "#{api_base}/auth/logout",
       nil,
@@ -164,6 +166,7 @@ module Discordrb::API
   def create_oauth_application(token, name, redirect_uris)
     request(
       :oauth2_applications,
+      nil,
       :post,
       "#{api_base}/oauth2/applications",
       { name: name, redirect_uris: redirect_uris }.to_json,
@@ -176,6 +179,7 @@ module Discordrb::API
   def update_oauth_application(token, name, redirect_uris, description = '', icon = nil)
     request(
       __method__,
+      nil,
       :put,
       "#{api_base}/oauth2/applications",
       { name: name, redirect_uris: redirect_uris, description: description, icon: icon }.to_json,
@@ -188,6 +192,7 @@ module Discordrb::API
   def oauth_application(token)
     request(
       :oauth2_applications_me,
+      nil,
       :get,
       "#{api_base}/oauth2/applications/@me",
       Authorization: token
@@ -198,6 +203,7 @@ module Discordrb::API
   def create_private(token, bot_user_id, user_id)
     request(
       :users_uid_channels,
+      nil,
       :post,
       "#{api_base}/users/#{bot_user_id}/channels",
       { recipient_id: user_id }.to_json,
@@ -214,6 +220,7 @@ module Discordrb::API
   def acknowledge_message(token, channel_id, message_id)
     request(
       :channels_cid_messages_mid_ack,
+      nil, # This endpoint is unavailable for bot accounts and thus isn't subject to its rate limit requirements.
       :post,
       "#{api_base}/channels/#{channel_id}/messages/#{message_id}/ack",
       nil,
@@ -225,6 +232,7 @@ module Discordrb::API
   def gateway(token)
     request(
       :gateway,
+      nil,
       :get,
       "#{api_base}/gateway",
       Authorization: token
@@ -235,6 +243,7 @@ module Discordrb::API
   def validate_token(token)
     request(
       :auth_login,
+      nil,
       :post,
       "#{api_base}/auth/login",
       {}.to_json,
