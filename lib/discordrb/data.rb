@@ -1170,11 +1170,13 @@ module Discordrb
       allow_bits = allow.respond_to?(:bits) ? allow.bits : allow
       deny_bits = deny.respond_to?(:bits) ? deny.bits : deny
 
-      if thing.is_a?(User) || thing.is_a?(Member) || thing.is_a?(Recipient) || thing.is_a?(Profile)
-        API::Channel.update_user_overrides(@bot.token, @id, thing.id, allow_bits, deny_bits)
-      elsif thing.is_a? Role
-        API::Channel.update_role_overrides(@bot.token, @id, thing.id, allow_bits, deny_bits)
-      end
+      type = if thing.is_a?(User) || thing.is_a?(Member) || thing.is_a?(Recipient) || thing.is_a?(Profile)
+               :user
+             elsif thing.is_a? Role
+               :role
+             end
+
+      API::Channel.update_permission(@bot.token, @id, thing.id, allow_bits, deny_bits, type)
     end
 
     # Updates the cached data from another channel.
