@@ -140,7 +140,7 @@ module Discordrb::API::Channel
       :channels_cid_permissions_oid,
       channel_id,
       :put,
-      "#{Discordrb::API.api_base}/channels/#{channel_id}/permissions/#{role_id}",
+      "#{Discordrb::API.api_base}/channels/#{channel_id}/permissions/#{overwrite_id}",
       { type: type, id: overwrite_id, allow: allow, deny: deny }.to_json,
       Authorization: token,
       content_type: :json
