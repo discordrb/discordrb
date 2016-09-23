@@ -73,9 +73,11 @@ module Discordrb::API
 
   # Make an API request. Utility function to implement message queueing
   # in the future
-  def request(key, type, *attributes)
+  def request(key, major_parameter, type, *attributes)
     # Add a custom user agent
     attributes.last[:user_agent] = user_agent if attributes.last.is_a? Hash
+
+    key = [key, major_parameter].freeze
 
     begin
       mutex = @mutexes[key] ||= Mutex.new
