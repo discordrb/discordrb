@@ -1174,6 +1174,8 @@ module Discordrb
                :user
              elsif thing.is_a? Role
                :role
+             else
+               raise ArgumentError, '`thing` in define_overwrite needs to be a kind of User (User, Member, Recipient, Profile) or a Role!'
              end
 
       API::Channel.update_permission(@bot.token, @id, thing.id, allow_bits, deny_bits, type)
