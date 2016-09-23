@@ -7,7 +7,7 @@ require 'discordrb/errors'
 # List of methods representing endpoints in Discord's API
 module Discordrb::API
   # The base URL of the Discord REST API.
-  APIBASE = 'https://discordapp.com/api'.freeze
+  APIBASE = 'https://discordapp.com/api/v6'.freeze
 
   module_function
 
@@ -161,20 +161,6 @@ module Discordrb::API
       "#{api_base}/oauth2/applications/@me",
       Authorization: token
     )
-  end
-
-  # Create a private channel
-  def create_private(token, bot_user_id, user_id)
-    request(
-      __method__,
-      :post,
-      "#{api_base}/users/#{bot_user_id}/channels",
-      { recipient_id: user_id }.to_json,
-      Authorization: token,
-      content_type: :json
-    )
-  rescue RestClient::BadRequest
-    raise 'Attempted to PM the bot itself!'
   end
 
   # Acknowledge that a message has been received

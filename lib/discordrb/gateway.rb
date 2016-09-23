@@ -126,7 +126,7 @@ module Discordrb
     LARGE_THRESHOLD = 100
 
     # The version of the gateway that's supposed to be used.
-    GATEWAY_VERSION = 5
+    GATEWAY_VERSION = 6
 
     def initialize(bot, token)
       @token = token

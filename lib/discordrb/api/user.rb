@@ -95,7 +95,7 @@ module Discordrb::API::User
 
   # Create a DM to another user
   # https://discordapp.com/developers/docs/resources/user#create-dm
-  def create_private(token, recipient_id)
+  def create_pm(token, recipient_id)
     Discordrb::API.request(
       __method__,
       :post,

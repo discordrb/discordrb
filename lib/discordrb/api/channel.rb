@@ -226,4 +226,68 @@ module Discordrb::API::Channel
   def update_role_overrides(token, channel_id, role_id, allow, deny)
     update_permission(token, channel_id, role_id, allow, deny, 'role')
   end
+
+  # Create an empty group channel.
+  def create_empty_group(token, bot_user_id)
+    Discordrb::API.request(
+      __method__,
+      :post,
+      "#{Discordrb::API.api_base}/users/#{bot_user_id}/channels",
+      {}.to_json,
+      Authorization: token,
+      content_type: :json
+    )
+  end
+
+  # Create a group channel.
+  def create_group(token, pm_channel_id, user_id)
+    Discordrb::API.request(
+      __method__,
+      :put,
+      "#{Discordrb::API.api_base}/channels/#{pm_channel_id}/recipients/#{user_id}",
+      {}.to_json,
+      Authorization: token,
+      content_type: :json
+    )
+  rescue RestClient::InternalServerError
+    raise 'Attempted to add self as a new group channel recipient!'
+  rescue RestClient::NoContent
+    raise 'Attempted to create a group channel with the PM channel recipient!'
+  rescue RestClient::Forbidden
+    raise 'Attempted to add a user to group channel without permission!'
+  end
+
+  # Add a user to a group channel.
+  def add_group_user(token, group_channel_id, user_id)
+    Discordrb::API.request(
+      __method__,
+      :put,
+      "#{Discordrb::API.api_base}/channels/#{group_channel_id}/recipients/#{user_id}",
+      {}.to_json,
+      Authorization: token,
+      content_type: :json
+    )
+  end
+
+  # Remove a user from a group channel.
+  def remove_group_user(token, group_channel_id, user_id)
+    Discordrb::API.request(
+      __method__,
+      :delete,
+      "#{Discordrb::API.api_base}/channels/#{group_channel_id}/recipients/#{user_id}",
+      Authorization: token,
+      content_type: :json
+    )
+  end
+
+  # Leave a group channel.
+  def leave_group(token, group_channel_id)
+    Discordrb::API.request(
+      __method__,
+      :delete,
+      "#{Discordrb::API.api_base}/channels/#{group_channel_id}",
+      Authorization: token,
+      content_type: :json
+    )
+  end
 end

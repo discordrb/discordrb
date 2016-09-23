@@ -522,6 +522,12 @@ module Discordrb
       raise_event(HeartbeatEvent.new(self))
     end
 
+    def prune_empty_groups
+      @channels.each_value do |channel|
+        channel.leave_group if channel.group? && channel.recipients.empty?
+      end
+    end
+
     private
 
     # Throws a useful exception if there's currently no gateway connection
@@ -617,8 +623,10 @@ module Discordrb
       if server
         server.channels << channel
         @channels[channel.id] = channel
-      else
-        @private_channels[channel.id] = channel
+      elsif channel.pm?
+        @pm_channels[channel.id] = channel
+      elsif channel.group?
+        @channels[channel.id] = channel
       end
     end
 
@@ -639,9 +647,31 @@ module Discordrb
       if server
         @channels.delete(channel.id)
         server.channels.reject! { |c| c.id == channel.id }
-      else
-        @private_channels.delete(channel.id)
+      elsif channel.pm?
+        @pm_channels.delete(channel.recipient.id)
+      elsif channel.group?
+        @channels.delete(channel.id)
       end
+    end
+
+    # Internal handler for CHANNEL_RECIPIENT_ADD
+    def add_recipient(data)
+      channel_id = data['channel_id'].to_i
+      channel = self.channel(channel_id)
+
+      recipient_user = ensure_user(data['user'])
+      recipient = Recipient.new(recipient_user, channel, self)
+      channel.add_recipient(recipient)
+    end
+
+    # Internal handler for CHANNEL_RECIPIENT_REMOVE
+    def remove_recipient(data)
+      channel_id = data['channel_id'].to_i
+      channel = self.channel(channel_id)
+
+      recipient_user = ensure_user(data['user'])
+      recipient = Recipient.new(recipient_user, channel, self)
+      channel.remove_recipient(recipient)
     end
 
     # Internal handler for GUILD_MEMBER_ADD
@@ -793,10 +823,14 @@ module Discordrb
           ensure_server(element)
         end
 
-        # Add private channels
+        # Add PM and group channels
         data['private_channels'].each do |element|
           channel = ensure_channel(element)
-          @private_channels[channel.recipient.id] = channel
+          if channel.pm?
+            @pm_channels[channel.recipient.id] = channel
+          else
+            @channels[channel.id] = channel
+          end
         end
 
         # Don't notify yet if there are unavailable servers because they need to get available before the bot truly has
@@ -918,6 +952,16 @@ module Discordrb
         delete_channel(data)
 
         event = ChannelDeleteEvent.new(data, self)
+        raise_event(event)
+      when :CHANNEL_RECIPIENT_ADD
+        add_recipient(data)
+
+        event = ChannelRecipientAddEvent.new(data, self)
+        raise_event(event)
+      when :CHANNEL_RECIPIENT_REMOVE
+        remove_recipient(data)
+
+        event = ChannelRecipientRemoveEvent.new(data, self)
         raise_event(event)
       when :GUILD_MEMBER_ADD
         add_guild_member(data)

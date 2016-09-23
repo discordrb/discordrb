@@ -169,7 +169,7 @@ module Discordrb
         channel.send_message(content)
       else
         # If no message was specified, return the PM channel
-        @bot.private_channel(@id)
+        @bot.pm_channel(@id)
       end
     end
 
@@ -848,7 +848,7 @@ module Discordrb
     # @return [String] this channel's name.
     attr_reader :name
 
-    # @return [String] this channel's type (text or voice)
+    # @return [Integer] this channel's type (0: text, 1: private, 2: voice, 3: group).
     attr_reader :type
 
     # @!visibility private
@@ -948,14 +948,6 @@ module Discordrb
 
   # A Discord channel, including data like the topic
   class Channel
-    # The type string that stands for a text channel
-    # @see Channel#type
-    TEXT_TYPE = 'text'.freeze
-
-    # The type string that stands for a voice channel
-    # @see Channel#type
-    VOICE_TYPE = 'voice'.freeze
-
     include IDObject
 
     # @return [String] this channel's name.
@@ -964,11 +956,14 @@ module Discordrb
     # @return [Server, nil] the server this channel is on. If this channel is a PM channel, it will be nil.
     attr_reader :server
 
-    # @return [String] the type of this channel (currently either 'text' or 'voice')
+    # @return [Integer] the type of this channel (0: text, 1: private, 2: voice, 3: group)
     attr_reader :type
 
-    # @return [Recipient, nil] the recipient of the private messages, or nil if this is not a PM channel
-    attr_reader :recipient
+    # @return [Integer, nil] the id of the owner of the group channel or nil if this is not a group channel.
+    attr_reader :owner_id
+
+    # @return [Array<Recipient>, nil] the array of recipients of the private messages, or nil if this is not a Private channel
+    attr_reader :recipients
 
     # @return [String] the channel's topic
     attr_reader :topic
@@ -988,9 +983,9 @@ module Discordrb
     # @return [Hash<Integer => OpenStruct>] the channel's permission overwrites
     attr_reader :permission_overwrites
 
-    # @return [true, false] whether or not this channel is a PM channel.
+    # @return [true, false] whether or not this channel is a PM or group channel.
     def private?
-      @server.nil?
+      pm? || group?
     end
 
     # @return [String] a string that will mention the channel as a clickable link on Discord.
@@ -998,25 +993,38 @@ module Discordrb
       "<##{@id}>"
     end
 
+    # @return [Recipient, nil] the recipient of the private messages, or nil if this is not a PM channel
+    def recipient
+      @recipients.first if pm?
+    end
+
     # @!visibility private
     def initialize(data, bot, server = nil)
       @bot = bot
-
-      # data is a sometimes a Hash and othertimes an array of Hashes, you only want the last one if it's an array
+      # data is a sometimes a Hash and other times an array of Hashes, you only want the last one if it's an array
       data = data[-1] if data.is_a?(Array)
 
       @id = data['id'].to_i
-      @type = data['type'] || TEXT_TYPE
+      @type = data['type'] || 0
       @topic = data['topic']
       @bitrate = data['bitrate']
       @user_limit = data['user_limit']
       @position = data['position']
 
-      @is_private = data['is_private']
-      if @is_private
-        recipient_user = bot.ensure_user(data['recipient'])
-        @recipient = Recipient.new(recipient_user, self, bot)
-        @name = @recipient.username
+      if private?
+        @recipients = []
+        if data['recipients']
+          data['recipients'].each do |recipient|
+            recipient_user = bot.ensure_user(recipient)
+            @recipients << Recipient.new(recipient_user, self, bot)
+          end
+        end
+        if pm?
+          @name = @recipients.first.username
+        else
+          @name = data['name']
+          @owner_id = data['owner_id']
+        end
       else
         @name = data['name']
         @server = if server
@@ -1041,12 +1049,22 @@ module Discordrb
 
     # @return [true, false] whether or not this channel is a text channel
     def text?
-      @type == TEXT_TYPE
+      @type.zero?
     end
 
-    # @return [true, false] whether or not this channel is a voice channel
+    # @return [true, false] whether or not this channel is a PM channel.
+    def pm?
+      @type == 1
+    end
+
+    # @return [true, false] whether or not this channel is a voice channel.
     def voice?
-      @type == VOICE_TYPE
+      @type == 2
+    end
+
+    # @return [true, false] whether or not this channel is a group channel.
+    def group?
+      @type == 3
     end
 
     # Sends a message to this channel.
@@ -1056,6 +1074,8 @@ module Discordrb
     def send_message(content, tts = false)
       @bot.send_message(@id, content, tts, @server && @server.id)
     end
+
+    alias_method :send, :send_message
 
     # Sends a temporary message to this channel.
     # @param content [String] The content to send. Should not be longer than 2000 characters or it will result in an error.
@@ -1164,17 +1184,16 @@ module Discordrb
     def update_from(other)
       @topic = other.topic
       @name = other.name
-      @recipient = other.recipient
       @permission_overwrites = other.permission_overwrites
     end
 
     # The list of users currently in this channel. For a voice channel, it will return all the members currently
-    # in that channel, for a text channel, it will return all online members that have permission to read it.
+    # in that channel. For a text channel, it will return all online members that have permission to read it.
     # @return [Array<Member>] the users in this channel
     def users
-      if @type == 'text'
+      if text?
         @server.online_members(include_idle: true).select { |u| u.can_read_messages? self }
-      else
+      elsif voice?
         @server.voice_states.map { |id, voice_state| @server.member(id) if !voice_state.voice_channel.nil? && voice_state.voice_channel.id == @id }.compact
       end
     end
@@ -1253,6 +1272,8 @@ module Discordrb
       Invite.new(JSON.parse(response), @bot)
     end
 
+    alias_method :invite, :make_invite
+
     # Starts typing, which displays the typing indicator on the client for five seconds.
     # If you want to keep typing you'll have to resend this every five seconds. (An abstraction
     # for this will eventually be coming)
@@ -1260,12 +1281,78 @@ module Discordrb
       API::Channel.start_typing(@bot.token, @id)
     end
 
-    alias_method :send, :send_message
-    alias_method :invite, :make_invite
+    # Creates a Group channel
+    # @param user_ids [Array<Integer>] Array of user IDs to add to the new group channel (Excluding
+    # the recipient of the PM channel).
+    # @return [Channel] the created channel.
+    def create_group(user_ids)
+      raise 'Attempted to create group channel on a non-pm channel!' unless pm?
+      response = API::Channel.create_group(@bot.token, @id, user_ids.shift)
+      channel = Channel.new(JSON.parse(response), @bot)
+      channel.add_group_users(user_ids)
+    end
+
+    # Adds a user to a Group channel
+    # @param user_ids [Array<#resolve_id>, #resolve_id] User ID or array of user IDs to add to the group channel.
+    # @return [Channel] the group channel.
+    def add_group_users(user_ids)
+      raise 'Attempted to add a user to a non-group channel!' unless group?
+      user_ids = [user_ids] unless user_ids.is_a? Array
+      user_ids.each do |user_id|
+        API::Channel.add_group_user(@bot.token, @id, user_id.resolve_id)
+      end
+      self
+    end
+
+    alias_method :add_group_user, :add_group_users
+
+    # Removes a user from a group channel.
+    # @param user_ids [Array<#resolve_id>, #resolve_id] User ID or array of user IDs to remove from the group channel.
+    # @return [Channel] the group channel.
+    def remove_group_users(user_ids)
+      raise 'Attempted to remove a user from a non-group channel!' unless group?
+      user_ids = [user_ids] unless user_ids.is_a? Array
+      user_ids.each do |user_id|
+        API::Channel.remove_group_user(@bot.token, @id, user_id.resolve_id)
+      end
+      self
+    end
+
+    alias_method :remove_group_user, :remove_group_users
+
+    # Leaves the group
+    def leave_group
+      raise 'Attempted to leave a non-group channel!' unless group?
+      API::Channel.leave_group(@bot.token, @id)
+    end
+
+    alias_method :leave, :leave_group
 
     # The inspect method is overwritten to give more useful output
     def inspect
       "<Channel name=#{@name} id=#{@id} topic=\"#{@topic}\" type=#{@type} position=#{@position} server=#{@server}>"
+    end
+
+    # Adds a recipient to a group channel.
+    # @param recipient [Recipient] the recipient to add to the group
+    # @raise [ArgumentError] if tried to add a non-recipient
+    # @note For internal use only
+    # @!visibility private
+    def add_recipient(recipient)
+      raise 'Tried to add recipient to a non-group channel' unless group?
+      raise ArgumentError, 'Tried to add a non-recipient to a group' unless recipient.is_a?(Recipient)
+      @recipients << recipient
+    end
+
+    # Removes a recipient from a group channel.
+    # @param recipient [Recipient] the recipient to remove from the group
+    # @raise [ArgumentError] if tried to remove a non-recipient
+    # @note For internal use only
+    # @!visibility private
+    def remove_recipient(recipient)
+      raise 'Tried to add recipient to a non-group channel' unless group?
+      raise ArgumentError, 'Tried to remove a non-recipient from a group' unless recipient.is_a?(Recipient)
+      @recipients.delete(recipient)
     end
 
     private
@@ -1529,7 +1616,7 @@ module Discordrb
       @role_mentions = []
 
       # Role mentions can only happen on public servers so make sure we only parse them there
-      unless @channel.private?
+      if @channel.text?
         data['mention_roles'].each do |element|
           @role_mentions << @channel.server.role(element.to_i)
         end if data['mention_roles']
@@ -1954,8 +2041,12 @@ module Discordrb
     end
 
     # Creates a channel on this server with the given name.
+    # @param name [String] Name of the channel to create
+    # @param type [Integer] Type of channel to create (0: text, 2: voice)
     # @return [Channel] the created channel.
-    def create_channel(name, type = 'text')
+    # @raise [ArgumentError] if type is not 0 or 2
+    def create_channel(name, type = 0)
+      raise ArgumentError, 'Channel type must be either 0 (text) or 2 (voice)!' unless [0, 2].include?(type)
       response = API::Server.create_channel(@bot.token, @id, name, type)
       Channel.new(JSON.parse(response), @bot)
     end

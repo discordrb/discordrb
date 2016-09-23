@@ -18,7 +18,7 @@ module Discordrb
       @servers = {}
 
       @channels = {}
-      @private_channels = {}
+      @pm_channels = {}
 
       @restricted_channels = []
     end
@@ -110,19 +110,29 @@ module Discordrb
       server.cache_member(member)
     end
 
-    # Creates a private channel for the given user ID, or if one exists already, returns that one.
+    # Creates a PM channel for the given user ID, or if one exists already, returns that one.
     # It is recommended that you use {User#pm} instead, as this is mainly for internal use. However,
     # usage of this method may be unavoidable if only the user ID is known.
     # @param id [Integer] The user ID to generate a private channel for.
     # @return [Channel] A private channel for that user.
-    def private_channel(id)
+    def pm_channel(id)
       id = id.resolve_id
-      debug("Creating private channel with user id #{id}")
-      return @private_channels[id] if @private_channels[id]
-
-      response = API::User.create_private(token, id)
+      return @pm_channels[id] if @pm_channels[id]
+      debug("Creating pm channel with user id #{id}")
+      response = API::User.create_pm(token, id)
       channel = Channel.new(JSON.parse(response), self)
-      @private_channels[id] = channel
+      @pm_channels[id] = channel
+    end
+
+    alias_method :private_channel, :pm_channel
+
+    # Returns a group channel for the given channel ID
+    # @param id [Integer] The channel ID.
+    # @return [Channel] The channel for the given ID.
+    def group_channel(id)
+      id = id.resolve_id
+      return @channels[id] if @channels[id]
+      raise "Tried to get group channel that isn't cached!"
     end
 
     # Ensures a given user object is cached and if not, cache it from the given data hash.
@@ -191,7 +201,7 @@ module Discordrb
     # Finds a channel given its name and optionally the name of the server it is in.
     # @param channel_name [String] The channel to search for.
     # @param server_name [String] The server to search for, or `nil` if only the channel should be searched for.
-    # @param type [String, nil] The type of channel to search for (`'text'` or `'voice'`), or `nil` if either type of
+    # @param type [Integer, nil] The type of channel to search for (0: text, 1: private, 2: voice, 3: group), or `nil` if any type of
     #   channel should be searched for
     # @return [Array<Channel>] The array of channels that were found. May be empty if none were found.
     def find_channel(channel_name, server_name = nil, type: nil)
