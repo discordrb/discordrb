@@ -248,7 +248,7 @@ module Discordrb::API::Channel
   # Create an empty group channel.
   def create_empty_group(token, bot_user_id)
     Discordrb::API.request(
-      __method__,
+      :users_uid_channels,
       :post,
       "#{Discordrb::API.api_base}/users/#{bot_user_id}/channels",
       {}.to_json,
@@ -260,7 +260,7 @@ module Discordrb::API::Channel
   # Create a group channel.
   def create_group(token, pm_channel_id, user_id)
     Discordrb::API.request(
-      __method__,
+      :channels_cid_recipients_uid,
       :put,
       "#{Discordrb::API.api_base}/channels/#{pm_channel_id}/recipients/#{user_id}",
       {}.to_json,
@@ -278,7 +278,7 @@ module Discordrb::API::Channel
   # Add a user to a group channel.
   def add_group_user(token, group_channel_id, user_id)
     Discordrb::API.request(
-      __method__,
+      :channels_cid_recipients_uid,
       :put,
       "#{Discordrb::API.api_base}/channels/#{group_channel_id}/recipients/#{user_id}",
       {}.to_json,
@@ -290,7 +290,7 @@ module Discordrb::API::Channel
   # Remove a user from a group channel.
   def remove_group_user(token, group_channel_id, user_id)
     Discordrb::API.request(
-      __method__,
+      :channels_cid_recipients_uid,
       :delete,
       "#{Discordrb::API.api_base}/channels/#{group_channel_id}/recipients/#{user_id}",
       Authorization: token,
@@ -301,7 +301,7 @@ module Discordrb::API::Channel
   # Leave a group channel.
   def leave_group(token, group_channel_id)
     Discordrb::API.request(
-      __method__,
+      :channels_cid,
       :delete,
       "#{Discordrb::API.api_base}/channels/#{group_channel_id}",
       Authorization: token,
