@@ -151,7 +151,7 @@ module Discordrb
 
     # This **event** is raised when a channel is created.
     # @param attributes [Hash] The event's attributes.
-    # @option attributes [String] :type Matches the type of channel that is being created (text or voice)
+    # @option attributes [Integer] :type Matches the type of channel that is being created (0: text, 1: private, 2: voice, 3: group)
     # @option attributes [String] :name Matches the name of the created channel.
     # @yield The block is executed when the event is raised.
     # @yieldparam event [ChannelCreateEvent] The event that was raised.
@@ -162,7 +162,7 @@ module Discordrb
 
     # This **event** is raised when a channel is updated.
     # @param attributes [Hash] The event's attributes.
-    # @option attributes [String] :type Matches the type of channel that is being updated (text or voice)
+    # @option attributes [Integer] :type Matches the type of channel that is being updated (0: text, 1: private, 2: voice, 3: group).
     # @option attributes [String] :name Matches the new name of the channel.
     # @yield The block is executed when the event is raised.
     # @yieldparam event [ChannelUpdateEvent] The event that was raised.
@@ -173,13 +173,37 @@ module Discordrb
 
     # This **event** is raised when a channel is deleted.
     # @param attributes [Hash] The event's attributes.
-    # @option attributes [String] :type Matches the type of channel that is being deleted (text or voice)
+    # @option attributes [Integer] :type Matches the type of channel that is being deleted (0: text, 1: private, 2: voice, 3: group).
     # @option attributes [String] :name Matches the name of the deleted channel.
     # @yield The block is executed when the event is raised.
     # @yieldparam event [ChannelDeleteEvent] The event that was raised.
     # @return [ChannelDeleteEventHandler] The event handler that was registered.
     def channel_delete(attributes = {}, &block)
       register_event(ChannelDeleteEvent, attributes, block)
+    end
+
+    # This **event** is raised when a recipient is added to a group channel.
+    # @param attributes [Hash] The event's attributes.
+    # @option attributes [String] :name Matches the name of the group channel that the recipient is added to.
+    # @option attributes [#resolve_id] :owner_id Matches the id of the group channel's owner.
+    # @option attributes [#resolve_id] :id Matches the id of the recipient added to the group channel.
+    # @yield The block is executed when the event is raised.
+    # @yieldparam event [ChannelRecipientAddEvent] The event that was raised.
+    # @return [ChannelRecipientAddHandler] The event handler that was registered.
+    def channel_recipient_add(attributes = {}, &block)
+      register_event(ChannelRecipientAddEvent, attributes, block)
+    end
+
+    # This **event** is raised when a recipient is removed from a group channel.
+    # @param attributes [Hash] The event's attributes.
+    # @option attributes [String] :name Matches the name of the group channel that the recipient is added to.
+    # @option attributes [#resolve_id] :owner_id Matches the id of the group channel's owner.
+    # @option attributes [#resolve_id] :id Matches the id of the recipient removed from the group channel.
+    # @yield The block is executed when the event is raised.
+    # @yieldparam event [ChannelRecipientRemoveEvent] The event that was raised.
+    # @return [ChannelRecipientRemoveHandler] The event handler that was registered.
+    def channel_recipient_remove(attributes = {}, &block)
+      register_event(ChannelRecipientRemoveEvent, attributes, block)
     end
 
     # This **event** is raised when a user's voice state changes.
