@@ -137,7 +137,7 @@ module Discordrb::API
   # Login to the server
   def login(email, password)
     request(
-      __method__,
+      :auth_login,
       :post,
       "#{api_base}/auth/login",
       email: email,
@@ -148,7 +148,7 @@ module Discordrb::API
   # Logout from the server
   def logout(token)
     request(
-      __method__,
+      :auth_logout,
       :post,
       "#{api_base}/auth/logout",
       nil,
@@ -159,7 +159,7 @@ module Discordrb::API
   # Create an OAuth application
   def create_oauth_application(token, name, redirect_uris)
     request(
-      __method__,
+      :oauth2_applications,
       :post,
       "#{api_base}/oauth2/applications",
       { name: name, redirect_uris: redirect_uris }.to_json,
@@ -183,7 +183,7 @@ module Discordrb::API
   # Get the bot's OAuth application's information
   def oauth_application(token)
     request(
-      __method__,
+      :oauth2_applications_me,
       :get,
       "#{api_base}/oauth2/applications/@me",
       Authorization: token
@@ -193,7 +193,7 @@ module Discordrb::API
   # Create a private channel
   def create_private(token, bot_user_id, user_id)
     request(
-      __method__,
+      :users_uid_channels,
       :post,
       "#{api_base}/users/#{bot_user_id}/channels",
       { recipient_id: user_id }.to_json,
@@ -209,7 +209,7 @@ module Discordrb::API
   # so this is an easy way to catch up on messages
   def acknowledge_message(token, channel_id, message_id)
     request(
-      __method__,
+      :channels_cid_messages_mid_ack,
       :post,
       "#{api_base}/channels/#{channel_id}/messages/#{message_id}/ack",
       nil,
@@ -220,7 +220,7 @@ module Discordrb::API
   # Get the gateway to be used
   def gateway(token)
     request(
-      __method__,
+      :gateway,
       :get,
       "#{api_base}/gateway",
       Authorization: token
@@ -230,7 +230,7 @@ module Discordrb::API
   # Validate a token (this request will fail if the token is invalid)
   def validate_token(token)
     request(
-      __method__,
+      :auth_login,
       :post,
       "#{api_base}/auth/login",
       {}.to_json,
