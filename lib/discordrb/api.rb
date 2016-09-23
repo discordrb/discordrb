@@ -77,6 +77,8 @@ module Discordrb::API
     # Add a custom user agent
     attributes.last[:user_agent] = user_agent if attributes.last.is_a? Hash
 
+    # The most recent Discord rate limit requirements require the support of major parameters, where a particular route
+    # and major parameter combination (*not* the HTTP method) uniquely identifies a RL bucket.
     key = [key, major_parameter].freeze
 
     begin
