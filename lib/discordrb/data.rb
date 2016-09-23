@@ -1171,7 +1171,7 @@ module Discordrb
       deny_bits = deny.respond_to?(:bits) ? deny.bits : deny
 
       type = if thing.is_a?(User) || thing.is_a?(Member) || thing.is_a?(Recipient) || thing.is_a?(Profile)
-               :user
+               :member
              elsif thing.is_a? Role
                :role
              else
