@@ -7,6 +7,7 @@ module Discordrb::API::Invite
   def resolve(token, invite_code)
     Discordrb::API.request(
       :invite_code,
+      nil,
       :get,
       "#{Discordrb::API.api_base}/invite/#{invite_code}",
       Authorization: token
@@ -18,6 +19,7 @@ module Discordrb::API::Invite
   def delete(token, code)
     Discordrb::API.request(
       :invites_code,
+      nil,
       :delete,
       "#{Discordrb::API.api_base}/invites/#{code}",
       Authorization: token
@@ -29,6 +31,7 @@ module Discordrb::API::Invite
   def accept(token, invite_code)
     Discordrb::API.request(
       :invite_code,
+      nil,
       :post,
       "#{Discordrb::API.api_base}/invite/#{invite_code}",
       nil,
