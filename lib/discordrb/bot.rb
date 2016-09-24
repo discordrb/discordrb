@@ -624,7 +624,7 @@ module Discordrb
         server.channels << channel
         @channels[channel.id] = channel
       elsif channel.pm?
-        @pm_channels[channel.id] = channel
+        @pm_channels[channel.recipient.id] = channel
       elsif channel.group?
         @channels[channel.id] = channel
       end
