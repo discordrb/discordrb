@@ -52,6 +52,8 @@ module Discordrb
       end
     end
 
+    alias_method :group_channel, :channel
+
     # Gets a user by its ID.
     # @note This can only resolve users known by the bot (i.e. that share a server with the bot).
     # @param id [Integer] The user ID that should be resolved.
@@ -125,15 +127,6 @@ module Discordrb
     end
 
     alias_method :private_channel, :pm_channel
-
-    # Returns a group channel for the given channel ID
-    # @param id [Integer] The channel ID.
-    # @return [Channel] The channel for the given ID.
-    def group_channel(id)
-      id = id.resolve_id
-      return @channels[id] if @channels[id]
-      raise "Tried to get group channel that isn't cached!"
-    end
 
     # Ensures a given user object is cached and if not, cache it from the given data hash.
     # @param data [Hash] A data hash representing a user.
