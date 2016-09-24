@@ -606,7 +606,13 @@ module Discordrb
     # Op 9
     def handle_invalidate_session
       LOGGER.debug('Received op 9, invalidating session and reidentifying.')
-      @session.invalidate
+
+      if @session
+        @session.invalidate
+      else
+        LOGGER.warn('Received op 9 without a running session! Not invalidating, we *should* be fine though.')
+      end
+
       identify
     end
 
