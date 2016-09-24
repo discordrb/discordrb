@@ -1027,6 +1027,11 @@ module Discordrb
       when :GUILD_DELETE
         delete_guild(data)
 
+        if d['unavailable'].is_a? TrueClass
+          LOGGER.warn("Server #{d['id']} is unavailable due to an outage!")
+          return # Don't raise an event
+        end
+
         event = ServerDeleteEvent.new(data, self)
         raise_event(event)
       else
