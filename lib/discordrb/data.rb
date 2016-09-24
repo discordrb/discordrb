@@ -2234,6 +2234,8 @@ module Discordrb
         if user
           user.status = element['status'].to_sym
           user.game = element['game'] ? element['game']['name'] : nil
+        else
+          LOGGER.warn "Rogue presence update! #{element['user']['id']} on #{@id}"
         end
       end
     end
