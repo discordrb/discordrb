@@ -90,11 +90,12 @@ module Discordrb
     #   https://github.com/hammerandchisel/discord-api-docs/issues/17 for how to do sharding.
     # @param num_shards [Integer] The total number of shards that should be running. See
     #   https://github.com/hammerandchisel/discord-api-docs/issues/17 for how to do sharding.
+    # @param redact_token [true, false] Whether the bot should redact the token in logs. Default is true.
     def initialize(
         log_mode: :normal,
         token: nil, application_id: nil,
         type: nil, name: '', fancy_log: false, suppress_ready: false, parse_self: false,
-        shard_id: nil, num_shards: nil
+        shard_id: nil, num_shards: nil, redact_token: true
     )
 
       LOGGER.mode = if log_mode.is_a? TrueClass # Specifically check for `true` because people might not have updated yet
@@ -102,6 +103,8 @@ module Discordrb
                     else
                       log_mode
                     end
+
+      LOGGER.token = token if redact_token
 
       @should_parse_self = parse_self
 
