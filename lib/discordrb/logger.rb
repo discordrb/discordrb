@@ -9,6 +9,9 @@ module Discordrb
     # @return [true, false] whether this logger is in extra-fancy mode!
     attr_writer :fancy
 
+    # @return [String, nil] The bot token to be redacted or nil if it shouldn't.
+    attr_writer :token
+
     # @return [Array<IO>, Array<#puts & #flush>] the streams the logger should write to.
     attr_accessor :streams
 
@@ -86,6 +89,10 @@ module Discordrb
     def write(message, mode)
       thread_name = Thread.current[:discordrb_name]
       timestamp = Time.now.strftime(LOG_TIMESTAMP_FORMAT)
+
+      # Redact token if set
+      message.gsub!(@token, 'REDACTED_TOKEN') if @token
+
       @streams.each do |stream|
         if @fancy && !stream.is_a?(File)
           fancy_write(stream, message, mode, thread_name, timestamp)
