@@ -2500,6 +2500,35 @@ module Discordrb
       update_server_data(afk_timeout: afk_timeout)
     end
 
+    # Adds a new custom emoji to the server.
+    # @param name [String] The name given to the new custom emoji.
+    # @param emoji [String, #read] A JPG file to be used as the avatar, either something readable (e. g. File Object) or as a data URL.
+    def add_emoji(name, emoji)
+      if emoji.respond_to? :read
+        # Set the file to binary mode if supported, so we don't get problems with Windows
+        emoji.binmode if emoji.respond_to?(:binmode)
+
+        emoji_string = 'data:image/jpg;base64,'
+        emoji_string += Base64.strict_encode64(emoji.read)
+        update_profile_data(emoji_string, name)
+      else
+        update_profile_data(emoji, name)
+      end
+    end
+
+    # Edits a custom emoji name on the server.
+    # @param emoji_id [Integer] The emoji id.
+    # @param name [String] The new name to be given to the emoji.
+    def edit_emoji(emoji_id, name)
+      API::Server.edit_emoji(@bot.token, @id, emoji_id, name)
+    end
+
+    # Deletes a custom emoji from the server.
+    # @param emoji_id [Integer] The emoji id.
+    def delete_emoji(emoji_id)
+      API::Server.add_emoji(@bot.token, @id, emoji_id)
+    end
+
     # @return [true, false] whether this server has any emoji or not.
     def any_emoji?
       @emoji.any?
