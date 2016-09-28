@@ -1251,6 +1251,16 @@ module Discordrb
       API::Channel.bulk_delete_messages(@bot.token, @id, messages)
     end
 
+    # Deletes a collection of messages
+    # @param messages [Array<Message, Integer>] the messages (or message IDs) to delete. Total must be an amount between 2 and 100 (Discord limitation)
+    # @raise [ArgumentError] if the amount of messages is not a value between 2 and 100
+    def delete_messages(messages)
+      raise ArgumentError, 'Can only delete between 2 and 100 messages!' unless messages.count.between?(2,100)
+
+      messages.map! { |m| m.is_a?(Integer) ? m : m.id }
+      API::Channel.bulk_delete_messages(@bot.token, @id, messages)
+    end
+
     # Updates the cached permission overwrites
     # @note For internal use only
     # @!visibility private
