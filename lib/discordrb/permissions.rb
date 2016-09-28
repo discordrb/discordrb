@@ -36,7 +36,7 @@ module Discordrb
       26 => :change_nickname,      # 67108864
       27 => :manage_nicknames,     # 134217728
       28 => :manage_roles,         # 268435456, also Manage Permissions
-      # 29
+      # 29                         # 536870912
       30 => :manage_emojis         # 1073741824
     }.freeze
 
