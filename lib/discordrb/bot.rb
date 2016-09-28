@@ -497,7 +497,7 @@ module Discordrb
     # Sets status to idle.
     def idle
       gateway_check
-      update_status((Time.now.to_f * 1000), @game, nil)
+      update_status(:idle, @game, nil)
     end
 
     alias_method :away, :idle
