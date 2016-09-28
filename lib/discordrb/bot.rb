@@ -454,6 +454,12 @@ module Discordrb
 
     alias_method :away, :idle
 
+    # Sets the bot's status to DnD (red icon).
+    def dnd
+      gateway_check
+      update_status(:dnd, @game, nil)
+    end
+
     # Sets debug mode. If debug mode is on, many things will be outputted to STDOUT.
     def debug=(new_debug)
       LOGGER.debug = new_debug
