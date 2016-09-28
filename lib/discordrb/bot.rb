@@ -129,7 +129,6 @@ module Discordrb
       @current_thread = 0
 
       @status = :online
-      @idletime = nil
     end
 
     # The list of users the bot shares a server with.
@@ -413,7 +412,6 @@ module Discordrb
 
       @game = game
       @status = status
-      @idletime = idletime
       @streamurl = url
       type = url ? 1 : nil
 
