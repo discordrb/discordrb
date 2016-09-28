@@ -384,8 +384,8 @@ module Discordrb::API::Server
     Discordrb::API.request(
       :guilds_sid_emojis_eid,
       server_id,
-      :delete
-      "#{Discordrb::API.api_base}/guilds/#{server_id}/emojis/#{emoji_id}"
+      :delete,
+      "#{Discordrb::API.api_base}/guilds/#{server_id}/emojis/#{emoji_id}",
       Authorization: token
     )
   end
