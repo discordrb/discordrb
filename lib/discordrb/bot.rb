@@ -411,6 +411,7 @@ module Discordrb
       gateway_check
 
       @game = game
+      @status = status
       @idletime = idletime
       @streamurl = url
       type = url ? 1 : nil
