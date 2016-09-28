@@ -506,6 +506,12 @@ module Discordrb
       update_status(:dnd, @game, nil)
     end
 
+    # Sets the bot's status to invisible (appears offline).
+    def invisible
+      gateway_check
+      update_status(:invisible, @game, nil)
+    end
+
     # Sets debug mode. If debug mode is on, many things will be outputted to STDOUT.
     def debug=(new_debug)
       LOGGER.debug = new_debug
