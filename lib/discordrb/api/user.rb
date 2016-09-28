@@ -127,8 +127,8 @@ module Discordrb::API::User
     )
   end
 
-  # Change user status
-  def change_status(token, status)
+  # Change user status setting
+  def change_status_setting(token, status)
     Discordrb::API.request(
       :users_me_settings,
       nil,

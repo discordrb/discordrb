@@ -671,28 +671,32 @@ module Discordrb
       @avatar_id = new_data[:avatar_id] || @avatar_id
     end
 
-    # Sets the bot status to Online.
+    # Sets the user status setting to Online.
+    # @note Only usable on User accounts.
     def online
-      update_profile_status('online')
+      update_profile_status_setting('online')
     end
 
     alias_method(:on, :online)
 
-    # Sets the bot status to Idle.
+    # Sets the user status setting to Idle.
+    # @note Only usable on User accounts.
     def idle
-      update_profile_status('idle')
+      update_profile_status_setting('idle')
     end
 
-    # Sets the bot status to Do Not Disturb
+    # Sets the user status setting to Do Not Disturb.
+    # @note Only usable on User accounts.
     def dnd
-      update_profile_status('dnd')
+      update_profile_status_setting('dnd')
     end
 
     alias_method(:busy, :dnd)
 
-    # Sets the bot status to Invisible
+    # Sets the user status setting to Invisible.
+    # @note Only usable on User accounts.
     def invisible
-      update_profile_status('invisible')
+      update_profile_status_setting('invisible')
     end
 
     # The inspect method is overwritten to give more useful output
@@ -702,8 +706,9 @@ module Discordrb
 
     private
 
-    def update_profile_status(status)
-      API::User.change_status(@bot.token, status)
+    # Internal handler for updating the user's status setting
+    def update_profile_status_setting(status)
+      API::User.change_status_setting(@bot.token, status)
     end
 
     def update_profile_data(new_data)
