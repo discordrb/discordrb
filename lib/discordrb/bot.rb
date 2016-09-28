@@ -489,7 +489,7 @@ module Discordrb
     # Sets status to online.
     def online
       gateway_check
-      update_status(nil, @game, @streamurl)
+      update_status(:online, @game, @streamurl)
     end
 
     alias_method :on, :online
