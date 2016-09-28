@@ -2159,9 +2159,9 @@ module Discordrb
 
         emoji_string = 'data:image/jpg;base64,'
         emoji_string += Base64.strict_encode64(emoji.read)
-        update_profile_data(emoji_string, name)
+        priv_add_emoji(emoji_string, name)
       else
-        update_profile_data(emoji, name)
+        priv_add_emoji(emoji, name)
       end
     end
 
