@@ -268,10 +268,12 @@ module Discordrb
     #   not be idle.
     # @param game [Hash<Symbol => Object>, nil] `nil` if no game should be played, or a hash of `:game => "name"` if a
     #   game should be played. The hash can also contain additional attributes for streaming statuses.
-    def send_status_update(idle_since, game)
+    def send_status_update(status, since, game, afk)
       data = {
-        idle_since: idle_since,
-        game: game
+        status: status,
+        since: since,
+        game: game,
+        afk: afk
       }
 
       send_packet(Opcodes::PRESENCE, data)
