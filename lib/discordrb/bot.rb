@@ -482,7 +482,7 @@ module Discordrb
     # @return [String] The stream name that is being displayed now.
     def stream(name, url)
       gateway_check
-      update_status(@idletime, name, url)
+      update_status(@status, name, url)
       name
     end
 
