@@ -131,7 +131,7 @@ module Discordrb
       @event_threads = []
       @current_thread = 0
 
-      @idletime = nil
+      @status = :online
     end
 
     # The list of users the bot shares a server with.
@@ -404,19 +404,22 @@ module Discordrb
     end
 
     # Updates presence status.
-    # @param idletime [Integer, nil] The floating point of a Time object that shows the last time the bot was on.
+    # @param status [String] The status the bot should show up as.
     # @param game [String, nil] The name of the game to be played/stream name on the stream.
     # @param url [String, nil] The Twitch URL to display as a stream. nil for no stream.
-    def update_status(idletime, game, url)
+    # @param since [Integer] When this status was set.
+    # @param afk [true, false] Whether the bot is AFK.
+    # @see Gateway#send_status_update
+    def update_status(status, game, url, since = 0, afk = false)
       gateway_check
 
       @game = game
-      @idletime = idletime
+      @status = status
       @streamurl = url
       type = url ? 1 : nil
 
       game_obj = game || url ? { name: game, url: url, type: type } : nil
-      @gateway.send_status_update(idletime, game_obj)
+      @gateway.send_status_update(status, since, game_obj, afk)
     end
 
     # Sets the currently playing game to the specified game.
@@ -424,7 +427,7 @@ module Discordrb
     # @return [String] The game that is being played now.
     def game=(name)
       gateway_check
-      update_status(@idletime, name, nil)
+      update_status(@status, name, nil)
       name
     end
 
@@ -434,14 +437,14 @@ module Discordrb
     # @return [String] The stream name that is being displayed now.
     def stream(name, url)
       gateway_check
-      update_status(@idletime, name, url)
+      update_status(@status, name, url)
       name
     end
 
     # Sets status to online.
     def online
       gateway_check
-      update_status(nil, @game, @streamurl)
+      update_status(:online, @game, @streamurl)
     end
 
     alias_method :on, :online
@@ -449,10 +452,22 @@ module Discordrb
     # Sets status to idle.
     def idle
       gateway_check
-      update_status((Time.now.to_f * 1000), @game, nil)
+      update_status(:idle, @game, nil)
     end
 
     alias_method :away, :idle
+
+    # Sets the bot's status to DnD (red icon).
+    def dnd
+      gateway_check
+      update_status(:dnd, @game, nil)
+    end
+
+    # Sets the bot's status to invisible (appears offline).
+    def invisible
+      gateway_check
+      update_status(:invisible, @game, nil)
+    end
 
     # Sets debug mode. If debug mode is on, many things will be outputted to STDOUT.
     def debug=(new_debug)
