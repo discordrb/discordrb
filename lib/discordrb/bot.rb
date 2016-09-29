@@ -74,7 +74,7 @@ module Discordrb
     # @param token [String] The token that should be used to log in. If your bot is a bot account, you have to specify
     #   this. If you're logging in as a user, make sure to also set the account type to :user so discordrb doesn't think
     #   you're trying to log in as a bot.
-    # @param application_id [Integer] If you're logging in as a bot, the bot's application ID.
+    # @param client_id [Integer] If you're logging in as a bot, the bot's client ID.
     # @param type [Symbol] This parameter lets you manually overwrite the account type. This needs to be set when
     #   logging in as a user, otherwise discordrb will treat you as a bot account. Valid values are `:user` and `:bot`.
     # @param name [String] Your bot's name. This will be sent to Discord with any API requests, who will use this to
