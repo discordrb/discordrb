@@ -67,6 +67,7 @@ module Discordrb::Commands
         log_mode: attributes[:log_mode],
         token: attributes[:token],
         application_id: attributes[:application_id],
+        client_id: attributes[:client_id],
         type: attributes[:type],
         name: attributes[:name],
         fancy_log: attributes[:fancy_log],
