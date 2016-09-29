@@ -73,7 +73,8 @@ module Discordrb::Commands
         suppress_ready: attributes[:suppress_ready],
         parse_self: attributes[:parse_self],
         shard_id: attributes[:shard_id],
-        num_shards: attributes[:num_shards])
+        num_shards: attributes[:num_shards],
+        redact_token: attributes[:redact_token])
 
       @prefix = attributes[:prefix]
       @attributes = {
