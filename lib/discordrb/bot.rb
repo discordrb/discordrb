@@ -93,7 +93,7 @@ module Discordrb
     # @param redact_token [true, false] Whether the bot should redact the token in logs. Default is true.
     def initialize(
         log_mode: :normal,
-        token: nil, application_id: nil,
+        token: nil, client_id: nil,
         type: nil, name: '', fancy_log: false, suppress_ready: false, parse_self: false,
         shard_id: nil, num_shards: nil, redact_token: true
     )
@@ -108,7 +108,7 @@ module Discordrb
 
       @should_parse_self = parse_self
 
-      @client_id = application_id
+      @client_id = client_id
 
       @type = type || :bot
       @name = name
