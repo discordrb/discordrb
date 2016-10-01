@@ -917,9 +917,10 @@ module Discordrb
           return
         end
 
-        create_message(data)
-
-        message = Message.new(data, self)
+        # If create_message is overwritten with a method that returns the parsed message, use that instead, so we don't
+        # parse the message twice (which is just thrown away performance)
+        message = create_message(data)
+        message = Message.new(data, self) unless message.is_a? Message
 
         return if message.from_bot? && !should_parse_self
 
