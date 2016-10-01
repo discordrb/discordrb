@@ -48,6 +48,8 @@ module Discordrb::Commands
     # @option attributes [String] :no_permission_message The message to be displayed when `NoPermission` error is raised.
     # @option attributes [true, false] :spaces_allowed Whether spaces are allowed to occur between the prefix and the
     #   command. Default is false.
+    # @option attributes [true, false] :webhook_commands Whether messages sent by webhooks are allowed to trigger
+    #   commands. Default is true.
     # @option attributes [String] :previous Character that should designate the result of the previous command in
     #   a command chain (see :advanced_functionality). Default is '~'.
     # @option attributes [String] :chain_delimiter Character that should designate that a new command begins in the
@@ -94,6 +96,9 @@ module Discordrb::Commands
 
         # Spaces allowed between prefix and command
         spaces_allowed: attributes[:spaces_allowed].nil? ? false : attributes[:spaces_allowed],
+
+        # Webhooks allowed to trigger commands
+        webhook_commands: attributes[:webhook_commands].nil? ? true : attributes[:webhook_commands],
 
         # All of the following need to be one character
         # String to designate previous result in command chain
