@@ -1210,7 +1210,7 @@ module Discordrb
     # @return [Webhook] The created webhook.
     def create_webhook(name, avatar = nil)
       webhooks = JSON.parse(API::Server.webhooks(@bot.token, @id))
-      Webhook.new(JSON.parse(API::Channel.create_webhook(@bot.token, @id, name, avatar)), @bot, self)
+      Webhook.new(JSON.parse(API::Channel.create_webhook(@bot.token, @id, name, avatar)), @bot, @server)
     end
 
     # Sets this channel's name. The name must be alphanumeric with dashes, unless this is a voice channel (then there are no limitations)
