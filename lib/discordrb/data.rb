@@ -1656,6 +1656,8 @@ module Discordrb
                   end
                 end
 
+      @webhook_id = data['webhook_id'].to_i if data['webhook_id']
+
       @timestamp = Time.parse(data['timestamp']) if data['timestamp']
       @edited_timestamp = data['edited_timestamp'].nil? ? nil : Time.parse(data['edited_timestamp'])
       @edited = !@edited_timestamp.nil?
