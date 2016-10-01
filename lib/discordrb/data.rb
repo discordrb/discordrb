@@ -211,6 +211,11 @@ module Discordrb
       @bot.profile.id == @id
     end
 
+    # @return [true, false] whether this user is a fake user for a webhook message
+    def webhook?
+      @discriminator == Message::ZERO_DISCRIM
+    end
+
     [:offline, :idle, :online].each do |e|
       define_method(e.to_s + '?') do
         @status.to_sym == e
