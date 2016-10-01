@@ -1687,6 +1687,11 @@ module Discordrb
       @author && @author.current_bot?
     end
 
+    # @return [true, false] whether this message has been sent over a webhook.
+    def webhook?
+      !@webhook_id.nil?
+    end
+
     # The inspect method is overwritten to give more useful output
     def inspect
       "<Message content=\"#{@content}\" id=#{@id} timestamp=#{@timestamp} author=#{@author} channel=#{@channel}>"
