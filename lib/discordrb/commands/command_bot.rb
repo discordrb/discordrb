@@ -287,6 +287,7 @@ module Discordrb::Commands
     end
 
     def required_roles?(member, required)
+      return (required.nil? || required.empty?) if member.webhook?
       if required.is_a? Array
         required.all? do |role|
           member.role?(role)
