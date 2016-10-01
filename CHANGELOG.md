@@ -1,5 +1,18 @@
 # Changelog
 
+## 3.0.1
+
+A tiny update to support webhook-sent messages properly!
+
+- Added the utility methods `Message#webhook?` and `User#webhook?` to check whether a message or a user belongs to a webhook
+- Added `Message#webhook_id` to get the ID of the sending webhook for webhook messages
+- Added the `webhook_commands` parameter to CommandBot that, if false (default true), prevents webhook-sent messages from being parsed and handled as commands.
+
+### Bugfixes
+
+- Fixed webhook-sent messages being ignored because their author couldn't be resolved.
+- Fixed a minor performance problem where a CommandBot would create unnecessarily create redundant objects for every received message.
+
 ## 3.0.0
 
 I didn't think there could possibly be a release larger than 2.0.0 was, but here it is! Including the respective release commit, there were 540 commits from 1.8.1 to 2.0.0, but a whopping 734 commits from 2.1.3 to 3.0.0.
