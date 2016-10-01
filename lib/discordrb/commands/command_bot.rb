@@ -262,6 +262,9 @@ module Discordrb::Commands
       end
 
       execute_chain(chain, event)
+
+      # Return the message so it doesn't get parsed again during the rest of the dispatch handling
+      message
     end
 
     # Check whether a message should trigger command execution, and if it does, return the raw chain
