@@ -308,7 +308,7 @@ module Discordrb::API::Channel
   def create_webhook(token, channel_id, name, avatar = nil)
     Discordrb::API.request(
       :channels_webhooks,
-      nil,
+      channel_id,
       :post,
       "#{Discordrb::API.api_base}/channels/#{channel_id}/webhooks",
       { name: name, avatar: avatar }.to_json,
@@ -321,7 +321,7 @@ module Discordrb::API::Channel
   def webhooks(token, channel_id)
     Discordrb::API.request(
       :channels_webhooks,
-      nil,
+      channel_id,
       :get,
       "#{Discordrb::API.api_base}/channels/#{channel_id}/webhooks",
       Authorization: token
