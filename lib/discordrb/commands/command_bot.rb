@@ -237,8 +237,8 @@ module Discordrb::Commands
     # Internal handler for MESSAGE_CREATE that is overwritten to allow for command handling
     def create_message(data)
       message = Discordrb::Message.new(data, self)
-      return if message.from_bot? && !@should_parse_self
-      return if message.webhook? && !@attributes[:webhook_commands]
+      return message if message.from_bot? && !@should_parse_self
+      return message if message.webhook? && !@attributes[:webhook_commands]
 
       unless message.author
         Discordrb::LOGGER.warn("Received a message (#{message.inspect}) with nil author! Ignoring, please report this if you can")
@@ -248,17 +248,17 @@ module Discordrb::Commands
       event = CommandEvent.new(message, self)
 
       chain = trigger?(message)
-      return unless chain
+      return message unless chain
 
       # Don't allow spaces between the prefix and the command
       if chain.start_with?(' ') && !@attributes[:spaces_allowed]
         debug('Chain starts with a space')
-        return
+        return message
       end
 
       if chain.strip.empty?
         debug('Chain is empty')
-        return
+        return message
       end
 
       execute_chain(chain, event)
