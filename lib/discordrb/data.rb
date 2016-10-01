@@ -302,6 +302,29 @@ module Discordrb
       @user = @bot.ensure_user(data['owner'])
     end
 
+    # Sets the server's AFK channel.
+    # @param afk_channel [Channel, nil] The new AFK channel, or `nil` if there should be none set.
+    def name=(name)
+      update_webhook_data(name: name)
+    end
+
+    # Sets the server's icon.
+    # @param icon [String, #read] The new icon, in base64-encoded JPG format.
+    def icon=(icon)
+      if icon.respond_to? :read
+        icon_string = 'data:image/jpg;base64,'
+        icon_string += Base64.strict_encode64(icon.read)
+        update_webhook_data(icon: icon_string)
+      else
+        update_webhook_data(icon: icon)
+      end
+    end
+
+    # Deletes webhook.
+    def delete
+      API::Server.delete_webhook(@bot.token, @id)
+    end
+
     # Utility function to get a webhook's avatar URL.
     # @return [String, nil] the URL to the avatar image (nil if no image is set).
     def avatar_url
@@ -312,6 +335,23 @@ module Discordrb
     # The inspect method is overwritten to give more useful output
     def inspect
       "<Webhook name=#{@name} id=#{@id}>"
+    end
+
+    # Updates the cached data with new data
+    # @note For internal use only
+    # @!visibility private
+    def update_data(new_data)
+      @name = new_data[:name] || new_data['name'] || @name
+      @avatar_id = new_data[:avatar] || new_data['avatar'] || @avatar_id
+    end
+
+    private
+
+    def update_webhook_data(new_data)
+      API::Server.update_webhook(@bot.token, @id,
+                         new_data[:name] || @name,
+                         new_data.key?(:avatar) ? new_data[:avatar] : @avatar_id)
+      update_data(new_data)
     end
   end
 
@@ -1156,6 +1196,22 @@ module Discordrb
       API::Channel.delete(@bot.token, @id)
     end
 
+    # @return [Array<Webhook>] an array of all the webhooks connected to this channel.
+    def webhooks
+      webhooks = JSON.parse(API::Channel.webhooks(@bot.token, @id))
+      webhooks.map { |webhook| Webhook.new(webhook, @bot, self) }
+    end
+
+
+    # Creates a webhook connected to this channel.
+    # @param name [String] the webhook's name.
+    # @param avatar [String, #read] the webhook's avatar.
+    # @return [Webhook] The created webhook.
+    def create_webhook(name, avatar = nil)
+      webhooks = JSON.parse(API::Server.webhooks(@bot.token, @id))
+      Webhook.new(JSON.parse(API::Channel.create_webhook(@bot.token, @id, name, avatar)), @bot, self)
+    end
+
     # Sets this channel's name. The name must be alphanumeric with dashes, unless this is a voice channel (then there are no limitations)
     # @param name [String] The new name.
     def name=(name)
@@ -1938,6 +1994,12 @@ module Discordrb
     def integrations
       integration = JSON.parse(API.server_integrations(@bot.token, @id))
       integration.map { |element| Integration.new(element, @bot, self) }
+    end
+
+    # @return [Array<Webhook>] an array of all the webhooks on this server.
+    def webhooks
+      webhooks = JSON.parse(API::Server.webhooks(@bot.token, @id))
+      webhooks.map { |webhook| Webhook.new(webhook, @bot, self) }
     end
 
     # Cache @embed
