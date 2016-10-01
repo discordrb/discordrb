@@ -243,6 +243,7 @@ module Discordrb
     # ID and avatar if the bot cannot reach the owner.
     # @return [User] the user object of the owner
     attr_reader :owner
+    alias_method :user, :owner
 
     def initialize(data, bot)
       @bot = bot
@@ -295,11 +296,11 @@ module Discordrb
 
       @name = data['name']
       @id = data['id'].to_i
-      @channel = server.text_channels.find(|c| c.id == data['channel'].to_i)
+      @channel = server.text_channels.find {|c| c.id == data['channel'].to_i}
       @server = server
       @token = data['token']
       @avatar_id = data['avatar']
-      @user = @bot.ensure_user(data['owner'])
+      @owner = @bot.ensure_user(data['user'])
     end
 
     # Sets the server's AFK channel.
@@ -1199,7 +1200,7 @@ module Discordrb
     # @return [Array<Webhook>] an array of all the webhooks connected to this channel.
     def webhooks
       webhooks = JSON.parse(API::Channel.webhooks(@bot.token, @id))
-      webhooks.map { |webhook| Webhook.new(webhook, @bot, self) }
+      webhooks.map { |webhook| Webhook.new(webhook, @bot, @server) }
     end
 
 
