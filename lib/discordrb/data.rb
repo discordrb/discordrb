@@ -1640,7 +1640,12 @@ module Discordrb
       @mention_everyone = data['mention_everyone']
 
       @author = if data['author']
-                  if @channel.private?
+                  if data['author']['discriminator'] == ZERO_DISCRIM
+                    # This is a webhook user! It would be pointless to try to resolve a member here, so we just create
+                    # a User and return that instead.
+                    Discordrb::LOGGER.debug("Webhook user: #{data['author']['id']}")
+                    User.new(data['author'], @bot)
+                  elsif @channel.private?
                     # Turn the message user into a recipient - we can't use the channel recipient
                     # directly because the bot may also send messages to the channel
                     Recipient.new(bot.user(data['author']['id'].to_i), @channel, bot)
