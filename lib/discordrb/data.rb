@@ -269,6 +269,52 @@ module Discordrb
     end
   end
 
+  # A webhook to a server channel
+  class Webhook
+    include IDObject
+
+    # @return [String] the webhook name
+    attr_reader :name
+
+    # @return [Channel] the channel that the webhook is currently connected to
+    attr_reader :channel
+
+    # @return [Server] the server that the webhook is currently connected to
+    attr_reader :server
+
+    # @return [String] the webhook's token
+    attr_reader :token
+
+    # Gets the user object of the creator of the webhook. May be limited to username, discriminator,
+    # ID and avatar if the bot cannot reach the owner.
+    # @return [User] the user object of the owner
+    attr_reader :owner
+
+    def initialize(data, bot, server)
+      @bot = bot
+
+      @name = data['name']
+      @id = data['id'].to_i
+      @channel = server.text_channels.find(|c| c.id == data['channel'].to_i)
+      @server = server
+      @token = data['token']
+      @avatar_id = data['avatar']
+      @user = @bot.ensure_user(data['owner'])
+    end
+
+    # Utility function to get a webhook's avatar URL.
+    # @return [String, nil] the URL to the avatar image (nil if no image is set).
+    def avatar_url
+      return nil if @avatar_id.nil?
+      API::User.avatar_url(@id, @avatar_id)
+    end
+
+    # The inspect method is overwritten to give more useful output
+    def inspect
+      "<Webhook name=#{@name} id=#{@id}>"
+    end
+  end
+
   # Mixin for the attributes members and private members should have
   module MemberAttributes
     # @return [Time] when this member joined the server.
