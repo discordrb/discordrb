@@ -1626,6 +1626,9 @@ module Discordrb
     attr_reader :pinned
     alias_method :pinned?, :pinned
 
+    # @return [Integer, nil] the webhook ID that sent this message, or nil if it wasn't sent through a webhook.
+    attr_reader :webhook_id
+
     # The discriminator that webhook user accounts have.
     ZERO_DISCRIM = '0000'.freeze
 
