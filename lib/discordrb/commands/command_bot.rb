@@ -221,9 +221,14 @@ module Discordrb::Commands
     # @param server [Server] The server on which to check
     # @return [true, false] whether or not the user has the given permission
     def permission?(user, level, server)
-      determined_level = server.nil? ? 0 : user.roles.reduce(0) do |memo, role|
-        [@permissions[:roles][role.id] || 0, memo].max
-      end
+      determined_level = if user.webhook? || server.nil?
+                           0
+                         else
+                           user.roles.reduce(0) do |memo, role|
+                             [@permissions[:roles][role.id] || 0, memo].max
+                           end
+                         end
+
       [@permissions[:users][user.id] || 0, determined_level].max >= level
     end
 
