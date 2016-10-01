@@ -233,6 +233,7 @@ module Discordrb::Commands
     def create_message(data)
       message = Discordrb::Message.new(data, self)
       return if message.from_bot? && !@should_parse_self
+      return if message.webhook? && !@attributes[:webhook_commands]
 
       unless message.author
         Discordrb::LOGGER.warn("Received a message (#{message.inspect}) with nil author! Ignoring, please report this if you can")
