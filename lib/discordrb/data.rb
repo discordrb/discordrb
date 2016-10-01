@@ -1583,6 +1583,9 @@ module Discordrb
     attr_reader :pinned
     alias_method :pinned?, :pinned
 
+    # The discriminator that webhook user accounts have.
+    ZERO_DISCRIM = '0000'.freeze
+
     # @!visibility private
     def initialize(data, bot)
       @bot = bot
