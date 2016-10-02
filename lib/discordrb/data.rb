@@ -1361,7 +1361,7 @@ module Discordrb
     private
 
     def update_channel_data
-      API.update_channel(@bot.token, @id, @name, @topic, @position, @bitrate, @user_limit)
+      API::Channel.update(@bot.token, @id, @name, @topic, @position, @bitrate, @user_limit)
     end
   end
 

@@ -16,13 +16,13 @@ module Discordrb::API::Channel
 
   # Update a channel's data
   # https://discordapp.com/developers/docs/resources/channel#modify-channel
-  def update(token, channel_id, name, topic, position = 0)
+  def update(token, channel_id, name, topic, position, bitrate, user_limit)
     Discordrb::API.request(
       :channels_cid,
       channel_id,
       :patch,
       "#{Discordrb::API.api_base}/channels/#{channel_id}",
-      { name: name, position: position, topic: topic }.to_json,
+      { name: name, position: position, topic: topic, bitrate: bitrate, user_limit: user_limit }.to_json,
       Authorization: token,
       content_type: :json
     )
