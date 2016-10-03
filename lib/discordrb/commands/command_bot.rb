@@ -139,8 +139,9 @@ module Discordrb::Commands
           result = "**`#{command_name}`**: #{desc}"
           result += "\nUsage: `#{usage}`" if usage
           if parameters
-            result += "\nAccepted Parameters:"
-            parameters.each { |p| result += "\n    ``` #{p} ```" }
+            result += "\nAccepted Parameters:\n```"
+            parameters.each { |p| result += "\n#{p}" }
+            result += "```"
           end
           result
         else
