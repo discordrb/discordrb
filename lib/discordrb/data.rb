@@ -303,14 +303,14 @@ module Discordrb
       @owner = @bot.ensure_user(data['user'])
     end
 
-    # Sets the server's AFK channel.
-    # @param afk_channel [Channel, nil] The new AFK channel, or `nil` if there should be none set.
+    # Sets the webhook's name.
+    # @param name [String] The webhook's new name.
     def name=(name)
       update_webhook_data(name: name)
     end
 
-    # Sets the server's icon.
-    # @param icon [String, #read] The new icon, in base64-encoded JPG format.
+    # Sets the webhook's avatar.
+    # @param icon [String, #read] The new avatar, in base64-encoded JPG format.
     def icon=(icon)
       if icon.respond_to? :read
         icon_string = 'data:image/jpg;base64,'
