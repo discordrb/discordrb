@@ -141,7 +141,7 @@ module Discordrb::Commands
           if parameters
             result += "\nAccepted Parameters:\n```"
             parameters.each { |p| result += "\n#{p}" }
-            result += "```"
+            result += '```'
           end
           result
         else
