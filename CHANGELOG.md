@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.0.2
+
+- A small change to how CommandBot parameter lists are formatted ([#240](https://github.com/meew0/discordrb/pull/240), thanks @FormalHellhound)
+
+### Bugfixes
+
+- Setting properties on a channel (e.g. `Channel#topic=`) works again ([#238](https://github.com/meew0/discordrb/issues/238) / [#239](https://github.com/meew0/discordrb/pull/239), thanks @Daniel-Worrall)
+
 ## 3.0.1
 
 A tiny update to support webhook-sent messages properly!
