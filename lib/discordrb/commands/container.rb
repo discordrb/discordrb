@@ -43,7 +43,6 @@ module Discordrb::Commands
     # @yieldparam event [CommandEvent] The event of the message that contained the command.
     # @return [Command] The command that was added.
     def command(name, attributes = {}, &block)
-      @commands ||= {}
       if name.is_a? Array
         new_command = nil
 
@@ -61,7 +60,6 @@ module Discordrb::Commands
     # Removes a specific command from this container.
     # @param name [Symbol] The command to remove.
     def remove_command(name)
-      @commands ||= {}
       @commands.delete name
     end
 
@@ -71,7 +69,6 @@ module Discordrb::Commands
       handlers = container.instance_variable_get '@commands'
       return unless handlers
 
-      @commands ||= {}
       @commands.merge! handlers
     end
 
