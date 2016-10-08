@@ -127,6 +127,19 @@ module Discordrb::API::User
     )
   end
 
+  # Change user status setting
+  def change_status_setting(token, status)
+    Discordrb::API.request(
+      :users_me_settings,
+      nil,
+      :patch,
+      "#{Discordrb::API.api_base}/users/@me/settings",
+      { status: status }.to_json,
+      Authorization: token,
+      content_type: :json
+    )
+  end
+
   # Make an avatar URL from the user and avatar IDs
   def avatar_url(user_id, avatar_id)
     "#{Discordrb::API.api_base}/users/#{user_id}/avatars/#{avatar_id}.jpg"
