@@ -1257,7 +1257,7 @@ module Discordrb
     def delete_messages(messages)
       raise ArgumentError, 'Can only delete between 2 and 100 messages!' unless messages.count.between?(2, 100)
 
-      messages.map! { |m| m.is_a?(Integer) ? m : m.id }
+      messages.map!(&:resolve_id)
       API::Channel.bulk_delete_messages(@bot.token, @id, messages)
     end
 
