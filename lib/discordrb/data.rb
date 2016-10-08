@@ -682,8 +682,6 @@ module Discordrb
       update_profile_status_setting('online')
     end
 
-    alias_method(:on, :online)
-
     # Sets the user status setting to Idle.
     # @note Only usable on User accounts.
     def idle
