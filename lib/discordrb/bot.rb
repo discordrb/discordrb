@@ -152,6 +152,39 @@ module Discordrb
       @servers
     end
 
+    # @overload emoji(id)
+    #   Return an emoji by its ID
+    #   @param id [Integer] The emoji's ID.
+    #   @return emoji [GlobalEmoji, nil] the emoji object. `nil` if the emoji was not found.
+    # @overload emoji
+    #   The list of emoji the bot can use.
+    #   @return [Array<GlobalEmoji>] the emoji available.
+    def emoji(id = nil)
+      gateway_check
+      if id
+        emoji = @emoji.find { |sth| sth.id == id }
+      else
+        emoji = {}
+        @servers.each do |_, server|
+          server.emoji.values.each do |element|
+            emoji[element.name] = GlobalEmoji.new(element, self)
+          end
+        end
+        emoji.values
+      end
+    end
+
+    alias_method :emojis, :emoji
+    alias_method :all_emoji, :emoji
+
+    # Finds an emoji by its name.
+    # @param name [String] The emoji name that should be resolved.
+    # @return [GlobalEmoji, nil] the emoji identified by the name, or `nil` if it couldn't be found.
+    def find_emoji(name)
+      LOGGER.out("Resolving emoji #{name}")
+      emoji.find { |element| element.name == name }
+    end
+
     # The bot's user profile. This special user object can be used
     # to edit user data like the current username (see {Profile#username=}).
     # @return [Profile] The bot's profile that can be used to edit data.
@@ -398,13 +431,23 @@ module Discordrb
       API.update_oauth_application(@token, name, redirect_uris, description, icon)
     end
 
-    # Gets the user from a mention of the user.
-    # @param mention [String] The mention, which should look like <@12314873129>.
-    # @return [User] The user identified by the mention, or `nil` if none exists.
-    def parse_mention(mention)
+    # Gets the user, role or emoji from a mention of the user, role or emoji.
+    # @param mention [String] The mention, which should look like `<@12314873129>`, `<@&123456789>` or `<:Name:126328:>`.
+    # @param server [Server, nil] The server of the associated mention. (recommended for role parsing, to speed things up)
+    # @return [User, Role, Emoji] The user, role or emoji identified by the mention, or `nil` if none exists.
+    def parse_mention(mention, server = nil)
       # Mention format: <@id>
-      return nil unless /<@!?(?<id>\d+)>?/ =~ mention
-      user(id.to_i)
+      if /<@!?(?<id>\d+)>?/ =~ mention
+        user(id.to_i)
+      elsif /<@&(?<id>\d+)>?/ =~ mention
+        return server.role(id) if server
+        servers.each do |element|
+          role = element.role(id)
+          return role unless role.nil?
+        end
+      elsif /<:(\w+):(?<id>\d+)>?/ =~ mention
+        emoji.find { |element| element.id.to_i == id.to_i }
+      end
     end
 
     # Updates presence status.

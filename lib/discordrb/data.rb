@@ -1661,6 +1661,8 @@ module Discordrb
       @edited = !@edited_timestamp.nil?
       @id = data['id'].to_i
 
+      @emoji = []
+
       @mentions = []
 
       data['mentions'].each do |element|
@@ -1733,9 +1735,136 @@ module Discordrb
       !@webhook_id.nil?
     end
 
+    # @!visibility private
+    # @return [Array<String>] the emoji mentions found in the message
+    def scan_for_emoji
+      emoji = @content.split
+      emoji = emoji.grep(/<:(?<name>\w+):(?<id>\d+)>?/)
+      emoji
+    end
+
+    # @return [Array<Emoji>] the emotes that were used/mentioned in this message (Only returns Emoji the bot has access to, else nil).
+    def emoji
+      return if @content.nil?
+
+      emoji = scan_for_emoji
+      emoji.each do |element|
+        @emoji << @bot.parse_mention(element)
+      end
+      @emoji
+    end
+
+    # Check if any emoji got used in this message
+    # @return [true, false] whether or not any emoji got used
+    def emoji?
+      emoji = scan_for_emoji
+      return true unless emoji.empty?
+    end
+
     # The inspect method is overwritten to give more useful output
     def inspect
       "<Message content=\"#{@content}\" id=#{@id} timestamp=#{@timestamp} author=#{@author} channel=#{@channel}>"
+    end
+  end
+
+  # Server emoji
+  class Emoji
+    include IDObject
+
+    # @return [String] the emoji name
+    attr_reader :name
+
+    # @return [Server] the server of this emoji
+    attr_reader :server
+
+    # @return [Array<Role>] roles this emoji is active for
+    attr_reader :roles
+
+    def initialize(data, bot, server)
+      @bot = bot
+      @roles = nil
+
+      @name = data['name']
+      @server = server
+      @id = data['id'].to_i
+
+      process_roles(data['roles']) if server
+    end
+
+    # @return [String] the layout to mention it (or have it used) in a message
+    def mention
+      "<:#{@name}:#{@id}>"
+    end
+
+    alias_method :use, :mention
+
+    # @return [String] the icon URL of the emoji
+    def icon_url
+      API.emoji_icon_url(@id)
+    end
+
+    # The inspect method is overwritten to give more useful output
+    def inspect
+      "<Emoji name=#{@name} id=#{@id}>"
+    end
+
+    # @!visibility private
+    def process_roles(roles)
+      @roles = []
+      return unless roles
+      roles.each do |role_id|
+        role = server.role(role_id)
+        @roles << role
+      end
+    end
+  end
+
+  # Emoji that is not tailored to a server
+  class GlobalEmoji
+    include IDObject
+
+    # @return [String] the emoji name
+    attr_reader :name
+
+    # @return [Hash<Integer => Array<Role>>] roles this emoji is active for in every server
+    attr_reader :role_associations
+
+    def initialize(data, bot)
+      @bot = bot
+      @roles = nil
+
+      @name = data.name
+      @id = data.id
+      @role_associations = Hash.new([])
+      @role_associations[data.server.id] = data.roles
+    end
+
+    # @return [String] the layout to mention it (or have it used) in a message
+    def mention
+      "<:#{@name}:#{@id}>"
+    end
+
+    alias_method :use, :mention
+
+    # @return [String] the icon URL of the emoji
+    def icon_url
+      API.emoji_icon_url(@id)
+    end
+
+    # The inspect method is overwritten to give more useful output
+    def inspect
+      "<GlobalEmoji name=#{@name} id=#{@id}>"
+    end
+
+    # @!visibility private
+    def process_roles(roles)
+      newroles = []
+      return unless roles
+      roles.each do
+        role = server.role(role_id)
+        newroles << role
+      end
+      newroles
     end
   end
 
@@ -1852,6 +1981,10 @@ module Discordrb
     # @return [Array<Role>] an array of all the roles created on this server.
     attr_reader :roles
 
+    # @return [Array<Emoji>] an array of all the emoji available on this server.
+    attr_reader :emoji
+    alias_method :emojis, :emoji
+
     # @return [true, false] whether or not this server is large (members > 100). If it is,
     # it means the members list may be inaccurate for a couple seconds after starting up the bot.
     attr_reader :large
@@ -1890,8 +2023,10 @@ module Discordrb
       @features = data['features'].map { |element| element.downcase.to_sym }
       @members = {}
       @voice_states = {}
+      @emoji = {}
 
       process_roles(data['roles'])
+      process_emoji(data['emojis'])
       process_members(data['members'])
       process_presences(data['presences'])
       process_channels(data['channels'])
@@ -2205,6 +2340,14 @@ module Discordrb
       update_server_data(afk_timeout: afk_timeout)
     end
 
+    # @return [true, false] whether this server has any emoji or not.
+    def any_emoji?
+      @emoji.any?
+    end
+
+    alias_method :has_emoji?, :any_emoji?
+    alias_method :emoji?, :any_emoji?
+
     # Processes a GUILD_MEMBERS_CHUNK packet, specifically the members field
     # @note For internal use only
     # @!visibility private
@@ -2269,6 +2412,14 @@ module Discordrb
         role = Role.new(element, @bot, self)
         @roles << role
         @roles_by_id[role.id] = role
+      end
+    end
+
+    def process_emoji(emoji)
+      return if emoji.empty?
+      emoji.each do |element|
+        newemoji = Emoji.new(element, @bot, self)
+        @emoji[newemoji.id] = newemoji
       end
     end
 
