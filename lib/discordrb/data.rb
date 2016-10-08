@@ -262,7 +262,7 @@ module Discordrb
     end
 
     # Utility function to get a application's icon URL.
-    # @return [String, nil] the URL to the icon image (nil if no iamge is set).
+    # @return [String, nil] the URL to the icon image (nil if no image is set).
     def icon_url
       return nil if @icon_id.nil?
       API.app_icon_url(@id, @icon_id)
@@ -855,7 +855,7 @@ module Discordrb
       @permissions.bits = packed if update_perms
     end
 
-    # Delets this role. This cannot be undone without recreating the role!
+    # Deletes this role. This cannot be undone without recreating the role!
     def delete
       API::Server.delete_role(@bot.token, @server.id, @id)
       @server.delete_role(@id)
@@ -1868,13 +1868,13 @@ module Discordrb
 
     # @!visibility private
     def process_roles(roles)
-      newroles = []
+      new_roles = []
       return unless roles
       roles.each do
         role = server.role(role_id)
-        newroles << role
+        new_roles << role
       end
-      newroles
+      new_roles
     end
   end
 
@@ -1896,7 +1896,7 @@ module Discordrb
 
   # Integration Account
   class IntegrationAccount
-    # @return [String] this accounts's name.
+    # @return [String] this account's name.
     attr_reader :name
 
     # @return [Integer] this account's ID.
@@ -2461,8 +2461,8 @@ module Discordrb
     def process_emoji(emoji)
       return if emoji.empty?
       emoji.each do |element|
-        newemoji = Emoji.new(element, @bot, self)
-        @emoji[newemoji.id] = newemoji
+        new_emoji = Emoji.new(element, @bot, self)
+        @emoji[new_emoji.id] = new_emoji
       end
     end
 

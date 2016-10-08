@@ -6,7 +6,7 @@ require 'discordrb/data'
 module Discordrb::Events
   # Module to make sending messages easier with the presence of a text channel in an event
   module Respondable
-    # @return [Channel] the channel in which this event occured
+    # @return [Channel] the channel in which this event occurred
     attr_reader :channel
 
     # Sends a message to the channel this message was sent in, right now. It is usually preferable to use {#<<} instead
