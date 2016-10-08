@@ -855,7 +855,7 @@ module Discordrb
         LOGGER.warn("This means some servers are unavailable due to an outage. Notifying ready now, we'll have to live without these servers")
 
         # Unset the unavailable server count so this doesn't get triggered again
-        @unavailable_servers = nil
+        @unavailable_servers = 0
 
         notify_ready
       end
