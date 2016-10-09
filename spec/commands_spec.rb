@@ -19,5 +19,26 @@ describe Discordrb::Commands do
         expect(spy).to_not have_received :respond
       end
     end
+
+    context 'single command' do
+      bot = Discordrb::Commands::CommandBot.new token: '', help_available: false
+
+      RESPONSE = 'hi'.freeze
+
+      bot.command :name do
+        RESPONSE
+      end
+
+      context 'regular user' do
+        it 'should return the response' do
+          event = double
+          allow(event).to receive :command=
+          allow(event).to receive(:drain_into) { |e| e }
+          result = bot.execute_command(:name, event, [], false, false)
+
+          expect(result).to eq RESPONSE
+        end
+      end
+    end
   end
 end
