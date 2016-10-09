@@ -128,8 +128,6 @@ module Discordrb::Commands
         users: {}
       }
 
-      @commands = {}
-
       return unless @attributes[:help_command]
       command(@attributes[:help_command], max_args: 1, description: 'Shows a list of all the commands available or displays help for a specific command.', usage: 'help [command name]') do |event, command_name|
         if command_name
