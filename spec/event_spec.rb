@@ -131,7 +131,6 @@ describe Discordrb::Events do
       it 'should call with empty attributes' do
         t = track('empty attributes')
         event = double('Discordrb::Events::MessageEvent')
-        p event.inspect
         Discordrb::Events::MessageEventHandler.new({}, proc { t.track(1) }).match(event)
         # t.summary
       end
