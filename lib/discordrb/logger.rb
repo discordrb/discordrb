@@ -91,7 +91,11 @@ module Discordrb
       timestamp = Time.now.strftime(LOG_TIMESTAMP_FORMAT)
 
       # Redact token if set
-      log = message.to_s.gsub(@token, 'REDACTED_TOKEN') if @token
+      log = if @token
+              message.to_s.gsub(@token, 'REDACTED_TOKEN')
+            else
+              message.to_s
+            end
 
       @streams.each do |stream|
         if @fancy && !stream.is_a?(File)
