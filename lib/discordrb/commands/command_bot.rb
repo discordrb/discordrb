@@ -172,6 +172,7 @@ module Discordrb::Commands
     # @return [String, nil] the command's result, if there is any.
     def execute_command(name, event, arguments, chained = false)
       debug("Executing command #{name} with arguments #{arguments}")
+      return unless @commands
       command = @commands[name]
       unless command
         event.respond @attributes[:command_doesnt_exist_message].gsub('%command%', name.to_s) if @attributes[:command_doesnt_exist_message]
