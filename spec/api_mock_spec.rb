@@ -6,26 +6,26 @@ describe APIMock do
   it 'stores the used method' do
     Discordrb::API.raw_request(:get, [])
 
-    Discordrb::API.last_method.should == :get
+    expect(Discordrb::API.last_method).to eq :get
   end
 
   it 'stores the used URL' do
     url = 'https://example.com/test'
     Discordrb::API.raw_request(:get, [url])
 
-    Discordrb::API.last_url.should == url
+    expect(Discordrb::API.last_url).to eq url
   end
 
   it 'parses the stored body using JSON' do
     body = { test: 1 }
     Discordrb::API.raw_request(:post, ['https://example.com/test', body.to_json])
 
-    Discordrb::API.last_body['test'].should == 1
+    expect(Discordrb::API.last_body['test']).to eq 1
   end
 
   it "doesn't parse the body if there is none present" do
     Discordrb::API.raw_request(:post, ['https://example.com/test', nil])
 
-    Discordrb::API.last_body.should be_nil
+    expect(Discordrb::API.last_body).to be_nil
   end
 end
