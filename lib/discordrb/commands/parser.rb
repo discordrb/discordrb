@@ -61,10 +61,10 @@ module Discordrb::Commands
     # @param event [CommandEvent] The event to call the command with.
     # @param arguments [Array<String>] The attributes for the command.
     # @param chained [true, false] Whether or not this command is part of a command chain.
-    # @param check_permission [true, false] Whether the user's permission to execute the command (i.e. rate limits)
+    # @param check_permissions [true, false] Whether the user's permission to execute the command (i.e. rate limits)
     #   should be checked.
     # @return [String] the result of the execution.
-    def call(event, arguments, chained = false, check_permission = true)
+    def call(event, arguments, chained = false, check_permissions = true)
       if arguments.length < @attributes[:min_args]
         event.respond "Too few arguments for command `#{name}`!"
         event.respond "Usage: `#{@attributes[:usage]}`" if @attributes[:usage]
@@ -82,7 +82,7 @@ module Discordrb::Commands
         end
       end
 
-      if check_permission
+      if check_permissions
         rate_limited = event.bot.rate_limited?(@attributes[:bucket], event.author)
         if @attributes[:bucket] && rate_limited
           if @attributes[:rate_limit_message]
