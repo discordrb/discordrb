@@ -760,6 +760,11 @@ module Discordrb
       def write(bits)
         @role.send(:packed=, bits, false)
       end
+
+      # The inspect method is overridden, in this case to prevent the token being leaked
+      def inspect
+        "<RoleWriter role=#{@role} token=...>"
+      end
     end
 
     # @!visibility private
