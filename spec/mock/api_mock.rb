@@ -13,7 +13,9 @@ module APIMock
     def raw_request(type, attributes)
       @last_method = type
       @last_url = attributes.first
-      @last_body = attributes[1].is_a?(Hash) ? nil : JSON.parse(attributes[1]) if attributes[1]
+      @last_body = if attributes[1]
+                     attributes[1].is_a?(Hash) ? nil : JSON.parse(attributes[1])
+                   end
       @last_headers = attributes.last
 
       @next_response
