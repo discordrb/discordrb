@@ -186,7 +186,7 @@ module Discordrb::Commands
          required_roles?(event.author, command.attributes[:required_roles])) ||
          !check_permissions
         event.command = command
-        result = command.call(event, arguments, chained)
+        result = command.call(event, arguments, chained, check_permissions)
         stringify(result)
       else
         event.respond command.attributes[:permission_message].gsub('%name%', name.to_s) if command.attributes[:permission_message]
