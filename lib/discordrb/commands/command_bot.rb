@@ -174,6 +174,7 @@ module Discordrb::Commands
       debug("Executing command #{name} with arguments #{arguments}")
       return unless @commands
       command = @commands[name]
+      return unless channels?(event.channel, command.attributes[:channels])
       unless command
         event.respond @attributes[:command_doesnt_exist_message].gsub('%command%', name.to_s) if @attributes[:command_doesnt_exist_message]
         return
@@ -299,6 +300,20 @@ module Discordrb::Commands
         end
       else
         member.role?(role)
+      end
+    end
+
+    def channels?(channel, channels)
+      return true if channels.empty?
+      channels.any? do |c|
+        if c.is_a? String
+          # Make sure to remove the "#" from channel names in case it was specified
+          c.delete('#') == channel.name
+        elsif c.is_a? Fixnum
+          c == channel.id
+        else
+          c == channel
+        end
       end
     end
 
