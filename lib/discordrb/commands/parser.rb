@@ -26,7 +26,7 @@ module Discordrb::Commands
         required_roles: attributes[:required_roles] || [],
 
         # Channels this command can be used on
-        channels: attributes[:channels] || [],
+        channels: attributes[:channels] || nil,
 
         # Whether this command is usable in a command chain
         chain_usable: attributes[:chain_usable].nil? ? true : attributes[:chain_usable],
