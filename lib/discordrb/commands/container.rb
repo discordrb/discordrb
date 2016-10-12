@@ -24,7 +24,7 @@ module Discordrb::Commands
     #   should be required to use this command. See {Discordrb::Permissions::Flags} for a list.
     # @option attributes [Array<Role>, Array<#resolve_id>] :required_roles Roles that user should have to use this command.
     # @option attributes [Array<String, Integer, Channel>] :channels The channels that this command can be used on. An
-    #   empty array indicates it can be used on any channel.
+    #   empty array indicates it can be used on any channel. Supersedes the command bot attribute.
     # @option attributes [true, false] :chain_usable Whether this command is able to be used inside of a command chain
     #   or sub-chain. Typically used for administrative commands that shouldn't be done carelessly.
     # @option attributes [true, false] :help_available Whether this command is visible in the help command. See the
