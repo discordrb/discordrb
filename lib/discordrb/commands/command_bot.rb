@@ -176,11 +176,12 @@ module Discordrb::Commands
       debug("Executing command #{name} with arguments #{arguments}")
       return unless @commands
       command = @commands[name]
-      return unless channels?(event.channel, command.attributes[:channels])
       unless command
         event.respond @attributes[:command_doesnt_exist_message].gsub('%command%', name.to_s) if @attributes[:command_doesnt_exist_message]
         return
       end
+      return unless channels?(event.channel, command.attributes[:channels])
+      if permission?(event.author, command.attributes[:permission_level], event.server) &&
       if (check_permissions &&
          permission?(event.author, command.attributes[:permission_level], event.server) &&
          required_permissions?(event.author, command.attributes[:required_permissions], event.channel) &&
