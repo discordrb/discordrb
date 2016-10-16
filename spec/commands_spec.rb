@@ -2,6 +2,14 @@ require 'discordrb'
 
 describe Discordrb::Commands do
   describe Discordrb::Commands::CommandBot do
+    def command_event_double
+      event = double('event')
+      allow(event).to receive :command=
+      allow(event).to receive(:drain_into) { |e| e }
+
+      event
+    end
+
     context 'no defined commands' do
       bot = Discordrb::Commands::CommandBot.new token: '', help_available: false
 
@@ -31,10 +39,7 @@ describe Discordrb::Commands do
 
       context 'regular user' do
         it 'should return the response' do
-          event = double
-          allow(event).to receive :command=
-          allow(event).to receive(:drain_into) { |e| e }
-          result = bot.execute_command(:name, event, [], false, false)
+          result = bot.execute_command(:name, command_event_double, [], false, false)
 
           expect(result).to eq RESPONSE
         end
