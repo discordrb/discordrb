@@ -50,6 +50,8 @@ module Discordrb::Commands
     #   command. Default is false.
     # @option attributes [true, false] :webhook_commands Whether messages sent by webhooks are allowed to trigger
     #   commands. Default is true.
+    # @option attributes [Array<String, Integer, Channel>] :channels The channels this command bot accepts commands on.
+    #   Superseded if a command has a 'channels' attribute.
     # @option attributes [String] :previous Character that should designate the result of the previous command in
     #   a command chain (see :advanced_functionality). Default is '~'.
     # @option attributes [String] :chain_delimiter Character that should designate that a new command begins in the
@@ -99,6 +101,8 @@ module Discordrb::Commands
 
         # Webhooks allowed to trigger commands
         webhook_commands: attributes[:webhook_commands].nil? ? true : attributes[:webhook_commands],
+
+        channels: attributes[:channels] || [],
 
         # All of the following need to be one character
         # String to designate previous result in command chain
@@ -174,10 +178,13 @@ module Discordrb::Commands
       debug("Executing command #{name} with arguments #{arguments}")
       return unless @commands
       command = @commands[name]
+      return unless channels?(event.channel, @attributes[:channels]) ||
+                    (command && !command.attributes[:channels].nil?)
       unless command
         event.respond @attributes[:command_doesnt_exist_message].gsub('%command%', name.to_s) if @attributes[:command_doesnt_exist_message]
         return
       end
+      return unless channels?(event.channel, command.attributes[:channels])
       if permission?(event.author, command.attributes[:permission_level], event.server) &&
          required_permissions?(event.author, command.attributes[:required_permissions], event.channel) &&
          required_roles?(event.author, command.attributes[:required_roles])
@@ -299,6 +306,20 @@ module Discordrb::Commands
         end
       else
         member.role?(role)
+      end
+    end
+
+    def channels?(channel, channels)
+      return true if channels.nil? || channels.empty?
+      channels.any? do |c|
+        if c.is_a? String
+          # Make sure to remove the "#" from channel names in case it was specified
+          c.delete('#') == channel.name
+        elsif c.is_a? Fixnum
+          c == channel.id
+        else
+          c == channel
+        end
       end
     end
 
