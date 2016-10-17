@@ -84,3 +84,7 @@ end
 def track(*messages)
   EventTracker.new(messages)
 end
+
+RSpec::Matchers.define :something_including do |x|
+  match { |actual| actual.include? x }
+end
