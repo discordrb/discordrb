@@ -19,4 +19,15 @@ describe Discordrb::Logger do
 
     expect(stream).to_not have_received(:puts)
   end
+
+  context 'fancy mode' do
+    it 'should log messages' do
+      stream = spy
+      logger = Discordrb::Logger.new(true, [stream])
+
+      logger.error('Testing')
+
+      expect(stream).to have_received(:puts).with(something_including('Testing'))
+    end
+  end
 end
