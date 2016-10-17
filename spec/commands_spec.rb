@@ -16,13 +16,13 @@ describe Discordrb::Commands do
       it 'should successfully trigger the command' do
         event = double
 
-        bot.execute_command(:test, event, [])
+        bot.execute_command(:test, event, [], false, false)
       end
 
       it 'should not send anything to the channel' do
         event = spy
 
-        bot.execute_command(:test, event, [])
+        bot.execute_command(:test, event, [], false, false)
 
         expect(spy).to_not have_received :respond
       end
