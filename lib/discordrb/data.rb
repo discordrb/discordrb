@@ -1870,6 +1870,7 @@ module Discordrb
     end
 
     alias_method :use, :mention
+    alias_method :to_s, :mention
 
     # @return [String] the icon URL of the emoji
     def icon_url
