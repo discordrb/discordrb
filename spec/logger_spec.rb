@@ -30,4 +30,16 @@ describe Discordrb::Logger do
       expect(stream).to have_received(:puts).with(something_including('Testing'))
     end
   end
+
+  context 'redacted token' do
+    it 'should redact the token from messages' do
+      stream = spy
+      logger = Discordrb::Logger.new(true, [stream])
+      logger.token = 'asdfg'
+
+      logger.error('this message contains a token that should be redacted: asdfg')
+
+      expect(stream).to have_received(:puts).with(something_not_including('asdfg'))
+    end
+  end
 end
