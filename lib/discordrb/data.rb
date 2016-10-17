@@ -295,6 +295,9 @@ module Discordrb
     # through for example being the server owner or having the Manage Roles permission
     # @param action [Symbol] The permission that should be checked. See also {Permissions::Flags} for a list.
     # @param channel [Channel, nil] If channel overrides should be checked too, this channel specifies where the overrides should be checked.
+    # @example Check if the bot can send messages to a specific channel in a server.
+    #   bot_profile = bot.profile.on(event.server)
+    #   can_send_messages = bot_profile.permission?(:send_messages, channel)
     # @return [true, false] whether or not this user has the permission.
     def permission?(action, channel = nil)
       # If the member is the server owner, it irrevocably has all permissions.
@@ -314,6 +317,8 @@ module Discordrb
     # Manage Roles)
     # @param action [Symbol] The permission that should be checked. See also {Permissions::Flags} for a list.
     # @param channel [Channel, nil] If channel overrides should be checked too, this channel specifies where the overrides should be checked.
+    # @example Check if a member has the Manage Channels permission defined in the server.
+    #   has_manage_channels = member.defined_permission?(:manage_channels)
     # @return [true, false] whether or not this user has the permission defined.
     def defined_permission?(action, channel = nil)
       # Get the permission the user's roles have
@@ -488,6 +493,10 @@ module Discordrb
     # Adds and removes roles from a member.
     # @param add [Role, Array<Role>] The role(s) to add.
     # @param remove [Role, Array<Role>] The role(s) to remove.
+    # @example Remove the 'Member' role from a user, and add the 'Muted' role to them.
+    #   to_add = server.roles.find {|role| role.name == 'Muted'}
+    #   to_remove = server.roles.find {|role| role.name == 'Member'}
+    #   member.modify_roles(to_add, to_remove)
     def modify_roles(add, remove)
       add_role_ids = role_id_array(add)
       remove_role_ids = role_id_array(remove)
@@ -1248,6 +1257,8 @@ module Discordrb
     #   start at the current message.
     # @param after_id [Integer] The ID of the oldest message the retrieval should start at, or nil if it should start
     #   as soon as possible with the specified amount.
+    # @example Count the number of messages in the last 50 messages that contain the letter 'e'.
+    #   message_count = channel.history(50).count {|message| message.content.include? "e"}
     # @return [Array<Message>] the retrieved messages.
     def history(amount, before_id = nil, after_id = nil)
       logs = API::Channel.messages(@bot.token, @id, amount, before_id, after_id)
@@ -1704,6 +1715,7 @@ module Discordrb
     end
 
     # Edits this message to have the specified content instead.
+    # You can only edit your own messages.
     # @param new_content [String] the new content the message should have.
     # @return [Message] the resulting message.
     def edit(new_content)
@@ -1809,6 +1821,7 @@ module Discordrb
     end
 
     alias_method :use, :mention
+    alias_method :to_s, :mention
 
     # @return [String] the icon URL of the emoji
     def icon_url
@@ -1857,6 +1870,7 @@ module Discordrb
     end
 
     alias_method :use, :mention
+    alias_method :to_s, :mention
 
     # @return [String] the icon URL of the emoji
     def icon_url
