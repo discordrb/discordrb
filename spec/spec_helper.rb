@@ -88,3 +88,7 @@ end
 RSpec::Matchers.define :something_including do |x|
   match { |actual| actual.include? x }
 end
+
+RSpec::Matchers.define :something_not_including do |x|
+  match { |actual| !actual.include?(x) }
+end
