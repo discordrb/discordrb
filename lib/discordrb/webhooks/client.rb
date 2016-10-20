@@ -8,6 +8,11 @@ module Discordrb::Webhooks
     # @param token [String] The webhook's authorisation token. Will only be used
     #   if `url` is not set.
     def initialize(url: nil, id: nil, token: nil)
+      @url = if url
+               url
+             else
+               generate_url(id, token)
+             end
     end
 
     private
