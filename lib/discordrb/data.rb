@@ -10,7 +10,6 @@ require 'discordrb/api/channel'
 require 'discordrb/api/server'
 require 'discordrb/api/invite'
 require 'discordrb/api/user'
-require 'discordrb/events/message'
 require 'time'
 require 'base64'
 

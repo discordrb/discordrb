@@ -28,7 +28,7 @@ RSpec.configure do |config|
     #     # => "be bigger than 2 and smaller than 4"
     # ...rather than:
     #     # => "be bigger than 2"
-    expectations.syntax = [:should, :expect]
+    expectations.syntax = :expect
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true
   end
 
@@ -83,4 +83,12 @@ end
 
 def track(*messages)
   EventTracker.new(messages)
+end
+
+RSpec::Matchers.define :something_including do |x|
+  match { |actual| actual.include? x }
+end
+
+RSpec::Matchers.define :something_not_including do |x|
+  match { |actual| !actual.include?(x) }
 end

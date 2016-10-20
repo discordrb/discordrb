@@ -173,23 +173,27 @@ module Discordrb::Commands
     # @param arguments [Array<String>] The arguments to pass to the command.
     # @param chained [true, false] Whether or not it should be executed as part of a command chain. If this is false,
     #   commands that have chain_usable set to false will not work.
+    # @param check_permissions [true, false] Whether permission parameters such as `required_permission` or
+    #   `permission_level` should be checked.
     # @return [String, nil] the command's result, if there is any.
-    def execute_command(name, event, arguments, chained = false)
+    def execute_command(name, event, arguments, chained = false, check_permissions = true)
       debug("Executing command #{name} with arguments #{arguments}")
       return unless @commands
       command = @commands[name]
-      return unless channels?(event.channel, @attributes[:channels]) ||
+      return unless !check_permissions || channels?(event.channel, @attributes[:channels]) ||
                     (command && !command.attributes[:channels].nil?)
       unless command
         event.respond @attributes[:command_doesnt_exist_message].gsub('%command%', name.to_s) if @attributes[:command_doesnt_exist_message]
         return
       end
-      return unless channels?(event.channel, command.attributes[:channels])
-      if permission?(event.author, command.attributes[:permission_level], event.server) &&
+      return unless !check_permissions || channels?(event.channel, command.attributes[:channels])
+      if (check_permissions &&
+         permission?(event.author, command.attributes[:permission_level], event.server) &&
          required_permissions?(event.author, command.attributes[:required_permissions], event.channel) &&
-         required_roles?(event.author, command.attributes[:required_roles])
+         required_roles?(event.author, command.attributes[:required_roles])) ||
+         !check_permissions
         event.command = command
-        result = command.call(event, arguments, chained)
+        result = command.call(event, arguments, chained, check_permissions)
         stringify(result)
       else
         event.respond command.attributes[:permission_message].gsub('%name%', name.to_s) if command.attributes[:permission_message]
