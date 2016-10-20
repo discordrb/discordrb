@@ -1,5 +1,23 @@
 # Changelog
 
+## 3.1.0
+
+- Emoji handling support ([#226](https://github.com/meew0/discordrb/pull/226), thanks @greenbigfrog)
+- A `channels` attribute has been added to `CommandBot` as well as `Command` to restrict the channels in which either of the two works ([#249](https://github.com/meew0/discordrb/pull/249), thanks @Xzanth)
+- The bulk deletion endpoint is now exposed directly using the `Channel#delete_messages` method ([#235](https://github.com/meew0/discordrb/pull/235), thanks @z64)
+- The internal settings fields for user statuses that cause statuses to persist across restarts can now be modified ([#233](https://github.com/meew0/discordrb/pull/233), thanks @Daniel-Worrall)
+- A few examples have been added to the docs ([#250](https://github.com/meew0/discordrb/pull/250), thanks @SunDwarf)
+- The specs have been improved; they're still not exhaustive by far but there are at least slightly more now.
+
+### Bugfixes
+
+- Fixed an important bug that caused the logger not to work in some cases. ([#243](https://github.com/meew0/discordrb/pull/243), thanks @Daniel-Worrall)
+- Fixed logger token redaction.
+- `unavailable_servers` should no longer crash the bot due to being nil in some cases ([#244](https://github.com/meew0/discordrb/pull/244), thanks @Daniel-Worrall)
+- `Profile#on` for member resolution is now no longer overwritten by an alias for `#online` ([#247](https://github.com/meew0/discordrb/pull/247), thanks @Daniel-Worrall)
+- A `CommandBot` without any commands should no longer crash when receiving a message that triggers it ([#242](https://github.com/meew0/discordrb/issues/242))
+- Changing nicknames works again, it has apparently been broken in 3.0.0.
+
 ## 3.0.2
 
 - A small change to how CommandBot parameter lists are formatted ([#240](https://github.com/meew0/discordrb/pull/240), thanks @FormalHellhound)
