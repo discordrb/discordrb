@@ -14,7 +14,7 @@ Gem::Specification.new do |spec|
   spec.homepage      = 'https://github.com/meew0/discordrb'
   spec.license       = 'MIT'
 
-  spec.files         = `git ls-files -z lib/discordrb/webhooks/`.split("\x0") + 'lib/discordrb/webhooks.rb'
+  spec.files         = `git ls-files -z lib/discordrb/webhooks/`.split("\x0") + ['lib/discordrb/webhooks.rb']
   spec.bindir        = 'exe'
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
