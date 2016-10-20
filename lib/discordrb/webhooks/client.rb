@@ -9,5 +9,11 @@ module Discordrb::Webhooks
     #   if `url` is not set.
     def initialize(url: nil, id: nil, token: nil)
     end
+
+    private
+
+    def generate_url(id, token)
+      "https://discordapp.com/api/v6/webhooks/#{id}/#{token}"
+    end
   end
 end
