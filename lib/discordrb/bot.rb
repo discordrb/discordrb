@@ -919,7 +919,7 @@ module Discordrb
           return
         end
 
-        if @ignore_bots and user(data['author']['id']).bot_account?
+        if @ignore_bots && user(data['author']['id']).bot_account?
           debug("Ignored Bot account with ID #{data['author']['id']}")
           return
         end
