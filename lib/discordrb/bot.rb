@@ -91,11 +91,12 @@ module Discordrb
     # @param num_shards [Integer] The total number of shards that should be running. See
     #   https://github.com/hammerandchisel/discord-api-docs/issues/17 for how to do sharding.
     # @param redact_token [true, false] Whether the bot should redact the token in logs. Default is true.
+    # @param ignore_bots [true, false] Whether the bot should ignore Bot accounts or not. Default is false.
     def initialize(
         log_mode: :normal,
         token: nil, client_id: nil, application_id: nil,
         type: nil, name: '', fancy_log: false, suppress_ready: false, parse_self: false,
-        shard_id: nil, num_shards: nil, redact_token: true
+        shard_id: nil, num_shards: nil, redact_token: true, ignore_bots: false
     )
 
       LOGGER.mode = if log_mode.is_a? TrueClass # Specifically check for `true` because people might not have updated yet
@@ -131,6 +132,7 @@ module Discordrb
       @should_connect_to_voice = {}
 
       @ignored_ids = Set.new
+      @ignore_bots = ignore_bots
 
       @event_threads = []
       @current_thread = 0
@@ -914,6 +916,11 @@ module Discordrb
       when :MESSAGE_CREATE
         if ignored?(data['author']['id'].to_i)
           debug("Ignored author with ID #{data['author']['id']}")
+          return
+        end
+
+        if @ignore_bots and user(data['author']['id']).bot_account?
+          debug("Ignored Bot account with ID #{data['author']['id']}")
           return
         end
 
