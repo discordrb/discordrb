@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.1.1
+
+*Bugfix-only release.*
+
+### Bugfixes
+
+- An oversight where a `GUILD_DELETE` dispatch would cause an internal error was fixed. ([#256](https://github.com/meew0/discordrb/pull/256), thanks @greenbigfrog)
+
 ## 3.1.0
 
 - Emoji handling support ([#226](https://github.com/meew0/discordrb/pull/226), thanks @greenbigfrog)
