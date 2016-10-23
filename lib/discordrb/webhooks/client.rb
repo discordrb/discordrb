@@ -1,4 +1,5 @@
 require 'rest-client'
+require 'json'
 
 module Discordrb::Webhooks
   # A client for a particular webhook added to a Discord channel.
@@ -18,6 +19,10 @@ module Discordrb::Webhooks
     end
 
     private
+
+    def post_json(builder)
+      RestClient.post(@url, builder.to_json_hash.to_json, content_type: :json)
+    end
 
     def post_multipart(builder)
       RestClient.post(@url, builder.to_multipart_hash)
