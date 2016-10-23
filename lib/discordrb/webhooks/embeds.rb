@@ -73,4 +73,14 @@ module Discordrb::Webhooks
       @url = url
     end
   end
+
+  # An embed's thumbnail will be displayed at the right of the message, next to the description and fields. When clicked
+  # it will point to the embed URL.
+  class EmbedThumbnail
+    # Creates a new thumbnail object.
+    # @param url [String, nil] The URL of the thumbnail.
+    def initialize(url: nil)
+      @url = url
+    end
+  end
 end
