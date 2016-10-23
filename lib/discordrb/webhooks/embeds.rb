@@ -164,6 +164,15 @@ module Discordrb::Webhooks
       @url = url
       @icon_url = icon_url
     end
+
+    # @return A hash representation of this embed author, to be converted to JSON.
+    def to_hash
+      {
+        name: @name,
+        url: @url,
+        icon_url: @icon_url
+      }
+    end
   end
 
   # A field is a small block of text with a header that can be relatively freely layouted with other fields.
