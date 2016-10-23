@@ -38,15 +38,15 @@ module Discordrb::Webhooks
     #     end
     #   end
     # @return [RestClient::Response] the response returned by Discord.
-    def execute(builder = nil)
+    def execute(builder = nil, wait = false)
       builder ||= Builder.new
 
       yield builder
 
       if builder.file
-        post_multipart(builder)
+        post_multipart(builder, wait)
       else
-        post_json(builder)
+        post_json(builder, wait)
       end
     end
 
