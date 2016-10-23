@@ -107,13 +107,13 @@ module Discordrb::Webhooks
         url: @url,
         timestamp: @timestamp,
         colour: @colour,
-        footer: @footer,
-        image: @image,
-        thumbnail: @thumbnail,
-        video: @video,
-        provider: @provider,
-        author: @author,
-        fields: @fields
+        footer: @footer.to_hash,
+        image: @image.to_hash,
+        thumbnail: @thumbnail.to_hash,
+        video: @video.to_hash,
+        provider: @provider.to_hash,
+        author: @author.to_hash,
+        fields: @fields.map(&:to_hash)
       }
     end
   end
