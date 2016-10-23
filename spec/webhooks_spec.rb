@@ -49,6 +49,13 @@ describe Discordrb::Webhooks do
         embed.colour = colour
         expect(embed.colour).to eq 1_452_607
       end
+
+      it 'should raise if a RGB tuple is of the wrong size' do
+        embed = Discordrb::Webhooks::Embed.new
+
+        expect { embed.colour = [0, 1] }.to raise_error(ArgumentError)
+        expect { embed.colour = [0, 1, 2, 3] }.to raise_error(ArgumentError)
+      end
     end
   end
 end
