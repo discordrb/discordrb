@@ -51,6 +51,12 @@ module Discordrb::Webhooks
         self.colour = value[0] << 16 | value[1] << 8 | value[2]
       end
     end
+
+    # The footer for this embed.
+    # @example Add a footer to an embed
+    #   embed.footer = Discordrb::Webhooks::EmbedFooter.new(text: 'Hello', icon_url: 'https://i.imgur.com/j69wMDu.jpg')
+    # @return [EmbedFooter]
+    attr_accessor :footer
   end
 
   # An embed's footer will be displayed at the very bottom of an embed, together with the timestamp. An icon URL can be
