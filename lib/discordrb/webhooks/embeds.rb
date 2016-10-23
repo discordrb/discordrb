@@ -99,7 +99,7 @@ module Discordrb::Webhooks
     # @return [Array<EmbedField>] the fields attached to this embed.
     attr_reader :fields
 
-    # @return [Hash] A hash representation of this embed, to be converted to JSON.
+    # @return [Hash] a hash representation of this embed, to be converted to JSON.
     def to_hash
       {
         title: @title,
@@ -129,7 +129,7 @@ module Discordrb::Webhooks
       @icon_url = icon_url
     end
 
-    # @return [Hash] A hash representation of this embed footer, to be converted to JSON.
+    # @return [Hash] a hash representation of this embed footer, to be converted to JSON.
     def to_hash
       {
         text: @text,
@@ -146,7 +146,7 @@ module Discordrb::Webhooks
       @url = url
     end
 
-    # @return [Hash] A hash representation of this embed image, to be converted to JSON.
+    # @return [Hash] a hash representation of this embed image, to be converted to JSON.
     def to_hash
       {
         url: @url
@@ -163,7 +163,7 @@ module Discordrb::Webhooks
       @url = url
     end
 
-    # @return [Hash] A hash representation of this embed thumbnail, to be converted to JSON.
+    # @return [Hash] a hash representation of this embed thumbnail, to be converted to JSON.
     def to_hash
       {
         url: @url
@@ -183,7 +183,7 @@ module Discordrb::Webhooks
       @icon_url = icon_url
     end
 
-    # @return [Hash] A hash representation of this embed author, to be converted to JSON.
+    # @return [Hash] a hash representation of this embed author, to be converted to JSON.
     def to_hash
       {
         name: @name,
@@ -205,7 +205,7 @@ module Discordrb::Webhooks
       @inline = inline
     end
 
-    # @return [Hash] A hash representation of this embed field, to be converted to JSON.
+    # @return [Hash] a hash representation of this embed field, to be converted to JSON.
     def to_hash
       {
         name: @name,
