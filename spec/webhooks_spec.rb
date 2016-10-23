@@ -18,6 +18,13 @@ describe Discordrb::Webhooks do
         embed.colour = colour
         expect(embed.colour).to eq colour
       end
+
+      it 'should raise if the colour value is too high' do
+        embed = Discordrb::Webhooks::Embed.new
+        colour = 100_000_000
+
+        expect { embed.colour = colour }.to raise_error(ArgumentError)
+      end
     end
   end
 end
