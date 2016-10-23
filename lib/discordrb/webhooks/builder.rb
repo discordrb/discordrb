@@ -1,3 +1,5 @@
+require 'discordrb/webhooks/embeds'
+
 module Discordrb::Webhooks
   # A class that acts as a builder for a webhook message object.
   class Builder
@@ -41,6 +43,21 @@ module Discordrb::Webhooks
     def <<(embed)
       raise ArgumentError, 'Embeds and files are mutually exclusive!' if @file
       @embeds << embed
+    end
+
+    # Convenience method to add an embed using a block-style builder pattern
+    # @example Add an embed to a message
+    #   builder.add_embed do |embed|
+    #     embed.title = 'Testing'
+    #     embed.image = Discordrb::Webhooks::EmbedImage.new(url: 'https://i.imgur.com/PcMltU7.jpg')
+    #   end
+    # @param embed [Embed, nil] The embed to start the building process with, or nil if one should be created anew.
+    # @return [Embed] The created embed.
+    def add_embed(embed = nil)
+      embed ||= Embed.new
+      yield(embed)
+      self << embed
+      embed
     end
   end
 end
