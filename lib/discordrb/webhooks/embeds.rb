@@ -64,4 +64,13 @@ module Discordrb::Webhooks
       @icon_url = icon_url
     end
   end
+
+  # An embed's image will be displayed at the bottom, in large format. It will replace a footer icon URL if one is set.
+  class EmbedImage
+    # Creates a new image object.
+    # @param url [String, nil] The URL of the image.
+    def initialize(url: nil)
+      @url = url
+    end
+  end
 end
