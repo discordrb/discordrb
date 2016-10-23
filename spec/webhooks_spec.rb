@@ -33,6 +33,14 @@ describe Discordrb::Webhooks do
         embed.colour = colour
         expect(embed.colour).to eq 1_452_607
       end
+
+      it 'should accept colours in hex format with a # in front' do
+        embed = Discordrb::Webhooks::Embed.new
+        colour = '#162a3f'
+
+        embed.colour = colour
+        expect(embed.colour).to eq 1_452_607
+      end
     end
   end
 end
