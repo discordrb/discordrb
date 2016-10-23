@@ -78,6 +78,12 @@ module Discordrb::Webhooks
     #   embed.author = Discordrb::Webhooks::EmbedAuthor.new(name: 'meew0', url: 'https://github.com/meew0', icon_url: 'https://avatars2.githubusercontent.com/u/3662915?v=3&s=466')
     # @return [EmbedAuthor]
     attr_accessor :author
+
+    # Add a field object to this embed.
+    # @param field [EmbedField] The field to add.
+    def <<(field)
+      @fields << field
+    end
   end
 
   # An embed's footer will be displayed at the very bottom of an embed, together with the timestamp. An icon URL can be
