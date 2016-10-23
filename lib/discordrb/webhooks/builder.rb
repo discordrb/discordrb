@@ -62,5 +62,8 @@ module Discordrb::Webhooks
 
     # @return [File, nil] the file attached to this message.
     attr_reader :file
+
+    # @return [Array<Embed>] the embeds attached to this message.
+    attr_reader :embeds
   end
 end
