@@ -29,5 +29,9 @@ module Discordrb::Webhooks
     # The URL the title should point to.
     # @return [String]
     attr_accessor :url
+
+    # The timestamp for this embed. Will be displayed just below the title.
+    # @return [String]
+    attr_accessor :timestamp
   end
 end
