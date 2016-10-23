@@ -52,12 +52,12 @@ module Discordrb::Webhooks
 
     private
 
-    def post_json(builder)
-      RestClient.post(@url, builder.to_json_hash.to_json, content_type: :json)
+    def post_json(builder, wait)
+      RestClient.post(@url + (wait ? '?wait=true' : ''), builder.to_json_hash.to_json, content_type: :json)
     end
 
     def post_multipart(builder)
-      RestClient.post(@url, builder.to_multipart_hash)
+      RestClient.post(@url + (wait ? '?wait=true' : ''), builder.to_multipart_hash)
     end
 
     def generate_url(id, token)
