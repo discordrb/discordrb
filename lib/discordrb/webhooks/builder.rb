@@ -13,5 +13,10 @@ module Discordrb::Webhooks
     # The content of the message. May be 2000 characters long at most.
     # @return [String] the content of the message.
     attr_accessor :content
+
+    # The username the webhook will display as. If this is not set, the default username set in the webhook's settings
+    # will be used instead.
+    # @return [String] the username.
+    attr_accessor :username
   end
 end
