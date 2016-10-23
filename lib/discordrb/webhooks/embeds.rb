@@ -105,7 +105,7 @@ module Discordrb::Webhooks
         title: @title,
         description: @description,
         url: @url,
-        timestamp: @timestamp,
+        timestamp: @timestamp && @timestamp.utc.iso8601,
         colour: @colour,
         footer: @footer && @footer.to_hash,
         image: @image && @image.to_hash,
