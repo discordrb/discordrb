@@ -2,13 +2,13 @@ module Discordrb::Webhooks
   # An embed is a multipart-style attachment to a webhook message that can have a variety of different purposes and
   # appearances.
   class Embed
-    def initialize(title: nil, description: nil, url: nil, timestamp: nil, colour: nil, footer: nil, image: nil,
-                   thumbnail: nil, video: nil, provider: nil, author: nil, fields: [])
+    def initialize(title: nil, description: nil, url: nil, timestamp: nil, colour: nil, color: nil, footer: nil,
+                   image: nil, thumbnail: nil, video: nil, provider: nil, author: nil, fields: [])
       @title = title
       @description = description
       @url = url
       @timestamp = timestamp
-      @colour = colour
+      @colour = colour || color
       @footer = footer
       @image = image
       @thumbnail = thumbnail
@@ -36,6 +36,7 @@ module Discordrb::Webhooks
 
     # @return [Integer] the colour of the bar to the side, in decimal form.
     attr_reader :colour
+    alias_method :color, :colour
 
     # Sets the colour of the bar to the side of the embed to something new.
     # @param value [Integer, String, {Integer, Integer, Integer}] The colour in decimal, hexadecimal, or R/G/B decimal
@@ -51,6 +52,8 @@ module Discordrb::Webhooks
         self.colour = value[0] << 16 | value[1] << 8 | value[2]
       end
     end
+
+    alias_method :color=, :colour=
 
     # The footer for this embed.
     # @example Add a footer to an embed
@@ -106,7 +109,7 @@ module Discordrb::Webhooks
         description: @description,
         url: @url,
         timestamp: @timestamp && @timestamp.utc.iso8601,
-        colour: @colour,
+        color: @colour,
         footer: @footer && @footer.to_hash,
         image: @image && @image.to_hash,
         thumbnail: @thumbnail && @thumbnail.to_hash,
