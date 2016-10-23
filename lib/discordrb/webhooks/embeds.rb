@@ -71,6 +71,13 @@ module Discordrb::Webhooks
     #   embed.thumbnail = Discordrb::Webhooks::EmbedThumbnail.new(url: 'https://i.imgur.com/xTG3a1I.jpg')
     # @return [EmbedThumbnail]
     attr_accessor :thumbnail
+
+    # The author for this embed.
+    # @see EmbedAuthor
+    # @example Add a author to an embed
+    #   embed.author = Discordrb::Webhooks::EmbedAuthor.new(name: 'meew0', url: 'https://github.com/meew0', icon_url: 'https://avatars2.githubusercontent.com/u/3662915?v=3&s=466')
+    # @return [EmbedAuthor]
+    attr_accessor :author
   end
 
   # An embed's footer will be displayed at the very bottom of an embed, together with the timestamp. An icon URL can be
