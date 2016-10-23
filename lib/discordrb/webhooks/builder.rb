@@ -76,5 +76,16 @@ module Discordrb::Webhooks
         embeds: @embeds
       }
     end
+
+    # @return [Hash] a hash representation of the created message, for multipart format.
+    def to_multipart_hash
+      {
+        content: @content,
+        username: @username,
+        avatar_url: @avatar_url,
+        tts: @tts,
+        file: @file
+      }
+    end
   end
 end
