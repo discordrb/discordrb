@@ -17,5 +17,9 @@ module Discordrb::Webhooks
       @author = author
       @fields = fields
     end
+
+    # The title of this embed that will be displayed above everything else.
+    # @return [String]
+    attr_accessor :title
   end
 end
