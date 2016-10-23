@@ -18,5 +18,10 @@ module Discordrb::Webhooks
     # will be used instead.
     # @return [String] the username.
     attr_accessor :username
+
+    # The URL of an image file to be used as an avatar. If this is not set, the default avatar from the webhook's
+    # settings will be used instead.
+    # @return [String] the avatar URL.
+    attr_accessor :avatar_url
   end
 end
