@@ -83,4 +83,17 @@ module Discordrb::Webhooks
       @url = url
     end
   end
+
+  # An embed's author will be shown at the top to indicate who "authored" the particular event the webhook was sent for.
+  class EmbedAuthor
+    # Creates a new author object.
+    # @param name [String, nil] The name of the author.
+    # @param url [String, nil] The URL the name should link to.
+    # @param icon_url [String, nil] The URL of the icon to be displayed next to the author.
+    def initialize(name: nil, url: nil, icon_url: nil)
+      @name = name
+      @url = url
+      @icon_url = icon_url
+    end
+  end
 end
