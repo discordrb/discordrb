@@ -23,5 +23,9 @@ module Discordrb::Webhooks
     # settings will be used instead.
     # @return [String] the avatar URL.
     attr_accessor :avatar_url
+
+    # Whether this message should use TTS or not. By default, it doesn't.
+    # @return [true, false] the TTS status.
+    attr_accessor :tts
   end
 end
