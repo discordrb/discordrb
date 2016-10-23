@@ -52,4 +52,16 @@ module Discordrb::Webhooks
       end
     end
   end
+
+  # An embed's footer will be displayed at the very bottom of an embed, together with the timestamp. An icon URL can be
+  # set together with some text to be displayed.
+  class EmbedFooter
+    # Creates a new footer object.
+    # @param text [String, nil] The text to be displayed in the footer.
+    # @param icon_url [String, nil] The URL to an icon to be showed alongside the text.
+    def initialize(text: nil, icon_url: nil)
+      @text = text
+      @icon_url = icon_url
+    end
+  end
 end
