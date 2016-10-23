@@ -23,6 +23,8 @@ module Discordrb::Webhooks
     def execute(builder = nil)
       builder ||= Builder.new
 
+      yield builder
+
       if builder.file
         post_multipart(builder)
       else
