@@ -84,6 +84,17 @@ module Discordrb::Webhooks
     def <<(field)
       @fields << field
     end
+
+    # Convenience method to add a field to the embed without having to create one manually.
+    # @see EmbedField
+    # @example Add a field to an embed, conveniently
+    #   embed.add_field(name: 'A field', value: "The field's content")
+    # @param name [String] The field's name
+    # @param value [String] The field's value
+    # @param inline [true, false] Whether the field should be inlined
+    def add_field(name: nil, value: nil, inline: nil)
+      self << EmbedField.new(name: name, value: value, inline: inline)
+    end
   end
 
   # An embed's footer will be displayed at the very bottom of an embed, together with the timestamp. An icon URL can be
