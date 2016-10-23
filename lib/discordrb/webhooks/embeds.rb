@@ -31,7 +31,7 @@ module Discordrb::Webhooks
     attr_accessor :url
 
     # The timestamp for this embed. Will be displayed just below the title.
-    # @return [String]
+    # @return [Time]
     attr_accessor :timestamp
   end
 end
