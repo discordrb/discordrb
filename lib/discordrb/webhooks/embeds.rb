@@ -186,5 +186,14 @@ module Discordrb::Webhooks
       @value = value
       @inline = inline
     end
+
+    # @return A hash representation of this embed field, to be converted to JSON.
+    def to_hash
+      {
+        name: @name,
+        value: @value,
+        inline: @inline
+      }
+    end
   end
 end
