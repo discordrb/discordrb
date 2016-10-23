@@ -1,6 +1,8 @@
 require 'rest-client'
 require 'json'
 
+require 'discordrb/webhooks/builder'
+
 module Discordrb::Webhooks
   # A client for a particular webhook added to a Discord channel.
   class Client
@@ -19,6 +21,8 @@ module Discordrb::Webhooks
     end
 
     def execute(builder = nil)
+      builder ||= Builder.new
+
       if builder.file
         post_multipart(builder)
       else
