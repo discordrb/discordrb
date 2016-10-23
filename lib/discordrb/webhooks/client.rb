@@ -18,6 +18,14 @@ module Discordrb::Webhooks
              end
     end
 
+    def execute(builder = nil)
+      if builder.file
+        post_multipart(builder)
+      else
+        post_json(builder)
+      end
+    end
+
     private
 
     def post_json(builder)
