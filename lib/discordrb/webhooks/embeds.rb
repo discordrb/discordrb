@@ -144,6 +144,13 @@ module Discordrb::Webhooks
     def initialize(url: nil)
       @url = url
     end
+
+    # @return A hash representation of this embed thumbnail, to be converted to JSON.
+    def to_hash
+      {
+        url: @url
+      }
+    end
   end
 
   # An embed's author will be shown at the top to indicate who "authored" the particular event the webhook was sent for.
