@@ -56,6 +56,12 @@ describe Discordrb::Webhooks do
         expect { embed.colour = [0, 1] }.to raise_error(ArgumentError)
         expect { embed.colour = [0, 1, 2, 3] }.to raise_error(ArgumentError)
       end
+
+      it 'should raise if a RGB tuple results in a too large value' do
+        embed = Discordrb::Webhooks::Embed.new
+
+        expect { embed.colour = [2000, 1, 2] }.to raise_error(ArgumentError)
+      end
     end
   end
 end
