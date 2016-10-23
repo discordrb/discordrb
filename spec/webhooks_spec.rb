@@ -1,6 +1,20 @@
 require 'discordrb/webhooks'
 
 describe Discordrb::Webhooks do
+  describe Discordrb::Webhooks::Builder do
+    it 'should be able to add embeds' do
+      builder = Discordrb::Webhooks::Builder.new
+
+      embed = builder.add_embed do |e|
+        e.title = 'a'
+        e.image = Discordrb::Webhooks::EmbedImage.new(url: 'http://some.url/image.png')
+      end
+
+      expect(builder.embeds.length).to eq 1
+      expect(builder.embeds.first).to eq embed
+    end
+  end
+
   describe Discordrb::Webhooks::Embed do
     it 'should be able to have fields added' do
       embed = Discordrb::Webhooks::Embed.new
