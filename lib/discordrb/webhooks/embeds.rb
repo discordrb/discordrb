@@ -36,5 +36,20 @@ module Discordrb::Webhooks
 
     # @return [Integer] the colour of the bar to the side, in decimal form.
     attr_reader :colour
+
+    # Sets the colour of the bar to the side of the embed to something new.
+    # @param value [Integer, String, {Integer, Integer, Integer}] The colour in decimal, hexadecimal, or R/G/B decimal
+    #   form.
+    def colour=(value)
+      if value.is_a? Integer
+        raise ArgumentError, 'Embed colour must be 24-bit!' if value >= 16_777_216
+        @colour = value
+      elsif value.is_a? String
+        self.colour = value.delete('#').to_i(16)
+      elsif value.is_a? Array
+        raise ArgumentError, 'Colour tuple must have three values!' if value.length != 3
+        self.colour = value[0] << 16 | value[1] << 8 | value[2]
+      end
+    end
   end
 end
