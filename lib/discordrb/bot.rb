@@ -91,7 +91,7 @@ module Discordrb
     # @param num_shards [Integer] The total number of shards that should be running. See
     #   https://github.com/hammerandchisel/discord-api-docs/issues/17 for how to do sharding.
     # @param redact_token [true, false] Whether the bot should redact the token in logs. Default is true.
-    # @param ignore_bots [true, false] Whether the bot should ignore Bot accounts or not. Default is false.
+    # @param ignore_bots [true, false] Whether the bot should ignore bot accounts or not. Default is false.
     def initialize(
         log_mode: :normal,
         token: nil, client_id: nil, application_id: nil,
@@ -919,7 +919,7 @@ module Discordrb
           return
         end
 
-        if @ignore_bots && user(data['author']['id']).bot_account?
+        if @ignore_bots && user(data['author']['bot'])
           debug("Ignored Bot account with ID #{data['author']['id']}")
           return
         end
