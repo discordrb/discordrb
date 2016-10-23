@@ -21,5 +21,9 @@ module Discordrb::Webhooks
     # The title of this embed that will be displayed above everything else.
     # @return [String]
     attr_accessor :title
+
+    # The description for this embed.
+    # @return [String]
+    attr_accessor :description
   end
 end
