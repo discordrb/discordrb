@@ -33,5 +33,8 @@ module Discordrb::Webhooks
     # The timestamp for this embed. Will be displayed just below the title.
     # @return [Time]
     attr_accessor :timestamp
+
+    # @return [Integer] the colour of the bar to the side, in decimal form.
+    attr_reader :colour
   end
 end
