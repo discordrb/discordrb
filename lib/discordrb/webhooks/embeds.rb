@@ -127,6 +127,13 @@ module Discordrb::Webhooks
     def initialize(url: nil)
       @url = url
     end
+
+    # @return A hash representation of this embed image, to be converted to JSON.
+    def to_hash
+      {
+        url: @url
+      }
+    end
   end
 
   # An embed's thumbnail will be displayed at the right of the message, next to the description and fields. When clicked
