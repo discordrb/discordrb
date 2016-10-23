@@ -1,3 +1,5 @@
+require 'rest-client'
+
 module Discordrb::Webhooks
   # A client for a particular webhook added to a Discord channel.
   class Client
@@ -16,6 +18,10 @@ module Discordrb::Webhooks
     end
 
     private
+
+    def post_multipart(builder)
+      RestClient.post(@url, builder.to_multipart_hash)
+    end
 
     def generate_url(id, token)
       "https://discordapp.com/api/v6/webhooks/#{id}/#{token}"
