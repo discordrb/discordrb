@@ -22,6 +22,8 @@ module Discordrb::Webhooks
 
     # Executes the webhook this client points to with the given data.
     # @param builder [Builder, nil] The builder to start out with, or nil if one should be created anew.
+    # @param wait [true, false] Whether Discord should wait for the message to be successfully received by clients, or
+    #   whether it should return immediately after sending the message.
     # @yield [builder] Gives the builder to the block to add additional steps, or to do the entire building process.
     # @yieldparam builder [Builder] The builder given as a parameter which is used as the initial step to start from.
     # @example Execute the webhook with an already existing builder
