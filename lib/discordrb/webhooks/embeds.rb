@@ -25,5 +25,9 @@ module Discordrb::Webhooks
     # The description for this embed.
     # @return [String]
     attr_accessor :description
+
+    # The URL the title should point to.
+    # @return [String]
+    attr_accessor :url
   end
 end
