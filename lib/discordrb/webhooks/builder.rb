@@ -35,5 +35,12 @@ module Discordrb::Webhooks
       raise ArgumentError, 'Embeds and files are mutually exclusive!' unless embeds.empty?
       @file = file
     end
+
+    # Adds an embed to this message.
+    # @param embed [Embed] The embed to add.
+    def <<(embed)
+      raise ArgumentError, 'Embeds and files are mutually exclusive!' if @file
+      @embeds << embed
+    end
   end
 end
