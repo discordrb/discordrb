@@ -56,7 +56,7 @@ module Discordrb::Webhooks
       RestClient.post(@url + (wait ? '?wait=true' : ''), builder.to_json_hash.to_json, content_type: :json)
     end
 
-    def post_multipart(builder)
+    def post_multipart(builder, wait)
       RestClient.post(@url + (wait ? '?wait=true' : ''), builder.to_multipart_hash)
     end
 
