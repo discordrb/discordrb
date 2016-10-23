@@ -57,6 +57,13 @@ module Discordrb::Webhooks
     #   embed.footer = Discordrb::Webhooks::EmbedFooter.new(text: 'Hello', icon_url: 'https://i.imgur.com/j69wMDu.jpg')
     # @return [EmbedFooter]
     attr_accessor :footer
+
+    # The image for this embed.
+    # @see EmbedImage
+    # @example Add a image to an embed
+    #   embed.image = Discordrb::Webhooks::EmbedImage.new(url: 'https://i.imgur.com/PcMltU7.jpg')
+    # @return [EmbedImage]
+    attr_accessor :image
   end
 
   # An embed's footer will be displayed at the very bottom of an embed, together with the timestamp. An icon URL can be
