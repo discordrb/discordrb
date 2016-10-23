@@ -27,5 +27,13 @@ module Discordrb::Webhooks
     # Whether this message should use TTS or not. By default, it doesn't.
     # @return [true, false] the TTS status.
     attr_accessor :tts
+
+    # Sets a file to be sent together with the message. Mutually exclusive with embeds; a webhook message can contain
+    # either a file to be sent or an embed.
+    # @param file [File] A file to be sent.
+    def file=(file)
+      raise ArgumentError, 'Embeds and files are mutually exclusive!' unless embeds.empty?
+      @file = file
+    end
   end
 end
