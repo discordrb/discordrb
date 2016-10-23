@@ -20,6 +20,24 @@ module Discordrb::Webhooks
              end
     end
 
+    # Executes the webhook this client points to with the given data.
+    # @param builder [Builder, nil] The builder to start out with, or nil if one should be created anew.
+    # @yield [builder] Gives the builder to the block to add additional steps, or to do the entire building process.
+    # @yieldparam builder [Builder] The builder given as a parameter which is used as the initial step to start from.
+    # @example Execute the webhook with an already existing builder
+    #   builder = Discordrb::Webhooks::Builder.new # ...
+    #   client.execute(builder)
+    # @example Execute the webhook by building a new message
+    #   client.execute do |builder|
+    #     builder.content = 'Testing'
+    #     builder.username = 'discordrb'
+    #     builder.add_embed do |embed|
+    #       embed.timestamp = Time.now
+    #       embed.title = 'Testing'
+    #       embed.image = Discordrb::Webhooks::EmbedImage.new(url: 'https://i.imgur.com/PcMltU7.jpg')
+    #     end
+    #   end
+    # @return [RestClient::Response] the response returned by Discord.
     def execute(builder = nil)
       builder ||= Builder.new
 
