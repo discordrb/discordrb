@@ -73,7 +73,7 @@ module Discordrb::Webhooks
         username: @username,
         avatar_url: @avatar_url,
         tts: @tts,
-        embeds: @embeds
+        embeds: @embeds.map(&:to_hash)
       }
     end
 
