@@ -41,6 +41,14 @@ describe Discordrb::Webhooks do
         embed.colour = colour
         expect(embed.colour).to eq 1_452_607
       end
+
+      it 'should accept colours as a RGB tuple' do
+        embed = Discordrb::Webhooks::Embed.new
+        colour = [22, 42, 63]
+
+        embed.colour = colour
+        expect(embed.colour).to eq 1_452_607
+      end
     end
   end
 end
