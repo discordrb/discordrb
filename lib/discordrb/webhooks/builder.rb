@@ -9,5 +9,9 @@ module Discordrb::Webhooks
       @file = file
       @embeds = embeds
     end
+
+    # The content of the message. May be 2000 characters long at most.
+    # @return [String] the content of the message.
+    attr_accessor :content
   end
 end
