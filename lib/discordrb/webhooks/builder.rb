@@ -32,7 +32,7 @@ module Discordrb::Webhooks
     # either a file to be sent or an embed.
     # @param file [File] A file to be sent.
     def file=(file)
-      raise ArgumentError, 'Embeds and files are mutually exclusive!' unless embeds.empty?
+      raise ArgumentError, 'Embeds and files are mutually exclusive!' unless @embeds.empty?
       @file = file
     end
 
