@@ -1715,7 +1715,7 @@ module Discordrb
     end
 
     # Edits this message to have the specified content instead.
-    # You can only edit your own messages.
+    #   You can only edit your own messages.
     # @param new_content [String] the new content the message should have.
     # @return [Message] the resulting message.
     def edit(new_content)
