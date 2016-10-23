@@ -66,8 +66,8 @@ module Discordrb::Webhooks
     # @return [Array<Embed>] the embeds attached to this message.
     attr_reader :embeds
 
-    # @return [Hash] a hash representation of the created message.
-    def to_hash
+    # @return [Hash] a hash representation of the created message, for JSON format.
+    def to_json_hash
       {
         content: @content,
         username: @username,
