@@ -98,6 +98,24 @@ module Discordrb::Webhooks
 
     # @return [Array<EmbedField>] the fields attached to this embed.
     attr_reader :fields
+
+    # @return A hash representation of this embed, to be converted to JSON.
+    def to_hash
+      {
+        title: @title,
+        description: @description,
+        url: @url,
+        timestamp: @timestamp,
+        colour: @colour,
+        footer: @footer,
+        image: @image,
+        thumbnail: @thumbnail,
+        video: @video,
+        provider: @provider,
+        author: @author,
+        fields: @fields
+      }
+    end
   end
 
   # An embed's footer will be displayed at the very bottom of an embed, together with the timestamp. An icon URL can be
