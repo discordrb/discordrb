@@ -111,7 +111,7 @@ module Discordrb::Webhooks
       @icon_url = icon_url
     end
 
-    # @return A has representation of this embed footer, to be converted to JSON.
+    # @return A hash representation of this embed footer, to be converted to JSON.
     def to_hash
       {
         text: @text,
