@@ -95,6 +95,9 @@ module Discordrb::Webhooks
     def add_field(name: nil, value: nil, inline: nil)
       self << EmbedField.new(name: name, value: value, inline: inline)
     end
+
+    # @return [Array<EmbedField>] the fields attached to this embed.
+    attr_reader :fields
   end
 
   # An embed's footer will be displayed at the very bottom of an embed, together with the timestamp. An icon URL can be
