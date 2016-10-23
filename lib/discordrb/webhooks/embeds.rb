@@ -96,4 +96,17 @@ module Discordrb::Webhooks
       @icon_url = icon_url
     end
   end
+
+  # A field is a small block of text with a header that can be relatively freely layouted with other fields.
+  class EmbedField
+    # Creates a new field object.
+    # @param name [String, nil] The name of the field, displayed in bold at the top.
+    # @param value [String, nil] The value of the field, displayed in normal text below the name.
+    # @param inline [true, false] Whether the field should be displayed in-line with other fields.
+    def initialize(name: nil, value: nil, inline: nil)
+      @name = name
+      @value = value
+      @inline = inline
+    end
+  end
 end
