@@ -59,5 +59,8 @@ module Discordrb::Webhooks
       self << embed
       embed
     end
+
+    # @return [File, nil] the file attached to this message.
+    attr_reader :file
   end
 end
