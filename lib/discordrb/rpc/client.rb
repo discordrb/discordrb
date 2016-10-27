@@ -19,5 +19,9 @@ module Discordrb::RPC
         proc { |e| Discordrb::LOGGER.warn "RPCWS close: #{e}" }
       )
     end
+
+    def websocket_open
+      Discordrb::LOGGER.info 'RPCWS opened'
+    end
   end
 end
