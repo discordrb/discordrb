@@ -1,4 +1,5 @@
 require 'json'
+require 'securerandom'
 
 require 'discordrb/websocket'
 
@@ -26,7 +27,8 @@ module Discordrb::RPC
       frame = {
         cmd: command,
         args: payload,
-        evt: event
+        evt: event,
+        nonce: SecureRandom.uuid
       }
 
       data = frame.to_json
