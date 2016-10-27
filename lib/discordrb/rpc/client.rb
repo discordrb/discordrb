@@ -23,5 +23,9 @@ module Discordrb::RPC
     def websocket_open
       Discordrb::LOGGER.info 'RPCWS opened'
     end
+
+    def websocket_message(msg)
+      Discordrb::LOGGER.info "RPCWS message: #{msg}"
+    end
   end
 end
