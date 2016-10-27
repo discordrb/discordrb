@@ -12,6 +12,15 @@ module Discordrb::Light
       @port = port
       @path = path
       @server = WEBrick::HTTPServer.new(Port: port)
+
+      register_endpoint
+    end
+
+    private
+
+    def register_endpoint
+      @server.mount_proc @path do |req, res|
+      end
     end
   end
 end
