@@ -7,8 +7,10 @@ module Discordrb::Light
   class OAuth2Server
     # Creates a new OAuth2 server, without any startup or running being done.
     # @param port [Integer] The port to listen on.
-    def initialize(port)
+    # @param path [String] The endpoint path to listen on.
+    def initialize(port, path = '/')
       @port = port
+      @path = path
       @server = WEBrick::HTTPServer.new(Port: port)
     end
   end
