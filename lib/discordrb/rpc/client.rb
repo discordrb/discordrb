@@ -1,3 +1,5 @@
+require 'json'
+
 require 'discordrb/websocket'
 
 module Discordrb::RPC
