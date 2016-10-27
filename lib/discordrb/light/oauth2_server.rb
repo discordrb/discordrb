@@ -28,7 +28,8 @@ module Discordrb::Light
       @server.mount_proc(@path, method(:process_request))
     end
 
-    def process_request(req, res)
+    def process_request(_, res)
+      res.body = 'Dummy response for Discordrb::Light::OAuth2Server.'
     end
   end
 end
