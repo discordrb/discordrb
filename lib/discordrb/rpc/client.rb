@@ -18,7 +18,7 @@ module Discordrb::RPC
     end
 
     def authorise(scopes)
-      send_frame(:AUTHORIZE, client_id: @client_id, scopes: scopes)
+      send_frame(:AUTHORIZE, client_id: @client_id.to_s, scopes: scopes)
     end
 
     def select_text_channel(id)
