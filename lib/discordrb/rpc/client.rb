@@ -15,8 +15,8 @@ module Discordrb::RPC
         url,
         method(:websocket_open),
         method(:websocket_message),
-        proc { |e| Discordrb::Logger.error "RPCWS error: #{e}" },
-        proc { |e| Discordrb::Logger.warn "RPCWS close: #{e}" }
+        proc { |e| Discordrb::LOGGER.error "RPCWS error: #{e}" },
+        proc { |e| Discordrb::LOGGER.warn "RPCWS close: #{e}" }
       )
     end
   end
