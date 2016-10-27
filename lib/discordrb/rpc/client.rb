@@ -10,6 +10,8 @@ module Discordrb::RPC
       @origin = origin
     end
 
+    private
+
     def connect
       url = "wss://discordapp.io:6463/?v=1&client_id=#{@client_id}"
 
