@@ -25,8 +25,10 @@ module Discordrb::Light
     private
 
     def register_endpoint
-      @server.mount_proc @path do |req, res|
-      end
+      @server.mount_proc(@path, method(:process_request))
+    end
+
+    def process_request(req, res)
     end
   end
 end
