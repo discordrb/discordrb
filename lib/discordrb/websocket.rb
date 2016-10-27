@@ -30,7 +30,8 @@ module Discordrb
     #   error. The error will be passed as the first parameter to the handler.
     # @param error_handler [#call] The handler that should be called when an error occurs in another handler. The error
     #   will be passed as the first parameter to the handler.
-    def initialize(endpoint, open_handler, message_handler, close_handler, error_handler)
+    # @param options [Hash] Additional options to relay to WSCS.
+    def initialize(endpoint, open_handler, message_handler, close_handler, error_handler, options = {})
       @open_handler = open_handler
       @message_handler = message_handler
       @close_handler = close_handler
@@ -38,7 +39,7 @@ module Discordrb
 
       instance = self # to work around WSCS's weird way of handling blocks
 
-      @client = ::WebSocket::Client::Simple.connect(endpoint) do |ws|
+      @client = ::WebSocket::Client::Simple.connect(endpoint, options) do |ws|
         ws.on(:open) { instance.open_handler.call }
         ws.on(:message) do |msg|
           # If the message has a code attribute, it is in reality a close message
