@@ -1,3 +1,5 @@
+require 'webrick'
+
 module Discordrb::Light
   # A utility class that provides a local HTTP server to act as a redirect URI
   # in OAuth2 applications. Useful for RPC, or when you're making a script that
@@ -7,6 +9,7 @@ module Discordrb::Light
     # @param port [Integer] The port to listen on.
     def initialize(port)
       @port = port
+      @server = WEBrick::HTTPServer.new(Port: port)
     end
   end
 end
