@@ -16,6 +16,12 @@ module Discordrb::Light
       register_endpoint
     end
 
+    # Starts the server, blocking the current thread, without doing any waiting
+    # for responses.
+    def start
+      @server.start
+    end
+
     private
 
     def register_endpoint
