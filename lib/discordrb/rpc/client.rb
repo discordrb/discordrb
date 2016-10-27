@@ -27,7 +27,9 @@ module Discordrb::RPC
         evt: event
       }
 
-      @ws.send(frame.to_json)
+      data = frame.to_json
+      Discordrb::LOGGER.info("RPCWS send: #{data}")
+      @ws.send(data)
     end
 
     def connect
