@@ -3,6 +3,8 @@ require 'discordrb/websocket'
 module Discordrb::RPC
   # Client for Discord's RPC protocol.
   class Client
+    attr_reader :ws
+
     def initialize(client_id, origin)
       @client_id = client_id
       @origin = origin
