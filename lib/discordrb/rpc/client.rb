@@ -9,7 +9,7 @@ module Discordrb::RPC
     end
 
     def connect
-      url = "wss://discordapp.io:6463/?v=1&client_id=#{client_id}"
+      url = "wss://discordapp.io:6463/?v=1&client_id=#{@client_id}"
 
       headers = {
         origin: @origin
