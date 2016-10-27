@@ -10,6 +10,10 @@ module Discordrb::RPC
       @origin = origin
     end
 
+    def run
+      connect
+    end
+
     private
 
     def connect
