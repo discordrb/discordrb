@@ -28,7 +28,7 @@ module Discordrb::RPC
       }
 
       data = frame.to_json
-      Discordrb::LOGGER.info("RPCWS send: #{data}")
+      Discordrb::LOGGER.debug("RPCWS send: #{data}")
       @ws.send(data)
     end
 
@@ -50,11 +50,11 @@ module Discordrb::RPC
     end
 
     def websocket_open
-      Discordrb::LOGGER.info 'RPCWS opened'
+      Discordrb::LOGGER.debug 'RPCWS opened'
     end
 
     def websocket_message(msg)
-      Discordrb::LOGGER.info "RPCWS message: #{msg}"
+      Discordrb::LOGGER.debug "RPCWS message: #{msg}"
     end
   end
 end
