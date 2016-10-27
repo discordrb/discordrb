@@ -14,6 +14,10 @@ module Discordrb::RPC
       connect
     end
 
+    def select_text_channel(id)
+      send_frame(:SELECT_TEXT_CHANNEL, channel_id: id)
+    end
+
     private
 
     def send_frame(command, payload, event = nil)
