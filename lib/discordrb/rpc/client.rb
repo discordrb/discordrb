@@ -16,6 +16,16 @@ module Discordrb::RPC
 
     private
 
+    def send_frame(command, payload, event = nil)
+      frame = {
+        cmd: command,
+        args: payload,
+        evt: event
+      }
+
+      @ws.send(frame.to_json)
+    end
+
     def connect
       url = "wss://discordapp.io:6463/?v=1&client_id=#{@client_id}"
 
