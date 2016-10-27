@@ -28,7 +28,10 @@ module Discordrb::Light
       @server.mount_proc(@path, method(:process_request))
     end
 
-    def process_request(_, res)
+    def process_request(req, res)
+      code = req.query['code']
+      Discordrb::LOGGER.debug("OAuth2Server received request with code #{code[0..1]}[redacted]#{code[-2..-1]}")
+
       res.body = 'Dummy response for Discordrb::Light::OAuth2Server.'
     end
   end
