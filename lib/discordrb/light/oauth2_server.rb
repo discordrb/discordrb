@@ -52,6 +52,9 @@ module Discordrb::Light
     # @return [String] the token type.
     attr_reader :token_type
 
+    # @return [Integer] the total lifetime of the token, in seconds.
+    attr_reader :lifetime
+
     # Create a new token from data received from Discord's token endpoint.
     # @param data [Hash] The data this token should represent.
     def initialize(data)
