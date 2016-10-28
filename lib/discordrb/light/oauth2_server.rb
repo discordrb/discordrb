@@ -73,6 +73,9 @@ module Discordrb::Light
     def obtain_token(code)
       response = Discordrb::API.oauth_obtain_token(@client_id, @client_secret, code, @redirect_uri)
       OAuth2Token.new(JSON.parse(response))
+    rescue => e
+      Discordrb::LOGGER.error("Error response during token obtention: #{e.response.body}") if e.respond_to? :response
+      raise
     end
 
     def register_endpoint
