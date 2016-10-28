@@ -63,8 +63,15 @@ module Discordrb::Light
 
     # Create a new token from data received from Discord's token endpoint.
     # @param data [Hash] The data this token should represent.
-    def initialize(data)
+    # @param client_id [Integer] The client ID of the application that issued
+    #   this token.
+    # @param client_secret [String] The client secret of the application that
+    #   issued this token.
+    def initialize(data, client_id, client_secret)
       parse(data)
+
+      @client_id = client_id
+      @client_secret = client_secret
     end
 
     # Checks whether this token has a certain scope, i. e. is authorised to do
