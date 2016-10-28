@@ -48,6 +48,10 @@ module Discordrb::Light
     # @return [String] the token string.
     attr_reader :token
 
+    # The type of the token. Usually 'Bearer'.
+    # @return [String] the token type.
+    attr_reader :token_type
+
     # Create a new token from data received from Discord's token endpoint.
     # @param data [Hash] The data this token should represent.
     def initialize(data)
