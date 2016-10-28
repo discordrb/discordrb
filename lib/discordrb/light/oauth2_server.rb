@@ -85,6 +85,7 @@ module Discordrb::Light
 
       code = req.query['code']
       Discordrb::LOGGER.debug("OAuth2Server received request with code #{code[0..1]}[redacted]#{code[-2..-1]}")
+      @code_callback.call(code) if @code_callback
 
       res.body = 'Dummy response for Discordrb::Light::OAuth2Server.'
     rescue => e
