@@ -39,4 +39,9 @@ module Discordrb::Light
       Discordrb::LOGGER.log_exception e
     end
   end
+
+  # Represents a token obtained from Discord's token endpoint, with additional
+  # functionality for refreshing the token.
+  class OAuth2Token
+  end
 end
