@@ -29,6 +29,8 @@ module Discordrb::Light
     end
 
     def process_request(req, res)
+      Thread.current[:discordrb_name] ||= 'webrick'
+
       code = req.query['code']
       Discordrb::LOGGER.debug("OAuth2Server received request with code #{code[0..1]}[redacted]#{code[-2..-1]}")
 
