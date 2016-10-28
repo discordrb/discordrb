@@ -213,7 +213,8 @@ module Discordrb::API
       client_id: client_id,
       client_secret: client_secret,
       code: code,
-      redirect_uri: redirect_uri
+      redirect_uri: redirect_uri,
+      grant_type: :authorization_code
     )
   end
 
