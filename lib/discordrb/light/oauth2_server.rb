@@ -58,6 +58,9 @@ module Discordrb::Light
     # @return [String] the token that can be used to refresh this token.
     attr_reader :refresh_token
 
+    # @return [Array<Symbol>] the scopes this token is authorised for.
+    attr_reader :scopes
+
     # Create a new token from data received from Discord's token endpoint.
     # @param data [Hash] The data this token should represent.
     def initialize(data)
