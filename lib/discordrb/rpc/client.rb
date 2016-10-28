@@ -11,6 +11,10 @@ module Discordrb::RPC
     def initialize(client_id, origin)
       @client_id = client_id
       @origin = origin
+
+      # A hash of nonce to concurrent-ruby Concurrent::Event, so we can
+      # wait for responses in a more sane way than `sleep 0.1 until`
+      @response_events = {}
     end
 
     def run
