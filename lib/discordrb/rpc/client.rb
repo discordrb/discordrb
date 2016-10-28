@@ -33,7 +33,15 @@ module Discordrb::RPC
 
     def send_frame(command, payload, event = nil)
       nonce = SecureRandom.uuid
+      send_frame_internal(command, payload, event, nonce)
 
+      event = @response_events[nonce] = Concurrent::Event.new
+      event.wait
+
+      @response_events.delete(nonce)
+    end
+
+    def send_frame_internal(command, payload, event, nonce)
       frame = {
         cmd: command,
         args: payload,
@@ -44,11 +52,6 @@ module Discordrb::RPC
       data = frame.to_json
       Discordrb::LOGGER.debug("RPCWS send: #{data}")
       @ws.send(data)
-
-      event = @response_events[nonce] = Concurrent::Event.new
-      event.wait
-
-      @response_events.delete(nonce)
     end
 
     def connect
