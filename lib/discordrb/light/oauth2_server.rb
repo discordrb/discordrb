@@ -33,6 +33,8 @@ module Discordrb::Light
       Discordrb::LOGGER.debug("OAuth2Server received request with code #{code[0..1]}[redacted]#{code[-2..-1]}")
 
       res.body = 'Dummy response for Discordrb::Light::OAuth2Server.'
+    rescue => e
+      Discordrb::LOGGER.log_exception e
     end
   end
 end
