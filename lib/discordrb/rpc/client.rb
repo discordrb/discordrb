@@ -44,6 +44,9 @@ module Discordrb::RPC
       data = frame.to_json
       Discordrb::LOGGER.debug("RPCWS send: #{data}")
       @ws.send(data)
+
+      event = @response_events[nonce] = Concurrent::Event.new
+      event.wait
     end
 
     def connect
