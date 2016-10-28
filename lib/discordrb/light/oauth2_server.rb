@@ -43,6 +43,11 @@ module Discordrb::Light
   # Represents a token obtained from Discord's token endpoint, with additional
   # functionality for refreshing the token.
   class OAuth2Token
+    # The actual token string returned by Discord. This on itself is useless for
+    # making requests; the {#token_type} is required as well.
+    # @return [String] the token string.
+    attr_reader :token
+
     # Create a new token from data received from Discord's token endpoint.
     # @param data [Hash] The data this token should represent.
     def initialize(data)
