@@ -43,5 +43,14 @@ module Discordrb::Light
   # Represents a token obtained from Discord's token endpoint, with additional
   # functionality for refreshing the token.
   class OAuth2Token
+    # Create a new token from data received from Discord's token endpoint.
+    # @param data [Hash] The data this token should represent.
+    def initialize(data)
+      @token = data['access_token']
+      @token_type = data['token_type']
+      @expires_in = data['expires_in']
+      @refresh_token = data['refresh_token']
+      @scope = data['scope'].split(' ').map(&:to_sym)
+    end
   end
 end
