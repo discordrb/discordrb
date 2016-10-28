@@ -50,6 +50,25 @@ module Discordrb::Light
       @server.start
     end
 
+    # Starts the server and waits for a particular kind of object to be
+    # obtained, then returns with the obtained object.
+    #
+    # If this method is used, any other callback for the requested type of
+    # object will not be called.
+    # @param object [Symbol] `:code` or `:token`. You'll want the latter for
+    #   an actual OAuth2 token.
+    # @return [String, OAuth2Token] the requested object.
+    def wait_for(object)
+      callback = proc do |obj|
+        @obtained = obj
+        @server.shutdown # Shutdown the server as it's not needed anymore
+      end
+
+      instance_variable_set("@#{object}_callback", callback)
+      start # Start the server - this blocks until whatever object is received
+      @obtained # Return the obtained object
+    end
+
     private
 
     def obtain_token(code)
