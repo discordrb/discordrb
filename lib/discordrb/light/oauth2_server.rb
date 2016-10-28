@@ -70,5 +70,13 @@ module Discordrb::Light
       @refresh_token = data['refresh_token']
       @scopes = data['scope'].split(' ').map(&:to_sym)
     end
+
+    # Checks whether this token has a certain scope, i. e. is authorised to do
+    # something particular.
+    # @param scope [Symbol] The scope that should be checked.
+    # @return [true, false] whether this token is authorised for the scope.
+    def can?(scope)
+      @scopes.include? scope
+    end
   end
 end
