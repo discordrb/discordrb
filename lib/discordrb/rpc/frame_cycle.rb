@@ -9,5 +9,12 @@ module Discordrb::RPC
       @nonce = nonce
       @event = Concurrent::Event.new
     end
+
+    # Waits for a response to occur.
+    # @return [Hash] the response's data.
+    def wait_for_response
+      @event.wait
+      @response
+    end
   end
 end
