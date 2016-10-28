@@ -47,6 +47,8 @@ module Discordrb::RPC
 
       event = @response_events[nonce] = Concurrent::Event.new
       event.wait
+
+      @response_events.delete(nonce)
     end
 
     def connect
