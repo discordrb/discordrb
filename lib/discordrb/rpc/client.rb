@@ -14,7 +14,7 @@ module Discordrb::RPC
 
       # A hash of nonce to concurrent-ruby Concurrent::Event, so we can
       # wait for responses in a more sane way than `sleep 0.1 until`
-      @response_events = {}
+      @cycles = {}
     end
 
     def run
@@ -35,10 +35,10 @@ module Discordrb::RPC
       nonce = SecureRandom.uuid
       send_frame_internal(command, payload, event, nonce)
 
-      event = @response_events[nonce] = Concurrent::Event.new
+      event = @cycles[nonce] = Concurrent::Event.new
       event.wait
 
-      @response_events.delete(nonce)
+      @cycles.delete(nonce)
     end
 
     def send_frame_internal(command, payload, event, nonce)
@@ -80,7 +80,7 @@ module Discordrb::RPC
 
       data = JSON.parse(msg)
       nonce = data['nonce']
-      event = @response_events[nonce]
+      event = @cycles[nonce]
 
       if event
         # Notify that we're done with this particular event
