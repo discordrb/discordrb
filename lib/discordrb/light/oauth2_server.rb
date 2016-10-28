@@ -86,6 +86,12 @@ module Discordrb::Light
       Discordrb::LOGGER.debug("OAuth2Server received request with code #{code[0..1]}[redacted]#{code[-2..-1]}")
       @code_callback.call(code) if @code_callback
 
+      # Only obtain a token if it is actually desired
+      if @token_callback
+        token = obtain_token(code)
+        @token_callback.call(token)
+      end
+
       res.body = 'Dummy response for Discordrb::Light::OAuth2Server.'
     rescue => e
       Discordrb::LOGGER.log_exception e
