@@ -72,7 +72,7 @@ module Discordrb::Light
 
     def obtain_token(code)
       response = Discordrb::API.oauth_obtain_token(@client_id, @client_secret, code, @redirect_uri)
-      OAuth2Token.new(JSON.parse(response))
+      OAuth2Token.new(JSON.parse(response), @client_id, @client_secret)
     rescue => e
       if e.respond_to? :response
         if e.response.body == '{"error": "invalid_grant"}'
