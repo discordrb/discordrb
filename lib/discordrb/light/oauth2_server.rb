@@ -64,11 +64,7 @@ module Discordrb::Light
     # Create a new token from data received from Discord's token endpoint.
     # @param data [Hash] The data this token should represent.
     def initialize(data)
-      @token = data['access_token']
-      @token_type = data['token_type']
-      @lifetime = data['expires_in']
-      @refresh_token = data['refresh_token']
-      @scopes = data['scope'].split(' ').map(&:to_sym)
+      parse(data)
     end
 
     # Checks whether this token has a certain scope, i. e. is authorised to do
@@ -77,6 +73,16 @@ module Discordrb::Light
     # @return [true, false] whether this token is authorised for the scope.
     def can?(scope)
       @scopes.include? scope
+    end
+
+    private
+
+    def parse(data)
+      @token = data['access_token']
+      @token_type = data['token_type']
+      @lifetime = data['expires_in']
+      @refresh_token = data['refresh_token']
+      @scopes = data['scope'].split(' ').map(&:to_sym)
     end
   end
 end
