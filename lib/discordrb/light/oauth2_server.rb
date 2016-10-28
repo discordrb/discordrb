@@ -15,7 +15,6 @@ module Discordrb::Light
     #   server should run for.
     def initialize(port: nil, path: '/', client_id: nil, client_secret: nil)
       raise ArgumentError, 'A port is required' unless port
-      raise ArgumentError, 'client_id and client_secret are required' unless client_id && client_secret
 
       @port = port
       @path = path
