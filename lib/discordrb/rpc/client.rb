@@ -74,6 +74,17 @@ module Discordrb::RPC
 
     def websocket_message(msg)
       Discordrb::LOGGER.debug "RPCWS message: #{msg}"
+
+      data = JSON.parse(msg)
+      nonce = data['nonce']
+      event = @response_events[nonce]
+
+      if event
+        # Notify that we're done with this particular event
+        event.set
+      end
+
+      Discordrb::LOGGER.debug "RPCWS: processed #{nonce}"
     end
   end
 end
