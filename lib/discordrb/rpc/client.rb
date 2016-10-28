@@ -43,6 +43,8 @@ module Discordrb::RPC
       raise "RPC error: #{response['data']}" if response['evt'] == 'ERROR'
 
       @cycles.delete(nonce)
+
+      response
     end
 
     def send_frame_internal(command, payload, event, nonce)
