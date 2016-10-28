@@ -32,11 +32,13 @@ module Discordrb::RPC
     private
 
     def send_frame(command, payload, event = nil)
+      nonce = SecureRandom.uuid
+
       frame = {
         cmd: command,
         args: payload,
         evt: event,
-        nonce: SecureRandom.uuid
+        nonce: nonce
       }
 
       data = frame.to_json
