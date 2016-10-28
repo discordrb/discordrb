@@ -65,7 +65,7 @@ module Discordrb::Light
       @token_type = data['token_type']
       @lifetime = data['expires_in']
       @refresh_token = data['refresh_token']
-      @scope = data['scope'].split(' ').map(&:to_sym)
+      @scopes = data['scope'].split(' ').map(&:to_sym)
     end
   end
 end
