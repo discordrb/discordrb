@@ -2,6 +2,7 @@ require 'json'
 require 'securerandom'
 
 require 'discordrb/websocket'
+require 'discordrb/rpc/frame_cycle'
 
 module Discordrb::RPC
   # Client for Discord's RPC protocol.
@@ -12,8 +13,8 @@ module Discordrb::RPC
       @client_id = client_id
       @origin = origin
 
-      # A hash of nonce to concurrent-ruby Concurrent::Event, so we can
-      # wait for responses in a more sane way than `sleep 0.1 until`
+      # A hash of nonce to FrameCycle, so we can wait for responses in a more
+      # sane way than `sleep 0.1 until`
       @cycles = {}
     end
 
@@ -35,8 +36,8 @@ module Discordrb::RPC
       nonce = SecureRandom.uuid
       send_frame_internal(command, payload, event, nonce)
 
-      event = @cycles[nonce] = Concurrent::Event.new
-      event.wait
+      cycle = @cycles[nonce] = FrameCycle.new(nonce)
+      cycle.wait_for_response
 
       @cycles.delete(nonce)
     end
@@ -80,11 +81,11 @@ module Discordrb::RPC
 
       data = JSON.parse(msg)
       nonce = data['nonce']
-      event = @cycles[nonce]
+      cycle = @cycles[nonce]
 
-      if event
-        # Notify that we're done with this particular event
-        event.set
+      if cycle
+        # Notify that we're done with this particular cycle
+        cycle.notify_response(data)
       end
 
       @last_data = data['data']
