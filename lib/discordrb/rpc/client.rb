@@ -26,6 +26,10 @@ module Discordrb::RPC
       send_frame(:AUTHORIZE, client_id: @client_id.to_s, scopes: scopes)
     end
 
+    def authenticate(token)
+      send_frame(:AUTHENTICATE, access_token: token)
+    end
+
     def select_text_channel(id)
       send_frame(:SELECT_TEXT_CHANNEL, channel_id: id)
     end
