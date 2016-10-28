@@ -218,6 +218,20 @@ module Discordrb::API
     )
   end
 
+  # Refresh an OAuth2 token
+  def oauth_refresh_token(client_id, client_secret, refresh_token)
+    request(
+      :oauth2_token,
+      nil,
+      :post,
+      "#{api_base}/oauth2/token",
+      client_id: client_id,
+      client_secret: client_secret,
+      refresh_token: refresh_token,
+      grant_type: :refresh_token
+    )
+  end
+
   # Acknowledge that a message has been received
   # The last acknowledged message will be sent in the ready packet,
   # so this is an easy way to catch up on messages
