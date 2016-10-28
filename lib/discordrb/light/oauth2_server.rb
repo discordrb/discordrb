@@ -1,4 +1,5 @@
 require 'webrick'
+require 'json'
 
 module Discordrb::Light
   # A utility class that provides a local HTTP server to act as a redirect URI
@@ -35,6 +36,11 @@ module Discordrb::Light
     end
 
     private
+
+    def obtain_token(code)
+      response = oauth_obtain_token(@client_id, @client_secret, code, @redirect_uri)
+      OAuth2Token.new(JSON.parse(response))
+    end
 
     def register_endpoint
       @server.mount_proc(@path, method(:process_request))
