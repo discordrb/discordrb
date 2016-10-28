@@ -71,7 +71,7 @@ module Discordrb::Light
     private
 
     def obtain_token(code)
-      response = oauth_obtain_token(@client_id, @client_secret, code, @redirect_uri)
+      response = Discordrb::API.oauth_obtain_token(@client_id, @client_secret, code, @redirect_uri)
       OAuth2Token.new(JSON.parse(response))
     end
 
