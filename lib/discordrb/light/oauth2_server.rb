@@ -82,6 +82,18 @@ module Discordrb::Light
       @scopes.include? scope
     end
 
+    # Refreshes this token, extending the time when it expires.
+    def refresh
+      # A POST request to /oauth2/token with a content type of
+      # `application/x-www-form-urlencoded` and the parameters:
+      #   grant_type: 'refresh_token'
+      #   refresh_token: <refresh token>
+      #   client_id: <client ID>
+      #   client_secret: <client secret>
+      response = Discordrb::API.oauth_refresh_token(@client_id, @client_secret, @refresh_token)
+      parse(JSON.parse(response))
+    end
+
     private
 
     def parse(data)
