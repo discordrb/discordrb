@@ -29,6 +29,14 @@ module Discordrb::Light
       register_endpoint
     end
 
+    # Sets the callback to be called when an authorisation code (**NOT** a
+    # token) is obtained.
+    # @yield when an authorisation code is obtained.
+    # @yieldparam [String] the obtained authorisation code.
+    def code_callback(&block)
+      @code_callback = block
+    end
+
     # Starts the server, blocking the current thread, without doing any waiting
     # for responses.
     def start
