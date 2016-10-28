@@ -87,6 +87,8 @@ module Discordrb::RPC
         event.set
       end
 
+      @last_data = data['data']
+
       Discordrb::LOGGER.debug "RPCWS: processed #{nonce}"
     end
   end
