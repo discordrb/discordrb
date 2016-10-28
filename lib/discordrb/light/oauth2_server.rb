@@ -23,6 +23,8 @@ module Discordrb::Light
       @client_id = client_id
       @client_secret = client_secret
 
+      @redirect_uri = "http://localhost:#{port}#{path}"
+
       register_endpoint
     end
 
