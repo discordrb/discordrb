@@ -16,5 +16,12 @@ module Discordrb::RPC
       @event.wait
       @response
     end
+
+    # Notifies that a response occurred.
+    # @param response [Hash] the response's data.
+    def notify_response(response)
+      @response = response
+      @event.set
+    end
   end
 end
