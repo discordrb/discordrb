@@ -37,6 +37,13 @@ module Discordrb::Light
       @code_callback = block
     end
 
+    # Sets the callback to be called when a token is obtained.
+    # @yield when an OAuth2 token is obtained.
+    # @yieldparam [OAuth2Token] the obtained token.
+    def token_callback(&block)
+      @token_callback = block
+    end
+
     # Starts the server, blocking the current thread, without doing any waiting
     # for responses.
     def start
