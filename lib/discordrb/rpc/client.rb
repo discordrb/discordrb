@@ -31,7 +31,7 @@ module Discordrb::RPC
     end
 
     def select_text_channel(id)
-      send_frame(:SELECT_TEXT_CHANNEL, channel_id: id)
+      send_frame(:SELECT_TEXT_CHANNEL, channel_id: id.to_s)
     end
 
     private
