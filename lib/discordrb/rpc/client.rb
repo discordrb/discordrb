@@ -43,10 +43,10 @@ module Discordrb::RPC
       cycle = @cycles[nonce] = FrameCycle.new(nonce)
       response = cycle.wait_for_response
 
+      @cycles.delete(nonce)
+
       # TODO: error classes
       raise "RPC error: #{response['data']}" if response['evt'] == 'ERROR'
-
-      @cycles.delete(nonce)
 
       response
     end
