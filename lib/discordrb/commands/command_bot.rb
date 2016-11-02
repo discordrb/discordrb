@@ -44,7 +44,7 @@ module Discordrb::Commands
     #   `false` as the value.
     # @option attributes [String, #call] :command_doesnt_exist_message The message that should be displayed if a user attempts
     #   to use a command that does not exist. If none is specified, no message will be displayed. It can be:
-    #   
+    #
     #   * Any strng, in which '%command%' will be replaced with the name of the command.
     #   * Something Proc-like (responds to :call) that takes the command name and {Message} object and should return a string.
     # @option attributes [String] :no_permission_message The message to be displayed when `NoPermission` error is raised.
