@@ -1796,6 +1796,11 @@ module Discordrb
       @reactions.any?
     end
 
+    # Returns the reactions made by the current bot or user
+    def my_reactions
+      reactions.select { |r| r.me }
+    end
+
     # The inspect method is overwritten to give more useful output
     def inspect
       "<Message content=\"#{@content}\" id=#{@id} timestamp=#{@timestamp} author=#{@author} channel=#{@channel}>"
