@@ -1624,6 +1624,9 @@ module Discordrb
     # @return [Array<Embed>] the embed objects contained in this message.
     attr_reader :embeds
 
+    # @return [Array<Reaction>] the reaction objects attached to this message
+    attr_reader :reactions
+
     # @return [true, false] whether the message used Text-To-Speech (TTS) or not.
     attr_reader :tts
     alias_method :tts?, :tts
@@ -1706,6 +1709,8 @@ module Discordrb
 
       @embeds = []
       @embeds = data['embeds'].map { |e| Embed.new(e, self) } if data['embeds']
+
+      @reactions = data['reactions'].map { |e| Reaction.new(e) } if data['reactions']
     end
 
     # Replies to this message with the specified content.
@@ -1780,6 +1785,12 @@ module Discordrb
       return true unless emoji.empty?
     end
 
+    # Check if any reactions got used in this message
+    # @return [true, false] whether or not this message has reactions
+    def reactions?
+      @reactions.any?
+    end
+
     # @return [true, false] whether this message has been sent over a webhook.
     def webhook?
       !@webhook_id.nil?
@@ -1788,6 +1799,29 @@ module Discordrb
     # The inspect method is overwritten to give more useful output
     def inspect
       "<Message content=\"#{@content}\" id=#{@id} timestamp=#{@timestamp} author=#{@author} channel=#{@channel}>"
+    end
+  end
+
+  # A reaction to a message
+  class Reaction
+    # @return [Integer] the amount of users who have reacted with this reaction
+    attr_reader :count
+
+    # TODO: I have no idea what this is.
+    # @return [true, false] me
+    attr_reader :me
+
+    # @return [Integer] the ID of the emoji, if it was custom
+    attr_reader :id
+
+    # @return [String] the name or unicode representation of the emoji
+    attr_reader :name
+
+    def initialize(data)
+      @count = data['count']
+      @me = data['me']
+      @id = data['emoji']['id']
+      @name = data['emoji']['name']
     end
   end
 
