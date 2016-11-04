@@ -1820,7 +1820,7 @@ module Discordrb
     def initialize(data)
       @count = data['count']
       @me = data['me']
-      @id = data['emoji']['id']
+      @id = data['emoji']['id'].to_i
       @name = data['emoji']['name']
     end
   end
