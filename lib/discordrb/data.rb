@@ -1807,8 +1807,7 @@ module Discordrb
     # @return [Integer] the amount of users who have reacted with this reaction
     attr_reader :count
 
-    # TODO: I have no idea what this is.
-    # @return [true, false] me
+    # @return [true, false] whether the current bot or user used this reaction
     attr_reader :me
 
     # @return [Integer] the ID of the emoji, if it was custom
