@@ -1797,6 +1797,7 @@ module Discordrb
     end
 
     # Returns the reactions made by the current bot or user
+    # @return [Array<Reaction>] the reactions
     def my_reactions
       reactions.select { |r| r.me }
     end
