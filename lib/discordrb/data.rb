@@ -1794,7 +1794,7 @@ module Discordrb
     # Returns the reactions made by the current bot or user
     # @return [Array<Reaction>] the reactions
     def my_reactions
-      @reactions.select { |r| r.me }
+      @reactions.select(&:me)
     end
 
     # @return [true, false] whether this message has been sent over a webhook.
