@@ -364,7 +364,7 @@ module Discordrb::Voice
           # Wait `length` ms, then send the next packet
           sleep @length / 1000.0
         else
-          Discordrb::Logger.warn('Audio encoding and sending together took longer than Discord expects one packet to be (20 ms)! This may be indicative of network problems.')
+          Discordrb::LOGGER.warn('Audio encoding and sending together took longer than Discord expects one packet to be (20 ms)! This may be indicative of network problems.')
         end
       end
 
