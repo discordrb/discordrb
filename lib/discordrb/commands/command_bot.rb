@@ -66,6 +66,7 @@ module Discordrb::Commands
     #   :advanced_functionality). Default is '"'.
     # @option attributes [String] :quote_end Character that should end a quoted string (see
     #   :advanced_functionality). Default is '"'.
+    # @option attributes [true, false] :ignore_bots Whether the bot should ignore bot accounts or not. Default is false.
     def initialize(attributes = {})
       super(
         log_mode: attributes[:log_mode],
@@ -79,7 +80,8 @@ module Discordrb::Commands
         parse_self: attributes[:parse_self],
         shard_id: attributes[:shard_id],
         num_shards: attributes[:num_shards],
-        redact_token: attributes.key?(:redact_token) ? attributes[:redact_token] : true)
+        redact_token: attributes.key?(:redact_token) ? attributes[:redact_token] : true,
+        ignore_bots: attributes[:ignore_bots])
 
       @prefix = attributes[:prefix]
       @attributes = {
