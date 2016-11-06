@@ -1815,6 +1815,7 @@ module Discordrb
 
     # @return [true, false] whether the current bot or user used this reaction
     attr_reader :me
+    alias_method :me?, :me
 
     # @return [Integer] the ID of the emoji, if it was custom
     attr_reader :id
