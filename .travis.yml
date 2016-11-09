@@ -4,4 +4,5 @@ rvm:
 before_install: gem install bundler -v 1.10.6
 script:
   - bundle exec rspec spec
+  - bundle exec codeclimate-test-reporter
   - bundle exec rubocop -c .rubocop.yml
