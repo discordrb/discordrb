@@ -644,6 +644,9 @@ module Discordrb
 
       member.status = data['status'].to_sym
       member.game = data['game'] ? data['game']['name'] : nil
+      member.avatar_id = data['user']['avatar'] if data['user']['avatar']
+
+      Discordrb::LOGGER.info "Updating avatar to #{data['user']['avatar']}"
 
       server.cache_member(member)
     end
