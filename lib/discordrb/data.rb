@@ -1691,9 +1691,11 @@ module Discordrb
 
       @mentions = []
 
-      data['mentions'].each do |element|
-        @mentions << bot.ensure_user(element)
-      end if data['mentions']
+      if data['mentions']
+        data['mentions'].each do |element|
+          @mentions << bot.ensure_user(element)
+        end
+      end
 
       @role_mentions = []
 
