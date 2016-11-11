@@ -104,7 +104,7 @@ module Discordrb
 
     # @return [String] the ID of this user's current avatar, can be used to generate an avatar URL.
     # @see #avatar_url
-    attr_reader :avatar_id
+    attr_accessor :avatar_id
 
     # Utility function to mention users in messages
     # @return [String] the mention code in the form of <@id>
