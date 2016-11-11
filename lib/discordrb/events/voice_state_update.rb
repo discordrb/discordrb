@@ -73,7 +73,7 @@ module Discordrb::Events
         matches_all(@attributes[:channel], event.channel) do |a, e|
           a == if a.is_a? String
                  e.name
-               elsif a.is_a? Fixnum
+               elsif a.is_a? Integer
                  e.id
                else
                  e
