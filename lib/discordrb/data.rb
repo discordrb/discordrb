@@ -1701,9 +1701,11 @@ module Discordrb
 
       # Role mentions can only happen on public servers so make sure we only parse them there
       if @channel.text?
-        data['mention_roles'].each do |element|
-          @role_mentions << @channel.server.role(element.to_i)
-        end if data['mention_roles']
+        if data['mention_roles']
+          data['mention_roles'].each do |element|
+            @role_mentions << @channel.server.role(element.to_i)
+          end
+        end
       end
 
       @attachments = []
