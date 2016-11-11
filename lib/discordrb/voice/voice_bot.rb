@@ -160,11 +160,10 @@ module Discordrb::Voice
       @playing = false
       sleep IDEAL_LENGTH / 1000.0 if @was_playing_before
 
-      if wait_for_confirmation
-        @has_stopped_playing = false
-        sleep IDEAL_LENGTH / 1000.0 until @has_stopped_playing
-        @has_stopped_playing = false
-      end
+      return unless wait_for_confirmation
+      @has_stopped_playing = false
+      sleep IDEAL_LENGTH / 1000.0 until @has_stopped_playing
+      @has_stopped_playing = false
     end
 
     # Permanently disconnects from the voice channel; to reconnect you will have to call {Bot#voice_connect} again.
