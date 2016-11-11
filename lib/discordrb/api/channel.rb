@@ -133,6 +133,23 @@ module Discordrb::API::Channel
     )
   end
 
+  # TODO: Insert docs links once they are pushed to master
+  # for reactions endpoints
+
+  # Create a reaction on a message using this client
+  def create_reaction(token, channel_id, message_id, emoji)
+    emoji = URI.encode(emoji)
+    Discordrb::API.request(
+      :channels_cid_messages_mid,
+      channel_id,
+      :put,
+      "#{Discordrb::API.api_base}/channels/#{channel_id}/messages/#{message_id}/reactions/#{emoji}/@me",
+      nil,
+      Authorization: token,
+      content_type: :json
+    )
+  end
+
   # Update a channels permission for a role or member
   # https://discordapp.com/developers/docs/resources/channel#edit-channel-permissions
   def update_permission(token, channel_id, overwrite_id, allow, deny, type)
