@@ -150,6 +150,17 @@ module Discordrb::API::Channel
     )
   end
 
+  # Deletes all reactions on a message from all clients
+  def delete_all_reactions(token, channel_id, message_id)
+    Discordrb::API.request(
+      :channels_cid_messages_mid,
+      channel_id,
+      :delete,
+      "#{Discordrb::API.api_base}/channels/#{channel_id}/messages/#{message_id}/reactions",
+      Authorization: token
+    )
+  end
+
   # Update a channels permission for a role or member
   # https://discordapp.com/developers/docs/resources/channel#edit-channel-permissions
   def update_permission(token, channel_id, overwrite_id, allow, deny, type)
