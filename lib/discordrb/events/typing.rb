@@ -45,7 +45,7 @@ module Discordrb::Events
         matches_all(@attributes[:in], event.channel) do |a, e|
           if a.is_a? String
             a.delete('#') == e.name
-          elsif a.is_a? Fixnum
+          elsif a.is_a? Integer
             a == e.id
           else
             a == e
@@ -54,7 +54,7 @@ module Discordrb::Events
         matches_all(@attributes[:from], event.user) do |a, e|
           a == if a.is_a? String
                  e.name
-               elsif a.is_a? Fixnum
+               elsif a.is_a? Integer
                  e.id
                else
                  e
