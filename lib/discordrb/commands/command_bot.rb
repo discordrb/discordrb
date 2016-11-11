@@ -323,7 +323,7 @@ module Discordrb::Commands
         if c.is_a? String
           # Make sure to remove the "#" from channel names in case it was specified
           c.delete('#') == channel.name
-        elsif c.is_a? Fixnum
+        elsif c.is_a? Integer
           c == channel.id
         else
           c == channel
