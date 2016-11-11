@@ -41,6 +41,12 @@ Style/ConstantName:
 Lint/RescueException:
   Enabled: false
 
+# Prefer |m, e| for the `reduce` block arguments
+Style/SingleLineBlockParams:
+  Methods:
+    - reduce: [m, e]
+    - inject: [m, e]
+
 AllCops:
   TargetRubyVersion: 2.1
 
