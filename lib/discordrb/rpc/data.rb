@@ -86,6 +86,9 @@ module Discordrb::RPC
 
   # Represents a server as sent over RPC.
   class RPCServer < RPCLightServer
+    # @return [Array<RPCMember>] the server's online members.
+    attr_reader :members
+
     # @!visibility private
     def initialize(data)
       super data
