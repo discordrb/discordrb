@@ -1808,11 +1808,13 @@ module Discordrb
 
     # Reacts to a message
     # @param [String, Emoji] the unicode emoji or an Emoji
-    def react(reaction)
+    def create_reaction(reaction)
       reaction = "#{reaction.name}:#{reaction.id}" if reaction.is_a? Emoji
       API::Channel.create_reaction(@bot.token, @channel.id, @id, reaction)
       nil
     end
+
+    alias_method :react, :create_reaction
 
     # Returns the list of users who reacted with a certain reaction
     # @param [String, Emoji] the unicode emoji or an Emoji
