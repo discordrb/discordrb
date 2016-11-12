@@ -138,6 +138,9 @@ module Discordrb::RPC
     # @return [String] the name the user shows up as in the voice channel.
     attr_reader :nick
 
+    # @return [true, false] whether this user is muted.
+    attr_reader :mute
+
     # @!visibility private
     def initialize(data)
       @user = RPCUser.new(data['user'])
