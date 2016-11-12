@@ -3,6 +3,7 @@ require 'securerandom'
 
 require 'discordrb/websocket'
 require 'discordrb/rpc/frame_cycle'
+require 'discordrb/rpc/data'
 
 module Discordrb::RPC
   # Client for Discord's RPC protocol.
