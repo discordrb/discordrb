@@ -104,6 +104,15 @@ module Discordrb::RPC
   # Represents a voice state as sent over RPC.
   class RPCVoiceState
     include Discordrb::VoiceAttributes
+
+    # @!visibility private
+    def initialize(data)
+      @mute = data['mute']
+      @deaf = data['deaf']
+      @self_mute = data['self_mute']
+      @self_deaf = data['self_deaf']
+      @suppress = data['suppress']
+    end
   end
 
   # Represents a channel as sent over RPC.
