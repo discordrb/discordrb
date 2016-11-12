@@ -22,4 +22,8 @@ module Discordrb::RPC
       @bot_account = true if data['bot']
     end
   end
+
+  # Represents a server as sent over RPC.
+  class RPCServer
+  end
 end
