@@ -135,6 +135,18 @@ module Discordrb::RPC
 
   # Represents a user in a voice channel.
   class RPCVoiceUser < DelegateClass(RPCUser)
+    # @!visibility private
+    def initialize(data)
+      @user = RPCUser.new(data['user'])
+      super @user
+
+      @nick = data['nick']
+      @mute = data['mute']
+      @volume = data['volume']
+
+      @pan = Pan.new(data['pan'])
+      @voice_state = RPCVoiceState.new(data['pan'])
+    end
   end
 
   # Represents a channel as sent over RPC.
