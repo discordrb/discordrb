@@ -48,7 +48,8 @@ module Discordrb::RPC
     end
 
     def server(id)
-      send_frame(:GET_GUILD, guild_id: id.to_s)
+      response = send_frame(:GET_GUILD, guild_id: id.to_s)
+      RPCServer.new(response['data'])
     end
 
     private
