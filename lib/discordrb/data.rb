@@ -1806,6 +1806,14 @@ module Discordrb
       @reactions.select(&:me)
     end
 
+    # Reacts to a message
+    # @param [String, Emoji] the unicode emoji or an Emoji
+    def react(reaction)
+      reaction = "#{reaction.name}:#{reaction.id}" if reaction.is_a? Emoji
+      API::Channel.create_reaction(@bot.token, @channel.id, @id, reaction)
+      nil
+    end
+
     # The inspect method is overwritten to give more useful output
     def inspect
       "<Message content=\"#{@content}\" id=#{@id} timestamp=#{@timestamp} author=#{@author} channel=#{@channel}>"
