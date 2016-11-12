@@ -138,7 +138,7 @@ module Discordrb::API::Channel
 
   # Create a reaction on a message using this client
   def create_reaction(token, channel_id, message_id, emoji)
-    emoji = URI.encode(emoji)
+    emoji = URI.encode(emoji) unless emoji.ascii_only?
     Discordrb::API.request(
       :channels_cid_messages_mid,
       channel_id,
@@ -152,7 +152,7 @@ module Discordrb::API::Channel
 
   # Delete this client's own reaction on a message
   def delete_own_reaction(token, channel_id, message_id, emoji)
-    emoji = URI.encode(emoji)
+    emoji = URI.encode(emoji) unless emoji.ascii_only?
     Discordrb::API.request(
       :channels_cid_messages_mid,
       channel_id,
@@ -164,7 +164,7 @@ module Discordrb::API::Channel
 
   # Delete another client's reaction on a message
   def delete_user_reaction(token, channel_id, message_id, emoji, user_id)
-    emoji = URI.encode(emoji)
+    emoji = URI.encode(emoji) unless emoji.ascii_only?
     Discordrb::API.request(
       :channels_cid_messages_mid,
       channel_id,
@@ -176,7 +176,7 @@ module Discordrb::API::Channel
 
   # Get a list of clients who reacted with a specific reaction on a message
   def get_reactions(token, channel_id, message_id, emoji)
-    emoji = URI.encode(emoji)
+    emoji = URI.encode(emoji) unless emoji.ascii_only?
     Discordrb::API.request(
       :channels_cid_messages_mid,
       channel_id,
