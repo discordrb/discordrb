@@ -88,5 +88,11 @@ module Discordrb::RPC
 
   # Represents a server as sent over RPC.
   class RPCServer < RPCLightServer
+    # @!visibility private
+    def initialize(data)
+      super data
+
+      @members = data['members'].map { |e| RPCMember.new(e) }
+    end
   end
 end
