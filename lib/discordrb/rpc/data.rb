@@ -10,9 +10,7 @@ module Discordrb::RPC
     include Discordrb::UserAttributes
 
     # @!visibility private
-    def initialize(data, bot)
-      @bot = bot
-
+    def initialize(data)
       @username = data['username']
       @id = data['id'].to_i
       @discriminator = data['discriminator']
