@@ -160,7 +160,7 @@ module Discordrb::RPC
       @volume = data['volume']
 
       @pan = Pan.new(data['pan'])
-      @voice_state = RPCVoiceState.new(data['pan'])
+      @voice_state = RPCVoiceState.new(data['voice_state'])
     end
   end
 
