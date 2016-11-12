@@ -115,6 +115,21 @@ module Discordrb::RPC
     end
   end
 
+  # A voice user's pan status.
+  class Pan
+    # @return [Float] how much this user is panned to the left.
+    attr_reader :left
+
+    # @return [Float] how much this user is panned to the right.
+    attr_reader :right
+
+    # @!visibility private
+    def initialize(data)
+      @left = data['left'].to_f
+      @right = data['right'].to_f
+    end
+  end
+
   # Represents a user in a voice channel.
   class RPCVoiceUser < DelegateClass(RPCUser)
   end
