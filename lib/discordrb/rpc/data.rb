@@ -33,6 +33,11 @@ module Discordrb::RPC
     def initialize(data)
       @id = data['id'].to_i
       @name = data['name']
+
+      return unless data['icon_url']
+
+      @icon_id = data['icon_url'].scan(/[0-9a-f]{32}/).first
+      @icon_url = data['icon_url']
     end
   end
 
