@@ -48,6 +48,9 @@ module Discordrb::RPC
     # @return [String, nil] this member's nickname, or nil if none is set.
     attr_reader :nick
 
+    # @return [Symbol] the user's presence status (`:online`, `:idle`, or `:dnd`).
+    attr_reader :status
+
     # @!visibility private
     def initialize(data)
       @user = RPCUser.new(data['user'])
