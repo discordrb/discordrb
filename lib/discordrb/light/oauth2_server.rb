@@ -75,11 +75,8 @@ module Discordrb::Light
       OAuth2Token.new(JSON.parse(response), @client_id, @client_secret)
     rescue => e
       if e.respond_to? :response
-        if e.response.body == '{"error": "invalid_grant"}'
-          raise "Invalid grant! Make sure the application's redirect URIs contain `#{@redirect_uri}` (without quotes) EXACTLY."
-        else
-          Discordrb::LOGGER.error("Error response during token obtention: #{e.response.body}")
-        end
+        raise "Invalid grant! Make sure the application's redirect URIs contain `#{@redirect_uri}` (without quotes) EXACTLY." if e.response.body == '{"error": "invalid_grant"}'
+        Discordrb::LOGGER.error("Error response during token obtention: #{e.response.body}")
       end
 
       raise
