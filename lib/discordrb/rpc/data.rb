@@ -105,6 +105,9 @@ module Discordrb::RPC
   class RPCVoiceState
     include Discordrb::VoiceAttributes
 
+    # @return [true, false] whether this user is suppressed.
+    attr_reader :suppress
+
     # @!visibility private
     def initialize(data)
       @mute = data['mute']
