@@ -100,6 +100,8 @@ module Discordrb::RPC
 
   # Represents a message as sent over RPC.
   class RPCMessage
+    include Discordrb::IDObject
+
     # @!visibility private
     def initialize(data)
       @id = data['id'].to_i
