@@ -34,6 +34,10 @@ module Discordrb::RPC
       send_frame(:SELECT_TEXT_CHANNEL, channel_id: id.to_s)
     end
 
+    def select_voice_channel(id)
+      send_frame(:SELECT_VOICE_CHANNEL, channel_id: id.to_s)
+    end
+
     private
 
     def send_frame(command, payload, event = nil)
