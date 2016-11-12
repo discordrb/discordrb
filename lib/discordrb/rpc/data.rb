@@ -101,6 +101,10 @@ module Discordrb::RPC
   class RPCMessage
   end
 
+  # Represents a voice state as sent over RPC.
+  class RPCVoiceState
+  end
+
   # Represents a channel as sent over RPC.
   class RPCChannel
   end
