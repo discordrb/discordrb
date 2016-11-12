@@ -47,6 +47,9 @@ module Discordrb::RPC
       response['data']['guilds'].map { |e| RPCLightServer.new(e) }
     end
 
+    # Obtains more detailed information (i. e. the member list) of a particular
+    # server the controlled user is in.
+    # @return [RPCServer] the requested server.
     def server(id)
       response = send_frame(:GET_GUILD, guild_id: id.to_s)
       RPCServer.new(response['data'])
