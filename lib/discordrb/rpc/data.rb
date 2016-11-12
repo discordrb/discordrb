@@ -141,6 +141,9 @@ module Discordrb::RPC
     # @return [true, false] whether this user is muted.
     attr_reader :mute
 
+    # @return [Integer] the user's relative volume, where 100 is default.
+    attr_reader :volume
+
     # @!visibility private
     def initialize(data)
       @user = RPCUser.new(data['user'])
