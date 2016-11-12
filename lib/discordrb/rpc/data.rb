@@ -28,6 +28,9 @@ module Discordrb::RPC
     # @return [String] the name of the played game.
     attr_reader :name
 
+    # @return [Integer] the type of activity (0 = playing, 1 = Twitch streaming)
+    attr_reader :type
+
     # @!visibility private
     def initialize(data)
       @name = data['name']
