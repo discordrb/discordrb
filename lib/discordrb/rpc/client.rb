@@ -39,6 +39,9 @@ module Discordrb::RPC
       send_frame(:SELECT_VOICE_CHANNEL, channel_id: id.to_s)
     end
 
+    # Obtains a list of all the servers the controlled user is in, with basic
+    # information such as name and icon URL.
+    # @return [Array<RPCLightServer>] the servers the user is in.
     def servers
       response = send_frame(:GET_GUILDS, nil)
       response['data']['guilds'].map { |e| RPCLightServer.new(e) }
