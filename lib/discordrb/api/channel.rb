@@ -150,6 +150,18 @@ module Discordrb::API::Channel
     )
   end
 
+  # Get a list of clients who reacted with a specific reaction on a message
+  def get_reactions(token, channel_id, message_id, emoji)
+    emoji = URI.encode(emoji)
+    Discordrb::API.request(
+      :channels_cid_messages_mid,
+      channel_id,
+      :get,
+      "#{Discordrb::API.api_base}/channels/#{channel_id}/messages/#{message_id}/reactions/#{emoji}",
+      Authorization: token
+    )
+  end
+
   # Deletes all reactions on a message from all clients
   def delete_all_reactions(token, channel_id, message_id)
     Discordrb::API.request(
