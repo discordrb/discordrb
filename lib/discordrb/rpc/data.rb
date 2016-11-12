@@ -45,6 +45,15 @@ module Discordrb::RPC
   # Represents a member as sent over RPC, i. e. user, status, possibly nick,
   # and "activity".
   class RPCMember < DelegateClass(RPCUser)
+    # @!visibility private
+    def initialize(data)
+      @user = RPCUser.new(data['user'])
+      super @user
+
+      @nick = data['nick']
+      @status = data['status'].to_sym
+      @activity = Activity.new(data['activity']) if data['activity']
+    end
   end
 
   # Represents a server as sent over RPC, without member data (i.e. only ID,
