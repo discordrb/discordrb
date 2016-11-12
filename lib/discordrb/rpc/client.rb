@@ -42,6 +42,10 @@ module Discordrb::RPC
       send_frame(:GET_GUILDS, nil)
     end
 
+    def server(id)
+      send_frame(:GET_GUILD, guild_id: id.to_s)
+    end
+
     private
 
     def send_frame(command, payload, event = nil)
