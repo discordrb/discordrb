@@ -1818,6 +1818,11 @@ module Discordrb
       response.map { |d| User.new(d, @bot) }
     end
 
+    # Removes all reactions from this message
+    def delete_all_reactions
+      API::Channel.delete_all_reactions(@bot.token, @channel.id, @id)
+    end
+
     # @return [true, false] whether this message has been sent over a webhook.
     def webhook?
       !@webhook_id.nil?
