@@ -115,6 +115,10 @@ module Discordrb::RPC
     end
   end
 
+  # Represents a user in a voice channel.
+  class RPCVoiceUser < DelegateClass(RPCUser)
+  end
+
   # Represents a channel as sent over RPC.
   class RPCChannel
   end
