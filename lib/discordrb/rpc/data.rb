@@ -31,6 +31,9 @@ module Discordrb::RPC
     # @return [Integer] the type of activity (0 = playing, 1 = Twitch streaming)
     attr_reader :type
 
+    # @return [String, nil] the stream URL, or nil if no streaming is being done
+    attr_reader :url
+
     # @!visibility private
     def initialize(data)
       @name = data['name']
