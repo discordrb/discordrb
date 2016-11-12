@@ -147,6 +147,9 @@ module Discordrb::RPC
     # @return [Pan] this user's pan status.
     attr_reader :pan
 
+    # @return [RPCVoiceState] this user's voice state.
+    attr_reader :voice_state
+
     # @!visibility private
     def initialize(data)
       @user = RPCUser.new(data['user'])
