@@ -103,6 +103,7 @@ module Discordrb::RPC
 
   # Represents a voice state as sent over RPC.
   class RPCVoiceState
+    include Discordrb::VoiceAttributes
   end
 
   # Represents a channel as sent over RPC.
