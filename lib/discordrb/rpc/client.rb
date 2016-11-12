@@ -40,7 +40,8 @@ module Discordrb::RPC
     end
 
     def servers
-      send_frame(:GET_GUILDS, nil)
+      response = send_frame(:GET_GUILDS, nil)
+      response['data']['guilds'].map { |e| RPCLightServer.new(e) }
     end
 
     def server(id)
