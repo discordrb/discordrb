@@ -1,4 +1,5 @@
 require 'json'
+require 'time'
 
 require 'discordrb/data'
 
@@ -99,6 +100,30 @@ module Discordrb::RPC
 
   # Represents a message as sent over RPC.
   class RPCMessage
+    # @!visibility private
+    def initialize(data)
+      @id = data['id'].to_i
+      @blocked = data['blocked']
+      # @bot = data['bot'] - unsure what this does, was always nil for me
+
+      @content = data['content']
+      # TODO: content_parsed
+
+      @author_colour = data['author_color']
+      @timestamp = Time.parse(data['timestamp'])
+      @tts = data['tts']
+
+      @mentions = data['mentions'].map(&:to_i)
+      @mention_roles = data['mention_roles'].map(&:to_i)
+
+      @embeds = data['embeds'].map { |e| Discordrb::Embed.new(e, self) }
+      @attachments = data['attachments'].map { |e| Discordrb::Attachment.new(e, self) }
+
+      @author = RPCUser.new(data['author'])
+      @nick = data['nick']
+      @pinned = data['pinned']
+      @type = data['type']
+    end
   end
 
   # Represents a voice state as sent over RPC.
