@@ -1823,6 +1823,14 @@ module Discordrb
       response.map { |d| User.new(d, @bot) }
     end
 
+    # Deletes a reaction made by a user on this message
+    # @param [User, #resolve_id] the user who used this reaction
+    # @param [String, Emoji] the reaction to remove
+    def delete_reaction(user, reaction)
+      reaction = "#{reaction.name}:#{reaction.id}" if reaction.is_a? Emoji
+      API::Channel.delete_user_reaction(@bot.token, @channel.id, @id, reaction, user.resolve_id)
+    end
+
     # Removes all reactions from this message
     def delete_all_reactions
       API::Channel.delete_all_reactions(@bot.token, @channel.id, @id)
