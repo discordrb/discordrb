@@ -28,6 +28,12 @@ module Discordrb::RPC
   class RPCLightServer
     include Discordrb::IDObject
     include Discordrb::ServerAttributes
+
+    # @!visibility private
+    def initialize(data)
+      @id = data['id'].to_i
+      @name = data['name']
+    end
   end
 
   # Represents a server as sent over RPC.
