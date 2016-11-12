@@ -1801,6 +1801,14 @@ module Discordrb
       @reactions.select(&:me)
     end
 
+    # Reacts to a message
+    # @param [String, Emoji] the unicode emoji or an Emoji
+    def react(reaction)
+      reaction = "#{reaction.name}:#{reaction.id}" if reaction.is_a? Emoji
+      API::Channel.create_reaction(@bot.token, @channel.id, @id, reaction)
+      nil
+    end
+
     # @return [true, false] whether this message has been sent over a webhook.
     def webhook?
       !@webhook_id.nil?
