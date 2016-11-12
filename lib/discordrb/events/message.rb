@@ -178,7 +178,7 @@ module Discordrb::Events
           if a.is_a? String
             # Make sure to remove the "#" from channel names in case it was specified
             a.delete('#') == e.name
-          elsif a.is_a? Fixnum
+          elsif a.is_a? Integer
             a == e.id
           else
             a == e
@@ -187,7 +187,7 @@ module Discordrb::Events
         matches_all(@attributes[:from], event.author) do |a, e|
           if a.is_a? String
             a == e.name
-          elsif a.is_a? Fixnum
+          elsif a.is_a? Integer
             a == e.id
           elsif a == :bot
             e.current_bot?

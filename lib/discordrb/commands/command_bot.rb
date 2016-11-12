@@ -66,6 +66,7 @@ module Discordrb::Commands
     #   :advanced_functionality). Default is '"'.
     # @option attributes [String] :quote_end Character that should end a quoted string (see
     #   :advanced_functionality). Default is '"'.
+    # @option attributes [true, false] :ignore_bots Whether the bot should ignore bot accounts or not. Default is false.
     def initialize(attributes = {})
       super(
         log_mode: attributes[:log_mode],
@@ -79,7 +80,8 @@ module Discordrb::Commands
         parse_self: attributes[:parse_self],
         shard_id: attributes[:shard_id],
         num_shards: attributes[:num_shards],
-        redact_token: attributes.key?(:redact_token) ? attributes[:redact_token] : true)
+        redact_token: attributes.key?(:redact_token) ? attributes[:redact_token] : true,
+        ignore_bots: attributes[:ignore_bots])
 
       @prefix = attributes[:prefix]
       @attributes = {
@@ -160,7 +162,7 @@ module Discordrb::Commands
               memo + "`#{c.name}`, "
             end)[0..-3]
           else
-            event.user.pm(available_commands.reduce("**List of commands:**\n") { |a, e| a + "`#{e.name}`, " })[0..-3]
+            event.user.pm(available_commands.reduce("**List of commands:**\n") { |m, e| m + "`#{e.name}`, " })[0..-3]
             'Sending list in PM!'
           end
         end
@@ -285,7 +287,7 @@ module Discordrb::Commands
       if @prefix.is_a? String
         standard_prefix_trigger(message.content, @prefix)
       elsif @prefix.is_a? Array
-        @prefix.map { |e| standard_prefix_trigger(message.content, e) }.reduce { |a, e| a || e }
+        @prefix.map { |e| standard_prefix_trigger(message.content, e) }.reduce { |m, e| m || e }
       elsif @prefix.respond_to? :call
         @prefix.call(message)
       end
@@ -319,7 +321,7 @@ module Discordrb::Commands
         if c.is_a? String
           # Make sure to remove the "#" from channel names in case it was specified
           c.delete('#') == channel.name
-        elsif c.is_a? Fixnum
+        elsif c.is_a? Integer
           c == channel.id
         else
           c == channel

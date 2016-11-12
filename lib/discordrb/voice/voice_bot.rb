@@ -160,11 +160,10 @@ module Discordrb::Voice
       @playing = false
       sleep IDEAL_LENGTH / 1000.0 if @was_playing_before
 
-      if wait_for_confirmation
-        @has_stopped_playing = false
-        sleep IDEAL_LENGTH / 1000.0 until @has_stopped_playing
-        @has_stopped_playing = false
-      end
+      return unless wait_for_confirmation
+      @has_stopped_playing = false
+      sleep IDEAL_LENGTH / 1000.0 until @has_stopped_playing
+      @has_stopped_playing = false
     end
 
     # Permanently disconnects from the voice channel; to reconnect you will have to call {Bot#voice_connect} again.
@@ -364,7 +363,7 @@ module Discordrb::Voice
           # Wait `length` ms, then send the next packet
           sleep @length / 1000.0
         else
-          Discordrb::Logger.warn('Audio encoding and sending together took longer than Discord expects one packet to be (20 ms)! This may be indicative of network problems.')
+          Discordrb::LOGGER.warn('Audio encoding and sending together took longer than Discord expects one packet to be (20 ms)! This may be indicative of network problems.')
         end
       end
 

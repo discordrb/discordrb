@@ -104,7 +104,7 @@ module Discordrb
 
     # @return [String] the ID of this user's current avatar, can be used to generate an avatar URL.
     # @see #avatar_url
-    attr_reader :avatar_id
+    attr_accessor :avatar_id
 
     # Utility function to mention users in messages
     # @return [String] the mention code in the form of <@id>
@@ -1624,6 +1624,9 @@ module Discordrb
     # @return [Array<Embed>] the embed objects contained in this message.
     attr_reader :embeds
 
+    # @return [Array<Reaction>] the reaction objects attached to this message
+    attr_reader :reactions
+
     # @return [true, false] whether the message used Text-To-Speech (TTS) or not.
     attr_reader :tts
     alias_method :tts?, :tts
@@ -1688,17 +1691,21 @@ module Discordrb
 
       @mentions = []
 
-      data['mentions'].each do |element|
-        @mentions << bot.ensure_user(element)
-      end if data['mentions']
+      if data['mentions']
+        data['mentions'].each do |element|
+          @mentions << bot.ensure_user(element)
+        end
+      end
 
       @role_mentions = []
 
       # Role mentions can only happen on public servers so make sure we only parse them there
       if @channel.text?
-        data['mention_roles'].each do |element|
-          @role_mentions << @channel.server.role(element.to_i)
-        end if data['mention_roles']
+        if data['mention_roles']
+          data['mention_roles'].each do |element|
+            @role_mentions << @channel.server.role(element.to_i)
+          end
+        end
       end
 
       @attachments = []
@@ -1706,6 +1713,8 @@ module Discordrb
 
       @embeds = []
       @embeds = data['embeds'].map { |e| Embed.new(e, self) } if data['embeds']
+
+      @reactions = data['reactions'].map { |e| Reaction.new(e) } if data['reactions']
     end
 
     # Replies to this message with the specified content.
@@ -1785,9 +1794,44 @@ module Discordrb
       return true unless emoji.empty?
     end
 
+    # Check if any reactions got used in this message
+    # @return [true, false] whether or not this message has reactions
+    def reactions?
+      @reactions.any?
+    end
+
+    # Returns the reactions made by the current bot or user
+    # @return [Array<Reaction>] the reactions
+    def my_reactions
+      @reactions.select(&:me)
+    end
+
     # The inspect method is overwritten to give more useful output
     def inspect
       "<Message content=\"#{@content}\" id=#{@id} timestamp=#{@timestamp} author=#{@author} channel=#{@channel}>"
+    end
+  end
+
+  # A reaction to a message
+  class Reaction
+    # @return [Integer] the amount of users who have reacted with this reaction
+    attr_reader :count
+
+    # @return [true, false] whether the current bot or user used this reaction
+    attr_reader :me
+    alias_method :me?, :me
+
+    # @return [Integer] the ID of the emoji, if it was custom
+    attr_reader :id
+
+    # @return [String] the name or unicode representation of the emoji
+    attr_reader :name
+
+    def initialize(data)
+      @count = data['count']
+      @me = data['me']
+      @id = data['emoji']['id'].to_i
+      @name = data['emoji']['name']
     end
   end
 
