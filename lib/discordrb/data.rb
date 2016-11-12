@@ -1823,6 +1823,11 @@ module Discordrb
       response.map { |d| User.new(d, @bot) }
     end
 
+    # Removes all reactions from this message
+    def delete_all_reactions
+      API::Channel.delete_all_reactions(@bot.token, @channel.id, @id)
+    end
+
     # The inspect method is overwritten to give more useful output
     def inspect
       "<Message content=\"#{@content}\" id=#{@id} timestamp=#{@timestamp} author=#{@author} channel=#{@channel}>"
