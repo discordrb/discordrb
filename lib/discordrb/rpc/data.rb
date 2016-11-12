@@ -29,6 +29,6 @@ module Discordrb::RPC
   end
 
   # Represents a server as sent over RPC.
-  class RPCServer
+  class RPCServer < RPCLightServer
   end
 end
