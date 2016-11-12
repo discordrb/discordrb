@@ -1831,6 +1831,13 @@ module Discordrb
       API::Channel.delete_user_reaction(@bot.token, @channel.id, @id, reaction, user.resolve_id)
     end
 
+    # Delete's this clients reaction on this message
+    # @param [String, Emoji] the reaction to remove
+    def delete_own_reaction(reaction)
+      reaction = "#{reaction.name}:#{reaction.id}" if reaction.is_a? Emoji
+      API::Channel.delete_own_reaction(@bot.token, @channel.id, @id, reaction)
+    end
+
     # Removes all reactions from this message
     def delete_all_reactions
       API::Channel.delete_all_reactions(@bot.token, @channel.id, @id)
