@@ -135,6 +135,9 @@ module Discordrb::RPC
 
   # Represents a user in a voice channel.
   class RPCVoiceUser < DelegateClass(RPCUser)
+    # @return [String] the name the user shows up as in the voice channel.
+    attr_reader :nick
+
     # @!visibility private
     def initialize(data)
       @user = RPCUser.new(data['user'])
