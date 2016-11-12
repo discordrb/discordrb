@@ -97,6 +97,10 @@ module Discordrb::RPC
     end
   end
 
+  # Represents a message as sent over RPC.
+  class RPCMessage
+  end
+
   # Represents a channel as sent over RPC.
   class RPCChannel
   end
