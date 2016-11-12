@@ -29,6 +29,9 @@ module Discordrb::RPC
     include Discordrb::IDObject
     include Discordrb::ServerAttributes
 
+    # @return [String, nil] the URL to the server icon image, or nil if none exists.
+    attr_reader :icon_url
+
     # @!visibility private
     def initialize(data)
       @id = data['id'].to_i
