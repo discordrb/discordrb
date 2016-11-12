@@ -44,7 +44,7 @@ module Discordrb::RPC
 
   # Represents a member as sent over RPC, i. e. user, status, possibly nick,
   # and "activity".
-  class RPCMember
+  class RPCMember < DelegateClass(RPCUser)
   end
 
   # Represents a server as sent over RPC, without member data (i.e. only ID,
