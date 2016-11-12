@@ -51,6 +51,9 @@ module Discordrb::RPC
     # @return [Symbol] the user's presence status (`:online`, `:idle`, or `:dnd`).
     attr_reader :status
 
+    # @return [Activity, nil] the game the user is currently playing.
+    attr_reader :activity
+
     # @!visibility private
     def initialize(data)
       @user = RPCUser.new(data['user'])
