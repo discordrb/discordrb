@@ -1574,8 +1574,7 @@ module Discordrb
     attr_reader :height
 
     # @!visibility private
-    def initialize(data, message, bot)
-      @bot = bot
+    def initialize(data, message)
       @message = message
 
       @url = data['url']
