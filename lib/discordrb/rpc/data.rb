@@ -26,6 +26,8 @@ module Discordrb::RPC
   # Represents a server as sent over RPC, without member data (i.e. only ID,
   # name, and icon URL).
   class RPCLightServer
+    include Discordrb::IDObject
+    include Discordrb::ServerAttributes
   end
 
   # Represents a server as sent over RPC.
