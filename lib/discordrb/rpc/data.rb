@@ -45,6 +45,9 @@ module Discordrb::RPC
   # Represents a member as sent over RPC, i. e. user, status, possibly nick,
   # and "activity".
   class RPCMember < DelegateClass(RPCUser)
+    # @return [String, nil] this member's nickname, or nil if none is set.
+    attr_reader :nick
+
     # @!visibility private
     def initialize(data)
       @user = RPCUser.new(data['user'])
