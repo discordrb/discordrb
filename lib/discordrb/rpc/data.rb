@@ -144,6 +144,9 @@ module Discordrb::RPC
     # @return [Integer] the user's relative volume, where 100 is default.
     attr_reader :volume
 
+    # @return [Pan] this user's pan status.
+    attr_reader :pan
+
     # @!visibility private
     def initialize(data)
       @user = RPCUser.new(data['user'])
