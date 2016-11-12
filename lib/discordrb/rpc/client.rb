@@ -38,6 +38,10 @@ module Discordrb::RPC
       send_frame(:SELECT_VOICE_CHANNEL, channel_id: id.to_s)
     end
 
+    def servers
+      send_frame(:GET_GUILDS, nil)
+    end
+
     private
 
     def send_frame(command, payload, event = nil)
