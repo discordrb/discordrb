@@ -23,6 +23,11 @@ module Discordrb::RPC
     end
   end
 
+  # Represents a member as sent over RPC, i. e. user, status, possibly nick,
+  # and "activity".
+  class RPCMember
+  end
+
   # Represents a server as sent over RPC, without member data (i.e. only ID,
   # name, and icon URL).
   class RPCLightServer
