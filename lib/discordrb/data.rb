@@ -380,12 +380,9 @@ module Discordrb
     end
   end
 
-  # A voice state represents the state of a member's connection to a voice channel. It includes data like the voice
-  # channel the member is connected to and mute/deaf flags.
-  class VoiceState
-    # @return [Integer] the ID of the user whose voice state is represented by this object.
-    attr_reader :user_id
-
+  # A mixin with readers for the four elementary voice state attributes - mute,
+  # deaf, self mute, and self deaf.
+  module VoiceAttributes
     # @return [true, false] whether this voice state's member is muted server-wide.
     attr_reader :mute
 
@@ -397,6 +394,15 @@ module Discordrb
 
     # @return [true, false] whether this voice state's member has deafened themselves.
     attr_reader :self_deaf
+  end
+
+  # A voice state represents the state of a member's connection to a voice channel. It includes data like the voice
+  # channel the member is connected to and mute/deaf flags.
+  class VoiceState
+    include VoiceAttributes
+
+    # @return [Integer] the ID of the user whose voice state is represented by this object.
+    attr_reader :user_id
 
     # @return [Channel] the voice channel this voice state's member is in.
     attr_reader :voice_channel
