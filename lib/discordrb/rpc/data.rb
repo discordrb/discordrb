@@ -25,6 +25,12 @@ module Discordrb::RPC
 
   # The game the user is currently playing or streaming.
   class Activity
+    # @!visibility private
+    def initialize(data)
+      @name = data['name']
+      @type = data['type'].to_i
+      @url = data['url']
+    end
   end
 
   # Represents a member as sent over RPC, i. e. user, status, possibly nick,
