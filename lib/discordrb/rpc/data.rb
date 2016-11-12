@@ -23,6 +23,10 @@ module Discordrb::RPC
     end
   end
 
+  # The game the user is currently playing or streaming.
+  class Activity
+  end
+
   # Represents a member as sent over RPC, i. e. user, status, possibly nick,
   # and "activity".
   class RPCMember
