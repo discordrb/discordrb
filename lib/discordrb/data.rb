@@ -1814,6 +1814,15 @@ module Discordrb
       nil
     end
 
+    # Returns the list of users who reacted with a certain reaction
+    # @param [String, Emoji] the unicode emoji or an Emoji
+    # @return [Array<User>] the users who used this reaction
+    def reacted_with(reaction)
+      reaction = "#{reaction.name}:#{reaction.id}" if reaction.is_a? Emoji
+      response = JSON.parse(API::Channel.get_reactions(@bot.token, @channel.id, @id, reaction))
+      response.map { |d| User.new(d, @bot) }
+    end
+
     # The inspect method is overwritten to give more useful output
     def inspect
       "<Message content=\"#{@content}\" id=#{@id} timestamp=#{@timestamp} author=#{@author} channel=#{@channel}>"
