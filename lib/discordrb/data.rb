@@ -1802,9 +1802,9 @@ module Discordrb
     end
 
     # Reacts to a message
-    # @param [String, Emoji] the unicode emoji or an Emoji
+    # @param [String, #to_reaction] the unicode emoji, Emoji, or GlobalEmoji
     def create_reaction(reaction)
-      reaction = "#{reaction.name}:#{reaction.id}" if reaction.is_a? Emoji
+      reaction = reaction.to_reaction if reaction.respond_to?(:to_reaction)
       API::Channel.create_reaction(@bot.token, @channel.id, @id, reaction)
       nil
     end
@@ -1812,26 +1812,26 @@ module Discordrb
     alias_method :react, :create_reaction
 
     # Returns the list of users who reacted with a certain reaction
-    # @param [String, Emoji] the unicode emoji or an Emoji
+    # @param [String, #to_reaction] the unicode emoji, Emoji, or GlobalEmoji
     # @return [Array<User>] the users who used this reaction
     def reacted_with(reaction)
-      reaction = "#{reaction.name}:#{reaction.id}" if reaction.is_a? Emoji
+      reaction = reaction.to_reaction if reaction.respond_to?(:to_reaction)
       response = JSON.parse(API::Channel.get_reactions(@bot.token, @channel.id, @id, reaction))
       response.map { |d| User.new(d, @bot) }
     end
 
     # Deletes a reaction made by a user on this message
     # @param [User, #resolve_id] the user who used this reaction
-    # @param [String, Emoji] the reaction to remove
+    # @param [String, #to_reaction] the reaction to remove
     def delete_reaction(user, reaction)
-      reaction = "#{reaction.name}:#{reaction.id}" if reaction.is_a? Emoji
+      reaction = reaction.to_reaction if reaction.respond_to?(:to_reaction)
       API::Channel.delete_user_reaction(@bot.token, @channel.id, @id, reaction, user.resolve_id)
     end
 
     # Delete's this clients reaction on this message
-    # @param [String, Emoji] the reaction to remove
+    # @param [String, #to_reaction] the reaction to remove
     def delete_own_reaction(reaction)
-      reaction = "#{reaction.name}:#{reaction.id}" if reaction.is_a? Emoji
+      reaction = reaction.to_reaction if reaction.respond_to?(:to_reaction)
       API::Channel.delete_own_reaction(@bot.token, @channel.id, @id, reaction)
     end
 
@@ -1906,6 +1906,11 @@ module Discordrb
     alias_method :use, :mention
     alias_method :to_s, :mention
 
+    # @return [String] the layout to use this emoji in a reaction
+    def to_reaction
+      "#{@name}:#{@id}"
+    end
+
     # @return [String] the icon URL of the emoji
     def icon_url
       API.emoji_icon_url(@id)
@@ -1954,6 +1959,11 @@ module Discordrb
 
     alias_method :use, :mention
     alias_method :to_s, :mention
+
+    # @return [String] the layout to use this emoji in a reaction
+    def to_reaction
+      "#{@name}:#{@id}"
+    end
 
     # @return [String] the icon URL of the emoji
     def icon_url
