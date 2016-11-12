@@ -96,4 +96,8 @@ module Discordrb::RPC
       @members = data['members'].map { |e| RPCMember.new(e) }
     end
   end
+
+  # Represents a channel as sent over RPC.
+  class RPCChannel
+  end
 end
