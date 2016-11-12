@@ -25,6 +25,9 @@ module Discordrb::RPC
 
   # The game the user is currently playing or streaming.
   class Activity
+    # @return [String] the name of the played game.
+    attr_reader :name
+
     # @!visibility private
     def initialize(data)
       @name = data['name']
