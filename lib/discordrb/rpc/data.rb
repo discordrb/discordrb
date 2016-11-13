@@ -237,6 +237,9 @@ module Discordrb::RPC
   class RPCChannel
     include Discordrb::IDObject
 
+    # @return [String] the channel's name (without a prefixed #)
+    attr_reader :name
+
     # @!visibility private
     def initialize(data)
       @id = data['id'].to_i
