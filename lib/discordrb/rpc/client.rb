@@ -40,7 +40,8 @@ module Discordrb::RPC
     end
 
     def select_voice_channel(id)
-      send_frame(:SELECT_VOICE_CHANNEL, channel_id: id.to_s)
+      response = send_frame(:SELECT_VOICE_CHANNEL, channel_id: id.to_s)
+      RPCChannel.new(response['data'])
     end
 
     # Obtains a list of all the servers the controlled user is in, with basic
