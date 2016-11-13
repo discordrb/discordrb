@@ -27,6 +27,10 @@ module Discordrb::RPC
       send_frame(:AUTHORIZE, client_id: @client_id.to_s, scopes: scopes)
     end
 
+    # Authenticate this RPC connection with an OAuth token, allowing it to
+    # actually interact with the client.
+    # @param token [String] A valid Discord OAuth2 token with the `rpc` scope.
+    # @return [AuthenticateResponse] some information about the client.
     def authenticate(token)
       response = send_frame(:AUTHENTICATE, access_token: token)
       AuthenticateResponse.new(response['data'])
