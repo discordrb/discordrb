@@ -1031,6 +1031,7 @@ module Discordrb
     # `allow` and `deny` properties which are {Permissions} objects respectively.
     # @return [Hash<Integer => OpenStruct>] the channel's permission overwrites
     attr_reader :permission_overwrites
+    alias_method :overwrites, :permission_overwrites
 
     # @return [true, false] whether or not this channel is a PM or group channel.
     def private?
