@@ -31,6 +31,9 @@ module Discordrb::RPC
       send_frame(:AUTHENTICATE, access_token: token)
     end
 
+    # Switches the client's view to a particular text channel.
+    # @param id [Integer] the ID of the channel to switch to.
+    # @return [RPCChannel] the channel that was switched to.
     def select_text_channel(id)
       response = send_frame(:SELECT_TEXT_CHANNEL, channel_id: id.to_s)
       RPCChannel.new(response['data'])
