@@ -137,6 +137,9 @@ module Discordrb::RPC
     # @return [String, nil] the nickname the author has, if there is one.
     attr_reader :nick
 
+    # @return [true, false] whether this message is pinned to the channel it is in.
+    attr_reader :pinned
+
     # @!visibility private
     def initialize(data)
       @id = data['id'].to_i
