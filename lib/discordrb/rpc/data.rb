@@ -235,5 +235,6 @@ module Discordrb::RPC
 
   # Represents a channel as sent over RPC.
   class RPCChannel
+    include Discordrb::IDObject
   end
 end
