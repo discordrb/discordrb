@@ -263,7 +263,7 @@ module Discordrb::RPC
       @topic = data['topic']
       @bitrate = data['bitrate']
       @user_limit = data['user_limit']
-      @guild_id = data['guild_id'].to_i
+      @server_id = data['guild_id'].to_i
       @position = data['position']
 
       @messages = data['messages'].map { |e| RPCMessage.new(e) }
