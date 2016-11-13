@@ -141,6 +141,9 @@ module Discordrb::RPC
     attr_reader :pinned
     alias_method :pinned?, :pinned
 
+    # @return [Integer] the type this message is (0 = regular, 6 = pin notification, etc.)
+    attr_reader :type
+
     # @!visibility private
     def initialize(data)
       @id = data['id'].to_i
