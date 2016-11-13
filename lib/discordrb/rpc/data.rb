@@ -284,5 +284,14 @@ module Discordrb::RPC
   # Represents an OAuth2 application as sent over RPC
   class RPCApplication
     include Discordrb::IDObject
+
+    # @!visibililty private
+    def initialize(data)
+      @description = data['description']
+      @icon_id = data['icon_id']
+      @id = data['id'].to_i
+      @rpc_origins = data['rpc_origins']
+      @name = data['name']
+    end
   end
 end
