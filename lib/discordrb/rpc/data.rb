@@ -285,6 +285,18 @@ module Discordrb::RPC
   class RPCApplication
     include Discordrb::IDObject
 
+    # @return [String] this application's description as set in the settings.
+    attr_reader :description
+
+    # @return [String] the hexadecimal ID that identifies the application's icon.
+    attr_reader :icon_id
+
+    # @return [Array<String>] the permitted RPC origins.
+    attr_reader :rpc_origins
+
+    # @return [String] this application's name.
+    attr_reader :name
+
     # @!visibililty private
     def initialize(data)
       @description = data['description']
