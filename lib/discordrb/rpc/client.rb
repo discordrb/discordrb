@@ -39,6 +39,9 @@ module Discordrb::RPC
       RPCChannel.new(response['data'])
     end
 
+    # Makes the client join (or switch to) a particular voice channel.
+    # @param id [Integer] the ID of the channel to join.
+    # @return [RPCChannel] the channel that was joined.
     def select_voice_channel(id)
       response = send_frame(:SELECT_VOICE_CHANNEL, channel_id: id.to_s)
       RPCChannel.new(response['data'])
