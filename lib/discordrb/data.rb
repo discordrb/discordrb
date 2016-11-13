@@ -1232,11 +1232,15 @@ module Discordrb
     end
 
     # Deletes a permission overwrite for this channel
-    # @param thing [Member, User, Role, Profile, Reciepient]
-    def delete_overwrite(thing)
-      raise 'Tried deleting a overwrite for a invalid thing' unless thing.is_a?(Member) || thing.is_a?(User) || thing.is_a?(Role) || thing.is_a(Profile) || thing.is_a(Receipient)
+    # @param target [Member, User, Role, Profile, Recipient] What permission overwrite to delete
+    def delete_overwrite(target)
+      raise 'Tried deleting a overwrite for a invalid target' unless target.is_a?(Member) || target.is_a?(User) || target.is_a?(Role) || target.is_a?(Profile) || target.is_a?(Recipient) || target.respond_to?(:resolve_id)
 
-      API::Channel.delete_permission(@bot.token, @id, thing.id)
+      if target.respond_to?(:resolve_id)
+        return API::Channel.delete_permission(@bot.token, @id, target.resolve_id)
+      else
+        API::Channel.delete_permission(@bot.token, @id, target.id)
+      end
     end
 
     # Updates the cached data from another channel.
