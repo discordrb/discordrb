@@ -246,6 +246,9 @@ module Discordrb::RPC
     # @return [Integer] the channel's numeric type.
     attr_reader :type
 
+    # @return [Integer] the channel's bitrate in bits per second, 0 if not applicable.
+    attr_reader :bitrate
+
     # @!visibility private
     def initialize(data)
       @id = data['id'].to_i
