@@ -237,7 +237,7 @@ module Discordrb::RPC
   class RPCChannel
     include Discordrb::IDObject
 
-    # @return [String] the channel's name (without a prefixed #)
+    # @return [String] the channel's name (without a prefixed #), empty if not applicable.
     attr_reader :name
 
     # @return [String] the channel's topic, empty if not applicable.
