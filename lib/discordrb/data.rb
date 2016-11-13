@@ -1230,6 +1230,14 @@ module Discordrb
       API::Channel.update_permission(@bot.token, @id, thing.id, allow_bits, deny_bits, type)
     end
 
+    # Deletes a permission overwrite for this channel
+    # @param thing [Member, User, Role, Profile, Reciepient]
+    def delete_overwrite(thing)
+      raise 'Tried deleting a overwrite for a invalid thing' unless thing.is_a?(Member) || thing.is_a?(User) || thing.is_a?(Role) || thing.is_a(Profile) || thing.is_a(Receipient)
+
+      API::Channel.delete_permission(@bot.token, @id, thing.id)
+    end
+
     # Updates the cached data from another channel.
     # @note For internal use only
     # @!visibility private
