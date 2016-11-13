@@ -263,6 +263,7 @@ module Discordrb::RPC
 
     # @return [Array<RPCVoiceUser>] the users in this voice channel, empty if not applicable.
     attr_reader :voice_states
+    alias_method :voice_users, :voice_states
 
     # @!visibility private
     def initialize(data)
