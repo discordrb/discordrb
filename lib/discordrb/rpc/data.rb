@@ -236,5 +236,20 @@ module Discordrb::RPC
   # Represents a channel as sent over RPC.
   class RPCChannel
     include Discordrb::IDObject
+
+    # @!visibility private
+    def initialize(data)
+      @id = data['id'].to_i
+      @name = data['name']
+      @type = data['type']
+      @topic = data['topic']
+      @bitrate = data['bitrate']
+      @user_limit = data['user_limit']
+      @guild_id = data['guild_id'].to_i
+      @position = data['position']
+
+      @messages = data['messages'].map { |e| RPCMessage.new(e) }
+      @voice_states = data['voice_states'].map { |e| RPCVoiceUser.new(e) }
+    end
   end
 end
