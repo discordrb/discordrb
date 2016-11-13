@@ -114,6 +114,9 @@ module Discordrb::RPC
     # @return [Time] the timestamp when this message was sent.
     attr_reader :timestamp
 
+    # @return [true, false] whether this message is a text-to-speech message.
+    attr_reader :tts
+
     # @!visibility private
     def initialize(data)
       @id = data['id'].to_i
