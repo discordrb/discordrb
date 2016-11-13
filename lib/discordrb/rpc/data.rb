@@ -258,6 +258,9 @@ module Discordrb::RPC
     # @return [Integer] the channel's position on the server, 0 if not applicable.
     attr_reader :position
 
+    # @return [Array<RPCMessage>] the last 50 messages on this channel, empty if not applicable.
+    attr_reader :messages
+
     # @!visibility private
     def initialize(data)
       @id = data['id'].to_i
