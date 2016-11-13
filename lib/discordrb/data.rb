@@ -1232,7 +1232,7 @@ module Discordrb
     end
 
     # Deletes a permission overwrite for this channel
-    # @param target [Member, User, Role, Profile, Recipient] What permission overwrite to delete
+    # @param target [Member, User, Role, Profile, Recipient, #resolve_id] What permission overwrite to delete
     def delete_overwrite(target)
       raise 'Tried deleting a overwrite for an invalid target' unless target.is_a?(Member) || target.is_a?(User) || target.is_a?(Role) || target.is_a?(Profile) || target.is_a?(Recipient) || target.respond_to?(:resolve_id)
 
