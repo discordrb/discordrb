@@ -281,6 +281,8 @@ module Discordrb::RPC
     end
   end
 
+  # Represents an OAuth2 application as sent over RPC
   class RPCApplication
+    include Discordrb::IDObject
   end
 end
