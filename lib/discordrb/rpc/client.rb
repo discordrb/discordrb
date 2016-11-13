@@ -24,7 +24,8 @@ module Discordrb::RPC
     end
 
     def authorise(scopes)
-      send_frame(:AUTHORIZE, client_id: @client_id.to_s, scopes: scopes)
+      response = send_frame(:AUTHORIZE, client_id: @client_id.to_s, scopes: scopes)
+      response['data']['code']
     end
 
     # Authenticate this RPC connection with an OAuth token, allowing it to
