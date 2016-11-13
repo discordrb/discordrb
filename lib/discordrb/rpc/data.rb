@@ -153,7 +153,7 @@ module Discordrb::RPC
       @content = data['content']
       # TODO: content_parsed
 
-      @author_colour = ColourRGB.new(data['author_color'][1..-1].to_i(16))
+      @author_colour = Discordrb::ColourRGB.new(data['author_color'][1..-1].to_i(16))
       @timestamp = Time.parse(data['timestamp'])
       @tts = data['tts']
 
