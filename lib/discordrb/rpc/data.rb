@@ -2,6 +2,7 @@ require 'json'
 require 'time'
 
 require 'discordrb/data'
+require 'discordrb/api'
 
 # Support for Discord's RPC protocol
 module Discordrb::RPC
@@ -304,6 +305,13 @@ module Discordrb::RPC
       @id = data['id'].to_i
       @rpc_origins = data['rpc_origins']
       @name = data['name']
+    end
+
+    # Utility function to get a application's icon URL.
+    # @return [String, nil] the URL to the icon image (nil if no image is set).
+    def icon_url
+      return nil if @icon_id.nil?
+      Discordrb::API.app_icon_url(@id, @icon_id)
     end
   end
 end
