@@ -139,6 +139,7 @@ module Discordrb::RPC
 
     # @return [true, false] whether this message is pinned to the channel it is in.
     attr_reader :pinned
+    alias_method :pinned?, :pinned
 
     # @!visibility private
     def initialize(data)
