@@ -125,6 +125,9 @@ module Discordrb::RPC
     # @return [Array<Integer>] the IDs of roles that have been mentioned.
     attr_reader :mention_roles
 
+    # @return [Array<Embed>] this message's embeds.
+    attr_reader :embeds
+
     # @!visibility private
     def initialize(data)
       @id = data['id'].to_i
