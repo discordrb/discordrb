@@ -119,6 +119,9 @@ module Discordrb::RPC
     attr_reader :tts
     alias_method :tts?, :tts
 
+    # @return [Array<Integer>] the IDs of users that have been mentioned.
+    attr_reader :mentions
+
     # @!visibility private
     def initialize(data)
       @id = data['id'].to_i
