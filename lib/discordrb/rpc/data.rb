@@ -117,6 +117,7 @@ module Discordrb::RPC
 
     # @return [true, false] whether this message is a text-to-speech message.
     attr_reader :tts
+    alias_method :tts?, :tts
 
     # @!visibility private
     def initialize(data)
