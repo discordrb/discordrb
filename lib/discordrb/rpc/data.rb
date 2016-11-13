@@ -128,6 +128,9 @@ module Discordrb::RPC
     # @return [Array<Embed>] this message's embeds.
     attr_reader :embeds
 
+    # @return [Array<Attachment>] this message's attachments.
+    attr_reader :attachments
+
     # @!visibility private
     def initialize(data)
       @id = data['id'].to_i
