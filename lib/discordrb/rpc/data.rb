@@ -240,6 +240,9 @@ module Discordrb::RPC
     # @return [String] the channel's name (without a prefixed #)
     attr_reader :name
 
+    # @return [String] the channel's topic, empty if not applicable.
+    attr_reader :topic
+
     # @!visibility private
     def initialize(data)
       @id = data['id'].to_i
