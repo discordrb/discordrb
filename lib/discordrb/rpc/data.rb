@@ -104,6 +104,7 @@ module Discordrb::RPC
 
     # @return [true, false] whether this message was sent by a blocked user (content hidden by default).
     attr_reader :blocked
+    alias_method :blocked?, :blocked
 
     # @return [String] the message's content.
     attr_reader :content
