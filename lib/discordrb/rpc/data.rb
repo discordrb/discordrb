@@ -317,5 +317,12 @@ module Discordrb::RPC
 
   # A response to a RPC AUTHENTICATE request.
   class AuthenticateResponse
+    # @!visibility private
+    def initialize(data)
+      @application = RPCApplication.new(data['application'])
+      @expires = Time.parse(data['expires'])
+      @user = RPCUser.new(data['user'])
+      @scopes = data['scopes']
+    end
   end
 end
