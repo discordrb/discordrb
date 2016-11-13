@@ -280,4 +280,7 @@ module Discordrb::RPC
       @voice_states = data['voice_states'].map { |e| RPCVoiceUser.new(e) }
     end
   end
+
+  class RPCApplication
+  end
 end
