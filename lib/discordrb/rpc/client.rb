@@ -28,7 +28,8 @@ module Discordrb::RPC
     end
 
     def authenticate(token)
-      send_frame(:AUTHENTICATE, access_token: token)
+      response = send_frame(:AUTHENTICATE, access_token: token)
+      AuthenticateResponse.new(response['data'])
     end
 
     # Switches the client's view to a particular text channel.
