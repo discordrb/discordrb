@@ -317,6 +317,18 @@ module Discordrb::RPC
 
   # A response to a RPC AUTHENTICATE request.
   class AuthenticateResponse
+    # @return [RPCApplication] the application that authenticated with the client.
+    attr_reader :application
+
+    # @return [Time] the time when the token associated with the request will expire.
+    attr_reader :expires
+
+    # @return [RPCUser] the user logged in on the client.
+    attr_reader :user
+
+    # @return [Array<String>] the OAuth2 scopes the token is authenticated to use.
+    attr_reader :scopes
+
     # @!visibility private
     def initialize(data)
       @application = RPCApplication.new(data['application'])
