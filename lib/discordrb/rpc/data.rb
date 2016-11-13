@@ -261,6 +261,9 @@ module Discordrb::RPC
     # @return [Array<RPCMessage>] the last 50 messages on this channel, empty if not applicable.
     attr_reader :messages
 
+    # @return [Array<RPCVoiceUser>] the users in this voice channel, empty if not applicable.
+    attr_reader :voice_states
+
     # @!visibility private
     def initialize(data)
       @id = data['id'].to_i
