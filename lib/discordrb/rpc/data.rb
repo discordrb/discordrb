@@ -109,7 +109,7 @@ module Discordrb::RPC
     # @return [String] the message's content.
     attr_reader :content
 
-    # @return [ColourRGB] the colour the username shows up as on the client.
+    # @return [ColourRGB, nil] the colour the username shows up as on the client, or nil if it is the default colour.
     attr_reader :author_colour
 
     # @return [Time] the timestamp when this message was sent.
