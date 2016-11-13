@@ -314,4 +314,8 @@ module Discordrb::RPC
       Discordrb::API.app_icon_url(@id, @icon_id)
     end
   end
+
+  # A response to a RPC AUTHENTICATE request.
+  class AuthenticateResponse
+  end
 end
