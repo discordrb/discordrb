@@ -134,6 +134,9 @@ module Discordrb::RPC
     # @return [RPCUser] the user that sent this message.
     attr_reader :author
 
+    # @return [String, nil] the nickname the author has, if there is one.
+    attr_reader :nick
+
     # @!visibility private
     def initialize(data)
       @id = data['id'].to_i
