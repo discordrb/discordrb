@@ -1624,7 +1624,7 @@ module Discordrb
     # @return [Array<Embed>] the embed objects contained in this message.
     attr_reader :embeds
 
-    # @return [Array<Reaction>] the reaction objects attached to this message
+    # @return [Hash<String, Reaction>] the reaction objects attached to this message keyed by the name of the reaction
     attr_reader :reactions
 
     # @return [true, false] whether the message used Text-To-Speech (TTS) or not.
@@ -1689,6 +1689,14 @@ module Discordrb
 
       @emoji = []
 
+      @reactions = {}
+
+      if data['reactions']
+        data['reactions'].each do |element|
+          @reactions[element['emoji']['name']] = Reaction.new(element)
+        end
+      end
+
       @mentions = []
 
       if data['mentions']
@@ -1713,8 +1721,6 @@ module Discordrb
 
       @embeds = []
       @embeds = data['embeds'].map { |e| Embed.new(e, self) } if data['embeds']
-
-      @reactions = data['reactions'].map { |e| Reaction.new(e) } if data['reactions']
     end
 
     # Replies to this message with the specified content.
