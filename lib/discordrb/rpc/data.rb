@@ -108,6 +108,9 @@ module Discordrb::RPC
     # @return [String] the message's content.
     attr_reader :content
 
+    # @return [ColourRGB] the colour the username shows up as on the client.
+    attr_reader :author_colour
+
     # @!visibility private
     def initialize(data)
       @id = data['id'].to_i
