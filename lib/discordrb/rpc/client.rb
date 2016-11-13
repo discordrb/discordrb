@@ -32,7 +32,8 @@ module Discordrb::RPC
     end
 
     def select_text_channel(id)
-      send_frame(:SELECT_TEXT_CHANNEL, channel_id: id.to_s)
+      response = send_frame(:SELECT_TEXT_CHANNEL, channel_id: id.to_s)
+      RPCChannel.new(response['data'])
     end
 
     def select_voice_channel(id)
