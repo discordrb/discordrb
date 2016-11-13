@@ -243,6 +243,9 @@ module Discordrb::RPC
     # @return [String] the channel's topic, empty if not applicable.
     attr_reader :topic
 
+    # @return [Integer] the channel's numeric type.
+    attr_reader :type
+
     # @!visibility private
     def initialize(data)
       @id = data['id'].to_i
