@@ -122,6 +122,9 @@ module Discordrb::RPC
     # @return [Array<Integer>] the IDs of users that have been mentioned.
     attr_reader :mentions
 
+    # @return [Array<Integer>] the IDs of roles that have been mentioned.
+    attr_reader :mention_roles
+
     # @!visibility private
     def initialize(data)
       @id = data['id'].to_i
