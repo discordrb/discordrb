@@ -255,6 +255,9 @@ module Discordrb::RPC
     # @return [Integer, nil] the channel's server ID, `nil` if not applicable.
     attr_reader :server_id
 
+    # @return [Integer] the channel's position on the server, 0 if not applicable.
+    attr_reader :position
+
     # @!visibility private
     def initialize(data)
       @id = data['id'].to_i
