@@ -131,6 +131,9 @@ module Discordrb::RPC
     # @return [Array<Attachment>] this message's attachments.
     attr_reader :attachments
 
+    # @return [RPCUser] the user that sent this message.
+    attr_reader :author
+
     # @!visibility private
     def initialize(data)
       @id = data['id'].to_i
