@@ -111,6 +111,9 @@ module Discordrb::RPC
     # @return [ColourRGB] the colour the username shows up as on the client.
     attr_reader :author_colour
 
+    # @return [Time] the timestamp when this message was sent.
+    attr_reader :timestamp
+
     # @!visibility private
     def initialize(data)
       @id = data['id'].to_i
