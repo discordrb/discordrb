@@ -6,6 +6,7 @@ module Discordrb::Events
   # Event raised when a user starts typing
   class TypingEvent < Event
     include Respondable
+
     # @return [Channel] the channel on which a user started typing.
     attr_reader :channel
 
