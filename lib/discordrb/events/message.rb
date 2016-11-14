@@ -62,6 +62,7 @@ module Discordrb::Events
   # Event raised when a text message is sent to a channel
   class MessageEvent < Event
     include Respondable
+
     # @return [Message] the message which triggered this event.
     attr_reader :message
 
@@ -234,6 +235,7 @@ module Discordrb::Events
   # A subset of MessageEvent that only contains a message ID and a channel
   class MessageIDEvent < Event
     include Respondable
+
     # @return [Integer] the ID associated with this event
     attr_reader :id
 
