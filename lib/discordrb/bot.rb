@@ -94,7 +94,7 @@ module Discordrb
     # @param ignore_bots [true, false] Whether the bot should ignore bot accounts or not. Default is false.
     def initialize(
         log_mode: :normal,
-        token: nil, client_id: nil, application_id: nil,
+        token: nil, client_id: nil,
         type: nil, name: '', fancy_log: false, suppress_ready: false, parse_self: false,
         shard_id: nil, num_shards: nil, redact_token: true, ignore_bots: false
     )
