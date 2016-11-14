@@ -109,10 +109,6 @@ module Discordrb
 
       @should_parse_self = parse_self
 
-      if application_id
-        raise ArgumentError, 'Starting with discordrb 3.0.0, the application_id parameter has been renamed to client_id! Make sure to change this in your bot. This check will be removed in 3.1.0.'
-      end
-
       @client_id = client_id
 
       @type = type || :bot
