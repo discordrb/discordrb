@@ -152,7 +152,7 @@ module Discordrb::Commands
           result
         else
           available_commands = @commands.values.reject do |c|
-            !c.attributes[:help_available] || !required_roles?(event.author, c.attributes[:required_roles]) || !required_permissions?(event.author, c.attributes[:required_permissions], event.channel)
+            !c.attributes[:help_available] || !required_roles?(event.user, c.attributes[:required_roles]) || !required_permissions?(event.user, c.attributes[:required_permissions], event.channel)
           end
           case available_commands.length
           when 0..5
