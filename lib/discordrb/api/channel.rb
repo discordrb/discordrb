@@ -76,7 +76,7 @@ module Discordrb::API::Channel
       Authorization: token,
       content_type: :json
     )
-  rescue RestClient::InternalServerError
+  rescue RestClient::BadRequest
     raise Discordrb::Errors::MessageTooLong, "Message over the character limit (#{message.length} > 2000)"
   end
 
