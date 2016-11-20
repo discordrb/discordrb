@@ -140,7 +140,7 @@ module Discordrb::API::Channel
   def create_reaction(token, channel_id, message_id, emoji)
     emoji = URI.encode(emoji) unless emoji.ascii_only?
     Discordrb::API.request(
-      :channels_cid_messages_mid,
+      :channels_cid_messages_mid_reactions_emoji_me,
       channel_id,
       :put,
       "#{Discordrb::API.api_base}/channels/#{channel_id}/messages/#{message_id}/reactions/#{emoji}/@me",
@@ -155,7 +155,7 @@ module Discordrb::API::Channel
   def delete_own_reaction(token, channel_id, message_id, emoji)
     emoji = URI.encode(emoji) unless emoji.ascii_only?
     Discordrb::API.request(
-      :channels_cid_messages_mid,
+      :channels_cid_messages_mid_reactions_emoji_me,
       channel_id,
       :delete,
       "#{Discordrb::API.api_base}/channels/#{channel_id}/messages/#{message_id}/reactions/#{emoji}/@me",
@@ -168,7 +168,7 @@ module Discordrb::API::Channel
   def delete_user_reaction(token, channel_id, message_id, emoji, user_id)
     emoji = URI.encode(emoji) unless emoji.ascii_only?
     Discordrb::API.request(
-      :channels_cid_messages_mid,
+      :channels_cid_messages_mid_reactions_emoji_uid,
       channel_id,
       :delete,
       "#{Discordrb::API.api_base}/channels/#{channel_id}/messages/#{message_id}/reactions/#{emoji}/#{user_id}",
@@ -181,7 +181,7 @@ module Discordrb::API::Channel
   def get_reactions(token, channel_id, message_id, emoji)
     emoji = URI.encode(emoji) unless emoji.ascii_only?
     Discordrb::API.request(
-      :channels_cid_messages_mid,
+      :channels_cid_messages_mid_reactions_emoji,
       channel_id,
       :get,
       "#{Discordrb::API.api_base}/channels/#{channel_id}/messages/#{message_id}/reactions/#{emoji}",
@@ -193,7 +193,7 @@ module Discordrb::API::Channel
   # https://discordapp.com/developers/docs/resources/channel#delete-all-reactions
   def delete_all_reactions(token, channel_id, message_id)
     Discordrb::API.request(
-      :channels_cid_messages_mid,
+      :channels_cid_messages_mid_reactions,
       channel_id,
       :delete,
       "#{Discordrb::API.api_base}/channels/#{channel_id}/messages/#{message_id}/reactions",
