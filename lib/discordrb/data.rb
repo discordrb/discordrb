@@ -1031,6 +1031,7 @@ module Discordrb
     # `allow` and `deny` properties which are {Permissions} objects respectively.
     # @return [Hash<Integer => OpenStruct>] the channel's permission overwrites
     attr_reader :permission_overwrites
+    alias_method :overwrites, :permission_overwrites
 
     # @return [true, false] whether or not this channel is a PM or group channel.
     def private?
@@ -1228,6 +1229,14 @@ module Discordrb
              end
 
       API::Channel.update_permission(@bot.token, @id, thing.id, allow_bits, deny_bits, type)
+    end
+
+    # Deletes a permission overwrite for this channel
+    # @param target [Member, User, Role, Profile, Recipient, #resolve_id] What permission overwrite to delete
+    def delete_overwrite(target)
+      raise 'Tried deleting a overwrite for an invalid target' unless target.is_a?(Member) || target.is_a?(User) || target.is_a?(Role) || target.is_a?(Profile) || target.is_a?(Recipient) || target.respond_to?(:resolve_id)
+
+      API::Channel.delete_permission(@bot.token, @id, target.resolve_id)
     end
 
     # Updates the cached data from another channel.
