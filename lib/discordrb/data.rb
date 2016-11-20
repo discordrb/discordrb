@@ -1132,7 +1132,7 @@ module Discordrb
     # @param timeout [Float] The amount of time in seconds after which the message sent will be deleted.
     # @param tts [true, false] Whether or not this message should be sent using Discord text-to-speech.
     def send_temporary_message(content, timeout, tts = false)
-      @bot.send_temporary_message(@id, content, timeout, tts, @server && @server.id)
+      @bot.send_temporary_message(@id, content, timeout, tts)
     end
 
     # Sends multiple messages to a channel
