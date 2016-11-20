@@ -69,6 +69,14 @@ module Discordrb::RPC
       RPCServer.new(response['data'])
     end
 
+    # Obtains detailed information on a specific channel the controlled user is
+    # in.
+    # @return [RPCChannel] the requested channel.
+    def channel(id)
+      response = send_frame(:GET_CHANNEL, channel_id: id.to_s)
+      RPCChannel.new(response['data'])
+    end
+
     private
 
     def send_frame(command, payload, event = nil)
