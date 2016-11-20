@@ -234,6 +234,24 @@ module Discordrb::RPC
     end
   end
 
+  # Represents a subset of a channel as sent over RPC.
+  class RPCLightChannel
+    include Discordrb::IDObject
+
+    # @return [String] the channel's name (without a prefixed #), empty if not applicable.
+    attr_reader :name
+
+    # @return [Integer] the channel's numeric type.
+    attr_reader :type
+
+    # @!visibility private
+    def initialize(data)
+      @id = data['id'].to_i
+      @name = data['name']
+      @type = data['type']
+    end
+  end
+
   # Represents a channel as sent over RPC.
   class RPCChannel
     include Discordrb::IDObject
