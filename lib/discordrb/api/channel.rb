@@ -66,13 +66,13 @@ module Discordrb::API::Channel
 
   # Send a message to a channel
   # https://discordapp.com/developers/docs/resources/channel#create-message
-  def create_message(token, channel_id, message, mentions = [], tts = false) # send message
+  def create_message(token, channel_id, message, mentions = [], tts = false, embed = nil) # send message
     Discordrb::API.request(
       :channels_cid_messages_mid,
       channel_id,
       :post,
       "#{Discordrb::API.api_base}/channels/#{channel_id}/messages",
-      { content: message, mentions: mentions, tts: tts }.to_json,
+      { content: message, mentions: mentions, tts: tts, embed: embed }.to_json,
       Authorization: token,
       content_type: :json
     )
