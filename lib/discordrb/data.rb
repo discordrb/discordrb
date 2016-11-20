@@ -1151,7 +1151,7 @@ module Discordrb
     # @return [Message] The resulting message.
     def send_embed(message = '', embed = nil)
       embed ||= Discordrb::Webhooks::Embed.new
-      yield(embed)
+      yield(embed) if block_given?
       send_message(message, false, embed)
     end
 
