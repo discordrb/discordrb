@@ -66,7 +66,7 @@ module Discordrb::API::Channel
 
   # Send a message to a channel
   # https://discordapp.com/developers/docs/resources/channel#create-message
-  def create_message(token, channel_id, message, mentions = [], tts = false, _server_id = nil) # send message
+  def create_message(token, channel_id, message, mentions = [], tts = false) # send message
     Discordrb::API.request(
       :channels_cid_messages_mid,
       channel_id,
