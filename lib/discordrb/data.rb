@@ -1138,6 +1138,23 @@ module Discordrb
       @bot.send_temporary_message(@id, content, timeout, tts, embed)
     end
 
+    # Convenience method to send a message with an embed.
+    # @example Send a message with an embed
+    #   channel.send_embed do |embed|
+    #     embed.title = 'The Ruby logo'
+    #     embed.image = Discordrb::Webhooks::EmbedImage.new(url: 'https://www.ruby-lang.org/images/header-ruby-logo.png')
+    #   end
+    # @param message [String] The message that should be sent along with the embed. If this is the empty string, only the embed will be shown.
+    # @param embed [Discordrb::Webhooks::Embed, nil] The embed to start the building process with, or nil if one should be created anew.
+    # @yield [embed] Yields the embed to allow for easy building inside a block.
+    # @yieldparam embed [Discordrb::Webhooks::Embed] The embed from the parameters, or a new one.
+    # @return [Message] The resulting message.
+    def send_embed(message = '', embed = nil)
+      embed ||= Discordrb::Webhooks::Embed.new
+      yield(embed)
+      send_message(message, false, embed)
+    end
+
     # Sends multiple messages to a channel
     # @param content [Array<String>] The messages to send.
     def send_multiple(content)
