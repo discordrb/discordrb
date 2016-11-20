@@ -97,13 +97,13 @@ module Discordrb::API::Channel
 
   # Edit a message
   # https://discordapp.com/developers/docs/resources/channel#edit-message
-  def edit_message(token, channel_id, message_id, message, mentions = [])
+  def edit_message(token, channel_id, message_id, message, mentions = [], embed = nil)
     Discordrb::API.request(
       :channels_cid_messages_mid,
       channel_id,
       :patch,
       "#{Discordrb::API.api_base}/channels/#{channel_id}/messages/#{message_id}",
-      { content: message, mentions: mentions }.to_json,
+      { content: message, mentions: mentions, embed: embed }.to_json,
       Authorization: token,
       content_type: :json
     )
