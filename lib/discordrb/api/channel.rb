@@ -133,6 +133,72 @@ module Discordrb::API::Channel
     )
   end
 
+  # Create a reaction on a message using this client
+  # https://discordapp.com/developers/docs/resources/channel#create-reaction
+  def create_reaction(token, channel_id, message_id, emoji)
+    emoji = URI.encode(emoji) unless emoji.ascii_only?
+    Discordrb::API.request(
+      :channels_cid_messages_mid,
+      channel_id,
+      :put,
+      "#{Discordrb::API.api_base}/channels/#{channel_id}/messages/#{message_id}/reactions/#{emoji}/@me",
+      nil,
+      Authorization: token,
+      content_type: :json
+    )
+  end
+
+  # Delete this client's own reaction on a message
+  # https://discordapp.com/developers/docs/resources/channel#delete-own-reaction
+  def delete_own_reaction(token, channel_id, message_id, emoji)
+    emoji = URI.encode(emoji) unless emoji.ascii_only?
+    Discordrb::API.request(
+      :channels_cid_messages_mid,
+      channel_id,
+      :delete,
+      "#{Discordrb::API.api_base}/channels/#{channel_id}/messages/#{message_id}/reactions/#{emoji}/@me",
+      Authorization: token
+    )
+  end
+
+  # Delete another client's reaction on a message
+  # https://discordapp.com/developers/docs/resources/channel#delete-user-reaction
+  def delete_user_reaction(token, channel_id, message_id, emoji, user_id)
+    emoji = URI.encode(emoji) unless emoji.ascii_only?
+    Discordrb::API.request(
+      :channels_cid_messages_mid,
+      channel_id,
+      :delete,
+      "#{Discordrb::API.api_base}/channels/#{channel_id}/messages/#{message_id}/reactions/#{emoji}/#{user_id}",
+      Authorization: token
+    )
+  end
+
+  # Get a list of clients who reacted with a specific reaction on a message
+  # https://discordapp.com/developers/docs/resources/channel#get-reactions
+  def get_reactions(token, channel_id, message_id, emoji)
+    emoji = URI.encode(emoji) unless emoji.ascii_only?
+    Discordrb::API.request(
+      :channels_cid_messages_mid,
+      channel_id,
+      :get,
+      "#{Discordrb::API.api_base}/channels/#{channel_id}/messages/#{message_id}/reactions/#{emoji}",
+      Authorization: token
+    )
+  end
+
+  # Deletes all reactions on a message from all clients
+  # https://discordapp.com/developers/docs/resources/channel#delete-all-reactions
+  def delete_all_reactions(token, channel_id, message_id)
+    Discordrb::API.request(
+      :channels_cid_messages_mid,
+      channel_id,
+      :delete,
+      "#{Discordrb::API.api_base}/channels/#{channel_id}/messages/#{message_id}/reactions",
+      Authorization: token
+    )
+  end
+
   # Update a channels permission for a role or member
   # https://discordapp.com/developers/docs/resources/channel#edit-channel-permissions
   def update_permission(token, channel_id, overwrite_id, allow, deny, type)
