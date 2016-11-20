@@ -1246,6 +1246,10 @@ module Discordrb
       @topic = other.topic
       @name = other.name
       @position = other.position
+      @topic = other.topic
+      @recipients = other.recipients
+      @bitrate = other.bitrate
+      @user_limit = other.user_limit
       @permission_overwrites = other.permission_overwrites
     end
 
