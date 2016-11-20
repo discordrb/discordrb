@@ -76,8 +76,10 @@ module Discordrb::API::Channel
       Authorization: token,
       content_type: :json
     )
-  rescue RestClient::BadRequest
-    raise Discordrb::Errors::MessageTooLong, "Message over the character limit (#{message.length} > 2000)"
+  rescue RestClient::BadRequest => e
+    parsed = JSON.parse(e.response.body)
+    raise Discordrb::Errors::MessageTooLong, "Message over the character limit (#{message.length} > 2000)" if parsed['content'] && parsed['content'].is_a?(Array) && parsed['content'].first == 'Must be 2000 or less characters long.'
+    raise
   end
 
   # Send a file as a message to a channel
