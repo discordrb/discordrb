@@ -350,7 +350,7 @@ module Discordrb
       channel_id = channel_id.resolve_id
       debug("Sending message to #{channel_id} with content '#{content}'")
 
-      response = API::Channel.create_message(token, channel_id, content, [], tts, embed)
+      response = API::Channel.create_message(token, channel_id, content, [], tts, embed.to_hash)
       Message.new(JSON.parse(response), self)
     end
 
