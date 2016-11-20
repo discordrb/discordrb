@@ -359,10 +359,9 @@ module Discordrb
     # @param content [String] The text that should be sent as a message. It is limited to 2000 characters (Discord imposed).
     # @param timeout [Float] The amount of time in seconds after which the message sent will be deleted.
     # @param tts [true, false] Whether or not this message should be sent using Discord text-to-speech.
-    # @param server_id [Integer] The ID that identifies the server to send something to.
-    def send_temporary_message(channel_id, content, timeout, tts = false, server_id = nil)
+    def send_temporary_message(channel_id, content, timeout, tts = false)
       Thread.new do
-        message = send_message(channel_id, content, tts, server_id)
+        message = send_message(channel_id, content, tts)
 
         sleep(timeout)
 
