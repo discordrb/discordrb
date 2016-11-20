@@ -1120,9 +1120,10 @@ module Discordrb
     # Sends a message to this channel.
     # @param content [String] The content to send. Should not be longer than 2000 characters or it will result in an error.
     # @param tts [true, false] Whether or not this message should be sent using Discord text-to-speech.
+    # @param embed [Hash, Discordrb::Webhooks::Embed, nil] The rich embed to append to this message.
     # @return [Message] the message that was sent.
-    def send_message(content, tts = false)
-      @bot.send_message(@id, content, tts)
+    def send_message(content, tts = false, embed = nil)
+      @bot.send_message(@id, content, tts, embed)
     end
 
     alias_method :send, :send_message
@@ -1131,8 +1132,9 @@ module Discordrb
     # @param content [String] The content to send. Should not be longer than 2000 characters or it will result in an error.
     # @param timeout [Float] The amount of time in seconds after which the message sent will be deleted.
     # @param tts [true, false] Whether or not this message should be sent using Discord text-to-speech.
-    def send_temporary_message(content, timeout, tts = false)
-      @bot.send_temporary_message(@id, content, timeout, tts)
+    # @param embed [Hash, Discordrb::Webhooks::Embed, nil] The rich embed to append to this message.
+    def send_temporary_message(content, timeout, tts = false, embed = nil)
+      @bot.send_temporary_message(@id, content, timeout, tts, embed)
     end
 
     # Sends multiple messages to a channel
