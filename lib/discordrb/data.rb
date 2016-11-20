@@ -1245,6 +1245,7 @@ module Discordrb
     def update_from(other)
       @topic = other.topic
       @name = other.name
+      @position = other.position
       @permission_overwrites = other.permission_overwrites
     end
 
