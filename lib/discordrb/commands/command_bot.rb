@@ -151,7 +151,9 @@ module Discordrb::Commands
           end
           result
         else
-          available_commands = @commands.values.reject { |c| !c.attributes[:help_available] }
+          available_commands = @commands.values.reject do |c|
+            !c.attributes[:help_available] || !required_roles?(event.user, c.attributes[:required_roles]) || !required_permissions?(event.user, c.attributes[:required_permissions], event.channel)
+          end
           case available_commands.length
           when 0..5
             available_commands.reduce "**List of commands:**\n" do |memo, c|
