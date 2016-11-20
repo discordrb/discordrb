@@ -77,6 +77,14 @@ module Discordrb::RPC
       RPCChannel.new(response['data'])
     end
 
+    # Obtains a list of channels on a specific server.
+    # @param server_id [Integer] The server ID to list channels of.
+    # @return [Array<RPCLightChannel>] the requested channel list.
+    def channels(server_id)
+      response = send_frame(:GET_CHANNELS, guild_id: server_id.to_s)
+      response['data']['channels'].map { |e| RPCLightChannel.new(e) }
+    end
+
     private
 
     def send_frame(command, payload, event = nil)
