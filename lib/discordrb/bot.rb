@@ -94,7 +94,7 @@ module Discordrb
     # @param ignore_bots [true, false] Whether the bot should ignore bot accounts or not. Default is false.
     def initialize(
         log_mode: :normal,
-        token: nil, client_id: nil, application_id: nil,
+        token: nil, client_id: nil,
         type: nil, name: '', fancy_log: false, suppress_ready: false, parse_self: false,
         shard_id: nil, num_shards: nil, redact_token: true, ignore_bots: false
     )
@@ -108,10 +108,6 @@ module Discordrb
       LOGGER.token = token if redact_token
 
       @should_parse_self = parse_self
-
-      if application_id
-        raise ArgumentError, 'Starting with discordrb 3.0.0, the application_id parameter has been renamed to client_id! Make sure to change this in your bot. This check will be removed in 3.1.0.'
-      end
 
       @client_id = client_id
 
