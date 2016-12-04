@@ -42,6 +42,8 @@ Using [Bundler](http://bundler.io/#getting-started), you can add discordrb to yo
 
     gem 'discordrb'
 
+And then install via `bundle install`.
+
 ### Windows
 
 On Windows, to install discordrb, run this in a shell **(make sure you have the DevKit installed! See the [Dependencies](https://github.com/meew0/discordrb#dependencies) section)**:
