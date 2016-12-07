@@ -1947,9 +1947,10 @@ module Discordrb
     end
 
     # Deletes the emoji from the server. Requires manage_emojis.
-    # @return
+    # @return [Integer] emoji id deleted
     def delete
       @server.delete_emoji(@id)
+      @id
     end
 
     # @return [String] the layout to mention it (or have it used) in a message

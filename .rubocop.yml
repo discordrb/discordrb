@@ -66,3 +66,7 @@ Lint/Eval:
 
 EndOfLine:
   Enabled: false
+
+AllCops:
+  Exclude:
+    - 'doc/*'
