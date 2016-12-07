@@ -35,11 +35,11 @@ module Discordrb::Events
     end
   end
 
-  # Event handler for ChannelCreateEvent
-  class ChannelCreateEventHandler < EventHandler
+  # Helper handler for ChannelEventHandlers
+  class ChannelEventHandler < EventHandler
     def matches?(event)
       # Check for the proper event type
-      return false unless event.is_a? ChannelCreateEvent
+      return false unless event.is_a? @event_class
 
       [
         matches_all(@attributes[:type], event.type) do |a, e|
@@ -57,6 +57,14 @@ module Discordrb::Events
                end
         end
       ].reduce(true, &:&)
+    end
+  end
+
+  # Event handler for ChannelCreateEvent
+  class ChannelCreateEventHandler < ChannelEventHandler
+    def initialize(attributes, block)
+      super
+      @event_class = ChannelCreateEvent
     end
   end
 
@@ -99,26 +107,9 @@ module Discordrb::Events
 
   # Event handler for ChannelDeleteEvent
   class ChannelDeleteEventHandler < EventHandler
-    def matches?(event)
-      # Check for the proper event type
-      return false unless event.is_a? ChannelDeleteEvent
-
-      [
-        matches_all(@attributes[:type], event.type) do |a, e|
-          a == if a.is_a? String
-                 e.name
-               else
-                 e
-               end
-        end,
-        matches_all(@attributes[:name], event.name) do |a, e|
-          a == if a.is_a? String
-                 e.to_s
-               else
-                 e
-               end
-        end
-      ].reduce(true, &:&)
+    def initialize(attributes, block)
+      super
+      @event_class = ChannelDeleteEvent
     end
   end
 
