@@ -59,17 +59,7 @@ module Discordrb
     # @param id [Integer] The user ID that should be resolved.
     # @return [User, nil] The user identified by the ID, or `nil` if it couldn't be found.
     def user(id)
-      id = id.resolve_id
-      return @users[id] if @users[id]
-
-      LOGGER.out("Resolving user #{id}")
-      begin
-        response = API::User.resolve(token, id)
-      rescue RestClient::ResourceNotFound
-        return nil
-      end
-      user = User.new(JSON.parse(response), self)
-      @users[id] = user
+      resolve_cache(id, @users, 'User')
     end
 
     # Gets a server by its ID.
@@ -77,17 +67,7 @@ module Discordrb
     # @param id [Integer] The server ID that should be resolved.
     # @return [Server, nil] The server identified by the ID, or `nil` if it couldn't be found.
     def server(id)
-      id = id.resolve_id
-      return @servers[id] if @servers[id]
-
-      LOGGER.out("Resolving server #{id}")
-      begin
-        response = API::Server.resolve(token, id)
-      rescue RestClient::ResourceNotFound
-        return nil
-      end
-      server = Server.new(JSON.parse(response), self)
-      @servers[id] = server
+      resolve_cache(id, @servers, 'Server')
     end
 
     # Gets a member by both IDs, or `Server` and user ID.
@@ -219,6 +199,22 @@ module Discordrb
     # @return [Array<User>] The array of users that were found. May be empty if none were found.
     def find_user(username)
       @users.values.find_all { |e| e.username == username }
+    end
+
+    private
+
+    #
+    def resolve_cache(id, cache, class_name)
+      id = id.resolve_id
+      return cache[id] if cache[id]
+
+      LOGGER.out("Resolving #{class_name.downcase} #{id}")
+      begin
+        response = "Discordrb::API::#{class_name}".constantize.resolve(token, id)
+      rescue RestClient::ResourceNotFound
+        return nil
+      end
+      cache[id] = "Discordrb::#{class_name}".constantize.new(JSON.parse(response), self)
     end
   end
 end
