@@ -82,7 +82,7 @@ module Discordrb
 
       return server.member(user_id) if server.member_cached?(user_id)
 
-      LOGGER.out("Resolving member #{server_id} on server #{user_id}")
+      LOGGER.out("Resolving member #{user_id} on server #{server_id}")
       begin
         response = API::Server.resolve_member(token, server_id, user_id)
       rescue RestClient::ResourceNotFound
