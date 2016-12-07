@@ -63,3 +63,6 @@ Style/NumericLiterals:
 Lint/Eval:
   Exclude:
     - examples/*
+
+EndOfLine:
+  Enabled: false
