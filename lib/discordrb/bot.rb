@@ -720,22 +720,23 @@ module Discordrb
 
     # Internal handler for CHANNEL_RECIPIENT_ADD
     def add_recipient(data)
-      channel_id = data['channel_id'].to_i
-      channel = self.channel(channel_id)
-
-      recipient_user = ensure_user(data['user'])
-      recipient = Recipient.new(recipient_user, channel, self)
-      channel.add_recipient(recipient)
+      recipient = ensure_recipient(data)
+      recipient.channel.add_recipient(recipient)
     end
 
     # Internal handler for CHANNEL_RECIPIENT_REMOVE
     def remove_recipient(data)
+      recipient = ensure_recipient(data)
+      recipient.channel.remove_recipient(recipient)
+    end
+
+    # Internal helper for CHANNEL_RECIPIENT_*
+    def ensure_recipient(data)
       channel_id = data['channel_id'].to_i
       channel = self.channel(channel_id)
 
       recipient_user = ensure_user(data['user'])
-      recipient = Recipient.new(recipient_user, channel, self)
-      channel.remove_recipient(recipient)
+      Recipient.new(recipient_user, channel, self)
     end
 
     # Internal handler for GUILD_MEMBER_ADD
