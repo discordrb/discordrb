@@ -139,7 +139,7 @@ module Discordrb
     #   @return [String, nil] the game the user is currently playing, or `nil` if none is being played.
     attr_accessor :game
 
-    def initialize(data, bot)
+    def initialize(bot, data)
       @bot = bot
 
       @username = data['username']
@@ -643,8 +643,8 @@ module Discordrb
   # This class is a special variant of User that represents the bot's user profile (things like own username and the avatar).
   # It can be accessed using {Bot#profile}.
   class Profile < User
-    def initialize(data, bot)
-      super(data, bot)
+    def initialize(bot, data)
+      super(bot, data)
     end
 
     # Whether or not the user is the bot. The Profile can only ever be the bot user, so this always returns true.
@@ -966,7 +966,7 @@ module Discordrb
       @channel = InviteChannel.new(data['channel'], bot)
       @server = InviteServer.new(data['guild'], bot)
       @uses = data['uses']
-      @inviter = data['inviter'] ? (@bot.user(data['inviter']['id'].to_i) || User.new(data['inviter'], bot)) : nil
+      @inviter = data['inviter'] ? (@bot.user(data['inviter']['id'].to_i) || User.new(bot, data['inviter'])) : nil
       @temporary = data['temporary']
       @revoked = data['revoked']
 
@@ -1050,7 +1050,7 @@ module Discordrb
     end
 
     # @!visibility private
-    def initialize(data, bot, server = nil)
+    def initialize(bot, data, server = nil)
       @bot = bot
       # data is a sometimes a Hash and other times an array of Hashes, you only want the last one if it's an array
       data = data[-1] if data.is_a?(Array)
@@ -1078,11 +1078,7 @@ module Discordrb
         end
       else
         @name = data['name']
-        @server = if server
-                    server
-                  else
-                    bot.server(data['guild_id'].to_i)
-                  end
+        @server = server ? server : bot.server(data['guild_id'].to_i)
       end
 
       # Populate permission overwrites
@@ -1386,7 +1382,7 @@ module Discordrb
     def create_group(user_ids)
       raise 'Attempted to create group channel on a non-pm channel!' unless pm?
       response = API::Channel.create_group(@bot.token, @id, user_ids.shift)
-      channel = Channel.new(JSON.parse(response), @bot)
+      channel = Channel.new(@bot, JSON.parse(response))
       channel.add_group_users(user_ids)
     end
 
@@ -1702,7 +1698,7 @@ module Discordrb
                     # This is a webhook user! It would be pointless to try to resolve a member here, so we just create
                     # a User and return that instead.
                     Discordrb::LOGGER.debug("Webhook user: #{data['author']['id']}")
-                    User.new(data['author'], @bot)
+                    User.new(@bot, data['author'])
                   elsif @channel.private?
                     # Turn the message user into a recipient - we can't use the channel recipient
                     # directly because the bot may also send messages to the channel
@@ -1863,7 +1859,7 @@ module Discordrb
     def reacted_with(reaction)
       reaction = reaction.to_reaction if reaction.respond_to?(:to_reaction)
       response = JSON.parse(API::Channel.get_reactions(@bot.token, @channel.id, @id, reaction))
-      response.map { |d| User.new(d, @bot) }
+      response.map { |d| User.new(@bot, d) }
     end
 
     # Deletes a reaction made by a user on this message
@@ -2169,7 +2165,7 @@ module Discordrb
     attr_reader :voice_states
 
     # @!visibility private
-    def initialize(data, bot, exists = true)
+    def initialize(bot, data, exists = true)
       @bot = bot
       @owner_id = data['owner_id'].to_i
       @id = data['id'].to_i
@@ -2402,7 +2398,7 @@ module Discordrb
     def create_channel(name, type = 0)
       raise ArgumentError, 'Channel type must be either 0 (text) or 2 (voice)!' unless [0, 2].include?(type)
       response = API::Server.create_channel(@bot.token, @id, name, type)
-      Channel.new(JSON.parse(response), @bot)
+      Channel.new(@bot, JSON.parse(response))
     end
 
     # Creates a role on this server which can then be modified. It will be initialized (on Discord's side)
@@ -2419,7 +2415,7 @@ module Discordrb
     # @return [Array<User>] a list of banned users on this server.
     def bans
       users = JSON.parse(API::Server.bans(@bot.token, @id))
-      users.map { |e| User.new(e['user'], @bot) }
+      users.map { |e| User.new(@bot, e['user']) }
     end
 
     # Bans a user from this server.

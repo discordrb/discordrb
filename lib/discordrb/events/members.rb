@@ -80,7 +80,7 @@ module Discordrb::Events
   class ServerMemberDeleteEvent < ServerMemberEvent
     # Overide init_user to account for the deleted user on the server
     def init_user(data, bot)
-      @user = Discordrb::User.new(data['user'], bot)
+      @user = Discordrb::User.new(bot, data['user'])
     end
   end
 

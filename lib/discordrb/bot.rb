@@ -680,7 +680,7 @@ module Discordrb
 
     # Internal handler for CHANNEL_CREATE
     def create_channel(data)
-      channel = Channel.new(data, self)
+      channel = Channel.new(self, data)
       server = channel.server
 
       # Handle normal and private channels separately
@@ -696,7 +696,7 @@ module Discordrb
 
     # Internal handler for CHANNEL_UPDATE
     def update_channel(data)
-      channel = Channel.new(data, self)
+      channel = Channel.new(self, data)
       old_channel = @channels[channel.id]
       return unless old_channel
       old_channel.update_from(channel)
@@ -704,7 +704,7 @@ module Discordrb
 
     # Internal handler for CHANNEL_DELETE
     def delete_channel(data)
-      channel = Channel.new(data, self)
+      channel = Channel.new(self, data)
       server = channel.server
 
       # Handle normal and private channels separately
@@ -866,7 +866,7 @@ module Discordrb
         # replaced.
         init_cache
 
-        @profile = Profile.new(data['user'], self)
+        @profile = Profile.new(self, data['user'])
 
         # Initialize servers
         @servers = {}

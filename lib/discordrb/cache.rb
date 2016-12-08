@@ -43,7 +43,7 @@ module Discordrb
         rescue RestClient::ResourceNotFound
           return nil
         end
-        channel = Channel.new(JSON.parse(response), self, server)
+        channel = Channel.new(self, JSON.parse(response), server)
         @channels[id] = channel
       rescue Discordrb::Errors::NoPermission
         debug "Tried to get access to restricted channel #{id}, blacklisting it"
@@ -102,7 +102,7 @@ module Discordrb
       return @pm_channels[id] if @pm_channels[id]
       debug("Creating pm channel with user id #{id}")
       response = API::User.create_pm(token, id)
-      channel = Channel.new(JSON.parse(response), self)
+      channel = Channel.new(self, JSON.parse(response))
       @pm_channels[id] = channel
     end
 
@@ -207,11 +207,7 @@ module Discordrb
     def ensure_cache(cache, cache_class, *data)
       id = data[0]['id'].to_i
       return cache[id] if cache.include?(id)
-      cache[id] = if cache_class == Channel
-                    cache_class.new(data[0], self, data[1])
-                  else
-                    cache_class.new(data[0], self)
-                  end
+      cache[id] = cache_class.new(self, *data)
     end
   end
 end
