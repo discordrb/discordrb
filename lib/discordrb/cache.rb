@@ -112,22 +112,14 @@ module Discordrb
     # @param data [Hash] A data hash representing a user.
     # @return [User] the user represented by the data hash.
     def ensure_user(data)
-      if @users.include?(data['id'].to_i)
-        @users[data['id'].to_i]
-      else
-        @users[data['id'].to_i] = User.new(data, self)
-      end
+      ensure_cache(@users, User, data)
     end
 
     # Ensures a given server object is cached and if not, cache it from the given data hash.
     # @param data [Hash] A data hash representing a server.
     # @return [Server] the server represented by the data hash.
     def ensure_server(data)
-      if @servers.include?(data['id'].to_i)
-        @servers[data['id'].to_i]
-      else
-        @servers[data['id'].to_i] = Server.new(data, self)
-      end
+      ensure_cache(@servers, Server, data)
     end
 
     # Ensures a given channel object is cached and if not, cache it from the given data hash.
@@ -135,11 +127,7 @@ module Discordrb
     # @param server [Server, nil] The server the channel is on, if known.
     # @return [Channel] the channel represented by the data hash.
     def ensure_channel(data, server = nil)
-      if @channels.include?(data['id'].to_i)
-        @channels[data['id'].to_i]
-      else
-        @channels[data['id'].to_i] = Channel.new(data, self, server)
-      end
+      ensure_cache(@channels, Channel, data, server)
     end
 
     # Requests member chunks for a given server ID.
@@ -203,7 +191,6 @@ module Discordrb
 
     private
 
-    #
     def resolve_cache(id, cache, class_name)
       id = id.resolve_id
       return cache[id] if cache[id]
@@ -215,6 +202,16 @@ module Discordrb
         return nil
       end
       cache[id] = "Discordrb::#{class_name}".constantize.new(JSON.parse(response), self)
+    end
+
+    def ensure_cache(cache, cache_class, *data)
+      id = data[0]['id'].to_i
+      return cache[id] if cache.include?(id)
+      cache[id] = if cache_class == Channel
+                    cache_class.new(data[0], self, data[1])
+                  else
+                    cache_class.new(data[0], self)
+                  end
     end
   end
 end
