@@ -1531,15 +1531,15 @@ module Discordrb
     end
   end
 
-  # An Embed provider for the embed object
-  class EmbedProvider
+  # An Embed mixin helper class
+  class EmbedIdentity
     # @return [Embed] the embed object this is based on.
     attr_reader :embed
 
-    # @return [String] the provider's name.
+    # @return [String] the name.
     attr_reader :name
 
-    # @return [String, nil] the URL of the provider. `nil` is there is no URL
+    # @return [String, nil] the URL. `nil` if there is no URL.
     attr_reader :url
 
     # @!visibility private
@@ -1551,23 +1551,22 @@ module Discordrb
     end
   end
 
+  # An Embed provider for the embed object
+  class EmbedProvider < EmbedIdentity; end
+
   # An Embed author for the embed object
-  class EmbedAuthor
-    # @return [Embed] the embed object this is based on.
-    attr_reader :embed
+  class EmbedAuthor < EmbedIdentity
+    # @return [String, nil] the URL of the author icon. `nil` if there is no URL.
+    attr_reader :icon_url
 
-    # @return [String] the author's name.
-    attr_reader :name
-
-    # @return [String, nil] the URL of the author's website. `nil` is there is no URL
-    attr_reader :url
+    # @return [String, nil] the proxy URL of the author icon. `nil` if there is no URL.
+    attr_reader :proxy_icon_url
 
     # @!visibility private
     def initialize(data, embed)
-      @embed = embed
-
-      @name = data['name']
-      @url = data['url']
+      super(data, embed)
+      @icon_url = data['icon_url']
+      @proxy_icon_url = data['proxy_icon_url']
     end
   end
 
@@ -1582,7 +1581,7 @@ module Discordrb
     attr_reader :url
 
     # @return [String] the attachment's proxy URL - I'm not sure what exactly this does, but I think it has something to
-    #   do with CDNs
+    #   do with CDNs.
     attr_reader :proxy_url
 
     # @return [String] the attachment's filename.
