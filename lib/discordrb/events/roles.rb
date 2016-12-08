@@ -23,19 +23,20 @@ module Discordrb::Events
     end
   end
 
+  # Event helper handler for Server Role Events
   class ServerRoleEventHandler < EventHandler
     def matches?(event)
       # Check for the proper event type
       return false unless event.is_a? @event_class
 
       [
-          matches_all(@attributes[:name], event.name) do |a, e|
-            a == if a.is_a? String
-                   e.to_s
-                 else
-                   e
-                 end
-          end
+        matches_all(@attributes[:name], event.name) do |a, e|
+          a == if a.is_a? String
+                 e.to_s
+               else
+                 e
+               end
+        end
       ].reduce(true, &:&)
     end
   end
