@@ -63,7 +63,7 @@ module Discordrb::Events
   # Event handler for ChannelCreateEvent
   class ChannelCreateEventHandler < ChannelEventHandler
     def initialize(attributes, block)
-      super
+      super(attributes, block)
       @event_class = ChannelCreateEvent
     end
   end
@@ -106,9 +106,9 @@ module Discordrb::Events
   end
 
   # Event handler for ChannelDeleteEvent
-  class ChannelDeleteEventHandler < EventHandler
+  class ChannelDeleteEventHandler < ChannelEventHandler
     def initialize(attributes, block)
-      super
+      super(attributes, block)
       @event_class = ChannelDeleteEvent
     end
   end
