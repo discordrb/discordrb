@@ -23,21 +23,28 @@ module Discordrb::Events
     end
   end
 
-  # Event handler for ServerRoleCreateEvent
-  class ServerRoleCreateEventHandler < EventHandler
+  class ServerRoleEventHandler < EventHandler
     def matches?(event)
       # Check for the proper event type
-      return false unless event.is_a? ServerRoleCreateEvent
+      return false unless event.is_a? @event_class
 
       [
-        matches_all(@attributes[:name], event.name) do |a, e|
-          a == if a.is_a? String
-                 e.to_s
-               else
-                 e
-               end
-        end
+          matches_all(@attributes[:name], event.name) do |a, e|
+            a == if a.is_a? String
+                   e.to_s
+                 else
+                   e
+                 end
+          end
       ].reduce(true, &:&)
+    end
+  end
+
+  # Event handler for ServerRoleCreateEvent
+  class ServerRoleCreateEventHandler < ServerRoleEventHandler
+    def initialize(attributes, block)
+      super(attributes, block)
+      @event_class = ServerRoleCreateEvent
     end
   end
 
@@ -63,19 +70,9 @@ module Discordrb::Events
 
   # EventHandler for ServerRoleDeleteEvent
   class ServerRoleDeleteEventHandler < EventHandler
-    def matches?(event)
-      # Check for the proper event type
-      return false unless event.is_a? ServerRoleDeleteEvent
-
-      [
-        matches_all(@attributes[:name], event.name) do |a, e|
-          a == if a.is_a? String
-                 e.to_s
-               else
-                 e
-               end
-        end
-      ].reduce(true, &:&)
+    def initialize(attributes, block)
+      super(attributes, block)
+      @event_class = ServerRoleDeleteEvent
     end
   end
 
