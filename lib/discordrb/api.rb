@@ -122,6 +122,12 @@ module Discordrb::API
     response
   end
 
+  # Generic API request helper
+  def generic_request(token, id, path, key, type, data = nil)
+    return request(key, id, type, "#{api_base}/#{path}", Authorization: token) if data.nil?
+    request(key, id, type, "#{api_base}/#{path}", data, Authorization: token, content_type: :json)
+  end
+
   # Make an icon URL from server and icon IDs
   def icon_url(server_id, icon_id)
     "#{api_base}/guilds/#{server_id}/icons/#{icon_id}.jpg"
@@ -168,28 +174,12 @@ module Discordrb::API
 
   # Create an OAuth application
   def create_oauth_application(token, name, redirect_uris)
-    request(
-      :oauth2_applications,
-      nil,
-      :post,
-      "#{api_base}/oauth2/applications",
-      { name: name, redirect_uris: redirect_uris }.to_json,
-      Authorization: token,
-      content_type: :json
-    )
+    generic_request(token, nil, 'oauth2/applications', :oauth2_applications, :post, { name: name, redirect_uris: redirect_uris }.to_json)
   end
 
   # Change an OAuth application's properties
   def update_oauth_application(token, name, redirect_uris, description = '', icon = nil)
-    request(
-      :oauth2_applications,
-      nil,
-      :put,
-      "#{api_base}/oauth2/applications",
-      { name: name, redirect_uris: redirect_uris, description: description, icon: icon }.to_json,
-      Authorization: token,
-      content_type: :json
-    )
+    generic_request(token, nil, 'oauth2/applications', :oauth2_applications, :put, { name: name, redirect_uris: redirect_uris, description: description, icon: icon }.to_json)
   end
 
   # Get the bot's OAuth application's information
@@ -219,26 +209,12 @@ module Discordrb::API
 
   # Get the gateway to be used
   def gateway(token)
-    request(
-      :gateway,
-      nil,
-      :get,
-      "#{api_base}/gateway",
-      Authorization: token
-    )
+    generic_request(token, nil, 'gateway', :gateway, :get)
   end
 
   # Validate a token (this request will fail if the token is invalid)
   def validate_token(token)
-    request(
-      :auth_login,
-      nil,
-      :post,
-      "#{api_base}/auth/login",
-      {}.to_json,
-      Authorization: token,
-      content_type: :json
-    )
+    generic_request(token, nil, 'auth/login', :auth_login, :post, '{}')
   end
 end
 
