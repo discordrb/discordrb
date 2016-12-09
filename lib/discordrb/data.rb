@@ -1452,7 +1452,7 @@ module Discordrb
     private
 
     def update_channel_data
-      API::Channel.update(@bot.token, @id, @name, @topic, @position, @bitrate, @user_limit)
+      API::Channel.update(@bot.token, @id, name: @name, topic: @topic, position: @position, bitrate: @bitrate, user_limit: @user_limit)
     end
   end
 
@@ -2549,11 +2549,11 @@ module Discordrb
 
     def update_server_data(new_data)
       API::Server.update(@bot.token, @id,
-                         new_data[:name] || @name,
-                         new_data[:region] || @region,
-                         new_data[:icon_id] || @icon_id,
-                         new_data[:afk_channel_id] || @afk_channel_id,
-                         new_data[:afk_timeout] || @afk_timeout)
+                         name: new_data[:name] || @name,
+                         region: new_data[:region] || @region,
+                         icon: new_data[:icon_id] || @icon_id,
+                         afk_channel_id: new_data[:afk_channel_id] || @afk_channel_id,
+                         afk_timeout: new_data[:afk_timeout] || @afk_timeout)
       update_data(new_data)
     end
 

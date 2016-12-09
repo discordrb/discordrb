@@ -19,10 +19,10 @@ module Discordrb::API::Server
 
   # Update a server
   # https://discordapp.com/developers/docs/resources/guild#modify-guild
-  def update(token, server_id, name, region, icon, afk_channel_id, afk_timeout)
+  def update(token, server_id, data)
     Discordrb::API.generic_request(
       token, server_id, "guilds/#{server_id}", :guilds_sid, :patch,
-      { name: name, region: region, icon: icon, afk_channel_id: afk_channel_id, afk_timeout: afk_timeout }.to_json
+      data.to_json
     )
   end
 

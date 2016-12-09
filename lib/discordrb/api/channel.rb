@@ -10,10 +10,10 @@ module Discordrb::API::Channel
 
   # Update a channel's data
   # https://discordapp.com/developers/docs/resources/channel#modify-channel
-  def update(token, channel_id, name, topic, position, bitrate, user_limit)
+  def update(token, channel_id, data)
     Discordrb::API.generic_request(
       token, channel_id, "channels/#{channel_id}", :channels_cid, :patch,
-      { name: name, position: position, topic: topic, bitrate: bitrate, user_limit: user_limit }.to_json
+      data.to_json
     )
   end
 
@@ -179,12 +179,12 @@ module Discordrb::API::Channel
 
   # Create an empty group channel.
   def create_empty_group(token, bot_user_id)
-    Discordrb::API.generic_request(token, bot_user_id, "users/#{bot_user_id}/channels", :users_uid_channels, :post, "{}")
+    Discordrb::API.generic_request(token, bot_user_id, "users/#{bot_user_id}/channels", :users_uid_channels, :post, '{}')
   end
 
   # Create a group channel.
   def create_group(token, channel_id, user_id)
-    Discordrb::API.put(token, channel_id, "channels/#{channel_id}/recipients/#{user_id}", :channels_cid_recipients_uid, "{}")
+    Discordrb::API.put(token, channel_id, "channels/#{channel_id}/recipients/#{user_id}", :channels_cid_recipients_uid, '{}')
   rescue RestClient::InternalServerError
     raise 'Attempted to add self as a new group channel recipient!'
   rescue RestClient::NoContent
@@ -195,7 +195,7 @@ module Discordrb::API::Channel
 
   # Add a user to a group channel.
   def add_group_user(token, channel_id, user_id)
-    Discordrb::API.generic_request(token, channel_id, "channels/#{channel_id}/recipients/#{user_id}", :channels_cid_recipients_uid, :put, "{}")
+    Discordrb::API.generic_request(token, channel_id, "channels/#{channel_id}/recipients/#{user_id}", :channels_cid_recipients_uid, :put, '{}')
   end
 
   # Remove a user from a group channel.

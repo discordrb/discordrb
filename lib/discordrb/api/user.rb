@@ -29,7 +29,7 @@ module Discordrb::API::User
   # https://discordapp.com/developers/docs/resources/user#modify-current-user
   def update_profile(token, email, password, new_username, avatar, new_password = nil)
     Discordrb::API.generic_request(
-      token, nil, "users/@me", :users_me, :patch,
+      token, nil, 'users/@me', :users_me, :patch,
       { avatar: avatar, email: email, new_password: new_password, password: password, username: new_username }.to_json
     )
   end
@@ -37,7 +37,7 @@ module Discordrb::API::User
   # Get the servers a user is connected to
   # https://discordapp.com/developers/docs/resources/user#get-current-user-guilds
   def servers(token)
-    Discordrb::API.generic_request(token, nil, "users/@me/guilds", :users_me_guilds, :get)
+    Discordrb::API.generic_request(token, nil, 'users/@me/guilds', :users_me_guilds, :get)
   end
 
   # Leave a server
