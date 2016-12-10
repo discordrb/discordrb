@@ -1132,12 +1132,12 @@ module Discordrb
         raise_event(event)
 
         create.each do |e|
-          event = ServerEmojiCreateEvent.new(server, nil, new_emoji_data[e], self)
+          event = ServerEmojiCreateEvent.new(server, new_emoji_data[e], self)
           raise_event(event)
         end
 
         delete.each do |e|
-          event = ServerEmojiDeleteEvent.new(server, old_emoji_data[e], nil, self)
+          event = ServerEmojiDeleteEvent.new(server, old_emoji_data[e], self)
           raise_event(event)
         end
 

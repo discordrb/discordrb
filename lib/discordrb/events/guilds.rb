@@ -70,6 +70,53 @@ module Discordrb::Events
 
   # Generic subclass for emoji events (create/update/delete)
   class ServerEmojiEvent < ServerEvent
+
+  end
+
+  # Emoji is created/deleted/updated
+  class ServerEmojiChangeEvent < Event
+    # @return [Server] the server in question.
+    attr_reader :server
+
+    # @return [Array<Emoji>] array of emojis.
+    attr_reader :emoji
+
+    def initialize(server, data, bot)
+      @bot = bot
+      @server = server
+      process_emoji(data)
+    end
+
+    def process_emoji(data)
+      @emoji = data['emojis'].map do |e|
+        @server.emoji(e.id)
+      end
+    end
+  end
+
+  #
+  class ServerEmojiCDEvent < ServerEvent
+    # @return [Server] the server in question.
+    attr_reader :server
+
+    # @return [Emoji] the emoji data.
+    attr_reader :emoji
+
+    def initialize(server, emoji, bot)
+      @bot = bot
+      @emoji = emoji
+      @server = server
+    end
+  end
+
+  # Emoji is created
+  class ServerEmojiCreateEvent < ServerEmojiCDEvent; end
+
+  # Emoji is deleted
+  class ServerEmojiDeleteEvent < ServerEmojiCDEvent; end
+
+  # Emoji is updated
+  class ServerEmojiUpdateEvent < ServerEmojiEvent
     # @return [Server] the server in question.
     attr_reader :server
 
@@ -87,82 +134,36 @@ module Discordrb::Events
     end
   end
 
-  # Emoji is created/deleted/updated
-  class ServerEmojiChangeEvent < Event
-    # @return [Server] the server in question.
-    attr_reader :server
-
-    # @return [Array<Emoji>] array of new emojis.
-    attr_reader :emoji
-
-    def initialize(server, data, bot)
-      @bot = bot
-      @server = server
-      process_emoji(data)
-    end
-
-    def process_emoji(data)
-      @emoji = data['emojis'].map do |e|
-        @server.emoji(e.id)
-      end
-    end
-  end
-
-  # Emoji is created
-  class ServerEmojiCreateEvent < ServerEmojiEvent; end
-
-  # Emoji is deleted
-  class ServerEmojiDeleteEvent < ServerEmojiEvent; end
-
-  # Emoji is updated
-  class ServerEmojiUpdateEvent < ServerEmojiEvent; end
-
   # Event handler for {ServerEmojiChangeEvent}
   class ServerEmojiChangeEventHandler < ServerEventHandler; end
 
-  # Event handler for {ServerEmojiCreateEvent}
-  class ServerEmojiCreateEventHandler < EventHandler
+  # Generic handler for emoji create and delete
+  class ServerEmojiCDEventHandler < ServerEventHandler
     def matches?(event)
       # Check for the proper event type
-      return false unless event.is_a? ServerEmojiCreateEvent
+      return false unless event.is_a? ServerEmojiCDEvent
 
       [
-        matches_all(@attributes[:server], event.server) do |a, e|
-          a == if a.is_a? String
-                 e.name
-               elsif a.is_a? Integer
-                 e.id
-               else
-                 e
-               end
-        end,
-        matches_all(@attributes[:id], event.emoji.id) { |a, e| a.resolve_id == e.resolve_id },
-        matches_all(@attributes[:name], event.emoji.name) { |a, e| a == e }
+          matches_all(@attributes[:server], event.server) do |a, e|
+            a == if a.is_a? String
+                   e.name
+                 elsif a.is_a? Integer
+                   e.id
+                 else
+                   e
+                 end
+          end,
+          matches_all(@attributes[:id], event.emoji.id) { |a, e| a.resolve_id == e.resolve_id },
+          matches_all(@attributes[:name], event.emoji.name) { |a, e| a == e }
       ].reduce(true, &:&)
     end
   end
+
+  # Event handler for {ServerEmojiCreateEvent}
+  class ServerEmojiCreateEventHandler < ServerEmojiCDEventHandler; end
 
   # Event handler for {ServerEmojiDeleteEvent}
-  class ServerEmojiDeleteEventHandler < EventHandler
-    def matches?(event)
-      # Check for the proper event type
-      return false unless event.is_a? ServerEmojiDeleteEvent
-
-      [
-        matches_all(@attributes[:server], event.server) do |a, e|
-          a == if a.is_a? String
-                 e.name
-               elsif a.is_a? Integer
-                 e.id
-               else
-                 e
-               end
-        end,
-        matches_all(@attributes[:id], event.old_emoji.id) { |a, e| a.resolve_id == e.resolve_id },
-        matches_all(@attributes[:name], event.old_emoji.name) { |a, e| a == e }
-      ].reduce(true, &:&)
-    end
-  end
+  class ServerEmojiDeleteEventHandler < ServerEmojiCDEventHandler; end
 
   # Event handler for {ServerEmojiUpdateEvent}
   class ServerEmojiUpdateEventHandler < EventHandler
