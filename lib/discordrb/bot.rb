@@ -1112,10 +1112,39 @@ module Discordrb
         event = ServerDeleteEvent.new(data, self)
         raise_event(event)
       when :GUILD_EMOJIS_UPDATE
+        server_id = data['guild_id'].to_i
+        server = @servers[server_id]
+        old_emoji_data = server.emoji.clone
         update_guild_emoji(data)
+        new_emoji_data = server.emoji
 
-        event = ServerEmojiUpdateEvent.new(data, self)
+        create = new_emoji_data.select do |k, _|
+          old_emoji_data[k].nil?
+        end.keys
+        delete = old_emoji_data.select do |k, _|
+          new_emoji_data[k].nil?
+        end.keys
+        update = data.select do |k, v|
+          v.name != new_emoji_data(k).name || v.roles != new_emoji_data.roles
+        end.keys
+
+        event = ServerEmojiChangeEvent.new(server, data, self)
         raise_event(event)
+
+        create.each do |e|
+          event = ServerEmojiCreateEvent.new(server, nil, new_emoji_data[e], self)
+          raise_event(event)
+        end
+
+        delete.each do |e|
+          event = ServerEmojiDeleteEvent.new(server, old_emoji_data[e], nil, self)
+          raise_event(event)
+        end
+
+        update.each do |e|
+          event = ServerEmojiUpdateEvent.new(server, old_emoji_data[e], new_emoji_data[e], self)
+          raise_event(event)
+        end
       else
         # another event that we don't support yet
         debug "Event #{type} has been received but is unsupported, ignoring"

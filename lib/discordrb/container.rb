@@ -306,9 +306,46 @@ module Discordrb
       register_event(ServerDeleteEvent, attributes, block)
     end
 
-    # This **event** is raised when an emoji is created/updated/deleted.
+    # This **event** is raised when an emoji or collection of emojis is created/deleted/updated.
     # @param attributes [Hash] The event's attributes.
-    # @option attributes [String, Integer, Server] :server Matches the server that was deleted.
+    # @option attributes [String, Integer, Server] :server Matches the server.
+    # @yield The block is executed when the event is raised.
+    # @yieldparam event [ServerEmojiChangeEvent] The event that was raised.
+    # @return [ServerEmojiChangeEventHandler] The event handler that was registered.
+    def server_emoji(attributes = {}, &block)
+      register_event(ServerEmojiChangeEvent, attributes, block)
+    end
+
+    # This **event** is raised when an emoji is created.
+    # @param attributes [Hash] The event's attributes.
+    # @option attributes [String, Integer, Server] :server Matches the server.
+    # @option attributes [String, Integer] :id Matches the id of the emoji.
+    # @option attributes [String] :name Matches the name of the emoji.
+    # @yield The block is executed when the event is raised.
+    # @yieldparam event [ServerEmojiCreateEvent] The event that was raised.
+    # @return [ServerEmojiCreateEventHandler] The event handler that was registered.
+    def server_emoji_create(attributes = {}, &block)
+      register_event(ServerEmojiCreateEvent, attributes, block)
+    end
+
+    # This **event** is raised when an emoji is deleted.
+    # @param attributes [Hash] The event's attributes.
+    # @option attributes [String, Integer, Server] :server Matches the server.
+    # @option attributes [String, Integer] :id Matches the id of the emoji.
+    # @option attributes [String] :name Matches the name of the emoji.
+    # @yield The block is executed when the event is raised.
+    # @yieldparam event [ServerEmojiDeleteEvent] The event that was raised.
+    # @return [ServerEmojiDeleteEventHandler] The event handler that was registered.
+    def server_emoji_delete(attributes = {}, &block)
+      register_event(ServerEmojiDeleteEvent, attributes, block)
+    end
+
+    # This **event** is raised when an emoji is updated.
+    # @param attributes [Hash] The event's attributes.
+    # @option attributes [String, Integer, Server] :server Matches the server.
+    # @option attributes [String, Integer] :id Matches the id of the emoji.
+    # @option attributes [String] :name Matches the name of the emoji.
+    # @option attributes [String] :old_name Matches the name of the emoji before the update.
     # @yield The block is executed when the event is raised.
     # @yieldparam event [ServerEmojiUpdateEvent] The event that was raised.
     # @return [ServerEmojiUpdateEventHandler] The event handler that was registered.
