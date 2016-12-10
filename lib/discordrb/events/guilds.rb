@@ -69,9 +69,7 @@ module Discordrb::Events
   class ServerDeleteEventHandler < ServerEventHandler; end
 
   # Generic subclass for emoji events (create/update/delete)
-  class ServerEmojiEvent < ServerEvent
-
-  end
+  class ServerEmojiEvent < ServerEvent; end
 
   # Emoji is created/deleted/updated
   class ServerEmojiChangeEvent < Event
@@ -144,17 +142,17 @@ module Discordrb::Events
       return false unless event.is_a? ServerEmojiCDEvent
 
       [
-          matches_all(@attributes[:server], event.server) do |a, e|
-            a == if a.is_a? String
-                   e.name
-                 elsif a.is_a? Integer
-                   e.id
-                 else
-                   e
-                 end
-          end,
-          matches_all(@attributes[:id], event.emoji.id) { |a, e| a.resolve_id == e.resolve_id },
-          matches_all(@attributes[:name], event.emoji.name) { |a, e| a == e }
+        matches_all(@attributes[:server], event.server) do |a, e|
+          a == if a.is_a? String
+                 e.name
+               elsif a.is_a? Integer
+                 e.id
+               else
+                 e
+               end
+        end,
+        matches_all(@attributes[:id], event.emoji.id) { |a, e| a.resolve_id == e.resolve_id },
+        matches_all(@attributes[:name], event.emoji.name) { |a, e| a == e }
       ].reduce(true, &:&)
     end
   end
