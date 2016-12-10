@@ -2588,6 +2588,14 @@ module Discordrb
       end
     end
 
+    # Updates the cached emoji data with new data
+    # @note For internal use only
+    # @!visibility private
+    def update_emoji_data(new_data)
+      @emoji = {}
+      process_emoji(new_data['emojis'])
+    end
+
     # The inspect method is overwritten to give more useful output
     def inspect
       "<Server name=#{@name} id=#{@id} large=#{@large} region=#{@region} owner=#{@owner} afk_channel_id=#{@afk_channel_id} afk_timeout=#{@afk_timeout}>"

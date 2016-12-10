@@ -59,7 +59,7 @@ module Discordrb::Events
   # Server is deleted
   # @see Discordrb::EventContainer#server_delete
   class ServerDeleteEvent < ServerEvent
-    # Overide init_server to account for the deleted server
+    # Override init_server to account for the deleted server
     def init_server(data, bot)
       @server = Discordrb::Server.new(data, bot, false)
     end
@@ -67,4 +67,40 @@ module Discordrb::Events
 
   # Event handler for {ServerDeleteEvent}
   class ServerDeleteEventHandler < ServerEventHandler; end
+
+  # Emoji is created/updated/deleted
+  class ServerEmojiUpdateEvent < Event
+    # @return [Server] the server in question.
+    attr_reader :server
+
+    def initialize(data, bot)
+      @bot = bot
+
+      init_server(data)
+    end
+
+    # Initializes this event with server data.
+    def init_server(data)
+      @server = @bot.server(data['guild_id'].to_i)
+    end
+  end
+
+  # Event handler for {ServerEmojiUpdateEvent}
+  class ServerEmojiUpdateEventHandler < EventHandler
+    def matches?(event)
+      return false unless event.is_a? ServerEmojiUpdateEvent
+
+      [
+          matches_all(@attributes[:server], event.server) do |a, e|
+            a == if a.is_a? String
+                   e.name
+                 elsif a.is_a? Integer
+                   e.id
+                 else
+                   e
+                 end
+          end
+      ].reduce(true, &:&)
+    end
+  end
 end

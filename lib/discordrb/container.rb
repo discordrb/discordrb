@@ -306,6 +306,16 @@ module Discordrb
       register_event(ServerDeleteEvent, attributes, block)
     end
 
+    # This **event** is raised when an emoji is created/updated/deleted.
+    # @param attributes [Hash] The event's attributes.
+    # @option attributes [String, Integer, Server] :server Matches the server that was deleted.
+    # @yield The block is executed when the event is raised.
+    # @yieldparam event [ServerEmojiUpdateEvent] The event that was raised.
+    # @return [ServerEmojiUpdateEventHandler] The event handler that was registered.
+    def server_emoji_update(attributes = {}, &block)
+      register_event(ServerEmojiUpdateEvent, attributes, block)
+    end
+
     # This **event** is raised when an {Await} is triggered. It provides an easy way to execute code
     # on an await without having to rely on the await's block.
     # @param attributes [Hash] The event's attributes.

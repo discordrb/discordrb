@@ -812,6 +812,13 @@ module Discordrb
       server.delete_role(role_id)
     end
 
+    # Internal handler for GUILD_EMOJIS_UPDATE
+    def update_guild_emoji(data)
+      server_id = data['guild_id'].to_i
+      server = @servers[server_id]
+      server.update_emoji_data(data)
+    end
+
     # Internal handler for MESSAGE_CREATE
     def create_message(data); end
 
@@ -1103,6 +1110,11 @@ module Discordrb
         end
 
         event = ServerDeleteEvent.new(data, self)
+        raise_event(event)
+      when :GUILD_EMOJIS_UPDATE
+        update_guild_emoji(data)
+
+        event = ServerEmojiUpdateEvent.new(data, self)
         raise_event(event)
       else
         # another event that we don't support yet
