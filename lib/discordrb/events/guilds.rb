@@ -69,7 +69,7 @@ module Discordrb::Events
   class ServerDeleteEventHandler < ServerEventHandler; end
 
   # Generic subclass for emoji events (create/update/delete)
-  class ServerEmojiEvent < Event
+  class ServerEmojiEvent < ServerEvent
     # @return [Server] the server in question.
     attr_reader :server
 
@@ -118,24 +118,7 @@ module Discordrb::Events
   class ServerEmojiUpdateEvent < ServerEmojiEvent; end
 
   # Event handler for {ServerEmojiChangeEvent}
-  class ServerEmojiChangeEventHandler < EventHandler
-    def matches?(event)
-      # Check for the proper event type
-      return false unless event.is_a? ServerEmojiChangeEvent
-
-      [
-        matches_all(@attributes[:server], event.server) do |a, e|
-          a == if a.is_a? String
-                 e.name
-               elsif a.is_a? Integer
-                 e.id
-               else
-                 e
-               end
-        end
-      ].reduce(true, &:&)
-    end
-  end
+  class ServerEmojiChangeEventHandler < ServerEventHandler; end
 
   # Event handler for {ServerEmojiCreateEvent}
   class ServerEmojiCreateEventHandler < EventHandler
