@@ -1118,30 +1118,26 @@ module Discordrb
         update_guild_emoji(data)
         new_emoji_data = server.emoji
 
-        create = new_emoji_data.select do |k, _|
-          old_emoji_data[k].nil?
-        end.keys
-        delete = old_emoji_data.select do |k, _|
-          new_emoji_data[k].nil?
-        end.keys
-        update = data.select do |k, v|
-          v.name != new_emoji_data(k).name || v.roles != new_emoji_data.roles
+        created_ids = new_emoji_data.keys - old_emoji_data.keys
+        deleted_ids = old_emoji_data.keys - new_emoji_data.keys
+        updated_ids = data.select do |k, v|
+          v.name != new_emoji_data[k].name || v.roles != new_emoji_data[k].roles
         end.keys
 
         event = ServerEmojiChangeEvent.new(server, data, self)
         raise_event(event)
 
-        create.each do |e|
+        created_ids.each do |e|
           event = ServerEmojiCreateEvent.new(server, new_emoji_data[e], self)
           raise_event(event)
         end
 
-        delete.each do |e|
+        deleted_ids.each do |e|
           event = ServerEmojiDeleteEvent.new(server, old_emoji_data[e], self)
           raise_event(event)
         end
 
-        update.each do |e|
+        updated_ids.each do |e|
           event = ServerEmojiUpdateEvent.new(server, old_emoji_data[e], new_emoji_data[e], self)
           raise_event(event)
         end
