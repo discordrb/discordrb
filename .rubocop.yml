@@ -63,3 +63,7 @@ Style/NumericLiterals:
 Lint/Eval:
   Exclude:
     - examples/*
+
+Style/ExtraSpacing:
+  Exclude:
+    - lib/discordrb/permissions.rb
