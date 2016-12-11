@@ -89,7 +89,7 @@ module Discordrb::Events
     end
   end
 
-  #
+  # Generic event helper for when an emoji is either created or deleted
   class ServerEmojiCDEvent < ServerEvent
     # @return [Server] the server in question.
     attr_reader :server
