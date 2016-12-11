@@ -1940,17 +1940,14 @@ module Discordrb
     end
 
     # Edit the name of the emoji. Requires manage_emojis.
-    # @return [Integer] emoji id
-    def edit(name)
+    # @param name [String] The new emoji name.
+    def name=(name)
       @server.edit_emoji(@id, name)
-      @id
     end
 
     # Deletes the emoji from the server. Requires manage_emojis.
-    # @return [Integer] emoji id deleted
     def delete
       @server.delete_emoji(@id)
-      @id
     end
 
     # @return [String] the layout to mention it (or have it used) in a message
