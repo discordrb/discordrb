@@ -2521,9 +2521,9 @@ module Discordrb
 
         emoji_string = 'data:image/jpg;base64,'
         emoji_string += Base64.strict_encode64(emoji.read)
-        priv_add_emoji(emoji_string, name)
+        add_emoji(name, emoji_string)
       else
-        priv_add_emoji(emoji, name)
+        API::Server.add_emoji(@bot.token, @id, emoji, name)
       end
     end
 
@@ -2608,10 +2608,6 @@ module Discordrb
                          new_data[:afk_channel_id] || @afk_channel_id,
                          new_data[:afk_timeout] || @afk_timeout)
       update_data(new_data)
-    end
-
-    def priv_add_emoji(emoji, name)
-      API::Server.add_emoji(@bot.token, @id, emoji, name)
     end
 
     def process_roles(roles)
