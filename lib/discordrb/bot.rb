@@ -710,7 +710,7 @@ module Discordrb
       # Handle normal and private channels separately
       if server
         @channels.delete(channel.id)
-        server.channels.reject! { |c| c.id == channel.id }
+        server.delete_channel(channel.id)
       elsif channel.pm?
         @pm_channels.delete(channel.recipient.id)
       elsif channel.group?
