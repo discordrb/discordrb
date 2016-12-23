@@ -1711,7 +1711,7 @@ module Discordrb
                     member = @channel.server.member(data['author']['id'].to_i)
 
                     unless member
-                      Discordrb::LOGGER.warn("Member with ID #{data['author']['id']} not cached even though it should be.")
+                      Discordrb::LOGGER.debug("Member with ID #{data['author']['id']} not cached even though it should be.")
                       member = @bot.user(data['author']['id'].to_i)
                     end
 
