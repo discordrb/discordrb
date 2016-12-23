@@ -2553,6 +2553,14 @@ module Discordrb
       @channels_by_id[channel.id] = channel
     end
 
+    # Deletes a channel from this server's cache
+    # @note For internal use only
+    # @!visibility private
+    def delete_channel(id)
+      @channels.reject! { |e| e.id == id }
+      @channels_by_id.delete(id)
+    end
+
     # The inspect method is overwritten to give more useful output
     def inspect
       "<Server name=#{@name} id=#{@id} large=#{@large} region=#{@region} owner=#{@owner} afk_channel_id=#{@afk_channel_id} afk_timeout=#{@afk_timeout}>"
