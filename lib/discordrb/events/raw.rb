@@ -34,7 +34,7 @@ module Discordrb::Events
             match = a.match(e)
             match ? (e == match[0]) : false
           else
-            e.to_s.casecmp(a.to_s)
+            e.to_s.casecmp(a.to_s).zero?
           end
         end
       ].reduce(true, &:&)
