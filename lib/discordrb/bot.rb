@@ -15,6 +15,7 @@ require 'discordrb/events/roles'
 require 'discordrb/events/guilds'
 require 'discordrb/events/await'
 require 'discordrb/events/bans'
+require 'discordrb/events/raw'
 
 require 'discordrb/api'
 require 'discordrb/api/channel'
@@ -1107,6 +1108,11 @@ module Discordrb
       else
         # another event that we don't support yet
         debug "Event #{type} has been received but is unsupported, ignoring"
+      end
+
+      unless @event_handlers[RawEvent].empty?
+        event = RawEvent.new(type, data, self)
+        raise_event(event)
       end
     rescue Exception => e
       LOGGER.error('Gateway message error!')
