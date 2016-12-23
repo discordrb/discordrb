@@ -340,6 +340,16 @@ module Discordrb
     alias_method :direct_message, :pm
     alias_method :dm, :pm
 
+    # This **event** is raised for every dispatch received over the gateway, whether supported by discordrb or not.
+    # @param attributes [Hash] The event's attributes.
+    # @option attributes [String, Symbol, Regexp] :type Matches the event type of the dispatch.
+    # @yield The block is executed when the event is raised.
+    # @yieldparam event [RawEvent] The event that was raised.
+    # @return [RawEventHandler] The event handler that was registered.
+    def raw(attributes = {}, &block)
+      register_event(RawEvent, attributes, block)
+    end
+
     # Removes an event handler from this container. If you're looking for a way to do temporary events, I recommend
     # {Await}s instead of this.
     # @param handler [Discordrb::Events::EventHandler] The handler to remove.
