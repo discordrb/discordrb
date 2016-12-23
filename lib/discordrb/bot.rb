@@ -1107,7 +1107,7 @@ module Discordrb
         raise_event(event)
       else
         # another event that we don't support yet
-        debug "Event #{type} has been received but is unsupported, ignoring"
+        debug "Event #{type} has been received but is unsupported. Raising UnknownEvent"
 
         event = UnknownEvent.new(type, data, self)
         raise_event(event)
