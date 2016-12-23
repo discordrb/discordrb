@@ -40,4 +40,7 @@ module Discordrb::Events
       ].reduce(true, &:&)
     end
   end
+
+  # Event raised when an unknown dispatch is received
+  class UnknownEvent < RawEvent; end
 end
