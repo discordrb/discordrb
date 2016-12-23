@@ -685,7 +685,7 @@ module Discordrb
 
       # Handle normal and private channels separately
       if server
-        server.channels << channel
+        server.add_channel(channel)
         @channels[channel.id] = channel
       elsif channel.pm?
         @pm_channels[channel.recipient.id] = channel
