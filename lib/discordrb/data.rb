@@ -2545,6 +2545,13 @@ module Discordrb
       end
     end
 
+    # Adds a channel to this server's cache
+    # @note For internal use only
+    # @!visibility private
+    def add_channel(channel)
+      @channels << channel
+    end
+
     # The inspect method is overwritten to give more useful output
     def inspect
       "<Server name=#{@name} id=#{@id} large=#{@large} region=#{@region} owner=#{@owner} afk_channel_id=#{@afk_channel_id} afk_timeout=#{@afk_timeout}>"
