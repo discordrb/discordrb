@@ -1108,6 +1108,9 @@ module Discordrb
       else
         # another event that we don't support yet
         debug "Event #{type} has been received but is unsupported, ignoring"
+
+        event = UnknownEvent.new(type, data, self)
+        raise_event(event)
       end
 
       unless @event_handlers[RawEvent].empty?
