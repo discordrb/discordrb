@@ -1631,7 +1631,8 @@ module Discordrb
     alias_method :text, :content
     alias_method :to_s, :content
 
-    # @return [Member] the user that sent this message.
+    # @return [Member, User] the user that sent this message. (Will be a {Member} most of the time, it should only be a
+    #   {User} for old messages when the author has left the server since then)
     attr_reader :author
     alias_method :user, :author
     alias_method :writer, :author
