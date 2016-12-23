@@ -13,5 +13,11 @@ module Discordrb::Events
     # @return [Hash] the data of this dispatch.
     attr_reader :data
     alias_method :d, :data
+
+    def initialize(type, data, bot)
+      @type = type
+      @data = data
+      @bot = bot
+    end
   end
 end
