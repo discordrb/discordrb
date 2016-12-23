@@ -43,4 +43,7 @@ module Discordrb::Events
 
   # Event raised when an unknown dispatch is received
   class UnknownEvent < RawEvent; end
+
+  # Event handler for {UnknownEvent}
+  class UnknownEventHandler < RawEventHandler; end
 end
