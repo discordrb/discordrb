@@ -2550,6 +2550,7 @@ module Discordrb
     # @!visibility private
     def add_channel(channel)
       @channels << channel
+      @channels_by_id[channel.id] = channel
     end
 
     # The inspect method is overwritten to give more useful output
