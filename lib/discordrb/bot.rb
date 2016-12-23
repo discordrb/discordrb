@@ -1113,7 +1113,9 @@ module Discordrb
         raise_event(event)
       end
 
-      unless @event_handlers[RawEvent].empty?
+      # The existence of this array is checked before for performance reasons, since this has to be done for *every*
+      # dispatch.
+      if @event_handlers[RawEvent]
         event = RawEvent.new(type, data, self)
         raise_event(event)
       end
