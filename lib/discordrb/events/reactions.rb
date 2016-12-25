@@ -17,5 +17,11 @@ module Discordrb::Events
       @message_id = data['message_id'].to_i
       @channel_id = data['channel_id'].to_i
     end
+
+    # @return [User] the user that reacted to this message.
+    def user
+      # Cache the user so we don't do requests all the time
+      @user ||= @bot.user(@user_id)
+    end
   end
 end
