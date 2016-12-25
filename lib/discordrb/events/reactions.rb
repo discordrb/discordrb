@@ -23,5 +23,10 @@ module Discordrb::Events
       # Cache the user so we don't do requests all the time
       @user ||= @bot.user(@user_id)
     end
+
+    # @return [Message] the message that was reacted to.
+    def message
+      @message ||= channel.load_message(@message_id)
+    end
   end
 end
