@@ -36,7 +36,7 @@ module Discordrb::Events
   end
 
   # Generic superclass for event handlers pertaining to adding and removing reactions
-  class ReactionEventHandler
+  class ReactionEventHandler < EventHandler
     def matches?(event)
       # Check for the proper event type
       return false unless event.is_a? ReactionEvent
