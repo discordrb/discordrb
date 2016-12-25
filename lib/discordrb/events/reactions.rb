@@ -34,4 +34,8 @@ module Discordrb::Events
       @channel ||= @bot.channel(@channel_id)
     end
   end
+
+  # Generic superclass for event handlers pertaining to adding and removing reactions
+  class ReactionEventHandler
+  end
 end
