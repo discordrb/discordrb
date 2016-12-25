@@ -75,5 +75,10 @@ module Discordrb::Events
       @message_id = data['message_id'].to_i
       @channel_id = data['channel_id'].to_i
     end
+
+    # @return [Channel] the channel where the removal occurred.
+    def channel
+      @channel ||= @bot.channel(@channel_id)
+    end
   end
 end
