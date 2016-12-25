@@ -28,5 +28,10 @@ module Discordrb::Events
     def message
       @message ||= channel.load_message(@message_id)
     end
+
+    # @return [Channel] the channel that was reacted in.
+    def channel
+      @channel ||= @bot.channel(@channel_id)
+    end
   end
 end
