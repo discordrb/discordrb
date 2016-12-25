@@ -80,5 +80,10 @@ module Discordrb::Events
     def channel
       @channel ||= @bot.channel(@channel_id)
     end
+
+    # @return [Message] the message all reactions were removed from.
+    def message
+      @message ||= channel.load_message(@message_id)
+    end
   end
 end
