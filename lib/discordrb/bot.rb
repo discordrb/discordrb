@@ -984,6 +984,11 @@ module Discordrb
         rescue Discordrb::Errors::NoPermission
           debug 'Typing started in channel the bot has no access to, ignoring'
         end
+      when :MESSAGE_REACTION_ADD
+        # No call to an internal handler since there is no caching for this
+
+        event = ReactionAddEvent.new(data, self)
+        raise_event(event)
       when :PRESENCE_UPDATE
         # Ignore friends list presences
         return unless data['guild_id']
