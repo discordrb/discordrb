@@ -130,6 +130,15 @@ module Discordrb
       register_event(ReactionRemoveEvent, attributes, block)
     end
 
+    # This **event** is raised when somebody removes all reactions from a message.
+    # @param attributes [Hash] The event's attributes.
+    # @yield The block is executed when the event is raised.
+    # @yieldparam event [ReactionRemoveAllEvent] The event that was raised.
+    # @return [ReactionRemoveAllEventHandler] The event handler that was registered.
+    def reaction_remove_all(attributes = {}, &block)
+      register_event(ReactionRemoveAllEvent, attributes, block)
+    end
+
     # This **event** is raised when a user's status (online/offline/idle) changes.
     # @param attributes [Hash] The event's attributes.
     # @option attributes [String, Integer, User] :from Matches the user whose status changed.
