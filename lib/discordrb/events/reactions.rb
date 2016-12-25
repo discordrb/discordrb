@@ -89,5 +89,12 @@ module Discordrb::Events
 
   # Event handler for {ReactionRemoveAllEvent}
   class ReactionRemoveAllEventHandler < EventHandler
+    def matches?(event)
+      # Check for the proper event type
+      return false unless event.is_a? ReactionRemoveAllEvent
+
+      # No attributes yet as there is no property available on the event that doesn't involve doing a resolution request
+      [].reduce(true, &:&)
+    end
   end
 end
