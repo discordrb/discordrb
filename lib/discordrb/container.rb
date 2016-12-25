@@ -108,6 +108,16 @@ module Discordrb
       register_event(MessageDeleteEvent, attributes, block)
     end
 
+    # This **event** is raised when somebody reacts to a message.
+    # @param attributes [Hash] The event's attributes.
+    # @option attributes [Integer, String] :emoji Matches the ID of the emoji that was reacted with, or its name.
+    # @yield The block is executed when the event is raised.
+    # @yieldparam event [ReactionAddEvent] The event that was raised.
+    # @return [ReactionAddEventHandler] The event handler that was registered.
+    def reaction_add(attributes = {}, &block)
+      register_event(ReactionAddEvent, attributes, block)
+    end
+
     # This **event** is raised when a user's status (online/offline/idle) changes.
     # @param attributes [Hash] The event's attributes.
     # @option attributes [String, Integer, User] :from Matches the user whose status changed.
