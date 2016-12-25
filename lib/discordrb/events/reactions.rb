@@ -57,4 +57,7 @@ module Discordrb::Events
 
   # Event raised when somebody reacts to a message
   class ReactionAddEvent < ReactionEvent; end
+
+  # Event handler for {ReactionAddEvent}
+  class ReactionAddEventHandler < ReactionEventHandler; end
 end
