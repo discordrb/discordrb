@@ -37,5 +37,21 @@ module Discordrb::Events
 
   # Generic superclass for event handlers pertaining to adding and removing reactions
   class ReactionEventHandler
+    def matches?(event)
+      # Check for the proper event type
+      return false unless event.is_a? ReactionEvent
+
+      [
+        matches_all(@attributes[:emoji], event.type) do |a, e|
+          if a.is_a? Integer
+            e.id == a
+          elsif a.is_a? String
+            e.name == a || e.name == a.delete(':') || e.id == a.resolve_id
+          else
+            e == a
+          end
+        end
+      ].reduce(true, &:&)
+    end
   end
 end
