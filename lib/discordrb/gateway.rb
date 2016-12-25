@@ -488,6 +488,7 @@ module Discordrb
           recv_data = nil
 
           # Get some data from the socket, synchronised so the socket can't be closed during this
+          # 24: remove locking
           @getc_mutex.synchronize { recv_data = @socket.getc }
 
           # Check if we actually got data
