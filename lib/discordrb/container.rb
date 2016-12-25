@@ -11,6 +11,7 @@ require 'discordrb/events/roles'
 require 'discordrb/events/guilds'
 require 'discordrb/events/await'
 require 'discordrb/events/bans'
+require 'discordrb/events/reactions'
 
 require 'discordrb/await'
 
