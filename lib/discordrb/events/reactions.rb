@@ -69,5 +69,11 @@ module Discordrb::Events
 
   # Event raised when somebody removes all reactions from a message
   class ReactionRemoveAllEvent
+    def initialize(data, bot)
+      @bot = bot
+
+      @message_id = data['message_id'].to_i
+      @channel_id = data['channel_id'].to_i
+    end
   end
 end
