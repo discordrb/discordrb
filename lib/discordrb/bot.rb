@@ -16,6 +16,7 @@ require 'discordrb/events/guilds'
 require 'discordrb/events/await'
 require 'discordrb/events/bans'
 require 'discordrb/events/raw'
+require 'discordrb/events/reactions'
 
 require 'discordrb/api'
 require 'discordrb/api/channel'
