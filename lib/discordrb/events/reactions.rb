@@ -86,4 +86,8 @@ module Discordrb::Events
       @message ||= channel.load_message(@message_id)
     end
   end
+
+  # Event handler for {ReactionRemoveAllEvent}
+  class ReactionRemoveAllEventHandler < EventHandler
+  end
 end
