@@ -66,4 +66,8 @@ module Discordrb::Events
 
   # Event handler for {ReactionRemoveEvent}
   class ReactionRemoveEventHandler < ReactionEventHandler; end
+
+  # Event raised when somebody removes all reactions from a message
+  class ReactionRemoveAllEvent
+  end
 end
