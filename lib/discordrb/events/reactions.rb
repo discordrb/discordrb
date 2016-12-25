@@ -6,6 +6,8 @@ require 'discordrb/data'
 module Discordrb::Events
   # Generic superclass for events about adding and removing reactions
   class ReactionEvent
+    include Respondable
+
     # @return [Emoji] the emoji that was reacted with.
     attr_reader :emoji
 
