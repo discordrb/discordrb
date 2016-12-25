@@ -42,7 +42,7 @@ module Discordrb::Events
       return false unless event.is_a? ReactionEvent
 
       [
-        matches_all(@attributes[:emoji], event.type) do |a, e|
+        matches_all(@attributes[:emoji], event.emoji) do |a, e|
           if a.is_a? Integer
             e.id == a
           elsif a.is_a? String
