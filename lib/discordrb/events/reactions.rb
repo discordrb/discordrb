@@ -54,4 +54,7 @@ module Discordrb::Events
       ].reduce(true, &:&)
     end
   end
+
+  # Event raised when somebody reacts to a message
+  class ReactionAddEvent < ReactionEvent; end
 end
