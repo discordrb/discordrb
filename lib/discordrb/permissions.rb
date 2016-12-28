@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-# rubocop:disable Style/ExtraSpacing
 
 module Discordrb
   # List of permissions Discord uses
