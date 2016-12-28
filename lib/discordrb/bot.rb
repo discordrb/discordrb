@@ -15,6 +15,7 @@ require 'discordrb/events/roles'
 require 'discordrb/events/guilds'
 require 'discordrb/events/await'
 require 'discordrb/events/bans'
+require 'discordrb/events/raw'
 
 require 'discordrb/api'
 require 'discordrb/api/channel'
@@ -685,7 +686,7 @@ module Discordrb
 
       # Handle normal and private channels separately
       if server
-        server.channels << channel
+        server.add_channel(channel)
         @channels[channel.id] = channel
       elsif channel.pm?
         @pm_channels[channel.recipient.id] = channel
@@ -710,7 +711,7 @@ module Discordrb
       # Handle normal and private channels separately
       if server
         @channels.delete(channel.id)
-        server.channels.reject! { |c| c.id == channel.id }
+        server.delete_channel(channel.id)
       elsif channel.pm?
         @pm_channels.delete(channel.recipient.id)
       elsif channel.group?
@@ -1143,7 +1144,17 @@ module Discordrb
         end
       else
         # another event that we don't support yet
-        debug "Event #{type} has been received but is unsupported, ignoring"
+        debug "Event #{type} has been received but is unsupported. Raising UnknownEvent"
+
+        event = UnknownEvent.new(type, data, self)
+        raise_event(event)
+      end
+
+      # The existence of this array is checked before for performance reasons, since this has to be done for *every*
+      # dispatch.
+      if @event_handlers[RawEvent]
+        event = RawEvent.new(type, data, self)
+        raise_event(event)
       end
     rescue Exception => e
       LOGGER.error('Gateway message error!')

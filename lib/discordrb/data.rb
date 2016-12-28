@@ -1631,7 +1631,8 @@ module Discordrb
     alias_method :text, :content
     alias_method :to_s, :content
 
-    # @return [Member] the user that sent this message.
+    # @return [Member, User] the user that sent this message. (Will be a {Member} most of the time, it should only be a
+    #   {User} for old messages when the author has left the server since then)
     attr_reader :author
     alias_method :user, :author
     alias_method :writer, :author
@@ -1709,7 +1710,12 @@ module Discordrb
                     Recipient.new(bot.user(data['author']['id'].to_i), @channel, bot)
                   else
                     member = @channel.server.member(data['author']['id'].to_i)
-                    Discordrb::LOGGER.warn("Member with ID #{data['author']['id']} not cached even though it should be.") unless member
+
+                    unless member
+                      Discordrb::LOGGER.debug("Member with ID #{data['author']['id']} not cached (possibly left the server).")
+                      member = @bot.user(data['author']['id'].to_i)
+                    end
+
                     member
                   end
                 end
@@ -1939,17 +1945,6 @@ module Discordrb
       process_roles(data['roles']) if server
     end
 
-    # Edit the name of the emoji. Requires manage_emojis.
-    # @param name [String] The new emoji name.
-    def name=(name)
-      @server.edit_emoji(@id, name)
-    end
-
-    # Deletes the emoji from the server. Requires manage_emojis.
-    def delete
-      @server.delete_emoji(@id)
-    end
-
     # @return [String] the layout to mention it (or have it used) in a message
     def mention
       "<:#{@name}:#{@id}>"
@@ -2152,7 +2147,7 @@ module Discordrb
     # @return [Array<Role>] an array of all the roles created on this server.
     attr_reader :roles
 
-    # @return [Hash<Integer, Emoji>] an array of all the emoji available on this server.
+    # @return [Hash<Integer, Emoji>] a hash of all the emoji available on this server.
     attr_reader :emoji
     alias_method :emojis, :emoji
 
@@ -2511,35 +2506,6 @@ module Discordrb
       update_server_data(afk_timeout: afk_timeout)
     end
 
-    # Adds a new custom emoji to the server.
-    # @param name [String] The name given to the new custom emoji.
-    # @param emoji [String, #read] A JPG file to be used as the avatar, either something readable (e. g. File Object) or as a data URL.
-    def add_emoji(name, emoji)
-      if emoji.respond_to? :read
-        # Set the file to binary mode if supported, so we don't get problems with Windows
-        emoji.binmode if emoji.respond_to?(:binmode)
-
-        emoji_string = 'data:image/jpg;base64,'
-        emoji_string += Base64.strict_encode64(emoji.read)
-        add_emoji(name, emoji_string)
-      else
-        API::Server.add_emoji(@bot.token, @id, emoji, name)
-      end
-    end
-
-    # Edits a custom emoji name on the server.
-    # @param emoji_id [Integer] The emoji id.
-    # @param name [String] The new name to be given to the emoji.
-    def edit_emoji(emoji_id, name)
-      API::Server.edit_emoji(@bot.token, @id, emoji_id, name)
-    end
-
-    # Deletes a custom emoji from the server.
-    # @param emoji_id [Integer] The emoji id.
-    def delete_emoji(emoji_id)
-      API::Server.delete_emoji(@bot.token, @id, emoji_id)
-    end
-
     # @return [true, false] whether this server has any emoji or not.
     def any_emoji?
       @emoji.any?
@@ -2585,12 +2551,20 @@ module Discordrb
       end
     end
 
-    # Updates the cached emoji data with new data
+    # Adds a channel to this server's cache
     # @note For internal use only
     # @!visibility private
-    def update_emoji_data(new_data)
-      @emoji = {}
-      process_emoji(new_data['emojis'])
+    def add_channel(channel)
+      @channels << channel
+      @channels_by_id[channel.id] = channel
+    end
+
+    # Deletes a channel from this server's cache
+    # @note For internal use only
+    # @!visibility private
+    def delete_channel(id)
+      @channels.reject! { |e| e.id == id }
+      @channels_by_id.delete(id)
     end
 
     # The inspect method is overwritten to give more useful output

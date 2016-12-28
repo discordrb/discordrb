@@ -60,7 +60,7 @@ module Discordrb
     attr_reader :bits
 
     # Set the raw bitset of this permission object
-    # @param bits [Fixnum] A number whose binary representation is the desired bitset.
+    # @param bits [Integer] A number whose binary representation is the desired bitset.
     def bits=(bits)
       @bits = bits
       init_vars
