@@ -43,7 +43,7 @@ module Discordrb::Webhooks
     def execute(builder = nil, wait = false)
       builder ||= Builder.new
 
-      yield builder
+      yield builder if block_given?
 
       if builder.file
         post_multipart(builder, wait)
