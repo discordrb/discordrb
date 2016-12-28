@@ -20,10 +20,10 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_dependency 'rest-client'
-  spec.add_dependency 'activesupport', '~> 4.2.7.1'
+  spec.add_dependency 'activesupport', '~> 4.2.7.1' # 24: update
   spec.add_dependency 'opus-ruby'
   spec.add_dependency 'websocket-client-simple', '>= 0.3.0'
-  spec.add_dependency 'rbnacl', '~> 3.4.0'
+  spec.add_dependency 'rbnacl', '~> 3.4.0' # 24: update
 
   spec.add_dependency 'discordrb-webhooks'
 
