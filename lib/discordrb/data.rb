@@ -199,6 +199,23 @@ module Discordrb
       @username = username
     end
 
+    # Set the user's presence data
+    # @note for internal use only
+    # @!visibility private
+    def update_presence(data)
+      @status = data['status'].to_sym
+
+      if data['game']
+        game = data['game']
+
+        @game = game['name']
+        @stream_url = game['url']
+        @stream_type = game['type']
+      else
+        @game = @stream_url = @stream_type = nil
+      end
+    end
+
     # Add an await for a message from this user. Specifically, this adds a global await for a MessageEvent with this
     # user's ID as a :from attribute.
     # @see Bot#add_await
