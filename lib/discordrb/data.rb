@@ -143,6 +143,11 @@ module Discordrb
     #   @return [String, nil] the URL to the stream, if the user is currently streaming something.
     attr_accessor :stream_url
 
+    # @!attribute [r] stream_type
+    #   @return [String, Integer, nil] the type of the stream. Can technically be set to anything, most of the time it
+    #     will be 0 for no stream or 1 for Twitch streams.
+    attr_accessor :stream_type
+
     def initialize(data, bot)
       @bot = bot
 
