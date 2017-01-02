@@ -2645,8 +2645,7 @@ module Discordrb
         user_id = element['user']['id'].to_i
         user = @members[user_id]
         if user
-          user.status = element['status'].to_sym
-          user.game = element['game'] ? element['game']['name'] : nil
+          user.update_presence(element)
         else
           LOGGER.warn "Rogue presence update! #{element['user']['id']} on #{@id}"
         end
