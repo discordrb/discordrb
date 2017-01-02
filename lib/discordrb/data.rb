@@ -131,22 +131,18 @@ module Discordrb
     include IDObject
     include UserAttributes
 
-    # @!attribute [r] status
-    #   @return [Symbol] the current online status of the user (`:online`, `:offline` or `:idle`)
-    attr_accessor :status
+    # @return [Symbol] the current online status of the user (`:online`, `:offline` or `:idle`)
+    attr_reader :status
 
-    # @!attribute [r] game
-    #   @return [String, nil] the game the user is currently playing, or `nil` if none is being played.
-    attr_accessor :game
+    # @return [String, nil] the game the user is currently playing, or `nil` if none is being played.
+    attr_reader :game
 
-    # @!attribute [r] stream_url
-    #   @return [String, nil] the URL to the stream, if the user is currently streaming something.
-    attr_accessor :stream_url
+    # @return [String, nil] the URL to the stream, if the user is currently streaming something.
+    attr_reader :stream_url
 
-    # @!attribute [r] stream_type
-    #   @return [String, Integer, nil] the type of the stream. Can technically be set to anything, most of the time it
-    #     will be 0 for no stream or 1 for Twitch streams.
-    attr_accessor :stream_type
+    # @return [String, Integer, nil] the type of the stream. Can technically be set to anything, most of the time it
+    #   will be 0 for no stream or 1 for Twitch streams.
+    attr_reader :stream_type
 
     def initialize(data, bot)
       @bot = bot
