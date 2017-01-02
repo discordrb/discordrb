@@ -639,8 +639,8 @@ module Discordrb
         member.update_username(username)
       end
 
-      member.status = data['status'].to_sym
-      member.game = data['game'] ? data['game']['name'] : nil
+      member.update_presence(data)
+
       member.avatar_id = data['user']['avatar'] if data['user']['avatar']
 
       server.cache_member(member)
