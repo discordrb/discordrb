@@ -139,6 +139,10 @@ module Discordrb
     #   @return [String, nil] the game the user is currently playing, or `nil` if none is being played.
     attr_accessor :game
 
+    # @!attribute [r] stream_url
+    #   @return [String, nil] the URL to the stream, if the user is currently streaming something.
+    attr_accessor :stream_url
+
     def initialize(data, bot)
       @bot = bot
 
@@ -418,6 +422,8 @@ module Discordrb
       @self_deaf = self_deaf
     end
   end
+
+  # A presence represents a
 
   # A member is a user on a server. It differs from regular users in that it has roles, voice statuses and things like
   # that.
