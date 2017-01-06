@@ -191,7 +191,7 @@ module Discordrb::Commands
         return
       end
       return unless !check_permissions || channels?(event.channel, command.attributes[:channels])
-      arguments = arg_check(arguments, command.attributes[:arg_types], event.server)
+      arguments = arg_check(arguments, command.attributes[:arg_types], event.server) if check_permissions
       if (check_permissions &&
          permission?(event.author, command.attributes[:permission_level], event.server) &&
          required_permissions?(event.author, command.attributes[:required_permissions], event.channel) &&
