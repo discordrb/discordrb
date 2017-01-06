@@ -6,6 +6,7 @@ require 'discordrb/commands/parser'
 require 'discordrb/commands/events'
 require 'discordrb/commands/container'
 require 'discordrb/commands/rate_limiter'
+require 'time'
 
 # Specialized bot to run commands
 
@@ -190,6 +191,7 @@ module Discordrb::Commands
         return
       end
       return unless !check_permissions || channels?(event.channel, command.attributes[:channels])
+      arguments = arg_check(arguments, command.attributes[:args])
       if (check_permissions &&
          permission?(event.author, command.attributes[:permission_level], event.server) &&
          required_permissions?(event.author, command.attributes[:required_permissions], event.channel) &&
@@ -205,6 +207,54 @@ module Discordrb::Commands
     rescue Discordrb::Errors::NoPermission
       event.respond @attributes[:no_permission_message] unless @attributes[:no_permission_message].nil?
       raise
+    end
+
+    # Transforms an array of string arguments based on types array.
+    # For example, `['1', '10..14']` with types `[Integer, Range]` would turn into `[1, 10..14]`.
+    def arg_check(args, types = nil, server = nil)
+      return args unless types
+      args.each_with_index.map do |arg, i|
+        break arg unless types[i] || types[i] == String
+        case
+        when types[i] == Integer
+          Integer(arg) rescue nil
+        when types[i] == Float
+          Float(arg) rescue nil
+        when types[i] == Timeend
+          Time.parse arg rescue nil
+        when types[i] == TrueClass || types[i] == FalseClass
+          if arg.downcase == 'true' || arg.downcase.start_with?('y')
+            true
+          elsif arg.downcase == 'false' || arg.downcase.start_with?('n')
+            false
+          end
+        when types[i] == Symbol
+          arg.to_sym
+        when types[i] == Encoding
+          Encoding.find arg rescue nil
+        when types[i] == Regexp
+          Regexp.new arg rescue nil
+        when types[i] == Rational
+          Rational(arg) rescue nil
+        when types[i] == Range
+          Range.new(*arg.split("..").map(&:to_i)) rescue nil
+        when types[i] == NilClass
+          nil # ¯\_(ツ)_/¯
+        when types[i] == Discordrb::User
+          result = parse_mention arg, server
+          result if result.instance_of? Discordrb::User
+        when types[i] == Discordrb::Role
+          result = parse_mention arg, server
+          result if result.instance_of? Discordrb::Role
+        when types[i] == Discordrb::Emoji
+          result = parse_mention arg, server
+          result if result.instance_of? Discordrb::Emoji
+        when types[i] == Discordrb::Invite
+          resolve_invite_code arg
+        when types[i].respond_to?(:from_argument)
+          types[i].from_argument arg rescue nil
+        end
+      end
     end
 
     # Executes a command in a simple manner, without command chains or permissions.
