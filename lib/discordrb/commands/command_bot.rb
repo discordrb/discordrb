@@ -191,7 +191,7 @@ module Discordrb::Commands
         return
       end
       return unless !check_permissions || channels?(event.channel, command.attributes[:channels])
-      arguments = arg_check(arguments, command.attributes[:args])
+      arguments = arg_check(arguments, command.attributes[:arg_types], event.server)
       if (check_permissions &&
          permission?(event.author, command.attributes[:permission_level], event.server) &&
          required_permissions?(event.author, command.attributes[:required_permissions], event.channel) &&
@@ -214,45 +214,76 @@ module Discordrb::Commands
     def arg_check(args, types = nil, server = nil)
       return args unless types
       args.each_with_index.map do |arg, i|
-        break arg unless types[i] || types[i] == String
-        case
-        when types[i] == Integer
-          Integer(arg) rescue nil
-        when types[i] == Float
-          Float(arg) rescue nil
-        when types[i] == Timeend
-          Time.parse arg rescue nil
-        when types[i] == TrueClass || types[i] == FalseClass
-          if arg.downcase == 'true' || arg.downcase.start_with?('y')
+        next arg if types[i].nil? || types[i] == String
+        if types[i] == Integer
+          begin
+            Integer(arg)
+          rescue ArgumentError
+            nil
+          end
+        elsif types[i] == Float
+          begin
+            Float(arg)
+          rescue ArgumentError
+            nil
+          end
+        elsif types[i] == Time
+          begin
+            Time.parse arg
+          rescue ArgumentError
+            nil
+          end
+        elsif types[i] == TrueClass || types[i] == FalseClass
+          if arg.casecmp('true').zero? || arg.downcase.start_with?('y')
             true
-          elsif arg.downcase == 'false' || arg.downcase.start_with?('n')
+          elsif arg.casecmp('false').zero? || arg.downcase.start_with?('n')
             false
           end
-        when types[i] == Symbol
+        elsif types[i] == Symbol
           arg.to_sym
-        when types[i] == Encoding
-          Encoding.find arg rescue nil
-        when types[i] == Regexp
-          Regexp.new arg rescue nil
-        when types[i] == Rational
-          Rational(arg) rescue nil
-        when types[i] == Range
-          Range.new(*arg.split("..").map(&:to_i)) rescue nil
-        when types[i] == NilClass
-          nil # ¯\_(ツ)_/¯
-        when types[i] == Discordrb::User
+        elsif types[i] == Encoding
+          begin
+            Encoding.find arg
+          rescue ArgumentError
+            nil
+          end
+        elsif types[i] == Regexp
+          begin
+            Regexp.new arg
+          rescue ArgumentError
+            nil
+          end
+        elsif types[i] == Rational
+          begin
+            Rational(arg)
+          rescue ArgumentError
+            nil
+          end
+        elsif types[i] == Range
+          begin
+            if arg.include? '...'
+              Range.new(*arg.split('...').map(&:to_i))
+            elsif arg.include? '..'
+              Range.new(*arg.split('..').map(&:to_i))
+            end
+          rescue ArgumentError
+            nil
+          end
+        elsif types[i] == NilClass
+          nil
+        elsif [Discordrb::User, Discordrb::Role, Discordrb::Emoji].include? types[i]
           result = parse_mention arg, server
-          result if result.instance_of? Discordrb::User
-        when types[i] == Discordrb::Role
-          result = parse_mention arg, server
-          result if result.instance_of? Discordrb::Role
-        when types[i] == Discordrb::Emoji
-          result = parse_mention arg, server
-          result if result.instance_of? Discordrb::Emoji
-        when types[i] == Discordrb::Invite
+          result if result.instance_of? types[i]
+        elsif types[i] == Discordrb::Invite
           resolve_invite_code arg
-        when types[i].respond_to?(:from_argument)
-          types[i].from_argument arg rescue nil
+        elsif types[i].respond_to?(:from_argument)
+          begin
+            types[i].from_argument arg
+          rescue
+            nil
+          end
+        else
+          raise ArgumentError, "#{type} doensn't implement from_argument"
         end
       end
     end

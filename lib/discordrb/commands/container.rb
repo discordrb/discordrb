@@ -33,7 +33,7 @@ module Discordrb::Commands
     #   command if the user asks for it.
     # @option attributes [String] :usage A short description of how this command should be used. Will be displayed in
     #   the help command or if the user uses it wrong.
-    # @option attributes [Array<Class>] :args An array of argument classes which will be used for type-checking.
+    # @option attributes [Array<Class>] :arg_types An array of argument classes which will be used for type-checking.
     #   Hard-coded for some native classes, but can be used with any class that implements static
     #   method `from_argument`.
     # @option attributes [Integer] :min_args The minimum number of arguments this command should have. If a user
