@@ -11,6 +11,7 @@ require 'discordrb/events/roles'
 require 'discordrb/events/guilds'
 require 'discordrb/events/await'
 require 'discordrb/events/bans'
+require 'discordrb/events/reactions'
 
 require 'discordrb/await'
 
@@ -106,6 +107,36 @@ module Discordrb
     # @return [MessageDeleteEventHandler] The event handler that was registered.
     def message_delete(attributes = {}, &block)
       register_event(MessageDeleteEvent, attributes, block)
+    end
+
+    # This **event** is raised when somebody reacts to a message.
+    # @param attributes [Hash] The event's attributes.
+    # @option attributes [Integer, String] :emoji Matches the ID of the emoji that was reacted with, or its name.
+    # @yield The block is executed when the event is raised.
+    # @yieldparam event [ReactionAddEvent] The event that was raised.
+    # @return [ReactionAddEventHandler] The event handler that was registered.
+    def reaction_add(attributes = {}, &block)
+      register_event(ReactionAddEvent, attributes, block)
+    end
+
+    # This **event** is raised when somebody removes a reaction from a message.
+    # @param attributes [Hash] The event's attributes.
+    # @option attributes [Integer, String] :emoji Matches the ID of the emoji that was removed from the reactions, or
+    #   its name.
+    # @yield The block is executed when the event is raised.
+    # @yieldparam event [ReactionRemoveEvent] The event that was raised.
+    # @return [ReactionRemoveEventHandler] The event handler that was registered.
+    def reaction_remove(attributes = {}, &block)
+      register_event(ReactionRemoveEvent, attributes, block)
+    end
+
+    # This **event** is raised when somebody removes all reactions from a message.
+    # @param attributes [Hash] The event's attributes.
+    # @yield The block is executed when the event is raised.
+    # @yieldparam event [ReactionRemoveAllEvent] The event that was raised.
+    # @return [ReactionRemoveAllEventHandler] The event handler that was registered.
+    def reaction_remove_all(attributes = {}, &block)
+      register_event(ReactionRemoveAllEvent, attributes, block)
     end
 
     # This **event** is raised when a user's status (online/offline/idle) changes.
