@@ -40,6 +40,9 @@ module Discordrb::Commands
         # Usage description (for help command and error messages)
         usage: attributes[:usage] || nil,
 
+        # Array of arguments (for type-checking)
+        arg_types: attributes[:arg_types] || nil,
+
         # Parameter list (for help command and error messages)
         parameters: attributes[:parameters] || nil,
 

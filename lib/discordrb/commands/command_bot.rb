@@ -6,6 +6,7 @@ require 'discordrb/commands/parser'
 require 'discordrb/commands/events'
 require 'discordrb/commands/container'
 require 'discordrb/commands/rate_limiter'
+require 'time'
 
 # Specialized bot to run commands
 
@@ -190,6 +191,7 @@ module Discordrb::Commands
         return
       end
       return unless !check_permissions || channels?(event.channel, command.attributes[:channels])
+      arguments = arg_check(arguments, command.attributes[:arg_types], event.server) if check_permissions
       if (check_permissions &&
          permission?(event.author, command.attributes[:permission_level], event.server) &&
          required_permissions?(event.author, command.attributes[:required_permissions], event.channel) &&
@@ -205,6 +207,85 @@ module Discordrb::Commands
     rescue Discordrb::Errors::NoPermission
       event.respond @attributes[:no_permission_message] unless @attributes[:no_permission_message].nil?
       raise
+    end
+
+    # Transforms an array of string arguments based on types array.
+    # For example, `['1', '10..14']` with types `[Integer, Range]` would turn into `[1, 10..14]`.
+    def arg_check(args, types = nil, server = nil)
+      return args unless types
+      args.each_with_index.map do |arg, i|
+        next arg if types[i].nil? || types[i] == String
+        if types[i] == Integer
+          begin
+            Integer(arg)
+          rescue ArgumentError
+            nil
+          end
+        elsif types[i] == Float
+          begin
+            Float(arg)
+          rescue ArgumentError
+            nil
+          end
+        elsif types[i] == Time
+          begin
+            Time.parse arg
+          rescue ArgumentError
+            nil
+          end
+        elsif types[i] == TrueClass || types[i] == FalseClass
+          if arg.casecmp('true').zero? || arg.downcase.start_with?('y')
+            true
+          elsif arg.casecmp('false').zero? || arg.downcase.start_with?('n')
+            false
+          end
+        elsif types[i] == Symbol
+          arg.to_sym
+        elsif types[i] == Encoding
+          begin
+            Encoding.find arg
+          rescue ArgumentError
+            nil
+          end
+        elsif types[i] == Regexp
+          begin
+            Regexp.new arg
+          rescue ArgumentError
+            nil
+          end
+        elsif types[i] == Rational
+          begin
+            Rational(arg)
+          rescue ArgumentError
+            nil
+          end
+        elsif types[i] == Range
+          begin
+            if arg.include? '...'
+              Range.new(*arg.split('...').map(&:to_i), true)
+            elsif arg.include? '..'
+              Range.new(*arg.split('..').map(&:to_i))
+            end
+          rescue ArgumentError
+            nil
+          end
+        elsif types[i] == NilClass
+          nil
+        elsif [Discordrb::User, Discordrb::Role, Discordrb::Emoji].include? types[i]
+          result = parse_mention arg, server
+          result if result.instance_of? types[i]
+        elsif types[i] == Discordrb::Invite
+          resolve_invite_code arg
+        elsif types[i].respond_to?(:from_argument)
+          begin
+            types[i].from_argument arg
+          rescue
+            nil
+          end
+        else
+          raise ArgumentError, "#{type} doesn't implement from_argument"
+        end
+      end
     end
 
     # Executes a command in a simple manner, without command chains or permissions.
