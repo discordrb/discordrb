@@ -465,7 +465,7 @@ module Discordrb
       @streamurl = url
       type = url ? 1 : 0
 
-      game_obj = game || url ? { name: game, url: url, type: type } : nil
+      game_obj = { name: game, url: url, type: type }
       @gateway.send_status_update(status, since, game_obj, afk)
     end
 
