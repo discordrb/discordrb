@@ -262,7 +262,7 @@ module Discordrb::Commands
         elsif types[i] == Range
           begin
             if arg.include? '...'
-              Range.new(*arg.split('...').map(&:to_i))
+              Range.new(*arg.split('...').map(&:to_i), true)
             elsif arg.include? '..'
               Range.new(*arg.split('..').map(&:to_i))
             end
@@ -283,7 +283,7 @@ module Discordrb::Commands
             nil
           end
         else
-          raise ArgumentError, "#{type} doensn't implement from_argument"
+          raise ArgumentError, "#{type} doesn't implement from_argument"
         end
       end
     end
