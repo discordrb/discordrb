@@ -84,7 +84,7 @@ module Discordrb::Events
 
     def process_emoji(data)
       @emoji = data['emojis'].map do |e|
-        @server.emoji(e.id)
+        @server.emoji[e['id']]
       end
     end
   end
