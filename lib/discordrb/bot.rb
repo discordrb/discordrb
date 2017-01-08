@@ -1137,8 +1137,8 @@ module Discordrb
 
         created_ids = new_emoji_data.keys - old_emoji_data.keys
         deleted_ids = old_emoji_data.keys - new_emoji_data.keys
-        updated_ids = data.select do |k, v|
-          v.name != new_emoji_data[k].name || v.roles != new_emoji_data[k].roles
+        updated_ids = old_emoji_data.select do |k, v|
+          new_emoji_data[k] && (v.name != new_emoji_data[k].name || v.roles != new_emoji_data[k].roles)
         end.keys
 
         event = ServerEmojiChangeEvent.new(server, data, self)
