@@ -24,21 +24,26 @@ describe Discordrb do
     EMOJI2_NAME = 'emoji_name_2'.freeze
     EMOJI3_ID = 12
     EMOJI3_NAME = 'emoji_name_3'.freeze
+
     let!(:bot) { Discordrb::Bot.new(token: '') }
+
     let!(:server) do
-      fake_server_data = JSON.parse(%Q({ "verification_level": 0, "features": [], "emojis": [{"roles":[],"require_colons":true,"name":"#{EMOJI1_NAME}","managed":false,"id":"#{EMOJI1_ID}"}, {"roles":[],"require_colons":true,"name":"#{EMOJI2_NAME}","managed":false,"id":"#{EMOJI2_ID}"}] }))
+      fake_server_data = JSON.parse(%({ "verification_level": 0, "features": [], "emojis": [{"roles":[],"require_colons":true,"name":"#{EMOJI1_NAME}","managed":false,"id":"#{EMOJI1_ID}"}, {"roles":[],"require_colons":true,"name":"#{EMOJI2_NAME}","managed":false,"id":"#{EMOJI2_ID}"}] }))
       Discordrb::Server.new(fake_server_data, bot)
     end
+
     before do
-      bot.instance_variable_set(:@servers, { SERVER_ID => server })
+      bot.instance_variable_set(:@servers, SERVER_ID => server)
     end
+
     it 'should set up' do
       expect(bot.server(SERVER_ID)).to eq(server)
       expect(bot.server(SERVER_ID).emoji.size).to eq(2)
     end
+
     describe '#update_guild_emoji' do
       it 'removes an emoji' do
-        fake_emoji_data = JSON.parse(%Q({"guild_id":"#{SERVER_ID}","emojis":[{"roles":[],"require_colons":true,"name":"#{EMOJI1_NAME}","managed":false,"id":"#{EMOJI1_ID}"}]}))
+        fake_emoji_data = JSON.parse(%({"guild_id":"#{SERVER_ID}","emojis":[{"roles":[],"require_colons":true,"name":"#{EMOJI1_NAME}","managed":false,"id":"#{EMOJI1_ID}"}]}))
         bot.send(:update_guild_emoji, fake_emoji_data)
         emojis = bot.server(SERVER_ID).emoji
         emoji = emojis[EMOJI1_ID]
@@ -47,8 +52,9 @@ describe Discordrb do
         expect(emoji.server).to eq(server)
         expect(emoji.roles).to eq([])
       end
+
       it 'adds an emoji' do
-        fake_emoji_data = JSON.parse(%Q({"guild_id":"#{SERVER_ID}","emojis":[{"roles":[],"require_colons":true,"name":"#{EMOJI1_NAME}","managed":false,"id":"#{EMOJI1_ID}"},{"roles":[],"require_colons":true,"name":"#{EMOJI2_NAME}","managed":false,"id":"#{EMOJI2_ID}"},{"roles":[],"require_colons":true,"name":"#{EMOJI3_NAME}","managed":false,"id":"#{EMOJI3_ID}"}]}))
+        fake_emoji_data = JSON.parse(%({"guild_id":"#{SERVER_ID}","emojis":[{"roles":[],"require_colons":true,"name":"#{EMOJI1_NAME}","managed":false,"id":"#{EMOJI1_ID}"},{"roles":[],"require_colons":true,"name":"#{EMOJI2_NAME}","managed":false,"id":"#{EMOJI2_ID}"},{"roles":[],"require_colons":true,"name":"#{EMOJI3_NAME}","managed":false,"id":"#{EMOJI3_ID}"}]}))
         bot.send(:update_guild_emoji, fake_emoji_data)
         emojis = bot.server(SERVER_ID).emoji
         emoji = emojis[EMOJI3_ID]
@@ -57,9 +63,10 @@ describe Discordrb do
         expect(emoji.server).to eq(server)
         expect(emoji.roles).to eq([])
       end
+
       it 'edits an emoji' do
         emoji_name = 'new_emoji_name'
-        fake_emoji_data = JSON.parse(%Q({"guild_id":"#{SERVER_ID}","emojis":[{"roles":[],"require_colons":true,"name":"#{EMOJI1_NAME}","managed":false,"id":"#{EMOJI1_ID}"},{"roles":[],"require_colons":true,"name":"#{emoji_name}","managed":false,"id":"#{EMOJI2_ID}"}]}))
+        fake_emoji_data = JSON.parse(%({"guild_id":"#{SERVER_ID}","emojis":[{"roles":[],"require_colons":true,"name":"#{EMOJI1_NAME}","managed":false,"id":"#{EMOJI1_ID}"},{"roles":[],"require_colons":true,"name":"#{emoji_name}","managed":false,"id":"#{EMOJI2_ID}"}]}))
         bot.send(:update_guild_emoji, fake_emoji_data)
         emojis = bot.server(SERVER_ID).emoji
         emoji = emojis[EMOJI2_ID]
