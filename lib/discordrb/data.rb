@@ -131,13 +131,18 @@ module Discordrb
     include IDObject
     include UserAttributes
 
-    # @!attribute [r] status
-    #   @return [Symbol] the current online status of the user (`:online`, `:offline` or `:idle`)
-    attr_accessor :status
+    # @return [Symbol] the current online status of the user (`:online`, `:offline` or `:idle`)
+    attr_reader :status
 
-    # @!attribute [r] game
-    #   @return [String, nil] the game the user is currently playing, or `nil` if none is being played.
-    attr_accessor :game
+    # @return [String, nil] the game the user is currently playing, or `nil` if none is being played.
+    attr_reader :game
+
+    # @return [String, nil] the URL to the stream, if the user is currently streaming something.
+    attr_reader :stream_url
+
+    # @return [String, Integer, nil] the type of the stream. Can technically be set to anything, most of the time it
+    #   will be 0 for no stream or 1 for Twitch streams.
+    attr_reader :stream_type
 
     def initialize(data, bot)
       @bot = bot
@@ -188,6 +193,23 @@ module Discordrb
     # @!visibility private
     def update_username(username)
       @username = username
+    end
+
+    # Set the user's presence data
+    # @note for internal use only
+    # @!visibility private
+    def update_presence(data)
+      @status = data['status'].to_sym
+
+      if data['game']
+        game = data['game']
+
+        @game = game['name']
+        @stream_url = game['url']
+        @stream_type = game['type']
+      else
+        @game = @stream_url = @stream_type = nil
+      end
     end
 
     # Add an await for a message from this user. Specifically, this adds a global await for a MessageEvent with this
@@ -418,6 +440,8 @@ module Discordrb
       @self_deaf = self_deaf
     end
   end
+
+  # A presence represents a
 
   # A member is a user on a server. It differs from regular users in that it has roles, voice statuses and things like
   # that.
@@ -2621,8 +2645,7 @@ module Discordrb
         user_id = element['user']['id'].to_i
         user = @members[user_id]
         if user
-          user.status = element['status'].to_sym
-          user.game = element['game'] ? element['game']['name'] : nil
+          user.update_presence(element)
         else
           LOGGER.warn "Rogue presence update! #{element['user']['id']} on #{@id}"
         end

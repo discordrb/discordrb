@@ -40,6 +40,9 @@ module Discordrb::Commands
         # Usage description (for help command and error messages)
         usage: attributes[:usage] || nil,
 
+        # Array of arguments (for type-checking)
+        arg_types: attributes[:arg_types] || nil,
+
         # Parameter list (for help command and error messages)
         parameters: attributes[:parameters] || nil,
 
@@ -123,7 +126,7 @@ module Discordrb::Commands
       b_level = 0
       result = ''
       quoted = false
-      hacky_delim, hacky_space, hacky_prev = [0xe001, 0xe002, 0xe003].pack('U*').chars
+      hacky_delim, hacky_space, hacky_prev, hacky_newline = [0xe001, 0xe002, 0xe003, 0xe004].pack('U*').chars
 
       @chain.each_char.each_with_index do |char, index|
         # Quote begin
@@ -153,6 +156,11 @@ module Discordrb::Commands
           next
         end
 
+        if char == "\n" && quoted
+          result += hacky_newline
+          next
+        end
+
         if char == @attributes[:sub_chain_start] && !quoted
           b_start = index if b_level.zero?
           b_level += 1
@@ -179,7 +187,7 @@ module Discordrb::Commands
       chain_to_split = @chain
 
       # Don't break if a command is called the same thing as the chain delimiter
-      chain_to_split.slice!(1..-1) if chain_to_split.start_with?(@attributes[:chain_delimiter])
+      chain_to_split = chain_to_split.slice(1..-1) if chain_to_split.start_with?(@attributes[:chain_delimiter])
 
       first = true
       split_chain = chain_to_split.split(@attributes[:chain_delimiter])
@@ -205,9 +213,10 @@ module Discordrb::Commands
 
         arguments = arguments.split ' '
 
-        # Replace the hacky spaces with actual spaces
+        # Replace the hacky spaces/newlines with actual ones
         arguments.map! do |elem|
           elem.gsub hacky_space, ' '
+          elem.gsub hacky_newline, "\n"
         end
 
         # Finally execute the command

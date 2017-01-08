@@ -14,14 +14,14 @@ module Discordrb::Events
     # @param content [String] The message to send to the channel
     # @return [Discordrb::Message] the message that was sent
     def send_message(content)
-      @channel.send_message(content)
+      channel.send_message(content)
     end
 
     # Sends a temporary message to the channel this message was sent in, right now.
     # @param content [String] The content to send. Should not be longer than 2000 characters or it will result in an error.
     # @param timeout [Float] The amount of time in seconds after which the message sent will be deleted.
     def send_temporary_message(content, timeout)
-      @channel.send_temporary_message(content, timeout)
+      channel.send_temporary_message(content, timeout)
     end
 
     # Adds a string to be sent after the event has finished execution. Avoids problems with rate limiting because only

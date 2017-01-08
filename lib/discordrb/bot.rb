@@ -16,6 +16,7 @@ require 'discordrb/events/guilds'
 require 'discordrb/events/await'
 require 'discordrb/events/bans'
 require 'discordrb/events/raw'
+require 'discordrb/events/reactions'
 
 require 'discordrb/api'
 require 'discordrb/api/channel'
@@ -639,8 +640,8 @@ module Discordrb
         member.update_username(username)
       end
 
-      member.status = data['status'].to_sym
-      member.game = data['game'] ? data['game']['name'] : nil
+      member.update_presence(data)
+
       member.avatar_id = data['user']['avatar'] if data['user']['avatar']
 
       server.cache_member(member)
@@ -991,6 +992,21 @@ module Discordrb
         rescue Discordrb::Errors::NoPermission
           debug 'Typing started in channel the bot has no access to, ignoring'
         end
+      when :MESSAGE_REACTION_ADD
+        # No call to an internal handler since there is no caching for this
+
+        event = ReactionAddEvent.new(data, self)
+        raise_event(event)
+      when :MESSAGE_REACTION_REMOVE
+        # No call to an internal handler since there is no caching for this
+
+        event = ReactionRemoveEvent.new(data, self)
+        raise_event(event)
+      when :MESSAGE_REACTION_REMOVE_ALL
+        # No call to an internal handler since there is no caching for this
+
+        event = ReactionRemoveAllEvent.new(data, self)
+        raise_event(event)
       when :PRESENCE_UPDATE
         # Ignore friends list presences
         return unless data['guild_id']
@@ -1152,7 +1168,7 @@ module Discordrb
 
       # The existence of this array is checked before for performance reasons, since this has to be done for *every*
       # dispatch.
-      if @event_handlers[RawEvent]
+      if @event_handlers && @event_handlers[RawEvent]
         event = RawEvent.new(type, data, self)
         raise_event(event)
       end
