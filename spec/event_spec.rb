@@ -1,4 +1,9 @@
 require 'discordrb'
+require 'helpers'
+
+RSpec.configure do |c|
+  c.include Helpers
+end
 
 describe Discordrb::Events do
   describe Discordrb::Events::Negated do
@@ -133,6 +138,89 @@ describe Discordrb::Events do
         event = double('Discordrb::Events::MessageEvent')
         Discordrb::Events::MessageEventHandler.new({}, proc { t.track(1) }).match(event)
         # t.summary
+      end
+    end
+  end
+end
+
+module Discordrb::Events
+  include Helpers
+
+  shared_examples 'ServerEvent' do
+    describe '#initialize' do
+      it 'sets bot' do
+        expect(event.bot).to eq(bot)
+      end
+      it 'sets server' do
+        expect(event.server).to eq(server)
+      end
+    end
+  end
+
+  describe ServerEvent do
+    let(:bot) { double('bot', server: server) }
+    let(:server) { double }
+
+    subject(:event) do
+      described_class.new({ SERVER_ID => nil }, bot)
+    end
+
+    it_behaves_like 'ServerEvent'
+  end
+
+  describe ServerEmojiCDEvent do
+    let(:bot) { double }
+    let(:server) { double }
+    let(:emoji) { double }
+
+    subject(:event) do
+      described_class.new(server, emoji, bot)
+    end
+
+    it_behaves_like 'ServerEvent'
+
+    describe '#initialize' do
+      it 'sets emoji' do
+        expect(event.emoji).to eq(emoji)
+      end
+    end
+  end
+
+  describe ServerEmojiChangeEvent do
+    let(:bot) { double }
+    let(:server) { double('server', emoji: { EMOJI1_ID => nil, EMOJI2_ID => nil }) }
+
+    subject(:event) do
+      described_class.new(server, fake_emoji_data, bot)
+    end
+
+    it_behaves_like 'ServerEvent'
+
+    describe '#process_emoji' do
+      it 'sets an array of Emoji' do
+        expect(event.emoji).to eq([nil, nil])
+      end
+    end
+  end
+
+  describe ServerEmojiUpdateEvent do
+    let(:bot) { double }
+    let(:server) { double }
+    let(:old_emoji) { double }
+    let(:emoji) { double }
+
+    subject(:event) do
+      described_class.new(server, old_emoji, emoji, bot)
+    end
+
+    it_behaves_like 'ServerEvent'
+
+    describe '#initialize' do
+      it 'sets emoji' do
+        expect(event.emoji).to eq(emoji)
+      end
+      it 'sets old_emoji' do
+        expect(event.old_emoji).to eq(old_emoji)
       end
     end
   end
