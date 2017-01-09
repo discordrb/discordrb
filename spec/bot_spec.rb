@@ -1,19 +1,18 @@
 require 'discordrb'
+require 'helpers'
+
+RSpec.configure do |c|
+  c.include Helpers
+end
 
 module Discordrb
+  include Helpers
   describe Bot do
-    SERVER_ID = 1
-    EMOJI1_ID = 10
-    EMOJI1_NAME = 'emoji_name_1'.freeze
-    EMOJI2_ID = 11
-    EMOJI2_NAME = 'emoji_name_2'.freeze
-    EMOJI3_ID = 12
-    EMOJI3_NAME = 'emoji_name_3'.freeze
-
-    let!(:bot) { Discordrb::Bot.new(token: 'fake_token') }
+    subject(:bot) do
+      described_class.new(token: 'fake_token')
+    end
 
     let!(:server) do
-      fake_server_data = JSON.parse(%({ "verification_level": 0, "features": [], "emojis": [{"roles":[],"require_colons":true,"name":"#{EMOJI1_NAME}","managed":false,"id":"#{EMOJI1_ID}"}, {"roles":[],"require_colons":true,"name":"#{EMOJI2_NAME}","managed":false,"id":"#{EMOJI2_ID}"}] }))
       Discordrb::Server.new(fake_server_data, bot)
     end
 
