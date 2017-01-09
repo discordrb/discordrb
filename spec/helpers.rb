@@ -1,6 +1,6 @@
 module Helpers
   SERVER_ID = 1
-  SERVER_NAME = 'server_name'
+  SERVER_NAME = 'server_name'.freeze
   EMOJI1_ID = 10
   EMOJI1_NAME = 'emoji_name_1'.freeze
   EMOJI2_ID = 11
