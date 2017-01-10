@@ -2271,7 +2271,7 @@ module Discordrb
 
     # @return [Array<Integration>] an array of all the integrations connected to this server.
     def integrations
-      integration = JSON.parse(API.server_integrations(@bot.token, @id))
+      integration = JSON.parse(API::Server.integrations(@bot.token, @id))
       integration.map { |element| Integration.new(element, @bot, self) }
     end
 
@@ -2279,7 +2279,7 @@ module Discordrb
     # @note For internal use only
     # @!visibility private
     def cache_embed
-      @embed = JSON.parse(API.server(@bot.token, @id))['embed_enabled'] if @embed.nil?
+      @embed = JSON.parse(API::Server.resolve(@bot.token, @id))['embed_enabled'] if @embed.nil?
     end
 
     # @return [true, false] whether or not the server has widget enabled
@@ -2333,7 +2333,7 @@ module Discordrb
 
     # @return [String] the hexadecimal ID used to identify this server's splash image for their VIP invite page.
     def splash_id
-      @splash_id = JSON.parse(API.server(@bot.token, @id))['splash'] if @splash_id.nil?
+      @splash_id = JSON.parse(API::Server.resolve(@bot.token, @id))['splash'] if @splash_id.nil?
       @splash_id
     end
 
