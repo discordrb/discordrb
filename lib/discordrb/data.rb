@@ -2279,7 +2279,7 @@ module Discordrb
     # @note For internal use only
     # @!visibility private
     def cache_embed
-      @embed = JSON.parse(API::Server.resolve(@bot.token, @id))['embed_enabled'] if @embed.nil?
+      @embed ||= JSON.parse(API::Server.resolve(@bot.token, @id))['embed_enabled']
     end
 
     # @return [true, false] whether or not the server has widget enabled
@@ -2333,8 +2333,7 @@ module Discordrb
 
     # @return [String] the hexadecimal ID used to identify this server's splash image for their VIP invite page.
     def splash_id
-      @splash_id = JSON.parse(API::Server.resolve(@bot.token, @id))['splash'] if @splash_id.nil?
-      @splash_id
+      @splash_id ||= JSON.parse(API::Server.resolve(@bot.token, @id))['splash']
     end
 
     # @return [String, nil] the splash image URL for the server's VIP invite page.
