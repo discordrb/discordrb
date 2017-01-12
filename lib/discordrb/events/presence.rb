@@ -96,18 +96,10 @@ module Discordrb::Events
                end
         end,
         matches_all(@attributes[:game], event.game) do |a, e|
-          a == if a.is_a? String
-                 e.name
-               else
-                 e
-               end
+          a == e
         end,
         matches_all(@attributes[:type], event.type) do |a, e|
-          a == if a.is_a? Integer
-                 e.type
-               else
-                 e
-               end
+          a == e
         end
       ].reduce(true, &:&)
     end
