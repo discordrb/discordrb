@@ -1040,9 +1040,9 @@ module Discordrb
 
         raise_event(event)
       when :VOICE_STATE_UPDATE
-        update_voice_state(data)
+        old_channel_id = update_voice_state(data)
 
-        event = VoiceStateUpdateEvent.new(data, self)
+        event = VoiceStateUpdateEvent.new(data, old_channel_id, self)
         raise_event(event)
       when :VOICE_SERVER_UPDATE
         update_voice_server(data)
