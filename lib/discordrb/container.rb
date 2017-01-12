@@ -241,6 +241,7 @@ module Discordrb
     # @param attributes [Hash] The event's attributes.
     # @option attributes [String, Integer, User] :from Matches the user that sent the message.
     # @option attributes [String, Integer, Channel] :channel Matches the voice channel the user has joined.
+    # @option attributes [String, Integer, Channel] :old_channel Matches the voice channel the user was in previously.
     # @option attributes [true, false] :mute Matches whether or not the user is muted server-wide.
     # @option attributes [true, false] :deaf Matches whether or not the user is deafened server-wide.
     # @option attributes [true, false] :self_mute Matches whether or not the user is muted by the bot.
