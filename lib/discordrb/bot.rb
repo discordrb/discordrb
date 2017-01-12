@@ -1003,17 +1003,17 @@ module Discordrb
           debug 'Typing started in channel the bot has no access to, ignoring'
         end
       when :MESSAGE_REACTION_ADD
-        # No call to an internal handler since there is no caching for this
+        add_message_reaction(data)
 
         event = ReactionAddEvent.new(data, self)
         raise_event(event)
       when :MESSAGE_REACTION_REMOVE
-        # No call to an internal handler since there is no caching for this
+        remove_message_reaction(data)
 
         event = ReactionRemoveEvent.new(data, self)
         raise_event(event)
       when :MESSAGE_REACTION_REMOVE_ALL
-        # No call to an internal handler since there is no caching for this
+        remove_all_message_reactions(data)
 
         event = ReactionRemoveAllEvent.new(data, self)
         raise_event(event)
