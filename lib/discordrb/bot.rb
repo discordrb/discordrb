@@ -17,6 +17,7 @@ require 'discordrb/events/await'
 require 'discordrb/events/bans'
 require 'discordrb/events/raw'
 require 'discordrb/events/reactions'
+require 'discordrb/events/webhooks'
 
 require 'discordrb/api'
 require 'discordrb/api/channel'
@@ -1172,6 +1173,9 @@ module Discordrb
           event = ServerEmojiUpdateEvent.new(server, old_emoji_data[e], new_emoji_data[e], self)
           raise_event(event)
         end
+      when :WEBHOOKS_UPDATE
+        event = WebhookUpdateEvent.new(data, self)
+        raise_event(event)
       else
         # another event that we don't support yet
         debug "Event #{type} has been received but is unsupported. Raising UnknownEvent"
