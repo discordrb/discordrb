@@ -19,7 +19,6 @@ module APIMock
       @last_headers = attributes.last
 
       @next_response ||= nil
-      @next_response
     end
   end
 end

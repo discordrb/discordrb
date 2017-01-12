@@ -13,7 +13,7 @@ module Discordrb
       3 => :administrator,         # 8
       4 => :manage_channels,       # 16
       5 => :manage_server,         # 32
-      # 6                          # 64
+      6 => :add_reactions,         # 64
       # 7                          # 128
       # 8                          # 256
       # 9                          # 512
@@ -35,7 +35,9 @@ module Discordrb
       25 => :use_voice_activity,   # 33554432
       26 => :change_nickname,      # 67108864
       27 => :manage_nicknames,     # 134217728
-      28 => :manage_roles          # 268435456, also Manage Permissions
+      28 => :manage_roles,         # 268435456, also Manage Permissions
+      29 => :manage_webhooks,      # 536870912
+      30 => :manage_emojis         # 1073741824
     }.freeze
 
     Flags.each do |position, flag|
