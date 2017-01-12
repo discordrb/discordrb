@@ -162,7 +162,8 @@ module Discordrb
     def emoji(id = nil)
       gateway_check
       if id
-        emoji = @emoji.find { |sth| sth.id == id }
+        emoji
+        @emoji.find { |sth| sth.id == id }
       else
         emoji = {}
         @servers.each do |_, server|
@@ -170,7 +171,7 @@ module Discordrb
             emoji[element.name] = GlobalEmoji.new(element, self)
           end
         end
-        emoji.values
+        @emoji = emoji.values
       end
     end
 
