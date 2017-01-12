@@ -8,6 +8,9 @@ module Discordrb::Events
   class VoiceStateUpdateEvent < Event
     attr_reader :user, :token, :suppress, :session_id, :self_mute, :self_deaf, :mute, :deaf, :server, :channel
 
+    # @return [Channel, nil] the old channel this user was on, or nil if the user is newly joining voice.
+    attr_reader :old_channel
+
     def initialize(data, old_channel_id, bot)
       @bot = bot
 
