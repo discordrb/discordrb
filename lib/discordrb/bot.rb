@@ -648,7 +648,7 @@ module Discordrb
       server.cache_member(member)
     end
 
-    # Internal handler for VOICE_STATUS_UPDATE
+    # Internal handler for VOICE_STATE_UPDATE
     def update_voice_state(data)
       server_id = data['guild_id'].to_i
       server = server(server_id)
