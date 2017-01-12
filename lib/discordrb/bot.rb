@@ -834,6 +834,15 @@ module Discordrb
     # Internal handler for MESSAGE_DELETE
     def delete_message(data); end
 
+    # Internal handler for MESSAGE_REACTION_ADD
+    def add_message_reaction(data); end
+
+    # Internal handler for MESSAGE_REACTION_REMOVE
+    def remove_message_reaction(data); end
+
+    # Internal handler for MESSAGE_REACTION_REMOVE_ALL
+    def remove_all_message_reactions(data); end
+
     # Internal handler for GUILD_BAN_ADD
     def add_user_ban(data); end
 
