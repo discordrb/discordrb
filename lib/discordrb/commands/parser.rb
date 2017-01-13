@@ -126,9 +126,20 @@ module Discordrb::Commands
       b_level = 0
       result = ''
       quoted = false
+      escaped = false
       hacky_delim, hacky_space, hacky_prev, hacky_newline = [0xe001, 0xe002, 0xe003, 0xe004].pack('U*').chars
 
       @chain.each_char.each_with_index do |char, index|
+        # Escape character
+        if char == '\\' && !escaped
+          escaped = true
+          next
+        elsif escaped && b_level <= 0
+          result += char
+          escaped = false
+          next
+        end
+
         # Quote begin
         if char == @attributes[:quote_start] && !quoted
           quoted = true
@@ -141,22 +152,22 @@ module Discordrb::Commands
           next
         end
 
-        if char == @attributes[:chain_delimiter] && quoted
+        if char == @attributes[:chain_delimiter] && quoted && b_level <= 0
           result += hacky_delim
           next
         end
 
-        if char == @attributes[:previous] && quoted
+        if char == @attributes[:previous] && quoted && b_level <= 0
           result += hacky_prev
           next
         end
 
-        if char == ' ' && quoted
+        if char == ' ' && quoted && b_level <= 0
           result += hacky_space
           next
         end
 
-        if char == "\n" && quoted
+        if char == "\n" && quoted && b_level <= 0
           result += hacky_newline
           next
         end
