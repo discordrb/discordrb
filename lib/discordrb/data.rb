@@ -1370,12 +1370,14 @@ module Discordrb
 
     # Deletes a collection of messages
     # @param messages [Array<Message, Integer>] the messages (or message IDs) to delete. Total must be an amount between 2 and 100 (Discord limitation)
+    # @param strict [true, false] Whether an error should be raised when a message is reached that is too old to be bulk
+    #   deleted. If this is false only a warning message will be output to the console.
     # @raise [ArgumentError] if the amount of messages is not a value between 2 and 100
-    def delete_messages(messages)
+    def delete_messages(messages, strict = false)
       raise ArgumentError, 'Can only delete between 2 and 100 messages!' unless messages.count.between?(2, 100)
 
       messages.map!(&:resolve_id)
-      bulk_delete(messages)
+      bulk_delete(messages, strict)
     end
 
     # Updates the cached permission overwrites
