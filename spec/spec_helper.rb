@@ -95,11 +95,3 @@ end
 RSpec::Matchers.define :something_not_including do |x|
   match { |actual| !actual.include?(x) }
 end
-
-class SimpleIDObject
-  include Discordrb::IDObject
-
-  def initialize(id)
-    @id = id
-  end
-end

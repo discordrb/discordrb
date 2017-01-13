@@ -1,5 +1,13 @@
 require 'discordrb'
 
+class SimpleIDObject
+  include Discordrb::IDObject
+
+  def initialize(id)
+    @id = id
+  end
+end
+
 describe Discordrb do
   it 'should split messages correctly' do
     split = Discordrb.split_message('a' * 5234)
