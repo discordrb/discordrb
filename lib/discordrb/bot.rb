@@ -162,7 +162,8 @@ module Discordrb
     def emoji(id = nil)
       gateway_check
       if id
-        emoji = @emoji.find { |sth| sth.id == id }
+        emoji
+        @emoji.find { |sth| sth.id == id }
       else
         emoji = {}
         @servers.each do |_, server|
@@ -170,7 +171,7 @@ module Discordrb
             emoji[element.name] = GlobalEmoji.new(element, self)
           end
         end
-        emoji.values
+        @emoji = emoji.values
       end
     end
 
@@ -647,15 +648,21 @@ module Discordrb
       server.cache_member(member)
     end
 
-    # Internal handler for VOICE_STATUS_UPDATE
+    # Internal handler for VOICE_STATE_UPDATE
     def update_voice_state(data)
+      @session_id = data['session_id']
+
       server_id = data['guild_id'].to_i
       server = server(server_id)
       return unless server
 
+      user_id = data['user_id'].to_i
+      old_voice_state = server.voice_states[user_id]
+      old_channel_id = old_voice_state.voice_channel.id if old_voice_state
+
       server.update_voice_state(data)
 
-      @session_id = data['session_id']
+      old_channel_id
     end
 
     # Internal handler for VOICE_SERVER_UPDATE
@@ -814,6 +821,13 @@ module Discordrb
       server.delete_role(role_id)
     end
 
+    # Internal handler for GUILD_EMOJIS_UPDATE
+    def update_guild_emoji(data)
+      server_id = data['guild_id'].to_i
+      server = @servers[server_id]
+      server.update_emoji_data(data)
+    end
+
     # Internal handler for MESSAGE_CREATE
     def create_message(data); end
 
@@ -825,6 +839,15 @@ module Discordrb
 
     # Internal handler for MESSAGE_DELETE
     def delete_message(data); end
+
+    # Internal handler for MESSAGE_REACTION_ADD
+    def add_message_reaction(data); end
+
+    # Internal handler for MESSAGE_REACTION_REMOVE
+    def remove_message_reaction(data); end
+
+    # Internal handler for MESSAGE_REACTION_REMOVE_ALL
+    def remove_all_message_reactions(data); end
 
     # Internal handler for GUILD_BAN_ADD
     def add_user_ban(data); end
@@ -986,17 +1009,17 @@ module Discordrb
           debug 'Typing started in channel the bot has no access to, ignoring'
         end
       when :MESSAGE_REACTION_ADD
-        # No call to an internal handler since there is no caching for this
+        add_message_reaction(data)
 
         event = ReactionAddEvent.new(data, self)
         raise_event(event)
       when :MESSAGE_REACTION_REMOVE
-        # No call to an internal handler since there is no caching for this
+        remove_message_reaction(data)
 
         event = ReactionRemoveEvent.new(data, self)
         raise_event(event)
       when :MESSAGE_REACTION_REMOVE_ALL
-        # No call to an internal handler since there is no caching for this
+        remove_all_message_reactions(data)
 
         event = ReactionRemoveAllEvent.new(data, self)
         raise_event(event)
@@ -1017,9 +1040,9 @@ module Discordrb
 
         raise_event(event)
       when :VOICE_STATE_UPDATE
-        update_voice_state(data)
+        old_channel_id = update_voice_state(data)
 
-        event = VoiceStateUpdateEvent.new(data, self)
+        event = VoiceStateUpdateEvent.new(data, old_channel_id, self)
         raise_event(event)
       when :VOICE_SERVER_UPDATE
         update_voice_server(data)
@@ -1121,6 +1144,36 @@ module Discordrb
 
         event = ServerDeleteEvent.new(data, self)
         raise_event(event)
+      when :GUILD_EMOJIS_UPDATE
+        server_id = data['guild_id'].to_i
+        server = @servers[server_id]
+        old_emoji_data = server.emoji.clone
+        update_guild_emoji(data)
+        new_emoji_data = server.emoji
+
+        created_ids = new_emoji_data.keys - old_emoji_data.keys
+        deleted_ids = old_emoji_data.keys - new_emoji_data.keys
+        updated_ids = old_emoji_data.select do |k, v|
+          new_emoji_data[k] && (v.name != new_emoji_data[k].name || v.roles != new_emoji_data[k].roles)
+        end.keys
+
+        event = ServerEmojiChangeEvent.new(server, data, self)
+        raise_event(event)
+
+        created_ids.each do |e|
+          event = ServerEmojiCreateEvent.new(server, new_emoji_data[e], self)
+          raise_event(event)
+        end
+
+        deleted_ids.each do |e|
+          event = ServerEmojiDeleteEvent.new(server, old_emoji_data[e], self)
+          raise_event(event)
+        end
+
+        updated_ids.each do |e|
+          event = ServerEmojiUpdateEvent.new(server, old_emoji_data[e], new_emoji_data[e], self)
+          raise_event(event)
+        end
       else
         # another event that we don't support yet
         debug "Event #{type} has been received but is unsupported. Raising UnknownEvent"

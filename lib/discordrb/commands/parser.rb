@@ -215,8 +215,7 @@ module Discordrb::Commands
 
         # Replace the hacky spaces/newlines with actual ones
         arguments.map! do |elem|
-          elem.gsub hacky_space, ' '
-          elem.gsub hacky_newline, "\n"
+          elem.gsub(hacky_space, ' ').gsub(hacky_newline, "\n")
         end
 
         # Finally execute the command

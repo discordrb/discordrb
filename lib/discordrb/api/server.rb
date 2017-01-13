@@ -354,4 +354,41 @@ module Discordrb::API::Server
       Authorization: token
     )
   end
+
+  # Adds a custom emoji
+  def add_emoji(token, server_id, image, name)
+    Discordrb::API.request(
+      :guilds_sid_emojis,
+      server_id,
+      :post,
+      "#{Discordrb::API.api_base}/guilds/#{server_id}/emojis",
+      { image: image, name: name }.to_json,
+      Authorization: token,
+      content_type: :json
+    )
+  end
+
+  # Changes an emoji name
+  def edit_emoji(token, server_id, emoji_id, name)
+    Discordrb::API.request(
+      :guilds_sid_emojis_eid,
+      server_id,
+      :patch,
+      "#{Discordrb::API.api_base}/guilds/#{server_id}/emojis/#{emoji_id}",
+      { name: name }.to_json,
+      Authorization: token,
+      content_type: :json
+    )
+  end
+
+  # Deletes a custom emoji
+  def delete_emoji(token, server_id, emoji_id)
+    Discordrb::API.request(
+      :guilds_sid_emojis_eid,
+      server_id,
+      :delete,
+      "#{Discordrb::API.api_base}/guilds/#{server_id}/emojis/#{emoji_id}",
+      Authorization: token
+    )
+  end
 end

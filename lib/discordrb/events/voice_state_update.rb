@@ -8,7 +8,10 @@ module Discordrb::Events
   class VoiceStateUpdateEvent < Event
     attr_reader :user, :token, :suppress, :session_id, :self_mute, :self_deaf, :mute, :deaf, :server, :channel
 
-    def initialize(data, bot)
+    # @return [Channel, nil] the old channel this user was on, or nil if the user is newly joining voice.
+    attr_reader :old_channel
+
+    def initialize(data, old_channel_id, bot)
       @bot = bot
 
       @token = data['token']
@@ -22,6 +25,7 @@ module Discordrb::Events
       return unless @server
 
       @channel = bot.channel(data['channel_id'].to_i) if data['channel_id']
+      @old_channel = bot.channel(old_channel_id) if old_channel_id
       @user = bot.user(data['user_id'].to_i)
     end
   end
@@ -71,6 +75,17 @@ module Discordrb::Events
                end
         end,
         matches_all(@attributes[:channel], event.channel) do |a, e|
+          next unless e # Don't bother if the channel is nil
+          a == if a.is_a? String
+                 e.name
+               elsif a.is_a? Integer
+                 e.id
+               else
+                 e
+               end
+        end,
+        matches_all(@attributes[:old_channel], event.old_channel) do |a, e|
+          next unless e # Don't bother if the channel is nil
           a == if a.is_a? String
                  e.name
                elsif a.is_a? Integer
