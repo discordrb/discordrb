@@ -1360,12 +1360,14 @@ module Discordrb
 
     # Delete the last N messages on this channel.
     # @param amount [Integer] How many messages to delete. Must be a value between 2 and 100 (Discord limitation)
+    # @param strict [true, false] Whether an error should be raised when a message is reached that is too old to be bulk
+    #   deleted. If this is false only a warning message will be output to the console.
     # @raise [ArgumentError] if the amount of messages is not a value between 2 and 100
-    def prune(amount)
+    def prune(amount, strict)
       raise ArgumentError, 'Can only prune between 2 and 100 messages!' unless amount.between?(2, 100)
 
       messages = history_ids(amount)
-      bulk_delete(messages)
+      bulk_delete(messages, strict)
     end
 
     # Deletes a collection of messages
