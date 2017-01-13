@@ -85,6 +85,14 @@ module Discordrb
       ms = (@id >> 22) + DISCORD_EPOCH
       Time.at(ms / 1000.0)
     end
+
+    # Creates an artificial snowflake at the given point in time. Useful for comparing against.
+    # @param time [Time] The time the snowflake should represent.
+    # @return [Integer] a snowflake with the timestamp data as the given time
+    def synthesise(time)
+      ms = (time.to_f * 1000).to_i
+      (ms - DISCORD_EPOCH) << 22
+    end
   end
 
   # Mixin for the attributes users should have
