@@ -89,7 +89,7 @@ module Discordrb
     # Creates an artificial snowflake at the given point in time. Useful for comparing against.
     # @param time [Time] The time the snowflake should represent.
     # @return [Integer] a snowflake with the timestamp data as the given time
-    def synthesise(time)
+    def self.synthesise(time)
       ms = (time.to_f * 1000).to_i
       (ms - DISCORD_EPOCH) << 22
     end
