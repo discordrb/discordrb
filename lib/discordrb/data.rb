@@ -1357,7 +1357,7 @@ module Discordrb
       raise ArgumentError, 'Can only prune between 2 and 100 messages!' unless amount.between?(2, 100)
 
       messages = history_ids(amount)
-      API::Channel.bulk_delete_messages(@bot.token, @id, messages)
+      bulk_delete(messages)
     end
 
     # Deletes a collection of messages
