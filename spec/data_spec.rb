@@ -23,6 +23,11 @@ module Discordrb
         messages = [1]
         expect { channel.delete_messages(messages) }.to raise_error(ArgumentError)
       end
+
+      it 'should fail with old messages in strict mode' do
+        messages = [1, 2, 3]
+        expect { channel.delete_messages(messages, true) }.to raise_error(ArgumentError)
+      end
     end
   end
 end
