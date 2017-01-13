@@ -1479,6 +1479,11 @@ module Discordrb
 
     private
 
+    # Deletes a list of messages on this channel using bulk delete
+    def bulk_delete(ids)
+      API::Channel.bulk_delete_messages(@bot.token, @id, ids)
+    end
+
     def update_channel_data
       API::Channel.update(@bot.token, @id, @name, @topic, @position, @bitrate, @user_limit)
     end
