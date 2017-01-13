@@ -9,3 +9,10 @@ describe 'an example group' do
     expect(help).to be(:available)
   end
 end
+
+describe '#load_data_file' do
+  it 'should load the test data correctly' do
+    data = load_data_file(:test)
+    expect(data['success']).to eq(true)
+  end
+end
