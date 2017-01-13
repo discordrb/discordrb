@@ -1491,11 +1491,16 @@ module Discordrb
     TWO_WEEKS = 86_400 * 14
 
     # Deletes a list of messages on this channel using bulk delete
-    def bulk_delete(ids)
+    def bulk_delete(ids, strict = false)
       min_snowflake = IDObject.synthesise(Time.now - TWO_WEEKS)
 
       ids.reject! do |e|
-        Discordrb::LOGGER.warn("Attempted to bulk_delete message #{e} which is too old (min = #{min_snowflake})") if e < min_snowflake
+        next unless e < min_snowflake
+
+        message = "Attempted to bulk_delete message #{e} which is too old (min = #{min_snowflake})"
+        raise ArgumentError, message if strict
+        Discordrb::LOGGER.warn(message)
+        false
       end
 
       API::Channel.bulk_delete_messages(@bot.token, @id, ids)
