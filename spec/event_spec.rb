@@ -1,9 +1,4 @@
 require 'discordrb'
-require 'helpers'
-
-RSpec.configure do |c|
-  c.include Helpers
-end
 
 describe Discordrb::Events do
   describe Discordrb::Events::Negated do
@@ -144,8 +139,6 @@ describe Discordrb::Events do
 end
 
 module Discordrb::Events
-  include Helpers
-
   # This data is shared across examples, so it needs to be defined here
   SERVER_ID = 1
   SERVER_NAME = 'server_name'.freeze
