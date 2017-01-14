@@ -11,7 +11,11 @@ module Discordrb
 
     let!(:server) { Discordrb::Server.new(server_data, bot) }
 
-    # This data is represented in the fixtures (see ./data/emoji)
+    fixture :dispatch_event, [:emoji, :dispatch_event]
+    fixture :dispatch_add, [:emoji, :dispatch_add]
+    fixture :dispatch_remove, [:emoji, :dispatch_remove]
+    fixture :dispatch_update, [:emoji, :dispatch_update]
+
     EMOJI1_ID = 10
     EMOJI1_NAME = 'emoji_name_1'.freeze
 
@@ -33,17 +37,15 @@ module Discordrb
 
     describe '#handle_dispatch' do
       it 'handles GUILD_EMOJIS_UPDATE' do
-        data = load_data_file(:emoji, :dispatch_event)
         type = :GUILD_EMOJIS_UPDATE
         expect(bot).to receive(:raise_event).exactly(4).times
-        bot.send(:handle_dispatch, type, data)
+        bot.send(:handle_dispatch, type, dispatch_event)
       end
     end
 
     describe '#update_guild_emoji' do
       it 'removes an emoji' do
-        data = load_data_file(:emoji, :dispatch_remove)
-        bot.send(:update_guild_emoji, data)
+        bot.send(:update_guild_emoji, dispatch_remove)
         emojis = bot.server(server_id).emoji
         emoji = emojis[EMOJI1_ID]
         expect(emojis.size).to eq(1)
@@ -53,8 +55,7 @@ module Discordrb
       end
 
       it 'adds an emoji' do
-        data = load_data_file(:emoji, :dispatch_add)
-        bot.send(:update_guild_emoji, data)
+        bot.send(:update_guild_emoji, dispatch_add)
         emojis = bot.server(server_id).emoji
         emoji = emojis[EMOJI3_ID]
         expect(emojis.size).to eq(3)
@@ -64,8 +65,7 @@ module Discordrb
       end
 
       it 'edits an emoji' do
-        data = load_data_file(:emoji, :dispatch_update)
-        bot.send(:update_guild_emoji, data)
+        bot.send(:update_guild_emoji, dispatch_update)
         emojis = bot.server(server_id).emoji
         emoji = emojis[EMOJI2_ID]
         expect(emojis.size).to eq(2)
