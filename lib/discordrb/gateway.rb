@@ -234,7 +234,7 @@ module Discordrb
                       :'$device' => 'discordrb',
                       :'$referrer' => '',
                       :'$referring_domain' => ''
-                    }, true, 100)
+                    }, true, 100, @shard_key)
     end
 
     # Sends an identify packet (op 2). This starts a new session on the current connection and tells Discord who we are.
