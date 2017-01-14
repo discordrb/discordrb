@@ -46,8 +46,10 @@ module Discordrb
     describe '#update_guild_emoji' do
       it 'removes an emoji' do
         bot.send(:update_guild_emoji, dispatch_remove)
+
         emojis = bot.server(server_id).emoji
         emoji = emojis[emoji_1_id]
+
         expect(emojis.size).to eq(1)
         expect(emoji.name).to eq(emoji_1_name)
         expect(emoji.server).to eq(server)
@@ -56,8 +58,10 @@ module Discordrb
 
       it 'adds an emoji' do
         bot.send(:update_guild_emoji, dispatch_add)
+
         emojis = bot.server(server_id).emoji
         emoji = emojis[emoji_3_id]
+
         expect(emojis.size).to eq(3)
         expect(emoji.name).to eq(emoji_3_name)
         expect(emoji.server).to eq(server)
@@ -66,8 +70,10 @@ module Discordrb
 
       it 'edits an emoji' do
         bot.send(:update_guild_emoji, dispatch_update)
+
         emojis = bot.server(server_id).emoji
         emoji = emojis[emoji_2_id]
+
         expect(emojis.size).to eq(2)
         expect(emoji.name).to eq(edited_emoji_name)
         expect(emoji.server).to eq(server)
