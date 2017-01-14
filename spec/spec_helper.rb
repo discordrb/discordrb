@@ -1,3 +1,4 @@
+require 'rspec-prof'
 require 'simplecov'
 SimpleCov.start
 
