@@ -265,7 +265,7 @@ module Discordrb
       }
 
       # Don't include the shard key at all if it is nil as Discord checks for its mere existence
-      data[:shard_key] = shard_key if shard_key
+      data[:shard] = shard_key if shard_key
 
       send_packet(Opcodes::IDENTIFY, data)
     end
