@@ -13,18 +13,18 @@ module Discordrb
 
     fixture :dispatch_event, [:emoji, :dispatch_event]
     fixture :dispatch_add, [:emoji, :dispatch_add]
+
+    fixture_property :emoji_1_name, :dispatch_add, ['emojis', 0, 'name']
+    fixture_property :emoji_3_name, :dispatch_add, ['emojis', 2, 'name']
+
+    fixture_property :emoji_1_id, :dispatch_add, ['emojis', 0, 'id'], :to_i
+    fixture_property :emoji_2_id, :dispatch_add, ['emojis', 1, 'id'], :to_i
+    fixture_property :emoji_3_id, :dispatch_add, ['emojis', 2, 'id'], :to_i
+
     fixture :dispatch_remove, [:emoji, :dispatch_remove]
     fixture :dispatch_update, [:emoji, :dispatch_update]
 
-    EMOJI1_ID = 10
-    EMOJI1_NAME = 'emoji_name_1'.freeze
-
-    EMOJI2_ID = 11
-    EMOJI2_NAME = 'emoji_name_2'.freeze
-    EDITED_EMOJI_NAME = 'new_emoji_name'.freeze
-
-    EMOJI3_ID = 12
-    EMOJI3_NAME = 'emoji_name_3'.freeze
+    fixture_property :edited_emoji_name, :dispatch_update, ['emojis', 1, 'name']
 
     before do
       bot.instance_variable_set(:@servers, server_id => server)
@@ -47,9 +47,9 @@ module Discordrb
       it 'removes an emoji' do
         bot.send(:update_guild_emoji, dispatch_remove)
         emojis = bot.server(server_id).emoji
-        emoji = emojis[EMOJI1_ID]
+        emoji = emojis[emoji_1_id]
         expect(emojis.size).to eq(1)
-        expect(emoji.name).to eq(EMOJI1_NAME)
+        expect(emoji.name).to eq(emoji_1_name)
         expect(emoji.server).to eq(server)
         expect(emoji.roles).to eq([])
       end
@@ -57,9 +57,9 @@ module Discordrb
       it 'adds an emoji' do
         bot.send(:update_guild_emoji, dispatch_add)
         emojis = bot.server(server_id).emoji
-        emoji = emojis[EMOJI3_ID]
+        emoji = emojis[emoji_3_id]
         expect(emojis.size).to eq(3)
-        expect(emoji.name).to eq(EMOJI3_NAME)
+        expect(emoji.name).to eq(emoji_3_name)
         expect(emoji.server).to eq(server)
         expect(emoji.roles).to eq([])
       end
@@ -67,9 +67,9 @@ module Discordrb
       it 'edits an emoji' do
         bot.send(:update_guild_emoji, dispatch_update)
         emojis = bot.server(server_id).emoji
-        emoji = emojis[EMOJI2_ID]
+        emoji = emojis[emoji_2_id]
         expect(emojis.size).to eq(2)
-        expect(emoji.name).to eq(EDITED_EMOJI_NAME)
+        expect(emoji.name).to eq(edited_emoji_name)
         expect(emoji.server).to eq(server)
         expect(emoji.roles).to eq([])
       end
