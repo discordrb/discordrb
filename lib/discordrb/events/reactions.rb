@@ -48,7 +48,11 @@ module Discordrb::Events
           if a.is_a? Integer
             e.id == a
           elsif a.is_a? String
-            e.name == a || e.name == a.delete(':') || e.id == a.resolve_id
+            if e.name.ascii_only?
+              e.name == a || e.name == a.delete(':') || e.id == a.resolve_id
+            else
+              e.name == a
+            end
           else
             e == a
           end
