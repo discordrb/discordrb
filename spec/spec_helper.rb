@@ -107,3 +107,15 @@ def fixture(name, path)
     load_data_file(*path)
   end
 end
+
+def fixture_property(name, fixture, trace)
+  let! name do
+    data = send(fixture)
+
+    trace.each do |e|
+      data = data[e]
+    end
+
+    data
+  end
+end
