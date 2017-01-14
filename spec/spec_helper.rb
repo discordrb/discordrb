@@ -108,7 +108,7 @@ def fixture(name, path)
   end
 end
 
-def fixture_property(name, fixture, trace)
+def fixture_property(name, fixture, trace, filter = nil)
   let! name do
     data = send(fixture)
 
@@ -116,6 +116,10 @@ def fixture_property(name, fixture, trace)
       data = data[e]
     end
 
-    data
+    if filter
+      data.send(filter)
+    else
+      data
+    end
   end
 end
