@@ -128,9 +128,11 @@ module Discordrb
     # The version of the gateway that's supposed to be used.
     GATEWAY_VERSION = 6
 
-    def initialize(bot, token)
+    def initialize(bot, token, shard_key = nil)
       @token = token
       @bot = bot
+
+      @shard_key = shard_key
 
       @getc_mutex = Mutex.new
 
