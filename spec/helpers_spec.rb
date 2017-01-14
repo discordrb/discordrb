@@ -24,3 +24,12 @@ describe '#fixture' do
     expect(data['success']).to eq(true)
   end
 end
+
+describe '#fixture_property' do
+  fixture :data, [:test]
+  fixture_property :data_success, :data, ['success']
+
+  it 'should define the test property correctly' do
+    expect(data_success).to eq(true)
+  end
+end
