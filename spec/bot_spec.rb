@@ -13,16 +13,18 @@ module Discordrb
     end
 
     let!(:server) do
-      Discordrb::Server.new(fake_server_data, bot)
+      Discordrb::Server.new(load_data_file(:emoji, :emoji_server), bot)
     end
 
+    let!(:server_id) { server.id }
+
     before do
-      bot.instance_variable_set(:@servers, SERVER_ID => server)
+      bot.instance_variable_set(:@servers, server_id => server)
     end
 
     it 'should set up' do
-      expect(bot.server(SERVER_ID)).to eq(server)
-      expect(bot.server(SERVER_ID).emoji.size).to eq(2)
+      expect(bot.server(server_id)).to eq(server)
+      expect(bot.server(server_id).emoji.size).to eq(2)
     end
 
     describe '#handle_dispatch' do
@@ -38,7 +40,7 @@ module Discordrb
       it 'removes an emoji' do
         data = load_data_file(:emoji, :dispatch_remove)
         bot.send(:update_guild_emoji, data)
-        emojis = bot.server(SERVER_ID).emoji
+        emojis = bot.server(server_id).emoji
         emoji = emojis[EMOJI1_ID]
         expect(emojis.size).to eq(1)
         expect(emoji.name).to eq(EMOJI1_NAME)
@@ -49,7 +51,7 @@ module Discordrb
       it 'adds an emoji' do
         data = load_data_file(:emoji, :dispatch_add)
         bot.send(:update_guild_emoji, data)
-        emojis = bot.server(SERVER_ID).emoji
+        emojis = bot.server(server_id).emoji
         emoji = emojis[EMOJI3_ID]
         expect(emojis.size).to eq(3)
         expect(emoji.name).to eq(EMOJI3_NAME)
@@ -61,7 +63,7 @@ module Discordrb
         emoji_name = 'new_emoji_name'
         data = load_data_file(:emoji, :dispatch_update)
         bot.send(:update_guild_emoji, data)
-        emojis = bot.server(SERVER_ID).emoji
+        emojis = bot.server(server_id).emoji
         emoji = emojis[EMOJI2_ID]
         expect(emojis.size).to eq(2)
         expect(emoji.name).to eq(emoji_name)
