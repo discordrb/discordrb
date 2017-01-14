@@ -578,6 +578,8 @@ module Discordrb
         handle_invalidate_session
       when Opcodes::HEARTBEAT_ACK
         handle_heartbeat_ack(packet)
+      when Opcodes::HEARTBEAT
+        handle_heartbeat(packet)
       else
         LOGGER.warn("Received invalid opcode #{op} - please report with this information: #{msg}")
       end
@@ -603,6 +605,12 @@ module Discordrb
       end
 
       @bot.dispatch(type, data)
+    end
+
+    # Op 1
+    def handle_heartbeat(packet)
+      # If we receive a heartbeat, we have to resend one with the same sequence
+      send_heartbeat(packet['s'])
     end
 
     # Op 7
