@@ -146,6 +146,14 @@ end
 module Discordrb::Events
   include Helpers
 
+  # This data is shared across examples, so it needs to be defined here
+  SERVER_ID = 1
+  SERVER_NAME = 'server_name'.freeze
+  EMOJI1_ID = 10
+  EMOJI1_NAME = 'emoji_name_1'.freeze
+  EMOJI2_ID = 11
+  EMOJI2_NAME = 'emoji_name_2'.freeze
+
   shared_examples 'ServerEvent' do
     describe '#initialize' do
       it 'sets bot' do
