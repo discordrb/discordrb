@@ -6,10 +6,9 @@ module Discordrb
       described_class.new(token: 'fake_token')
     end
 
-    let!(:server) do
-      Discordrb::Server.new(load_data_file(:emoji, :emoji_server), bot)
-    end
+    fixture :server_data, [:emoji, :emoji_server]
 
+    let!(:server) { Discordrb::Server.new(server_data, bot) }
     let!(:server_id) { server.id }
 
     # This data is represented in the fixtures (see ./data/emoji)
