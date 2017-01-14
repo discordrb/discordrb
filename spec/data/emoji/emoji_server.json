@@ -1,0 +1,20 @@
+{
+  "verification_level": 0,
+  "features": [],
+  "emojis": [
+    {
+      "roles": [],
+      "require_colons": true,
+      "name": "emoji_name_1",
+      "managed": false,
+      "id": 10
+    },
+    {
+      "roles": [],
+      "require_colons": true,
+      "name": "emoji_name_2",
+      "managed": false,
+      "id": 11
+    }
+  ]
+}
