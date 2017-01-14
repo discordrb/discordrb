@@ -16,3 +16,11 @@ describe '#load_data_file' do
     expect(data['success']).to eq(true)
   end
 end
+
+describe '#fixture' do
+  fixture :data, [:test]
+
+  it 'should load the test data correctly' do
+    expect(data['success']).to eq(true)
+  end
+end
