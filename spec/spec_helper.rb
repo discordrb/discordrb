@@ -101,3 +101,9 @@ end
 def load_data_file(*name)
   JSON.parse(File.read("#{File.dirname(__FILE__)}/data/#{name.join('/')}.json"))
 end
+
+def fixture(name, path)
+  let! name do
+    load_data_file(*path)
+  end
+end
