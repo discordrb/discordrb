@@ -122,7 +122,7 @@ module Discordrb
       @prevent_ready = suppress_ready
 
       @token = process_token(@type, token)
-      @gateway = Gateway.new(self, @token)
+      @gateway = Gateway.new(self, @token, @shard_key)
 
       init_cache
 
