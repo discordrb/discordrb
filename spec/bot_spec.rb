@@ -7,9 +7,9 @@ module Discordrb
     end
 
     fixture :server_data, [:emoji, :emoji_server]
+    fixture_property :server_id, :server_data, ['id'], :to_i
 
     let!(:server) { Discordrb::Server.new(server_data, bot) }
-    let!(:server_id) { server.id }
 
     # This data is represented in the fixtures (see ./data/emoji)
     EMOJI1_ID = 10
