@@ -251,7 +251,9 @@ module Discordrb
     # @param compress [true, false] Whether certain large packets should be compressed using zlib.
     # @param large_threshold [Integer] The member threshold after which a server counts as large and will have to have
     #   its member list chunked.
-    def send_identify(token, properties, compress, large_threshold)
+    # @param shard_key [Array(Integer, Integer), nil] The shard key to use for sharding, represented as
+    #   [shard_id, num_shards], or nil if the bot should not be sharded.
+    def send_identify(token, properties, compress, large_threshold, shard_key = nil)
       data = {
         # Don't send a v anymore as it's entirely determined by the URL now
         token: token,
@@ -259,6 +261,9 @@ module Discordrb
         compress: compress,
         large_threshold: large_threshold
       }
+
+      # Don't include the shard key at all if it is nil as Discord checks for its mere existence
+      data[:shard_key] = shard_key if shard_key
 
       send_packet(Opcodes::IDENTIFY, data)
     end
