@@ -220,11 +220,16 @@ module Discordrb::Events
   end
 
   describe ServerEmojiChangeEvent do
+    fixture :dispatch, [:emoji, :dispatch]
+
+    fixture_property :emoji_1_id, :dispatch, ['emojis', 0, 'id'], :to_i
+    fixture_property :emoji_2_id, :dispatch, ['emojis', 1, 'id'], :to_i
+
     let(:bot) { double }
-    let(:server) { double('server', emoji: { EMOJI1_ID => nil, EMOJI2_ID => nil }) }
+    let(:server) { double('server', emoji: { emoji_1_id => nil, emoji_2_id => nil }) }
 
     subject(:event) do
-      described_class.new(server, fake_emoji_data, bot)
+      described_class.new(server, dispatch, bot)
     end
 
     it_behaves_like 'ServerEvent'
