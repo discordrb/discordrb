@@ -701,7 +701,7 @@ module Discordrb
       # Try to send it
       begin
         @socket.write frame.to_s
-      rescue Errno::EPIPE => e
+      rescue => e
         # There has been an error!
         @pipe_broken = true
         handle_internal_close(e)
