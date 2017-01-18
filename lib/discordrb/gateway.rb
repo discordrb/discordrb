@@ -72,8 +72,9 @@ module Discordrb
     # members when it receives them. (Sending this is never necessary for a gateway client to behave correctly)
     REQUEST_MEMBERS = 8
 
-    # **Received**: The functionality of this opcode is less known than the others but it appears to specifically
-    # tell the client to invalidate its local session and continue by {IDENTIFY}ing.
+    # **Received**: Sent by Discord when the session becomes invalid for any reason. This may include improperly
+    # resuming existing sessions, attempting to start sessions with invalid data, or something else entirely. The client
+    # should handle this by simply starting a new session.
     INVALIDATE_SESSION = 9
 
     # **Received**: Sent immediately for any opened connection; tells the client to start heartbeating early on, so the
