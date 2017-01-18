@@ -1207,6 +1207,12 @@ module Discordrb
       @bot.send_file(@id, file, caption: caption, tts: tts)
     end
 
+    # Deletes a message on this channel. Mostly useful in case a message needs to be deleted when only the ID is known
+    # @param message [Message, String, Integer, #resolve_id] The message that should be deleted.
+    def delete_message(message)
+      API::Channel.delete_message(@bot.token, @id, message.resolve_id)
+    end
+
     # Permanently deletes this channel
     def delete
       API::Channel.delete(@bot.token, @id)
