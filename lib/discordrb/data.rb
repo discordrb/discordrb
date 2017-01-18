@@ -1995,7 +1995,7 @@ module Discordrb
 
       @name = data['name']
       @server = server
-      @id = data['id'].to_i
+      @id = data['id'].nil? ? nil : data['id'].to_i
 
       process_roles(data['roles']) if server
     end
