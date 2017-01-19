@@ -1472,7 +1472,7 @@ module Discordrb
     # @note For internal use only
     # @!visibility private
     def remove_recipient(recipient)
-      raise 'Tried to add recipient to a non-group channel' unless group?
+      raise 'Tried to remove recipient from a non-group channel' unless group?
       raise ArgumentError, 'Tried to remove a non-recipient from a group' unless recipient.is_a?(Recipient)
       @recipients.delete(recipient)
     end
