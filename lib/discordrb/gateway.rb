@@ -633,11 +633,8 @@ module Discordrb
 
     # Op 7
     def handle_reconnect
-      @instant_reconnect = true
-      close
-
-      # Suspend session so we resume afterwards
-      @session.suspend
+      LOGGER.debug('Received op 7, reconnecting and attempting resume')
+      reconnect
     end
 
     # Op 9
