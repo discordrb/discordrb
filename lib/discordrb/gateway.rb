@@ -228,6 +228,7 @@ module Discordrb
           # a zombie. Reconnect
           LOGGER.warn('Last heartbeat was not acked, so this is a zombie connection! Reconnecting')
           reconnect
+          return
         end
 
         @last_heartbeat_acked = false
