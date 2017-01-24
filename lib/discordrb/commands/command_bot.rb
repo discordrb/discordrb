@@ -382,7 +382,7 @@ module Discordrb::Commands
 
     def required_permissions?(member, required, channel = nil)
       required.reduce(true) do |a, action|
-        a && !member.webhook? && member.permission?(action, channel)
+        a && !member.webhook? && !member.is_a?(Discordrb::Recipient) && member.permission?(action, channel)
       end
     end
 
