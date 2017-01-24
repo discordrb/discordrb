@@ -165,7 +165,7 @@ module Discordrb::Commands
             end)[0..-3]
           else
             event.user.pm(available_commands.reduce("**List of commands:**\n") { |m, e| m + "`#{e.name}`, " }[0..-3])
-            'Sending list in PM!'
+            event.channel.pm? ? '' : 'Sending list in PM!'
           end
         end
       end
