@@ -406,8 +406,7 @@ module Discordrb
         break unless @should_reconnect
 
         if @instant_reconnect
-          # We got an op 7! Don't wait before reconnecting
-          LOGGER.info('Got an op 7, reconnecting right away')
+          LOGGER.info('Instant reconnection flag was set - reconnecting right away')
           @instant_reconnect = false
         else
           wait_for_reconnect
