@@ -227,6 +227,9 @@ module Discordrb
           # We're in a bad situation - apparently the last heartbeat wasn't acked, which means the connection is likely
           # a zombie. Reconnect
           LOGGER.warn('Last heartbeat was not acked, so this is a zombie connection! Reconnecting')
+
+          # We can't send anything on zombie connections
+          @pipe_broken = true
           reconnect
           return
         end
