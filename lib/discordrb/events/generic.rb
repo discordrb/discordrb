@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'active_support/core_ext/module'
-
 # Events used by discordrb
 module Discordrb::Events
   # A negated object, used to not match something in event parameters.
