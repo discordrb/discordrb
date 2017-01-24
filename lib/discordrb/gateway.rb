@@ -680,6 +680,7 @@ module Discordrb
     # Op 11
     def handle_heartbeat_ack(packet)
       LOGGER.debug("Received heartbeat ack for packet: #{packet.inspect}")
+      @last_heartbeat_acked = true if @check_heartbeat_acks
     end
 
     # Called when the websocket has been disconnected in some way - say due to a pipe error while sending
