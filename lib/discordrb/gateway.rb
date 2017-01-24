@@ -319,6 +319,17 @@ module Discordrb
       send_resume(@token, @session.session_id, @session.sequence)
     end
 
+    # Reconnects the gateway connection in a controlled manner.
+    # @param attempt_resume [true, false] Whether a resume should be attempted after the reconnection.
+    def reconnect(attempt_resume = true)
+      @session.suspend if attempt_resume
+
+      @instant_reconnect = true
+      @should_reconnect = true
+
+      close
+    end
+
     # Sends a resume packet (op 6). This replays all events from a previous point specified by its packet sequence. This
     # will not work if the packet to resume from has already been acknowledged using a heartbeat, or if the session ID
     # belongs to a now invalid session.
