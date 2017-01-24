@@ -222,6 +222,17 @@ module Discordrb
     # before it), or if none have been received yet, with 0.
     # @see #send_heartbeat
     def heartbeat
+      if check_heartbeat_acks
+        unless @last_heartbeat_acked
+          # We're in a bad situation - apparently the last heartbeat wasn't acked, which means the connection is likely
+          # a zombie. Reconnect
+          LOGGER.warn('Last heartbeat was not acked, so this is a zombie connection! Reconnecting')
+          reconnect
+        end
+
+        @last_heartbeat_acked = false
+      end
+
       send_heartbeat(@session ? @session.sequence : 0)
     end
 
