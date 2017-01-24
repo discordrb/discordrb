@@ -94,7 +94,7 @@ module Discordrb
     attr_accessor :sequence
 
     def initialize(session_id)
-      @id = session_id
+      @session_id = session_id
       @sequence = 0
       @suspended = false
       @invalid = false
