@@ -164,7 +164,7 @@ module Discordrb::Commands
               memo + "`#{c.name}`, "
             end)[0..-3]
           else
-            event.user.pm(available_commands.reduce("**List of commands:**\n") { |m, e| m + "`#{e.name}`, " })[0..-3]
+            event.user.pm(available_commands.reduce("**List of commands:**\n") { |m, e| m + "`#{e.name}`, " }[0..-3])
             'Sending list in PM!'
           end
         end
