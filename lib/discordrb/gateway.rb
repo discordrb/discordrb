@@ -129,6 +129,12 @@ module Discordrb
     # The version of the gateway that's supposed to be used.
     GATEWAY_VERSION = 6
 
+    # Heartbeat ACKs are Discord's way of verifying on the client side whether the connection is still alive. Setting
+    # this to true will use that functionality to detect zombie connections and reconnect in such a case, however it may
+    # lead to instability if there's some problem with the ACKs.
+    # @return [true, false] whether or not this gateway should check for heartbeat ACKs.
+    attr_accessor :check_heartbeat_acks
+
     def initialize(bot, token, shard_key = nil)
       @token = token
       @bot = bot
