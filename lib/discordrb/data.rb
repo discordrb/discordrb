@@ -1342,7 +1342,7 @@ module Discordrb
     # @!visibility private
     def history_ids(amount, before_id = nil, after_id = nil)
       logs = API::Channel.messages(@bot.token, @id, amount, before_id, after_id)
-      JSON.parse(logs).map { |message| message['id'] }
+      JSON.parse(logs).map { |message| message['id'].to_i }
     end
 
     # Returns a single message from this channel's history by ID.
