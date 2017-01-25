@@ -108,6 +108,10 @@ module Discordrb
       @suspended
     end
 
+    def resume
+      @suspended = false
+    end
+
     def invalidate
       @invalid = true
     end
