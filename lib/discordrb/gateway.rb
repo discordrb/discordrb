@@ -386,7 +386,7 @@ module Discordrb
 
     def setup_heartbeats(interval)
       # Make sure to reset ACK handling, so we don't keep reconnecting
-      @last_heartbeat_acked = true if @check_heartbeat_acks
+      @last_heartbeat_acked = true
 
       # We don't want to have redundant heartbeat threads, so if one already exists, don't start a new one
       return if @heartbeat_thread
