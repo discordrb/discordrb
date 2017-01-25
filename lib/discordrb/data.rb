@@ -2275,8 +2275,9 @@ module Discordrb
     alias_method :general_channel, :default_channel
 
     # Gets a role on this server based on its ID.
-    # @param id [Integer] The role ID to look for.
+    # @param id [Integer, String, #resolve_id] The role ID to look for.
     def role(id)
+      id = id.resolve_id
       @roles.find { |e| e.id == id }
     end
 
