@@ -441,9 +441,9 @@ module Discordrb
       if /<@!?(?<id>\d+)>?/ =~ mention
         user(id.to_i)
       elsif /<@&(?<id>\d+)>?/ =~ mention
-        return server.role(id) if server
+        return server.role(id.to_i) if server
         servers.each do |element|
-          role = element.role(id)
+          role = element.role(id.to_i)
           return role unless role.nil?
         end
       elsif /<:(\w+):(?<id>\d+)>?/ =~ mention
