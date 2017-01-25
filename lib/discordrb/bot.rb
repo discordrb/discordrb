@@ -442,7 +442,7 @@ module Discordrb
         user(id.to_i)
       elsif /<@&(?<id>\d+)>?/ =~ mention
         return server.role(id.to_i) if server
-        servers.each do |element|
+        @servers.values.each do |element|
           role = element.role(id.to_i)
           return role unless role.nil?
         end
