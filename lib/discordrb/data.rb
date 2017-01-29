@@ -94,7 +94,9 @@ module Discordrb
       (ms - DISCORD_EPOCH) << 22
     end
 
-    alias_method :synthesize, :synthesise
+    class << self
+      alias_method :synthesize, :synthesise
+    end
   end
 
   # Mixin for the attributes users should have
