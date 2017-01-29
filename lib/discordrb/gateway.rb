@@ -108,6 +108,10 @@ module Discordrb
       @suspended
     end
 
+    def resume
+      @suspended = false
+    end
+
     def invalidate
       @invalid = true
     end
@@ -128,6 +132,12 @@ module Discordrb
 
     # The version of the gateway that's supposed to be used.
     GATEWAY_VERSION = 6
+
+    # Heartbeat ACKs are Discord's way of verifying on the client side whether the connection is still alive. Setting
+    # this to true will use that functionality to detect zombie connections and reconnect in such a case, however it may
+    # lead to instability if there's some problem with the ACKs.
+    # @return [true, false] whether or not this gateway should check for heartbeat ACKs.
+    attr_accessor :check_heartbeat_acks
 
     def initialize(bot, token, shard_key = nil)
       @token = token
@@ -216,6 +226,21 @@ module Discordrb
     # before it), or if none have been received yet, with 0.
     # @see #send_heartbeat
     def heartbeat
+      if check_heartbeat_acks
+        unless @last_heartbeat_acked
+          # We're in a bad situation - apparently the last heartbeat wasn't acked, which means the connection is likely
+          # a zombie. Reconnect
+          LOGGER.warn('Last heartbeat was not acked, so this is a zombie connection! Reconnecting')
+
+          # We can't send anything on zombie connections
+          @pipe_broken = true
+          reconnect
+          return
+        end
+
+        @last_heartbeat_acked = false
+      end
+
       send_heartbeat(@session ? @session.sequence : 0)
     end
 
@@ -313,6 +338,17 @@ module Discordrb
       send_resume(@token, @session.session_id, @session.sequence)
     end
 
+    # Reconnects the gateway connection in a controlled manner.
+    # @param attempt_resume [true, false] Whether a resume should be attempted after the reconnection.
+    def reconnect(attempt_resume = true)
+      @session.suspend if attempt_resume
+
+      @instant_reconnect = true
+      @should_reconnect = true
+
+      close
+    end
+
     # Sends a resume packet (op 6). This replays all events from a previous point specified by its packet sequence. This
     # will not work if the packet to resume from has already been acknowledged using a heartbeat, or if the session ID
     # belongs to a now invalid session.
@@ -353,6 +389,12 @@ module Discordrb
     private
 
     def setup_heartbeats(interval)
+      # Make sure to reset ACK handling, so we don't keep reconnecting
+      @last_heartbeat_acked = true
+
+      # If we suspended the session before because of a reconnection, we need to resume it now
+      @session.resume if @session && @session.suspended?
+
       # We don't want to have redundant heartbeat threads, so if one already exists, don't start a new one
       return if @heartbeat_thread
 
@@ -389,8 +431,7 @@ module Discordrb
         break unless @should_reconnect
 
         if @instant_reconnect
-          # We got an op 7! Don't wait before reconnecting
-          LOGGER.info('Got an op 7, reconnecting right away')
+          LOGGER.info('Instant reconnection flag was set - reconnecting right away')
           @instant_reconnect = false
         else
           wait_for_reconnect
@@ -601,7 +642,7 @@ module Discordrb
         # The RESUMED event is received after a successful op 6 (resume). It does nothing except tell the bot the
         # connection is initiated (like READY would). Starting with v5, it doesn't set a new heartbeat interval anymore
         # since that is handled by op 10 (HELLO).
-        LOGGER.debug('Connection resumed')
+        LOGGER.good 'Resumed'
         return
       end
 
@@ -616,11 +657,8 @@ module Discordrb
 
     # Op 7
     def handle_reconnect
-      @instant_reconnect = true
-      close
-
-      # Suspend session so we resume afterwards
-      @session.suspend
+      LOGGER.debug('Received op 7, reconnecting and attempting resume')
+      reconnect
     end
 
     # Op 9
@@ -656,6 +694,7 @@ module Discordrb
     # Op 11
     def handle_heartbeat_ack(packet)
       LOGGER.debug("Received heartbeat ack for packet: #{packet.inspect}")
+      @last_heartbeat_acked = true if @check_heartbeat_acks
     end
 
     # Called when the websocket has been disconnected in some way - say due to a pipe error while sending
