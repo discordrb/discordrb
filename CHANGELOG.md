@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.2.0.1
+
+- Attempt to fix an issue that causes a strange problem with dependencies when installing discordrb
+
 ## 3.2.0
 
 - Various parts of gateway error handling were improved, leading to significant stability improvements:
