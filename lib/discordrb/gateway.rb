@@ -149,6 +149,8 @@ module Discordrb
 
       # Whether the connection to the gateway has succeeded yet
       @ws_success = false
+
+      @check_heartbeat_acks = true
     end
 
     # Connect to the gateway server in a separate thread
