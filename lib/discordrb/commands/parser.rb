@@ -126,44 +126,52 @@ module Discordrb::Commands
       b_level = 0
       result = ''
       quoted = false
+      escaped = false
       hacky_delim, hacky_space, hacky_prev, hacky_newline = [0xe001, 0xe002, 0xe003, 0xe004].pack('U*').chars
 
       @chain.each_char.each_with_index do |char, index|
-        # Quote begin
-        if char == @attributes[:quote_start] && !quoted
-          quoted = true
+        # Escape character
+        if char == '\\' && !escaped
+          escaped = true
+          next
+        elsif escaped && b_level <= 0
+          result += char
+          escaped = false
           next
         end
 
-        # Quote end
-        if char == @attributes[:quote_end] && quoted
-          quoted = false
-          next
-        end
+        if quoted
+          # Quote end
+          if char == @attributes[:quote_end]
+            quoted = false
+            next
+          end
 
-        if char == @attributes[:chain_delimiter] && quoted
-          result += hacky_delim
-          next
-        end
-
-        if char == @attributes[:previous] && quoted
-          result += hacky_prev
-          next
-        end
-
-        if char == ' ' && quoted
-          result += hacky_space
-          next
-        end
-
-        if char == "\n" && quoted
-          result += hacky_newline
-          next
-        end
-
-        if char == @attributes[:sub_chain_start] && !quoted
-          b_start = index if b_level.zero?
-          b_level += 1
+          if b_level <= 0
+            case char
+            when @attributes[:chain_delimiter]
+              result += hacky_delim
+              next
+            when @attributes[:previous]
+              result += hacky_prev
+              next
+            when ' '
+              result += hacky_space
+              next
+            when "\n"
+              result += hacky_newline
+              next
+            end
+          end
+        else
+          case char
+          when @attributes[:quote_start] # Quote begin
+            quoted = true
+            next
+          when @attributes[:sub_chain_start]
+            b_start = index if b_level.zero?
+            b_level += 1
+          end
         end
 
         result += char if b_level <= 0
