@@ -2241,8 +2241,8 @@ module Discordrb
     include IDObject
     include ServerAttributes
 
-    # @return [String] the region the server is on (e. g. `amsterdam`).
-    attr_reader :region
+    # @return [String] the ID of the region the server is on (e. g. `amsterdam`).
+    attr_reader :region_id
 
     # @return [Member] The server owner.
     attr_reader :owner
@@ -2582,6 +2582,13 @@ module Discordrb
       update_server_data(name: name)
     end
 
+    # @return [VoiceRegion] voice region data for this server's region
+    def voice_region
+      @bot.voice_regions[@region_id]
+    end
+
+    alias_method :region, :voice_region
+
     # Moves the server to another region. This will cause a voice interruption of at most a second.
     # @param region [String] The new region the server should be in.
     def region=(region)
@@ -2643,7 +2650,7 @@ module Discordrb
     # @!visibility private
     def update_data(new_data)
       @name = new_data[:name] || new_data['name'] || @name
-      @region = new_data[:region] || new_data['region'] || @region
+      @region_id = new_data[:region] || new_data['region'] || @region_id
       @icon_id = new_data[:icon] || new_data['icon'] || @icon_id
       @afk_timeout = new_data[:afk_timeout] || new_data['afk_timeout'].to_i || @afk_timeout
 
