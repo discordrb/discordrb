@@ -267,6 +267,18 @@ module Discordrb::API::Server
     )
   end
 
+  # Removes a single role from a member
+  # https://discordapp.com/developers/docs/resources/guild#remove-guild-member-role
+  def remove_member_role(token, server_id, user_id, role_id)
+    Discordrb::API.request(
+      :guilds_sid_members_uid_roles_rid,
+      server_id,
+      :delete,
+      "#{Discordrb::API.api_base}/guilds/#{server_id}/members/#{user_id}/roles/#{role_id}",
+      Authorization: token
+    )
+  end
+
   # Get server prune count
   # https://discordapp.com/developers/docs/resources/guild#get-guild-prune-count
   def prune_count(token, server_id)
