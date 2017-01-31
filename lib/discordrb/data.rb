@@ -453,6 +453,47 @@ module Discordrb
     end
   end
 
+  # Voice regions are servers that host voice communication in Discord servers.
+  class VoiceRegion
+    # @return [String] unique ID for the region
+    attr_reader :id
+
+    # @return [String] name of the region
+    attr_reader :name
+
+    # @return [String] an example hostname for the region
+    attr_reader :sample_hostname
+
+    # @return [Integer] an example port for the region
+    attr_reader :sample_port
+
+    # @return [true, false] if this is a vip-only server
+    attr_reader :vip
+
+    # @return [true, false] if this voice server is the closest to the client
+    attr_reader :optimal
+
+    # @return [true, false] whether this is a deprecated voice region (avoid switching to these)
+    attr_reader :deprecated
+
+    # @return [true, false] whether this is a custom voice region (used for events/etc)
+    attr_reader :custom
+
+    def initialize(data)
+      @id = data['id']
+
+      @name = data['name']
+
+      @sample_hostname = data['sample_hostname']
+      @sample_port = data['sample_port']
+
+      @vip = data['vip']
+      @optimal = data['optimal']
+      @deprecated = data['deprecated']
+      @custom = data['custom']
+    end
+  end
+
   # A presence represents a
 
   # A member is a user on a server. It differs from regular users in that it has roles, voice statuses and things like
