@@ -85,6 +85,18 @@ module Discordrb
       ms = (@id >> 22) + DISCORD_EPOCH
       Time.at(ms / 1000.0)
     end
+
+    # Creates an artificial snowflake at the given point in time. Useful for comparing against.
+    # @param time [Time] The time the snowflake should represent.
+    # @return [Integer] a snowflake with the timestamp data as the given time
+    def self.synthesise(time)
+      ms = (time.to_f * 1000).to_i
+      (ms - DISCORD_EPOCH) << 22
+    end
+
+    class << self
+      alias_method :synthesize, :synthesise
+    end
   end
 
   # Mixin for the attributes users should have
@@ -1199,6 +1211,12 @@ module Discordrb
       @bot.send_file(@id, file, caption: caption, tts: tts)
     end
 
+    # Deletes a message on this channel. Mostly useful in case a message needs to be deleted when only the ID is known
+    # @param message [Message, String, Integer, #resolve_id] The message that should be deleted.
+    def delete_message(message)
+      API::Channel.delete_message(@bot.token, @id, message.resolve_id)
+    end
+
     # Permanently deletes this channel
     def delete
       API::Channel.delete(@bot.token, @id)
@@ -1328,7 +1346,7 @@ module Discordrb
     # @!visibility private
     def history_ids(amount, before_id = nil, after_id = nil)
       logs = API::Channel.messages(@bot.token, @id, amount, before_id, after_id)
-      JSON.parse(logs).map { |message| message['id'] }
+      JSON.parse(logs).map { |message| message['id'].to_i }
     end
 
     # Returns a single message from this channel's history by ID.
@@ -1352,22 +1370,26 @@ module Discordrb
 
     # Delete the last N messages on this channel.
     # @param amount [Integer] How many messages to delete. Must be a value between 2 and 100 (Discord limitation)
+    # @param strict [true, false] Whether an error should be raised when a message is reached that is too old to be bulk
+    #   deleted. If this is false only a warning message will be output to the console.
     # @raise [ArgumentError] if the amount of messages is not a value between 2 and 100
-    def prune(amount)
+    def prune(amount, strict = false)
       raise ArgumentError, 'Can only prune between 2 and 100 messages!' unless amount.between?(2, 100)
 
       messages = history_ids(amount)
-      API::Channel.bulk_delete_messages(@bot.token, @id, messages)
+      bulk_delete(messages, strict)
     end
 
     # Deletes a collection of messages
     # @param messages [Array<Message, Integer>] the messages (or message IDs) to delete. Total must be an amount between 2 and 100 (Discord limitation)
+    # @param strict [true, false] Whether an error should be raised when a message is reached that is too old to be bulk
+    #   deleted. If this is false only a warning message will be output to the console.
     # @raise [ArgumentError] if the amount of messages is not a value between 2 and 100
-    def delete_messages(messages)
+    def delete_messages(messages, strict = false)
       raise ArgumentError, 'Can only delete between 2 and 100 messages!' unless messages.count.between?(2, 100)
 
       messages.map!(&:resolve_id)
-      API::Channel.bulk_delete_messages(@bot.token, @id, messages)
+      bulk_delete(messages, strict)
     end
 
     # Updates the cached permission overwrites
@@ -1472,12 +1494,31 @@ module Discordrb
     # @note For internal use only
     # @!visibility private
     def remove_recipient(recipient)
-      raise 'Tried to add recipient to a non-group channel' unless group?
+      raise 'Tried to remove recipient from a non-group channel' unless group?
       raise ArgumentError, 'Tried to remove a non-recipient from a group' unless recipient.is_a?(Recipient)
       @recipients.delete(recipient)
     end
 
     private
+
+    # For bulk_delete checking
+    TWO_WEEKS = 86_400 * 14
+
+    # Deletes a list of messages on this channel using bulk delete
+    def bulk_delete(ids, strict = false)
+      min_snowflake = IDObject.synthesise(Time.now - TWO_WEEKS)
+
+      ids.reject! do |e|
+        next unless e < min_snowflake
+
+        message = "Attempted to bulk_delete message #{e} which is too old (min = #{min_snowflake})"
+        raise ArgumentError, message if strict
+        Discordrb::LOGGER.warn(message)
+        false
+      end
+
+      API::Channel.bulk_delete_messages(@bot.token, @id, ids)
+    end
 
     def update_channel_data
       API::Channel.update(@bot.token, @id, @name, @topic, @position, @bitrate, @user_limit)
@@ -1964,7 +2005,7 @@ module Discordrb
 
       @name = data['name']
       @server = server
-      @id = data['id'].to_i
+      @id = data['id'].nil? ? nil : data['id'].to_i
 
       process_roles(data['roles']) if server
     end
@@ -2238,8 +2279,9 @@ module Discordrb
     alias_method :general_channel, :default_channel
 
     # Gets a role on this server based on its ID.
-    # @param id [Integer] The role ID to look for.
+    # @param id [Integer, String, #resolve_id] The role ID to look for.
     def role(id)
+      id = id.resolve_id
       @roles.find { |e| e.id == id }
     end
 

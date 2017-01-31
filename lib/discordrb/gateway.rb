@@ -72,8 +72,9 @@ module Discordrb
     # members when it receives them. (Sending this is never necessary for a gateway client to behave correctly)
     REQUEST_MEMBERS = 8
 
-    # **Received**: The functionality of this opcode is less known than the others but it appears to specifically
-    # tell the client to invalidate its local session and continue by {IDENTIFY}ing.
+    # **Received**: Sent by Discord when the session becomes invalid for any reason. This may include improperly
+    # resuming existing sessions, attempting to start sessions with invalid data, or something else entirely. The client
+    # should handle this by simply starting a new session.
     INVALIDATE_SESSION = 9
 
     # **Received**: Sent immediately for any opened connection; tells the client to start heartbeating early on, so the
@@ -93,7 +94,7 @@ module Discordrb
     attr_accessor :sequence
 
     def initialize(session_id)
-      @id = session_id
+      @session_id = session_id
       @sequence = 0
       @suspended = false
       @invalid = false
@@ -105,6 +106,10 @@ module Discordrb
 
     def suspended?
       @suspended
+    end
+
+    def resume
+      @suspended = false
     end
 
     def invalidate
@@ -128,14 +133,25 @@ module Discordrb
     # The version of the gateway that's supposed to be used.
     GATEWAY_VERSION = 6
 
-    def initialize(bot, token)
+    # Heartbeat ACKs are Discord's way of verifying on the client side whether the connection is still alive. If this is
+    # set to true (default value) the gateway client will use that functionality to detect zombie connections and
+    # reconnect in such a case; however it may lead to instability if there's some problem with the ACKs. If this occurs
+    # it can simply be set to false.
+    # @return [true, false] whether or not this gateway should check for heartbeat ACKs.
+    attr_accessor :check_heartbeat_acks
+
+    def initialize(bot, token, shard_key = nil)
       @token = token
       @bot = bot
+
+      @shard_key = shard_key
 
       @getc_mutex = Mutex.new
 
       # Whether the connection to the gateway has succeeded yet
       @ws_success = false
+
+      @check_heartbeat_acks = true
     end
 
     # Connect to the gateway server in a separate thread
@@ -213,6 +229,21 @@ module Discordrb
     # before it), or if none have been received yet, with 0.
     # @see #send_heartbeat
     def heartbeat
+      if check_heartbeat_acks
+        unless @last_heartbeat_acked
+          # We're in a bad situation - apparently the last heartbeat wasn't acked, which means the connection is likely
+          # a zombie. Reconnect
+          LOGGER.warn('Last heartbeat was not acked, so this is a zombie connection! Reconnecting')
+
+          # We can't send anything on zombie connections
+          @pipe_broken = true
+          reconnect
+          return
+        end
+
+        @last_heartbeat_acked = false
+      end
+
       send_heartbeat(@session ? @session.sequence : 0)
     end
 
@@ -232,7 +263,7 @@ module Discordrb
                       :'$device' => 'discordrb',
                       :'$referrer' => '',
                       :'$referring_domain' => ''
-                    }, true, 100)
+                    }, true, 100, @shard_key)
     end
 
     # Sends an identify packet (op 2). This starts a new session on the current connection and tells Discord who we are.
@@ -251,7 +282,9 @@ module Discordrb
     # @param compress [true, false] Whether certain large packets should be compressed using zlib.
     # @param large_threshold [Integer] The member threshold after which a server counts as large and will have to have
     #   its member list chunked.
-    def send_identify(token, properties, compress, large_threshold)
+    # @param shard_key [Array(Integer, Integer), nil] The shard key to use for sharding, represented as
+    #   [shard_id, num_shards], or nil if the bot should not be sharded.
+    def send_identify(token, properties, compress, large_threshold, shard_key = nil)
       data = {
         # Don't send a v anymore as it's entirely determined by the URL now
         token: token,
@@ -259,6 +292,9 @@ module Discordrb
         compress: compress,
         large_threshold: large_threshold
       }
+
+      # Don't include the shard key at all if it is nil as Discord checks for its mere existence
+      data[:shard] = shard_key if shard_key
 
       send_packet(Opcodes::IDENTIFY, data)
     end
@@ -305,6 +341,17 @@ module Discordrb
       send_resume(@token, @session.session_id, @session.sequence)
     end
 
+    # Reconnects the gateway connection in a controlled manner.
+    # @param attempt_resume [true, false] Whether a resume should be attempted after the reconnection.
+    def reconnect(attempt_resume = true)
+      @session.suspend if attempt_resume
+
+      @instant_reconnect = true
+      @should_reconnect = true
+
+      close
+    end
+
     # Sends a resume packet (op 6). This replays all events from a previous point specified by its packet sequence. This
     # will not work if the packet to resume from has already been acknowledged using a heartbeat, or if the session ID
     # belongs to a now invalid session.
@@ -345,6 +392,12 @@ module Discordrb
     private
 
     def setup_heartbeats(interval)
+      # Make sure to reset ACK handling, so we don't keep reconnecting
+      @last_heartbeat_acked = true
+
+      # If we suspended the session before because of a reconnection, we need to resume it now
+      @session.resume if @session && @session.suspended?
+
       # We don't want to have redundant heartbeat threads, so if one already exists, don't start a new one
       return if @heartbeat_thread
 
@@ -381,8 +434,7 @@ module Discordrb
         break unless @should_reconnect
 
         if @instant_reconnect
-          # We got an op 7! Don't wait before reconnecting
-          LOGGER.info('Got an op 7, reconnecting right away')
+          LOGGER.info('Instant reconnection flag was set - reconnecting right away')
           @instant_reconnect = false
         else
           wait_for_reconnect
@@ -571,6 +623,8 @@ module Discordrb
         handle_invalidate_session
       when Opcodes::HEARTBEAT_ACK
         handle_heartbeat_ack(packet)
+      when Opcodes::HEARTBEAT
+        handle_heartbeat(packet)
       else
         LOGGER.warn("Received invalid opcode #{op} - please report with this information: #{msg}")
       end
@@ -591,20 +645,23 @@ module Discordrb
         # The RESUMED event is received after a successful op 6 (resume). It does nothing except tell the bot the
         # connection is initiated (like READY would). Starting with v5, it doesn't set a new heartbeat interval anymore
         # since that is handled by op 10 (HELLO).
-        LOGGER.debug('Connection resumed')
+        LOGGER.good 'Resumed'
         return
       end
 
       @bot.dispatch(type, data)
     end
 
+    # Op 1
+    def handle_heartbeat(packet)
+      # If we receive a heartbeat, we have to resend one with the same sequence
+      send_heartbeat(packet['s'])
+    end
+
     # Op 7
     def handle_reconnect
-      @instant_reconnect = true
-      close
-
-      # Suspend session so we resume afterwards
-      @session.suspend
+      LOGGER.debug('Received op 7, reconnecting and attempting resume')
+      reconnect
     end
 
     # Op 9
@@ -640,6 +697,7 @@ module Discordrb
     # Op 11
     def handle_heartbeat_ack(packet)
       LOGGER.debug("Received heartbeat ack for packet: #{packet.inspect}")
+      @last_heartbeat_acked = true if @check_heartbeat_acks
     end
 
     # Called when the websocket has been disconnected in some way - say due to a pipe error while sending
@@ -686,7 +744,7 @@ module Discordrb
       # Try to send it
       begin
         @socket.write frame.to_s
-      rescue Errno::EPIPE => e
+      rescue => e
         # There has been an error!
         @pipe_broken = true
         handle_internal_close(e)

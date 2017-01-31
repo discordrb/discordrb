@@ -164,8 +164,8 @@ module Discordrb::Commands
               memo + "`#{c.name}`, "
             end)[0..-3]
           else
-            event.user.pm(available_commands.reduce("**List of commands:**\n") { |m, e| m + "`#{e.name}`, " })[0..-3]
-            'Sending list in PM!'
+            event.user.pm(available_commands.reduce("**List of commands:**\n") { |m, e| m + "`#{e.name}`, " }[0..-3])
+            event.channel.pm? ? '' : 'Sending list in PM!'
           end
         end
       end
@@ -382,12 +382,12 @@ module Discordrb::Commands
 
     def required_permissions?(member, required, channel = nil)
       required.reduce(true) do |a, action|
-        a && !member.webhook? && member.permission?(action, channel)
+        a && !member.webhook? && !member.is_a?(Discordrb::Recipient) && member.permission?(action, channel)
       end
     end
 
     def required_roles?(member, required)
-      return (required.nil? || required.empty?) if member.webhook?
+      return (required.nil? || required.empty?) if member.webhook? || member.is_a?(Discordrb::Recipient)
       if required.is_a? Array
         required.all? do |role|
           member.role?(role)

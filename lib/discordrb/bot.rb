@@ -122,7 +122,7 @@ module Discordrb
       @prevent_ready = suppress_ready
 
       @token = process_token(@type, token)
-      @gateway = Gateway.new(self, @token)
+      @gateway = Gateway.new(self, @token, @shard_key)
 
       init_cache
 
@@ -441,11 +441,14 @@ module Discordrb
       if /<@!?(?<id>\d+)>?/ =~ mention
         user(id.to_i)
       elsif /<@&(?<id>\d+)>?/ =~ mention
-        return server.role(id) if server
-        servers.each do |element|
-          role = element.role(id)
+        return server.role(id.to_i) if server
+        @servers.values.each do |element|
+          role = element.role(id.to_i)
           return role unless role.nil?
         end
+
+        # Return nil if no role is found
+        nil
       elsif /<:(\w+):(?<id>\d+)>?/ =~ mention
         emoji.find { |element| element.id.to_i == id.to_i }
       end

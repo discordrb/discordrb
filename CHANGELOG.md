@@ -1,5 +1,58 @@
 # Changelog
 
+## 3.2.0.1
+
+- Attempt to fix an issue that causes a strange problem with dependencies when installing discordrb
+
+## 3.2.0
+
+- Various parts of gateway error handling were improved, leading to significant stability improvements:
+  - A long standing bug was fixed that prevented resumes in most cases, which caused unnecessary reconnections.
+  - The error handler that handles problems with sending the raw data over TCP now catches errors more broadly.
+  - Heartbeat ACKs (opcode 11) are now checked, which allows the client to detect zombie connections early on. If this causes problems for you you can disable it using `bot.gateway.check_heartbeat_acks = false`.
+  - Received heartbeats are now properly handled again
+- Added a client for webhooks, implemented as a separate gem `discordrb-webhooks`. This allows the creation of applications that only use webhooks without the overhead provided by the rest of discordrb. The gem is added as a dependency by normal discordrb so you don't need to install it separately if you're already using that.
+- Adding, updating or deleting custom emoji is now supported ([#285](https://github.com/meew0/discordrb/pull/285), thanks @Daniel-Worrall)
+- Rich embeds can now be sent alongside messages, for example using the `embed` parameter in `send_message`, or with the new method `Channel#send_embed`
+- `advanced_functionality` bots now support escaping using backslashes ([#293](https://github.com/meew0/discordrb/issues/293) / [#304](https://github.com/meew0/discordrb/pull/304), thanks @LikeLakers2)
+- Added type checking and conversion for commands ([#298](https://github.com/meew0/discordrb/pull/298), thanks @ohtaavi)
+- Bulk deleting messages now checks for message age (see also [hammerandchisel/discord-api-docs#208](https://github.com/hammerandchisel/discord-api-docs/issues/208)). By default, it will ignore messages that are too old to be bulk deleted, but there is also a `strict` mode setting now that raises an exception in such a case.
+- Reactions can now be viewed for existing messages ([#262](https://github.com/meew0/discordrb/pull/262), thanks @z64), added to messages ([#266](https://github.com/meew0/discordrb/pull/266), thanks @z64), and listened for using gateway events as well as internal handlers ([#300](https://github.com/meew0/discordrb/issues/300)).
+- Game types and stream URLs are now cached ([#297](https://github.com/meew0/discordrb/issues/297))
+- The default non-streaming game was changed to be `0` instead of `nil` ([#277](https://github.com/meew0/discordrb/pull/277), thanks @zeyla) 
+- A method `Channel#delete_message` was added to support deleting single messages by ID without prior resolution.
+- Permission overwrites can now be deleted from channels ([#268](https://github.com/meew0/discordrb/pull/268), thanks @greenbigfrog)
+- There is now a utility method `IDObject.synthesise` that creates snowflakes with specific timestamps out of thin air.
+- Typing events are now respondable, so you can call `#respond` on them for example ([#270](https://github.com/meew0/discordrb/pull/270), thanks @VxJasonxV)
+- Message authors can now be `User` objects if a `Member` object could not be found or created ([#290](https://github.com/meew0/discordrb/issues/290))
+- Added two new events, `unknown` ([#288](https://github.com/meew0/discordrb/issues/288)) and `raw`, that are raised for unknown dispatches and all dispatches, respectively.
+- Bots can now be set to fully ignore other bots ([#257](https://github.com/meew0/discordrb/pull/257), thanks @greenbigfrog) 
+- Voice state update events now have an `old_channel` property/attribute that denotes the previous channel the user was in in case of joining/moving/leaving.
+- The default help command no longer shows commands the user can't use ([#275](https://github.com/meew0/discordrb/pull/275), thanks @FormalHellhound)
+- Updated the command example to no longer include user-specific stuff ([#260](https://github.com/meew0/discordrb/issues/260))
+- `Server#role` now resolves IDs, so they can be passed as strings if necessary.
+
+### Bugfixes
+
+- Fixed bots' shard settings being ignored in certain cases 
+- Parsing role mentions using `Bot#parse_mention` works properly now.
+- Fixed some specific REST methods that were broken by the API module refactor ([#302](https://github.com/meew0/discordrb/pull/302), thanks @LikeLakers2)
+- Cached channel data is now updated properly on change ([#272](https://github.com/meew0/discordrb/issues/272))
+- Users' avatars are now updated properly on change ([#265](https://github.com/meew0/discordrb/pull/265), thanks @Roughsketch)
+- Fixed voice state tracking for newly created channels ([#292](https://github.com/meew0/discordrb/issues/292))
+- Fixed event attribute handling for PlayingEvent ([#303](https://github.com/meew0/discordrb/pull/303), thanks @sven-strothoff)
+- Getting specific emoji by ID no longer fails to resolve non-cached emoji ([#283](https://github.com/meew0/discordrb/pull/283), thanks @greenbigfrog)
+- Voice state update events no longer fail to be raised for users leaving channels, if the event handler had a channel attribute set ([#301](https://github.com/meew0/discordrb/issues/301))
+- Bots that don't define any events should work properly again
+- Fixed error handling for messages over the character limit ([#276](https://github.com/meew0/discordrb/issues/276))
+- Fixed some specific log messages not being called properly ([#263](https://github.com/meew0/discordrb/pull/263), thanks @Roughsketch)
+- Fixed some edge case bugs in the default help command:
+  - In the case of too many commands to be sent in the channel, it no longer replies with "Sending help in PM!" when called from PM
+  - It no longer fails completely if called from PM if there are any commands that require server-specific checks ([#308](https://github.com/meew0/discordrb/issues/308))
+  - Fixed a slight formatting mistake
+- Quoted command arguments in `advanced_functionality` are no longer split by newline
+- Fixed a specific edge case in command chain handling where handling commands with the same name as the chain delimiter was broken 
+
 ## 3.1.1
 
 *Bugfix-only release.*

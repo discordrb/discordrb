@@ -1,9 +1,4 @@
 require 'discordrb'
-require 'helpers'
-
-RSpec.configure do |c|
-  c.include Helpers
-end
 
 describe Discordrb::Events do
   describe Discordrb::Events::Negated do
@@ -144,7 +139,13 @@ describe Discordrb::Events do
 end
 
 module Discordrb::Events
-  include Helpers
+  # This data is shared across examples, so it needs to be defined here
+  SERVER_ID = 1
+  SERVER_NAME = 'server_name'.freeze
+  EMOJI1_ID = 10
+  EMOJI1_NAME = 'emoji_name_1'.freeze
+  EMOJI2_ID = 11
+  EMOJI2_NAME = 'emoji_name_2'.freeze
 
   shared_examples 'ServerEvent' do
     describe '#initialize' do
@@ -220,11 +221,16 @@ module Discordrb::Events
   end
 
   describe ServerEmojiChangeEvent do
+    fixture :dispatch, [:emoji, :dispatch]
+
+    fixture_property :emoji_1_id, :dispatch, ['emojis', 0, 'id'], :to_i
+    fixture_property :emoji_2_id, :dispatch, ['emojis', 1, 'id'], :to_i
+
     let(:bot) { double }
-    let(:server) { double('server', emoji: { EMOJI1_ID => nil, EMOJI2_ID => nil }) }
+    let(:server) { double('server', emoji: { emoji_1_id => nil, emoji_2_id => nil }) }
 
     subject(:event) do
-      described_class.new(server, fake_emoji_data, bot)
+      described_class.new(server, dispatch, bot)
     end
 
     it_behaves_like 'ServerEvent'

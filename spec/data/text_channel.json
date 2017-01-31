@@ -1,0 +1,23 @@
+{
+  "guild_id": "269512733039394816",
+  "name": "text_channel",
+  "permission_overwrites": [
+    {
+      "deny": 0,
+      "type": "member",
+      "id": "66237334693085184",
+      "allow": 131072
+    },
+    {
+      "deny": 131072,
+      "type": "role",
+      "id": "269512733039394816",
+      "allow": 0
+    }
+  ],
+  "topic": "This is the topic of the text channel.",
+  "position": 1,
+  "last_message_id": null,
+  "type": 0,
+  "id": "269512751339143168"
+}
