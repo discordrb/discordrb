@@ -254,6 +254,19 @@ module Discordrb::API::Server
     )
   end
 
+  # Adds a single role to a member
+  # https://discordapp.com/developers/docs/resources/guild#add-guild-member-role
+  def add_member_role(token, server_id, user_id, role_id)
+    Discordrb::API.request(
+      :guilds_sid_members_uid_roles_rid,
+      server_id,
+      :put,
+      "#{Discordrb::API.api_base}/guilds/#{server_id}/members/#{user_id}/roles/#{role_id}",
+      nil,
+      Authorization: token
+    )
+  end
+
   # Get server prune count
   # https://discordapp.com/developers/docs/resources/guild#get-guild-prune-count
   def prune_count(token, server_id)
