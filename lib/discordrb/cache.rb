@@ -15,12 +15,26 @@ module Discordrb
     def init_cache
       @users = {}
 
+      @voice_regions = {}
+
       @servers = {}
 
       @channels = {}
       @pm_channels = {}
 
       @restricted_channels = []
+    end
+
+    # Returns or caches the available voice regions
+    def voice_regions
+      return @voice_regions unless @voice_regions.empty?
+
+      regions = JSON.parse API.voice_regions(token)
+      regions.each do |data|
+        @voice_regions[data['id']] = VoiceRegion.new(data)
+      end
+
+      @voice_regions
     end
 
     # Gets a channel given its ID. This queries the internal channel cache, and if the channel doesn't
