@@ -245,6 +245,18 @@ module Discordrb::API
       content_type: :json
     )
   end
+
+  # Get a list of available voice regions
+  def voice_regions(token)
+    request(
+      :voice_regions,
+      nil,
+      :get,
+      "#{api_base}/voice/regions",
+      Authorization: token,
+      content_type: :json
+    )
+  end
 end
 
 Discordrb::API.reset_mutexes
