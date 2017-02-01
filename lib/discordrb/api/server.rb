@@ -391,4 +391,15 @@ module Discordrb::API::Server
       Authorization: token
     )
   end
+
+  # Available voice regions for this server
+  def regions(token, server_id)
+    Discordrb::API.request(
+      :guilds_sid_regions,
+      server_id,
+      :get,
+      "#{Discordrb::API.api_base}/guilds/#{server_id}/regions",
+      Authorization: token
+    )
+  end
 end
