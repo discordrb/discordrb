@@ -1336,8 +1336,8 @@ module Discordrb
     # @example Count the number of messages in the last 50 messages that contain the letter 'e'.
     #   message_count = channel.history(50).count {|message| message.content.include? "e"}
     # @return [Array<Message>] the retrieved messages.
-    def history(amount, before_id = nil, after_id = nil)
-      logs = API::Channel.messages(@bot.token, @id, amount, before_id, after_id)
+    def history(amount, before_id = nil, after_id = nil, around_id = nil)
+      logs = API::Channel.messages(@bot.token, @id, amount, before_id, after_id, around_id)
       JSON.parse(logs).map { |message| Message.new(message, @bot) }
     end
 
