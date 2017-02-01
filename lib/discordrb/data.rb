@@ -1344,8 +1344,8 @@ module Discordrb
     # Retrieves message history, but only message IDs for use with prune
     # @note For internal use only
     # @!visibility private
-    def history_ids(amount, before_id = nil, after_id = nil)
-      logs = API::Channel.messages(@bot.token, @id, amount, before_id, after_id)
+    def history_ids(amount, before_id = nil, after_id = nil, around_id = nil)
+      logs = API::Channel.messages(@bot.token, @id, amount, before_id, after_id, around_id)
       JSON.parse(logs).map { |message| message['id'].to_i }
     end
 
