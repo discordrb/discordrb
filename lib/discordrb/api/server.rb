@@ -256,12 +256,12 @@ module Discordrb::API::Server
 
   # Get server prune count
   # https://discordapp.com/developers/docs/resources/guild#get-guild-prune-count
-  def prune_count(token, server_id)
+  def prune_count(token, server_id, days)
     Discordrb::API.request(
       :guilds_sid_prune,
       server_id,
       :get,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}/prune",
+      "#{Discordrb::API.api_base}/guilds/#{server_id}/prune?days=#{days}",
       Authorization: token
     )
   end
