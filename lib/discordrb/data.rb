@@ -2352,6 +2352,19 @@ module Discordrb
       response['pruned']
     end
 
+    # Prunes (kicks) an amount of members for inactivity
+    # @param [days] the number of days to consider for inactivity (between 1 and 30)
+    # @return [Integer] the number of members removed at the end of the operation
+    # @raise [ArgumentError] if days is not between 1 and 30 (inclusive)
+    def begin_prune(days)
+      raise ArgumentError, 'Days must be between 1 and 30' unless days.between?(1, 30)
+
+      response = JSON.parse API::Server.begin_prune(@bot.token, @id, days)
+      response['pruned']
+    end
+
+    alias_method :prune, :begin_prune
+
     # @return [Array<Channel>] an array of text channels on this server
     def text_channels
       @channels.select(&:text?)
