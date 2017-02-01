@@ -2341,6 +2341,17 @@ module Discordrb
 
     alias_method :online_users, :online_members
 
+    # Returns the amount of members that are candidates for pruning
+    # @param days [Integer] the number of days to consider for inactivity
+    # @return [Integer] number of members to be removed
+    # @raise [ArgumentError] if days is not between 1 and 30 (inclusive)
+    def prune_count(days)
+      raise ArgumentError, 'Days must be between 1 and 30' unless days.between?(1, 30)
+
+      response = JSON.parse API::Server.prune_count(@bot.token, @id, days)
+      response['pruned']
+    end
+
     # @return [Array<Channel>] an array of text channels on this server
     def text_channels
       @channels.select(&:text?)
