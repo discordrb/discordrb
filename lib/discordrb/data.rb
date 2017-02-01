@@ -2582,9 +2582,19 @@ module Discordrb
       update_server_data(name: name)
     end
 
+    # @return [Array<VoiceRegion>] collection of available voice regions to this guild
+    def available_voice_regions
+      return @available_voice_regions if @available_voice_regions
+
+      @available_voice_regions = {}
+
+      data = JSON.parse API::Server.regions(@bot.token, @id)
+      @available_voice_regions = data.map { |e| VoiceRegion.new e }
+    end
+
     # @return [VoiceRegion] voice region data for this server's region
     def voice_region
-      @bot.voice_regions[@region_id]
+      available_voice_regions.find { |e| e.id == @region_id }
     end
 
     alias_method :region, :voice_region
