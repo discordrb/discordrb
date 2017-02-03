@@ -2593,11 +2593,9 @@ module Discordrb
     end
 
     # @return [VoiceRegion] voice region data for this server's region
-    def voice_region
+    def region
       available_voice_regions.find { |e| e.id == @region_id }
     end
-
-    alias_method :region, :voice_region
 
     # Moves the server to another region. This will cause a voice interruption of at most a second.
     # @param region [String] The new region the server should be in.
