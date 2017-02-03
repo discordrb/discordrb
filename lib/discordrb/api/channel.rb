@@ -128,7 +128,7 @@ module Discordrb::API::Channel
       :channels_cid_messages_bulk_delete,
       channel_id,
       :post,
-      "#{Discordrb::API.api_base}/channels/#{channel_id}/messages/bulk_delete",
+      "#{Discordrb::API.api_base}/channels/#{channel_id}/messages/bulk-delete",
       { messages: messages }.to_json,
       Authorization: token,
       content_type: :json
