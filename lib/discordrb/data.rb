@@ -1333,6 +1333,7 @@ module Discordrb
     #   start at the current message.
     # @param after_id [Integer] The ID of the oldest message the retrieval should start at, or nil if it should start
     #   as soon as possible with the specified amount.
+    # @param around_id [Integer] The ID of the message retrieval should start from, reading in both directions
     # @example Count the number of messages in the last 50 messages that contain the letter 'e'.
     #   message_count = channel.history(50).count {|message| message.content.include? "e"}
     # @return [Array<Message>] the retrieved messages.
