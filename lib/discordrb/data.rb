@@ -453,7 +453,7 @@ module Discordrb
     end
   end
 
-  # Voice regions are servers that host voice communication in Discord servers.
+  # Voice regions are the locations of servers that handle voice communication in Discord
   class VoiceRegion
     # @return [String] unique ID for the region
     attr_reader :id
