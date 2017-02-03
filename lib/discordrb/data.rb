@@ -457,6 +457,7 @@ module Discordrb
   class VoiceRegion
     # @return [String] unique ID for the region
     attr_reader :id
+    alias_method :to_s, :id
 
     # @return [String] name of the region
     attr_reader :name
