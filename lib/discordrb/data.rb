@@ -467,7 +467,7 @@ module Discordrb
     # @return [Integer] an example port for the region
     attr_reader :sample_port
 
-    # @return [true, false] if this is a vip-only server
+    # @return [true, false] if this is a VIP-only server
     attr_reader :vip
 
     # @return [true, false] if this voice server is the closest to the client
