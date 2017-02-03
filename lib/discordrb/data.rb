@@ -2513,10 +2513,10 @@ module Discordrb
     end
 
     # Forcibly moves a user into a different voice channel. Only works if the bot has the permission needed.
-    # @param user [User] The user to move.
-    # @param channel [Channel] The voice channel to move into.
+    # @param user [User, #resolve_id] The user to move.
+    # @param channel [Channel, #resolve_id] The voice channel to move into.
     def move(user, channel)
-      API::Server.update_member(@bot.token, @id, user.id, channel_id: channel.id)
+      API::Server.update_member(@bot.token, @id, user.resolve_id, channel_id: channel.resolve_id)
     end
 
     # Deletes this server. Be aware that this is permanent and impossible to undo, so be careful!
@@ -2530,9 +2530,9 @@ module Discordrb
     end
 
     # Transfers server ownership to another user.
-    # @param user [User] The user who should become the new owner.
+    # @param user [User, #resolve_id] The user who should become the new owner.
     def owner=(user)
-      API::Server.transfer_ownership(@bot.token, @id, user.id)
+      API::Server.transfer_ownership(@bot.token, @id, user.resolve_id)
     end
 
     # Sets the server's name.
