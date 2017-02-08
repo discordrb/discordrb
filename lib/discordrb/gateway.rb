@@ -184,6 +184,9 @@ module Discordrb
     def stop(no_sync = false)
       @should_reconnect = false
       close(no_sync)
+
+      # Return nil so command bots don't send a message
+      nil
     end
 
     # Kills the websocket thread, stopping all connections to Discord.
