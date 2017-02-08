@@ -395,9 +395,6 @@ module Discordrb
       # Make sure to reset ACK handling, so we don't keep reconnecting
       @last_heartbeat_acked = true
 
-      # If we suspended the session before because of a reconnection, we need to resume it now
-      @session.resume if @session && @session.suspended?
-
       # We don't want to have redundant heartbeat threads, so if one already exists, don't start a new one
       return if @heartbeat_thread
 
@@ -689,6 +686,10 @@ module Discordrb
       LOGGER.debug("Session: #{@session.inspect}")
 
       if @session && @session.should_resume?
+        # Make sure we're sending heartbeats again
+        @session.resume
+
+        # Send the actual resume packet to get the missing events
         resume
       else
         identify
