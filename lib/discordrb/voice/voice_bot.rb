@@ -193,13 +193,13 @@ module Discordrb::Voice
           raise IOError, 'File or stream not found!' if @first_packet
 
           @bot.debug('EOF while reading, breaking immediately')
-          break
+          next :stop
         end
 
         # Check whether the buffer has enough data
         if !buf || buf.length != DATA_LENGTH
           @bot.debug("No data is available! Retrying #{@retry_attempts} more times")
-          break if @retry_attempts.zero?
+          next :stop if @retry_attempts.zero?
 
           @retry_attempts -= 1
           next
@@ -272,7 +272,7 @@ module Discordrb::Voice
 
           unless header_str
             @bot.debug 'Finished DCA parsing (header is nil)'
-            break
+            next :stop
           end
 
           header = header_str.unpack('s<')[0]
@@ -280,7 +280,7 @@ module Discordrb::Voice
           raise 'Negative header in DCA file! Your file is likely corrupted.' if header < 0
         rescue EOFError
           @bot.debug 'Finished DCA parsing (EOFError)'
-          break
+          next :stop
         end
 
         # Read bytes
@@ -323,6 +323,11 @@ module Discordrb::Voice
 
         # Get packet data
         buf = yield
+
+        # Stop doing anything if the stop signal was sent
+        break if buf == :stop
+
+        # Proceed to the next packet if we got nil
         next unless buf
 
         # Track intermediate adjustment so we can measure how much encoding contributes to the total time
