@@ -2,18 +2,6 @@
 module Discordrb::API::User
   module_function
 
-  # Returns users based on a query
-  # https://discordapp.com/developers/docs/resources/user#query-users
-  def query(token, query, limit = nil)
-    Discordrb::API.request(
-      :users,
-      nil,
-      :get,
-      "#{Discordrb::API.api_base}/users?q=#{query}#{"&limit=#{limit}" if limit}",
-      Authorization: token
-    )
-  end
-
   # Get user data
   # https://discordapp.com/developers/docs/resources/user#get-user
   def resolve(token, user_id)
