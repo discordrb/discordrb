@@ -686,6 +686,7 @@ module Discordrb
       setup_heartbeats(interval)
 
       LOGGER.debug("Trace: #{packet['d']['_trace']}")
+      LOGGER.debug("Session: #{@session.inspect}")
 
       if @session && @session.should_resume?
         resume
