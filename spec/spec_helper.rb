@@ -103,6 +103,11 @@ def load_data_file(*name)
   JSON.parse(File.read("#{File.dirname(__FILE__)}/data/#{name.join('/')}.json"))
 end
 
+# Creates a helper method that gives access to a particular fixture's data.
+# @example Load the JSON file at "spec/data/folder/filename.json" as a "data_name" helper method
+#   fixture :data_name, [:folder, :filename]
+# @param name [Symbol] The name the helper method should have
+# @param path [Array<Symbol>] The path to the data file to load, originating from "spec/data"
 def fixture(name, path)
   let name do
     load_data_file(*path)
