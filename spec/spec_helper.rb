@@ -104,13 +104,13 @@ def load_data_file(*name)
 end
 
 def fixture(name, path)
-  let! name do
+  let name do
     load_data_file(*path)
   end
 end
 
 def fixture_property(name, fixture, trace, filter = nil)
-  let! name do
+  let name do
     data = send(fixture)
 
     trace.each do |e|
