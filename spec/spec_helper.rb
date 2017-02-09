@@ -114,6 +114,13 @@ def fixture(name, path)
   end
 end
 
+# Creates a helper method that gives access to a specific property on a particular fixture.
+# @example Add a helper method called "property_value" for `data_name['properties'][0]['value'].to_i`
+#   fixture_property :property_value, :data_name, ['properties', 0, 'value'], :to_i
+# @param name [Symbol] The name the helper method should have
+# @param fixture [Symbol] The name of the fixture the property is on
+# @param trace [Array] The objects to consecutively pass to the #[] method when accessing the data.
+# @param filter [Symbol, nil] An optional method to call on the result, in case some conversion is necessary.
 def fixture_property(name, fixture, trace, filter = nil)
   let name do
     data = send(fixture)
