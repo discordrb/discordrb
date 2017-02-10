@@ -1154,6 +1154,13 @@ module Discordrb
       @type == 3
     end
 
+    # @return [true, false] whether or not this channel is the default channel
+    def default_channel?
+      server.default_channel == self
+    end
+
+    alias_method :defalt?, :default_channel?
+
     # Sends a message to this channel.
     # @param content [String] The content to send. Should not be longer than 2000 characters or it will result in an error.
     # @param tts [true, false] Whether or not this message should be sent using Discord text-to-speech.
