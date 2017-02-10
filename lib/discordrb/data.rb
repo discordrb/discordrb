@@ -1159,7 +1159,7 @@ module Discordrb
       server.default_channel == self
     end
 
-    alias_method :defalt?, :default_channel?
+    alias_method :default?, :default_channel?
 
     # Sends a message to this channel.
     # @param content [String] The content to send. Should not be longer than 2000 characters or it will result in an error.
