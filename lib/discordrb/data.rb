@@ -2476,12 +2476,13 @@ module Discordrb
       Channel.new(JSON.parse(response), @bot)
     end
 
-    # Creates a role on this server which can then be modified. It will be initialized (on Discord's side)
-    # with the regular role defaults the client uses, i. e. name is "new role", permissions are the default,
-    # colour is the default etc.
-    # If all arguments are provided it will create the role with custom name, colour, hoist, mentionable,
-    # and packed_permissions properties, if they are not all provided it will just create the role with
-    # default settings.
+    # @overload create_role
+    #   Creates a role on this server which can then be modified. It will be initialized
+    #   with the regular role defaults the client uses, i. e. name is "new role",
+    #   permissions are the default, colour is the default etc.
+    # @overload create_role(name, colour, hoist, mentionable, packed_permissions)
+    #   Creates a role on this server which can then be modified. It will be initialized
+    #   with custom role attributes. All attributes must be specified.
     # @return [Role] the created role.
     def create_role(name = nil, colour = nil, hoist = nil, mentionable = nil, packed_permissions = nil)
       response = if [name, colour, hoist, mentionable, packed_permissions].all?(&:nil?)
