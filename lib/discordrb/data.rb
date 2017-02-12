@@ -1136,11 +1136,6 @@ module Discordrb
     # @return [Integer] the channel's position on the channel list
     attr_reader :position
 
-    # This channel's permission overwrites, represented as a hash of role/user ID to an Overwrite object
-    # @return [Hash<Integer => Overwrite>] the channel's permission overwrites
-    attr_reader :permission_overwrites
-    alias_method :overwrites, :permission_overwrites
-
     # @return [true, false] whether or not this channel is a PM or group channel.
     def private?
       pm? || group?
@@ -1219,6 +1214,32 @@ module Discordrb
     # @return [true, false] whether or not this channel is a group channel.
     def group?
       @type == 3
+    end
+
+    # This channel's permission overwrites
+    # @overload permission_overwrites
+    #   The overwrites represented as a hash of role/user ID
+    #   to an Overwrite object
+    #   @return [Hash<Integer => Overwrite>] the channel's permission overwrites
+    # @overload permission_overwrites(type)
+    #   Return an array of a certain type of overwrite
+    #   @param type the kind of overwrite to return
+    #   @return [Array<Overwrite>]
+    def permission_overwrites(type = nil)
+      return @permission_overwrites unless type
+      @permission_overwrites.values.select { |e| e.type == type }
+    end
+
+    alias_method :overwrites, :permission_overwrites
+
+    # @return [Overwrite] any member-type permission overwrites on this channel
+    def member_overwrites
+      permission_overwrites 'member'
+    end
+
+    # @return [Overwrite] any role-type permission overwrites on this channel
+    def role_overwrites
+      permission_overwrites 'role'
     end
 
     # Sends a message to this channel.
