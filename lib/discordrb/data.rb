@@ -1136,9 +1136,8 @@ module Discordrb
     # @return [Integer] the channel's position on the channel list
     attr_reader :position
 
-    # This channel's permission overwrites, represented as a hash of role/user ID to an OpenStruct which has the
-    # `allow` and `deny` properties which are {Permissions} objects respectively.
-    # @return [Hash<Integer => OpenStruct>] the channel's permission overwrites
+    # This channel's permission overwrites, represented as a hash of role/user ID to an Overwrite object
+    # @return [Hash<Integer => Overwrite>] the channel's permission overwrites
     attr_reader :permission_overwrites
     alias_method :overwrites, :permission_overwrites
 
@@ -1197,12 +1196,8 @@ module Discordrb
       @permission_overwrites = {}
       return unless data['permission_overwrites']
       data['permission_overwrites'].each do |element|
-        role_id = element['id'].to_i
-        deny = Permissions.new(element['deny'])
-        allow = Permissions.new(element['allow'])
-        @permission_overwrites[role_id] = OpenStruct.new
-        @permission_overwrites[role_id].deny = deny
-        @permission_overwrites[role_id].allow = allow
+        id = element['id'].to_i
+        @permission_overwrites[id] = Overwrite.from_hash element
       end
     end
 
