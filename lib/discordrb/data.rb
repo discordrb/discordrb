@@ -2480,8 +2480,8 @@ module Discordrb
     # with the regular role defaults the client uses, i. e. name is "new role", permissions are the default,
     # colour is the default etc.
     # @return [Role] the created role.
-    def create_role
-      response = API::Server.create_role(@bot.token, @id)
+    def create_role(name = 'new role', colour = 0, hoist = false, mentionable = false, packed_permissions = 36_953_089)
+      response = API::Server.create_role(@bot.token, @id, name, colour, hoist, mentionable, packed_permissions)
       role = Role.new(JSON.parse(response), @bot, self)
       @roles << role
       role
