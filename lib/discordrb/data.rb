@@ -2,7 +2,6 @@
 
 # These classes hold relevant Discord data, such as messages or channels.
 
-require 'ostruct'
 require 'discordrb/permissions'
 require 'discordrb/errors'
 require 'discordrb/api'
