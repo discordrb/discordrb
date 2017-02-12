@@ -74,13 +74,43 @@ module Discordrb
       end
     end
 
+    # Return the corresponding bits for an array of permission flag symbols.
+    # This is a class method that can be used to calculate bits instead
+    # of instancing a new Permissions object.
+    # @example Get the bits for permissions that could allow/deny read messages, connect, and speak
+    #   Permissions.bits [:read_messages, :connect, :speak] #=> 3146752
+    # @param list [Array<Symbol>]
+    # @return [Integer] the computed permissions integer
+    def self.bits(list)
+      value = 0
+
+      Flags.each do |position, flag|
+        value += 2**position if list.include? flag
+      end
+
+      value
+    end
+
     # Create a new Permissions object either as a blank slate to add permissions to (for example for
     #   {Channel#define_overwrite}) or from existing bit data to read out.
-    # @param bits [Integer] The permission bits that should be set from the beginning.
+    # @example Create a permissions object that could allow/deny read messages, connect, and speak by setting flags
+    #   permission = Permissions.new
+    #   permission.can_read_messages = true
+    #   permission.can_connect = true
+    #   permission.can_speak = true
+    # @example Create a permissions object that could allow/deny read messages, connect, and speak by an array of symbols
+    #   Permissions.new [:read_messages, :connect, :speak]
+    # @param bits [Integer, Array<Symbol>] The permission bits that should be set from the beginning, or an array of permission flag symbols
     # @param writer [RoleWriter] The writer that should be used to update data when a permission is set.
     def initialize(bits = 0, writer = nil)
       @writer = writer
-      @bits = bits
+
+      @bits = if bits.is_a? Array
+                self.class.bits(bits)
+              else
+                bits
+              end
+
       init_vars
     end
   end
