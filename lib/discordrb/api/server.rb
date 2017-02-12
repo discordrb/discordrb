@@ -217,7 +217,7 @@ module Discordrb::API::Server
   # sending TTS messages, embedding links, sending files, reading the history, mentioning everybody,
   # connecting to voice, speaking and voice activity (push-to-talk isn't mandatory)
   # https://discordapp.com/developers/docs/resources/guild#get-guild-roles
-  def create_role(token, server_id, name, colour, hoist, mentionable, packed_permissions)
+  def create_role(token, server_id, name = 'new role', colour = 0, hoist = false, mentionable = false, packed_permissions = 36_953_089)
     Discordrb::API.request(
       :guilds_sid_roles,
       server_id,
