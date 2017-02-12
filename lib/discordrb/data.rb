@@ -2556,11 +2556,15 @@ module Discordrb
     # Creates a channel on this server with the given name.
     # @param name [String] Name of the channel to create
     # @param type [Integer] Type of channel to create (0: text, 2: voice)
+    # @param bitrate [Integer] the bitrate of this channel, if it will be a voice channel
+    # @param user_limit [Integer] the user limit of this channel, if it will be a voice channel
+    # @param permission_overwrites [Array<Hash>, Array<Overwrite>] permission overwrites for this channel
     # @return [Channel] the created channel.
     # @raise [ArgumentError] if type is not 0 or 2
-    def create_channel(name, type = 0)
+    def create_channel(name, type = 0, bitrate: nil, user_limit: nil, permission_overwrites: [])
       raise ArgumentError, 'Channel type must be either 0 (text) or 2 (voice)!' unless [0, 2].include?(type)
-      response = API::Server.create_channel(@bot.token, @id, name, type)
+      permission_overwrites.map! { |e| e.is_a?(Overwrite) ? e.to_hash : e }
+      response = API::Server.create_channel(@bot.token, @id, name, type, bitrate, user_limit, permission_overwrites)
       Channel.new(JSON.parse(response), @bot)
     end
 
