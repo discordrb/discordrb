@@ -217,7 +217,7 @@ module Discordrb::API::Server
   # sending TTS messages, embedding links, sending files, reading the history, mentioning everybody,
   # connecting to voice, speaking and voice activity (push-to-talk isn't mandatory)
   # https://discordapp.com/developers/docs/resources/guild#get-guild-roles
-  def create_role(token, server_id, name = 'new role', colour = 0, hoist = false, mentionable = false, packed_permissions = 36_953_089)
+  def create_role(token, server_id, name = 'new role', colour = 0, hoist = false, mentionable = false, packed_permissions = 104_324_161)
     Discordrb::API.request(
       :guilds_sid_roles,
       server_id,
@@ -234,7 +234,7 @@ module Discordrb::API::Server
   # sending TTS messages, embedding links, sending files, reading the history, mentioning everybody,
   # connecting to voice, speaking and voice activity (push-to-talk isn't mandatory)
   # https://discordapp.com/developers/docs/resources/guild#batch-modify-guild-role
-  def update_role(token, server_id, role_id, name, colour, hoist = false, mentionable = false, packed_permissions = 36_953_089)
+  def update_role(token, server_id, role_id, name, colour, hoist = false, mentionable = false, packed_permissions = 104_324_161)
     Discordrb::API.request(
       :guilds_sid_roles_rid,
       server_id,
