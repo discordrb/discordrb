@@ -1,5 +1,16 @@
 # Changelog
 
+## 3.2.1
+
+- `Bot#stop` and `Gateway#stop` now explicitly return `nil`, for more convenient use in commands
+- The API method to query for users has been removed as the endpoint no longer exists
+- Some more methods have been changed to resolve IDs, which means they can be called with integer and string IDs instead of just the objects ([#313](https://github.com/meew0/discordrb/pull/313), thanks @LikeLakers2)
+- Bulk deleting now uses the new non-deprecated URL – this has no immediate effect, but once the old one will be removed bots using it will not be able to bulk delete anymore (see also [#309](https://github.com/meew0/discordrb/issues/309))
+### Bugfixes
+
+- Fixed another bug with resumes that caused issues when resuming a zombie connection 
+- Fixed a bug that caused issues when playing short files ([#326](https://github.com/meew0/discordrb/issues/316))
+
 ## 3.2.0.1
 
 - Attempt to fix an issue that causes a strange problem with dependencies when installing discordrb
