@@ -403,7 +403,7 @@ module Discordrb
     #   * `:singapore`
     #   * `:sydney`
     # @return [Server] The server that was created.
-    def create_server(name, region = :london)
+    def create_server(name, region = :'eu-central')
       response = API::Server.create(token, name, region)
       id = JSON.parse(response)['id'].to_i
       sleep 0.1 until @servers[id]
