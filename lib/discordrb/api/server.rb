@@ -4,7 +4,7 @@ module Discordrb::API::Server
 
   # Create a server
   # https://discordapp.com/developers/docs/resources/guild#create-guild
-  def create(token, name, region = :london)
+  def create(token, name, region = :'eu-central')
     Discordrb::API.request(
       :guilds,
       nil,
