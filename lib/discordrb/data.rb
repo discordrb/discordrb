@@ -1334,7 +1334,9 @@ module Discordrb
     # in that channel. For a text channel, it will return all online members that have permission to read it.
     # @return [Array<Member>] the users in this channel
     def users
-      if text?
+      if default_channel?
+        @server.online_members(include_idle: true)
+      elsif text?
         @server.online_members(include_idle: true).select { |u| u.can_read_messages? self }
       elsif voice?
         @server.voice_states.map { |id, voice_state| @server.member(id) if !voice_state.voice_channel.nil? && voice_state.voice_channel.id == @id }.compact
