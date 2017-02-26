@@ -326,13 +326,14 @@ module Discordrb
 
     # Disconnects the client from a specific voice connection given the server ID. Usually it's more convenient to use
     # {Discordrb::Voice::VoiceBot#destroy} rather than this.
-    # @param server_id [Integer] The ID of the server the voice connection is on.
+    # @param server [Server, Integer, #resolve_id] The ID of the server the voice connection is on.
     # @param destroy_vws [true, false] Whether or not the VWS should also be destroyed. If you're calling this method
     #   directly, you should leave it as true.
-    def voice_destroy(server_id, destroy_vws = true)
-      @gateway.send_voice_state_update(server_id.to_s, nil, false, false)
-      @voices[server_id].destroy if @voices[server_id] && destroy_vws
-      @voices.delete(server_id)
+    def voice_destroy(server, destroy_vws = true)
+      server = server.resolve_id
+      @gateway.send_voice_state_update(server.to_s, nil, false, false)
+      @voices[server].destroy if @voices[server] && destroy_vws
+      @voices.delete(server)
     end
 
     # Revokes an invite to a server. Will fail unless you have the *Manage Server* permission.
