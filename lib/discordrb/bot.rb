@@ -459,7 +459,7 @@ module Discordrb
       @streamurl = url
       type = url ? 1 : 0
 
-      game_obj = game || url ? { name: game, url: url, type: type } : nil
+      game_obj = game || url ? { 'name' => game, 'url' => url, 'type' => type } : nil
       @gateway.send_status_update(status, since, game_obj, afk)
 
       # Update the status in the cache
