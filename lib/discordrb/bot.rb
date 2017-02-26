@@ -326,7 +326,7 @@ module Discordrb
 
     # Disconnects the client from a specific voice connection given the server ID. Usually it's more convenient to use
     # {Discordrb::Voice::VoiceBot#destroy} rather than this.
-    # @param server [Server, Integer, #resolve_id] The ID of the server the voice connection is on.
+    # @param server [Server, Integer, #resolve_id] The server the voice connection is on.
     # @param destroy_vws [true, false] Whether or not the VWS should also be destroyed. If you're calling this method
     #   directly, you should leave it as true.
     def voice_destroy(server, destroy_vws = true)
@@ -345,7 +345,7 @@ module Discordrb
     end
 
     # Sends a text message to a channel given its ID and the message's content.
-    # @param channel [Channel, Integer, #resolve_id] The ID that identifies the channel to send something to.
+    # @param channel [Channel, Integer, #resolve_id] The channel to send something to.
     # @param content [String] The text that should be sent as a message. It is limited to 2000 characters (Discord imposed).
     # @param tts [true, false] Whether or not this message should be sent using Discord text-to-speech.
     # @param embed [Hash, Discordrb::Webhooks::Embed, nil] The rich embed to append to this message.
@@ -360,7 +360,7 @@ module Discordrb
 
     # Sends a text message to a channel given its ID and the message's content,
     # then deletes it after the specified timeout in seconds.
-    # @param channel [Channel, Integer, #resolve_id] The ID that identifies the channel to send something to.
+    # @param channel [Channel, Integer, #resolve_id] The channel to send something to.
     # @param content [String] The text that should be sent as a message. It is limited to 2000 characters (Discord imposed).
     # @param timeout [Float] The amount of time in seconds after which the message sent will be deleted.
     # @param tts [true, false] Whether or not this message should be sent using Discord text-to-speech.
@@ -379,7 +379,7 @@ module Discordrb
 
     # Sends a file to a channel. If it is an image, it will automatically be embedded.
     # @note This executes in a blocking way, so if you're sending long files, be wary of delays.
-    # @param channel [Channel, Integer, #resolve_id] The ID that identifies the channel to send something to.
+    # @param channel [Channel, Integer, #resolve_id] The channel to send something to.
     # @param file [File] The file that should be sent.
     # @param caption [string] The caption for the file.
     # @param tts [true, false] Whether or not this file's caption should be sent using Discord text-to-speech.
