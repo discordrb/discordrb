@@ -344,16 +344,16 @@ module Discordrb
     end
 
     # Sends a text message to a channel given its ID and the message's content.
-    # @param channel_id [Integer] The ID that identifies the channel to send something to.
+    # @param channel [Channel, Integer, #resolve_id] The ID that identifies the channel to send something to.
     # @param content [String] The text that should be sent as a message. It is limited to 2000 characters (Discord imposed).
     # @param tts [true, false] Whether or not this message should be sent using Discord text-to-speech.
     # @param embed [Hash, Discordrb::Webhooks::Embed, nil] The rich embed to append to this message.
     # @return [Message] The message that was sent.
-    def send_message(channel_id, content, tts = false, embed = nil)
-      channel_id = channel_id.resolve_id
-      debug("Sending message to #{channel_id} with content '#{content}'")
+    def send_message(channel, content, tts = false, embed = nil)
+      channel = channel.resolve_id
+      debug("Sending message to #{channel} with content '#{content}'")
 
-      response = API::Channel.create_message(token, channel_id, content, [], tts, embed ? embed.to_hash : nil)
+      response = API::Channel.create_message(token, channel, content, [], tts, embed ? embed.to_hash : nil)
       Message.new(JSON.parse(response), self)
     end
 
