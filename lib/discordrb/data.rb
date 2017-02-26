@@ -2476,20 +2476,17 @@ module Discordrb
       Channel.new(JSON.parse(response), @bot)
     end
 
-    # @overload create_role
-    #   Creates a role on this server which can then be modified. It will be initialized
-    #   with the regular role defaults the client uses, i. e. name is "new role",
-    #   permissions are the default, colour is the default etc.
-    # @overload create_role(name, colour, hoist, mentionable, packed_permissions)
-    #   Creates a role on this server which can then be modified. It will be initialized
-    #   with custom role attributes. All attributes must be specified.
+    # Creates a role on this server which can then be modified. It will be initialized
+    # with the regular role defaults the client uses unless specified, i. e. name is "new role",
+    # permissions are the default, colour is the default etc.
+    # @param name [String] Name of the role to create
+    # @param colour [ColourRGB] The roles colour
+    # @param hoist [true, false]
+    # @param mentionable [true, false]
+    # @param packed_permissions [Integer] The packed permissions to write.
     # @return [Role] the created role.
-    def create_role(name = nil, colour = nil, hoist = nil, mentionable = nil, packed_permissions = nil)
-      response = if [name, colour, hoist, mentionable, packed_permissions].all?(&:nil?)
-                   API::Server.create_role(@bot.token, @id)
-                 else
-                   API::Server.create_role(@bot.token, @id, name, colour, hoist, mentionable, packed_permissions)
-                 end
+    def create_role(name: 'new role', colour: 0, hoist: false, mentionable: false, packed_permissions: 104_324_161)
+      response = API::Server.create_role(@bot.token, @id, name, colour, hoist, mentionable, packed_permissions)
 
       role = Role.new(JSON.parse(response), @bot, self)
       @roles << role
