@@ -547,20 +547,28 @@ module Discordrb
     # @param role [Role, Array<Role>] The role(s) to add.
     def add_role(role)
       role_ids = role_id_array(role)
-      old_role_ids = @roles.map(&:id)
-      new_role_ids = (old_role_ids + role_ids).uniq
 
-      API::Server.update_member(@bot.token, @server.id, @user.id, roles: new_role_ids)
+      if role_ids.count == 1
+        API::Server.add_member_role(@bot.token, @server.id, @user.id, role_ids[0])
+      else
+        old_role_ids = @roles.map(&:id)
+        new_role_ids = (old_role_ids + role_ids).uniq
+        API::Server.update_member(@bot.token, @server.id, @user.id, roles: new_role_ids)
+      end
     end
 
     # Removes one or more roles from this member.
     # @param role [Role, Array<Role>] The role(s) to remove.
     def remove_role(role)
-      old_role_ids = @roles.map(&:id)
       role_ids = role_id_array(role)
-      new_role_ids = old_role_ids.reject { |i| role_ids.include?(i) }
 
-      API::Server.update_member(@bot.token, @server.id, @user.id, roles: new_role_ids)
+      if role_ids.count == 1
+        API::Server.remove_member_role(@bot.token, @server.id, @user.id, role_ids[0])
+      else
+        old_role_ids = @roles.map(&:id)
+        new_role_ids = old_role_ids.reject { |i| role_ids.include?(i) }
+        API::Server.update_member(@bot.token, @server.id, @user.id, roles: new_role_ids)
+      end
     end
 
     # Server deafens this member.
