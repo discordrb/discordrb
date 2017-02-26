@@ -378,12 +378,13 @@ module Discordrb
 
     # Sends a file to a channel. If it is an image, it will automatically be embedded.
     # @note This executes in a blocking way, so if you're sending long files, be wary of delays.
-    # @param channel_id [Integer] The ID that identifies the channel to send something to.
+    # @param channel [Channel, Integer, #resolve_id] The ID that identifies the channel to send something to.
     # @param file [File] The file that should be sent.
     # @param caption [string] The caption for the file.
     # @param tts [true, false] Whether or not this file's caption should be sent using Discord text-to-speech.
-    def send_file(channel_id, file, caption: nil, tts: false)
-      response = API::Channel.upload_file(token, channel_id, file, caption: caption, tts: tts)
+    def send_file(channel, file, caption: nil, tts: false)
+      channel = channel.resolve_id
+      response = API::Channel.upload_file(token, channel, file, caption: caption, tts: tts)
       Message.new(JSON.parse(response), self)
     end
 
