@@ -359,14 +359,14 @@ module Discordrb
 
     # Sends a text message to a channel given its ID and the message's content,
     # then deletes it after the specified timeout in seconds.
-    # @param channel_id [Integer] The ID that identifies the channel to send something to.
+    # @param channel [Channel, Integer, #resolve_id] The ID that identifies the channel to send something to.
     # @param content [String] The text that should be sent as a message. It is limited to 2000 characters (Discord imposed).
     # @param timeout [Float] The amount of time in seconds after which the message sent will be deleted.
     # @param tts [true, false] Whether or not this message should be sent using Discord text-to-speech.
     # @param embed [Hash, Discordrb::Webhooks::Embed, nil] The rich embed to append to this message.
-    def send_temporary_message(channel_id, content, timeout, tts = false, embed = nil)
+    def send_temporary_message(channel, content, timeout, tts = false, embed = nil)
       Thread.new do
-        message = send_message(channel_id, content, tts, embed)
+        message = send_message(channel, content, tts, embed)
 
         sleep(timeout)
 
