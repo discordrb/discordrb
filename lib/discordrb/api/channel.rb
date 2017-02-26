@@ -229,13 +229,13 @@ module Discordrb::API::Channel
 
   # Create an instant invite from a server or a channel id
   # https://discordapp.com/developers/docs/resources/channel#create-channel-invite
-  def create_invite(token, channel_id, max_age = 0, max_uses = 0, temporary = false)
+  def create_invite(token, channel_id, max_age = 0, max_uses = 0, temporary = false, unique = false)
     Discordrb::API.request(
       :channels_cid_invites,
       channel_id,
       :post,
       "#{Discordrb::API.api_base}/channels/#{channel_id}/invites",
-      { max_age: max_age, max_uses: max_uses, temporary: temporary }.to_json,
+      { max_age: max_age, max_uses: max_uses, temporary: temporary, unique: unique }.to_json,
       Authorization: token,
       content_type: :json
     )

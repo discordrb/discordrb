@@ -1418,9 +1418,10 @@ module Discordrb
     # @param max_age [Integer] How many seconds this invite should last.
     # @param max_uses [Integer] How many times this invite should be able to be used.
     # @param temporary [true, false] Whether membership should be temporary (kicked after going offline).
+    # @param unique [true, false] If true, Discord will always send a unique invite instead of possibly re-using a similar one
     # @return [Invite] the created invite.
-    def make_invite(max_age = 0, max_uses = 0, temporary = false)
-      response = API::Channel.create_invite(@bot.token, @id, max_age, max_uses, temporary)
+    def make_invite(max_age = 0, max_uses = 0, temporary = false, unique = false)
+      response = API::Channel.create_invite(@bot.token, @id, max_age, max_uses, temporary, unique)
       Invite.new(JSON.parse(response), @bot)
     end
 
