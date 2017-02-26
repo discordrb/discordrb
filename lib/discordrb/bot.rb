@@ -431,18 +431,18 @@ module Discordrb
     def parse_mention(mention, server = nil)
       # Mention format: <@id>
       if /<@!?(?<id>\d+)>?/ =~ mention
-        user(id.to_i)
+        user(id)
       elsif /<@&(?<id>\d+)>?/ =~ mention
-        return server.role(id.to_i) if server
+        return server.role(id) if server
         @servers.values.each do |element|
-          role = element.role(id.to_i)
+          role = element.role(id)
           return role unless role.nil?
         end
 
         # Return nil if no role is found
         nil
       elsif /<:(\w+):(?<id>\d+)>?/ =~ mention
-        emoji.find { |element| element.id.to_i == id.to_i }
+        emoji.find { |element| element.id == id.to_i }
       end
     end
 
