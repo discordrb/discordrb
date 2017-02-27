@@ -442,7 +442,7 @@ module Discordrb
         # Return nil if no role is found
         nil
       elsif /<:(\w+):(?<id>\d+)>?/ =~ mention
-        emoji.find { |element| element.id == id.to_i }
+        emoji(id.to_i)
       end
     end
 
