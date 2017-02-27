@@ -154,7 +154,7 @@ module Discordrb
 
     # @overload emoji(id)
     #   Return an emoji by its ID
-    #   @param id [Integer] The emoji's ID.
+    #   @param id [Integer, #resolve_id] The emoji's ID.
     #   @return emoji [GlobalEmoji, nil] the emoji object. `nil` if the emoji was not found.
     # @overload emoji
     #   The list of emoji the bot can use.
@@ -163,6 +163,7 @@ module Discordrb
       gateway_check
       if id
         emoji
+        id = id.resolve_id
         @emoji.find { |sth| sth.id == id }
       else
         emoji = {}
@@ -442,7 +443,7 @@ module Discordrb
         # Return nil if no role is found
         nil
       elsif /<:(\w+):(?<id>\d+)>?/ =~ mention
-        emoji(id.to_i)
+        emoji(id)
       end
     end
 
