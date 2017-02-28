@@ -617,7 +617,7 @@ module Discordrb
     # @!visibility private
     def update_roles(roles)
       @roles = roles.map do |role|
-        role.is_a?(Role) ? role : @server.role(role.to_i)
+        @server.role(role)
       end
     end
 
