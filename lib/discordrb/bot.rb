@@ -42,11 +42,12 @@ module Discordrb
     # @return [Array<Thread>] The threads.
     attr_reader :event_threads
 
-    # Whether or not the bot should parse its own messages. Off by default.
+    # @return [true, false] whether or not the bot should parse its own messages. Off by default.
     attr_accessor :should_parse_self
 
     # The bot's name which discordrb sends to Discord when making any request, so Discord can identify bots with the
     # same codebase. Not required but I recommend setting it anyway.
+    # @return [String] The bot's name.
     attr_accessor :name
 
     # @return [Array(Integer, Integer)] the current shard key
@@ -216,7 +217,7 @@ module Discordrb
       @token
     end
 
-    # @return the raw token, without any prefix
+    # @return [String] the raw token, without any prefix
     # @see #token
     def raw_token
       @token.split(' ').last
@@ -280,7 +281,7 @@ module Discordrb
     # Gets the voice bot for a particular server or channel. You can connect to a new channel using the {#voice_connect}
     # method.
     # @param thing [Channel, Server, Integer] the server or channel you want to get the voice bot for, or its ID.
-    # @return [VoiceBot, nil] the VoiceBot for the thing you specified, or nil if there is no connection yet
+    # @return [Voice::VoiceBot, nil] the VoiceBot for the thing you specified, or nil if there is no connection yet
     def voice(thing)
       id = thing.resolve_id
       return @voices[id] if @voices[id]
