@@ -5,7 +5,7 @@ require 'discordrb/data'
 
 module Discordrb::Events
   # Generic superclass for events about adding and removing reactions
-  class ReactionEvent
+  class ReactionEvent < Event
     include Respondable
 
     # @return [Emoji] the emoji that was reacted with.
@@ -70,7 +70,7 @@ module Discordrb::Events
   class ReactionRemoveEventHandler < ReactionEventHandler; end
 
   # Event raised when somebody removes all reactions from a message
-  class ReactionRemoveAllEvent
+  class ReactionRemoveAllEvent < Event
     include Respondable
 
     def initialize(data, bot)
