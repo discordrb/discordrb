@@ -1037,7 +1037,7 @@ module Discordrb
     # @return [Integer] id of the thing associated with this overwrite type
     attr_accessor :id
 
-    # @return [String] either "role" or "member"
+    # @return [Symbol] either :role or :member
     attr_accessor :type
 
     # @return [Permissions] allowed permissions for this overwrite type
@@ -1068,10 +1068,10 @@ module Discordrb
     def initialize(object = nil, type: nil, allow: 0, deny: 0)
       @id = object.respond_to?(:id) ? object.id : object
 
-      @type = if object.is_a? Member
-                'member'
+      @type = if object.is_a?(User) || object.is_a?(Member) || object.is_a?(Recipient) || object.is_a?(Profile)
+                :member
               elsif object.is_a? Role
-                'role'
+                :role
               else
                 type
               end
