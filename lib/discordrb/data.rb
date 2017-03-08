@@ -2593,7 +2593,8 @@ module Discordrb
       @available_voice_regions = data.map { |e| VoiceRegion.new e }
     end
 
-    # @return [VoiceRegion] voice region data for this server's region
+    # @return [VoiceRegion, nil] voice region data for this server's region
+    # @note This may return `nil` if this server's voice region is deprecated.
     def region
       available_voice_regions.find { |e| e.id == @region_id }
     end
