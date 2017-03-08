@@ -1351,33 +1351,32 @@ module Discordrb
 
     # Defines a permission overwrite for this channel that sets the specified thing to the specified allow and deny
     # permission sets, or change an existing one.
-    # @param thing [User, Role] What to define an overwrite for.
-    # @param allow [#bits, Permissions, Integer] The permission sets that should receive an `allow` override (i. e. a
-    #   green checkmark on Discord)
-    # @param deny [#bits, Permissions, Integer] The permission sets that should receive a `deny` override (i. e. a red
-    #   cross on Discord)
-    # @example Define a permission overwrite for a user that can then mention everyone and use TTS, but not create any invites
-    #   allow = Discordrb::Permissions.new
-    #   allow.can_mention_everyone = true
-    #   allow.can_send_tts_messages = true
+    # @overload define_overwrite(overwrite)
+    #   @param thing [Overwrite] an Overwrite object to apply to this channel
+    # @overload define_overwrite(thing, allow, deny)
+    #   @param thing [User, Role] What to define an overwrite for.
+    #   @param allow [#bits, Permissions, Integer] The permission sets that should receive an `allow` override (i. e. a
+    #     green checkmark on Discord)
+    #   @param deny [#bits, Permissions, Integer] The permission sets that should receive a `deny` override (i. e. a red
+    #     cross on Discord)
+    #   @example Define a permission overwrite for a user that can then mention everyone and use TTS, but not create any invites
+    #     allow = Discordrb::Permissions.new
+    #     allow.can_mention_everyone = true
+    #     allow.can_send_tts_messages = true
     #
-    #   deny = Discordrb::Permissions.new
-    #   deny.can_create_instant_invite = true
+    #     deny = Discordrb::Permissions.new
+    #     deny.can_create_instant_invite = true
     #
-    #   channel.define_overwrite(user, allow, deny)
-    def define_overwrite(thing, allow, deny)
-      allow_bits = allow.respond_to?(:bits) ? allow.bits : allow
-      deny_bits = deny.respond_to?(:bits) ? deny.bits : deny
+    #     channel.define_overwrite(user, allow, deny)
+    def define_overwrite(thing, allow = 0, deny = 0)
+      unless thing.is_a? Overwrite
+        allow_bits = allow.respond_to?(:bits) ? allow.bits : allow
+        deny_bits = deny.respond_to?(:bits) ? deny.bits : deny
 
-      type = if thing.is_a?(User) || thing.is_a?(Member) || thing.is_a?(Recipient) || thing.is_a?(Profile)
-               :member
-             elsif thing.is_a? Role
-               :role
-             else
-               raise ArgumentError, '`thing` in define_overwrite needs to be a kind of User (User, Member, Recipient, Profile) or a Role!'
-             end
+        thing = Overwrite.new thing, allow: allow_bits, deny: deny_bits
+      end
 
-      API::Channel.update_permission(@bot.token, @id, thing.id, allow_bits, deny_bits, type)
+      API::Channel.update_permission(@bot.token, @id, thing.id, thing.allow.bits, thing.deny.bits, thing.type)
     end
 
     # Deletes a permission overwrite for this channel
