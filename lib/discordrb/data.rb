@@ -1225,7 +1225,7 @@ module Discordrb
     #   @return [Hash<Integer => Overwrite>] the channel's permission overwrites
     # @overload permission_overwrites(type)
     #   Return an array of a certain type of overwrite
-    #   @param type the kind of overwrite to return
+    #   @param type [Symbol] the kind of overwrite to return
     #   @return [Array<Overwrite>]
     def permission_overwrites(type = nil)
       return @permission_overwrites unless type
@@ -1236,12 +1236,12 @@ module Discordrb
 
     # @return [Overwrite] any member-type permission overwrites on this channel
     def member_overwrites
-      permission_overwrites 'member'
+      permission_overwrites :member
     end
 
     # @return [Overwrite] any role-type permission overwrites on this channel
     def role_overwrites
-      permission_overwrites 'role'
+      permission_overwrites :role
     end
 
     # Sends a message to this channel.
