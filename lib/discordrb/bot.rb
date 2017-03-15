@@ -369,10 +369,10 @@ module Discordrb
     # @param embed [Hash, Discordrb::Webhooks::Embed, nil] The rich embed to append to this message.
     def send_temporary_message(channel, content, timeout, tts = false, embed = nil)
       Thread.new do
+        Thread.current[:discordrb_name] = "#{@current_thread}-temp-msg"
+
         message = send_message(channel, content, tts, embed)
-
         sleep(timeout)
-
         message.delete
       end
 
