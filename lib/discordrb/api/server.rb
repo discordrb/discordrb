@@ -212,16 +212,20 @@ module Discordrb::API::Server
     )
   end
 
-  # Create a role (parameters such as name and colour will have to be set by update_role afterwards)
+  # Create a role (parameters such as name and colour if not set can be set by update_role afterwards)
+  # Permissions are the Discord defaults; allowed: invite creation, reading/sending messages,
+  # sending TTS messages, embedding links, sending files, reading the history, mentioning everybody,
+  # connecting to voice, speaking and voice activity (push-to-talk isn't mandatory)
   # https://discordapp.com/developers/docs/resources/guild#get-guild-roles
-  def create_role(token, server_id)
+  def create_role(token, server_id, name, colour, hoist, mentionable, packed_permissions)
     Discordrb::API.request(
       :guilds_sid_roles,
       server_id,
       :post,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/roles",
-      nil,
-      Authorization: token
+      { color: colour, name: name, hoist: hoist, mentionable: mentionable, permissions: packed_permissions }.to_json,
+      Authorization: token,
+      content_type: :json
     )
   end
 
@@ -230,7 +234,7 @@ module Discordrb::API::Server
   # sending TTS messages, embedding links, sending files, reading the history, mentioning everybody,
   # connecting to voice, speaking and voice activity (push-to-talk isn't mandatory)
   # https://discordapp.com/developers/docs/resources/guild#batch-modify-guild-role
-  def update_role(token, server_id, role_id, name, colour, hoist = false, mentionable = false, packed_permissions = 36_953_089)
+  def update_role(token, server_id, role_id, name, colour, hoist = false, mentionable = false, packed_permissions = 104_324_161)
     Discordrb::API.request(
       :guilds_sid_roles_rid,
       server_id,
