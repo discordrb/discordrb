@@ -129,7 +129,6 @@ module Discordrb::Events
     # Detaches a file from the message event.
     def detach_file
       @file = nil
-      nil
     end
 
     # @return [true, false] whether or not this message was sent by the bot itself

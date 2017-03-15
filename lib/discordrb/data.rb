@@ -617,7 +617,7 @@ module Discordrb
     # @!visibility private
     def update_roles(roles)
       @roles = roles.map do |role|
-        role.is_a?(Role) ? role : @server.role(role.to_i)
+        @server.role(role)
       end
     end
 
@@ -1334,7 +1334,9 @@ module Discordrb
     # in that channel. For a text channel, it will return all online members that have permission to read it.
     # @return [Array<Member>] the users in this channel
     def users
-      if text?
+      if default_channel?
+        @server.online_members(include_idle: true)
+      elsif text?
         @server.online_members(include_idle: true).select { |u| u.can_read_messages? self }
       elsif voice?
         @server.voice_states.map { |id, voice_state| @server.member(id) if !voice_state.voice_channel.nil? && voice_state.voice_channel.id == @id }.compact
@@ -1444,7 +1446,7 @@ module Discordrb
 
     # Creates a Group channel
     # @param user_ids [Array<Integer>] Array of user IDs to add to the new group channel (Excluding
-    # the recipient of the PM channel).
+    #   the recipient of the PM channel).
     # @return [Channel] the created channel.
     def create_group(user_ids)
       raise 'Attempted to create group channel on a non-pm channel!' unless pm?
@@ -1936,7 +1938,7 @@ module Discordrb
     end
 
     # Reacts to a message
-    # @param [String, #to_reaction] the unicode emoji, Emoji, or GlobalEmoji
+    # @param reaction [String, #to_reaction] the unicode emoji, Emoji, or GlobalEmoji
     def create_reaction(reaction)
       reaction = reaction.to_reaction if reaction.respond_to?(:to_reaction)
       API::Channel.create_reaction(@bot.token, @channel.id, @id, reaction)
@@ -1946,7 +1948,7 @@ module Discordrb
     alias_method :react, :create_reaction
 
     # Returns the list of users who reacted with a certain reaction
-    # @param [String, #to_reaction] the unicode emoji, Emoji, or GlobalEmoji
+    # @param reaction [String, #to_reaction] the unicode emoji, Emoji, or GlobalEmoji
     # @return [Array<User>] the users who used this reaction
     def reacted_with(reaction)
       reaction = reaction.to_reaction if reaction.respond_to?(:to_reaction)
@@ -1955,15 +1957,15 @@ module Discordrb
     end
 
     # Deletes a reaction made by a user on this message
-    # @param [User, #resolve_id] the user who used this reaction
-    # @param [String, #to_reaction] the reaction to remove
+    # @param user [User, #resolve_id] the user who used this reaction
+    # @param reaction [String, #to_reaction] the reaction to remove
     def delete_reaction(user, reaction)
       reaction = reaction.to_reaction if reaction.respond_to?(:to_reaction)
       API::Channel.delete_user_reaction(@bot.token, @channel.id, @id, reaction, user.resolve_id)
     end
 
     # Delete's this clients reaction on this message
-    # @param [String, #to_reaction] the reaction to remove
+    # @param reaction [String, #to_reaction] the reaction to remove
     def delete_own_reaction(reaction)
       reaction = reaction.to_reaction if reaction.respond_to?(:to_reaction)
       API::Channel.delete_own_reaction(@bot.token, @channel.id, @id, reaction)
@@ -2370,7 +2372,7 @@ module Discordrb
     end
 
     # Prunes (kicks) an amount of members for inactivity
-    # @param [days] the number of days to consider for inactivity (between 1 and 30)
+    # @param days [Integer] the number of days to consider for inactivity (between 1 and 30)
     # @return [Integer] the number of members removed at the end of the operation
     # @raise [ArgumentError] if days is not between 1 and 30 (inclusive)
     def begin_prune(days)
