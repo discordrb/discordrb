@@ -453,6 +453,48 @@ module Discordrb
     end
   end
 
+  # Voice regions are the locations of servers that handle voice communication in Discord
+  class VoiceRegion
+    # @return [String] unique ID for the region
+    attr_reader :id
+    alias_method :to_s, :id
+
+    # @return [String] name of the region
+    attr_reader :name
+
+    # @return [String] an example hostname for the region
+    attr_reader :sample_hostname
+
+    # @return [Integer] an example port for the region
+    attr_reader :sample_port
+
+    # @return [true, false] if this is a VIP-only server
+    attr_reader :vip
+
+    # @return [true, false] if this voice server is the closest to the client
+    attr_reader :optimal
+
+    # @return [true, false] whether this is a deprecated voice region (avoid switching to these)
+    attr_reader :deprecated
+
+    # @return [true, false] whether this is a custom voice region (used for events/etc)
+    attr_reader :custom
+
+    def initialize(data)
+      @id = data['id']
+
+      @name = data['name']
+
+      @sample_hostname = data['sample_hostname']
+      @sample_port = data['sample_port']
+
+      @vip = data['vip']
+      @optimal = data['optimal']
+      @deprecated = data['deprecated']
+      @custom = data['custom']
+    end
+  end
+
   # A presence represents a
 
   # A member is a user on a server. It differs from regular users in that it has roles, voice statuses and things like
@@ -2219,8 +2261,8 @@ module Discordrb
     include IDObject
     include ServerAttributes
 
-    # @return [String] the region the server is on (e. g. `amsterdam`).
-    attr_reader :region
+    # @return [String] the ID of the region the server is on (e. g. `amsterdam`).
+    attr_reader :region_id
 
     # @return [Member] The server owner.
     attr_reader :owner
@@ -2590,6 +2632,22 @@ module Discordrb
       update_server_data(name: name)
     end
 
+    # @return [Array<VoiceRegion>] collection of available voice regions to this guild
+    def available_voice_regions
+      return @available_voice_regions if @available_voice_regions
+
+      @available_voice_regions = {}
+
+      data = JSON.parse API::Server.regions(@bot.token, @id)
+      @available_voice_regions = data.map { |e| VoiceRegion.new e }
+    end
+
+    # @return [VoiceRegion, nil] voice region data for this server's region
+    # @note This may return `nil` if this server's voice region is deprecated.
+    def region
+      available_voice_regions.find { |e| e.id == @region_id }
+    end
+
     # Moves the server to another region. This will cause a voice interruption of at most a second.
     # @param region [String] The new region the server should be in.
     def region=(region)
@@ -2651,7 +2709,7 @@ module Discordrb
     # @!visibility private
     def update_data(new_data)
       @name = new_data[:name] || new_data['name'] || @name
-      @region = new_data[:region] || new_data['region'] || @region
+      @region_id = new_data[:region] || new_data['region'] || @region_id
       @icon_id = new_data[:icon] || new_data['icon'] || @icon_id
       @afk_timeout = new_data[:afk_timeout] || new_data['afk_timeout'].to_i || @afk_timeout
 
