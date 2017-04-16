@@ -129,6 +129,17 @@ module Discordrb::API
     response
   end
 
+  # Perform rate limit tracing. All this method does is log the current backtrace to the console with the `:ratelimit`
+  # level.
+  # @param reason [String] the reason to include with the backtrace.
+  def trace(reason)
+    Discordrb::LOGGER.ratelimit("Trace (#{reason}):")
+
+    caller.each do |str|
+      Discordrb::LOGGER.ratelimit(' ' + str)
+    end
+  end
+
   # Make an icon URL from server and icon IDs
   def icon_url(server_id, icon_id)
     "#{api_base}/guilds/#{server_id}/icons/#{icon_id}.jpg"
