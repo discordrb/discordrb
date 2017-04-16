@@ -380,10 +380,12 @@ module Discordrb
     private
 
     def defined_role_permission?(action, channel)
+      roles_to_check = @roles + [@server.everyone_role]
+
       # For each role, check if
       #   (1) the channel explicitly allows or permits an action for the role and
       #   (2) if the user is allowed to do the action if the channel doesn't specify
-      @roles.reduce(false) do |can_act, role|
+      roles_to_check.reduce(false) do |can_act, role|
         # Get the override defined for the role on the channel
         channel_allow = permission_overwrite(action, channel, role.id)
         can_act = if channel_allow
