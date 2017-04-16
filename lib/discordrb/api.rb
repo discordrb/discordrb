@@ -133,6 +133,11 @@ module Discordrb::API
   # level.
   # @param reason [String] the reason to include with the backtrace.
   def trace(reason)
+    unless @trace
+      Discordrb::LOGGER.debug("trace was called with reason #{reason}, but tracing is not enabled")
+      return
+    end
+
     Discordrb::LOGGER.ratelimit("Trace (#{reason}):")
 
     caller.each do |str|
