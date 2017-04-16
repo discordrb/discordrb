@@ -33,7 +33,8 @@ module Discordrb
       warn: { long: 'WARN', short: '!', format_code: "\u001B[33m" }, # yellow
       error: { long: 'ERROR', short: '✗', format_code: "\u001B[31m" }, # red
       out: { long: 'OUT', short: '→', format_code: "\u001B[36m" }, # cyan
-      in: { long: 'IN', short: '←', format_code: "\u001B[35m" } # purple
+      in: { long: 'IN', short: '←', format_code: "\u001B[35m" }, # purple
+      ratelimit: { long: 'RATELIMIT', short: 'R', format_code: "\u001B[41m" } # red background
     }.freeze
 
     # The ANSI format code that resets formatting
