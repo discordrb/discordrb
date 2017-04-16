@@ -33,6 +33,13 @@ module Discordrb::API
     @bot_name = value
   end
 
+  # Changes the rate limit tracing behaviour. If rate limit tracing is on, a full backtrace will be logged on every RL
+  # hit.
+  # @param value [true, false] whether or not to enable rate limit tracing
+  def trace=(value)
+    @trace = value
+  end
+
   # Generate a user agent identifying this requester as discordrb.
   def user_agent
     # This particular string is required by the Discord devs.
