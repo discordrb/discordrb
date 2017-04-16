@@ -92,14 +92,14 @@ module Discordrb::API
       response = raw_request(type, attributes)
 
       if response.headers[:x_ratelimit_remaining] == '0' && !mutex.locked?
-        Discordrb::LOGGER.debug "RL bucket depletion detected! Date: #{response.headers[:date]} Reset: #{response.headers[:x_ratelimit_reset]}"
+        Discordrb::LOGGER.ratelimit "RL bucket depletion detected! Date: #{response.headers[:date]} Reset: #{response.headers[:x_ratelimit_reset]}"
 
         now = Time.rfc2822(response.headers[:date])
         reset = Time.at(response.headers[:x_ratelimit_reset].to_i)
 
         delta = reset - now
 
-        Discordrb::LOGGER.warn("Locking RL mutex (key: #{key}) for #{delta} seconds preemptively")
+        Discordrb::LOGGER.ratelimit("Locking RL mutex (key: #{key}) for #{delta} seconds preemptively")
         sync_wait(delta, mutex)
       end
     rescue RestClient::TooManyRequests => e
@@ -109,7 +109,7 @@ module Discordrb::API
       unless mutex.locked?
         response = JSON.parse(e.response)
         wait_seconds = response['retry_after'].to_i / 1000.0
-        Discordrb::LOGGER.warn("Locking RL mutex (key: #{key}) for #{wait_seconds} seconds due to Discord rate limiting")
+        Discordrb::LOGGER.ratelimit("Locking RL mutex (key: #{key}) for #{wait_seconds} seconds due to Discord rate limiting")
 
         # Wait the required time synchronized by the mutex (so other incoming requests have to wait) but only do it if
         # the mutex isn't locked already so it will only ever wait once
