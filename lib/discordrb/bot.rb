@@ -432,9 +432,9 @@ module Discordrb
     # @return [User, Role, Emoji] The user, role or emoji identified by the mention, or `nil` if none exists.
     def parse_mention(mention, server = nil)
       # Mention format: <@id>
-      if /<@!?(?<id>\d+)>?/ =~ mention
+      if /<@!?(?<id>\d+)>/ =~ mention
         user(id)
-      elsif /<@&(?<id>\d+)>?/ =~ mention
+      elsif /<@&(?<id>\d+)>/ =~ mention
         return server.role(id) if server
         @servers.values.each do |element|
           role = element.role(id)
@@ -443,7 +443,7 @@ module Discordrb
 
         # Return nil if no role is found
         nil
-      elsif /<:(\w+):(?<id>\d+)>?/ =~ mention
+      elsif /<:(\w+):(?<id>\d+)>/ =~ mention
         emoji(id)
       end
     end
