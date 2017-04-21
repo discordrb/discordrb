@@ -631,7 +631,7 @@ module Discordrb
     def colour_role
       coloured_roles = @roles.select { |v| v.colour.combined != 0 }
       return nil if coloured_roles.empty?
-      coloured_roles.sort { |x, y| y.position <=> x.position }[0]
+      coloured_roles.sort(&:position).last
     end
     alias_method :color_role, :colour_role
 
