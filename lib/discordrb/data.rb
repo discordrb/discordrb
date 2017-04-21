@@ -616,28 +616,28 @@ module Discordrb
     end
 
     # @return [Role] the highest role this member has.
-    def highest_role()
+    def highest_role
       @roles.sort { |x,y| y <=> x }[0]
     end
 
     # @return [Role] the role this member is being hoisted with.
-    def hoist_role()
-      hoisted_roles = @roles.select { |v| v.hoist }
+    def hoist_role
+      hoisted_roles = @roles.select(&:hoist)
       return nil if hoisted_roles.empty?
-      hoisted_roles.sort { |x,y| y.position <=> x.position }[0]
+      hoisted_roles.sort { |x, y| y.position <=> x.position }[0]
     end
 
     # @return [Role] the role this member is basing their colour on.
-    def colour_role()
+    def colour_role
       coloured_roles = @roles.select { |v| v.colour.combined != 0 }
       return nil if coloured_roles.empty?
-      coloured_roles.sort { |x,y| y.position <=> x.position }[0]
+      coloured_roles.sort { |x, y| y.position <=> x.position }[0]
     end
     alias_method :color_role, :colour_role
 
     # @return [ColourRBG, nil] the color this member has.
-    def display_colour()
-      colour = colour_role()
+    def display_colour
+      colour = colour_role
       colour || nil
     end
     alias_method :display_color, :display_colour
@@ -860,6 +860,9 @@ module Discordrb
     # @return [true, false] whether or not this role should be displayed separately from other users
     attr_reader :hoist
 
+    # @return [true, false] whether or not this role is managed by a integration or bot
+    attr_reader :managed
+
     # @return [true, false] whether this role can be mentioned using a role mention
     attr_reader :mentionable
     alias_method :mentionable?, :mentionable
@@ -903,6 +906,7 @@ module Discordrb
 
       @hoist = data['hoist']
       @mentionable = data['mentionable']
+      @managed = data['managed']
 
       @colour = ColourRGB.new(data['color'])
     end
@@ -929,6 +933,7 @@ module Discordrb
       @hoist = other.hoist
       @colour = other.colour
       @position = other.position
+      @managed = other.managed
     end
 
     # Updates the data cache from a hash containing data
