@@ -624,7 +624,7 @@ module Discordrb
     def hoist_role
       hoisted_roles = @roles.select(&:hoist)
       return nil if hoisted_roles.empty?
-      hoisted_roles.sort { |x, y| y.position <=> x.position }[0]
+      hoisted_roles.sort(&:position).last
     end
 
     # @return [Role] the role this member is basing their colour on.
@@ -641,6 +641,8 @@ module Discordrb
       colour || nil
     end
     alias_method :display_color, :display_colour
+    alias_method :color, :display_colour
+    alias_method :colour, :display_colour
 
     # Server deafens this member.
     def server_deafen
@@ -862,6 +864,7 @@ module Discordrb
 
     # @return [true, false] whether or not this role is managed by a integration or bot
     attr_reader :managed
+    alias_method :managed?, :managed
 
     # @return [true, false] whether this role can be mentioned using a role mention
     attr_reader :mentionable
@@ -2882,7 +2885,7 @@ module Discordrb
     # @return [Integer] the colour's RGB values combined into one integer.
     attr_reader :combined
 
-    # @return [Integer] the colour as a hexidecimal.
+    # @return [String] the colour as a hexidecimal.
     attr_reader :hex
 
     # Make a new colour from the combined value.
