@@ -2293,8 +2293,21 @@ module Discordrb
     # @return [Symbol] the verification level of the server (:none = none, :low = 'Must have a verified email on their Discord account', :medium = 'Has to be registered with Discord for at least 5 minutes', :high = 'Has to be a member of this server for at least 10 minutes').
     attr_reader :verification_level
 
+    # @return [Symbol] the explicit content filter level of the server (:none = 'Don't scan any messages', :exclude_roles = 'Scan messages for members without a role.', :all = 'Scan messages sent by all messages.').
+    attr_reader :explicit_content_filter
+    alias_method :content_filter_level, :explicit_content_filter
+
+    # @return [Symbol] the default message notifications settings of the server (:all = 'All messages', :mentions = 'Only @mentions').
+    attr_reader :default_message_notifications
+
     # @return [Integer] the amount of time after which a voice user gets moved into the AFK channel, in seconds.
     attr_reader :afk_timeout
+
+    # @return [true, false] whether or not the widget is enabled on the server.
+    attr_reader :widget_enabled
+
+    # @return [Channel, nil] the channel the server widget will make a invite for.
+    attr_reader :widget_channel
 
     # @return [Channel, nil] the AFK voice channel of this server, or nil if none is set
     attr_reader :afk_channel
@@ -2312,6 +2325,10 @@ module Discordrb
       @large = data['large']
       @member_count = data['member_count']
       @verification_level = [:none, :low, :medium, :high][data['verification_level']]
+      @explicit_content_filter = [:none, :exclude_roles, :all][data['explicit_content_filter']]
+      @default_message_notifications = [:all, :mentions][data['default_message_notifications']]
+      @widget_enabled = data['widget_enabled']
+      @widget_channel = bot.ensure_channel(data['channels'][data['widget_channel_id']], self)
       @splash_id = nil
       @embed = nil
       @features = data['features'].map { |element| element.downcase.to_sym }
