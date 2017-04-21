@@ -1,5 +1,9 @@
 {
   "verification_level": 0,
+  "explicit_content_filter": 0,
+  "default_message_notifications": 0,
+  "widget_enabled": false,
+  "widget_channel_id": null,
   "features": [],
   "id": "1",
   "emojis": [
