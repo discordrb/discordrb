@@ -2887,7 +2887,7 @@ module Discordrb
     attr_reader :hex
 
     # Make a new colour from the combined value.
-    # @param combined [Integer, String] The colour's RGB values combined into one integer or hexadecimal
+    # @param combined [Integer, String] The colour's RGB values combined into one integer or hexadecimal string
     def initialize(combined)
       @combined = combined.is_a?(String) ? combined.to_i(16) : combined
       @red = (@combined >> 16) & 0xFF
