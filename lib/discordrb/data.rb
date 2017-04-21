@@ -615,6 +615,33 @@ module Discordrb
       end
     end
 
+    # @return [Role] the highest role this member has.
+    def highest_role()
+      @roles.sort { |x,y| y <=> x }[0]
+    end
+
+    # @return [Role] the role this member is being hoisted with.
+    def hoist_role()
+      hoisted_roles = @roles.select { |v| v.hoist }
+      return nil if hoisted_roles.empty?
+      hoisted_roles.sort { |x,y| y.position <=> x.position }[0]
+    end
+
+    # @return [Role] the role this member is basing their colour on.
+    def colour_role()
+      coloured_roles = @roles.select { |v| v.colour.combined != 0 }
+      return nil if coloured_roles.empty?
+      coloured_roles.sort { |x,y| y.position <=> x.position }[0]
+    end
+    alias_method :color_role, :colour_role
+
+    # @return [ColourRBG, nil] the color this member has.
+    def display_colour()
+      colour = colour_role()
+      colour || nil
+    end
+    alias_method :display_color, :display_colour
+
     # Server deafens this member.
     def server_deafen
       API::Server.update_member(@bot.token, @server.id, @user.id, deaf: true)
@@ -2850,6 +2877,9 @@ module Discordrb
     # @return [Integer] the colour's RGB values combined into one integer.
     attr_reader :combined
 
+    # @return [Integer] the colour as a hexidecimal.
+    attr_reader :hex
+
     # Make a new colour from the combined value.
     # @param combined [Integer] The colour's RGB values combined into one integer
     def initialize(combined)
@@ -2857,6 +2887,7 @@ module Discordrb
       @red = (combined >> 16) & 0xFF
       @green = (combined >> 8) & 0xFF
       @blue = combined & 0xFF
+      @hex = combined.to_s(16)
     end
   end
 
