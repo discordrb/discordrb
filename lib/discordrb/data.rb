@@ -617,7 +617,7 @@ module Discordrb
 
     # @return [Role] the highest role this member has.
     def highest_role
-      @roles.sort { |x,y| y <=> x }[0]
+      @roles.sort { |x, y| y <=> x }[0]
     end
 
     # @return [Role] the role this member is being hoisted with.
