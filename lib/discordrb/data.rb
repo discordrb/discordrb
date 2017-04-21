@@ -2328,7 +2328,7 @@ module Discordrb
       @explicit_content_filter = [:none, :exclude_roles, :all][data['explicit_content_filter']]
       @default_message_notifications = [:all, :mentions][data['default_message_notifications']]
       @widget_enabled = data['widget_enabled']
-      @widget_channel = bot.ensure_channel(data['channels'][data['widget_channel_id']], self)
+      @widget_channel = data['widget_channel_id'].nil? ? nil : bot.ensure_channel(data['channels'][data['widget_channel_id']], self)
       @splash_id = nil
       @embed = nil
       @features = data['features'].map { |element| element.downcase.to_sym }
