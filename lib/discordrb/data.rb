@@ -636,13 +636,11 @@ module Discordrb
     alias_method :color_role, :colour_role
 
     # @return [ColourRBG, nil] the color this member has.
-    def display_colour
+    def colour
       colour = colour_role
       colour || nil
     end
-    alias_method :display_color, :display_colour
-    alias_method :color, :display_colour
-    alias_method :colour, :display_colour
+    alias_method :colour, :colour
 
     # Server deafens this member.
     def server_deafen
@@ -2889,13 +2887,13 @@ module Discordrb
     attr_reader :hex
 
     # Make a new colour from the combined value.
-    # @param combined [Integer] The colour's RGB values combined into one integer
+    # @param combined [Integer, String] The colour's RGB values combined into one integer or hexadecimal
     def initialize(combined)
-      @combined = combined
-      @red = (combined >> 16) & 0xFF
-      @green = (combined >> 8) & 0xFF
-      @blue = combined & 0xFF
-      @hex = combined.to_s(16)
+      @combined = combined.is_a?(String) ? combined.to_i(16) : combined
+      @red = (@combined >> 16) & 0xFF
+      @green = (@combined >> 8) & 0xFF
+      @blue = @combined & 0xFF
+      @hex = @combined.to_s(16)
     end
   end
 
