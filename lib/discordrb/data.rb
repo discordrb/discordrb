@@ -629,7 +629,7 @@ module Discordrb
 
     # @return [Role] the role this member is basing their colour on.
     def colour_role
-      coloured_roles = @roles.select { |v| v.colour.combined != 0 }
+      coloured_roles = @roles.select { |v| v.colour.combined.nonzero? }
       return nil if coloured_roles.empty?
       coloured_roles.sort(&:position).last
     end
