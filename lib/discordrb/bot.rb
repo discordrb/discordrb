@@ -263,7 +263,6 @@ module Discordrb
     end
 
     # Creates an OAuth invite URL that can be used to invite this bot to a particular server.
-    # Requires the application ID to have been set during initialization.
     # @param server [Server, nil] The server the bot should be invited to, or nil if a general invite should be created.
     # @param permission_bits [Integer, String] Permission bits that should be appended to invite url.
     # @return [String] the OAuth invite URL.
