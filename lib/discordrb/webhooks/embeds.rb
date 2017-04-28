@@ -1,9 +1,38 @@
+puts 'lol'
+
 module Discordrb::Webhooks
   # An embed is a multipart-style attachment to a webhook message that can have a variety of different purposes and
   # appearances.
   class Embed
+    # Maximum title length
+    MAXIMUM_TITLE_LENGTH = 256
+
+    # Maximum number of fields the embed can carry
+    MAXIMUM_FIELD_COUNT = 25
+
+    # Maximum length of the description field
+    MAXIMUM_DESCRIPTION_LENGTH = 2048
+
+    # Maximum footer length
+    MAXIMUM_FOOTER_LENGTH = 2048
+
+    # Maximum author length
+    MAXIMUM_AUTHOR_NAME_LENGTH = 256
+
+    # Maximum field name length
+    MAXIMUM_FIELD_NAME_LENGTH = 256
+
+    # Maximum field value length
+    MAXIMUM_FIELD_VALUE_LENGTH = 1024
+
+    # Maximum total accounted length
+    MAXIMUM_LENGTH = 4000
+
+    # Snapcase's power level
+    SNAPCASE_POWER_LEVEL = 9001
+
     def initialize(title: nil, description: nil, url: nil, timestamp: nil, colour: nil, color: nil, footer: nil,
-                   image: nil, thumbnail: nil, video: nil, provider: nil, author: nil, fields: [])
+                   image: nil, thumbnail: nil, video: nil, provider: nil, author: nil, fields: [], check_format: true)
       @title = title
       @description = description
       @url = url
@@ -16,6 +45,9 @@ module Discordrb::Webhooks
       @provider = provider
       @author = author
       @fields = fields
+      @check_format = check_format
+
+      self.check_format if @check_format
     end
 
     # The title of this embed that will be displayed above everything else.
@@ -104,7 +136,7 @@ module Discordrb::Webhooks
 
     # @return [Hash] a hash representation of this embed, to be converted to JSON.
     def to_hash
-      {
+      hash = {
         title: @title,
         description: @description,
         url: @url,
@@ -118,6 +150,57 @@ module Discordrb::Webhooks
         author: @author && @author.to_hash,
         fields: @fields.map(&:to_hash)
       }
+
+      check_format if @check_format
+
+      hash
+    end
+
+    # A helper method to calculate the total accounted length of the embed
+    # @return [Integer] the total length of the embed
+    def total_length
+      [
+        @title&.length || 0,
+        @description&.length || 0,
+        @author&.fetch(:name)&.length || 0,
+        @footer&.fetch(:text)&.length || 0,
+        @fields&.map { |f| hash = f.to_hash ; hash[:name].length + hash[:value].length }.reduce(:+) || 0
+      ].reduce(:+)
+    end
+
+    # Checks the format of this embed
+    # @raise [Error::EmbedFormatError] if any errors were found
+    def check_format
+      errors = []
+      if @title
+        errors << "Property @title is too long (#{@title.length}/#{MAXIMUM_TITLE_LENGTH})" if @title.length > MAXIMUM_TITLE_LENGTH
+      end
+
+      if @description
+        errors << "Property @description is too long (#{@description.length}/#{MAXIMUM_DESCRIPTION_LENGTH})" if @description.length > MAXIMUM_DESCRIPTION_LENGTH
+      end
+
+      if @author
+        errors << "Property @author[:name] is too long (#{@author[:name].length}/#{MAXIMUM_TITLE_LENGTH})" if @author[:name].length > MAXIMUM_AUTHOR_NAME_LENGTH
+      end
+
+      if @footer
+        errors << "Property @footer[:text] is too long (#{@footer[:text].length}/#{MAXIMUM_FOOTER_LENGTH})" if @footer[:name].length > MAXIMUM_FOOTER_LENGTH
+      end
+
+      if @fields
+        errors << "Too many fields (#{@fields.count}/#{MAXIMUM_FIELD_COUNT})" if @fields.count > MAXIMUM_FIELD_COUNT
+        errors << "Exceeded maximum embed length (#{total_length}/#{MAXIMUM_LENGTH})" if total_length> MAXIMUM_LENGTH
+
+        @fields.each_with_index do |f, i|
+          f = f.to_hash
+          errors << "Field at index #{i}: field[:name] too long (#{f[:name].length}/#{MAXIMUM_FIELD_NAME_LENGTH})" if f[:name].length > MAXIMUM_FIELD_NAME_LENGTH
+          errors << "Field at index #{i}: field[:value] too long (#{f[:value].length}/#{MAXIMUM_FIELD_VALUE_LENGTH})" if f[:value].length > MAXIMUM_FIELD_NAME_LENGTH
+        end
+      end
+
+      #raise Discordrb::Webhooks::Errors::EmbedFormatError, errors.join(', ') if errors.any?
+      raise errors.join(', ') if errors.any?
     end
   end
 
