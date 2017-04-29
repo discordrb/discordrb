@@ -888,7 +888,7 @@ module Discordrb
     # @return [Array<Member>] an array of members who have this role.
     # @note This requests a member chunk if it hasn't for the server before, which may be slow initially
     def members
-      @server.members.select { |m| m.role? role }
+      @server.members.select { |m| m.role? self }
     end
 
     alias_method :users, :members
