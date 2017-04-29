@@ -1067,7 +1067,10 @@ module Discordrb
     # @param deny [Integer, Permissions] denied permissions for this overwrite, by bits or a Permissions object
     # @raise [ArgumentError] if type is not :member or :role
     def initialize(object = nil, type: nil, allow: 0, deny: 0)
-      raise ArgumentError, 'Overwrite type must be :member or :role' if type && (type != :member) && (type != :role)
+      if type
+        type = type.to_sym
+        raise ArgumentError, 'Overwrite type must be :member or :role' unless (type != :member) || (type != :role)
+      end
 
       @id = object.respond_to?(:id) ? object.id : object
 
