@@ -233,15 +233,15 @@ module Discordrb::Voice
     # Plays an encoded audio file of arbitrary format to the channel.
     # @see Encoder#encode_file
     # @see #play
-    def play_file(file)
-      play @encoder.encode_file(file)
+    def play_file(file, options="")
+      play @encoder.encode_file(file, options)
     end
 
     # Plays a stream of encoded audio data of arbitrary format to the channel.
     # @see Encoder#encode_io
     # @see #play
-    def play_io(io)
-      play @encoder.encode_io(io)
+    def play_io(io, options="")
+      play @encoder.encode_io(io, options)
     end
 
     # Plays a stream of audio data in the DCA format. This format has the advantage that no recoding has to be
