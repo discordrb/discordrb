@@ -233,14 +233,14 @@ module Discordrb::Voice
     # Plays an encoded audio file of arbitrary format to the channel.
     # @see Encoder#encode_file
     # @see #play
-    def play_file(file, options="")
+    def play_file(file, options = '')
       play @encoder.encode_file(file, options)
     end
 
     # Plays a stream of encoded audio data of arbitrary format to the channel.
     # @see Encoder#encode_io
     # @see #play
-    def play_io(io, options="")
+    def play_io(io, options = '')
       play @encoder.encode_io(io, options)
     end
 

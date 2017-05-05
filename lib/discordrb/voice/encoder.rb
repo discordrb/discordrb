@@ -75,7 +75,7 @@ module Discordrb::Voice
     # @param file [String] The path or URL to encode.
     # @param options [String] ffmpeg options to pass after the -i flag
     # @return [IO] the audio, encoded as s16le PCM
-    def encode_file(file, options="")
+    def encode_file(file, options = '')
       command = "#{ffmpeg_command} -loglevel 0 -i \"#{file}\" #{options} -f s16le -ar 48000 -ac 2 #{filter_volume_argument} pipe:1"
       IO.popen(command)
     end
@@ -85,7 +85,7 @@ module Discordrb::Voice
     # @param io [IO] The stream to encode.
     # @param options [String] ffmpeg options to pass after the -i flag
     # @return [IO] the audio, encoded as s16le PCM
-    def encode_io(io, options="")
+    def encode_io(io, options = '')
       ret_io, writer = IO.pipe
       command = "#{ffmpeg_command} -loglevel 0 -i - #{options} -f s16le -ar 48000 -ac 2 #{filter_volume_argument} pipe:1"
       spawn(command, in: io, out: writer)
