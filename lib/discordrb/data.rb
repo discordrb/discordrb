@@ -1978,7 +1978,7 @@ module Discordrb
     # Returns the reactions made by the current bot or user
     # @return [Array<Reaction>] the reactions
     def my_reactions
-      @reactions.select(&:me)
+      @reactions.values.select(&:me)
     end
 
     # Reacts to a message
