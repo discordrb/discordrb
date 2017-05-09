@@ -2047,6 +2047,13 @@ module Discordrb
       @id = data['emoji']['id'].nil? ? nil : data['emoji']['id'].to_i
       @name = data['emoji']['name']
     end
+
+    # Converts this Reaction into a string that can be sent back to Discord in other reaction endpoints.
+    # If ID is present, it will be rendered into the form of `name:id`.
+    # @return [String] the name of this reaction, including the ID if it is a custom emoji
+    def to_s
+      id.nil? ? name : "#{name}:#{id}"
+    end
   end
 
   # Server emoji
