@@ -347,7 +347,7 @@ module Discordrb
     # Reconnects the gateway connection in a controlled manner.
     # @param attempt_resume [true, false] Whether a resume should be attempted after the reconnection.
     def reconnect(attempt_resume = true)
-      @session.suspend if attempt_resume
+      @session.suspend if @session && attempt_resume
 
       @instant_reconnect = true
       @should_reconnect = true
