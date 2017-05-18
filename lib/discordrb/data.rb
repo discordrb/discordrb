@@ -1218,7 +1218,7 @@ module Discordrb
     # @param tts [true, false] Whether or not this message should be sent using Discord text-to-speech.
     # @param embed [Hash, Discordrb::Webhooks::Embed, nil] The rich embed to append to this message.
     # @return [Message] the message that was sent.
-    def send_message(content, tts = false, embed = nil)
+    def send_message(content, tts = false, embed: nil)
       @bot.send_message(@id, content, tts, embed)
     end
 
@@ -1229,7 +1229,7 @@ module Discordrb
     # @param timeout [Float] The amount of time in seconds after which the message sent will be deleted.
     # @param tts [true, false] Whether or not this message should be sent using Discord text-to-speech.
     # @param embed [Hash, Discordrb::Webhooks::Embed, nil] The rich embed to append to this message.
-    def send_temporary_message(content, timeout, tts = false, embed = nil)
+    def send_temporary_message(content, timeout, tts = false, embed: nil)
       @bot.send_temporary_message(@id, content, timeout, tts, embed)
     end
 
