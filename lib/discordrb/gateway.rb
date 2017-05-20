@@ -537,6 +537,11 @@ module Discordrb
 
       until @closed
         begin
+          unless @socket
+            LOGGER.warn('Socket is nil in websocket_loop! Reconnecting')
+            handle_internal_close('Socket is nil in websocket_loop')
+          end
+
           recv_data = nil
 
           # Get some data from the socket, synchronised so the socket can't be closed during this
