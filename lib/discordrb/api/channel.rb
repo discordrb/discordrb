@@ -42,12 +42,12 @@ module Discordrb::API::Channel
 
   # Get a list of messages from a channel's history
   # https://discordapp.com/developers/docs/resources/channel#get-channel-messages
-  def messages(token, channel_id, amount, before = nil, after = nil)
+  def messages(token, channel_id, amount, before = nil, after = nil, around = nil)
     Discordrb::API.request(
       :channels_cid_messages,
       channel_id,
       :get,
-      "#{Discordrb::API.api_base}/channels/#{channel_id}/messages?limit=#{amount}#{"&before=#{before}" if before}#{"&after=#{after}" if after}",
+      "#{Discordrb::API.api_base}/channels/#{channel_id}/messages?limit=#{amount}#{"&before=#{before}" if before}#{"&after=#{after}" if after}#{"&around=#{around}" if around}",
       Authorization: token
     )
   end
@@ -78,7 +78,7 @@ module Discordrb::API::Channel
     )
   rescue RestClient::BadRequest => e
     parsed = JSON.parse(e.response.body)
-    raise Discordrb::Errors::MessageTooLong, "Message over the character limit (#{message.length} > 2000)" if parsed['content'] && parsed['content'].is_a?(Array) && parsed['content'].first == 'Must be 2000 or less characters long.'
+    raise Discordrb::Errors::MessageTooLong, "Message over the character limit (#{message.length} > 2000)" if parsed['content'] && parsed['content'].is_a?(Array) && parsed['content'].first == 'Must be 2000 or fewer characters long.'
     raise
   end
 
@@ -229,13 +229,13 @@ module Discordrb::API::Channel
 
   # Create an instant invite from a server or a channel id
   # https://discordapp.com/developers/docs/resources/channel#create-channel-invite
-  def create_invite(token, channel_id, max_age = 0, max_uses = 0, temporary = false)
+  def create_invite(token, channel_id, max_age = 0, max_uses = 0, temporary = false, unique = false)
     Discordrb::API.request(
       :channels_cid_invites,
       channel_id,
       :post,
       "#{Discordrb::API.api_base}/channels/#{channel_id}/invites",
-      { max_age: max_age, max_uses: max_uses, temporary: temporary }.to_json,
+      { max_age: max_age, max_uses: max_uses, temporary: temporary, unique: unique }.to_json,
       Authorization: token,
       content_type: :json
     )

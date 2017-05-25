@@ -29,7 +29,7 @@ See also: [Documentation](http://www.rubydoc.info/gems/discordrb), [Tutorials](h
 
 This section only applies to you if you want to use voice functionality.
 * [libsodium](https://github.com/meew0/discordrb/wiki/Installing-libsodium)
-* A compiled libopus distribution for your system, anywhere the script can find it (on Windows, make sure it's named `opus.dll`)
+* A compiled libopus distribution for your system, anywhere the script can find it. See [here](https://github.com/meew0/discordrb/wiki/Installing-libopus) for installation instructions.
 * [FFmpeg](https://www.ffmpeg.org/download.html) installed and in your PATH
 
 In addition to this, if you're on Windows and want to use voice functionality, your installed Ruby version **needs to be 32 bit**, as otherwise Opus won't work.

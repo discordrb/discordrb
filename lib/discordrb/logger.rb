@@ -33,7 +33,8 @@ module Discordrb
       warn: { long: 'WARN', short: '!', format_code: "\u001B[33m" }, # yellow
       error: { long: 'ERROR', short: '✗', format_code: "\u001B[31m" }, # red
       out: { long: 'OUT', short: '→', format_code: "\u001B[36m" }, # cyan
-      in: { long: 'IN', short: '←', format_code: "\u001B[35m" } # purple
+      in: { long: 'IN', short: '←', format_code: "\u001B[35m" }, # purple
+      ratelimit: { long: 'RATELIMIT', short: 'R', format_code: "\u001B[41m" } # red background
     }.freeze
 
     # The ANSI format code that resets formatting
@@ -65,11 +66,11 @@ module Discordrb
     def mode=(value)
       case value
       when :debug
-        @enabled_modes = [:debug, :good, :info, :warn, :error, :out, :in]
+        @enabled_modes = [:debug, :good, :info, :warn, :error, :out, :in, :ratelimit]
       when :verbose
-        @enabled_modes = [:good, :info, :warn, :error, :out, :in]
+        @enabled_modes = [:good, :info, :warn, :error, :out, :in, :ratelimit]
       when :normal
-        @enabled_modes = [:info, :warn, :error]
+        @enabled_modes = [:info, :warn, :error, :ratelimit]
       when :quiet
         @enabled_modes = [:warn, :error]
       when :silent

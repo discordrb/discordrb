@@ -347,7 +347,7 @@ module Discordrb
     # Reconnects the gateway connection in a controlled manner.
     # @param attempt_resume [true, false] Whether a resume should be attempted after the reconnection.
     def reconnect(attempt_resume = true)
-      @session.suspend if attempt_resume
+      @session.suspend if @session && attempt_resume
 
       @instant_reconnect = true
       @should_reconnect = true
@@ -537,6 +537,11 @@ module Discordrb
 
       until @closed
         begin
+          unless @socket
+            LOGGER.warn('Socket is nil in websocket_loop! Reconnecting')
+            handle_internal_close('Socket is nil in websocket_loop')
+          end
+
           recv_data = nil
 
           # Get some data from the socket, synchronised so the socket can't be closed during this
