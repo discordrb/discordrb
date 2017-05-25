@@ -71,11 +71,14 @@ module Discordrb
     # @return [Integer] the ID which uniquely identifies this object across Discord.
     attr_reader :id
     alias_method :resolve_id, :id
+    alias_method :hash, :id
 
     # ID based comparison
     def ==(other)
       Discordrb.id_compare(@id, other)
     end
+
+    alias_method :eql?, :==
 
     # Estimates the time this object was generated on based on the beginning of the ID. This is fairly accurate but
     # shouldn't be relied on as Discord might change its algorithm at any time
