@@ -617,30 +617,30 @@ module Discordrb
 
     # @return [Role] the highest role this member has.
     def highest_role
-      @roles.sort { |x, y| y <=> x }[0]
+      @roles.sort_by(&:position).last
     end
 
     # @return [Role] the role this member is being hoisted with.
     def hoist_role
       hoisted_roles = @roles.select(&:hoist)
       return nil if hoisted_roles.empty?
-      hoisted_roles.sort(&:position).last
+      hoisted_roles.sort_by(&:position).last
     end
 
     # @return [Role] the role this member is basing their colour on.
     def colour_role
       coloured_roles = @roles.select { |v| v.colour.combined.nonzero? }
       return nil if coloured_roles.empty?
-      coloured_roles.sort(&:position).last
+      coloured_roles.sort_by(&:position).last
     end
     alias_method :color_role, :colour_role
 
-    # @return [ColourRBG, nil] the color this member has.
+    # @return [ColourRGB, nil] the colour this member has.
     def colour
-      colour = colour_role
-      colour || nil
+      return nil unless colour_role
+      colour_role.color
     end
-    alias_method :colour, :colour
+    alias_method :color, :colour
 
     # Server deafens this member.
     def server_deafen
@@ -2883,9 +2883,6 @@ module Discordrb
     # @return [Integer] the colour's RGB values combined into one integer.
     attr_reader :combined
 
-    # @return [String] the colour as a hexidecimal.
-    attr_reader :hex
-
     # Make a new colour from the combined value.
     # @param combined [Integer, String] The colour's RGB values combined into one integer or a hexadecimal string
     # @example Initialize a with a base 10 integer
@@ -2898,8 +2895,13 @@ module Discordrb
       @red = (@combined >> 16) & 0xFF
       @green = (@combined >> 8) & 0xFF
       @blue = @combined & 0xFF
-      @hex = @combined.to_s(16)
     end
+
+    # @return [String] the colour as a hexadecimal.
+    def hex
+      @combined.to_s(16)
+    end
+    alias_method :hexadecimal, :hex
   end
 
   # Alias for the class {ColourRGB}
