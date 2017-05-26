@@ -2259,6 +2259,8 @@ module Discordrb
   end
 
   # A server on Discord
+
+  # A server on Discord
   class Server
     include IDObject
     include ServerAttributes
@@ -2303,12 +2305,6 @@ module Discordrb
     # @return [Integer] the amount of time after which a voice user gets moved into the AFK channel, in seconds.
     attr_reader :afk_timeout
 
-    # @return [true, false] whether or not the widget is enabled on the server.
-    attr_reader :widget_enabled
-
-    # @return [Channel, nil] the channel the server widget will make a invite for.
-    attr_reader :widget_channel
-
     # @return [Channel, nil] the AFK voice channel of this server, or nil if none is set
     attr_reader :afk_channel
 
@@ -2328,7 +2324,7 @@ module Discordrb
       @explicit_content_filter = [:none, :exclude_roles, :all][data['explicit_content_filter']]
       @default_message_notifications = [:all, :mentions][data['default_message_notifications']]
       @widget_enabled = data['widget_enabled']
-      @widget_channel = data['widget_channel_id'].nil? ? nil : bot.ensure_channel(data['channels'][data['widget_channel_id']], self)
+      @embed_channel = nil
       @splash_id = nil
       @embed = nil
       @features = data['features'].map { |element| element.downcase.to_sym }
@@ -2407,6 +2403,13 @@ module Discordrb
     # @!visibility private
     def cache_embed
       @embed ||= JSON.parse(API::Server.resolve(@bot.token, @id))['embed_enabled']
+      @embed_channel_id ||= JSON.parse(API::Server.resolve(@bot.token, @id))['embed_channel_id']
+      begin
+        @embed_channel = @bot.channel(@embed_channel_id, self) if @embed_channel_id.nonzero? && (!@embed_channel || @embed_channel_id != @embed_channel.id)
+      rescue Discordrb::Errors::NoPermission
+        LOGGER.debug("Embed channel #{@embed_channel_id} on server #{@id} is unreachable, setting to nil even though one exists")
+        @embed_channel = nil
+      end
     end
 
     # @return [true, false] whether or not the server has widget enabled
@@ -2414,6 +2417,16 @@ module Discordrb
       cache_embed if @embed.nil?
       @embed
     end
+    alias_method :widget_enabled, :embed?
+    alias_method :widget?, :embed?
+    alias_method :embed_enabled, :embed?
+
+    # @return [Channel, nil] the channel the server embed will make a invite for.
+    def embed_channel
+      cache_embed if @embed_channel.nil?
+      @embed_channel
+    end
+    alias_method :widget_channel, :embed_channel
 
     # @param include_idle [true, false] Whether to count idle members as online.
     # @param include_bots [true, false] Whether to include bot accounts in the count.
@@ -2736,14 +2749,25 @@ module Discordrb
       @region_id = new_data[:region] || new_data['region'] || @region_id
       @icon_id = new_data[:icon] || new_data['icon'] || @icon_id
       @afk_timeout = new_data[:afk_timeout] || new_data['afk_timeout'].to_i || @afk_timeout
-
       @afk_channel_id = new_data[:afk_channel_id] || new_data['afk_channel_id'].to_i || @afk_channel.id
+      @embed_channel_id = new_data[:embed_channel_id] || new_data['embed_channel_id'].to_i || @embed_channel.id
+      @embed = new_data[:embed_enabled] || new_data['embed_enabled'] || @embed
+      @verification_level = [:none, :low, :medium, :high][new_data['verification_level']] || @verification_level
+      @explicit_content_filter = [:none, :exclude_roles, :all][new_data['explicit_content_filter']] || @explicit_content_filter
+      @default_message_notifications = [:all, :mentions][new_data['default_message_notifications']] || @default_message_notifications
 
       begin
         @afk_channel = @bot.channel(@afk_channel_id, self) if @afk_channel_id.nonzero? && (!@afk_channel || @afk_channel_id != @afk_channel.id)
       rescue Discordrb::Errors::NoPermission
         LOGGER.debug("AFK channel #{@afk_channel_id} on server #{@id} is unreachable, setting to nil even though one exists")
         @afk_channel = nil
+      end
+
+      begin
+        @embed_channel = @bot.channel(@embed_channel_id, self) if @embed_channel_id.nonzero? && (!@embed_channel || @embed_channel_id != @embed_channel.id)
+      rescue Discordrb::Errors::NoPermission
+        LOGGER.debug("Embed channel #{@embed_channel_id} on server #{@id} is unreachable, setting to nil even though one exists")
+        @embed_channel = nil
       end
     end
 
