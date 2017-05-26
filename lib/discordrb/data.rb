@@ -2402,8 +2402,9 @@ module Discordrb
     # @note For internal use only
     # @!visibility private
     def cache_embed
-      @embed ||= JSON.parse(API::Server.resolve(@bot.token, @id))['embed_enabled']
-      @embed_channel_id ||= JSON.parse(API::Server.resolve(@bot.token, @id))['embed_channel_id']
+      data = JSON.parse(API::Server.resolve(@bot.token, @id))
+      @embed ||= data['embed_enabled']
+      @embed_channel_id ||= data['embed_channel_id']
       begin
         @embed_channel = @bot.channel(@embed_channel_id, self) if @embed_channel_id.nonzero? && (!@embed_channel || @embed_channel_id != @embed_channel.id)
       rescue Discordrb::Errors::NoPermission
