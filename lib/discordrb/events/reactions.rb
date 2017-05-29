@@ -42,7 +42,7 @@ module Discordrb::Events
       @channel ||= @bot.channel(@channel_id)
     end
 
-    # @return [Server, nil] the server that was reacted in. If this channel is a PM channel, it will be nil.
+    # @return [Server, nil] the server that was reacted in. If reacted in a PM channel, it will be nil.
     def server
       @server ||= @channel.server
     end
