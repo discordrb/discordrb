@@ -3391,7 +3391,7 @@ module Discordrb
       # @return [Symbol] the type of target being preformed on. (:server, :channel, :user, :role, :invite, :webhook, :emoji, :unknown)
       attr_reader :target_type
 
-      # @return [Integer, nil] the amount of messages deleted. Won't be if the action is `:message_delete`.
+      # @return [Integer, nil] the amount of messages deleted. Won't be nil if the action is `:message_delete`.
       attr_reader :count
       alias_method :amount, :count
 
@@ -3442,8 +3442,7 @@ module Discordrb
       # @return [Channel, nil] the amount of messages deleted. Won't be nil if the action is `:message_delete`.
       def channel
         return nil unless @channel_id
-        return @channel unless @channel.nil?
-        @channel = @bot.channel(@channel_id, @server)
+        @channel ||= @bot.channel(@channel_id, @server)
       end
 
       # @!visibility private
@@ -3496,10 +3495,6 @@ module Discordrb
         @key = data['key']
         @old = data['old_value']
         @new = data['new_value']
-        evaluate_permissions
-      end
-
-      def evaluate_permissions
         return unless @key == 'permissions'
         @old = Permissions.new(@old) if @old
         @new = Permissions.new(@new) if @new
