@@ -2026,7 +2026,7 @@ module Discordrb
     end
 
     # Edits this message to have the specified content instead.
-    # You can only edit your own messages.
+    #   You can only edit your own messages.
     # @param new_content [String] the new content the message should have.
     # @param new_embed [Hash, Discordrb::Webhooks::Embed, nil] The new embed the message should have. If nil the message will be changed to have no embed.
     # @return [Message] the resulting message.
