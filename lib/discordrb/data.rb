@@ -3508,7 +3508,6 @@ module Discordrb
 
     # A change that includes roles.
     class RoleChange
-
       # @return [Symbol] what type of change this is: (:add, :remove)
       attr_reader :type
 
@@ -3535,8 +3534,7 @@ module Discordrb
     # @note This only uses data given by the audit logs request
     # @param id [Integer] The user ID to look for
     def user(id)
-      id = id.resolve_id
-      return @users[id]
+      @users[id.resolve_id]
     end
 
     def process_users(users)
