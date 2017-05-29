@@ -3395,7 +3395,7 @@ module Discordrb
       attr_reader :count
       alias_method :amount, :count
 
-      # @return [Integer, nil] the amount of members removed. Is not nil if the action is `:member_prune`.
+      # @return [Integer, nil] the amount of days the members were inactive for. Is not nil if the action is `:member_prune`.
       attr_reader :days
 
       # @return [Integer, nil] the amount of members removed. Is not nil if the action is `:member_prune`.
