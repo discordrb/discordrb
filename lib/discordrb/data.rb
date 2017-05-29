@@ -3411,17 +3411,10 @@ module Discordrb
         @logs = logs
         @server = server
         @data = data
-        @user = nil
         @action = Actions[data['action_type']]
         @action_type = @logs.get_action_type(data['action_type'])
         @target_type = @logs.get_target_type(data['action_type'])
         @target_cached = false
-        @count = nil
-        @channel = nil
-        @channel_id = nil
-        @days = nil
-        @members_removed = nil
-        @changes = nil
         @changes = {} unless @action == :message_delete || @action == :member_prune || @action == :member_role_update
         @changes = RoleChange.new(data['changes'][0], @server) if @action == :member_role_update
         process_changes(data['changes']) unless @action == :member_role_update
@@ -3441,10 +3434,10 @@ module Discordrb
 
       # @return [Member, User] the user that is executing this action. Can be a User object if the user no longer exists in the server.
       def user
-        return @user unless @user.nil?
-        @user = @server.member(@data['user_id'].to_i) || @bot.user(@data['user_id'].to_i) || @logs.user(@data['user_id'].to_i)
+        @user ||= @server.member(@data['user_id'].to_i) || @bot.user(@data['user_id'].to_i) || @logs.user(@data['user_id'].to_i)
       end
       alias_method :executor, :user
+      alias_method :author, :user
 
       # @return [Channel, nil] the amount of messages deleted. Won't be nil if the action is `:message_delete`.
       def channel
@@ -3458,21 +3451,20 @@ module Discordrb
         id = id.resolve_id unless id.nil?
         case type
         when :server
-          return @server # Since it won't be anything else
+          @server # Since it won't be anything else
         when :channel
-          return @bot.channel(id, @server)
+          @bot.channel(id, @server)
         when :user, :message
-          return @server.member(id) || @bot.user(id) || @logs.user(id)
+          @server.member(id) || @bot.user(id) || @logs.user(id)
         when :role
-          return @server.role(id)
+          @server.role(id)
         when :invite
-          return @bot.invite(@data['changes'].find { |change| change['key'] == 'code' }.values.delete_if { |v| v == 'code' }.first)
+          @bot.invite(@data['changes'].find { |change| change['key'] == 'code' }.values.delete_if { |v| v == 'code' }.first)
         when :webhook
-          return 'TODO' # TODO
+          'TODO' # TODO
         when :emoji
-          return @server.emoji[id]
+          @server.emoji[id]
         end
-        nil
       end
 
       # @!visibility private
@@ -3487,7 +3479,6 @@ module Discordrb
 
     # A change in a audit log entry.
     class Change
-
       # @return [String] the key that was changed.
       # @note You should check with the Discord API Documentation on what key gives out what value.
       attr_reader :key
@@ -3495,12 +3486,10 @@ module Discordrb
       # @return [String, Integer, true, false, Permissions, nil] the value that was changed from.
       attr_reader :old
       alias_method :old_value, :old
-      alias_method :old_val, :old
 
       # @return [String, Integer, true, false, Permissions, nil] the value that was changed to.
       attr_reader :new
       alias_method :new_value, :new
-      alias_method :new_val, :new
 
       # @!visibility private
       def initialize(data)
@@ -3527,14 +3516,12 @@ module Discordrb
       def initialize(data, server)
         @type = data['key'].delete('$').to_sym
         @role_id = data['new_value'][0]['id'].to_i
-        @role = nil
         @server = server
       end
 
       # @return [Role] the role being used.
       def role
-        return @role unless @role.nil?
-        @role = @server.role(@role_id)
+        @role ||= @server.role(@role_id)
       end
     end
 
@@ -3549,19 +3536,10 @@ module Discordrb
     # @param id [Integer] The user ID to look for
     def user(id)
       id = id.resolve_id
-      return @users[id] if user_cached?(id)
-      nil
-    end
-
-    # Checks whether a member is cached
-    # @note For internal use only
-    # @!visibility private
-    def user_cached?(user_id)
-      @users.include?(user_id)
+      return @users[id]
     end
 
     def process_users(users)
-      return unless users
       users.each do |element|
         user = User.new(element, self, @bot)
         @users[user.id] = user
