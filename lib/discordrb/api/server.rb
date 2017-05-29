@@ -111,18 +111,6 @@ module Discordrb::API::Server
     )
   end
 
-  # Gets a server's audit logs
-  # DOC LINK NOT PRESENTED
-  def audit_logs(token, server_id)
-    Discordrb::API.request(
-      :guilds_sid_auditlogs,
-      server_id,
-      :get,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}/audit-logs",
-      Authorization: token
-    )
-  end
-
   # Get a member's data
   # https://discordapp.com/developers/docs/resources/guild#get-guild-member
   def resolve_member(token, server_id, user_id)
@@ -232,7 +220,10 @@ module Discordrb::API::Server
     )
   end
 
-  # Create a role (parameters such as name and colour will have to be set by update_role afterwards)
+  # Create a role (parameters such as name and colour if not set can be set by update_role afterwards)
+  # Permissions are the Discord defaults; allowed: invite creation, reading/sending messages,
+  # sending TTS messages, embedding links, sending files, reading the history, mentioning everybody,
+  # connecting to voice, speaking and voice activity (push-to-talk isn't mandatory)
   # https://discordapp.com/developers/docs/resources/guild#get-guild-roles
   def create_role(token, server_id, name, colour, hoist, mentionable, packed_permissions, reason = nil)
     Discordrb::API.request(
@@ -305,14 +296,39 @@ module Discordrb::API::Server
     )
   end
 
+  # Adds a single role to a member
+  # https://discordapp.com/developers/docs/resources/guild#add-guild-member-role
+  def add_member_role(token, server_id, user_id, role_id)
+    Discordrb::API.request(
+      :guilds_sid_members_uid_roles_rid,
+      server_id,
+      :put,
+      "#{Discordrb::API.api_base}/guilds/#{server_id}/members/#{user_id}/roles/#{role_id}",
+      nil,
+      Authorization: token
+    )
+  end
+
+  # Removes a single role from a member
+  # https://discordapp.com/developers/docs/resources/guild#remove-guild-member-role
+  def remove_member_role(token, server_id, user_id, role_id)
+    Discordrb::API.request(
+      :guilds_sid_members_uid_roles_rid,
+      server_id,
+      :delete,
+      "#{Discordrb::API.api_base}/guilds/#{server_id}/members/#{user_id}/roles/#{role_id}",
+      Authorization: token
+    )
+  end
+
   # Get server prune count
   # https://discordapp.com/developers/docs/resources/guild#get-guild-prune-count
-  def prune_count(token, server_id)
+  def prune_count(token, server_id, days)
     Discordrb::API.request(
       :guilds_sid_prune,
       server_id,
       :get,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}/prune",
+      "#{Discordrb::API.api_base}/guilds/#{server_id}/prune?days=#{days}",
       Authorization: token
     )
   end
@@ -339,6 +355,18 @@ module Discordrb::API::Server
       server_id,
       :get,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/invites",
+      Authorization: token
+    )
+  end
+
+  # Gets a server's audit logs
+  # DOC LINK NOT PRESENTED
+  def audit_logs(token, server_id)
+    Discordrb::API.request(
+      :guilds_sid_auditlogs,
+      server_id,
+      :get,
+      "#{Discordrb::API.api_base}/guilds/#{server_id}/audit-logs",
       Authorization: token
     )
   end
@@ -466,6 +494,17 @@ module Discordrb::API::Server
       server_id,
       :get,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/webhooks",
+      Authorization: token
+    )
+  end
+
+  # Available voice regions for this server
+  def regions(token, server_id)
+    Discordrb::API.request(
+      :guilds_sid_regions,
+      server_id,
+      :get,
+      "#{Discordrb::API.api_base}/guilds/#{server_id}/regions",
       Authorization: token
     )
   end
