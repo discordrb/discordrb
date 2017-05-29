@@ -3395,7 +3395,13 @@ module Discordrb
       attr_reader :count
       alias_method :amount, :count
 
-      # @return [Hash<String => Change>, nil] the changes from this log, listing the key as the key changed. Is nil if the action is `:message_delete`.
+      # @return [Integer, nil] the amount of members removed. Is not nil if the action is `:member_prune`.
+      attr_reader :days
+
+      # @return [Integer, nil] the amount of members removed. Is not nil if the action is `:member_prune`.
+      attr_reader :members_removed
+
+      # @return [Hash<String => Change>, nil] the changes from this log, listing the key as the key changed. Is nil if the action is either `:message_delete` or `:member_prune`.
       attr_reader :changes
 
       # @!visibility private
@@ -3413,11 +3419,15 @@ module Discordrb
         @count = nil
         @channel = nil
         @channel_id = nil
-        @changes = @action == :message_delete ? nil : {}
+        @days = nil
+        @members_removed = nil
+        @changes = @action == :message_delete || @action == :member_prune ? nil : {}
         process_changes(data['changes'])
         return unless data.include?('options')
-        @count = data['options']['count'].to_i
-        @channel_id = data['options']['channel'].to_i
+        @count = data['options']['count'].to_i unless data['options']['count'].nil?
+        @channel_id = data['options']['channel'].to_i unless data['options']['channel'].nil?
+        @days = data['options']['delete_member_days'].to_i unless data['options']['delete_member_days'].nil?
+        @members_removed = data['options']['members_removed'].to_i unless data['options']['members_removed'].nil?
       end
 
       # @return [Server, Channel, Member, User, Role, Invite, Webhook, Emoji, nil] the target being preformed on.
