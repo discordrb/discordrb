@@ -3409,10 +3409,10 @@ module Discordrb
         @logs = logs
         @server = server
         @data = data
-        @user = @server.member(data['user_id'].to_i) || @bot.user(data['user_id'].to_i) || @logs.user(data['user_id'].to_i)
-        @action = Actions[data['action']]
-        @action_type = @logs.get_action_type(data['action'])
-        @target_type = @logs.get_target_type(data['action'])
+        @user = nil
+        @action = Actions[data['action_type']]
+        @action_type = @logs.get_action_type(data['action_type'])
+        @target_type = @logs.get_target_type(data['action_type'])
         @target_cached = false
         @count = nil
         @channel = nil
@@ -3429,14 +3429,21 @@ module Discordrb
       def target
         return @target if @target_cached
         @target_cached = true
-        @target = process_target(data['target_id'], @target_type)
+        @target = process_target(@data['target_id'], @target_type)
       end
+
+      # @return [Member, User] the user that is executing this action. Can be a User object if the user no longer exists in the server.
+      def user
+        return @user unless @user == nil
+        @user = @server.member(@data['user_id'].to_i) || @bot.user(@data['user_id'].to_i) || @logs.user(@data['user_id'].to_i)
+      end
+      alias_method :executor, :user
 
       # @return [Channel, nil] the amount of messages deleted. Is not nil if the action is `:message_delete`.
       def channel
-        return nil unless @action == :message_delete
+        return nil unless @channel_id
         return @channel unless @channel == nil
-        @channel = @server.channel(@channel_id)
+        @channel = @bot.channel(@channel_id, @server)
       end
 
       # @!visibility private
@@ -3446,8 +3453,8 @@ module Discordrb
         when :server
           @server # Since it won't be anything else
         when :channel
-          @server.channel(id)
-        when :user
+          @bot.channel(id, @server)
+        when :user, :message
           @server.member(id) || @bot.user(id) || @logs.user(id)
         when :role
           @server.role(id)
@@ -3499,15 +3506,15 @@ module Discordrb
 
       def evaluate_permissions
         if @key == 'permissions'
-          @old = Permissions.new(@old)
-          @new = Permissions.new(@new)
+          @old = Permissions.new(@old) if @old
+          @new = Permissions.new(@new) if @new
         end
       end
     end
 
-    # @return [Change] the latest change in the audit logs.
+    # @return [Entry] the latest entry in the audit logs.
     def latest
-      @changes.first
+      @entries.first
     end
     alias_method :first, :latest
 
