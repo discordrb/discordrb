@@ -23,13 +23,11 @@ module Discordrb::Events
     # @return [User, Member] the user that reacted to this message, or member if a server exists.
     def user
       # Cache the user so we don't do requests all the time
-      if @user
-        @user
-      elsif server
-        @user = @bot.user(@user_id).on(@server)
-      else
-        @user = @bot.user(@user_id)
-      end
+      @user ||= if server
+                  @bot.user(@user_id).on(@server)
+                else
+                  @bot.user(@user_id)
+                end
     end
 
     # @return [Message] the message that was reacted to.
