@@ -3398,10 +3398,6 @@ module Discordrb
       # @return [Hash<String => Change>, nil] the changes from this log, listing the key as the key changed. Is nil if the action is `:message_delete`.
       attr_reader :changes
 
-      # @return [Member, User] the user that is executing this action. Can be a User object if the user no longer exists in the server.
-      attr_reader :user
-      alias_method :executor, :user
-
       # @!visibility private
       def initialize(logs, server, bot, data)
         @bot = bot
@@ -3419,10 +3415,9 @@ module Discordrb
         @channel_id = nil
         @changes = @action == :message_delete ? nil : {}
         process_changes(data['changes'])
-        if data.include?('options')
-          @count = data['options']['count'].to_i
-          @channel_id = data['options']['channel'].to_i
-        end
+        return unless data.include?('options')
+        @count = data['options']['count'].to_i
+        @channel_id = data['options']['channel'].to_i
       end
 
       # @return [Server, Channel, Member, User, Role, Invite, Webhook, Emoji, nil] the target being preformed on.
@@ -3434,7 +3429,7 @@ module Discordrb
 
       # @return [Member, User] the user that is executing this action. Can be a User object if the user no longer exists in the server.
       def user
-        return @user unless @user == nil
+        return @user unless @user.nil?
         @user = @server.member(@data['user_id'].to_i) || @bot.user(@data['user_id'].to_i) || @logs.user(@data['user_id'].to_i)
       end
       alias_method :executor, :user
@@ -3442,7 +3437,7 @@ module Discordrb
       # @return [Channel, nil] the amount of messages deleted. Is not nil if the action is `:message_delete`.
       def channel
         return nil unless @channel_id
-        return @channel unless @channel == nil
+        return @channel unless @channel.nil?
         @channel = @bot.channel(@channel_id, @server)
       end
 
@@ -3505,10 +3500,9 @@ module Discordrb
       end
 
       def evaluate_permissions
-        if @key == 'permissions'
-          @old = Permissions.new(@old) if @old
-          @new = Permissions.new(@new) if @new
-        end
+        return unless @key == 'permissions'
+        @old = Permissions.new(@old) if @old
+        @new = Permissions.new(@new) if @new
       end
     end
 
@@ -3544,14 +3538,14 @@ module Discordrb
 
     # @!visibility private
     def get_target_type(action)
-      if action < 10 then return :server end
-      if action < 20 then return :channel end
-      if action < 30 then return :user end
-      if action < 40 then return :role end
-      if action < 50 then return :invite end
-      if action < 60 then return :webhook end
-      if action < 70 then return :emoji end
-      if action < 80 then return :message end
+      return :server if action < 10
+      return :channel if action < 20 
+      return :user if action < 30
+      return :role if action < 40
+      return :invite if action < 50
+      return :webhook if action < 60
+      return :emoji if action < 70
+      return :message if action < 80
       :unknown
     end
 
