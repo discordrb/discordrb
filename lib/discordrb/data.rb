@@ -3558,7 +3558,7 @@ module Discordrb
         :role_create,
         :invite_create,
         :webhook_create,
-        :emoji_create,
+        :emoji_create
       ].include?(action) then return :create end
       if [
         :channel_delete,
@@ -3570,7 +3570,7 @@ module Discordrb
         :invite_delete,
         :webhook_delete,
         :emoji_delete,
-        :message_delete,
+        :message_delete
       ].include?(action) then return :delete end
       if [
         :server_update,
@@ -3581,7 +3581,7 @@ module Discordrb
         :role_update,
         :invite_update,
         :webhook_update,
-        :emoji_update,
+        :emoji_update
       ].include?(action) then return :update end
       :unknown
     end
