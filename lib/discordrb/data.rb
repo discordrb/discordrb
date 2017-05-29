@@ -3391,17 +3391,17 @@ module Discordrb
       # @return [Symbol] the type of target being preformed on. (:server, :channel, :user, :role, :invite, :webhook, :emoji, :unknown)
       attr_reader :target_type
 
-      # @return [Integer, nil] the amount of messages deleted. Is not nil if the action is `:message_delete`.
+      # @return [Integer, nil] the amount of messages deleted. Won't be if the action is `:message_delete`.
       attr_reader :count
       alias_method :amount, :count
 
-      # @return [Integer, nil] the amount of days the members were inactive for. Is not nil if the action is `:member_prune`.
+      # @return [Integer, nil] the amount of days the members were inactive for. Won't be nil if the action is `:member_prune`.
       attr_reader :days
 
-      # @return [Integer, nil] the amount of members removed. Is not nil if the action is `:member_prune`.
+      # @return [Integer, nil] the amount of members removed. Won't be nil if the action is `:member_prune`.
       attr_reader :members_removed
 
-      # @return [Hash<String => Change>, nil] the changes from this log, listing the key as the key changed. Is nil if the action is either `:message_delete` or `:member_prune`.
+      # @return [Hash<String => Change>, RoleChange, nil] the changes from this log, listing the key as the key changed. Will be a RoleChange object if the action is `:member_role_update`. Will be nil if the action is either `:message_delete` or `:member_prune`.
       attr_reader :changes
 
       # @!visibility private
@@ -3421,7 +3421,9 @@ module Discordrb
         @channel_id = nil
         @days = nil
         @members_removed = nil
-        @changes = @action == :message_delete || @action == :member_prune ? nil : {}
+        @changes = nil
+        @changes = {} unless @action == :message_delete || @action == :member_prune || @action == :member_role_update
+        @changes = RoleChange.new(data['changes'][0], @server) if @action == :member_role_update
         process_changes(data['changes'])
         return unless data.include?('options')
         @count = data['options']['count'].to_i unless data['options']['count'].nil?
@@ -3444,7 +3446,7 @@ module Discordrb
       end
       alias_method :executor, :user
 
-      # @return [Channel, nil] the amount of messages deleted. Is not nil if the action is `:message_delete`.
+      # @return [Channel, nil] the amount of messages deleted. Won't be nil if the action is `:message_delete`.
       def channel
         return nil unless @channel_id
         return @channel unless @channel.nil?
@@ -3515,6 +3517,25 @@ module Discordrb
       end
     end
 
+    # A change that includes roles.
+    class RoleChange
+
+      # @return [Symbol] what type of change this is: (:add, :remove)
+      attr_reader :type
+
+      # @!visibility private
+      def initialize(data, server)
+        @type = data['key'].delete('$')
+        @role = nil
+      end
+
+      # @return [Role] the role being used.
+      def role
+        return @role unless @role.nil?
+        @role = @server.role(data['new_value']['id'])
+      end
+    end
+
     # @return [Entry] the latest entry in the audit logs.
     def latest
       @entries.first
@@ -3548,7 +3569,7 @@ module Discordrb
     # @!visibility private
     def get_target_type(action)
       return :server if action < 10
-      return :channel if action < 20 
+      return :channel if action < 20
       return :user if action < 30
       return :role if action < 40
       return :invite if action < 50
