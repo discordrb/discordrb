@@ -4,7 +4,7 @@ module Discordrb::API::Server
 
   # Create a server
   # https://discordapp.com/developers/docs/resources/guild#create-guild
-  def create(token, name, region = :'eu-central')
+  def create(token, name, region = :london)
     Discordrb::API.request(
       :guilds,
       nil,
@@ -108,6 +108,18 @@ module Discordrb::API::Server
       Authorization: token,
       content_type: :json,
       'X-Audit-Log-Reason': reason
+    )
+  end
+
+  # Gets a server's audit logs
+  # DOC LINK NOT PRESENTED
+  def audit_logs(token, server_id)
+    Discordrb::API.request(
+      :guilds_sid_auditlogs,
+      server_id,
+      :get,
+      "#{Discordrb::API.api_base}/guilds/#{server_id}/audit-logs",
+      Authorization: token
     )
   end
 
@@ -220,10 +232,7 @@ module Discordrb::API::Server
     )
   end
 
-  # Create a role (parameters such as name and colour if not set can be set by update_role afterwards)
-  # Permissions are the Discord defaults; allowed: invite creation, reading/sending messages,
-  # sending TTS messages, embedding links, sending files, reading the history, mentioning everybody,
-  # connecting to voice, speaking and voice activity (push-to-talk isn't mandatory)
+  # Create a role (parameters such as name and colour will have to be set by update_role afterwards)
   # https://discordapp.com/developers/docs/resources/guild#get-guild-roles
   def create_role(token, server_id, name, colour, hoist, mentionable, packed_permissions, reason = nil)
     Discordrb::API.request(
@@ -298,12 +307,12 @@ module Discordrb::API::Server
 
   # Get server prune count
   # https://discordapp.com/developers/docs/resources/guild#get-guild-prune-count
-  def prune_count(token, server_id, days)
+  def prune_count(token, server_id)
     Discordrb::API.request(
       :guilds_sid_prune,
       server_id,
       :get,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}/prune?days=#{days}",
+      "#{Discordrb::API.api_base}/guilds/#{server_id}/prune",
       Authorization: token
     )
   end
