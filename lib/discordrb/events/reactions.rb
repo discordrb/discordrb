@@ -35,6 +35,11 @@ module Discordrb::Events
     def channel
       @channel ||= @bot.channel(@channel_id)
     end
+
+    # @return [Server, nil] the server that was reacted in. If this channel is a PM channel, it will be nil.
+    def server
+      @server ||= @channel.server
+    end
   end
 
   # Generic superclass for event handlers pertaining to adding and removing reactions
