@@ -14,7 +14,7 @@ module Discordrb
       4 => :manage_channels,       # 16
       5 => :manage_server,         # 32
       6 => :add_reactions,         # 64
-      # 7                          # 128
+      7 => :view_audit_log,        # 128
       # 8                          # 256
       # 9                          # 512
       10 => :read_messages,        # 1024
