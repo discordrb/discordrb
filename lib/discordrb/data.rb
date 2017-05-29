@@ -3446,22 +3446,21 @@ module Discordrb
         id = id.resolve_id
         case type
         when :server
-          @server # Since it won't be anything else
+          return @server # Since it won't be anything else
         when :channel
-          @bot.channel(id, @server)
+          return @bot.channel(id, @server)
         when :user, :message
-          @server.member(id) || @bot.user(id) || @logs.user(id)
+          return @server.member(id) || @bot.user(id) || @logs.user(id)
         when :role
-          @server.role(id)
+          return @server.role(id)
         when :invite
-          @bot.invite(@data['changes'].find { |change| change['key'] == 'code' }.keys.delete_if { |k| k == 'key' }.first)
+          return @bot.invite(@data['changes'].find { |change| change['key'] == 'code' }.keys.delete_if { |k| k == 'key' }.first)
         when :webhook
-          'TODO' # TODO
+          return 'TODO' # TODO
         when :emoji
-          @server.emoji[id]
-        else
-          nil
+          return @server.emoji[id]
         end
+        nil
       end
 
       # @!visibility private
