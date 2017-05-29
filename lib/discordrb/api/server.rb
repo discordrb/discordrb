@@ -360,7 +360,6 @@ module Discordrb::API::Server
   end
 
   # Gets a server's audit logs
-  # DOC LINK NOT PRESENTED
   def audit_logs(token, server_id)
     Discordrb::API.request(
       :guilds_sid_auditlogs,
