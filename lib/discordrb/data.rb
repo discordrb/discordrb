@@ -3455,7 +3455,7 @@ module Discordrb
 
       # @!visibility private
       def process_target(id, type)
-        id = id.resolve_id
+        id = id.resolve_id unless id.nil?
         case type
         when :server
           return @server # Since it won't be anything else
@@ -3466,7 +3466,7 @@ module Discordrb
         when :role
           return @server.role(id)
         when :invite
-          return @bot.invite(@data['changes'].find { |change| change['key'] == 'code' }.keys.delete_if { |k| k == 'key' }.first)
+          return @bot.invite(@data['changes'].find { |change| change['key'] == 'code' }.values.delete_if { |v| v == 'code' }.first)
         when :webhook
           return 'TODO' # TODO
         when :emoji
