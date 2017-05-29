@@ -3443,22 +3443,22 @@ module Discordrb
       def process_target(id, type)
         id = id.resolve_id
         case type
-          when :server
-            @server # Since it won't be anything else
-          when :channel
-            @server.channel(id)
-          when :user
-            @server.member(id) || @bot.user(id) || @logs.user(id)
-          when :role
-            @server.role(id)
-          when :invite
-            @bot.invite(@data['changes'].find { |change| change['key'] == 'code' }.keys.delete_if { |k| k == 'key' }.first)
-          when :webhook
-            'TODO' # TODO
-          when :emoji
-            @server.emoji[id]
-          else
-            nil
+        when :server
+          @server # Since it won't be anything else
+        when :channel
+          @server.channel(id)
+        when :user
+          @server.member(id) || @bot.user(id) || @logs.user(id)
+        when :role
+          @server.role(id)
+        when :invite
+          @bot.invite(@data['changes'].find { |change| change['key'] == 'code' }.keys.delete_if { |k| k == 'key' }.first)
+        when :webhook
+          'TODO' # TODO
+        when :emoji
+          @server.emoji[id]
+        else
+          nil
         end
       end
 
@@ -3467,7 +3467,7 @@ module Discordrb
         return unless changes
         changes.each do |element|
           change = Change.new(element)
-          @changes[member.id] = member
+          @changes[change.key] = change
         end
       end
     end
