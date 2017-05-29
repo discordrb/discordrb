@@ -3424,7 +3424,7 @@ module Discordrb
         @changes = nil
         @changes = {} unless @action == :message_delete || @action == :member_prune || @action == :member_role_update
         @changes = RoleChange.new(data['changes'][0], @server) if @action == :member_role_update
-        process_changes(data['changes'])
+        process_changes(data['changes']) unless @action == :member_role_update
         return unless data.include?('options')
         @count = data['options']['count'].to_i unless data['options']['count'].nil?
         @channel_id = data['options']['channel'].to_i unless data['options']['channel'].nil?
@@ -3525,14 +3525,16 @@ module Discordrb
 
       # @!visibility private
       def initialize(data, server)
-        @type = data['key'].delete('$')
+        @type = data['key'].delete('$').to_sym
+        @role_id = data['new_value'][0]['id'].to_i
         @role = nil
+        @server = server
       end
 
       # @return [Role] the role being used.
       def role
         return @role unless @role.nil?
-        @role = @server.role(data['new_value']['id'])
+        @role = @server.role(@role_id)
       end
     end
 
