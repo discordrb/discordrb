@@ -2685,6 +2685,11 @@ module Discordrb
       integration.map { |element| Integration.new(element, @bot, self) }
     end
 
+    # @return [AuditLogs] the server's audit logs.
+    def audit_logs
+      AuditLogs.new(self, @bot, JSON.parse(API::Server.audit_logs(@bot.token, @id)))
+    end
+
     # Cache @embed
     # @note For internal use only
     # @!visibility private
@@ -3321,6 +3326,264 @@ module Discordrb
                         end)
       # Only update cache if API call worked
       update_internal(data) if data['name']
+    end
+  end
+
+  # A server's audit logs
+  class AuditLogs
+    # The numbers associated with the type of action.
+    Actions = {
+      1 => :server_update,
+      10 => :channel_create,
+      11 => :channel_update,
+      12 => :channel_delete,
+      13 => :channel_overwrite_create,
+      14 => :channel_overwrite_update,
+      15 => :channel_overwrite_delete,
+      20 => :member_kick,
+      21 => :member_prune,
+      22 => :member_ban_add,
+      23 => :member_ban_remove,
+      24 => :member_update,
+      25 => :member_role_update,
+      30 => :role_create,
+      31 => :role_update,
+      32 => :role_delete,
+      40 => :invite_create,
+      41 => :invite_update,
+      42 => :invite_delete,
+      50 => :webhook_create,
+      51 => :webhook_update,
+      52 => :webhook_delete,
+      60 => :emoji_create,
+      61 => :emoji_update,
+      62 => :emoji_delete,
+      # 70
+      # 71
+      72 => :message_delete
+    }.freeze
+
+    # @return [Array<User>] the users included in the audit logs.
+    attr_reader :users
+
+    # @return [Array<Entry>] the entries listed in the audit logs.
+    attr_reader :entries
+
+    # @!visibility private
+    def initialize(server, bot, data)
+      @bot = bot
+      @id = data['id']
+      @server = server
+      @users = {}
+      @entries = data['audit_log_entries'].map { |entry| Entry.new(self, @server, @bot, entry) }
+    end
+
+    # An entry in a server's audit logs.
+    class Entry
+      include IDObject
+
+      # @return [Symbol] the action that was preformed.
+      attr_reader :action
+
+      # @return [Symbol] the type action that was preformed. (:create, :delete, :update, :unknown)
+      attr_reader :action_type
+
+      # @return [Symbol] the type of target being preformed on. (:server, :channel, :user, :role, :invite, :webhook, :emoji, :unknown)
+      attr_reader :target_type
+
+      # @return [Integer, nil] the amount of messages deleted. Is not nil if the action is `:message_delete`.
+      attr_reader :count
+      alias_method :amount, :count
+
+      # @return [Hash<String => Change>, nil] the changes from this log, listing the key as the key changed. Is nil if the action is `:message_delete`.
+      attr_reader :changes
+
+      # @return [Member, User] the user that is executing this action. Can be a User object if the user no longer exists in the server.
+      attr_reader :user
+      alias_method :executor, :user
+
+      # @!visibility private
+      def initialize(logs, server, bot, data)
+        @bot = bot
+        @id = data['id']
+        @logs = logs
+        @server = server
+        @data = data
+        @user = @server.member(data['user_id'].to_i) || @bot.user(data['user_id'].to_i) || @logs.user(data['user_id'].to_i)
+        @action = Actions[data['action']]
+        @action_type = @logs.get_action_type(data['action'])
+        @target_type = @logs.get_target_type(data['action'])
+        @target_cached = false
+        @count = nil
+        @channel = nil
+        @channel_id = nil
+        @changes = @action == :message_delete ? nil : {}
+        process_changes(data['changes'])
+        if data.include?('options')
+          @count = data['options']['count'].to_i
+          @channel_id = data['options']['channel'].to_i
+        end
+      end
+
+      # @return [Server, Channel, Member, User, Role, Invite, Webhook, Emoji, nil] the target being preformed on.
+      def target
+        return @target if @target_cached
+        @target_cached = true
+        @target = process_target(data['target_id'], @target_type)
+      end
+
+      # @return [Channel, nil] the amount of messages deleted. Is not nil if the action is `:message_delete`.
+      def channel
+        return nil unless @action == :message_delete
+        return @channel unless @channel == nil
+        @channel = @server.channel(@channel_id)
+      end
+
+      # @!visibility private
+      def process_target(id, type)
+        id = id.resolve_id
+        case type
+          when :server
+            @server # Since it won't be anything else
+          when :channel
+            @server.channel(id)
+          when :user
+            @server.member(id) || @bot.user(id) || @logs.user(id)
+          when :role
+            @server.role(id)
+          when :invite
+            @bot.invite(@data['changes'].find { |change| change['key'] == 'code' }.keys.delete_if { |k| k == 'key' }.first)
+          when :webhook
+            'TODO' # TODO
+          when :emoji
+            @server.emoji[id]
+          else
+            nil
+        end
+      end
+
+      # @!visibility private
+      def process_changes(changes)
+        return unless changes
+        changes.each do |element|
+          change = Change.new(element)
+          @changes[member.id] = member
+        end
+      end
+    end
+
+    # A change in a audit log entry.
+    class Change
+
+      # @return [String] the key that was changed.
+      # @note You should check with the Discord API Documentation on what key gives out what value.
+      attr_reader :key
+
+      # @return [String, Integer, true, false, Permissions, nil] the value that was changed from.
+      attr_reader :old
+      alias_method :old_value, :old
+      alias_method :old_val, :old
+
+      # @return [String, Integer, true, false, Permissions, nil] the value that was changed to.
+      attr_reader :new
+      alias_method :new_value, :new
+      alias_method :new_val, :new
+
+      # @!visibility private
+      def initialize(data)
+        @key = data['key']
+        @old = data['old_value']
+        @new = data['new_value']
+        evaluate_permissions
+      end
+
+      def evaluate_permissions
+        if @key == 'permissions'
+          @old = Permissions.new(@old)
+          @new = Permissions.new(@new)
+        end
+      end
+    end
+
+    # @return [Change] the latest change in the audit logs.
+    def latest
+      @changes.first
+    end
+    alias_method :first, :latest
+
+    # Gets a member in the audit logs data based on user ID
+    # @note This only uses data given by the audit logs request
+    # @param id [Integer] The user ID to look for
+    def user(id)
+      id = id.resolve_id
+      return @users[id] if user_cached?(id)
+      nil
+    end
+
+    # Checks whether a member is cached
+    # @note For internal use only
+    # @!visibility private
+    def user_cached?(user_id)
+      @users.include?(user_id)
+    end
+
+    def process_users(users)
+      return unless users
+      users.each do |element|
+        user = User.new(element, self, @bot)
+        @users[user.id] = user
+      end
+    end
+
+    # @!visibility private
+    def get_target_type(action)
+      if action < 10 then return :server end
+      if action < 20 then return :channel end
+      if action < 30 then return :user end
+      if action < 40 then return :role end
+      if action < 50 then return :invite end
+      if action < 60 then return :webhook end
+      if action < 70 then return :emoji end
+      if action < 80 then return :message end
+      :unknown
+    end
+
+    # @!visibility private
+    def get_action_type(action)
+      action = Actions[action]
+      if [
+        :channel_create,
+        :channel_overwrite_create,
+        :member_ban_add,
+        :role_create,
+        :invite_create,
+        :webhook_create,
+        :emoji_create,
+      ].include?(action) then return :create end
+      if [
+        :channel_delete,
+        :channel_overwrite_delete,
+        :member_kick,
+        :member_prune,
+        :member_ban_remove,
+        :role_delete,
+        :invite_delete,
+        :webhook_delete,
+        :emoji_delete,
+        :message_delete,
+      ].include?(action) then return :delete end
+      if [
+        :server_update,
+        :channel_update,
+        :channel_overwrite_update,
+        :member_update,
+        :member_role_update,
+        :role_update,
+        :invite_update,
+        :webhook_update,
+        :emoji_update,
+      ].include?(action) then return :update end
+      :unknown
     end
   end
 
