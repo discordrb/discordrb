@@ -3586,7 +3586,7 @@ module Discordrb
         :invite_update,
         :webhook_update,
         :emoji_update
-      ].include?(acttion)
+      ].include?(action)
       :unknown
     end
   end
