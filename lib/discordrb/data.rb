@@ -3555,7 +3555,7 @@ module Discordrb
     # @!visibility private
     def get_action_type(action)
       action = Actions[action]
-      if [
+      return :create if [
         :channel_create,
         :channel_overwrite_create,
         :member_ban_add,
@@ -3563,8 +3563,8 @@ module Discordrb
         :invite_create,
         :webhook_create,
         :emoji_create
-      ].include?(action) then return :create end
-      if [
+      ].include?(action)
+      return :delete if [
         :channel_delete,
         :channel_overwrite_delete,
         :member_kick,
@@ -3575,8 +3575,8 @@ module Discordrb
         :webhook_delete,
         :emoji_delete,
         :message_delete
-      ].include?(action) then return :delete end
-      if [
+      ].include?(action)
+      return :update if [
         :server_update,
         :channel_update,
         :channel_overwrite_update,
@@ -3586,7 +3586,7 @@ module Discordrb
         :invite_update,
         :webhook_update,
         :emoji_update
-      ].include?(action) then return :update end
+      ].include?(acttion)
       :unknown
     end
   end
