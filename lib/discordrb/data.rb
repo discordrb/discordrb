@@ -243,7 +243,6 @@ module Discordrb
     # ID and avatar if the bot cannot reach the owner.
     # @return [User] the user object of the owner
     attr_reader :owner
-    alias_method :user, :owner
 
     def initialize(data, bot)
       @bot = bot
@@ -310,14 +309,14 @@ module Discordrb
     end
 
     # Sets the webhook's avatar.
-    # @param icon [String, #read] The new avatar, in base64-encoded JPG format.
-    def icon=(icon)
-      if icon.respond_to? :read
-        icon_string = 'data:image/jpg;base64,'
-        icon_string += Base64.strict_encode64(icon.read)
-        update_webhook_data(icon: icon_string)
+    # @param avatar [String, #read] The new avatar, in base64-encoded JPG format.
+    def avatar=(avatar)
+      if avatar.respond_to? :read
+        avatar_string = 'data:image/jpg;base64,'
+        avatar_string += Base64.strict_encode64(avatar.read)
+        update_webhook_data(avatar: avatar_string)
       else
-        update_webhook_data(icon: icon)
+        update_webhook_data(avatar: avatar)
       end
     end
 
