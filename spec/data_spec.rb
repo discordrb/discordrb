@@ -236,6 +236,7 @@ module Discordrb
     describe '#update_webhook' do
       context 'API returns valid data' do
         it 'calls update_internal' do
+          webhook
           data = double('data', :[] => double)
           allow(JSON).to receive(:parse).and_return(data)
           allow(API::Webhook).to receive(:update_webhook)
@@ -246,6 +247,7 @@ module Discordrb
 
       context 'API returns error' do
         it 'doesn\'t call update_internal' do
+          webhook
           data = double('data', :[] => nil)
           allow(JSON).to receive(:parse).and_return(data)
           allow(API::Webhook).to receive(:update_webhook)
@@ -256,6 +258,7 @@ module Discordrb
 
       context 'when webhook is from auth' do
         it 'calls auth API' do
+          webhook
           data = double('data')
           allow(JSON).to receive(:parse).and_return(double('received_data', :[] => double))
           expect(API::Webhook).to receive(:update_webhook).with(token, webhook_id, data)
