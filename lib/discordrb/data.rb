@@ -1539,6 +1539,14 @@ module Discordrb
 
     alias_method :leave, :leave_group
 
+    # Requests a list of Webhooks on the channel
+    # @return [Array<Webhook>] webhooks on the channel.
+    def webhooks
+      raise 'Tried to request webhooks from a non-server channel' unless server
+      webhooks = JSON.parse(API::Channel.webhooks(@bot.token, @id))
+      webhooks.map { |webhook_data| Webhook.new(webhook_data, @bot) }
+    end
+
     # The inspect method is overwritten to give more useful output
     def inspect
       "<Channel name=#{@name} id=#{@id} topic=\"#{@topic}\" type=#{@type} position=#{@position} server=#{@server}>"
@@ -2829,6 +2837,13 @@ module Discordrb
     alias_method :has_emoji?, :any_emoji?
     alias_method :emoji?, :any_emoji?
 
+    # Requests a list of Webhooks on the server
+    # @return [Array<Webhook>] webhooks on the server.
+    def webhooks
+      webhooks = JSON.parse(API::Server.webhooks(@bot.token, @id))
+      webhooks.map { |webhook| Webhook.new(webhook, @bot) }
+    end
+
     # Processes a GUILD_MEMBERS_CHUNK packet, specifically the members field
     # @note For internal use only
     # @!visibility private
@@ -2968,6 +2983,140 @@ module Discordrb
       voice_states.each do |element|
         update_voice_state(element)
       end
+    end
+  end
+
+  # A webhook on a server channel
+  class Webhook
+    include IDObject
+
+    # @return [String] the webhook name.
+    attr_reader :name
+
+    # @return [Channel] the channel that the webhook is currently connected to.
+    attr_reader :channel
+
+    # @return [Server] the server that the webhook is currently connected to.
+    attr_reader :server
+
+    # @return [String] the webhook's token.
+    attr_reader :token
+
+    # @return [String] the webhook's avatar id.
+    attr_reader :avatar
+
+    # Gets the user object of the creator of the webhook. May be limited to username, discriminator,
+    # ID and avatar if the bot cannot reach the owner
+    # @return [Member, User, nil] the user object of the owner or nil if the webhook was requested using the token.
+    attr_reader :owner
+
+    def initialize(data, bot)
+      @bot = bot
+
+      @name = data['name']
+      @id = data['id'].to_i
+      @channel = bot.channel(data['channel_id'])
+      @server = @channel.server
+      @token = data['token']
+      @avatar = data['avatar']
+
+      # Will not exist if the data was requested through a webhook token
+      if data['user']
+        @owner = @server.member(data['user']['id'].to_i)
+        unless @owner
+          Discordrb::LOGGER.debug("Member with ID #{data['user']['id']} not cached (possibly left the server).")
+          @owner = @bot.ensure_user(data['user'])
+        end
+      end
+    end
+
+    # Sets the webhook's avatar
+    # @param avatar [String, #read] The new avatar, in base64-encoded JPG format.
+    def avatar=(avatar)
+      update_webhook(avatar: avatarise(avatar))
+    end
+
+    # Deletes the webhook's avatar
+    def delete_avatar
+      update_webhook(avatar: nil)
+    end
+
+    # Sets the webhook's channel
+    # @param channel [Channel, String, Integer, #resolve_id] The channel the webhook should use.
+    def channel=(channel)
+      update_webhook(channel_id: channel.resolve_id)
+    end
+
+    # Sets the webhook's name
+    # @param name [String] The webhook's new name.
+    def name=(name)
+      update_webhook(name: name)
+    end
+
+    # Updates the webhook if you need to edit more than 1 attribute
+    # @param data [Hash] the data to update.
+    # @option data [String, #read, nil] :avatar The new avatar, in base64-encoded JPG format, or nil to delete the avatar.
+    # @option data [Channel, String, Integer, #resolve_id] :channel The channel the webhook should use.
+    # @option data [String] :name The webhook's new name.
+    def update(data)
+      # Only pass a value for avatar if the key is defined as sending nil will delete the
+      data[:avatar] = avatarise(data[:avatar]) if data.key?(:avatar)
+      data[:channel_id] = data[:channel].resolve_id
+      data.delete(:channel)
+      update_webhook(data)
+    end
+
+    # Deletes the webhook
+    def delete
+      if token?
+        API::Webhook.token_delete_webhook(@token, @id)
+      else
+        API::Webhook.delete_webhook(@bot.token, @id)
+      end
+    end
+
+    # Utility function to get a webhook's avatar URL
+    # @return [String, nil] the URL to the avatar image (nil if no image is set).
+    def avatar_url
+      return if @avatar.nil?
+      API::User.avatar_url(@id, @avatar)
+    end
+
+    # The inspect method is overwritten to give more useful output
+    def inspect
+      "<Webhook name=#{@name} id=#{@id}>"
+    end
+
+    # Utility function to know if the webhook was requested through a webhook token, rather than auth.
+    # @return [true, false] whether the webhook was requested by token or not.
+    def token?
+      @owner.nil?
+    end
+
+    private
+
+    def avatarise(avatar)
+      if avatar.respond_to? :read
+        "data:image/jpg;base64,#{Base64.strict_encode64(avatar.read)}"
+      else
+        avatar
+      end
+    end
+
+    def update_internal(data)
+      @name = data['name']
+      @avatar_id = data['avatar']
+      @channel = @bot.channel(data['channel_id'])
+    end
+
+    def update_webhook(new_data)
+      data = JSON.parse(if token?
+                          API::Webhook.token_update_webhook(@token, @id, new_data)
+                        else
+                          API::Webhook.update_webhook(@bot.token, @id, new_data)
+                        end)
+      # Only update cache if API call worked
+      update_internal(data) if data['name']
     end
   end
 

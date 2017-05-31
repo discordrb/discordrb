@@ -27,13 +27,13 @@ module Discordrb::API::Webhook
 
   # Update a webhook
   # https://discordapp.com/developers/docs/resources/webhook#modify-webhook
-  def update_webhook(token, webhook_id, name, avatar = nil)
+  def update_webhook(token, webhook_id, data)
     Discordrb::API.request(
       :webhooks_wid,
       webhook_id,
       :patch,
       "#{Discordrb::API.api_base}/webhooks/#{webhook_id}",
-      { name: name, avatar: avatar }.to_json,
+      data.to_json,
       Authorization: token,
       content_type: :json
     )
@@ -41,13 +41,13 @@ module Discordrb::API::Webhook
 
   # Update a webhook via webhook token
   # https://discordapp.com/developers/docs/resources/webhook#modify-webhook-with-token
-  def token_update_webhook(webhook_token, webhook_id, name, avatar = nil)
+  def token_update_webhook(webhook_token, webhook_id, data)
     Discordrb::API.request(
       :webhooks_wid,
       webhook_id,
       :patch,
       "#{Discordrb::API.api_base}/webhooks/#{webhook_id}/#{webhook_token}",
-      { name: name, avatar: avatar }.to_json,
+      data.to_json,
       content_type: :json
     )
   end
