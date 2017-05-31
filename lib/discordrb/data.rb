@@ -3021,13 +3021,11 @@ module Discordrb
       @avatar = data['avatar']
 
       # Will not exist if the data was requested through a webhook token
-      if data['user']
-        @owner = @server.member(data['user']['id'].to_i)
-        unless @owner
-          Discordrb::LOGGER.debug("Member with ID #{data['user']['id']} not cached (possibly left the server).")
-          @owner = @bot.ensure_user(data['user'])
-        end
-      end
+      return unless data['user']
+      @owner = @server.member(data['user']['id'].to_i)
+      return if @owner
+      Discordrb::LOGGER.debug("Member with ID #{data['user']['id']} not cached (possibly left the server).")
+      @owner = @bot.ensure_user(data['user'])
     end
 
     # Sets the webhook's avatar
