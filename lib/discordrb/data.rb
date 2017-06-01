@@ -135,9 +135,10 @@ module Discordrb
     end
 
     # Utility function to get a user's avatar URL.
+    # @param format [String] one of jpg, png, or gif. If the user does not have a gif avatar, the resulting URL will return a response with code 415.
     # @return [String] the URL to the avatar image.
-    def avatar_url
-      API::User.avatar_url(@id, @avatar_id)
+    def avatar_url(format = 'png')
+      API::User.avatar_url(@id, @avatar_id, format)
     end
   end
 

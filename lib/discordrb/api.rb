@@ -11,6 +11,9 @@ module Discordrb::API
   # The base URL of the Discord REST API.
   APIBASE = 'https://discordapp.com/api/v6'.freeze
 
+  # The URL of Discord's CDN
+  CDN_URL = 'https://cdn.discordapp.com'.freeze
+
   module_function
 
   # @return [String] the currently used API base URL.
@@ -21,6 +24,11 @@ module Discordrb::API
   # Sets the API base URL to something.
   def api_base=(value)
     @api_base = value
+  end
+
+  # @return [String] the currently used CDN url
+  def cdn_url
+    @cdn_url || CDN_URL
   end
 
   # @return [String] the bot name, previously specified using #bot_name=.
@@ -149,13 +157,13 @@ module Discordrb::API
   end
 
   # Make an icon URL from server and icon IDs
-  def icon_url(server_id, icon_id)
-    "#{api_base}/guilds/#{server_id}/icons/#{icon_id}.jpg"
+  def icon_url(server_id, icon_id, format = 'png')
+    "#{cdn_url}/icons/#{server_id}/#{icon_id}.#{format}"
   end
 
   # Make an icon URL from application and icon IDs
-  def app_icon_url(app_id, icon_id)
-    "https://cdn.discordapp.com/app-icons/#{app_id}/#{icon_id}.jpg"
+  def app_icon_url(app_id, icon_id, format = 'png')
+    "#{cdn_url}/app-icons/#{app_id}/#{icon_id}.#{format}"
   end
 
   # Make a widget picture URL from server ID
@@ -169,8 +177,8 @@ module Discordrb::API
   end
 
   # Make an emoji icon URL from emoji ID
-  def emoji_icon_url(emoji_id)
-    "https://cdn.discordapp.com/emojis/#{emoji_id}.png"
+  def emoji_icon_url(emoji_id, format = 'png')
+    "#{cdn_url}/emojis/#{emoji_id}.#{format}"
   end
 
   # Login to the server
