@@ -383,7 +383,7 @@ module Discordrb
     private
 
     def defined_role_permission?(action, channel)
-      roles_to_check = @roles + [@server.everyone_role]
+      roles_to_check = [@server.everyone_role] + @roles
 
       # For each role, check if
       #   (1) the channel explicitly allows or permits an action for the role and
