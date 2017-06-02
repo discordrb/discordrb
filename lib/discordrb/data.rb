@@ -337,7 +337,7 @@ module Discordrb
 
       @name = data['name']
       @id = data['id'].to_i
-      @channel = server.text_channels.find {|c| c.id == data['channel'].to_i}
+      @channel = server.text_channels.find { |c| c.id == data['channel'].to_i }
       @server = server
       @token = data['token']
       @avatar_id = data['avatar']
@@ -391,9 +391,7 @@ module Discordrb
     private
 
     def update_webhook_data(new_data)
-      API::Server.update_webhook(@bot.token, @id,
-                         new_data[:name] || @name,
-                         new_data.key?(:avatar) ? new_data[:avatar] : @avatar_id)
+      API::Server.update_webhook(@bot.token, @id, new_data[:name] || @name, new_data.key?(:avatar) ? new_data[:avatar] : @avatar_id)
       update_data(new_data)
     end
   end
