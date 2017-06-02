@@ -312,6 +312,7 @@ module Discordrb
     # @param avatar [String, #read] The new avatar, in base64-encoded JPG format.
     def avatar=(avatar)
       if avatar.respond_to? :read
+        avatar.binmode if avatar.respond_to?(:binmode)
         avatar_string = 'data:image/jpg;base64,'
         avatar_string += Base64.strict_encode64(avatar.read)
         update_webhook_data(avatar: avatar_string)
@@ -1202,13 +1203,17 @@ module Discordrb
       webhooks.map { |webhook| Webhook.new(webhook, @bot, @server) }
     end
 
-
     # Creates a webhook connected to this channel.
     # @param name [String] the webhook's name.
     # @param avatar [String, #read] the webhook's avatar.
     # @return [Webhook] The created webhook.
     def create_webhook(name, avatar = nil)
-      webhooks = JSON.parse(API::Server.webhooks(@bot.token, @id))
+      if avatar.respond_to?(:read) && !avatar.nil?
+        avatar.binmode if avatar.respond_to?(:binmode)
+        avatar_string = 'data:image/jpg;base64,'
+        avatar_string += Base64.strict_encode64(avatar.read)
+        avatar = avatar_string
+      end
       Webhook.new(JSON.parse(API::Channel.create_webhook(@bot.token, @id, name, avatar)), @bot, @server)
     end
 
