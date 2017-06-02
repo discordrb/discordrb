@@ -157,11 +157,19 @@ module Discordrb::Commands
           case available_commands.length
           when 0..5
             available_commands.reduce "**List of commands:**\n" do |memo, c|
-              memo + "**`#{c.name}`**: #{c.attributes[:description] || '*No description available*'}\n"
+              c.attributes[:required_roles].each do |r|
+                if (event.bot.member.role?(r)) || (r == nil)
+                  memo + "**`#{c.name}`**: #{c.attributes[:description] || '*No description available*'}\n"
+                end
+              end
             end
           when 5..50
             (available_commands.reduce "**List of commands:**\n" do |memo, c|
-              memo + "`#{c.name}`, "
+              c.attributes[:required_roles].each do |r|
+                if (event.bot.member.role?(r)) || (r == nil)
+                  memo + "`#{c.name}`, "
+                end
+              end
             end)[0..-3]
           else
             event.user.pm(available_commands.reduce("**List of commands:**\n") { |m, e| m + "`#{e.name}`, " }[0..-3])
