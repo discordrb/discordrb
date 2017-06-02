@@ -43,9 +43,11 @@ module Discordrb::Commands
     # @option attributes [Symbol, Array<Symbol>, false] :help_command The name of the command that displays info for
     #   other commands. Use an array if you want to have aliases. Default is "help". If none should be created, use
     #   `false` as the value.
-    # @option attributes [String] :command_doesnt_exist_message The message that should be displayed if a user attempts
-    #   to use a command that does not exist. If none is specified, no message will be displayed. In the message, you
-    #   can use the string '%command%' that will be replaced with the name of the command.
+    # @option attributes [String, #call] :command_doesnt_exist_message The message that should be displayed if a user attempts
+    #   to use a command that does not exist. If none is specified, no message will be displayed. It can be:
+    #
+    #   * Any strng, in which '%command%' will be replaced with the name of the command.
+    #   * Something Proc-like (responds to :call) that takes the command name and {Message} object and should return a string.
     # @option attributes [String] :no_permission_message The message to be displayed when `NoPermission` error is raised.
     # @option attributes [true, false] :spaces_allowed Whether spaces are allowed to occur between the prefix and the
     #   command. Default is false.
@@ -187,7 +189,14 @@ module Discordrb::Commands
       return unless !check_permissions || channels?(event.channel, @attributes[:channels]) ||
                     (command && !command.attributes[:channels].nil?)
       unless command
-        event.respond @attributes[:command_doesnt_exist_message].gsub('%command%', name.to_s) if @attributes[:command_doesnt_exist_message]
+        if @attributes[:command_doesnt_exist_message]
+          message = @attributes[:command_doesnt_exist_message]
+          if message.respond_to? :call
+            event.respond message[name.to_s, event]
+          else
+            event.respond message.gsub('%command%', name.to_s)
+          end
+        end
         return
       end
       return unless !check_permissions || channels?(event.channel, command.attributes[:channels])
