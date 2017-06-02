@@ -618,6 +618,33 @@ module Discordrb
       end
     end
 
+    # @return [Role] the highest role this member has.
+    def highest_role
+      @roles.sort_by(&:position).last
+    end
+
+    # @return [Role] the role this member is being hoisted with.
+    def hoist_role
+      hoisted_roles = @roles.select(&:hoist)
+      return nil if hoisted_roles.empty?
+      hoisted_roles.sort_by(&:position).last
+    end
+
+    # @return [Role] the role this member is basing their colour on.
+    def colour_role
+      coloured_roles = @roles.select { |v| v.colour.combined.nonzero? }
+      return nil if coloured_roles.empty?
+      coloured_roles.sort_by(&:position).last
+    end
+    alias_method :color_role, :colour_role
+
+    # @return [ColourRGB, nil] the colour this member has.
+    def colour
+      return nil unless colour_role
+      colour_role.color
+    end
+    alias_method :color, :colour
+
     # Server deafens this member.
     def server_deafen
       API::Server.update_member(@bot.token, @server.id, @user.id, deaf: true)
@@ -836,6 +863,10 @@ module Discordrb
     # @return [true, false] whether or not this role should be displayed separately from other users
     attr_reader :hoist
 
+    # @return [true, false] whether or not this role is managed by a integration or bot
+    attr_reader :managed
+    alias_method :managed?, :managed
+
     # @return [true, false] whether this role can be mentioned using a role mention
     attr_reader :mentionable
     alias_method :mentionable?, :mentionable
@@ -879,6 +910,7 @@ module Discordrb
 
       @hoist = data['hoist']
       @mentionable = data['mentionable']
+      @managed = data['managed']
 
       @colour = ColourRGB.new(data['color'])
     end
@@ -905,6 +937,7 @@ module Discordrb
       @hoist = other.hoist
       @colour = other.colour
       @position = other.position
+      @managed = other.managed
     end
 
     # Updates the data cache from a hash containing data
@@ -2986,13 +3019,24 @@ module Discordrb
     attr_reader :combined
 
     # Make a new colour from the combined value.
-    # @param combined [Integer] The colour's RGB values combined into one integer
+    # @param combined [Integer, String] The colour's RGB values combined into one integer or a hexadecimal string
+    # @example Initialize a with a base 10 integer
+    #   ColourRGB.new(7506394) #=> ColourRGB
+    #   ColourRGB.new(0x7289da) #=> ColourRGB
+    # @example Initialize a with a hexadecimal string
+    #   ColourRGB.new('7289da') #=> ColourRGB
     def initialize(combined)
-      @combined = combined
-      @red = (combined >> 16) & 0xFF
-      @green = (combined >> 8) & 0xFF
-      @blue = combined & 0xFF
+      @combined = combined.is_a?(String) ? combined.to_i(16) : combined
+      @red = (@combined >> 16) & 0xFF
+      @green = (@combined >> 8) & 0xFF
+      @blue = @combined & 0xFF
     end
+
+    # @return [String] the colour as a hexadecimal.
+    def hex
+      @combined.to_s(16)
+    end
+    alias_method :hexadecimal, :hex
   end
 
   # Alias for the class {ColourRGB}
