@@ -16,13 +16,13 @@ module Discordrb::API::Channel
 
   # Update a channel's data
   # https://discordapp.com/developers/docs/resources/channel#modify-channel
-  def update(token, channel_id, name, topic, position = 0)
+  def update(token, channel_id, name, topic, position, bitrate, user_limit)
     Discordrb::API.request(
       :channels_cid,
       channel_id,
       :patch,
       "#{Discordrb::API.api_base}/channels/#{channel_id}",
-      { name: name, position: position, topic: topic }.to_json,
+      { name: name, position: position, topic: topic, bitrate: bitrate, user_limit: user_limit }.to_json,
       Authorization: token,
       content_type: :json
     )
@@ -42,12 +42,12 @@ module Discordrb::API::Channel
 
   # Get a list of messages from a channel's history
   # https://discordapp.com/developers/docs/resources/channel#get-channel-messages
-  def messages(token, channel_id, amount, before = nil, after = nil)
+  def messages(token, channel_id, amount, before = nil, after = nil, around = nil)
     Discordrb::API.request(
       :channels_cid_messages,
       channel_id,
       :get,
-      "#{Discordrb::API.api_base}/channels/#{channel_id}/messages?limit=#{amount}#{"&before=#{before}" if before}#{"&after=#{after}" if after}",
+      "#{Discordrb::API.api_base}/channels/#{channel_id}/messages?limit=#{amount}#{"&before=#{before}" if before}#{"&after=#{after}" if after}#{"&around=#{around}" if around}",
       Authorization: token
     )
   end
@@ -66,18 +66,20 @@ module Discordrb::API::Channel
 
   # Send a message to a channel
   # https://discordapp.com/developers/docs/resources/channel#create-message
-  def create_message(token, channel_id, message, mentions = [], tts = false, _server_id = nil) # send message
+  def create_message(token, channel_id, message, mentions = [], tts = false, embed = nil) # send message
     Discordrb::API.request(
       :channels_cid_messages_mid,
       channel_id,
       :post,
       "#{Discordrb::API.api_base}/channels/#{channel_id}/messages",
-      { content: message, mentions: mentions, tts: tts }.to_json,
+      { content: message, mentions: mentions, tts: tts, embed: embed }.to_json,
       Authorization: token,
       content_type: :json
     )
-  rescue RestClient::InternalServerError
-    raise Discordrb::Errors::MessageTooLong, "Message over the character limit (#{message.length} > 2000)"
+  rescue RestClient::BadRequest => e
+    parsed = JSON.parse(e.response.body)
+    raise Discordrb::Errors::MessageTooLong, "Message over the character limit (#{message.length} > 2000)" if parsed['content'] && parsed['content'].is_a?(Array) && parsed['content'].first == 'Must be 2000 or fewer characters long.'
+    raise
   end
 
   # Send a file as a message to a channel
@@ -95,13 +97,13 @@ module Discordrb::API::Channel
 
   # Edit a message
   # https://discordapp.com/developers/docs/resources/channel#edit-message
-  def edit_message(token, channel_id, message_id, message, mentions = [])
+  def edit_message(token, channel_id, message_id, message, mentions = [], embed = nil)
     Discordrb::API.request(
       :channels_cid_messages_mid,
       channel_id,
       :patch,
       "#{Discordrb::API.api_base}/channels/#{channel_id}/messages/#{message_id}",
-      { content: message, mentions: mentions }.to_json,
+      { content: message, mentions: mentions, embed: embed }.to_json,
       Authorization: token,
       content_type: :json
     )
@@ -126,10 +128,76 @@ module Discordrb::API::Channel
       :channels_cid_messages_bulk_delete,
       channel_id,
       :post,
-      "#{Discordrb::API.api_base}/channels/#{channel_id}/messages/bulk_delete",
+      "#{Discordrb::API.api_base}/channels/#{channel_id}/messages/bulk-delete",
       { messages: messages }.to_json,
       Authorization: token,
       content_type: :json
+    )
+  end
+
+  # Create a reaction on a message using this client
+  # https://discordapp.com/developers/docs/resources/channel#create-reaction
+  def create_reaction(token, channel_id, message_id, emoji)
+    emoji = URI.encode(emoji) unless emoji.ascii_only?
+    Discordrb::API.request(
+      :channels_cid_messages_mid_reactions_emoji_me,
+      channel_id,
+      :put,
+      "#{Discordrb::API.api_base}/channels/#{channel_id}/messages/#{message_id}/reactions/#{emoji}/@me",
+      nil,
+      Authorization: token,
+      content_type: :json
+    )
+  end
+
+  # Delete this client's own reaction on a message
+  # https://discordapp.com/developers/docs/resources/channel#delete-own-reaction
+  def delete_own_reaction(token, channel_id, message_id, emoji)
+    emoji = URI.encode(emoji) unless emoji.ascii_only?
+    Discordrb::API.request(
+      :channels_cid_messages_mid_reactions_emoji_me,
+      channel_id,
+      :delete,
+      "#{Discordrb::API.api_base}/channels/#{channel_id}/messages/#{message_id}/reactions/#{emoji}/@me",
+      Authorization: token
+    )
+  end
+
+  # Delete another client's reaction on a message
+  # https://discordapp.com/developers/docs/resources/channel#delete-user-reaction
+  def delete_user_reaction(token, channel_id, message_id, emoji, user_id)
+    emoji = URI.encode(emoji) unless emoji.ascii_only?
+    Discordrb::API.request(
+      :channels_cid_messages_mid_reactions_emoji_uid,
+      channel_id,
+      :delete,
+      "#{Discordrb::API.api_base}/channels/#{channel_id}/messages/#{message_id}/reactions/#{emoji}/#{user_id}",
+      Authorization: token
+    )
+  end
+
+  # Get a list of clients who reacted with a specific reaction on a message
+  # https://discordapp.com/developers/docs/resources/channel#get-reactions
+  def get_reactions(token, channel_id, message_id, emoji)
+    emoji = URI.encode(emoji) unless emoji.ascii_only?
+    Discordrb::API.request(
+      :channels_cid_messages_mid_reactions_emoji,
+      channel_id,
+      :get,
+      "#{Discordrb::API.api_base}/channels/#{channel_id}/messages/#{message_id}/reactions/#{emoji}",
+      Authorization: token
+    )
+  end
+
+  # Deletes all reactions on a message from all clients
+  # https://discordapp.com/developers/docs/resources/channel#delete-all-reactions
+  def delete_all_reactions(token, channel_id, message_id)
+    Discordrb::API.request(
+      :channels_cid_messages_mid_reactions,
+      channel_id,
+      :delete,
+      "#{Discordrb::API.api_base}/channels/#{channel_id}/messages/#{message_id}/reactions",
+      Authorization: token
     )
   end
 
@@ -161,13 +229,13 @@ module Discordrb::API::Channel
 
   # Create an instant invite from a server or a channel id
   # https://discordapp.com/developers/docs/resources/channel#create-channel-invite
-  def create_invite(token, channel_id, max_age = 0, max_uses = 0, temporary = false)
+  def create_invite(token, channel_id, max_age = 0, max_uses = 0, temporary = false, unique = false)
     Discordrb::API.request(
       :channels_cid_invites,
       channel_id,
       :post,
       "#{Discordrb::API.api_base}/channels/#{channel_id}/invites",
-      { max_age: max_age, max_uses: max_uses, temporary: temporary }.to_json,
+      { max_age: max_age, max_uses: max_uses, temporary: temporary, unique: unique }.to_json,
       Authorization: token,
       content_type: :json
     )

@@ -33,7 +33,8 @@ module Discordrb
       warn: { long: 'WARN', short: '!', format_code: "\u001B[33m" }, # yellow
       error: { long: 'ERROR', short: '✗', format_code: "\u001B[31m" }, # red
       out: { long: 'OUT', short: '→', format_code: "\u001B[36m" }, # cyan
-      in: { long: 'IN', short: '←', format_code: "\u001B[35m" } # purple
+      in: { long: 'IN', short: '←', format_code: "\u001B[35m" }, # purple
+      ratelimit: { long: 'RATELIMIT', short: 'R', format_code: "\u001B[41m" } # red background
     }.freeze
 
     # The ANSI format code that resets formatting
@@ -44,7 +45,7 @@ module Discordrb
 
     MODES.each do |mode, hash|
       define_method(mode) do |message|
-        write(message, hash) if @enabled_modes.include? mode
+        write(message.to_s, hash) if @enabled_modes.include? mode
       end
     end
 
@@ -65,11 +66,11 @@ module Discordrb
     def mode=(value)
       case value
       when :debug
-        @enabled_modes = [:debug, :good, :info, :warn, :error, :out, :in]
+        @enabled_modes = [:debug, :good, :info, :warn, :error, :out, :in, :ratelimit]
       when :verbose
-        @enabled_modes = [:good, :info, :warn, :error, :out, :in]
+        @enabled_modes = [:good, :info, :warn, :error, :out, :in, :ratelimit]
       when :normal
-        @enabled_modes = [:info, :warn, :error]
+        @enabled_modes = [:info, :warn, :error, :ratelimit]
       when :quiet
         @enabled_modes = [:warn, :error]
       when :silent
@@ -91,13 +92,17 @@ module Discordrb
       timestamp = Time.now.strftime(LOG_TIMESTAMP_FORMAT)
 
       # Redact token if set
-      message.gsub!(@token, 'REDACTED_TOKEN') if @token
+      log = if @token
+              message.to_s.gsub(@token, 'REDACTED_TOKEN')
+            else
+              message.to_s
+            end
 
       @streams.each do |stream|
         if @fancy && !stream.is_a?(File)
-          fancy_write(stream, message, mode, thread_name, timestamp)
+          fancy_write(stream, log, mode, thread_name, timestamp)
         else
-          simple_write(stream, message, mode, thread_name, timestamp)
+          simple_write(stream, log, mode, thread_name, timestamp)
         end
       end
     end

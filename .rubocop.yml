@@ -5,6 +5,9 @@ Metrics/AbcSize:
 Metrics/BlockNesting:
   Enabled: false
 
+Metrics/BlockLength:
+  Enabled: false
+
 Metrics/ClassLength:
   Enabled: false
 
@@ -37,6 +40,12 @@ Style/ConstantName:
 # Allow 'Pokémon-style' exception handling
 Lint/RescueException:
   Enabled: false
+
+# Prefer |m, e| for the `reduce` block arguments
+Style/SingleLineBlockParams:
+  Methods:
+    - reduce: [m, e]
+    - inject: [m, e]
 
 AllCops:
   TargetRubyVersion: 2.1

@@ -6,6 +6,7 @@ require 'discordrb/commands/parser'
 require 'discordrb/commands/events'
 require 'discordrb/commands/container'
 require 'discordrb/commands/rate_limiter'
+require 'time'
 
 # Specialized bot to run commands
 
@@ -48,6 +49,10 @@ module Discordrb::Commands
     # @option attributes [String] :no_permission_message The message to be displayed when `NoPermission` error is raised.
     # @option attributes [true, false] :spaces_allowed Whether spaces are allowed to occur between the prefix and the
     #   command. Default is false.
+    # @option attributes [true, false] :webhook_commands Whether messages sent by webhooks are allowed to trigger
+    #   commands. Default is true.
+    # @option attributes [Array<String, Integer, Channel>] :channels The channels this command bot accepts commands on.
+    #   Superseded if a command has a 'channels' attribute.
     # @option attributes [String] :previous Character that should designate the result of the previous command in
     #   a command chain (see :advanced_functionality). Default is '~'.
     # @option attributes [String] :chain_delimiter Character that should designate that a new command begins in the
@@ -62,11 +67,11 @@ module Discordrb::Commands
     #   :advanced_functionality). Default is '"'.
     # @option attributes [String] :quote_end Character that should end a quoted string (see
     #   :advanced_functionality). Default is '"'.
+    # @option attributes [true, false] :ignore_bots Whether the bot should ignore bot accounts or not. Default is false.
     def initialize(attributes = {})
       super(
         log_mode: attributes[:log_mode],
         token: attributes[:token],
-        application_id: attributes[:application_id],
         client_id: attributes[:client_id],
         type: attributes[:type],
         name: attributes[:name],
@@ -75,7 +80,8 @@ module Discordrb::Commands
         parse_self: attributes[:parse_self],
         shard_id: attributes[:shard_id],
         num_shards: attributes[:num_shards],
-        redact_token: attributes[:redact_token])
+        redact_token: attributes.key?(:redact_token) ? attributes[:redact_token] : true,
+        ignore_bots: attributes[:ignore_bots])
 
       @prefix = attributes[:prefix]
       @attributes = {
@@ -94,6 +100,11 @@ module Discordrb::Commands
 
         # Spaces allowed between prefix and command
         spaces_allowed: attributes[:spaces_allowed].nil? ? false : attributes[:spaces_allowed],
+
+        # Webhooks allowed to trigger commands
+        webhook_commands: attributes[:webhook_commands].nil? ? true : attributes[:webhook_commands],
+
+        channels: attributes[:channels] || [],
 
         # All of the following need to be one character
         # String to designate previous result in command chain
@@ -134,12 +145,15 @@ module Discordrb::Commands
           result = "**`#{command_name}`**: #{desc}"
           result += "\nUsage: `#{usage}`" if usage
           if parameters
-            result += "\nAccepted Parameters:"
-            parameters.each { |p| result += "\n    `#{p}`" }
+            result += "\nAccepted Parameters:\n```"
+            parameters.each { |p| result += "\n#{p}" }
+            result += '```'
           end
           result
         else
-          available_commands = @commands.values.reject { |c| !c.attributes[:help_available] }
+          available_commands = @commands.values.reject do |c|
+            !c.attributes[:help_available] || !required_roles?(event.user, c.attributes[:required_roles]) || !required_permissions?(event.user, c.attributes[:required_permissions], event.channel)
+          end
           case available_commands.length
           when 0..5
             available_commands.reduce "**List of commands:**\n" do |memo, c|
@@ -150,8 +164,8 @@ module Discordrb::Commands
               memo + "`#{c.name}`, "
             end)[0..-3]
           else
-            event.user.pm(available_commands.reduce("**List of commands:**\n") { |a, e| a + "`#{e.name}`, " })[0..-3]
-            'Sending list in PM!'
+            event.user.pm(available_commands.reduce("**List of commands:**\n") { |m, e| m + "`#{e.name}`, " }[0..-3])
+            event.channel.pm? ? '' : 'Sending list in PM!'
           end
         end
       end
@@ -163,19 +177,28 @@ module Discordrb::Commands
     # @param arguments [Array<String>] The arguments to pass to the command.
     # @param chained [true, false] Whether or not it should be executed as part of a command chain. If this is false,
     #   commands that have chain_usable set to false will not work.
+    # @param check_permissions [true, false] Whether permission parameters such as `required_permission` or
+    #   `permission_level` should be checked.
     # @return [String, nil] the command's result, if there is any.
-    def execute_command(name, event, arguments, chained = false)
+    def execute_command(name, event, arguments, chained = false, check_permissions = true)
       debug("Executing command #{name} with arguments #{arguments}")
+      return unless @commands
       command = @commands[name]
+      return unless !check_permissions || channels?(event.channel, @attributes[:channels]) ||
+                    (command && !command.attributes[:channels].nil?)
       unless command
         event.respond @attributes[:command_doesnt_exist_message].gsub('%command%', name.to_s) if @attributes[:command_doesnt_exist_message]
         return
       end
-      if permission?(event.author, command.attributes[:permission_level], event.server) &&
+      return unless !check_permissions || channels?(event.channel, command.attributes[:channels])
+      arguments = arg_check(arguments, command.attributes[:arg_types], event.server) if check_permissions
+      if (check_permissions &&
+         permission?(event.author, command.attributes[:permission_level], event.server) &&
          required_permissions?(event.author, command.attributes[:required_permissions], event.channel) &&
-         required_roles?(event.author, command.attributes[:required_roles])
+         required_roles?(event.author, command.attributes[:required_roles])) ||
+         !check_permissions
         event.command = command
-        result = command.call(event, arguments, chained)
+        result = command.call(event, arguments, chained, check_permissions)
         stringify(result)
       else
         event.respond command.attributes[:permission_message].gsub('%name%', name.to_s) if command.attributes[:permission_message]
@@ -184,6 +207,85 @@ module Discordrb::Commands
     rescue Discordrb::Errors::NoPermission
       event.respond @attributes[:no_permission_message] unless @attributes[:no_permission_message].nil?
       raise
+    end
+
+    # Transforms an array of string arguments based on types array.
+    # For example, `['1', '10..14']` with types `[Integer, Range]` would turn into `[1, 10..14]`.
+    def arg_check(args, types = nil, server = nil)
+      return args unless types
+      args.each_with_index.map do |arg, i|
+        next arg if types[i].nil? || types[i] == String
+        if types[i] == Integer
+          begin
+            Integer(arg)
+          rescue ArgumentError
+            nil
+          end
+        elsif types[i] == Float
+          begin
+            Float(arg)
+          rescue ArgumentError
+            nil
+          end
+        elsif types[i] == Time
+          begin
+            Time.parse arg
+          rescue ArgumentError
+            nil
+          end
+        elsif types[i] == TrueClass || types[i] == FalseClass
+          if arg.casecmp('true').zero? || arg.downcase.start_with?('y')
+            true
+          elsif arg.casecmp('false').zero? || arg.downcase.start_with?('n')
+            false
+          end
+        elsif types[i] == Symbol
+          arg.to_sym
+        elsif types[i] == Encoding
+          begin
+            Encoding.find arg
+          rescue ArgumentError
+            nil
+          end
+        elsif types[i] == Regexp
+          begin
+            Regexp.new arg
+          rescue ArgumentError
+            nil
+          end
+        elsif types[i] == Rational
+          begin
+            Rational(arg)
+          rescue ArgumentError
+            nil
+          end
+        elsif types[i] == Range
+          begin
+            if arg.include? '...'
+              Range.new(*arg.split('...').map(&:to_i), true)
+            elsif arg.include? '..'
+              Range.new(*arg.split('..').map(&:to_i))
+            end
+          rescue ArgumentError
+            nil
+          end
+        elsif types[i] == NilClass
+          nil
+        elsif [Discordrb::User, Discordrb::Role, Discordrb::Emoji].include? types[i]
+          result = parse_mention arg, server
+          result if result.instance_of? types[i]
+        elsif types[i] == Discordrb::Invite
+          resolve_invite_code arg
+        elsif types[i].respond_to?(:from_argument)
+          begin
+            types[i].from_argument arg
+          rescue
+            nil
+          end
+        else
+          raise ArgumentError, "#{type} doesn't implement from_argument"
+        end
+      end
     end
 
     # Executes a command in a simple manner, without command chains or permissions.
@@ -216,9 +318,14 @@ module Discordrb::Commands
     # @param server [Server] The server on which to check
     # @return [true, false] whether or not the user has the given permission
     def permission?(user, level, server)
-      determined_level = server.nil? ? 0 : user.roles.reduce(0) do |memo, role|
-        [@permissions[:roles][role.id] || 0, memo].max
-      end
+      determined_level = if user.webhook? || server.nil?
+                           0
+                         else
+                           user.roles.reduce(0) do |memo, role|
+                             [@permissions[:roles][role.id] || 0, memo].max
+                           end
+                         end
+
       [@permissions[:users][user.id] || 0, determined_level].max >= level
     end
 
@@ -227,7 +334,8 @@ module Discordrb::Commands
     # Internal handler for MESSAGE_CREATE that is overwritten to allow for command handling
     def create_message(data)
       message = Discordrb::Message.new(data, self)
-      return if message.from_bot? && !@should_parse_self
+      return message if message.from_bot? && !@should_parse_self
+      return message if message.webhook? && !@attributes[:webhook_commands]
 
       unless message.author
         Discordrb::LOGGER.warn("Received a message (#{message.inspect}) with nil author! Ignoring, please report this if you can")
@@ -237,20 +345,23 @@ module Discordrb::Commands
       event = CommandEvent.new(message, self)
 
       chain = trigger?(message)
-      return unless chain
+      return message unless chain
 
       # Don't allow spaces between the prefix and the command
       if chain.start_with?(' ') && !@attributes[:spaces_allowed]
         debug('Chain starts with a space')
-        return
+        return message
       end
 
       if chain.strip.empty?
         debug('Chain is empty')
-        return
+        return message
       end
 
       execute_chain(chain, event)
+
+      # Return the message so it doesn't get parsed again during the rest of the dispatch handling
+      message
     end
 
     # Check whether a message should trigger command execution, and if it does, return the raw chain
@@ -258,7 +369,7 @@ module Discordrb::Commands
       if @prefix.is_a? String
         standard_prefix_trigger(message.content, @prefix)
       elsif @prefix.is_a? Array
-        @prefix.map { |e| standard_prefix_trigger(message.content, e) }.reduce { |a, e| a || e }
+        @prefix.map { |e| standard_prefix_trigger(message.content, e) }.reduce { |m, e| m || e }
       elsif @prefix.respond_to? :call
         @prefix.call(message)
       end
@@ -271,17 +382,32 @@ module Discordrb::Commands
 
     def required_permissions?(member, required, channel = nil)
       required.reduce(true) do |a, action|
-        a && member.permission?(action, channel)
+        a && !member.webhook? && !member.is_a?(Discordrb::Recipient) && member.permission?(action, channel)
       end
     end
 
     def required_roles?(member, required)
+      return (required.nil? || required.empty?) if member.webhook? || member.is_a?(Discordrb::Recipient)
       if required.is_a? Array
         required.all? do |role|
           member.role?(role)
         end
       else
         member.role?(role)
+      end
+    end
+
+    def channels?(channel, channels)
+      return true if channels.nil? || channels.empty?
+      channels.any? do |c|
+        if c.is_a? String
+          # Make sure to remove the "#" from channel names in case it was specified
+          c.delete('#') == channel.name
+        elsif c.is_a? Integer
+          c == channel.id
+        else
+          c == channel
+        end
       end
     end
 

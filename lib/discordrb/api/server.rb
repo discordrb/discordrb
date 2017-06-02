@@ -4,7 +4,7 @@ module Discordrb::API::Server
 
   # Create a server
   # https://discordapp.com/developers/docs/resources/guild#create-guild
-  def create(token, name, region = :london)
+  def create(token, name, region = :'eu-central')
     Discordrb::API.request(
       :guilds,
       nil,
@@ -212,16 +212,20 @@ module Discordrb::API::Server
     )
   end
 
-  # Create a role (parameters such as name and colour will have to be set by update_role afterwards)
+  # Create a role (parameters such as name and colour if not set can be set by update_role afterwards)
+  # Permissions are the Discord defaults; allowed: invite creation, reading/sending messages,
+  # sending TTS messages, embedding links, sending files, reading the history, mentioning everybody,
+  # connecting to voice, speaking and voice activity (push-to-talk isn't mandatory)
   # https://discordapp.com/developers/docs/resources/guild#get-guild-roles
-  def create_role(token, server_id)
+  def create_role(token, server_id, name, colour, hoist, mentionable, packed_permissions)
     Discordrb::API.request(
       :guilds_sid_roles,
       server_id,
       :post,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/roles",
-      nil,
-      Authorization: token
+      { color: colour, name: name, hoist: hoist, mentionable: mentionable, permissions: packed_permissions }.to_json,
+      Authorization: token,
+      content_type: :json
     )
   end
 
@@ -230,7 +234,7 @@ module Discordrb::API::Server
   # sending TTS messages, embedding links, sending files, reading the history, mentioning everybody,
   # connecting to voice, speaking and voice activity (push-to-talk isn't mandatory)
   # https://discordapp.com/developers/docs/resources/guild#batch-modify-guild-role
-  def update_role(token, server_id, role_id, name, colour, hoist = false, mentionable = false, packed_permissions = 36_953_089)
+  def update_role(token, server_id, role_id, name, colour, hoist = false, mentionable = false, packed_permissions = 104_324_161)
     Discordrb::API.request(
       :guilds_sid_roles_rid,
       server_id,
@@ -254,14 +258,39 @@ module Discordrb::API::Server
     )
   end
 
+  # Adds a single role to a member
+  # https://discordapp.com/developers/docs/resources/guild#add-guild-member-role
+  def add_member_role(token, server_id, user_id, role_id)
+    Discordrb::API.request(
+      :guilds_sid_members_uid_roles_rid,
+      server_id,
+      :put,
+      "#{Discordrb::API.api_base}/guilds/#{server_id}/members/#{user_id}/roles/#{role_id}",
+      nil,
+      Authorization: token
+    )
+  end
+
+  # Removes a single role from a member
+  # https://discordapp.com/developers/docs/resources/guild#remove-guild-member-role
+  def remove_member_role(token, server_id, user_id, role_id)
+    Discordrb::API.request(
+      :guilds_sid_members_uid_roles_rid,
+      server_id,
+      :delete,
+      "#{Discordrb::API.api_base}/guilds/#{server_id}/members/#{user_id}/roles/#{role_id}",
+      Authorization: token
+    )
+  end
+
   # Get server prune count
   # https://discordapp.com/developers/docs/resources/guild#get-guild-prune-count
-  def prune_count(token, server_id)
+  def prune_count(token, server_id, days)
     Discordrb::API.request(
       :guilds_sid_prune,
       server_id,
       :get,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}/prune",
+      "#{Discordrb::API.api_base}/guilds/#{server_id}/prune?days=#{days}",
       Authorization: token
     )
   end
@@ -351,6 +380,54 @@ module Discordrb::API::Server
       :post,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/integrations/#{integration_id}/sync",
       nil,
+      Authorization: token
+    )
+  end
+
+  # Adds a custom emoji
+  def add_emoji(token, server_id, image, name)
+    Discordrb::API.request(
+      :guilds_sid_emojis,
+      server_id,
+      :post,
+      "#{Discordrb::API.api_base}/guilds/#{server_id}/emojis",
+      { image: image, name: name }.to_json,
+      Authorization: token,
+      content_type: :json
+    )
+  end
+
+  # Changes an emoji name
+  def edit_emoji(token, server_id, emoji_id, name)
+    Discordrb::API.request(
+      :guilds_sid_emojis_eid,
+      server_id,
+      :patch,
+      "#{Discordrb::API.api_base}/guilds/#{server_id}/emojis/#{emoji_id}",
+      { name: name }.to_json,
+      Authorization: token,
+      content_type: :json
+    )
+  end
+
+  # Deletes a custom emoji
+  def delete_emoji(token, server_id, emoji_id)
+    Discordrb::API.request(
+      :guilds_sid_emojis_eid,
+      server_id,
+      :delete,
+      "#{Discordrb::API.api_base}/guilds/#{server_id}/emojis/#{emoji_id}",
+      Authorization: token
+    )
+  end
+
+  # Available voice regions for this server
+  def regions(token, server_id)
+    Discordrb::API.request(
+      :guilds_sid_regions,
+      server_id,
+      :get,
+      "#{Discordrb::API.api_base}/guilds/#{server_id}/regions",
       Authorization: token
     )
   end

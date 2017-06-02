@@ -11,6 +11,7 @@ require 'discordrb/events/roles'
 require 'discordrb/events/guilds'
 require 'discordrb/events/await'
 require 'discordrb/events/bans'
+require 'discordrb/events/reactions'
 
 require 'discordrb/await'
 
@@ -31,7 +32,7 @@ module Discordrb
     # @option attributes [Boolean] :private Matches whether or not the channel is private.
     # @yield The block is executed when the event is raised.
     # @yieldparam event [MessageEvent] The event that was raised.
-    # @return [MessageEventHandler] The event handler that was registered.
+    # @return [MessageEventHandler] the event handler that was registered.
     def message(attributes = {}, &block)
       register_event(MessageEvent, attributes, block)
     end
@@ -41,7 +42,7 @@ module Discordrb
     # @param attributes [Hash] Event attributes, none in this particular case
     # @yield The block is executed when the event is raised.
     # @yieldparam event [ReadyEvent] The event that was raised.
-    # @return [ReadyEventHandler] The event handler that was registered.
+    # @return [ReadyEventHandler] the event handler that was registered.
     def ready(attributes = {}, &block)
       register_event(ReadyEvent, attributes, block)
     end
@@ -51,7 +52,7 @@ module Discordrb
     # @param attributes [Hash] Event attributes, none in this particular case
     # @yield The block is executed when the event is raised.
     # @yieldparam event [DisconnectEvent] The event that was raised.
-    # @return [DisconnectEventHandler] The event handler that was registered.
+    # @return [DisconnectEventHandler] the event handler that was registered.
     def disconnected(attributes = {}, &block)
       register_event(DisconnectEvent, attributes, block)
     end
@@ -66,7 +67,7 @@ module Discordrb
     # @param attributes [Hash] Event attributes, none in this particular case
     # @yield The block is executed when the event is raised.
     # @yieldparam event [HeartbeatEvent] The event that was raised.
-    # @return [HeartbeatEventHandler] The event handler that was registered.
+    # @return [HeartbeatEventHandler] the event handler that was registered.
     def heartbeat(attributes = {}, &block)
       register_event(HeartbeatEvent, attributes, block)
     end
@@ -81,7 +82,7 @@ module Discordrb
     # @option attributes [Time] :before Matches a time before the time the typing started.
     # @yield The block is executed when the event is raised.
     # @yieldparam event [TypingEvent] The event that was raised.
-    # @return [TypingEventHandler] The event handler that was registered.
+    # @return [TypingEventHandler] the event handler that was registered.
     def typing(attributes = {}, &block)
       register_event(TypingEvent, attributes, block)
     end
@@ -92,7 +93,7 @@ module Discordrb
     # @option attributes [String, Integer, Channel] :in Matches the channel the message was edited in.
     # @yield The block is executed when the event is raised.
     # @yieldparam event [MessageEditEvent] The event that was raised.
-    # @return [MessageEditEventHandler] The event handler that was registered.
+    # @return [MessageEditEventHandler] the event handler that was registered.
     def message_edit(attributes = {}, &block)
       register_event(MessageEditEvent, attributes, block)
     end
@@ -103,9 +104,39 @@ module Discordrb
     # @option attributes [String, Integer, Channel] :in Matches the channel the message was deleted in.
     # @yield The block is executed when the event is raised.
     # @yieldparam event [MessageDeleteEvent] The event that was raised.
-    # @return [MessageDeleteEventHandler] The event handler that was registered.
+    # @return [MessageDeleteEventHandler] the event handler that was registered.
     def message_delete(attributes = {}, &block)
       register_event(MessageDeleteEvent, attributes, block)
+    end
+
+    # This **event** is raised when somebody reacts to a message.
+    # @param attributes [Hash] The event's attributes.
+    # @option attributes [Integer, String] :emoji Matches the ID of the emoji that was reacted with, or its name.
+    # @yield The block is executed when the event is raised.
+    # @yieldparam event [ReactionAddEvent] The event that was raised.
+    # @return [ReactionAddEventHandler] The event handler that was registered.
+    def reaction_add(attributes = {}, &block)
+      register_event(ReactionAddEvent, attributes, block)
+    end
+
+    # This **event** is raised when somebody removes a reaction from a message.
+    # @param attributes [Hash] The event's attributes.
+    # @option attributes [Integer, String] :emoji Matches the ID of the emoji that was removed from the reactions, or
+    #   its name.
+    # @yield The block is executed when the event is raised.
+    # @yieldparam event [ReactionRemoveEvent] The event that was raised.
+    # @return [ReactionRemoveEventHandler] The event handler that was registered.
+    def reaction_remove(attributes = {}, &block)
+      register_event(ReactionRemoveEvent, attributes, block)
+    end
+
+    # This **event** is raised when somebody removes all reactions from a message.
+    # @param attributes [Hash] The event's attributes.
+    # @yield The block is executed when the event is raised.
+    # @yieldparam event [ReactionRemoveAllEvent] The event that was raised.
+    # @return [ReactionRemoveAllEventHandler] The event handler that was registered.
+    def reaction_remove_all(attributes = {}, &block)
+      register_event(ReactionRemoveAllEvent, attributes, block)
     end
 
     # This **event** is raised when a user's status (online/offline/idle) changes.
@@ -114,7 +145,7 @@ module Discordrb
     # @option attributes [:offline, :idle, :online] :status Matches the status the user has now.
     # @yield The block is executed when the event is raised.
     # @yieldparam event [PresenceEvent] The event that was raised.
-    # @return [PresenceEventHandler] The event handler that was registered.
+    # @return [PresenceEventHandler] the event handler that was registered.
     def presence(attributes = {}, &block)
       register_event(PresenceEvent, attributes, block)
     end
@@ -126,7 +157,7 @@ module Discordrb
     # @option attributes [Integer] :type Matches the type of game object (0 game, 1 Twitch stream)
     # @yield The block is executed when the event is raised.
     # @yieldparam event [PlayingEvent] The event that was raised.
-    # @return [PlayingEventHandler] The event handler that was registered.
+    # @return [PlayingEventHandler] the event handler that was registered.
     def playing(attributes = {}, &block)
       register_event(PlayingEvent, attributes, block)
     end
@@ -144,7 +175,7 @@ module Discordrb
     # @option attributes [Boolean] :private Matches whether or not the channel is private.
     # @yield The block is executed when the event is raised.
     # @yieldparam event [MentionEvent] The event that was raised.
-    # @return [MentionEventHandler] The event handler that was registered.
+    # @return [MentionEventHandler] the event handler that was registered.
     def mention(attributes = {}, &block)
       register_event(MentionEvent, attributes, block)
     end
@@ -155,7 +186,7 @@ module Discordrb
     # @option attributes [String] :name Matches the name of the created channel.
     # @yield The block is executed when the event is raised.
     # @yieldparam event [ChannelCreateEvent] The event that was raised.
-    # @return [ChannelCreateEventHandler] The event handler that was registered.
+    # @return [ChannelCreateEventHandler] the event handler that was registered.
     def channel_create(attributes = {}, &block)
       register_event(ChannelCreateEvent, attributes, block)
     end
@@ -166,7 +197,7 @@ module Discordrb
     # @option attributes [String] :name Matches the new name of the channel.
     # @yield The block is executed when the event is raised.
     # @yieldparam event [ChannelUpdateEvent] The event that was raised.
-    # @return [ChannelUpdateEventHandler] The event handler that was registered.
+    # @return [ChannelUpdateEventHandler] the event handler that was registered.
     def channel_update(attributes = {}, &block)
       register_event(ChannelUpdateEvent, attributes, block)
     end
@@ -177,7 +208,7 @@ module Discordrb
     # @option attributes [String] :name Matches the name of the deleted channel.
     # @yield The block is executed when the event is raised.
     # @yieldparam event [ChannelDeleteEvent] The event that was raised.
-    # @return [ChannelDeleteEventHandler] The event handler that was registered.
+    # @return [ChannelDeleteEventHandler] the event handler that was registered.
     def channel_delete(attributes = {}, &block)
       register_event(ChannelDeleteEvent, attributes, block)
     end
@@ -189,7 +220,7 @@ module Discordrb
     # @option attributes [#resolve_id] :id Matches the id of the recipient added to the group channel.
     # @yield The block is executed when the event is raised.
     # @yieldparam event [ChannelRecipientAddEvent] The event that was raised.
-    # @return [ChannelRecipientAddHandler] The event handler that was registered.
+    # @return [ChannelRecipientAddHandler] the event handler that was registered.
     def channel_recipient_add(attributes = {}, &block)
       register_event(ChannelRecipientAddEvent, attributes, block)
     end
@@ -201,7 +232,7 @@ module Discordrb
     # @option attributes [#resolve_id] :id Matches the id of the recipient removed from the group channel.
     # @yield The block is executed when the event is raised.
     # @yieldparam event [ChannelRecipientRemoveEvent] The event that was raised.
-    # @return [ChannelRecipientRemoveHandler] The event handler that was registered.
+    # @return [ChannelRecipientRemoveHandler] the event handler that was registered.
     def channel_recipient_remove(attributes = {}, &block)
       register_event(ChannelRecipientRemoveEvent, attributes, block)
     end
@@ -210,13 +241,14 @@ module Discordrb
     # @param attributes [Hash] The event's attributes.
     # @option attributes [String, Integer, User] :from Matches the user that sent the message.
     # @option attributes [String, Integer, Channel] :channel Matches the voice channel the user has joined.
+    # @option attributes [String, Integer, Channel] :old_channel Matches the voice channel the user was in previously.
     # @option attributes [true, false] :mute Matches whether or not the user is muted server-wide.
     # @option attributes [true, false] :deaf Matches whether or not the user is deafened server-wide.
     # @option attributes [true, false] :self_mute Matches whether or not the user is muted by the bot.
     # @option attributes [true, false] :self_deaf Matches whether or not the user is deafened by the bot.
     # @yield The block is executed when the event is raised.
     # @yieldparam event [VoiceStateUpdateEvent] The event that was raised.
-    # @return [VoiceStateUpdateEventHandler] The event handler that was registered.
+    # @return [VoiceStateUpdateEventHandler] the event handler that was registered.
     def voice_state_update(attributes = {}, &block)
       register_event(VoiceStateUpdateEvent, attributes, block)
     end
@@ -226,7 +258,7 @@ module Discordrb
     # @option attributes [String] :username Matches the username of the joined user.
     # @yield The block is executed when the event is raised.
     # @yieldparam event [ServerMemberAddEvent] The event that was raised.
-    # @return [ServerMemberAddEventHandler] The event handler that was registered.
+    # @return [ServerMemberAddEventHandler] the event handler that was registered.
     def member_join(attributes = {}, &block)
       register_event(ServerMemberAddEvent, attributes, block)
     end
@@ -236,7 +268,7 @@ module Discordrb
     # @option attributes [String] :username Matches the username of the updated user.
     # @yield The block is executed when the event is raised.
     # @yieldparam event [ServerMemberUpdateEvent] The event that was raised.
-    # @return [ServerMemberUpdateEventHandler] The event handler that was registered.
+    # @return [ServerMemberUpdateEventHandler] the event handler that was registered.
     def member_update(attributes = {}, &block)
       register_event(ServerMemberUpdateEvent, attributes, block)
     end
@@ -246,7 +278,7 @@ module Discordrb
     # @option attributes [String] :username Matches the username of the member.
     # @yield The block is executed when the event is raised.
     # @yieldparam event [ServerMemberDeleteEvent] The event that was raised.
-    # @return [ServerMemberDeleteEventHandler] The event handler that was registered.
+    # @return [ServerMemberDeleteEventHandler] the event handler that was registered.
     def member_leave(attributes = {}, &block)
       register_event(ServerMemberDeleteEvent, attributes, block)
     end
@@ -257,7 +289,7 @@ module Discordrb
     # @option attributes [String, Integer, Server] :server Matches the server from which the user was banned.
     # @yield The block is executed when the event is raised.
     # @yieldparam event [UserBanEvent] The event that was raised.
-    # @return [UserBanEventHandler] The event handler that was registered.
+    # @return [UserBanEventHandler] the event handler that was registered.
     def user_ban(attributes = {}, &block)
       register_event(UserBanEvent, attributes, block)
     end
@@ -268,7 +300,7 @@ module Discordrb
     # @option attributes [String, Integer, Server] :server Matches the server from which the user was unbanned.
     # @yield The block is executed when the event is raised.
     # @yieldparam event [UserUnbanEvent] The event that was raised.
-    # @return [UserUnbanEventHandler] The event handler that was registered.
+    # @return [UserUnbanEventHandler] the event handler that was registered.
     def user_unban(attributes = {}, &block)
       register_event(UserUnbanEvent, attributes, block)
     end
@@ -280,7 +312,7 @@ module Discordrb
     # @option attributes [String, Integer, Server] :server Matches the server that was created.
     # @yield The block is executed when the event is raised.
     # @yieldparam event [ServerCreateEvent] The event that was raised.
-    # @return [ServerCreateEventHandler] The event handler that was registered.
+    # @return [ServerCreateEventHandler] the event handler that was registered.
     def server_create(attributes = {}, &block)
       register_event(ServerCreateEvent, attributes, block)
     end
@@ -290,7 +322,7 @@ module Discordrb
     # @option attributes [String, Integer, Server] :server Matches the server that was updated.
     # @yield The block is executed when the event is raised.
     # @yieldparam event [ServerUpdateEvent] The event that was raised.
-    # @return [ServerUpdateEventHandler] The event handler that was registered.
+    # @return [ServerUpdateEventHandler] the event handler that was registered.
     def server_update(attributes = {}, &block)
       register_event(ServerUpdateEvent, attributes, block)
     end
@@ -301,9 +333,56 @@ module Discordrb
     # @option attributes [String, Integer, Server] :server Matches the server that was deleted.
     # @yield The block is executed when the event is raised.
     # @yieldparam event [ServerDeleteEvent] The event that was raised.
-    # @return [ServerDeleteEventHandler] The event handler that was registered.
+    # @return [ServerDeleteEventHandler] the event handler that was registered.
     def server_delete(attributes = {}, &block)
       register_event(ServerDeleteEvent, attributes, block)
+    end
+
+    # This **event** is raised when an emoji or collection of emojis is created/deleted/updated.
+    # @param attributes [Hash] The event's attributes.
+    # @option attributes [String, Integer, Server] :server Matches the server.
+    # @yield The block is executed when the event is raised.
+    # @yieldparam event [ServerEmojiChangeEvent] The event that was raised.
+    # @return [ServerEmojiChangeEventHandler] the event handler that was registered.
+    def server_emoji(attributes = {}, &block)
+      register_event(ServerEmojiChangeEvent, attributes, block)
+    end
+
+    # This **event** is raised when an emoji is created.
+    # @param attributes [Hash] The event's attributes.
+    # @option attributes [String, Integer, Server] :server Matches the server.
+    # @option attributes [String, Integer] :id Matches the id of the emoji.
+    # @option attributes [String] :name Matches the name of the emoji.
+    # @yield The block is executed when the event is raised.
+    # @yieldparam event [ServerEmojiCreateEvent] The event that was raised.
+    # @return [ServerEmojiCreateEventHandler] the event handler that was registered.
+    def server_emoji_create(attributes = {}, &block)
+      register_event(ServerEmojiCreateEvent, attributes, block)
+    end
+
+    # This **event** is raised when an emoji is deleted.
+    # @param attributes [Hash] The event's attributes.
+    # @option attributes [String, Integer, Server] :server Matches the server.
+    # @option attributes [String, Integer] :id Matches the id of the emoji.
+    # @option attributes [String] :name Matches the name of the emoji.
+    # @yield The block is executed when the event is raised.
+    # @yieldparam event [ServerEmojiDeleteEvent] The event that was raised.
+    # @return [ServerEmojiDeleteEventHandler] the event handler that was registered.
+    def server_emoji_delete(attributes = {}, &block)
+      register_event(ServerEmojiDeleteEvent, attributes, block)
+    end
+
+    # This **event** is raised when an emoji is updated.
+    # @param attributes [Hash] The event's attributes.
+    # @option attributes [String, Integer, Server] :server Matches the server.
+    # @option attributes [String, Integer] :id Matches the id of the emoji.
+    # @option attributes [String] :name Matches the name of the emoji.
+    # @option attributes [String] :old_name Matches the name of the emoji before the update.
+    # @yield The block is executed when the event is raised.
+    # @yieldparam event [ServerEmojiUpdateEvent] The event that was raised.
+    # @return [ServerEmojiUpdateEventHandler] the event handler that was registered.
+    def server_emoji_update(attributes = {}, &block)
+      register_event(ServerEmojiUpdateEvent, attributes, block)
     end
 
     # This **event** is raised when an {Await} is triggered. It provides an easy way to execute code
@@ -313,7 +392,7 @@ module Discordrb
     # @option attributes [Class] :type Exactly matches the event's type.
     # @yield The block is executed when the event is raised.
     # @yieldparam event [AwaitEvent] The event that was raised.
-    # @return [AwaitEventHandler] The event handler that was registered.
+    # @return [AwaitEventHandler] the event handler that was registered.
     def await(attributes = {}, &block)
       register_event(AwaitEvent, attributes, block)
     end
@@ -331,7 +410,7 @@ module Discordrb
     # @option attributes [Boolean] :private Matches whether or not the channel is private.
     # @yield The block is executed when the event is raised.
     # @yieldparam event [PrivateMessageEvent] The event that was raised.
-    # @return [PrivateMessageEventHandler] The event handler that was registered.
+    # @return [PrivateMessageEventHandler] the event handler that was registered.
     def pm(attributes = {}, &block)
       register_event(PrivateMessageEvent, attributes, block)
     end
@@ -339,6 +418,27 @@ module Discordrb
     alias_method :private_message, :pm
     alias_method :direct_message, :pm
     alias_method :dm, :pm
+
+    # This **event** is raised for every dispatch received over the gateway, whether supported by discordrb or not.
+    # @param attributes [Hash] The event's attributes.
+    # @option attributes [String, Symbol, Regexp] :type Matches the event type of the dispatch.
+    # @yield The block is executed when the event is raised.
+    # @yieldparam event [RawEvent] The event that was raised.
+    # @return [RawEventHandler] The event handler that was registered.
+    def raw(attributes = {}, &block)
+      register_event(RawEvent, attributes, block)
+    end
+
+    # This **event** is raised for a dispatch received over the gateway that is not currently handled otherwise by
+    # discordrb.
+    # @param attributes [Hash] The event's attributes.
+    # @option attributes [String, Symbol, Regexp] :type Matches the event type of the dispatch.
+    # @yield The block is executed when the event is raised.
+    # @yieldparam event [UnknownEvent] The event that was raised.
+    # @return [UnknownEventHandler] The event handler that was registered.
+    def unknown(attributes = {}, &block)
+      register_event(UnknownEvent, attributes, block)
+    end
 
     # Removes an event handler from this container. If you're looking for a way to do temporary events, I recommend
     # {Await}s instead of this.

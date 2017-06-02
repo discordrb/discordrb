@@ -2,6 +2,8 @@
 [![Gem](https://img.shields.io/gem/dt/discordrb.svg)](https://rubygems.org/gems/discordrb)
 [![Build Status](https://travis-ci.org/meew0/discordrb.svg?branch=master)](https://travis-ci.org/meew0/discordrb)
 [![Inline docs](http://inch-ci.org/github/meew0/discordrb.svg?branch=master&style=shields)](http://inch-ci.org/github/meew0/discordrb)
+[![Code Climate](https://codeclimate.com/github/meew0/discordrb/badges/gpa.svg)](https://codeclimate.com/github/meew0/discordrb)
+[![Test Coverage](https://codeclimate.com/github/meew0/discordrb/badges/coverage.svg)](https://codeclimate.com/github/meew0/discordrb/coverage)
 [![Join Discord](https://img.shields.io/badge/discord-join-7289DA.svg)](https://discord.gg/0SBTUU1wZTWfFQL2)
 # discordrb
 
@@ -27,7 +29,7 @@ See also: [Documentation](http://www.rubydoc.info/gems/discordrb), [Tutorials](h
 
 This section only applies to you if you want to use voice functionality.
 * [libsodium](https://github.com/meew0/discordrb/wiki/Installing-libsodium)
-* A compiled libopus distribution for your system, anywhere the script can find it (on Windows, make sure it's named `opus.dll`)
+* A compiled libopus distribution for your system, anywhere the script can find it. See [here](https://github.com/meew0/discordrb/wiki/Installing-libopus) for installation instructions.
 * [FFmpeg](https://www.ffmpeg.org/download.html) installed and in your PATH
 
 In addition to this, if you're on Windows and want to use voice functionality, your installed Ruby version **needs to be 32 bit**, as otherwise Opus won't work.
@@ -86,7 +88,7 @@ You can make a simple bot like this:
 ```ruby
 require 'discordrb'
 
-bot = Discordrb::Bot.new token: '<token here>', application_id: 168123456789123456
+bot = Discordrb::Bot.new token: '<token here>', client_id: 168123456789123456
 
 bot.message(with_text: 'Ping!') do |event|
   event.respond 'Pong!'

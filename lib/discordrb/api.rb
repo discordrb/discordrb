@@ -33,6 +33,13 @@ module Discordrb::API
     @bot_name = value
   end
 
+  # Changes the rate limit tracing behaviour. If rate limit tracing is on, a full backtrace will be logged on every RL
+  # hit.
+  # @param value [true, false] whether or not to enable rate limit tracing
+  def trace=(value)
+    @trace = value
+  end
+
   # Generate a user agent identifying this requester as discordrb.
   def user_agent
     # This particular string is required by the Discord devs.
@@ -92,14 +99,16 @@ module Discordrb::API
       response = raw_request(type, attributes)
 
       if response.headers[:x_ratelimit_remaining] == '0' && !mutex.locked?
-        Discordrb::LOGGER.debug "RL bucket depletion detected! Date: #{response.headers[:date]} Reset: #{response.headers[:x_ratelimit_reset]}"
+        Discordrb::LOGGER.ratelimit "RL bucket depletion detected! Date: #{response.headers[:date]} Reset: #{response.headers[:x_ratelimit_reset]}"
 
         now = Time.rfc2822(response.headers[:date])
         reset = Time.at(response.headers[:x_ratelimit_reset].to_i)
 
         delta = reset - now
 
-        Discordrb::LOGGER.warn("Locking RL mutex (key: #{key}) for #{delta} seconds preemptively")
+        Discordrb::LOGGER.ratelimit("Locking RL mutex (key: #{key}) for #{delta} seconds preemptively")
+        trace("preemptive #{key.join(' ')}")
+
         sync_wait(delta, mutex)
       end
     rescue RestClient::TooManyRequests => e
@@ -109,7 +118,8 @@ module Discordrb::API
       unless mutex.locked?
         response = JSON.parse(e.response)
         wait_seconds = response['retry_after'].to_i / 1000.0
-        Discordrb::LOGGER.warn("Locking RL mutex (key: #{key}) for #{wait_seconds} seconds due to Discord rate limiting")
+        Discordrb::LOGGER.ratelimit("Locking RL mutex (key: #{key}) for #{wait_seconds} seconds due to Discord rate limiting")
+        trace("429 #{key.join(' ')}")
 
         # Wait the required time synchronized by the mutex (so other incoming requests have to wait) but only do it if
         # the mutex isn't locked already so it will only ever wait once
@@ -120,6 +130,22 @@ module Discordrb::API
     end
 
     response
+  end
+
+  # Perform rate limit tracing. All this method does is log the current backtrace to the console with the `:ratelimit`
+  # level.
+  # @param reason [String] the reason to include with the backtrace.
+  def trace(reason)
+    unless @trace
+      Discordrb::LOGGER.debug("trace was called with reason #{reason}, but tracing is not enabled")
+      return
+    end
+
+    Discordrb::LOGGER.ratelimit("Trace (#{reason}):")
+
+    caller.each do |str|
+      Discordrb::LOGGER.ratelimit(' ' + str)
+    end
   end
 
   # Make an icon URL from server and icon IDs
@@ -135,6 +161,16 @@ module Discordrb::API
   # Make a widget picture URL from server ID
   def widget_url(server_id, style = 'shield')
     "#{api_base}/guilds/#{server_id}/widget.png?style=#{style}"
+  end
+
+  # Make a splash URL from server and splash IDs
+  def splash_url(server_id, splash_id)
+    "https://cdn.discordapp.com/splashes/#{server_id}/#{splash_id}.jpg"
+  end
+
+  # Make an emoji icon URL from emoji ID
+  def emoji_icon_url(emoji_id)
+    "https://cdn.discordapp.com/emojis/#{emoji_id}.png"
   end
 
   # Login to the server
@@ -231,6 +267,18 @@ module Discordrb::API
       :post,
       "#{api_base}/auth/login",
       {}.to_json,
+      Authorization: token,
+      content_type: :json
+    )
+  end
+
+  # Get a list of available voice regions
+  def voice_regions(token)
+    request(
+      :voice_regions,
+      nil,
+      :get,
+      "#{api_base}/voice/regions",
       Authorization: token,
       content_type: :json
     )

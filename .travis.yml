@@ -1,7 +1,8 @@
 language: ruby
 rvm:
-  - 2.2.2
+  - 2.1.9
 before_install: gem install bundler -v 1.10.6
 script:
   - bundle exec rspec spec
+  - bundle exec codeclimate-test-reporter
   - bundle exec rubocop -c .rubocop.yml

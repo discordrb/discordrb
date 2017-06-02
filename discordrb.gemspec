@@ -14,16 +14,17 @@ Gem::Specification.new do |spec|
   spec.homepage      = 'https://github.com/meew0/discordrb'
   spec.license       = 'MIT'
 
-  spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
+  spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features|examples|lib/discordrb/webhooks)/}) }
   spec.bindir        = 'exe'
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
   spec.add_dependency 'rest-client'
-  spec.add_dependency 'activesupport'
   spec.add_dependency 'opus-ruby'
   spec.add_dependency 'websocket-client-simple', '>= 0.3.0'
-  spec.add_dependency 'rbnacl'
+  spec.add_dependency 'rbnacl', '~> 3.4.0' # 24: update
+
+  spec.add_dependency 'discordrb-webhooks', '~> 3.2.0.1'
 
   spec.required_ruby_version = '>= 2.1.0'
 
@@ -31,5 +32,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rake', '~> 10.0'
   spec.add_development_dependency 'yard', '~> 0.8.7.6'
   spec.add_development_dependency 'rspec', '~> 3.4.0'
-  spec.add_development_dependency 'rubocop', '0.42.0'
+  spec.add_development_dependency 'rspec-prof', '~> 0.0.7'
+  spec.add_development_dependency 'rubocop', '0.45.0'
 end

@@ -6,6 +6,8 @@
 /doc/
 /pkg/
 /spec/reports/
+/profiles/
 /tmp/
 /.idea/
 .DS_Store
+*.gem

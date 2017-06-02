@@ -6,7 +6,7 @@ require 'discordrb/data'
 module Discordrb::Events
   # Module to make sending messages easier with the presence of a text channel in an event
   module Respondable
-    # @return [Channel] the channel in which this event occured
+    # @return [Channel] the channel in which this event occurred
     attr_reader :channel
 
     # Sends a message to the channel this message was sent in, right now. It is usually preferable to use {#<<} instead
@@ -14,14 +14,14 @@ module Discordrb::Events
     # @param content [String] The message to send to the channel
     # @return [Discordrb::Message] the message that was sent
     def send_message(content)
-      @channel.send_message(content)
+      channel.send_message(content)
     end
 
     # Sends a temporary message to the channel this message was sent in, right now.
     # @param content [String] The content to send. Should not be longer than 2000 characters or it will result in an error.
     # @param timeout [Float] The amount of time in seconds after which the message sent will be deleted.
     def send_temporary_message(content, timeout)
-      @channel.send_temporary_message(content, timeout)
+      channel.send_temporary_message(content, timeout)
     end
 
     # Adds a string to be sent after the event has finished execution. Avoids problems with rate limiting because only
@@ -62,6 +62,7 @@ module Discordrb::Events
   # Event raised when a text message is sent to a channel
   class MessageEvent < Event
     include Respondable
+
     # @return [Message] the message which triggered this event.
     attr_reader :message
 
@@ -72,7 +73,7 @@ module Discordrb::Events
     attr_reader :file
 
     # @!attribute [r] author
-    #   @return [Member] who sent this message.
+    #   @return [Member, User] who sent this message.
     #   @see Message#author
     # @!attribute [r] channel
     #   @return [Channel] the channel in which this message was sent.
@@ -128,7 +129,6 @@ module Discordrb::Events
     # Detaches a file from the message event.
     def detach_file
       @file = nil
-      nil
     end
 
     # @return [true, false] whether or not this message was sent by the bot itself
@@ -178,7 +178,7 @@ module Discordrb::Events
           if a.is_a? String
             # Make sure to remove the "#" from channel names in case it was specified
             a.delete('#') == e.name
-          elsif a.is_a? Fixnum
+          elsif a.is_a? Integer
             a == e.id
           else
             a == e
@@ -187,7 +187,7 @@ module Discordrb::Events
         matches_all(@attributes[:from], event.author) do |a, e|
           if a.is_a? String
             a == e.name
-          elsif a.is_a? Fixnum
+          elsif a.is_a? Integer
             a == e.id
           elsif a == :bot
             e.current_bot?
@@ -234,6 +234,7 @@ module Discordrb::Events
   # A subset of MessageEvent that only contains a message ID and a channel
   class MessageIDEvent < Event
     include Respondable
+
     # @return [Integer] the ID associated with this event
     attr_reader :id
 

@@ -10,7 +10,7 @@ require 'discordrb/api/channel'
 require 'discordrb/api/server'
 require 'discordrb/api/invite'
 require 'discordrb/api/user'
-require 'discordrb/events/message'
+require 'discordrb/webhooks/embeds'
 require 'time'
 require 'base64'
 
@@ -71,11 +71,14 @@ module Discordrb
     # @return [Integer] the ID which uniquely identifies this object across Discord.
     attr_reader :id
     alias_method :resolve_id, :id
+    alias_method :hash, :id
 
     # ID based comparison
     def ==(other)
       Discordrb.id_compare(@id, other)
     end
+
+    alias_method :eql?, :==
 
     # Estimates the time this object was generated on based on the beginning of the ID. This is fairly accurate but
     # shouldn't be relied on as Discord might change its algorithm at any time
@@ -84,6 +87,18 @@ module Discordrb
       # Milliseconds
       ms = (@id >> 22) + DISCORD_EPOCH
       Time.at(ms / 1000.0)
+    end
+
+    # Creates an artificial snowflake at the given point in time. Useful for comparing against.
+    # @param time [Time] The time the snowflake should represent.
+    # @return [Integer] a snowflake with the timestamp data as the given time
+    def self.synthesise(time)
+      ms = (time.to_f * 1000).to_i
+      (ms - DISCORD_EPOCH) << 22
+    end
+
+    class << self
+      alias_method :synthesize, :synthesise
     end
   end
 
@@ -105,7 +120,7 @@ module Discordrb
 
     # @return [String] the ID of this user's current avatar, can be used to generate an avatar URL.
     # @see #avatar_url
-    attr_reader :avatar_id
+    attr_accessor :avatar_id
 
     # Utility function to mention users in messages
     # @return [String] the mention code in the form of <@id>
@@ -131,13 +146,18 @@ module Discordrb
     include IDObject
     include UserAttributes
 
-    # @!attribute [r] status
-    #   @return [Symbol] the current online status of the user (`:online`, `:offline` or `:idle`)
-    attr_accessor :status
+    # @return [Symbol] the current online status of the user (`:online`, `:offline` or `:idle`)
+    attr_reader :status
 
-    # @!attribute [r] game
-    #   @return [String, nil] the game the user is currently playing, or `nil` if none is being played.
-    attr_accessor :game
+    # @return [String, nil] the game the user is currently playing, or `nil` if none is being played.
+    attr_reader :game
+
+    # @return [String, nil] the URL to the stream, if the user is currently streaming something.
+    attr_reader :stream_url
+
+    # @return [String, Integer, nil] the type of the stream. Can technically be set to anything, most of the time it
+    #   will be 0 for no stream or 1 for Twitch streams.
+    attr_reader :stream_type
 
     def initialize(data, bot)
       @bot = bot
@@ -190,6 +210,23 @@ module Discordrb
       @username = username
     end
 
+    # Set the user's presence data
+    # @note for internal use only
+    # @!visibility private
+    def update_presence(data)
+      @status = data['status'].to_sym
+
+      if data['game']
+        game = data['game']
+
+        @game = game['name']
+        @stream_url = game['url']
+        @stream_type = game['type']
+      else
+        @game = @stream_url = @stream_type = nil
+      end
+    end
+
     # Add an await for a message from this user. Specifically, this adds a global await for a MessageEvent with this
     # user's ID as a :from attribute.
     # @see Bot#add_await
@@ -209,6 +246,11 @@ module Discordrb
     # @return [true, false] whether this user is the bot
     def current_bot?
       @bot.profile.id == @id
+    end
+
+    # @return [true, false] whether this user is a fake user for a webhook message
+    def webhook?
+      @discriminator == Message::ZERO_DISCRIM
     end
 
     [:offline, :idle, :online].each do |e|
@@ -257,7 +299,7 @@ module Discordrb
     end
 
     # Utility function to get a application's icon URL.
-    # @return [String, nil] the URL to the icon image (nil if no iamge is set).
+    # @return [String, nil] the URL to the icon image (nil if no image is set).
     def icon_url
       return nil if @icon_id.nil?
       API.app_icon_url(@id, @icon_id)
@@ -378,6 +420,9 @@ module Discordrb
     # through for example being the server owner or having the Manage Roles permission
     # @param action [Symbol] The permission that should be checked. See also {Permissions::Flags} for a list.
     # @param channel [Channel, nil] If channel overrides should be checked too, this channel specifies where the overrides should be checked.
+    # @example Check if the bot can send messages to a specific channel in a server.
+    #   bot_profile = bot.profile.on(event.server)
+    #   can_send_messages = bot_profile.permission?(:send_messages, channel)
     # @return [true, false] whether or not this user has the permission.
     def permission?(action, channel = nil)
       # If the member is the server owner, it irrevocably has all permissions.
@@ -397,6 +442,8 @@ module Discordrb
     # Manage Roles)
     # @param action [Symbol] The permission that should be checked. See also {Permissions::Flags} for a list.
     # @param channel [Channel, nil] If channel overrides should be checked too, this channel specifies where the overrides should be checked.
+    # @example Check if a member has the Manage Channels permission defined in the server.
+    #   has_manage_channels = member.defined_permission?(:manage_channels)
     # @return [true, false] whether or not this user has the permission defined.
     def defined_permission?(action, channel = nil)
       # Get the permission the user's roles have
@@ -423,10 +470,12 @@ module Discordrb
     private
 
     def defined_role_permission?(action, channel)
+      roles_to_check = @roles + [@server.everyone_role]
+
       # For each role, check if
       #   (1) the channel explicitly allows or permits an action for the role and
       #   (2) if the user is allowed to do the action if the channel doesn't specify
-      @roles.reduce(false) do |can_act, role|
+      roles_to_check.reduce(false) do |can_act, role|
         # Get the override defined for the role on the channel
         channel_allow = permission_overwrite(action, channel, role.id)
         can_act = if channel_allow
@@ -495,6 +544,50 @@ module Discordrb
       @self_deaf = self_deaf
     end
   end
+
+  # Voice regions are the locations of servers that handle voice communication in Discord
+  class VoiceRegion
+    # @return [String] unique ID for the region
+    attr_reader :id
+    alias_method :to_s, :id
+
+    # @return [String] name of the region
+    attr_reader :name
+
+    # @return [String] an example hostname for the region
+    attr_reader :sample_hostname
+
+    # @return [Integer] an example port for the region
+    attr_reader :sample_port
+
+    # @return [true, false] if this is a VIP-only server
+    attr_reader :vip
+
+    # @return [true, false] if this voice server is the closest to the client
+    attr_reader :optimal
+
+    # @return [true, false] whether this is a deprecated voice region (avoid switching to these)
+    attr_reader :deprecated
+
+    # @return [true, false] whether this is a custom voice region (used for events/etc)
+    attr_reader :custom
+
+    def initialize(data)
+      @id = data['id']
+
+      @name = data['name']
+
+      @sample_hostname = data['sample_hostname']
+      @sample_port = data['sample_port']
+
+      @vip = data['vip']
+      @optimal = data['optimal']
+      @deprecated = data['deprecated']
+      @custom = data['custom']
+    end
+  end
+
+  # A presence represents a
 
   # A member is a user on a server. It differs from regular users in that it has roles, voice statuses and things like
   # that.
@@ -571,6 +664,10 @@ module Discordrb
     # Adds and removes roles from a member.
     # @param add [Role, Array<Role>] The role(s) to add.
     # @param remove [Role, Array<Role>] The role(s) to remove.
+    # @example Remove the 'Member' role from a user, and add the 'Muted' role to them.
+    #   to_add = server.roles.find {|role| role.name == 'Muted'}
+    #   to_remove = server.roles.find {|role| role.name == 'Member'}
+    #   member.modify_roles(to_add, to_remove)
     def modify_roles(add, remove)
       add_role_ids = role_id_array(add)
       remove_role_ids = role_id_array(remove)
@@ -584,20 +681,28 @@ module Discordrb
     # @param role [Role, Array<Role>] The role(s) to add.
     def add_role(role)
       role_ids = role_id_array(role)
-      old_role_ids = @roles.map(&:id)
-      new_role_ids = (old_role_ids + role_ids).uniq
 
-      API::Server.update_member(@bot.token, @server.id, @user.id, roles: new_role_ids)
+      if role_ids.count == 1
+        API::Server.add_member_role(@bot.token, @server.id, @user.id, role_ids[0])
+      else
+        old_role_ids = @roles.map(&:id)
+        new_role_ids = (old_role_ids + role_ids).uniq
+        API::Server.update_member(@bot.token, @server.id, @user.id, roles: new_role_ids)
+      end
     end
 
     # Removes one or more roles from this member.
     # @param role [Role, Array<Role>] The role(s) to remove.
     def remove_role(role)
-      old_role_ids = @roles.map(&:id)
       role_ids = role_id_array(role)
-      new_role_ids = old_role_ids.reject { |i| role_ids.include?(i) }
 
-      API::Server.update_member(@bot.token, @server.id, @user.id, roles: new_role_ids)
+      if role_ids.count == 1
+        API::Server.remove_member_role(@bot.token, @server.id, @user.id, role_ids[0])
+      else
+        old_role_ids = @roles.map(&:id)
+        new_role_ids = old_role_ids.reject { |i| role_ids.include?(i) }
+        API::Server.update_member(@bot.token, @server.id, @user.id, roles: new_role_ids)
+      end
     end
 
     # Server deafens this member.
@@ -630,7 +735,7 @@ module Discordrb
       if @user.current_bot?
         API::User.change_own_nickname(@bot.token, @server.id, nick)
       else
-        API.change_nickname(@bot.token, @server.id, @user.id, nick)
+        API::Server.update_member(@bot.token, @server.id, @user.id, nick: nick)
       end
     end
 
@@ -646,7 +751,7 @@ module Discordrb
     # @!visibility private
     def update_roles(roles)
       @roles = roles.map do |role|
-        role.is_a?(Role) ? role : @server.role(role.to_i)
+        @server.role(role)
       end
     end
 
@@ -758,12 +863,43 @@ module Discordrb
       @avatar_id = new_data[:avatar_id] || @avatar_id
     end
 
+    # Sets the user status setting to Online.
+    # @note Only usable on User accounts.
+    def online
+      update_profile_status_setting('online')
+    end
+
+    # Sets the user status setting to Idle.
+    # @note Only usable on User accounts.
+    def idle
+      update_profile_status_setting('idle')
+    end
+
+    # Sets the user status setting to Do Not Disturb.
+    # @note Only usable on User accounts.
+    def dnd
+      update_profile_status_setting('dnd')
+    end
+
+    alias_method(:busy, :dnd)
+
+    # Sets the user status setting to Invisible.
+    # @note Only usable on User accounts.
+    def invisible
+      update_profile_status_setting('invisible')
+    end
+
     # The inspect method is overwritten to give more useful output
     def inspect
       "<Profile user=#{super}>"
     end
 
     private
+
+    # Internal handler for updating the user's status setting
+    def update_profile_status_setting(status)
+      API::User.change_status_setting(@bot.token, status)
+    end
 
     def update_profile_data(new_data)
       API::User.update_profile(@bot.token,
@@ -811,6 +947,11 @@ module Discordrb
       def write(bits)
         @role.send(:packed=, bits, false)
       end
+
+      # The inspect method is overridden, in this case to prevent the token being leaked
+      def inspect
+        "<RoleWriter role=#{@role} token=...>"
+      end
     end
 
     # @!visibility private
@@ -837,7 +978,7 @@ module Discordrb
     # @return [Array<Member>] an array of members who have this role.
     # @note This requests a member chunk if it hasn't for the server before, which may be slow initially
     def members
-      @server.members.select { |m| m.role? role }
+      @server.members.select { |m| m.role? self }
     end
 
     alias_method :users, :members
@@ -904,7 +1045,7 @@ module Discordrb
       @permissions.bits = packed if update_perms
     end
 
-    # Delets this role. This cannot be undone without recreating the role!
+    # Deletes this role. This cannot be undone without recreating the role!
     def delete
       API::Server.delete_role(@bot.token, @server.id, @id)
       @server.delete_role(@id)
@@ -1069,6 +1210,7 @@ module Discordrb
     # `allow` and `deny` properties which are {Permissions} objects respectively.
     # @return [Hash<Integer => OpenStruct>] the channel's permission overwrites
     attr_reader :permission_overwrites
+    alias_method :overwrites, :permission_overwrites
 
     # @return [true, false] whether or not this channel is a PM or group channel.
     def private?
@@ -1154,12 +1296,20 @@ module Discordrb
       @type == 3
     end
 
+    # @return [true, false] whether or not this channel is the default channel
+    def default_channel?
+      server.default_channel == self
+    end
+
+    alias_method :default?, :default_channel?
+
     # Sends a message to this channel.
     # @param content [String] The content to send. Should not be longer than 2000 characters or it will result in an error.
     # @param tts [true, false] Whether or not this message should be sent using Discord text-to-speech.
+    # @param embed [Hash, Discordrb::Webhooks::Embed, nil] The rich embed to append to this message.
     # @return [Message] the message that was sent.
-    def send_message(content, tts = false)
-      @bot.send_message(@id, content, tts, @server && @server.id)
+    def send_message(content, tts = false, embed = nil)
+      @bot.send_message(@id, content, tts, embed)
     end
 
     alias_method :send, :send_message
@@ -1168,8 +1318,26 @@ module Discordrb
     # @param content [String] The content to send. Should not be longer than 2000 characters or it will result in an error.
     # @param timeout [Float] The amount of time in seconds after which the message sent will be deleted.
     # @param tts [true, false] Whether or not this message should be sent using Discord text-to-speech.
-    def send_temporary_message(content, timeout, tts = false)
-      @bot.send_temporary_message(@id, content, timeout, tts, @server && @server.id)
+    # @param embed [Hash, Discordrb::Webhooks::Embed, nil] The rich embed to append to this message.
+    def send_temporary_message(content, timeout, tts = false, embed = nil)
+      @bot.send_temporary_message(@id, content, timeout, tts, embed)
+    end
+
+    # Convenience method to send a message with an embed.
+    # @example Send a message with an embed
+    #   channel.send_embed do |embed|
+    #     embed.title = 'The Ruby logo'
+    #     embed.image = Discordrb::Webhooks::EmbedImage.new(url: 'https://www.ruby-lang.org/images/header-ruby-logo.png')
+    #   end
+    # @param message [String] The message that should be sent along with the embed. If this is the empty string, only the embed will be shown.
+    # @param embed [Discordrb::Webhooks::Embed, nil] The embed to start the building process with, or nil if one should be created anew.
+    # @yield [embed] Yields the embed to allow for easy building inside a block.
+    # @yieldparam embed [Discordrb::Webhooks::Embed] The embed from the parameters, or a new one.
+    # @return [Message] The resulting message.
+    def send_embed(message = '', embed = nil)
+      embed ||= Discordrb::Webhooks::Embed.new
+      yield(embed) if block_given?
+      send_message(message, false, embed)
     end
 
     # Sends multiple messages to a channel
@@ -1190,6 +1358,12 @@ module Discordrb
     # @param tts [true, false] Whether or not this file's caption should be sent using Discord text-to-speech.
     def send_file(file, caption: nil, tts: false)
       @bot.send_file(@id, file, caption: caption, tts: tts)
+    end
+
+    # Deletes a message on this channel. Mostly useful in case a message needs to be deleted when only the ID is known
+    # @param message [Message, String, Integer, #resolve_id] The message that should be deleted.
+    def delete_message(message)
+      API::Channel.delete_message(@bot.token, @id, message.resolve_id)
     end
 
     # Permanently deletes this channel
@@ -1288,12 +1462,25 @@ module Discordrb
       API::Channel.update_permission(@bot.token, @id, thing.id, allow_bits, deny_bits, type)
     end
 
+    # Deletes a permission overwrite for this channel
+    # @param target [Member, User, Role, Profile, Recipient, #resolve_id] What permission overwrite to delete
+    def delete_overwrite(target)
+      raise 'Tried deleting a overwrite for an invalid target' unless target.is_a?(Member) || target.is_a?(User) || target.is_a?(Role) || target.is_a?(Profile) || target.is_a?(Recipient) || target.respond_to?(:resolve_id)
+
+      API::Channel.delete_permission(@bot.token, @id, target.resolve_id)
+    end
+
     # Updates the cached data from another channel.
     # @note For internal use only
     # @!visibility private
     def update_from(other)
       @topic = other.topic
       @name = other.name
+      @position = other.position
+      @topic = other.topic
+      @recipients = other.recipients
+      @bitrate = other.bitrate
+      @user_limit = other.user_limit
       @permission_overwrites = other.permission_overwrites
     end
 
@@ -1301,7 +1488,9 @@ module Discordrb
     # in that channel. For a text channel, it will return all online members that have permission to read it.
     # @return [Array<Member>] the users in this channel
     def users
-      if text?
+      if default_channel?
+        @server.online_members(include_idle: true)
+      elsif text?
         @server.online_members(include_idle: true).select { |u| u.can_read_messages? self }
       elsif voice?
         @server.voice_states.map { |id, voice_state| @server.member(id) if !voice_state.voice_channel.nil? && voice_state.voice_channel.id == @id }.compact
@@ -1315,18 +1504,21 @@ module Discordrb
     #   start at the current message.
     # @param after_id [Integer] The ID of the oldest message the retrieval should start at, or nil if it should start
     #   as soon as possible with the specified amount.
+    # @param around_id [Integer] The ID of the message retrieval should start from, reading in both directions
+    # @example Count the number of messages in the last 50 messages that contain the letter 'e'.
+    #   message_count = channel.history(50).count {|message| message.content.include? "e"}
     # @return [Array<Message>] the retrieved messages.
-    def history(amount, before_id = nil, after_id = nil)
-      logs = API::Channel.messages(@bot.token, @id, amount, before_id, after_id)
+    def history(amount, before_id = nil, after_id = nil, around_id = nil)
+      logs = API::Channel.messages(@bot.token, @id, amount, before_id, after_id, around_id)
       JSON.parse(logs).map { |message| Message.new(message, @bot) }
     end
 
     # Retrieves message history, but only message IDs for use with prune
     # @note For internal use only
     # @!visibility private
-    def history_ids(amount, before_id = nil, after_id = nil)
-      logs = API::Channel.messages(@bot.token, @id, amount, before_id, after_id)
-      JSON.parse(logs).map { |message| message['id'] }
+    def history_ids(amount, before_id = nil, after_id = nil, around_id = nil)
+      logs = API::Channel.messages(@bot.token, @id, amount, before_id, after_id, around_id)
+      JSON.parse(logs).map { |message| message['id'].to_i }
     end
 
     # Returns a single message from this channel's history by ID.
@@ -1350,12 +1542,26 @@ module Discordrb
 
     # Delete the last N messages on this channel.
     # @param amount [Integer] How many messages to delete. Must be a value between 2 and 100 (Discord limitation)
+    # @param strict [true, false] Whether an error should be raised when a message is reached that is too old to be bulk
+    #   deleted. If this is false only a warning message will be output to the console.
     # @raise [ArgumentError] if the amount of messages is not a value between 2 and 100
-    def prune(amount)
+    def prune(amount, strict = false)
       raise ArgumentError, 'Can only prune between 2 and 100 messages!' unless amount.between?(2, 100)
 
       messages = history_ids(amount)
-      API::Channel.bulk_delete_messages(@bot.token, @id, messages)
+      bulk_delete(messages, strict)
+    end
+
+    # Deletes a collection of messages
+    # @param messages [Array<Message, Integer>] the messages (or message IDs) to delete. Total must be an amount between 2 and 100 (Discord limitation)
+    # @param strict [true, false] Whether an error should be raised when a message is reached that is too old to be bulk
+    #   deleted. If this is false only a warning message will be output to the console.
+    # @raise [ArgumentError] if the amount of messages is not a value between 2 and 100
+    def delete_messages(messages, strict = false)
+      raise ArgumentError, 'Can only delete between 2 and 100 messages!' unless messages.count.between?(2, 100)
+
+      messages.map!(&:resolve_id)
+      bulk_delete(messages, strict)
     end
 
     # Updates the cached permission overwrites
@@ -1376,9 +1582,10 @@ module Discordrb
     # @param max_age [Integer] How many seconds this invite should last.
     # @param max_uses [Integer] How many times this invite should be able to be used.
     # @param temporary [true, false] Whether membership should be temporary (kicked after going offline).
+    # @param unique [true, false] If true, Discord will always send a unique invite instead of possibly re-using a similar one
     # @return [Invite] the created invite.
-    def make_invite(max_age = 0, max_uses = 0, temporary = false)
-      response = API::Channel.create_invite(@bot.token, @id, max_age, max_uses, temporary)
+    def make_invite(max_age = 0, max_uses = 0, temporary = false, unique = false)
+      response = API::Channel.create_invite(@bot.token, @id, max_age, max_uses, temporary, unique)
       Invite.new(JSON.parse(response), @bot)
     end
 
@@ -1393,7 +1600,7 @@ module Discordrb
 
     # Creates a Group channel
     # @param user_ids [Array<Integer>] Array of user IDs to add to the new group channel (Excluding
-    # the recipient of the PM channel).
+    #   the recipient of the PM channel).
     # @return [Channel] the created channel.
     def create_group(user_ids)
       raise 'Attempted to create group channel on a non-pm channel!' unless pm?
@@ -1460,15 +1667,34 @@ module Discordrb
     # @note For internal use only
     # @!visibility private
     def remove_recipient(recipient)
-      raise 'Tried to add recipient to a non-group channel' unless group?
+      raise 'Tried to remove recipient from a non-group channel' unless group?
       raise ArgumentError, 'Tried to remove a non-recipient from a group' unless recipient.is_a?(Recipient)
       @recipients.delete(recipient)
     end
 
     private
 
+    # For bulk_delete checking
+    TWO_WEEKS = 86_400 * 14
+
+    # Deletes a list of messages on this channel using bulk delete
+    def bulk_delete(ids, strict = false)
+      min_snowflake = IDObject.synthesise(Time.now - TWO_WEEKS)
+
+      ids.reject! do |e|
+        next unless e < min_snowflake
+
+        message = "Attempted to bulk_delete message #{e} which is too old (min = #{min_snowflake})"
+        raise ArgumentError, message if strict
+        Discordrb::LOGGER.warn(message)
+        false
+      end
+
+      API::Channel.bulk_delete_messages(@bot.token, @id, ids)
+    end
+
     def update_channel_data
-      API.update_channel(@bot.token, @id, @name, @topic, @position, @bitrate, @user_limit)
+      API::Channel.update(@bot.token, @id, @name, @topic, @position, @bitrate, @user_limit)
     end
   end
 
@@ -1495,14 +1721,33 @@ module Discordrb
     #   * `:image`
     attr_reader :type
 
-    # @return [EmbedProvider, nil] the provider of the embed object. `nil` is there is not a provider
+    # @return [Time, nil] the timestamp of the embed object. `nil` if there is not a timestamp
+    attr_reader :timestamp
+
+    # @return [String, nil] the color of the embed object. `nil` if there is not a color
+    attr_reader :color
+    alias_method :colour, :color
+
+    # @return [EmbedFooter, nil] the footer of the embed object. `nil` if there is not a footer
+    attr_reader :footer
+
+    # @return [EmbedProvider, nil] the provider of the embed object. `nil` if there is not a provider
     attr_reader :provider
 
-    # @return [EmbedThumbnail, nil] the thumbnail of the embed object. `nil` is there is not a thumbnail
+    # @return [EmbedImage, nil] the image of the embed object. `nil` if there is not an image
+    attr_reader :image
+
+    # @return [EmbedThumbnail, nil] the thumbnail of the embed object. `nil` if there is not a thumbnail
     attr_reader :thumbnail
 
-    # @return [EmbedAuthor, nil] the author of the embed object. `nil` is there is not an author
+    # @return [EmbedVideo, nil] the video of the embed object. `nil` if there is not a video
+    attr_reader :video
+
+    # @return [EmbedAuthor, nil] the author of the embed object. `nil` if there is not an author
     attr_reader :author
+
+    # @return [Array<EmbedField>, nil] the fields of the embed object. `nil` if there are no fields
+    attr_reader :fields
 
     # @!visibility private
     def initialize(data, message)
@@ -1512,9 +1757,91 @@ module Discordrb
       @title = data['title']
       @type = data['type'].to_sym
       @description = data['description']
+      @timestamp = data['timestamp'].nil? ? nil : Time.parse(data['timestamp'])
+      @color = data['color']
+      @footer = data['footer'].nil? ? nil : EmbedFooter.new(data['footer'], self)
+      @image = data['image'].nil? ? nil : EmbedImage.new(data['image'], self)
+      @video = data['video'].nil? ? nil : EmbedVideo.new(data['video'], self)
       @provider = data['provider'].nil? ? nil : EmbedProvider.new(data['provider'], self)
       @thumbnail = data['thumbnail'].nil? ? nil : EmbedThumbnail.new(data['thumbnail'], self)
       @author = data['author'].nil? ? nil : EmbedAuthor.new(data['author'], self)
+      @fields = data['fields'].nil? ? nil : data['fields'].map { |field| EmbedField.new(field, self) }
+    end
+  end
+
+  # An Embed footer for the embed object
+  class EmbedFooter
+    # @return [Embed] the embed object this is based on.
+    attr_reader :embed
+
+    # @return [String] the footer text.
+    attr_reader :text
+
+    # @return [String] the URL of the footer icon.
+    attr_reader :icon_url
+
+    # @return [String] the proxied URL of the footer icon.
+    attr_reader :proxy_icon_url
+
+    # @!visibility private
+    def initialize(data, embed)
+      @embed = embed
+
+      @text = data['text']
+      @icon_url = data['icon_url']
+      @proxy_icon_url = data['proxy_icon_url']
+    end
+  end
+
+  # An Embed image for the embed object
+  class EmbedImage
+    # @return [Embed] the embed object this is based on.
+    attr_reader :embed
+
+    # @return [String] the source URL of the image.
+    attr_reader :url
+
+    # @return [String] the proxy URL of the image.
+    attr_reader :proxy_url
+
+    # @return [Integer] the width of the image, in pixels.
+    attr_reader :width
+
+    # @return [Integer] the height of the image, in pixels.
+    attr_reader :height
+
+    # @!visibility private
+    def initialize(data, embed)
+      @embed = embed
+
+      @url = data['url']
+      @proxy_url = data['proxy_url']
+      @width = data['width']
+      @height = data['height']
+    end
+  end
+
+  # An Embed video for the embed object
+  class EmbedVideo
+    # @return [Embed] the embed object this is based on.
+    attr_reader :embed
+
+    # @return [String] the source URL of the video.
+    attr_reader :url
+
+    # @return [Integer] the width of the video, in pixels.
+    attr_reader :width
+
+    # @return [Integer] the height of the video, in pixels.
+    attr_reader :height
+
+    # @!visibility private
+    def initialize(data, embed)
+      @embed = embed
+
+      @url = data['url']
+      @width = data['width']
+      @height = data['height']
     end
   end
 
@@ -1587,6 +1914,30 @@ module Discordrb
     end
   end
 
+  # An Embed field for the embed object
+  class EmbedField
+    # @return [Embed] the embed object this is based on.
+    attr_reader :embed
+
+    # @return [String] the field's name.
+    attr_reader :name
+
+    # @return [String] the field's value.
+    attr_reader :value
+
+    # @return [true, false] whether this field is inline.
+    attr_reader :inline
+
+    # @!visibility private
+    def initialize(data, embed)
+      @embed = embed
+
+      @name = data['name']
+      @value = data['value']
+      @inline = data['inline']
+    end
+  end
+
   # An attachment to a message
   class Attachment
     include IDObject
@@ -1643,7 +1994,8 @@ module Discordrb
     alias_method :text, :content
     alias_method :to_s, :content
 
-    # @return [Member] the user that sent this message.
+    # @return [Member, User] the user that sent this message. (Will be a {Member} most of the time, it should only be a
+    #   {User} for old messages when the author has left the server since then)
     attr_reader :author
     alias_method :user, :author
     alias_method :writer, :author
@@ -1670,6 +2022,9 @@ module Discordrb
     # @return [Array<Embed>] the embed objects contained in this message.
     attr_reader :embeds
 
+    # @return [Hash<String, Reaction>] the reaction objects attached to this message keyed by the name of the reaction
+    attr_reader :reactions
+
     # @return [true, false] whether the message used Text-To-Speech (TTS) or not.
     attr_reader :tts
     alias_method :tts?, :tts
@@ -1690,6 +2045,12 @@ module Discordrb
     attr_reader :pinned
     alias_method :pinned?, :pinned
 
+    # @return [Integer, nil] the webhook ID that sent this message, or nil if it wasn't sent through a webhook.
+    attr_reader :webhook_id
+
+    # The discriminator that webhook user accounts have.
+    ZERO_DISCRIM = '0000'.freeze
+
     # @!visibility private
     def initialize(data, bot)
       @bot = bot
@@ -1701,35 +2062,61 @@ module Discordrb
       @mention_everyone = data['mention_everyone']
 
       @author = if data['author']
-                  if @channel.private?
+                  if data['author']['discriminator'] == ZERO_DISCRIM
+                    # This is a webhook user! It would be pointless to try to resolve a member here, so we just create
+                    # a User and return that instead.
+                    Discordrb::LOGGER.debug("Webhook user: #{data['author']['id']}")
+                    User.new(data['author'], @bot)
+                  elsif @channel.private?
                     # Turn the message user into a recipient - we can't use the channel recipient
                     # directly because the bot may also send messages to the channel
                     Recipient.new(bot.user(data['author']['id'].to_i), @channel, bot)
                   else
                     member = @channel.server.member(data['author']['id'].to_i)
-                    Discordrb::LOGGER.warn("Member with ID #{data['author']['id']} not cached even though it should be.") unless member
+
+                    unless member
+                      Discordrb::LOGGER.debug("Member with ID #{data['author']['id']} not cached (possibly left the server).")
+                      member = @bot.user(data['author']['id'].to_i)
+                    end
+
                     member
                   end
                 end
+
+      @webhook_id = data['webhook_id'].to_i if data['webhook_id']
 
       @timestamp = Time.parse(data['timestamp']) if data['timestamp']
       @edited_timestamp = data['edited_timestamp'].nil? ? nil : Time.parse(data['edited_timestamp'])
       @edited = !@edited_timestamp.nil?
       @id = data['id'].to_i
 
+      @emoji = []
+
+      @reactions = {}
+
+      if data['reactions']
+        data['reactions'].each do |element|
+          @reactions[element['emoji']['name']] = Reaction.new(element)
+        end
+      end
+
       @mentions = []
 
-      data['mentions'].each do |element|
-        @mentions << bot.ensure_user(element)
-      end if data['mentions']
+      if data['mentions']
+        data['mentions'].each do |element|
+          @mentions << bot.ensure_user(element)
+        end
+      end
 
       @role_mentions = []
 
       # Role mentions can only happen on public servers so make sure we only parse them there
       if @channel.text?
-        data['mention_roles'].each do |element|
-          @role_mentions << @channel.server.role(element.to_i)
-        end if data['mention_roles']
+        if data['mention_roles']
+          data['mention_roles'].each do |element|
+            @role_mentions << @channel.server.role(element.to_i)
+          end
+        end
       end
 
       @attachments = []
@@ -1746,10 +2133,12 @@ module Discordrb
     end
 
     # Edits this message to have the specified content instead.
+    # You can only edit your own messages.
     # @param new_content [String] the new content the message should have.
+    # @param new_embed [Hash, Discordrb::Webhooks::Embed, nil] The new embed the message should have. If nil the message will be changed to have no embed.
     # @return [Message] the resulting message.
-    def edit(new_content)
-      response = API::Channel.edit_message(@bot.token, @channel.id, @id, new_content)
+    def edit(new_content, new_embed = nil)
+      response = API::Channel.edit_message(@bot.token, @channel.id, @id, new_content, [], new_embed ? new_embed.to_hash : nil)
       Message.new(JSON.parse(response), @bot)
     end
 
@@ -1784,9 +2173,234 @@ module Discordrb
       @author && @author.current_bot?
     end
 
+    # @return [true, false] whether this message has been sent over a webhook.
+    def webhook?
+      !@webhook_id.nil?
+    end
+
+    # @!visibility private
+    # @return [Array<String>] the emoji mentions found in the message
+    def scan_for_emoji
+      emoji = @content.split
+      emoji = emoji.grep(/<:(?<name>\w+):(?<id>\d+)>?/)
+      emoji
+    end
+
+    # @return [Array<Emoji>] the emotes that were used/mentioned in this message (Only returns Emoji the bot has access to, else nil).
+    def emoji
+      return if @content.nil?
+
+      emoji = scan_for_emoji
+      emoji.each do |element|
+        @emoji << @bot.parse_mention(element)
+      end
+      @emoji
+    end
+
+    # Check if any emoji got used in this message
+    # @return [true, false] whether or not any emoji got used
+    def emoji?
+      emoji = scan_for_emoji
+      return true unless emoji.empty?
+    end
+
+    # Check if any reactions got used in this message
+    # @return [true, false] whether or not this message has reactions
+    def reactions?
+      @reactions.any?
+    end
+
+    # Returns the reactions made by the current bot or user
+    # @return [Array<Reaction>] the reactions
+    def my_reactions
+      @reactions.values.select(&:me)
+    end
+
+    # Reacts to a message
+    # @param reaction [String, #to_reaction] the unicode emoji, Emoji, or GlobalEmoji
+    def create_reaction(reaction)
+      reaction = reaction.to_reaction if reaction.respond_to?(:to_reaction)
+      API::Channel.create_reaction(@bot.token, @channel.id, @id, reaction)
+      nil
+    end
+
+    alias_method :react, :create_reaction
+
+    # Returns the list of users who reacted with a certain reaction
+    # @param reaction [String, #to_reaction] the unicode emoji, Emoji, or GlobalEmoji
+    # @return [Array<User>] the users who used this reaction
+    def reacted_with(reaction)
+      reaction = reaction.to_reaction if reaction.respond_to?(:to_reaction)
+      response = JSON.parse(API::Channel.get_reactions(@bot.token, @channel.id, @id, reaction))
+      response.map { |d| User.new(d, @bot) }
+    end
+
+    # Deletes a reaction made by a user on this message
+    # @param user [User, #resolve_id] the user who used this reaction
+    # @param reaction [String, #to_reaction] the reaction to remove
+    def delete_reaction(user, reaction)
+      reaction = reaction.to_reaction if reaction.respond_to?(:to_reaction)
+      API::Channel.delete_user_reaction(@bot.token, @channel.id, @id, reaction, user.resolve_id)
+    end
+
+    # Delete's this clients reaction on this message
+    # @param reaction [String, #to_reaction] the reaction to remove
+    def delete_own_reaction(reaction)
+      reaction = reaction.to_reaction if reaction.respond_to?(:to_reaction)
+      API::Channel.delete_own_reaction(@bot.token, @channel.id, @id, reaction)
+    end
+
+    # Removes all reactions from this message
+    def delete_all_reactions
+      API::Channel.delete_all_reactions(@bot.token, @channel.id, @id)
+    end
+
     # The inspect method is overwritten to give more useful output
     def inspect
       "<Message content=\"#{@content}\" id=#{@id} timestamp=#{@timestamp} author=#{@author} channel=#{@channel}>"
+    end
+  end
+
+  # A reaction to a message
+  class Reaction
+    # @return [Integer] the amount of users who have reacted with this reaction
+    attr_reader :count
+
+    # @return [true, false] whether the current bot or user used this reaction
+    attr_reader :me
+    alias_method :me?, :me
+
+    # @return [Integer] the ID of the emoji, if it was custom
+    attr_reader :id
+
+    # @return [String] the name or unicode representation of the emoji
+    attr_reader :name
+
+    def initialize(data)
+      @count = data['count']
+      @me = data['me']
+      @id = data['emoji']['id'].nil? ? nil : data['emoji']['id'].to_i
+      @name = data['emoji']['name']
+    end
+
+    # Converts this Reaction into a string that can be sent back to Discord in other reaction endpoints.
+    # If ID is present, it will be rendered into the form of `name:id`.
+    # @return [String] the name of this reaction, including the ID if it is a custom emoji
+    def to_s
+      id.nil? ? name : "#{name}:#{id}"
+    end
+  end
+
+  # Server emoji
+  class Emoji
+    include IDObject
+
+    # @return [String] the emoji name
+    attr_reader :name
+
+    # @return [Server] the server of this emoji
+    attr_reader :server
+
+    # @return [Array<Role>] roles this emoji is active for
+    attr_reader :roles
+
+    def initialize(data, bot, server)
+      @bot = bot
+      @roles = nil
+
+      @name = data['name']
+      @server = server
+      @id = data['id'].nil? ? nil : data['id'].to_i
+
+      process_roles(data['roles']) if server
+    end
+
+    # @return [String] the layout to mention it (or have it used) in a message
+    def mention
+      "<:#{@name}:#{@id}>"
+    end
+
+    alias_method :use, :mention
+    alias_method :to_s, :mention
+
+    # @return [String] the layout to use this emoji in a reaction
+    def to_reaction
+      "#{@name}:#{@id}"
+    end
+
+    # @return [String] the icon URL of the emoji
+    def icon_url
+      API.emoji_icon_url(@id)
+    end
+
+    # The inspect method is overwritten to give more useful output
+    def inspect
+      "<Emoji name=#{@name} id=#{@id}>"
+    end
+
+    # @!visibility private
+    def process_roles(roles)
+      @roles = []
+      return unless roles
+      roles.each do |role_id|
+        role = server.role(role_id)
+        @roles << role
+      end
+    end
+  end
+
+  # Emoji that is not tailored to a server
+  class GlobalEmoji
+    include IDObject
+
+    # @return [String] the emoji name
+    attr_reader :name
+
+    # @return [Hash<Integer => Array<Role>>] roles this emoji is active for in every server
+    attr_reader :role_associations
+
+    def initialize(data, bot)
+      @bot = bot
+      @roles = nil
+
+      @name = data.name
+      @id = data.id
+      @role_associations = Hash.new([])
+      @role_associations[data.server.id] = data.roles
+    end
+
+    # @return [String] the layout to mention it (or have it used) in a message
+    def mention
+      "<:#{@name}:#{@id}>"
+    end
+
+    alias_method :use, :mention
+    alias_method :to_s, :mention
+
+    # @return [String] the layout to use this emoji in a reaction
+    def to_reaction
+      "#{@name}:#{@id}"
+    end
+
+    # @return [String] the icon URL of the emoji
+    def icon_url
+      API.emoji_icon_url(@id)
+    end
+
+    # The inspect method is overwritten to give more useful output
+    def inspect
+      "<GlobalEmoji name=#{@name} id=#{@id}>"
+    end
+
+    # @!visibility private
+    def process_roles(roles)
+      new_roles = []
+      return unless roles
+      roles.each do
+        role = server.role(role_id)
+        new_roles << role
+      end
+      new_roles
     end
   end
 
@@ -1808,7 +2422,7 @@ module Discordrb
 
   # Integration Account
   class IntegrationAccount
-    # @return [String] this accounts's name.
+    # @return [String] this account's name.
     attr_reader :name
 
     # @return [Integer] this account's ID.
@@ -1891,8 +2505,8 @@ module Discordrb
     include IDObject
     include ServerAttributes
 
-    # @return [String] the region the server is on (e. g. `amsterdam`).
-    attr_reader :region
+    # @return [String] the ID of the region the server is on (e. g. `amsterdam`).
+    attr_reader :region_id
 
     # @return [Member] The server owner.
     attr_reader :owner
@@ -1902,6 +2516,10 @@ module Discordrb
 
     # @return [Array<Role>] an array of all the roles created on this server.
     attr_reader :roles
+
+    # @return [Hash<Integer, Emoji>] a hash of all the emoji available on this server.
+    attr_reader :emoji
+    alias_method :emojis, :emoji
 
     # @return [true, false] whether or not this server is large (members > 100). If it is,
     # it means the members list may be inaccurate for a couple seconds after starting up the bot.
@@ -1941,8 +2559,10 @@ module Discordrb
       @features = data['features'].map { |element| element.downcase.to_sym }
       @members = {}
       @voice_states = {}
+      @emoji = {}
 
       process_roles(data['roles'])
+      process_emoji(data['emojis'])
       process_members(data['members'])
       process_presences(data['presences'])
       process_channels(data['channels'])
@@ -1963,9 +2583,15 @@ module Discordrb
 
     alias_method :general_channel, :default_channel
 
+    # @return [Role] The @everyone role on this server
+    def everyone_role
+      role(@id)
+    end
+
     # Gets a role on this server based on its ID.
-    # @param id [Integer] The role ID to look for.
+    # @param id [Integer, String, #resolve_id] The role ID to look for.
     def role(id)
+      id = id.resolve_id
       @roles.find { |e| e.id == id }
     end
 
@@ -1997,7 +2623,7 @@ module Discordrb
 
     # @return [Array<Integration>] an array of all the integrations connected to this server.
     def integrations
-      integration = JSON.parse(API.server_integrations(@bot.token, @id))
+      integration = JSON.parse(API::Server.integrations(@bot.token, @id))
       integration.map { |element| Integration.new(element, @bot, self) }
     end
 
@@ -2011,7 +2637,7 @@ module Discordrb
     # @note For internal use only
     # @!visibility private
     def cache_embed
-      @embed = JSON.parse(API.server(@bot.token, @id))['embed_enabled'] if @embed.nil?
+      @embed ||= JSON.parse(API::Server.resolve(@bot.token, @id))['embed_enabled']
     end
 
     # @return [true, false] whether or not the server has widget enabled
@@ -2030,6 +2656,30 @@ module Discordrb
     end
 
     alias_method :online_users, :online_members
+
+    # Returns the amount of members that are candidates for pruning
+    # @param days [Integer] the number of days to consider for inactivity
+    # @return [Integer] number of members to be removed
+    # @raise [ArgumentError] if days is not between 1 and 30 (inclusive)
+    def prune_count(days)
+      raise ArgumentError, 'Days must be between 1 and 30' unless days.between?(1, 30)
+
+      response = JSON.parse API::Server.prune_count(@bot.token, @id, days)
+      response['pruned']
+    end
+
+    # Prunes (kicks) an amount of members for inactivity
+    # @param days [Integer] the number of days to consider for inactivity (between 1 and 30)
+    # @return [Integer] the number of members removed at the end of the operation
+    # @raise [ArgumentError] if days is not between 1 and 30 (inclusive)
+    def begin_prune(days)
+      raise ArgumentError, 'Days must be between 1 and 30' unless days.between?(1, 30)
+
+      response = JSON.parse API::Server.begin_prune(@bot.token, @id, days)
+      response['pruned']
+    end
+
+    alias_method :prune, :begin_prune
 
     # @return [Array<Channel>] an array of text channels on this server
     def text_channels
@@ -2065,8 +2715,7 @@ module Discordrb
 
     # @return [String] the hexadecimal ID used to identify this server's splash image for their VIP invite page.
     def splash_id
-      @splash_id = JSON.parse(API.server(@bot.token, @id))['splash'] if @splash_id.nil?
-      @splash_id
+      @splash_id ||= JSON.parse(API::Server.resolve(@bot.token, @id))['splash']
     end
 
     # @return [String, nil] the splash image URL for the server's VIP invite page.
@@ -2167,12 +2816,18 @@ module Discordrb
       Channel.new(JSON.parse(response), @bot)
     end
 
-    # Creates a role on this server which can then be modified. It will be initialized (on Discord's side)
-    # with the regular role defaults the client uses, i. e. name is "new role", permissions are the default,
-    # colour is the default etc.
+    # Creates a role on this server which can then be modified. It will be initialized
+    # with the regular role defaults the client uses unless specified, i. e. name is "new role",
+    # permissions are the default, colour is the default etc.
+    # @param name [String] Name of the role to create
+    # @param colour [ColourRGB] The roles colour
+    # @param hoist [true, false]
+    # @param mentionable [true, false]
+    # @param packed_permissions [Integer] The packed permissions to write.
     # @return [Role] the created role.
-    def create_role
-      response = API::Server.create_role(@bot.token, @id)
+    def create_role(name: 'new role', colour: 0, hoist: false, mentionable: false, packed_permissions: 104_324_161)
+      response = API::Server.create_role(@bot.token, @id, name, colour, hoist, mentionable, packed_permissions)
+
       role = Role.new(JSON.parse(response), @bot, self)
       @roles << role
       role
@@ -2204,10 +2859,10 @@ module Discordrb
     end
 
     # Forcibly moves a user into a different voice channel. Only works if the bot has the permission needed.
-    # @param user [User] The user to move.
-    # @param channel [Channel] The voice channel to move into.
+    # @param user [User, #resolve_id] The user to move.
+    # @param channel [Channel, #resolve_id] The voice channel to move into.
     def move(user, channel)
-      API::Server.update_member(@bot.token, @id, user.id, channel_id: channel.id)
+      API::Server.update_member(@bot.token, @id, user.resolve_id, channel_id: channel.resolve_id)
     end
 
     # Deletes this server. Be aware that this is permanent and impossible to undo, so be careful!
@@ -2221,15 +2876,31 @@ module Discordrb
     end
 
     # Transfers server ownership to another user.
-    # @param user [User] The user who should become the new owner.
+    # @param user [User, #resolve_id] The user who should become the new owner.
     def owner=(user)
-      API::Server.transfer_ownership(@bot.token, @id, user.id)
+      API::Server.transfer_ownership(@bot.token, @id, user.resolve_id)
     end
 
     # Sets the server's name.
     # @param name [String] The new server name.
     def name=(name)
       update_server_data(name: name)
+    end
+
+    # @return [Array<VoiceRegion>] collection of available voice regions to this guild
+    def available_voice_regions
+      return @available_voice_regions if @available_voice_regions
+
+      @available_voice_regions = {}
+
+      data = JSON.parse API::Server.regions(@bot.token, @id)
+      @available_voice_regions = data.map { |e| VoiceRegion.new e }
+    end
+
+    # @return [VoiceRegion, nil] voice region data for this server's region
+    # @note This may return `nil` if this server's voice region is deprecated.
+    def region
+      available_voice_regions.find { |e| e.id == @region_id }
     end
 
     # Moves the server to another region. This will cause a voice interruption of at most a second.
@@ -2262,6 +2933,14 @@ module Discordrb
       update_server_data(afk_timeout: afk_timeout)
     end
 
+    # @return [true, false] whether this server has any emoji or not.
+    def any_emoji?
+      @emoji.any?
+    end
+
+    alias_method :has_emoji?, :any_emoji?
+    alias_method :emoji?, :any_emoji?
+
     # Processes a GUILD_MEMBERS_CHUNK packet, specifically the members field
     # @note For internal use only
     # @!visibility private
@@ -2285,7 +2964,7 @@ module Discordrb
     # @!visibility private
     def update_data(new_data)
       @name = new_data[:name] || new_data['name'] || @name
-      @region = new_data[:region] || new_data['region'] || @region
+      @region_id = new_data[:region] || new_data['region'] || @region_id
       @icon_id = new_data[:icon] || new_data['icon'] || @icon_id
       @afk_timeout = new_data[:afk_timeout] || new_data['afk_timeout'].to_i || @afk_timeout
 
@@ -2297,6 +2976,30 @@ module Discordrb
         LOGGER.debug("AFK channel #{@afk_channel_id} on server #{@id} is unreachable, setting to nil even though one exists")
         @afk_channel = nil
       end
+    end
+
+    # Adds a channel to this server's cache
+    # @note For internal use only
+    # @!visibility private
+    def add_channel(channel)
+      @channels << channel
+      @channels_by_id[channel.id] = channel
+    end
+
+    # Deletes a channel from this server's cache
+    # @note For internal use only
+    # @!visibility private
+    def delete_channel(id)
+      @channels.reject! { |e| e.id == id }
+      @channels_by_id.delete(id)
+    end
+
+    # Updates the cached emoji data with new data
+    # @note For internal use only
+    # @!visibility private
+    def update_emoji_data(new_data)
+      @emoji = {}
+      process_emoji(new_data['emojis'])
     end
 
     # The inspect method is overwritten to give more useful output
@@ -2329,6 +3032,14 @@ module Discordrb
       end
     end
 
+    def process_emoji(emoji)
+      return if emoji.empty?
+      emoji.each do |element|
+        new_emoji = Emoji.new(element, @bot, self)
+        @emoji[new_emoji.id] = new_emoji
+      end
+    end
+
     def process_members(members)
       return unless members
       members.each do |element|
@@ -2345,8 +3056,7 @@ module Discordrb
         user_id = element['user']['id'].to_i
         user = @members[user_id]
         if user
-          user.status = element['status'].to_sym
-          user.game = element['game'] ? element['game']['name'] : nil
+          user.update_presence(element)
         else
           LOGGER.warn "Rogue presence update! #{element['user']['id']} on #{@id}"
         end
