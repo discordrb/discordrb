@@ -129,7 +129,12 @@ module Discordrb::API::User
   end
 
   # Make an avatar URL from the user and avatar IDs
-  def avatar_url(user_id, avatar_id, format = 'png')
+  def avatar_url(user_id, avatar_id, format = nil)
+    format ||= if avatar_id.start_with?('a_')
+                 'gif'
+               else
+                 'webp'
+               end
     "#{Discordrb::API.cdn_url}/avatars/#{user_id}/#{avatar_id}.#{format}"
   end
 end

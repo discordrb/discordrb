@@ -157,12 +157,12 @@ module Discordrb::API
   end
 
   # Make an icon URL from server and icon IDs
-  def icon_url(server_id, icon_id, format = 'png')
+  def icon_url(server_id, icon_id, format = 'webp')
     "#{cdn_url}/icons/#{server_id}/#{icon_id}.#{format}"
   end
 
   # Make an icon URL from application and icon IDs
-  def app_icon_url(app_id, icon_id, format = 'png')
+  def app_icon_url(app_id, icon_id, format = 'webp')
     "#{cdn_url}/app-icons/#{app_id}/#{icon_id}.#{format}"
   end
 
@@ -177,7 +177,7 @@ module Discordrb::API
   end
 
   # Make an emoji icon URL from emoji ID
-  def emoji_icon_url(emoji_id, format = 'png')
+  def emoji_icon_url(emoji_id, format = 'webp')
     "#{cdn_url}/emojis/#{emoji_id}.#{format}"
   end
 
