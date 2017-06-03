@@ -623,14 +623,14 @@ module Discordrb
       @roles.sort_by(&:position).last
     end
 
-    # @return [Role] the role this member is being hoisted with.
+    # @return [Role, nil] the role this member is being hoisted with.
     def hoist_role
       hoisted_roles = @roles.select(&:hoist)
       return nil if hoisted_roles.empty?
       hoisted_roles.sort_by(&:position).last
     end
 
-    # @return [Role] the role this member is basing their colour on.
+    # @return [Role, nil] the role this member is basing their colour on.
     def colour_role
       coloured_roles = @roles.select { |v| v.colour.combined.nonzero? }
       return nil if coloured_roles.empty?
