@@ -908,6 +908,10 @@ module Discordrb
           end
 
           ensure_server(element)
+          # Preload lost voice states (in some cases voices will still linger when a bot reloads)
+          if @profile.on(@servers[element['id']]).voice_channel
+            voice_connect(@profile.on(@servers[element['id']]).voice_channel)
+          end
         end
 
         # Add PM and group channels
