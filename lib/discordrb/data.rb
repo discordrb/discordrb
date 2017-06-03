@@ -2259,8 +2259,6 @@ module Discordrb
   end
 
   # A server on Discord
-
-  # A server on Discord
   class Server
     include IDObject
     include ServerAttributes
@@ -2292,7 +2290,7 @@ module Discordrb
     # @return [Integer] the absolute number of members on this server, offline or not.
     attr_reader :member_count
 
-    # @return [Symbol] the verification level of the server (:none = none, :low = 'Must have a verified email on their Discord account', :medium = 'Has to be registered with Discord for at least 5 minutes', :high = 'Has to be a member of this server for at least 10 minutes').
+    # @return [Symbol] the verification level of the server (:none = none, :low = 'Must have a verified email on their Discord account', :medium = 'Has to be registered with Discord for at least 5 minutes', :high = 'Has to be a member of this server for at least 10 minutes', :extra = 'Must have a verified phone ob their Discord account').
     attr_reader :verification_level
 
     # @return [Symbol] the explicit content filter level of the server (:none = 'Don't scan any messages', :exclude_roles = 'Scan messages for members without a role.', :all = 'Scan messages sent by all messages.').
@@ -2320,11 +2318,10 @@ module Discordrb
 
       @large = data['large']
       @member_count = data['member_count']
-      @verification_level = [:none, :low, :medium, :high][data['verification_level']]
+      @verification_level = [:none, :low, :medium, :high, :extra][data['verification_level']]
       @explicit_content_filter = [:none, :exclude_roles, :all][data['explicit_content_filter']]
       @default_message_notifications = [:all, :mentions][data['default_message_notifications']]
       @widget_enabled = data['widget_enabled']
-      @embed_channel = nil
       @splash_id = nil
       @embed = nil
       @features = data['features'].map { |element| element.downcase.to_sym }
@@ -2424,7 +2421,7 @@ module Discordrb
 
     # @return [Channel, nil] the channel the server embed will make a invite for.
     def embed_channel
-      cache_embed if @embed_channel.nil?
+      cache_embed if @embed.nil?
       @embed_channel
     end
     alias_method :widget_channel, :embed_channel
