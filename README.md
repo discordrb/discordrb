@@ -5,8 +5,9 @@
 [![Code Climate](https://codeclimate.com/github/meew0/discordrb/badges/gpa.svg)](https://codeclimate.com/github/meew0/discordrb)
 [![Test Coverage](https://codeclimate.com/github/meew0/discordrb/badges/coverage.svg)](https://codeclimate.com/github/meew0/discordrb/coverage)
 [![Join Discord](https://img.shields.io/badge/discord-join-7289DA.svg)](https://discord.gg/0SBTUU1wZTWfFQL2)
-# discordrb
 
+![discordrb](https://raw.github.com/meew0/discordrb/master/logo.png)
+============
 An implementation of the [Discord](https://discordapp.com/) API using Ruby.
 
 ## Quick links to sections
