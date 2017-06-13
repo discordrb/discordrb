@@ -1010,10 +1010,14 @@ module Discordrb
       when :MESSAGE_REACTION_ADD
         add_message_reaction(data)
 
+        return if profile.id == data['user_id'].to_i && !should_parse_self
+
         event = ReactionAddEvent.new(data, self)
         raise_event(event)
       when :MESSAGE_REACTION_REMOVE
         remove_message_reaction(data)
+
+        return if profile.id == data['user_id'].to_i && !should_parse_self
 
         event = ReactionRemoveEvent.new(data, self)
         raise_event(event)
