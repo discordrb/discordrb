@@ -501,8 +501,6 @@ module Discordrb
     end
   end
 
-  # A presence represents a
-
   # A member is a user on a server. It differs from regular users in that it has roles, voice statuses and things like
   # that.
   class Member < DelegateClass(User)
