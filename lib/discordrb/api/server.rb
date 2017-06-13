@@ -431,4 +431,16 @@ module Discordrb::API::Server
       Authorization: token
     )
   end
+
+  # Get server webhooks
+  # https://discordapp.com/developers/docs/resources/webhook#get-guild-webhooks
+  def webhooks(token, server_id)
+    Discordrb::API.request(
+      :guilds_sid_webhooks,
+      server_id,
+      :get,
+      "#{Discordrb::API.api_base}/guilds/#{server_id}/webhooks",
+      Authorization: token
+    )
+  end
 end
