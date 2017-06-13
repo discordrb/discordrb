@@ -2,7 +2,6 @@
 
 # These classes hold relevant Discord data, such as messages or channels.
 
-require 'ostruct'
 require 'discordrb/permissions'
 require 'discordrb/errors'
 require 'discordrb/api'
@@ -1120,6 +1119,84 @@ module Discordrb
     end
   end
 
+  # A permissions overwrite, when applied to channels describes additional
+  # permissions a member needs to perform certain actions in context.
+  class Overwrite
+    # @return [Integer] id of the thing associated with this overwrite type
+    attr_accessor :id
+
+    # @return [Symbol] either :role or :member
+    attr_accessor :type
+
+    # @return [Permissions] allowed permissions for this overwrite type
+    attr_accessor :allow
+
+    # @return [Permissions] denied permissions for this overwrite type
+    attr_accessor :deny
+
+    # Creates a new Overwrite object
+    # @example Create an overwrite for a role that can mention everyone, send TTS messages, but can't create instant invites
+    #   allow = Discordrb::Permissions.new
+    #   allow.can_mention_everyone = true
+    #   allow.can_send_tts_messages = true
+    #
+    #   deny = Discordrb::Permissions.new
+    #   deny.can_create_instant_invite = true
+    #
+    #   # Find some role by name
+    #   role = server.roles.find { |r| r.name == 'some role' }
+    #
+    #   Overwrite.new(role, allow: allow, deny: deny)
+    # @example Create an overwrite by ID and permissions bits
+    #   Overwrite.new(120571255635181568, type: 'member', allow: 1024, deny: 0)
+    # @param object [Integer, #id] the ID or object this overwrite is for
+    # @param type [String] the type of object this overwrite is for (only required if object is an Integer)
+    # @param allow [Integer, Permissions] allowed permissions for this overwrite, by bits or a Permissions object
+    # @param deny [Integer, Permissions] denied permissions for this overwrite, by bits or a Permissions object
+    # @raise [ArgumentError] if type is not :member or :role
+    def initialize(object = nil, type: nil, allow: 0, deny: 0)
+      if type
+        type = type.to_sym
+        raise ArgumentError, 'Overwrite type must be :member or :role' unless (type != :member) || (type != :role)
+      end
+
+      @id = object.respond_to?(:id) ? object.id : object
+
+      @type = if object.is_a?(User) || object.is_a?(Member) || object.is_a?(Recipient) || object.is_a?(Profile)
+                :member
+              elsif object.is_a? Role
+                :role
+              else
+                type
+              end
+
+      @allow = allow.is_a?(Permissions) ? allow : Permissions.new(allow)
+      @deny = deny.is_a?(Permissions) ? deny : Permissions.new(deny)
+    end
+
+    # @return [Overwrite] create an overwrite from a hash payload
+    # @!visibility private
+    def self.from_hash(data)
+      new(
+        data['id'].to_i,
+        type: data['type'],
+        allow: Permissions.new(data['allow']),
+        deny: Permissions.new(data['deny'])
+      )
+    end
+
+    # @return [Hash] hash representation of an overwrite
+    # @!visibility private
+    def to_hash
+      {
+        id: id,
+        type: type,
+        allow: allow.bits,
+        deny: deny.bits
+      }
+    end
+  end
+
   # A Discord channel, including data like the topic
   class Channel
     include IDObject
@@ -1151,12 +1228,6 @@ module Discordrb
 
     # @return [Integer] the channel's position on the channel list
     attr_reader :position
-
-    # This channel's permission overwrites, represented as a hash of role/user ID to an OpenStruct which has the
-    # `allow` and `deny` properties which are {Permissions} objects respectively.
-    # @return [Hash<Integer => OpenStruct>] the channel's permission overwrites
-    attr_reader :permission_overwrites
-    alias_method :overwrites, :permission_overwrites
 
     # @return [true, false] whether or not this channel is a PM or group channel.
     def private?
@@ -1213,12 +1284,8 @@ module Discordrb
       @permission_overwrites = {}
       return unless data['permission_overwrites']
       data['permission_overwrites'].each do |element|
-        role_id = element['id'].to_i
-        deny = Permissions.new(element['deny'])
-        allow = Permissions.new(element['allow'])
-        @permission_overwrites[role_id] = OpenStruct.new
-        @permission_overwrites[role_id].deny = deny
-        @permission_overwrites[role_id].allow = allow
+        id = element['id'].to_i
+        @permission_overwrites[id] = Overwrite.from_hash element
       end
     end
 
@@ -1240,6 +1307,32 @@ module Discordrb
     # @return [true, false] whether or not this channel is a group channel.
     def group?
       @type == 3
+    end
+
+    # This channel's permission overwrites
+    # @overload permission_overwrites
+    #   The overwrites represented as a hash of role/user ID
+    #   to an Overwrite object
+    #   @return [Hash<Integer => Overwrite>] the channel's permission overwrites
+    # @overload permission_overwrites(type)
+    #   Return an array of a certain type of overwrite
+    #   @param type [Symbol] the kind of overwrite to return
+    #   @return [Array<Overwrite>]
+    def permission_overwrites(type = nil)
+      return @permission_overwrites unless type
+      @permission_overwrites.values.select { |e| e.type == type }
+    end
+
+    alias_method :overwrites, :permission_overwrites
+
+    # @return [Overwrite] any member-type permission overwrites on this channel
+    def member_overwrites
+      permission_overwrites :member
+    end
+
+    # @return [Overwrite] any role-type permission overwrites on this channel
+    def role_overwrites
+      permission_overwrites :role
     end
 
     # @return [true, false] whether or not this channel is the default channel
@@ -1359,33 +1452,32 @@ module Discordrb
 
     # Defines a permission overwrite for this channel that sets the specified thing to the specified allow and deny
     # permission sets, or change an existing one.
-    # @param thing [User, Role] What to define an overwrite for.
-    # @param allow [#bits, Permissions, Integer] The permission sets that should receive an `allow` override (i. e. a
-    #   green checkmark on Discord)
-    # @param deny [#bits, Permissions, Integer] The permission sets that should receive a `deny` override (i. e. a red
-    #   cross on Discord)
-    # @example Define a permission overwrite for a user that can then mention everyone and use TTS, but not create any invites
-    #   allow = Discordrb::Permissions.new
-    #   allow.can_mention_everyone = true
-    #   allow.can_send_tts_messages = true
+    # @overload define_overwrite(overwrite)
+    #   @param thing [Overwrite] an Overwrite object to apply to this channel
+    # @overload define_overwrite(thing, allow, deny)
+    #   @param thing [User, Role] What to define an overwrite for.
+    #   @param allow [#bits, Permissions, Integer] The permission sets that should receive an `allow` override (i. e. a
+    #     green checkmark on Discord)
+    #   @param deny [#bits, Permissions, Integer] The permission sets that should receive a `deny` override (i. e. a red
+    #     cross on Discord)
+    #   @example Define a permission overwrite for a user that can then mention everyone and use TTS, but not create any invites
+    #     allow = Discordrb::Permissions.new
+    #     allow.can_mention_everyone = true
+    #     allow.can_send_tts_messages = true
     #
-    #   deny = Discordrb::Permissions.new
-    #   deny.can_create_instant_invite = true
+    #     deny = Discordrb::Permissions.new
+    #     deny.can_create_instant_invite = true
     #
-    #   channel.define_overwrite(user, allow, deny)
-    def define_overwrite(thing, allow, deny)
-      allow_bits = allow.respond_to?(:bits) ? allow.bits : allow
-      deny_bits = deny.respond_to?(:bits) ? deny.bits : deny
+    #     channel.define_overwrite(user, allow, deny)
+    def define_overwrite(thing, allow = 0, deny = 0)
+      unless thing.is_a? Overwrite
+        allow_bits = allow.respond_to?(:bits) ? allow.bits : allow
+        deny_bits = deny.respond_to?(:bits) ? deny.bits : deny
 
-      type = if thing.is_a?(User) || thing.is_a?(Member) || thing.is_a?(Recipient) || thing.is_a?(Profile)
-               :member
-             elsif thing.is_a? Role
-               :role
-             else
-               raise ArgumentError, '`thing` in define_overwrite needs to be a kind of User (User, Member, Recipient, Profile) or a Role!'
-             end
+        thing = Overwrite.new thing, allow: allow_bits, deny: deny_bits
+      end
 
-      API::Channel.update_permission(@bot.token, @id, thing.id, allow_bits, deny_bits, type)
+      API::Channel.update_permission(@bot.token, @id, thing.id, thing.allow.bits, thing.deny.bits, thing.type)
     end
 
     # Deletes a permission overwrite for this channel
@@ -2736,11 +2828,15 @@ module Discordrb
     # Creates a channel on this server with the given name.
     # @param name [String] Name of the channel to create
     # @param type [Integer] Type of channel to create (0: text, 2: voice)
+    # @param bitrate [Integer] the bitrate of this channel, if it will be a voice channel
+    # @param user_limit [Integer] the user limit of this channel, if it will be a voice channel
+    # @param permission_overwrites [Array<Hash>, Array<Overwrite>] permission overwrites for this channel
     # @return [Channel] the created channel.
     # @raise [ArgumentError] if type is not 0 or 2
-    def create_channel(name, type = 0)
+    def create_channel(name, type = 0, bitrate: nil, user_limit: nil, permission_overwrites: [])
       raise ArgumentError, 'Channel type must be either 0 (text) or 2 (voice)!' unless [0, 2].include?(type)
-      response = API::Server.create_channel(@bot.token, @id, name, type)
+      permission_overwrites.map! { |e| e.is_a?(Overwrite) ? e.to_hash : e }
+      response = API::Server.create_channel(@bot.token, @id, name, type, bitrate, user_limit, permission_overwrites)
       Channel.new(JSON.parse(response), @bot)
     end
 
