@@ -135,9 +135,10 @@ module Discordrb
     end
 
     # Utility function to get a user's avatar URL.
+    # @param format [String, nil] If `nil`, the URL will default to `webp` for static avatars, and will detect if the user has a `gif` avatar. You can otherwise specify one of `webp`, `jpg`, `png`, or `gif` to override this.
     # @return [String] the URL to the avatar image.
-    def avatar_url
-      API::User.avatar_url(@id, @avatar_id)
+    def avatar_url(format = nil)
+      API::User.avatar_url(@id, @avatar_id, format)
     end
   end
 
