@@ -312,6 +312,91 @@ module Discordrb
     end
   end
 
+  # A webhook to a server channel
+  class Webhook
+    include IDObject
+
+    # @return [String] the webhook name
+    attr_reader :name
+
+    # @return [Channel] the channel that the webhook is currently connected to
+    attr_reader :channel
+
+    # @return [Server] the server that the webhook is currently connected to
+    attr_reader :server
+
+    # @return [String] the webhook's token
+    attr_reader :token
+
+    # Gets the user object of the creator of the webhook. May be limited to username, discriminator,
+    # ID and avatar if the bot cannot reach the owner.
+    # @return [User] the user object of the owner
+    attr_reader :owner
+
+    def initialize(data, bot, server)
+      @bot = bot
+
+      @name = data['name']
+      @id = data['id'].to_i
+      @channel = server.text_channels.find { |c| c.id == data['channel'].to_i }
+      @server = server
+      @token = data['token']
+      @avatar_id = data['avatar']
+      @owner = @bot.ensure_user(data['user'])
+    end
+
+    # Sets the webhook's name.
+    # @param name [String] The webhook's new name.
+    def name=(name)
+      update_webhook_data(name: name)
+    end
+
+    # Sets the webhook's avatar.
+    # @param avatar [String, #read] The new avatar, in base64-encoded JPG format.
+    def avatar=(avatar)
+      if avatar.respond_to? :read
+        avatar.binmode if avatar.respond_to?(:binmode)
+        avatar_string = 'data:image/jpg;base64,'
+        avatar_string += Base64.strict_encode64(avatar.read)
+        update_webhook_data(avatar: avatar_string)
+      else
+        update_webhook_data(avatar: avatar)
+      end
+    end
+
+    # Deletes webhook.
+    def delete
+      API::Server.delete_webhook(@bot.token, @id)
+    end
+
+    # Utility function to get a webhook's avatar URL.
+    # @return [String, nil] the URL to the avatar image (nil if no image is set).
+    def avatar_url
+      return nil if @avatar_id.nil?
+      API::User.avatar_url(@id, @avatar_id)
+    end
+
+    # The inspect method is overwritten to give more useful output
+    def inspect
+      "<Webhook name=#{@name} id=#{@id}>"
+    end
+
+    # Updates the cached data with new data
+    # @note For internal use only
+    # @!visibility private
+    def update_data(new_data)
+      @name = new_data[:name] || new_data['name'] || @name
+      @avatar_id = new_data[:avatar] || new_data['avatar'] || @avatar_id
+    end
+
+    private
+
+    def update_webhook_data(new_data)
+      API::Server.update_webhook(@bot.token, @id, new_data[:name] || @name, new_data.key?(:avatar) ? new_data[:avatar] : @avatar_id)
+      update_data(new_data)
+    end
+  end
+
   # Mixin for the attributes members and private members should have
   module MemberAttributes
     # @return [Time] when this member joined the server.
@@ -1316,6 +1401,26 @@ module Discordrb
     # Permanently deletes this channel
     def delete
       API::Channel.delete(@bot.token, @id)
+    end
+
+    # @return [Array<Webhook>] an array of all the webhooks connected to this channel.
+    def webhooks
+      webhooks = JSON.parse(API::Channel.webhooks(@bot.token, @id))
+      webhooks.map { |webhook| Webhook.new(webhook, @bot, @server) }
+    end
+
+    # Creates a webhook connected to this channel.
+    # @param name [String] the webhook's name.
+    # @param avatar [String, #read] the webhook's avatar.
+    # @return [Webhook] The created webhook.
+    def create_webhook(name, avatar = nil)
+      if avatar.respond_to?(:read) && !avatar.nil?
+        avatar.binmode if avatar.respond_to?(:binmode)
+        avatar_string = 'data:image/jpg;base64,'
+        avatar_string += Base64.strict_encode64(avatar.read)
+        avatar = avatar_string
+      end
+      Webhook.new(JSON.parse(API::Channel.create_webhook(@bot.token, @id, name, avatar)), @bot, @server)
     end
 
     # Sets this channel's name. The name must be alphanumeric with dashes, unless this is a voice channel (then there are no limitations)
@@ -2552,6 +2657,12 @@ module Discordrb
     def integrations
       integration = JSON.parse(API::Server.integrations(@bot.token, @id))
       integration.map { |element| Integration.new(element, @bot, self) }
+    end
+
+    # @return [Array<Webhook>] an array of all the webhooks on this server.
+    def webhooks
+      webhooks = JSON.parse(API::Server.webhooks(@bot.token, @id))
+      webhooks.map { |webhook| Webhook.new(webhook, @bot, self) }
     end
 
     # Cache @embed

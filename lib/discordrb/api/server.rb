@@ -431,4 +431,39 @@ module Discordrb::API::Server
       Authorization: token
     )
   end
+
+  # Get all webhooks
+  def webhooks(token, server_id)
+    Discordrb::API.request(
+      :guilds_webhooks,
+      server_id,
+      :get,
+      "#{Discordrb::API.api_base}/guilds/#{server_id}/webhooks",
+      Authorization: token
+    )
+  end
+
+  # Update a webhook
+  def update_webhook(token, webhook_id, name, avatar = nil)
+    Discordrb::API.request(
+      :channels_webhooks,
+      webhook_id,
+      :patch,
+      "#{Discordrb::API.api_base}/webhooks/#{webhook_id}",
+      { name: name, avatar: avatar }.to_json,
+      Authorization: token,
+      content_type: :json
+    )
+  end
+
+  # Delete a webhook
+  def delete_webhook(token, webhook_id)
+    Discordrb::API.request(
+      :webhooks,
+      webhook_id,
+      :delete,
+      "#{Discordrb::API.api_base}/webhooks/#{webhook_id}",
+      Authorization: token
+    )
+  end
 end
