@@ -99,6 +99,16 @@ bot.run
 
 This bot responds to every "Ping!" with a "Pong!".
 
+Or you can simply send a message to your chanel like this:
+
+```ruby
+require 'discordrb'
+
+bot = Discordrb::Bot.new token: '<token>', client_id: 168123456789123456
+bot.run true
+bot.send_message  '123456789012345678', 'Hello world'
+```` 
+
 ## Support
 
 You can find me (@meew0, ID 66237334693085184) on the unofficial Discord API server - if you have a question, just ask there, I or somebody else will probably answer you: https://discord.gg/0SBTUU1wZTWfFQL2
