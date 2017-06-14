@@ -101,7 +101,7 @@ This bot responds to every "Ping!" with a "Pong!".
 
 Or you can simply send a message to your chanel like this:
 
-```
+```ruby
 require 'discordrb'
 
 bot = Discordrb::Bot.new token: '<token>', client_id: 168123456789123456
