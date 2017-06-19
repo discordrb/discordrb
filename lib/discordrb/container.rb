@@ -387,8 +387,9 @@ module Discordrb
 
     # This **event** is raised when a webhook is updated.
     # @param attributes [Hash] The event's attributes.
-    # @option attributes [String, Integer, Server] :server Matches the server.
-    # @option attributes [String, Integer, Channel] :channel Matches the channel.
+    # @option attributes [String, Integer, Server] :server Matches the server by name, id or instance.
+    # @option attributes [String, Integer, Channel] :channel Matches the channel by name, id or instance.
+    # @option attribute [String, Integer, Webhook] :webhook Matches the webhook by name, id or instance.
     # @yield The block is executed when the event is raised.
     # @yieldparam event [WebhookUpdateEvent] The event that was raised.
     # @return [WebhookUpdateEventHandler] the event handler that was registered.
