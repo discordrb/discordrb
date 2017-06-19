@@ -2619,7 +2619,7 @@ module Discordrb
     # @param user [User, #resolve_id] The user to ban.
     # @param message_days [Integer] How many days worth of messages sent by the user should be deleted.
     # @param reason [String] The reason the user is being banned.
-    def ban(user, message_days = 0, reason = nil)
+    def ban(user, message_days = 0, reason: nil)
       API::Server.ban_user(@bot.token, @id, user.resolve_id, message_days, reason)
     end
 
