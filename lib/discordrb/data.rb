@@ -2685,9 +2685,15 @@ module Discordrb
       integration.map { |element| Integration.new(element, @bot, self) }
     end
 
+    # @param action [Symbol] The action to only include.
+    # @param user [User, #resolve_id] The user to filter entries to.
+    # @param limit [Integer] The amount of entries to limit it to.
     # @return [AuditLogs] the server's audit logs.
-    def audit_logs
-      AuditLogs.new(self, @bot, JSON.parse(API::Server.audit_logs(@bot.token, @id)))
+    def audit_logs(action: nil, user: nil, limit: 50)
+      raise 'Invalid audit log action!' if action && AuditLogs::Actions.key(action).nil?
+      action = AuditLogs::Actions.key(action)
+      user = user.resolve_id if user.respond_to? :resolve_id
+      AuditLogs.new(self, @bot, JSON.parse(API::Server.audit_logs(@bot.token, @id, limit, user, action)))
     end
 
     # Cache @embed
@@ -3401,6 +3407,9 @@ module Discordrb
       # @return [Integer, nil] the amount of members removed. Only present if the action is `:member_prune`.
       attr_reader :members_removed
 
+      # @return [String, nil] the reason for this action occuring.
+      attr_reader :reason
+
       # @return [Hash<String => Change>, RoleChange, nil] the changes from this log, listing the key as the key changed. Will be a RoleChange object if the action is `:member_role_update`. Will be nil if the action is either `:message_delete` or `:member_prune`.
       attr_reader :changes
 
@@ -3412,6 +3421,7 @@ module Discordrb
         @server = server
         @data = data
         @action = Actions[data['action_type']]
+        @reason = data['reason']
         @action_type = @logs.action_type_for(data['action_type'])
         @target_type = @logs.target_type_for(data['action_type'])
         @target_cached = false
@@ -3471,6 +3481,11 @@ module Discordrb
         when :emoji
           @server.emoji[id]
         end
+      end
+
+      # The inspect method is overwritten to give more useful output
+      def inspect
+        "<AuditLogs::Entry id=#{@id} action=#{@action} action_type=#{@action_type} target_type=#{@target_type} count=#{@count} days=#{@days} members_removed=#{@members_removed}>"
       end
 
       # @!visibility private
