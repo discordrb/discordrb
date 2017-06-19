@@ -152,14 +152,15 @@ module Discordrb::API::Server
 
   # Remove user from server
   # https://discordapp.com/developers/docs/resources/guild#remove-guild-member
-  def remove_member(token, server_id, user_id)
+  def remove_member(token, server_id, user_id, reason)
     Discordrb::API.request(
       :guilds_sid_members_uid,
       server_id,
       :delete,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/members/#{user_id}",
       Authorization: token,
-      content_type: :json
+      content_type: :json,
+      'X-Audit-Log-Reason': reason
     )
   end
 
@@ -177,26 +178,28 @@ module Discordrb::API::Server
 
   # Ban a user from a server and delete their messages from the last message_days days
   # https://discordapp.com/developers/docs/resources/guild#create-guild-ban
-  def ban_user(token, server_id, user_id, message_days)
+  def ban_user(token, server_id, user_id, message_days, reason)
     Discordrb::API.request(
       :guilds_sid_bans_uid,
       server_id,
       :put,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/bans/#{user_id}?delete-message-days=#{message_days}",
       nil,
-      Authorization: token
+      Authorization: token,
+      'X-Audit-Log-Reason': reason
     )
   end
 
   # Unban a user from a server
   # https://discordapp.com/developers/docs/resources/guild#remove-guild-ban
-  def unban_user(token, server_id, user_id)
+  def unban_user(token, server_id, user_id, reason)
     Discordrb::API.request(
       :guilds_sid_bans_uid,
       server_id,
       :delete,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/bans/#{user_id}",
-      Authorization: token
+      Authorization: token,
+      'X-Audit-Log-Reason': reason
     )
   end
 
