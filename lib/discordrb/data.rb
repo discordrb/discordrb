@@ -3485,7 +3485,7 @@ module Discordrb
 
       # The inspect method is overwritten to give more useful output
       def inspect
-        "<AuditLogs::Entry id=#{@id} action=#{@action} action_type=#{@action_type} target_type=#{@target_type} count=#{@count} days=#{@days} members_removed=#{@members_removed}>"
+        "<AuditLogs::Entry id=#{@id} action=#{@action} reason=#{@reason} action_type=#{@action_type} target_type=#{@target_type} count=#{@count} days=#{@days} members_removed=#{@members_removed}>"
       end
 
       # @!visibility private
