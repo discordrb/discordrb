@@ -3467,7 +3467,7 @@ module Discordrb
         when :invite
           @bot.invite(@data['changes'].find { |change| change['key'] == 'code' }.values.delete_if { |v| v == 'code' }.first)
         when :webhook
-          'TODO' # TODO
+          @server.webhooks.find { |webhook| webhook.id == id }
         when :emoji
           @server.emoji[id]
         end
