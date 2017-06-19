@@ -2290,10 +2290,10 @@ module Discordrb
     # @return [Integer] the absolute number of members on this server, offline or not.
     attr_reader :member_count
 
-    # @return [Symbol] the verification level of the server (:none = none, :low = 'Must have a verified email on their Discord account', :medium = 'Has to be registered with Discord for at least 5 minutes', :high = 'Has to be a member of this server for at least 10 minutes', :extra = 'Must have a verified phone ob their Discord account').
+    # @return [Symbol] the verification level of the server (:none = none, :low = 'Must have a verified email on their Discord account', :medium = 'Has to be registered with Discord for at least 5 minutes', :high = 'Has to be a member of this server for at least 10 minutes', :very_high = 'Must have a verified phone on their Discord account').
     attr_reader :verification_level
 
-    # @return [Symbol] the explicit content filter level of the server (:none = 'Don't scan any messages', :exclude_roles = 'Scan messages for members without a role.', :all = 'Scan messages sent by all messages.').
+    # @return [Symbol] the explicit content filter level of the server (:none = 'Don't scan any messages.', :exclude_roles = 'Scan messages for members without a role.', :all = 'Scan messages sent by all members.').
     attr_reader :explicit_content_filter
     alias_method :content_filter_level, :explicit_content_filter
 
@@ -2318,10 +2318,6 @@ module Discordrb
 
       @large = data['large']
       @member_count = data['member_count']
-      @verification_level = [:none, :low, :medium, :high, :extra][data['verification_level']]
-      @explicit_content_filter = [:none, :exclude_roles, :all][data['explicit_content_filter']]
-      @default_message_notifications = [:all, :mentions][data['default_message_notifications']]
-      @widget_enabled = data['widget_enabled']
       @splash_id = nil
       @embed = nil
       @features = data['features'].map { |element| element.downcase.to_sym }
@@ -2750,7 +2746,7 @@ module Discordrb
       @afk_channel_id = new_data[:afk_channel_id] || new_data['afk_channel_id'].to_i || @afk_channel.id
       @embed_channel_id = new_data[:embed_channel_id] || new_data['embed_channel_id'].to_i || @embed_channel.id
       @embed = new_data[:embed_enabled] || new_data['embed_enabled'] || @embed
-      @verification_level = [:none, :low, :medium, :high][new_data['verification_level']] || @verification_level
+      @verification_level = [:none, :low, :medium, :high, :very_high][new_data['verification_level']] || @verification_level
       @explicit_content_filter = [:none, :exclude_roles, :all][new_data['explicit_content_filter']] || @explicit_content_filter
       @default_message_notifications = [:all, :mentions][new_data['default_message_notifications']] || @default_message_notifications
 
