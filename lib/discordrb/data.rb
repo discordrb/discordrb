@@ -2627,14 +2627,14 @@ module Discordrb
     # @param user [User, #resolve_id] The user to unban.
     # @param reason [String] The reason the user is being unbanned.
     def unban(user, reason = nil)
-      API::Server.unban_user(@bot.token, @id, user.resolve_id, reason = nil)
+      API::Server.unban_user(@bot.token, @id, user.resolve_id, reason)
     end
 
     # Kicks a user from this server.
     # @param user [User, #resolve_id] The user to kick.
     # @param reason [String] The reason the user is being kicked.
     def kick(user, reason = nil)
-      API::Server.remove_member(@bot.token, @id, user.resolve_id, reason = nil)
+      API::Server.remove_member(@bot.token, @id, user.resolve_id, reason)
     end
 
     # Forcibly moves a user into a different voice channel. Only works if the bot has the permission needed.
