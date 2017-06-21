@@ -242,7 +242,7 @@ module Discordrb
           allow(JSON).to receive(:parse).and_return(data)
           allow(API::Webhook).to receive(:update_webhook)
           expect(webhook).to receive(:update_internal).with(data)
-          webhook.send(:update_webhook, double('data', :delete => reason))
+          webhook.send(:update_webhook, double('data', delete: reason))
         end
       end
 
@@ -253,14 +253,14 @@ module Discordrb
           allow(JSON).to receive(:parse).and_return(data)
           allow(API::Webhook).to receive(:update_webhook)
           expect(webhook).to_not receive(:update_internal)
-          webhook.send(:update_webhook, double('data', :delete => reason))
+          webhook.send(:update_webhook, double('data', delete: reason))
         end
       end
 
       context 'when webhook is from auth' do
         it 'calls auth API' do
           webhook
-          data = double('data', :delete => reason)
+          data = double('data', delete: reason)
           allow(JSON).to receive(:parse).and_return(double('received_data', :[] => double))
           expect(API::Webhook).to receive(:update_webhook).with(token, webhook_id, data, reason)
           webhook.send(:update_webhook, data)
@@ -271,7 +271,7 @@ module Discordrb
         before { webhook.instance_variable_set(:@owner, nil) }
 
         it 'calls token API' do
-          data = double('data', :delete => reason)
+          data = double('data', delete: reason)
           allow(JSON).to receive(:parse).and_return(double('received_data', :[] => double))
           expect(API::Webhook).to receive(:token_update_webhook).with(webhook_token, webhook_id, data, reason)
           webhook.send(:update_webhook, data)
