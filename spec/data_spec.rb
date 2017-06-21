@@ -242,7 +242,7 @@ module Discordrb
           allow(JSON).to receive(:parse).and_return(data)
           allow(API::Webhook).to receive(:update_webhook)
           expect(webhook).to receive(:update_internal).with(data)
-          webhook.send(:update_webhook, double)
+          webhook.send(:update_webhook, double('data', :delete => reason))
         end
       end
 
@@ -253,7 +253,7 @@ module Discordrb
           allow(JSON).to receive(:parse).and_return(data)
           allow(API::Webhook).to receive(:update_webhook)
           expect(webhook).to_not receive(:update_internal)
-          webhook.send(:update_webhook, double)
+          webhook.send(:update_webhook, double('data', :delete => reason))
         end
       end
 

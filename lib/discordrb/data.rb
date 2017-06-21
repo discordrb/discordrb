@@ -1470,6 +1470,23 @@ module Discordrb
       update_channel_data
     end
 
+    # Updates this channel's settings.
+    # @param name [String] Name of the channel to create
+    # @param bitrate [Integer] The new bitrate (in bps). Number has to be between 8000-96000 (128000 for VIP servers)
+    # @param user_limit [Integer] The new user limit. `0` for unlimited, has to be a number between 0-99
+    # @param topic [String] The new topic.
+    # @param position [Integer] The new position.
+    # @param reason [String] The reason the for the changes requested for this channel.
+    def update(name: @name, bitrate: @bitrate, user_limit: @user_limit, topic: @topic, position: @position, reason: nil)
+      API::Channel.create_channel(@bot.token, @id, name, type, bitrate, user_limit, permission_overwrites, reason)
+      @topic = topic
+      @name = name
+      @position = position
+      @topic = topic
+      @bitrate = bitrate
+      @user_limit = user_limit
+    end
+
     # Defines a permission overwrite for this channel that sets the specified thing to the specified allow and deny
     # permission sets, or change an existing one.
     # @overload define_overwrite(overwrite)
