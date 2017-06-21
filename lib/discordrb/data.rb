@@ -3431,7 +3431,7 @@ module Discordrb
         
         # Sets the 'changes' variable to a RoleChange class if theres a role update.
         @changes = RoleChange.new(data['changes'][0], @server) if @action == :member_role_update
-        
+
         process_changes(data['changes']) unless @action == :member_role_update
         return unless data.include?('options')
         
