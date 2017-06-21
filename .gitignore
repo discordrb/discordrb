@@ -10,3 +10,4 @@
 /tmp/
 /.idea/
 .DS_Store
+*.gem

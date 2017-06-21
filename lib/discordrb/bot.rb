@@ -17,6 +17,7 @@ require 'discordrb/events/await'
 require 'discordrb/events/bans'
 require 'discordrb/events/raw'
 require 'discordrb/events/reactions'
+require 'discordrb/events/webhooks'
 
 require 'discordrb/api'
 require 'discordrb/api/channel'
@@ -201,8 +202,7 @@ module Discordrb
     # The bot's OAuth application.
     # @return [Application, nil] The bot's application info. Returns `nil` if bot is not a bot account.
     def bot_application
-      gateway_check
-      return nil unless @type == :bot
+      return unless @type == :bot
       response = API.oauth_application(token)
       Application.new(JSON.parse(response), self)
     end
@@ -263,12 +263,11 @@ module Discordrb
     end
 
     # Creates an OAuth invite URL that can be used to invite this bot to a particular server.
-    # Requires the application ID to have been set during initialization.
     # @param server [Server, nil] The server the bot should be invited to, or nil if a general invite should be created.
     # @param permission_bits [Integer, String] Permission bits that should be appended to invite url.
     # @return [String] the OAuth invite URL.
     def invite_url(server: nil, permission_bits: nil)
-      raise 'No application ID has been set during initialization! Add one as the `client_id` named parameter while creating your bot.' unless @client_id
+      @client_id ||= bot_application.id
 
       server_id_str = server ? "&guild_id=#{server.id}" : ''
       permission_bits_str = permission_bits ? "&permissions=#{permission_bits}" : ''
@@ -1011,10 +1010,14 @@ module Discordrb
       when :MESSAGE_REACTION_ADD
         add_message_reaction(data)
 
+        return if profile.id == data['user_id'].to_i && !should_parse_self
+
         event = ReactionAddEvent.new(data, self)
         raise_event(event)
       when :MESSAGE_REACTION_REMOVE
         remove_message_reaction(data)
+
+        return if profile.id == data['user_id'].to_i && !should_parse_self
 
         event = ReactionRemoveEvent.new(data, self)
         raise_event(event)
@@ -1174,6 +1177,9 @@ module Discordrb
           event = ServerEmojiUpdateEvent.new(server, old_emoji_data[e], new_emoji_data[e], self)
           raise_event(event)
         end
+      when :WEBHOOKS_UPDATE
+        event = WebhookUpdateEvent.new(data, self)
+        raise_event(event)
       else
         # another event that we don't support yet
         debug "Event #{type} has been received but is unsupported. Raising UnknownEvent"
