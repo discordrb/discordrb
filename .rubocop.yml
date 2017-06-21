@@ -48,7 +48,7 @@ Style/SingleLineBlockParams:
     - inject: [m, e]
 
 AllCops:
-  TargetRubyVersion: 2.1
+  TargetRubyVersion: 2.2.4
 
 # http://stackoverflow.com/questions/4763121/should-i-use-alias-or-alias-method
 Style/Alias:
