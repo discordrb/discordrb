@@ -2886,7 +2886,7 @@ module Discordrb
     # @param reason [String] The reason the for the creation of this channel.
     # @return [Channel] the created channel.
     # @raise [ArgumentError] if type is not 0 or 2
-    def create_channel(name, type = 0, bitrate: nil, user_limit: nil, permission_overwrites: [], reason : nil)
+    def create_channel(name, type = 0, bitrate: nil, user_limit: nil, permission_overwrites: [], reason: nil)
       raise ArgumentError, 'Channel type must be either 0 (text) or 2 (voice)!' unless [0, 2].include?(type)
       permission_overwrites.map! { |e| e.is_a?(Overwrite) ? e.to_hash : e }
       response = API::Server.create_channel(@bot.token, @id, name, type, bitrate, user_limit, permission_overwrites, reason)
