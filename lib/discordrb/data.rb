@@ -2,7 +2,6 @@
 
 # These classes hold relevant Discord data, such as messages or channels.
 
-require 'ostruct'
 require 'discordrb/permissions'
 require 'discordrb/errors'
 require 'discordrb/api'
@@ -10,6 +9,7 @@ require 'discordrb/api/channel'
 require 'discordrb/api/server'
 require 'discordrb/api/invite'
 require 'discordrb/api/user'
+require 'discordrb/api/webhook'
 require 'discordrb/webhooks/embeds'
 require 'time'
 require 'base64'
@@ -71,11 +71,14 @@ module Discordrb
     # @return [Integer] the ID which uniquely identifies this object across Discord.
     attr_reader :id
     alias_method :resolve_id, :id
+    alias_method :hash, :id
 
     # ID based comparison
     def ==(other)
       Discordrb.id_compare(@id, other)
     end
+
+    alias_method :eql?, :==
 
     # Estimates the time this object was generated on based on the beginning of the ID. This is fairly accurate but
     # shouldn't be relied on as Discord might change its algorithm at any time
@@ -132,9 +135,10 @@ module Discordrb
     end
 
     # Utility function to get a user's avatar URL.
+    # @param format [String, nil] If `nil`, the URL will default to `webp` for static avatars, and will detect if the user has a `gif` avatar. You can otherwise specify one of `webp`, `jpg`, `png`, or `gif` to override this.
     # @return [String] the URL to the avatar image.
-    def avatar_url
-      API::User.avatar_url(@id, @avatar_id)
+    def avatar_url(format = nil)
+      API::User.avatar_url(@id, @avatar_id, format)
     end
   end
 
@@ -380,7 +384,7 @@ module Discordrb
     private
 
     def defined_role_permission?(action, channel)
-      roles_to_check = @roles + [@server.everyone_role]
+      roles_to_check = [@server.everyone_role] + @roles
 
       # For each role, check if
       #   (1) the channel explicitly allows or permits an action for the role and
@@ -496,8 +500,6 @@ module Discordrb
       @custom = data['custom']
     end
   end
-
-  # A presence represents a
 
   # A member is a user on a server. It differs from regular users in that it has roles, voice statuses and things like
   # that.
@@ -623,6 +625,33 @@ module Discordrb
         API::Server.update_member(@bot.token, @server.id, @user.id, roles: new_role_ids, reason: reason)
       end
     end
+
+    # @return [Role] the highest role this member has.
+    def highest_role
+      @roles.sort_by(&:position).last
+    end
+
+    # @return [Role, nil] the role this member is being hoisted with.
+    def hoist_role
+      hoisted_roles = @roles.select(&:hoist)
+      return nil if hoisted_roles.empty?
+      hoisted_roles.sort_by(&:position).last
+    end
+
+    # @return [Role, nil] the role this member is basing their colour on.
+    def colour_role
+      coloured_roles = @roles.select { |v| v.colour.combined.nonzero? }
+      return nil if coloured_roles.empty?
+      coloured_roles.sort_by(&:position).last
+    end
+    alias_method :color_role, :colour_role
+
+    # @return [ColourRGB, nil] the colour this member has.
+    def colour
+      return nil unless colour_role
+      colour_role.color
+    end
+    alias_method :color, :colour
 
     # Server deafens this member.
     def server_deafen
@@ -850,6 +879,10 @@ module Discordrb
     # @return [true, false] whether or not this role should be displayed separately from other users
     attr_reader :hoist
 
+    # @return [true, false] whether or not this role is managed by a integration or bot
+    attr_reader :managed
+    alias_method :managed?, :managed
+
     # @return [true, false] whether this role can be mentioned using a role mention
     attr_reader :mentionable
     alias_method :mentionable?, :mentionable
@@ -893,6 +926,7 @@ module Discordrb
 
       @hoist = data['hoist']
       @mentionable = data['mentionable']
+      @managed = data['managed']
 
       @colour = ColourRGB.new(data['color'])
     end
@@ -905,7 +939,7 @@ module Discordrb
     # @return [Array<Member>] an array of members who have this role.
     # @note This requests a member chunk if it hasn't for the server before, which may be slow initially
     def members
-      @server.members.select { |m| m.role? role }
+      @server.members.select { |m| m.role? self }
     end
 
     alias_method :users, :members
@@ -919,6 +953,7 @@ module Discordrb
       @hoist = other.hoist
       @colour = other.colour
       @position = other.position
+      @managed = other.managed
     end
 
     # Updates the data cache from a hash containing data
@@ -1101,6 +1136,84 @@ module Discordrb
     end
   end
 
+  # A permissions overwrite, when applied to channels describes additional
+  # permissions a member needs to perform certain actions in context.
+  class Overwrite
+    # @return [Integer] id of the thing associated with this overwrite type
+    attr_accessor :id
+
+    # @return [Symbol] either :role or :member
+    attr_accessor :type
+
+    # @return [Permissions] allowed permissions for this overwrite type
+    attr_accessor :allow
+
+    # @return [Permissions] denied permissions for this overwrite type
+    attr_accessor :deny
+
+    # Creates a new Overwrite object
+    # @example Create an overwrite for a role that can mention everyone, send TTS messages, but can't create instant invites
+    #   allow = Discordrb::Permissions.new
+    #   allow.can_mention_everyone = true
+    #   allow.can_send_tts_messages = true
+    #
+    #   deny = Discordrb::Permissions.new
+    #   deny.can_create_instant_invite = true
+    #
+    #   # Find some role by name
+    #   role = server.roles.find { |r| r.name == 'some role' }
+    #
+    #   Overwrite.new(role, allow: allow, deny: deny)
+    # @example Create an overwrite by ID and permissions bits
+    #   Overwrite.new(120571255635181568, type: 'member', allow: 1024, deny: 0)
+    # @param object [Integer, #id] the ID or object this overwrite is for
+    # @param type [String] the type of object this overwrite is for (only required if object is an Integer)
+    # @param allow [Integer, Permissions] allowed permissions for this overwrite, by bits or a Permissions object
+    # @param deny [Integer, Permissions] denied permissions for this overwrite, by bits or a Permissions object
+    # @raise [ArgumentError] if type is not :member or :role
+    def initialize(object = nil, type: nil, allow: 0, deny: 0)
+      if type
+        type = type.to_sym
+        raise ArgumentError, 'Overwrite type must be :member or :role' unless (type != :member) || (type != :role)
+      end
+
+      @id = object.respond_to?(:id) ? object.id : object
+
+      @type = if object.is_a?(User) || object.is_a?(Member) || object.is_a?(Recipient) || object.is_a?(Profile)
+                :member
+              elsif object.is_a? Role
+                :role
+              else
+                type
+              end
+
+      @allow = allow.is_a?(Permissions) ? allow : Permissions.new(allow)
+      @deny = deny.is_a?(Permissions) ? deny : Permissions.new(deny)
+    end
+
+    # @return [Overwrite] create an overwrite from a hash payload
+    # @!visibility private
+    def self.from_hash(data)
+      new(
+        data['id'].to_i,
+        type: data['type'],
+        allow: Permissions.new(data['allow']),
+        deny: Permissions.new(data['deny'])
+      )
+    end
+
+    # @return [Hash] hash representation of an overwrite
+    # @!visibility private
+    def to_hash
+      {
+        id: id,
+        type: type,
+        allow: allow.bits,
+        deny: deny.bits
+      }
+    end
+  end
+
   # A Discord channel, including data like the topic
   class Channel
     include IDObject
@@ -1132,12 +1245,6 @@ module Discordrb
 
     # @return [Integer] the channel's position on the channel list
     attr_reader :position
-
-    # This channel's permission overwrites, represented as a hash of role/user ID to an OpenStruct which has the
-    # `allow` and `deny` properties which are {Permissions} objects respectively.
-    # @return [Hash<Integer => OpenStruct>] the channel's permission overwrites
-    attr_reader :permission_overwrites
-    alias_method :overwrites, :permission_overwrites
 
     # @return [true, false] whether or not this channel is a PM or group channel.
     def private?
@@ -1194,12 +1301,8 @@ module Discordrb
       @permission_overwrites = {}
       return unless data['permission_overwrites']
       data['permission_overwrites'].each do |element|
-        role_id = element['id'].to_i
-        deny = Permissions.new(element['deny'])
-        allow = Permissions.new(element['allow'])
-        @permission_overwrites[role_id] = OpenStruct.new
-        @permission_overwrites[role_id].deny = deny
-        @permission_overwrites[role_id].allow = allow
+        id = element['id'].to_i
+        @permission_overwrites[id] = Overwrite.from_hash element
       end
     end
 
@@ -1221,6 +1324,32 @@ module Discordrb
     # @return [true, false] whether or not this channel is a group channel.
     def group?
       @type == 3
+    end
+
+    # This channel's permission overwrites
+    # @overload permission_overwrites
+    #   The overwrites represented as a hash of role/user ID
+    #   to an Overwrite object
+    #   @return [Hash<Integer => Overwrite>] the channel's permission overwrites
+    # @overload permission_overwrites(type)
+    #   Return an array of a certain type of overwrite
+    #   @param type [Symbol] the kind of overwrite to return
+    #   @return [Array<Overwrite>]
+    def permission_overwrites(type = nil)
+      return @permission_overwrites unless type
+      @permission_overwrites.values.select { |e| e.type == type }
+    end
+
+    alias_method :overwrites, :permission_overwrites
+
+    # @return [Overwrite] any member-type permission overwrites on this channel
+    def member_overwrites
+      permission_overwrites :member
+    end
+
+    # @return [Overwrite] any role-type permission overwrites on this channel
+    def role_overwrites
+      permission_overwrites :role
     end
 
     # @return [true, false] whether or not this channel is the default channel
@@ -1340,33 +1469,32 @@ module Discordrb
 
     # Defines a permission overwrite for this channel that sets the specified thing to the specified allow and deny
     # permission sets, or change an existing one.
-    # @param thing [User, Role] What to define an overwrite for.
-    # @param allow [#bits, Permissions, Integer] The permission sets that should receive an `allow` override (i. e. a
-    #   green checkmark on Discord)
-    # @param deny [#bits, Permissions, Integer] The permission sets that should receive a `deny` override (i. e. a red
-    #   cross on Discord)
-    # @example Define a permission overwrite for a user that can then mention everyone and use TTS, but not create any invites
-    #   allow = Discordrb::Permissions.new
-    #   allow.can_mention_everyone = true
-    #   allow.can_send_tts_messages = true
+    # @overload define_overwrite(overwrite)
+    #   @param thing [Overwrite] an Overwrite object to apply to this channel
+    # @overload define_overwrite(thing, allow, deny)
+    #   @param thing [User, Role] What to define an overwrite for.
+    #   @param allow [#bits, Permissions, Integer] The permission sets that should receive an `allow` override (i. e. a
+    #     green checkmark on Discord)
+    #   @param deny [#bits, Permissions, Integer] The permission sets that should receive a `deny` override (i. e. a red
+    #     cross on Discord)
+    #   @example Define a permission overwrite for a user that can then mention everyone and use TTS, but not create any invites
+    #     allow = Discordrb::Permissions.new
+    #     allow.can_mention_everyone = true
+    #     allow.can_send_tts_messages = true
     #
-    #   deny = Discordrb::Permissions.new
-    #   deny.can_create_instant_invite = true
+    #     deny = Discordrb::Permissions.new
+    #     deny.can_create_instant_invite = true
     #
-    #   channel.define_overwrite(user, allow, deny)
-    def define_overwrite(thing, allow, deny)
-      allow_bits = allow.respond_to?(:bits) ? allow.bits : allow
-      deny_bits = deny.respond_to?(:bits) ? deny.bits : deny
+    #     channel.define_overwrite(user, allow, deny)
+    def define_overwrite(thing, allow = 0, deny = 0)
+      unless thing.is_a? Overwrite
+        allow_bits = allow.respond_to?(:bits) ? allow.bits : allow
+        deny_bits = deny.respond_to?(:bits) ? deny.bits : deny
 
-      type = if thing.is_a?(User) || thing.is_a?(Member) || thing.is_a?(Recipient) || thing.is_a?(Profile)
-               :member
-             elsif thing.is_a? Role
-               :role
-             else
-               raise ArgumentError, '`thing` in define_overwrite needs to be a kind of User (User, Member, Recipient, Profile) or a Role!'
-             end
+        thing = Overwrite.new thing, allow: allow_bits, deny: deny_bits
+      end
 
-      API::Channel.update_permission(@bot.token, @id, thing.id, allow_bits, deny_bits, type)
+      API::Channel.update_permission(@bot.token, @id, thing.id, thing.allow.bits, thing.deny.bits, thing.type)
     end
 
     # Deletes a permission overwrite for this channel
@@ -1552,6 +1680,14 @@ module Discordrb
 
     alias_method :leave, :leave_group
 
+    # Requests a list of Webhooks on the channel
+    # @return [Array<Webhook>] webhooks on the channel.
+    def webhooks
+      raise 'Tried to request webhooks from a non-server channel' unless server
+      webhooks = JSON.parse(API::Channel.webhooks(@bot.token, @id))
+      webhooks.map { |webhook_data| Webhook.new(webhook_data, @bot) }
+    end
+
     # The inspect method is overwritten to give more useful output
     def inspect
       "<Channel name=#{@name} id=#{@id} topic=\"#{@topic}\" type=#{@type} position=#{@position} server=#{@server}>"
@@ -1628,14 +1764,33 @@ module Discordrb
     #   * `:image`
     attr_reader :type
 
-    # @return [EmbedProvider, nil] the provider of the embed object. `nil` is there is not a provider
+    # @return [Time, nil] the timestamp of the embed object. `nil` if there is not a timestamp
+    attr_reader :timestamp
+
+    # @return [String, nil] the color of the embed object. `nil` if there is not a color
+    attr_reader :color
+    alias_method :colour, :color
+
+    # @return [EmbedFooter, nil] the footer of the embed object. `nil` if there is not a footer
+    attr_reader :footer
+
+    # @return [EmbedProvider, nil] the provider of the embed object. `nil` if there is not a provider
     attr_reader :provider
 
-    # @return [EmbedThumbnail, nil] the thumbnail of the embed object. `nil` is there is not a thumbnail
+    # @return [EmbedImage, nil] the image of the embed object. `nil` if there is not an image
+    attr_reader :image
+
+    # @return [EmbedThumbnail, nil] the thumbnail of the embed object. `nil` if there is not a thumbnail
     attr_reader :thumbnail
 
-    # @return [EmbedAuthor, nil] the author of the embed object. `nil` is there is not an author
+    # @return [EmbedVideo, nil] the video of the embed object. `nil` if there is not a video
+    attr_reader :video
+
+    # @return [EmbedAuthor, nil] the author of the embed object. `nil` if there is not an author
     attr_reader :author
+
+    # @return [Array<EmbedField>, nil] the fields of the embed object. `nil` if there are no fields
+    attr_reader :fields
 
     # @!visibility private
     def initialize(data, message)
@@ -1645,9 +1800,91 @@ module Discordrb
       @title = data['title']
       @type = data['type'].to_sym
       @description = data['description']
+      @timestamp = data['timestamp'].nil? ? nil : Time.parse(data['timestamp'])
+      @color = data['color']
+      @footer = data['footer'].nil? ? nil : EmbedFooter.new(data['footer'], self)
+      @image = data['image'].nil? ? nil : EmbedImage.new(data['image'], self)
+      @video = data['video'].nil? ? nil : EmbedVideo.new(data['video'], self)
       @provider = data['provider'].nil? ? nil : EmbedProvider.new(data['provider'], self)
       @thumbnail = data['thumbnail'].nil? ? nil : EmbedThumbnail.new(data['thumbnail'], self)
       @author = data['author'].nil? ? nil : EmbedAuthor.new(data['author'], self)
+      @fields = data['fields'].nil? ? nil : data['fields'].map { |field| EmbedField.new(field, self) }
+    end
+  end
+
+  # An Embed footer for the embed object
+  class EmbedFooter
+    # @return [Embed] the embed object this is based on.
+    attr_reader :embed
+
+    # @return [String] the footer text.
+    attr_reader :text
+
+    # @return [String] the URL of the footer icon.
+    attr_reader :icon_url
+
+    # @return [String] the proxied URL of the footer icon.
+    attr_reader :proxy_icon_url
+
+    # @!visibility private
+    def initialize(data, embed)
+      @embed = embed
+
+      @text = data['text']
+      @icon_url = data['icon_url']
+      @proxy_icon_url = data['proxy_icon_url']
+    end
+  end
+
+  # An Embed image for the embed object
+  class EmbedImage
+    # @return [Embed] the embed object this is based on.
+    attr_reader :embed
+
+    # @return [String] the source URL of the image.
+    attr_reader :url
+
+    # @return [String] the proxy URL of the image.
+    attr_reader :proxy_url
+
+    # @return [Integer] the width of the image, in pixels.
+    attr_reader :width
+
+    # @return [Integer] the height of the image, in pixels.
+    attr_reader :height
+
+    # @!visibility private
+    def initialize(data, embed)
+      @embed = embed
+
+      @url = data['url']
+      @proxy_url = data['proxy_url']
+      @width = data['width']
+      @height = data['height']
+    end
+  end
+
+  # An Embed video for the embed object
+  class EmbedVideo
+    # @return [Embed] the embed object this is based on.
+    attr_reader :embed
+
+    # @return [String] the source URL of the video.
+    attr_reader :url
+
+    # @return [Integer] the width of the video, in pixels.
+    attr_reader :width
+
+    # @return [Integer] the height of the video, in pixels.
+    attr_reader :height
+
+    # @!visibility private
+    def initialize(data, embed)
+      @embed = embed
+
+      @url = data['url']
+      @width = data['width']
+      @height = data['height']
     end
   end
 
@@ -1717,6 +1954,30 @@ module Discordrb
 
       @name = data['name']
       @url = data['url']
+    end
+  end
+
+  # An Embed field for the embed object
+  class EmbedField
+    # @return [Embed] the embed object this is based on.
+    attr_reader :embed
+
+    # @return [String] the field's name.
+    attr_reader :name
+
+    # @return [String] the field's value.
+    attr_reader :value
+
+    # @return [true, false] whether this field is inline.
+    attr_reader :inline
+
+    # @!visibility private
+    def initialize(data, embed)
+      @embed = embed
+
+      @name = data['name']
+      @value = data['value']
+      @inline = data['inline']
     end
   end
 
@@ -1995,7 +2256,7 @@ module Discordrb
     # Returns the reactions made by the current bot or user
     # @return [Array<Reaction>] the reactions
     def my_reactions
-      @reactions.select(&:me)
+      @reactions.values.select(&:me)
     end
 
     # Reacts to a message
@@ -2063,6 +2324,13 @@ module Discordrb
       @me = data['me']
       @id = data['emoji']['id'].nil? ? nil : data['emoji']['id'].to_i
       @name = data['emoji']['name']
+    end
+
+    # Converts this Reaction into a string that can be sent back to Discord in other reaction endpoints.
+    # If ID is present, it will be rendered into the form of `name:id`.
+    # @return [String] the name of this reaction, including the ID if it is a custom emoji
+    def to_s
+      id.nil? ? name : "#{name}:#{id}"
     end
   end
 
@@ -2602,12 +2870,16 @@ module Discordrb
     # Creates a channel on this server with the given name.
     # @param name [String] Name of the channel to create
     # @param type [Integer] Type of channel to create (0: text, 2: voice)
+    # @param bitrate [Integer] the bitrate of this channel, if it will be a voice channel
+    # @param user_limit [Integer] the user limit of this channel, if it will be a voice channel
+    # @param permission_overwrites [Array<Hash>, Array<Overwrite>] permission overwrites for this channel
     # @param reason [String] The reason the for the creation of this channel.
     # @return [Channel] the created channel.
     # @raise [ArgumentError] if type is not 0 or 2
-    def create_channel(name, type = 0, reason = nil)
+    def create_channel(name, type = 0, bitrate: nil, user_limit: nil, permission_overwrites: [], reason : nil)
       raise ArgumentError, 'Channel type must be either 0 (text) or 2 (voice)!' unless [0, 2].include?(type)
-      response = API::Server.create_channel(@bot.token, @id, name, type, reason)
+      permission_overwrites.map! { |e| e.is_a?(Overwrite) ? e.to_hash : e }
+      response = API::Server.create_channel(@bot.token, @id, name, type, bitrate, user_limit, permission_overwrites, reason)
       Channel.new(JSON.parse(response), @bot)
     end
 
@@ -2739,6 +3011,13 @@ module Discordrb
 
     alias_method :has_emoji?, :any_emoji?
     alias_method :emoji?, :any_emoji?
+
+    # Requests a list of Webhooks on the server
+    # @return [Array<Webhook>] webhooks on the server.
+    def webhooks
+      webhooks = JSON.parse(API::Server.webhooks(@bot.token, @id))
+      webhooks.map { |webhook| Webhook.new(webhook, @bot) }
+    end
 
     # Processes a GUILD_MEMBERS_CHUNK packet, specifically the members field
     # @note For internal use only
@@ -2893,6 +3172,138 @@ module Discordrb
     end
   end
 
+  # A webhook on a server channel
+  class Webhook
+    include IDObject
+
+    # @return [String] the webhook name.
+    attr_reader :name
+
+    # @return [Channel] the channel that the webhook is currently connected to.
+    attr_reader :channel
+
+    # @return [Server] the server that the webhook is currently connected to.
+    attr_reader :server
+
+    # @return [String] the webhook's token.
+    attr_reader :token
+
+    # @return [String] the webhook's avatar id.
+    attr_reader :avatar
+
+    # Gets the user object of the creator of the webhook. May be limited to username, discriminator,
+    # ID and avatar if the bot cannot reach the owner
+    # @return [Member, User, nil] the user object of the owner or nil if the webhook was requested using the token.
+    attr_reader :owner
+
+    def initialize(data, bot)
+      @bot = bot
+
+      @name = data['name']
+      @id = data['id'].to_i
+      @channel = bot.channel(data['channel_id'])
+      @server = @channel.server
+      @token = data['token']
+      @avatar = data['avatar']
+
+      # Will not exist if the data was requested through a webhook token
+      return unless data['user']
+      @owner = @server.member(data['user']['id'].to_i)
+      return if @owner
+      Discordrb::LOGGER.debug("Member with ID #{data['user']['id']} not cached (possibly left the server).")
+      @owner = @bot.ensure_user(data['user'])
+    end
+
+    # Sets the webhook's avatar
+    # @param avatar [String, #read] The new avatar, in base64-encoded JPG format.
+    def avatar=(avatar)
+      update_webhook(avatar: avatarise(avatar))
+    end
+
+    # Deletes the webhook's avatar
+    def delete_avatar
+      update_webhook(avatar: nil)
+    end
+
+    # Sets the webhook's channel
+    # @param channel [Channel, String, Integer, #resolve_id] The channel the webhook should use.
+    def channel=(channel)
+      update_webhook(channel_id: channel.resolve_id)
+    end
+
+    # Sets the webhook's name
+    # @param name [String] The webhook's new name.
+    def name=(name)
+      update_webhook(name: name)
+    end
+
+    # Updates the webhook if you need to edit more than 1 attribute
+    # @param data [Hash] the data to update.
+    # @option data [String, #read, nil] :avatar The new avatar, in base64-encoded JPG format, or nil to delete the avatar.
+    # @option data [Channel, String, Integer, #resolve_id] :channel The channel the webhook should use.
+    # @option data [String] :name The webhook's new name.
+    def update(data)
+      # Only pass a value for avatar if the key is defined as sending nil will delete the
+      data[:avatar] = avatarise(data[:avatar]) if data.key?(:avatar)
+      data[:channel_id] = data[:channel].resolve_id
+      data.delete(:channel)
+      update_webhook(data)
+    end
+
+    # Deletes the webhook
+    def delete
+      if token?
+        API::Webhook.token_delete_webhook(@token, @id)
+      else
+        API::Webhook.delete_webhook(@bot.token, @id)
+      end
+    end
+
+    # Utility function to get a webhook's avatar URL
+    # @return [String, nil] the URL to the avatar image (nil if no image is set).
+    def avatar_url
+      return if @avatar.nil?
+      API::User.avatar_url(@id, @avatar)
+    end
+
+    # The inspect method is overwritten to give more useful output
+    def inspect
+      "<Webhook name=#{@name} id=#{@id}>"
+    end
+
+    # Utility function to know if the webhook was requested through a webhook token, rather than auth.
+    # @return [true, false] whether the webhook was requested by token or not.
+    def token?
+      @owner.nil?
+    end
+
+    private
+
+    def avatarise(avatar)
+      if avatar.respond_to? :read
+        "data:image/jpg;base64,#{Base64.strict_encode64(avatar.read)}"
+      else
+        avatar
+      end
+    end
+
+    def update_internal(data)
+      @name = data['name']
+      @avatar_id = data['avatar']
+      @channel = @bot.channel(data['channel_id'])
+    end
+
+    def update_webhook(new_data)
+      data = JSON.parse(if token?
+                          API::Webhook.token_update_webhook(@token, @id, new_data)
+                        else
+                          API::Webhook.update_webhook(@bot.token, @id, new_data)
+                        end)
+      # Only update cache if API call worked
+      update_internal(data) if data['name']
+    end
+  end
+
   # A colour (red, green and blue values). Used for role colours. If you prefer the American spelling, the alias
   # {ColorRGB} is also available.
   class ColourRGB
@@ -2909,13 +3320,24 @@ module Discordrb
     attr_reader :combined
 
     # Make a new colour from the combined value.
-    # @param combined [Integer] The colour's RGB values combined into one integer
+    # @param combined [Integer, String] The colour's RGB values combined into one integer or a hexadecimal string
+    # @example Initialize a with a base 10 integer
+    #   ColourRGB.new(7506394) #=> ColourRGB
+    #   ColourRGB.new(0x7289da) #=> ColourRGB
+    # @example Initialize a with a hexadecimal string
+    #   ColourRGB.new('7289da') #=> ColourRGB
     def initialize(combined)
-      @combined = combined
-      @red = (combined >> 16) & 0xFF
-      @green = (combined >> 8) & 0xFF
-      @blue = combined & 0xFF
+      @combined = combined.is_a?(String) ? combined.to_i(16) : combined
+      @red = (@combined >> 16) & 0xFF
+      @green = (@combined >> 8) & 0xFF
+      @blue = @combined & 0xFF
     end
+
+    # @return [String] the colour as a hexadecimal.
+    def hex
+      @combined.to_s(16)
+    end
+    alias_method :hexadecimal, :hex
   end
 
   # Alias for the class {ColourRGB}

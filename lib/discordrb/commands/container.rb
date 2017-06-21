@@ -46,6 +46,8 @@ module Discordrb::Commands
     #   will be done if unspecified or nil.
     # @yield The block is executed when the command is executed.
     # @yieldparam event [CommandEvent] The event of the message that contained the command.
+    # @note `LocalJumpError`s are rescued from internally, giving bots the opportunity to use `return` or `break` in
+    #   their blocks without propagating an exception.
     # @return [Command] The command that was added.
     def command(name, attributes = {}, &block)
       @commands ||= {}

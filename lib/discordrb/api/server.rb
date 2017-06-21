@@ -83,13 +83,13 @@ module Discordrb::API::Server
 
   # Create a channel
   # https://discordapp.com/developers/docs/resources/guild#create-guild-channel
-  def create_channel(token, server_id, name, type, reason)
+  def create_channel(token, server_id, name, type, bitrate, user_limit, permission_overwrites, reason)
     Discordrb::API.request(
       :guilds_sid_channels,
       server_id,
       :post,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/channels",
-      { name: name, type: type }.to_json,
+      { name: name, type: type, bitrate: bitrate, user_limit: user_limit, permission_overwrites: permission_overwrites }.to_json,
       Authorization: token,
       content_type: :json,
       'X-Audit-Log-Reason': reason
@@ -445,6 +445,18 @@ module Discordrb::API::Server
       server_id,
       :get,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/regions",
+      Authorization: token
+    )
+  end
+
+  # Get server webhooks
+  # https://discordapp.com/developers/docs/resources/webhook#get-guild-webhooks
+  def webhooks(token, server_id)
+    Discordrb::API.request(
+      :guilds_sid_webhooks,
+      server_id,
+      :get,
+      "#{Discordrb::API.api_base}/guilds/#{server_id}/webhooks",
       Authorization: token
     )
   end

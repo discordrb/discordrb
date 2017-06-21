@@ -385,6 +385,17 @@ module Discordrb
       register_event(ServerEmojiUpdateEvent, attributes, block)
     end
 
+    # This **event** is raised when a webhook is updated.
+    # @param attributes [Hash] The event's attributes.
+    # @option attributes [String, Integer, Server] :server Matches the server.
+    # @option attributes [String, Integer, Channel] :channel Matches the channel.
+    # @yield The block is executed when the event is raised.
+    # @yieldparam event [WebhookUpdateEvent] The event that was raised.
+    # @return [WebhookUpdateEventHandler] the event handler that was registered.
+    def webhook_update(attributes = {}, &block)
+      register_event(WebhookUpdateEvent, attributes, block)
+    end
+
     # This **event** is raised when an {Await} is triggered. It provides an easy way to execute code
     # on an await without having to rely on the await's block.
     # @param attributes [Hash] The event's attributes.
