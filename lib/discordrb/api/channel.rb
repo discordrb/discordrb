@@ -113,20 +113,19 @@ module Discordrb::API::Channel
 
   # Delete a message
   # https://discordapp.com/developers/docs/resources/channel#delete-message
-  def delete_message(token, channel_id, message_id, reason)
+  def delete_message(token, channel_id, message_id)
     Discordrb::API.request(
       :channels_cid_messages_mid,
       channel_id,
       :delete,
       "#{Discordrb::API.api_base}/channels/#{channel_id}/messages/#{message_id}",
-      Authorization: token,
-      'X-Audit-Log-Reason': reason
+      Authorization: token
     )
   end
 
   # Delete messages in bulk
   # https://discordapp.com/developers/docs/resources/channel#bulk-delete-messages
-  def bulk_delete_messages(token, channel_id, messages = [], reason = nil)
+  def bulk_delete_messages(token, channel_id, messages = [])
     Discordrb::API.request(
       :channels_cid_messages_bulk_delete,
       channel_id,
@@ -134,8 +133,7 @@ module Discordrb::API::Channel
       "#{Discordrb::API.api_base}/channels/#{channel_id}/messages/bulk-delete",
       { messages: messages }.to_json,
       Authorization: token,
-      content_type: :json,
-      'X-Audit-Log-Reason': reason
+      content_type: :json
     )
   end
 

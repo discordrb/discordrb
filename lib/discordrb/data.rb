@@ -1474,14 +1474,14 @@ module Discordrb
     # permission sets, or change an existing one.
     # @overload define_overwrite(overwrite)
     #   @param thing [Overwrite] an Overwrite object to apply to this channel
-    #   @param reason [String] The reason the for the overwrite.
+    #   @param reason [String] The reason the for defining the overwrite.
     # @overload define_overwrite(thing, allow, deny)
     #   @param thing [User, Role] What to define an overwrite for.
     #   @param allow [#bits, Permissions, Integer] The permission sets that should receive an `allow` override (i. e. a
     #     green checkmark on Discord)
     #   @param deny [#bits, Permissions, Integer] The permission sets that should receive a `deny` override (i. e. a red
     #     cross on Discord)
-    #   @param reason [String] The reason the for the overwrite.
+    #   @param reason [String] The reason the for defining the overwrite.
     #   @example Define a permission overwrite for a user that can then mention everyone and use TTS, but not create any invites
     #     allow = Discordrb::Permissions.new
     #     allow.can_mention_everyone = true
@@ -1585,26 +1585,24 @@ module Discordrb
     # @param amount [Integer] How many messages to delete. Must be a value between 2 and 100 (Discord limitation)
     # @param strict [true, false] Whether an error should be raised when a message is reached that is too old to be bulk
     #   deleted. If this is false only a warning message will be output to the console.
-    # @param reason [String] The reason the for the prune.
     # @raise [ArgumentError] if the amount of messages is not a value between 2 and 100
-    def prune(amount, strict = false, reason = nil)
+    def prune(amount, strict = false)
       raise ArgumentError, 'Can only prune between 2 and 100 messages!' unless amount.between?(2, 100)
 
       messages = history_ids(amount)
-      bulk_delete(messages, strict, reason)
+      bulk_delete(messages, strict)
     end
 
     # Deletes a collection of messages
     # @param messages [Array<Message, Integer>] the messages (or message IDs) to delete. Total must be an amount between 2 and 100 (Discord limitation)
     # @param strict [true, false] Whether an error should be raised when a message is reached that is too old to be bulk
     #   deleted. If this is false only a warning message will be output to the console.
-    # @param reason [String] The reason the for the prune.
     # @raise [ArgumentError] if the amount of messages is not a value between 2 and 100
-    def delete_messages(messages, strict = false, reason = nil)
+    def delete_messages(messages, strict = false)
       raise ArgumentError, 'Can only delete between 2 and 100 messages!' unless messages.count.between?(2, 100)
 
       messages.map!(&:resolve_id)
-      bulk_delete(messages, strict, reason)
+      bulk_delete(messages, strict)
     end
 
     # Updates the cached permission overwrites
@@ -1730,7 +1728,7 @@ module Discordrb
     TWO_WEEKS = 86_400 * 14
 
     # Deletes a list of messages on this channel using bulk delete
-    def bulk_delete(ids, strict = false, reason = nil)
+    def bulk_delete(ids, strict = false)
       min_snowflake = IDObject.synthesise(Time.now - TWO_WEEKS)
 
       ids.reject! do |e|
@@ -1742,7 +1740,7 @@ module Discordrb
         false
       end
 
-      API::Channel.bulk_delete_messages(@bot.token, @id, ids, reason)
+      API::Channel.bulk_delete_messages(@bot.token, @id, ids)
     end
 
     def update_channel_data
@@ -2195,9 +2193,8 @@ module Discordrb
     end
 
     # Deletes this message.
-    # @param reason [String] The reason the for the message deletion.
-    def delete(reason = nil)
-      API::Channel.delete_message(@bot.token, @channel.id, @id, reason)
+    def delete
+      API::Channel.delete_message(@bot.token, @channel.id, @id)
       nil
     end
 
@@ -3252,6 +3249,7 @@ module Discordrb
     # @option data [String, #read, nil] :avatar The new avatar, in base64-encoded JPG format, or nil to delete the avatar.
     # @option data [Channel, String, Integer, #resolve_id] :channel The channel the webhook should use.
     # @option data [String] :name The webhook's new name.
+    # @option data [String] :reason The reason for the webhook changes.
     def update(data)
       # Only pass a value for avatar if the key is defined as sending nil will delete the
       data[:avatar] = avatarise(data[:avatar]) if data.key?(:avatar)
@@ -3305,10 +3303,11 @@ module Discordrb
     end
 
     def update_webhook(new_data)
+      reason = new_data.delete(:reason)
       data = JSON.parse(if token?
-                          API::Webhook.token_update_webhook(@token, @id, new_data, nil)
+                          API::Webhook.token_update_webhook(@token, @id, new_data, reason)
                         else
-                          API::Webhook.update_webhook(@bot.token, @id, new_data, nil)
+                          API::Webhook.update_webhook(@bot.token, @id, new_data, reason)
                         end)
       # Only update cache if API call worked
       update_internal(data) if data['name']
