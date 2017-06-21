@@ -3422,8 +3422,8 @@ module Discordrb
         @data = data
         @action = Actions[data['action_type']]
         @reason = data['reason']
-        @action_type = @logs.action_type_for(data['action_type'])
-        @target_type = @logs.target_type_for(data['action_type'])
+        @action_type = AuditLogs.action_type_for(data['action_type'])
+        @target_type = AuditLogs.target_type_for(data['action_type'])
         @target_cached = false
         
         # Sets the 'changes' variable to a empty hash if there are no special actions.
@@ -3466,20 +3466,13 @@ module Discordrb
       def process_target(id, type)
         id = id.resolve_id unless id.nil?
         case type
-        when :server
-          @server # Since it won't be anything else
-        when :channel
-          @bot.channel(id, @server)
-        when :user, :message
-          @server.member(id) || @bot.user(id) || @logs.user(id)
-        when :role
-          @server.role(id)
-        when :invite
-          @bot.invite(@data['changes'].find { |change| change['key'] == 'code' }.values.delete_if { |v| v == 'code' }.first)
-        when :webhook
-          @server.webhooks.find { |webhook| webhook.id == id }
-        when :emoji
-          @server.emoji[id]
+        when :server then @server # Since it won't be anything else
+        when :channel then @bot.channel(id, @server)
+        when :user, :message then @server.member(id) || @bot.user(id) || @logs.user(id)
+        when :role then @server.role(id)
+        when :invite then @bot.invite(@data['changes'].find { |change| change['key'] == 'code' }.values.delete_if { |v| v == 'code' }.first)
+        when :webhook then @server.webhooks.find { |webhook| webhook.id == id }
+        when :emoji then @server.emoji[id]
         end
       end
 
@@ -3563,15 +3556,17 @@ module Discordrb
 
     # @!visibility private
     def self.target_type_for(action)
-      return :server if action < 10
-      return :channel if action < 20
-      return :user if action < 30
-      return :role if action < 40
-      return :invite if action < 50
-      return :webhook if action < 60
-      return :emoji if action < 70
-      return :message if action < 80
-      :unknown
+      case action
+      when 1..9 then return :server
+      when 10..19 then :channel
+      when 20..29 then :user
+      when 30..39 then :role
+      when 40..49 then :invite
+      when 50..59 then :webhook
+      when 60..69 then :emoji
+      when 70..79 then :message
+      else :unknown
+      end
     end
 
     # @!visibility private
