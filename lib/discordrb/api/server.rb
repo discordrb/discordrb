@@ -30,7 +30,7 @@ module Discordrb::API::Server
 
   # Update a server
   # https://discordapp.com/developers/docs/resources/guild#modify-guild
-  def update(token, server_id, name, region, icon, afk_channel_id, afk_timeout)
+  def update(token, server_id, name, region, icon, afk_channel_id, afk_timeout, reason)
     Discordrb::API.request(
       :guilds_sid,
       server_id,
@@ -38,12 +38,13 @@ module Discordrb::API::Server
       "#{Discordrb::API.api_base}/guilds/#{server_id}",
       { name: name, region: region, icon: icon, afk_channel_id: afk_channel_id, afk_timeout: afk_timeout }.to_json,
       Authorization: token,
-      content_type: :json
+      content_type: :json,
+      'X-Audit-Log-Reason': reason
     )
   end
 
   # Transfer server ownership
-  def transfer_ownership(token, server_id, user_id)
+  def transfer_ownership(token, server_id, user_id, reason)
     Discordrb::API.request(
       :guilds_sid,
       server_id,
@@ -51,7 +52,8 @@ module Discordrb::API::Server
       "#{Discordrb::API.api_base}/guilds/#{server_id}",
       { owner_id: user_id }.to_json,
       Authorization: token,
-      content_type: :json
+      content_type: :json,
+      'X-Audit-Log-Reason': reason
     )
   end
 
@@ -81,7 +83,7 @@ module Discordrb::API::Server
 
   # Create a channel
   # https://discordapp.com/developers/docs/resources/guild#create-guild-channel
-  def create_channel(token, server_id, name, type)
+  def create_channel(token, server_id, name, type, reason)
     Discordrb::API.request(
       :guilds_sid_channels,
       server_id,
@@ -89,13 +91,14 @@ module Discordrb::API::Server
       "#{Discordrb::API.api_base}/guilds/#{server_id}/channels",
       { name: name, type: type }.to_json,
       Authorization: token,
-      content_type: :json
+      content_type: :json,
+      'X-Audit-Log-Reason': reason
     )
   end
 
   # Update a channels position
   # https://discordapp.com/developers/docs/resources/guild#modify-guild-channel
-  def update_channel(token, server_id, channel_id, position)
+  def update_channel(token, server_id, channel_id, position, reason)
     Discordrb::API.request(
       :guilds_sid_channels,
       server_id,
@@ -103,7 +106,8 @@ module Discordrb::API::Server
       "#{Discordrb::API.api_base}/guilds/#{server_id}/channels",
       { id: channel_id, position: position }.to_json,
       Authorization: token,
-      content_type: :json
+      content_type: :json,
+      'X-Audit-Log-Reason': reason
     )
   end
 
@@ -133,7 +137,7 @@ module Discordrb::API::Server
 
   # Update a user properties
   # https://discordapp.com/developers/docs/resources/guild#modify-guild-member
-  def update_member(token, server_id, user_id, nick: nil, roles: nil, mute: nil, deaf: nil, channel_id: nil)
+  def update_member(token, server_id, user_id, nick: nil, roles: nil, mute: nil, deaf: nil, channel_id: nil, reason: nil)
     Discordrb::API.request(
       :guilds_sid_members_uid,
       server_id,
@@ -146,7 +150,8 @@ module Discordrb::API::Server
         channel_id: channel_id
       }.reject { |_, v| v.nil? }.to_json,
       Authorization: token,
-      content_type: :json
+      content_type: :json,
+      'X-Audit-Log-Reason': reason
     )
   end
 
@@ -220,7 +225,7 @@ module Discordrb::API::Server
   # sending TTS messages, embedding links, sending files, reading the history, mentioning everybody,
   # connecting to voice, speaking and voice activity (push-to-talk isn't mandatory)
   # https://discordapp.com/developers/docs/resources/guild#get-guild-roles
-  def create_role(token, server_id, name, colour, hoist, mentionable, packed_permissions)
+  def create_role(token, server_id, name, colour, hoist, mentionable, packed_permissions, reason)
     Discordrb::API.request(
       :guilds_sid_roles,
       server_id,
@@ -228,7 +233,8 @@ module Discordrb::API::Server
       "#{Discordrb::API.api_base}/guilds/#{server_id}/roles",
       { color: colour, name: name, hoist: hoist, mentionable: mentionable, permissions: packed_permissions }.to_json,
       Authorization: token,
-      content_type: :json
+      content_type: :json,
+      'X-Audit-Log-Reason': reason
     )
   end
 
@@ -237,7 +243,7 @@ module Discordrb::API::Server
   # sending TTS messages, embedding links, sending files, reading the history, mentioning everybody,
   # connecting to voice, speaking and voice activity (push-to-talk isn't mandatory)
   # https://discordapp.com/developers/docs/resources/guild#batch-modify-guild-role
-  def update_role(token, server_id, role_id, name, colour, hoist = false, mentionable = false, packed_permissions = 104_324_161)
+  def update_role(token, server_id, role_id, name, colour, hoist = false, mentionable = false, packed_permissions = 104_324_161, reason = nil)
     Discordrb::API.request(
       :guilds_sid_roles_rid,
       server_id,
@@ -245,44 +251,48 @@ module Discordrb::API::Server
       "#{Discordrb::API.api_base}/guilds/#{server_id}/roles/#{role_id}",
       { color: colour, name: name, hoist: hoist, mentionable: mentionable, permissions: packed_permissions }.to_json,
       Authorization: token,
-      content_type: :json
+      content_type: :json,
+      'X-Audit-Log-Reason': reason
     )
   end
 
   # Delete a role
   # https://discordapp.com/developers/docs/resources/guild#delete-guild-role
-  def delete_role(token, server_id, role_id)
+  def delete_role(token, server_id, role_id, reason)
     Discordrb::API.request(
       :guilds_sid_roles_rid,
       server_id,
       :delete,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/roles/#{role_id}",
-      Authorization: token
+      Authorization: token,
+      'X-Audit-Log-Reason': reason
     )
   end
 
   # Adds a single role to a member
   # https://discordapp.com/developers/docs/resources/guild#add-guild-member-role
-  def add_member_role(token, server_id, user_id, role_id)
+  def add_member_role(token, server_id, user_id, role_id, reason)
     Discordrb::API.request(
       :guilds_sid_members_uid_roles_rid,
       server_id,
       :put,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/members/#{user_id}/roles/#{role_id}",
       nil,
-      Authorization: token
+      Authorization: token,
+      'X-Audit-Log-Reason': reason
     )
   end
 
   # Removes a single role from a member
   # https://discordapp.com/developers/docs/resources/guild#remove-guild-member-role
-  def remove_member_role(token, server_id, user_id, role_id)
+  def remove_member_role(token, server_id, user_id, role_id, reason)
     Discordrb::API.request(
       :guilds_sid_members_uid_roles_rid,
       server_id,
       :delete,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/members/#{user_id}/roles/#{role_id}",
-      Authorization: token
+      Authorization: token,
+      'X-Audit-Log-Reason': reason
     )
   end
 
@@ -300,14 +310,15 @@ module Discordrb::API::Server
 
   # Begin server prune
   # https://discordapp.com/developers/docs/resources/guild#begin-guild-prune
-  def begin_prune(token, server_id, days)
+  def begin_prune(token, server_id, days, reason)
     Discordrb::API.request(
       :guilds_sid_prune,
       server_id,
       :post,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/prune",
       { days: days },
-      Authorization: token
+      Authorization: token,
+      'X-Audit-Log-Reason': reason
     )
   end
 
@@ -388,7 +399,7 @@ module Discordrb::API::Server
   end
 
   # Adds a custom emoji
-  def add_emoji(token, server_id, image, name)
+  def add_emoji(token, server_id, image, name, reason)
     Discordrb::API.request(
       :guilds_sid_emojis,
       server_id,
@@ -396,12 +407,13 @@ module Discordrb::API::Server
       "#{Discordrb::API.api_base}/guilds/#{server_id}/emojis",
       { image: image, name: name }.to_json,
       Authorization: token,
-      content_type: :json
+      content_type: :json,
+      'X-Audit-Log-Reason': reason
     )
   end
 
   # Changes an emoji name
-  def edit_emoji(token, server_id, emoji_id, name)
+  def edit_emoji(token, server_id, emoji_id, name, reason)
     Discordrb::API.request(
       :guilds_sid_emojis_eid,
       server_id,
@@ -409,18 +421,20 @@ module Discordrb::API::Server
       "#{Discordrb::API.api_base}/guilds/#{server_id}/emojis/#{emoji_id}",
       { name: name }.to_json,
       Authorization: token,
-      content_type: :json
+      content_type: :json,
+      'X-Audit-Log-Reason': reason
     )
   end
 
   # Deletes a custom emoji
-  def delete_emoji(token, server_id, emoji_id)
+  def delete_emoji(token, server_id, emoji_id, reason)
     Discordrb::API.request(
       :guilds_sid_emojis_eid,
       server_id,
       :delete,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/emojis/#{emoji_id}",
-      Authorization: token
+      Authorization: token,
+      'X-Audit-Log-Reason': reason
     )
   end
 

@@ -564,54 +564,63 @@ module Discordrb
       @roles.any? { |e| e.id == role }
     end
 
+    # @see Member#set_roles
+    def roles=(role)
+      set_roles(role)
+    end
+
     # Bulk sets a member's roles.
     # @param role [Role, Array<Role>] The role(s) to set.
-    def roles=(role)
+    # @param reason [String] The reason the user's roles are being changed.
+    def set_roles(role, reason = nil)
       role_ids = role_id_array(role)
-      API::Server.update_member(@bot.token, @server.id, @user.id, roles: role_ids)
+      API::Server.update_member(@bot.token, @server.id, @user.id, roles: role_ids, reason: reason)
     end
 
     # Adds and removes roles from a member.
     # @param add [Role, Array<Role>] The role(s) to add.
     # @param remove [Role, Array<Role>] The role(s) to remove.
+    # @param reason [String] The reason the user's roles are being changed.
     # @example Remove the 'Member' role from a user, and add the 'Muted' role to them.
     #   to_add = server.roles.find {|role| role.name == 'Muted'}
     #   to_remove = server.roles.find {|role| role.name == 'Member'}
     #   member.modify_roles(to_add, to_remove)
-    def modify_roles(add, remove)
+    def modify_roles(add, remove, reason = nil)
       add_role_ids = role_id_array(add)
       remove_role_ids = role_id_array(remove)
       old_role_ids = @roles.map(&:id)
       new_role_ids = (old_role_ids - remove_role_ids + add_role_ids).uniq
 
-      API::Server.update_member(@bot.token, @server.id, @user.id, roles: new_role_ids)
+      API::Server.update_member(@bot.token, @server.id, @user.id, roles: new_role_ids, reason: reason)
     end
 
     # Adds one or more roles to this member.
     # @param role [Role, Array<Role>] The role(s) to add.
-    def add_role(role)
+    # @param reason [String] The reason the user's roles are being changed.
+    def add_role(role, reason = nil)
       role_ids = role_id_array(role)
 
       if role_ids.count == 1
-        API::Server.add_member_role(@bot.token, @server.id, @user.id, role_ids[0])
+        API::Server.add_member_role(@bot.token, @server.id, @user.id, role_ids[0], reason: reason)
       else
         old_role_ids = @roles.map(&:id)
         new_role_ids = (old_role_ids + role_ids).uniq
-        API::Server.update_member(@bot.token, @server.id, @user.id, roles: new_role_ids)
+        API::Server.update_member(@bot.token, @server.id, @user.id, roles: new_role_ids, reason: reason)
       end
     end
 
     # Removes one or more roles from this member.
     # @param role [Role, Array<Role>] The role(s) to remove.
-    def remove_role(role)
+    # @param reason [String] The reason the user's roles are being changed.
+    def remove_role(role, reason = nil)
       role_ids = role_id_array(role)
 
       if role_ids.count == 1
-        API::Server.remove_member_role(@bot.token, @server.id, @user.id, role_ids[0])
+        API::Server.remove_member_role(@bot.token, @server.id, @user.id, role_ids[0], reason: reason)
       else
         old_role_ids = @roles.map(&:id)
         new_role_ids = old_role_ids.reject { |i| role_ids.include?(i) }
-        API::Server.update_member(@bot.token, @server.id, @user.id, roles: new_role_ids)
+        API::Server.update_member(@bot.token, @server.id, @user.id, roles: new_role_ids, reason: reason)
       end
     end
 
@@ -635,21 +644,29 @@ module Discordrb
       API::Server.update_member(@bot.token, @server.id, @user.id, mute: false)
     end
 
+    # @see Member#set_nick
+    def nick=(nick)
+      set_nick(nick)
+    end
+
+    alias_method :nickname=, :nick=
+
     # Sets or resets this member's nickname. Requires the Change Nickname permission for the bot itself and Manage
     # Nicknames for other users.
     # @param nick [String, nil] The string to set the nickname to, or nil if it should be reset.
-    def nick=(nick)
+    # @param reason [String] The reason the user's nickname is being changed.
+    def set_nick(nick, reason = nil)
       # Discord uses the empty string to signify 'no nickname' so we convert nil into that
       nick ||= ''
 
       if @user.current_bot?
         API::User.change_own_nickname(@bot.token, @server.id, nick)
       else
-        API::Server.update_member(@bot.token, @server.id, @user.id, nick: nick)
+        API::Server.update_member(@bot.token, @server.id, @user.id, nick: nick, reason: nil)
       end
     end
 
-    alias_method :nickname=, :nick=
+    alias_method :set_nickname, :set_nick
 
     # @return [String] the name the user displays as (nickname if they have one, username otherwise)
     def display_name
@@ -2446,12 +2463,13 @@ module Discordrb
 
     # Prunes (kicks) an amount of members for inactivity
     # @param days [Integer] the number of days to consider for inactivity (between 1 and 30)
+    # @param reason [String] The reason the for the prune.
     # @return [Integer] the number of members removed at the end of the operation
     # @raise [ArgumentError] if days is not between 1 and 30 (inclusive)
-    def begin_prune(days)
+    def begin_prune(days, reason = nil)
       raise ArgumentError, 'Days must be between 1 and 30' unless days.between?(1, 30)
 
-      response = JSON.parse API::Server.begin_prune(@bot.token, @id, days)
+      response = JSON.parse API::Server.begin_prune(@bot.token, @id, days, reason)
       response['pruned']
     end
 
@@ -2584,11 +2602,12 @@ module Discordrb
     # Creates a channel on this server with the given name.
     # @param name [String] Name of the channel to create
     # @param type [Integer] Type of channel to create (0: text, 2: voice)
+    # @param reason [String] The reason the for the creation of this channel.
     # @return [Channel] the created channel.
     # @raise [ArgumentError] if type is not 0 or 2
-    def create_channel(name, type = 0)
+    def create_channel(name, type = 0, reason = nil)
       raise ArgumentError, 'Channel type must be either 0 (text) or 2 (voice)!' unless [0, 2].include?(type)
-      response = API::Server.create_channel(@bot.token, @id, name, type)
+      response = API::Server.create_channel(@bot.token, @id, name, type, reason)
       Channel.new(JSON.parse(response), @bot)
     end
 
@@ -2600,9 +2619,10 @@ module Discordrb
     # @param hoist [true, false]
     # @param mentionable [true, false]
     # @param packed_permissions [Integer] The packed permissions to write.
+    # @param reason [String] The reason the for the creation of this channel.
     # @return [Role] the created role.
-    def create_role(name: 'new role', colour: 0, hoist: false, mentionable: false, packed_permissions: 104_324_161)
-      response = API::Server.create_role(@bot.token, @id, name, colour, hoist, mentionable, packed_permissions)
+    def create_role(name: 'new role', colour: 0, hoist: false, mentionable: false, packed_permissions: 104_324_161, reason: nil)
+      response = API::Server.create_role(@bot.token, @id, name, colour, hoist, mentionable, packed_permissions, reason)
 
       role = Role.new(JSON.parse(response), @bot, self)
       @roles << role

@@ -27,7 +27,7 @@ module Discordrb::API::User
   end
 
   # Change the current bot's nickname on a server
-  def change_own_nickname(token, server_id, nick)
+  def change_own_nickname(token, server_id, nick, reason)
     Discordrb::API.request(
       :guilds_sid_members_me_nick,
       server_id, # This is technically a guild endpoint
@@ -35,7 +35,8 @@ module Discordrb::API::User
       "#{Discordrb::API.api_base}/guilds/#{server_id}/members/@me/nick",
       { nick: nick }.to_json,
       Authorization: token,
-      content_type: :json
+      content_type: :json,
+      'X-Audit-Log-Reason': reason
     )
   end
 
