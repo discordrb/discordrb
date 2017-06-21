@@ -381,7 +381,7 @@ module Discordrb::API::Channel
 
   # Create a webhook
   # https://discordapp.com/developers/docs/resources/webhook#create-webhook
-  def create_webhook(token, channel_id, name, avatar = nil)
+  def create_webhook(token, channel_id, name, avatar = nil, reason = nil)
     Discordrb::API.request(
       :channels_cid_webhooks,
       channel_id,
@@ -389,7 +389,8 @@ module Discordrb::API::Channel
       "#{Discordrb::API.api_base}/channels/#{channel_id}/webhooks",
       { name: name, avatar: avatar }.to_json,
       Authorization: token,
-      content_type: :json
+      content_type: :json,
+      'X-Audit-Log-Reason': reason
     )
   end
 

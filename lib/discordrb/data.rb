@@ -3261,11 +3261,12 @@ module Discordrb
     end
 
     # Deletes the webhook
-    def delete
+    # @param reason [String] The reason the invite is being deleted.
+    def delete(reason = nil)
       if token?
-        API::Webhook.token_delete_webhook(@token, @id)
+        API::Webhook.token_delete_webhook(@token, @id, reason)
       else
-        API::Webhook.delete_webhook(@bot.token, @id)
+        API::Webhook.delete_webhook(@bot.token, @id, reason)
       end
     end
 
@@ -3305,9 +3306,9 @@ module Discordrb
 
     def update_webhook(new_data)
       data = JSON.parse(if token?
-                          API::Webhook.token_update_webhook(@token, @id, new_data)
+                          API::Webhook.token_update_webhook(@token, @id, new_data, nil)
                         else
-                          API::Webhook.update_webhook(@bot.token, @id, new_data)
+                          API::Webhook.update_webhook(@bot.token, @id, new_data, nil)
                         end)
       # Only update cache if API call worked
       update_internal(data) if data['name']
