@@ -3557,7 +3557,7 @@ module Discordrb
     # @!visibility private
     def self.target_type_for(action)
       case action
-      when 1..9 then return :server
+      when 1..9 then :server
       when 10..19 then :channel
       when 20..29 then :user
       when 30..39 then :role
