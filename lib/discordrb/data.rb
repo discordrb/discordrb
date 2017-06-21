@@ -1119,8 +1119,9 @@ module Discordrb
     end
 
     # Deletes this invite
-    def delete
-      API::Invite.delete(@bot.token, @code)
+    # @param reason [String] The reason the invite is being deleted.
+    def delete(reason = nil)
+      API::Invite.delete(@bot.token, @code, reason)
     end
 
     alias_method :revoke, :delete
@@ -1418,13 +1419,15 @@ module Discordrb
 
     # Deletes a message on this channel. Mostly useful in case a message needs to be deleted when only the ID is known
     # @param message [Message, String, Integer, #resolve_id] The message that should be deleted.
-    def delete_message(message)
-      API::Channel.delete_message(@bot.token, @id, message.resolve_id)
+    # @param reason [String] The reason the for the message deletion.
+    def delete_message(message, reason = nil)
+      API::Channel.delete_message(@bot.token, @id, message.resolve_id, reason)
     end
 
     # Permanently deletes this channel
-    def delete
-      API::Channel.delete(@bot.token, @id)
+    # @param reason [String] The reason the for the channel deletion.
+    def delete(reason = nil)
+      API::Channel.delete(@bot.token, @id, reason)
     end
 
     # Sets this channel's name. The name must be alphanumeric with dashes, unless this is a voice channel (then there are no limitations)
@@ -1471,12 +1474,14 @@ module Discordrb
     # permission sets, or change an existing one.
     # @overload define_overwrite(overwrite)
     #   @param thing [Overwrite] an Overwrite object to apply to this channel
+    #   @param reason [String] The reason the for the overwrite.
     # @overload define_overwrite(thing, allow, deny)
     #   @param thing [User, Role] What to define an overwrite for.
     #   @param allow [#bits, Permissions, Integer] The permission sets that should receive an `allow` override (i. e. a
     #     green checkmark on Discord)
     #   @param deny [#bits, Permissions, Integer] The permission sets that should receive a `deny` override (i. e. a red
     #     cross on Discord)
+    #   @param reason [String] The reason the for the overwrite.
     #   @example Define a permission overwrite for a user that can then mention everyone and use TTS, but not create any invites
     #     allow = Discordrb::Permissions.new
     #     allow.can_mention_everyone = true
@@ -1486,7 +1491,7 @@ module Discordrb
     #     deny.can_create_instant_invite = true
     #
     #     channel.define_overwrite(user, allow, deny)
-    def define_overwrite(thing, allow = 0, deny = 0)
+    def define_overwrite(thing, allow = 0, deny = 0, reason: nil)
       unless thing.is_a? Overwrite
         allow_bits = allow.respond_to?(:bits) ? allow.bits : allow
         deny_bits = deny.respond_to?(:bits) ? deny.bits : deny
@@ -1494,15 +1499,16 @@ module Discordrb
         thing = Overwrite.new thing, allow: allow_bits, deny: deny_bits
       end
 
-      API::Channel.update_permission(@bot.token, @id, thing.id, thing.allow.bits, thing.deny.bits, thing.type)
+      API::Channel.update_permission(@bot.token, @id, thing.id, thing.allow.bits, thing.deny.bits, thing.type, reason)
     end
 
     # Deletes a permission overwrite for this channel
     # @param target [Member, User, Role, Profile, Recipient, #resolve_id] What permission overwrite to delete
-    def delete_overwrite(target)
+    #   @param reason [String] The reason the for the overwrite deletion.
+    def delete_overwrite(target, reason = nil)
       raise 'Tried deleting a overwrite for an invalid target' unless target.is_a?(Member) || target.is_a?(User) || target.is_a?(Role) || target.is_a?(Profile) || target.is_a?(Recipient) || target.respond_to?(:resolve_id)
 
-      API::Channel.delete_permission(@bot.token, @id, target.resolve_id)
+      API::Channel.delete_permission(@bot.token, @id, target.resolve_id, reason)
     end
 
     # Updates the cached data from another channel.
@@ -1579,8 +1585,9 @@ module Discordrb
     # @param amount [Integer] How many messages to delete. Must be a value between 2 and 100 (Discord limitation)
     # @param strict [true, false] Whether an error should be raised when a message is reached that is too old to be bulk
     #   deleted. If this is false only a warning message will be output to the console.
+    # @param reason [String] The reason the for the prune.
     # @raise [ArgumentError] if the amount of messages is not a value between 2 and 100
-    def prune(amount, strict = false)
+    def prune(amount, strict = false, reason = nil)
       raise ArgumentError, 'Can only prune between 2 and 100 messages!' unless amount.between?(2, 100)
 
       messages = history_ids(amount)
@@ -1591,12 +1598,13 @@ module Discordrb
     # @param messages [Array<Message, Integer>] the messages (or message IDs) to delete. Total must be an amount between 2 and 100 (Discord limitation)
     # @param strict [true, false] Whether an error should be raised when a message is reached that is too old to be bulk
     #   deleted. If this is false only a warning message will be output to the console.
+    # @param reason [String] The reason the for the prune.
     # @raise [ArgumentError] if the amount of messages is not a value between 2 and 100
-    def delete_messages(messages, strict = false)
+    def delete_messages(messages, strict = false, reason = nil)
       raise ArgumentError, 'Can only delete between 2 and 100 messages!' unless messages.count.between?(2, 100)
 
       messages.map!(&:resolve_id)
-      bulk_delete(messages, strict)
+      bulk_delete(messages, strict, reason)
     end
 
     # Updates the cached permission overwrites
@@ -1618,9 +1626,10 @@ module Discordrb
     # @param max_uses [Integer] How many times this invite should be able to be used.
     # @param temporary [true, false] Whether membership should be temporary (kicked after going offline).
     # @param unique [true, false] If true, Discord will always send a unique invite instead of possibly re-using a similar one
+    # @param reason [String] The reason the for the creation of this invite.
     # @return [Invite] the created invite.
-    def make_invite(max_age = 0, max_uses = 0, temporary = false, unique = false)
-      response = API::Channel.create_invite(@bot.token, @id, max_age, max_uses, temporary, unique)
+    def make_invite(max_age = 0, max_uses = 0, temporary = false, unique = false, reason = nil)
+      response = API::Channel.create_invite(@bot.token, @id, max_age, max_uses, temporary, unique, reason)
       Invite.new(JSON.parse(response), @bot)
     end
 
@@ -1721,7 +1730,7 @@ module Discordrb
     TWO_WEEKS = 86_400 * 14
 
     # Deletes a list of messages on this channel using bulk delete
-    def bulk_delete(ids, strict = false)
+    def bulk_delete(ids, strict = false, reason = nil)
       min_snowflake = IDObject.synthesise(Time.now - TWO_WEEKS)
 
       ids.reject! do |e|
@@ -1733,11 +1742,11 @@ module Discordrb
         false
       end
 
-      API::Channel.bulk_delete_messages(@bot.token, @id, ids)
+      API::Channel.bulk_delete_messages(@bot.token, @id, ids, reason)
     end
 
     def update_channel_data
-      API::Channel.update(@bot.token, @id, @name, @topic, @position, @bitrate, @user_limit)
+      API::Channel.update(@bot.token, @id, @name, @topic, @position, @bitrate, @user_limit, nil)
     end
   end
 
@@ -2186,8 +2195,9 @@ module Discordrb
     end
 
     # Deletes this message.
-    def delete
-      API::Channel.delete_message(@bot.token, @channel.id, @id)
+    # @param reason [String] The reason the for the message deletion.
+    def delete(reason = nil)
+      API::Channel.delete_message(@bot.token, @channel.id, @id, reason)
       nil
     end
 
@@ -2891,7 +2901,7 @@ module Discordrb
     # @param hoist [true, false]
     # @param mentionable [true, false]
     # @param packed_permissions [Integer] The packed permissions to write.
-    # @param reason [String] The reason the for the creation of this channel.
+    # @param reason [String] The reason the for the creation of this role.
     # @return [Role] the created role.
     def create_role(name: 'new role', colour: 0, hoist: false, mentionable: false, packed_permissions: 104_324_161, reason: nil)
       response = API::Server.create_role(@bot.token, @id, name, colour, hoist, mentionable, packed_permissions, reason)
