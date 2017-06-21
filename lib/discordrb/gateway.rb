@@ -261,11 +261,11 @@ module Discordrb
     # @see #send_identify
     def identify
       send_identify(@token, {
-                      :'$os' => RUBY_PLATFORM,
-                      :'$browser' => 'discordrb',
-                      :'$device' => 'discordrb',
-                      :'$referrer' => '',
-                      :'$referring_domain' => ''
+                      '$os': RUBY_PLATFORM,
+                      '$browser': 'discordrb',
+                      '$device': 'discordrb',
+                      '$referrer': '',
+                      '$referring_domain': ''
                     }, true, 100, @shard_key)
     end
 

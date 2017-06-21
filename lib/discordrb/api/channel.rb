@@ -126,7 +126,7 @@ module Discordrb::API::Channel
 
   # Delete messages in bulk
   # https://discordapp.com/developers/docs/resources/channel#bulk-delete-messages
-  def bulk_delete_messages(token, channel_id, messages = [], reason)
+  def bulk_delete_messages(token, channel_id, messages = [], reason = nil)
     Discordrb::API.request(
       :channels_cid_messages_bulk_delete,
       channel_id,
