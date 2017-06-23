@@ -27,7 +27,7 @@ module Discordrb::API::Webhook
 
   # Update a webhook
   # https://discordapp.com/developers/docs/resources/webhook#modify-webhook
-  def update_webhook(token, webhook_id, data)
+  def update_webhook(token, webhook_id, data, reason)
     Discordrb::API.request(
       :webhooks_wid,
       webhook_id,
@@ -35,43 +35,47 @@ module Discordrb::API::Webhook
       "#{Discordrb::API.api_base}/webhooks/#{webhook_id}",
       data.to_json,
       Authorization: token,
-      content_type: :json
+      content_type: :json,
+      'X-Audit-Log-Reason': reason
     )
   end
 
   # Update a webhook via webhook token
   # https://discordapp.com/developers/docs/resources/webhook#modify-webhook-with-token
-  def token_update_webhook(webhook_token, webhook_id, data)
+  def token_update_webhook(webhook_token, webhook_id, data, reason)
     Discordrb::API.request(
       :webhooks_wid,
       webhook_id,
       :patch,
       "#{Discordrb::API.api_base}/webhooks/#{webhook_id}/#{webhook_token}",
       data.to_json,
-      content_type: :json
+      content_type: :json,
+      'X-Audit-Log-Reason': reason
     )
   end
 
   # Deletes a webhook
   # https://discordapp.com/developers/docs/resources/webhook#delete-webhook
-  def delete_webhook(token, webhook_id)
+  def delete_webhook(token, webhook_id, reason)
     Discordrb::API.request(
       :webhooks_wid,
       webhook_id,
       :delete,
       "#{Discordrb::API.api_base}/webhooks/#{webhook_id}",
-      Authorization: token
+      Authorization: token,
+      'X-Audit-Log-Reason': reason
     )
   end
 
   # Deletes a webhook via webhook token
   # https://discordapp.com/developers/docs/resources/webhook#delete-webhook-with-token
-  def token_delete_webhook(webhook_token, webhook_id)
+  def token_delete_webhook(webhook_token, webhook_id, reason)
     Discordrb::API.request(
       :webhooks_wid,
       webhook_id,
       :delete,
-      "#{Discordrb::API.api_base}/webhooks/#{webhook_id}/#{webhook_token}"
+      "#{Discordrb::API.api_base}/webhooks/#{webhook_id}/#{webhook_token}",
+      'X-Audit-Log-Reason': reason
     )
   end
 end

@@ -566,54 +566,63 @@ module Discordrb
       @roles.any? { |e| e.id == role }
     end
 
+    # @see Member#set_roles
+    def roles=(role)
+      set_roles(role)
+    end
+
     # Bulk sets a member's roles.
     # @param role [Role, Array<Role>] The role(s) to set.
-    def roles=(role)
+    # @param reason [String] The reason the user's roles are being changed.
+    def set_roles(role, reason = nil)
       role_ids = role_id_array(role)
-      API::Server.update_member(@bot.token, @server.id, @user.id, roles: role_ids)
+      API::Server.update_member(@bot.token, @server.id, @user.id, roles: role_ids, reason: reason)
     end
 
     # Adds and removes roles from a member.
     # @param add [Role, Array<Role>] The role(s) to add.
     # @param remove [Role, Array<Role>] The role(s) to remove.
+    # @param reason [String] The reason the user's roles are being changed.
     # @example Remove the 'Member' role from a user, and add the 'Muted' role to them.
     #   to_add = server.roles.find {|role| role.name == 'Muted'}
     #   to_remove = server.roles.find {|role| role.name == 'Member'}
     #   member.modify_roles(to_add, to_remove)
-    def modify_roles(add, remove)
+    def modify_roles(add, remove, reason = nil)
       add_role_ids = role_id_array(add)
       remove_role_ids = role_id_array(remove)
       old_role_ids = @roles.map(&:id)
       new_role_ids = (old_role_ids - remove_role_ids + add_role_ids).uniq
 
-      API::Server.update_member(@bot.token, @server.id, @user.id, roles: new_role_ids)
+      API::Server.update_member(@bot.token, @server.id, @user.id, roles: new_role_ids, reason: reason)
     end
 
     # Adds one or more roles to this member.
     # @param role [Role, Array<Role>] The role(s) to add.
-    def add_role(role)
+    # @param reason [String] The reason the user's roles are being changed.
+    def add_role(role, reason = nil)
       role_ids = role_id_array(role)
 
       if role_ids.count == 1
-        API::Server.add_member_role(@bot.token, @server.id, @user.id, role_ids[0])
+        API::Server.add_member_role(@bot.token, @server.id, @user.id, role_ids[0], reason: reason)
       else
         old_role_ids = @roles.map(&:id)
         new_role_ids = (old_role_ids + role_ids).uniq
-        API::Server.update_member(@bot.token, @server.id, @user.id, roles: new_role_ids)
+        API::Server.update_member(@bot.token, @server.id, @user.id, roles: new_role_ids, reason: reason)
       end
     end
 
     # Removes one or more roles from this member.
     # @param role [Role, Array<Role>] The role(s) to remove.
-    def remove_role(role)
+    # @param reason [String] The reason the user's roles are being changed.
+    def remove_role(role, reason = nil)
       role_ids = role_id_array(role)
 
       if role_ids.count == 1
-        API::Server.remove_member_role(@bot.token, @server.id, @user.id, role_ids[0])
+        API::Server.remove_member_role(@bot.token, @server.id, @user.id, role_ids[0], reason: reason)
       else
         old_role_ids = @roles.map(&:id)
         new_role_ids = old_role_ids.reject { |i| role_ids.include?(i) }
-        API::Server.update_member(@bot.token, @server.id, @user.id, roles: new_role_ids)
+        API::Server.update_member(@bot.token, @server.id, @user.id, roles: new_role_ids, reason: reason)
       end
     end
 
@@ -664,21 +673,29 @@ module Discordrb
       API::Server.update_member(@bot.token, @server.id, @user.id, mute: false)
     end
 
+    # @see Member#set_nick
+    def nick=(nick)
+      set_nick(nick)
+    end
+
+    alias_method :nickname=, :nick=
+
     # Sets or resets this member's nickname. Requires the Change Nickname permission for the bot itself and Manage
     # Nicknames for other users.
     # @param nick [String, nil] The string to set the nickname to, or nil if it should be reset.
-    def nick=(nick)
+    # @param reason [String] The reason the user's nickname is being changed.
+    def set_nick(nick, reason = nil)
       # Discord uses the empty string to signify 'no nickname' so we convert nil into that
       nick ||= ''
 
       if @user.current_bot?
-        API::User.change_own_nickname(@bot.token, @server.id, nick)
+        API::User.change_own_nickname(@bot.token, @server.id, nick, reason)
       else
-        API::Server.update_member(@bot.token, @server.id, @user.id, nick: nick)
+        API::Server.update_member(@bot.token, @server.id, @user.id, nick: nick, reason: nil)
       end
     end
 
-    alias_method :nickname=, :nick=
+    alias_method :set_nickname, :set_nick
 
     # @return [String] the name the user displays as (nickname if they have one, username otherwise)
     def display_name
@@ -1102,8 +1119,9 @@ module Discordrb
     end
 
     # Deletes this invite
-    def delete
-      API::Invite.delete(@bot.token, @code)
+    # @param reason [String] The reason the invite is being deleted.
+    def delete(reason = nil)
+      API::Invite.delete(@bot.token, @code, reason)
     end
 
     alias_method :revoke, :delete
@@ -1401,13 +1419,15 @@ module Discordrb
 
     # Deletes a message on this channel. Mostly useful in case a message needs to be deleted when only the ID is known
     # @param message [Message, String, Integer, #resolve_id] The message that should be deleted.
-    def delete_message(message)
-      API::Channel.delete_message(@bot.token, @id, message.resolve_id)
+    # @param reason [String] The reason the for the message deletion.
+    def delete_message(message, reason = nil)
+      API::Channel.delete_message(@bot.token, @id, message.resolve_id, reason)
     end
 
     # Permanently deletes this channel
-    def delete
-      API::Channel.delete(@bot.token, @id)
+    # @param reason [String] The reason the for the channel deletion.
+    def delete(reason = nil)
+      API::Channel.delete(@bot.token, @id, reason)
     end
 
     # Sets this channel's name. The name must be alphanumeric with dashes, unless this is a voice channel (then there are no limitations)
@@ -1450,16 +1470,35 @@ module Discordrb
       update_channel_data
     end
 
+    # Updates this channel's settings.
+    # @param name [String] Name of the channel to create
+    # @param bitrate [Integer] The new bitrate (in bps). Number has to be between 8000-96000 (128000 for VIP servers)
+    # @param user_limit [Integer] The new user limit. `0` for unlimited, has to be a number between 0-99
+    # @param topic [String] The new topic.
+    # @param position [Integer] The new position.
+    # @param reason [String] The reason the for the changes requested for this channel.
+    def update(name: @name, bitrate: @bitrate, user_limit: @user_limit, topic: @topic, position: @position, reason: nil)
+      API::Channel.create_channel(@bot.token, @id, name, type, bitrate, user_limit, permission_overwrites, reason)
+      @topic = topic
+      @name = name
+      @position = position
+      @topic = topic
+      @bitrate = bitrate
+      @user_limit = user_limit
+    end
+
     # Defines a permission overwrite for this channel that sets the specified thing to the specified allow and deny
     # permission sets, or change an existing one.
     # @overload define_overwrite(overwrite)
     #   @param thing [Overwrite] an Overwrite object to apply to this channel
+    #   @param reason [String] The reason the for defining the overwrite.
     # @overload define_overwrite(thing, allow, deny)
     #   @param thing [User, Role] What to define an overwrite for.
     #   @param allow [#bits, Permissions, Integer] The permission sets that should receive an `allow` override (i. e. a
     #     green checkmark on Discord)
     #   @param deny [#bits, Permissions, Integer] The permission sets that should receive a `deny` override (i. e. a red
     #     cross on Discord)
+    #   @param reason [String] The reason the for defining the overwrite.
     #   @example Define a permission overwrite for a user that can then mention everyone and use TTS, but not create any invites
     #     allow = Discordrb::Permissions.new
     #     allow.can_mention_everyone = true
@@ -1469,7 +1508,7 @@ module Discordrb
     #     deny.can_create_instant_invite = true
     #
     #     channel.define_overwrite(user, allow, deny)
-    def define_overwrite(thing, allow = 0, deny = 0)
+    def define_overwrite(thing, allow = 0, deny = 0, reason: nil)
       unless thing.is_a? Overwrite
         allow_bits = allow.respond_to?(:bits) ? allow.bits : allow
         deny_bits = deny.respond_to?(:bits) ? deny.bits : deny
@@ -1477,15 +1516,16 @@ module Discordrb
         thing = Overwrite.new thing, allow: allow_bits, deny: deny_bits
       end
 
-      API::Channel.update_permission(@bot.token, @id, thing.id, thing.allow.bits, thing.deny.bits, thing.type)
+      API::Channel.update_permission(@bot.token, @id, thing.id, thing.allow.bits, thing.deny.bits, thing.type, reason)
     end
 
     # Deletes a permission overwrite for this channel
     # @param target [Member, User, Role, Profile, Recipient, #resolve_id] What permission overwrite to delete
-    def delete_overwrite(target)
+    #   @param reason [String] The reason the for the overwrite deletion.
+    def delete_overwrite(target, reason = nil)
       raise 'Tried deleting a overwrite for an invalid target' unless target.is_a?(Member) || target.is_a?(User) || target.is_a?(Role) || target.is_a?(Profile) || target.is_a?(Recipient) || target.respond_to?(:resolve_id)
 
-      API::Channel.delete_permission(@bot.token, @id, target.resolve_id)
+      API::Channel.delete_permission(@bot.token, @id, target.resolve_id, reason)
     end
 
     # Updates the cached data from another channel.
@@ -1601,9 +1641,10 @@ module Discordrb
     # @param max_uses [Integer] How many times this invite should be able to be used.
     # @param temporary [true, false] Whether membership should be temporary (kicked after going offline).
     # @param unique [true, false] If true, Discord will always send a unique invite instead of possibly re-using a similar one
+    # @param reason [String] The reason the for the creation of this invite.
     # @return [Invite] the created invite.
-    def make_invite(max_age = 0, max_uses = 0, temporary = false, unique = false)
-      response = API::Channel.create_invite(@bot.token, @id, max_age, max_uses, temporary, unique)
+    def make_invite(max_age = 0, max_uses = 0, temporary = false, unique = false, reason = nil)
+      response = API::Channel.create_invite(@bot.token, @id, max_age, max_uses, temporary, unique, reason)
       Invite.new(JSON.parse(response), @bot)
     end
 
@@ -1720,7 +1761,7 @@ module Discordrb
     end
 
     def update_channel_data
-      API::Channel.update(@bot.token, @id, @name, @topic, @position, @bitrate, @user_limit)
+      API::Channel.update(@bot.token, @id, @name, @topic, @position, @bitrate, @user_limit, nil)
     end
   end
 
@@ -2558,8 +2599,15 @@ module Discordrb
     # @return [Integer] the absolute number of members on this server, offline or not.
     attr_reader :member_count
 
-    # @return [Symbol] the verification level of the server (:none = none, :low = 'Must have a verified email on their Discord account', :medium = 'Has to be registered with Discord for at least 5 minutes', :high = 'Has to be a member of this server for at least 10 minutes').
+    # @return [Symbol] the verification level of the server (:none = none, :low = 'Must have a verified email on their Discord account', :medium = 'Has to be registered with Discord for at least 5 minutes', :high = 'Has to be a member of this server for at least 10 minutes', :very_high = 'Must have a verified phone on their Discord account').
     attr_reader :verification_level
+
+    # @return [Symbol] the explicit content filter level of the server (:none = 'Don't scan any messages.', :exclude_roles = 'Scan messages for members without a role.', :all = 'Scan messages sent by all members.').
+    attr_reader :explicit_content_filter
+    alias_method :content_filter_level, :explicit_content_filter
+
+    # @return [Symbol] the default message notifications settings of the server (:all = 'All messages', :mentions = 'Only @mentions').
+    attr_reader :default_message_notifications
 
     # @return [Integer] the amount of time after which a voice user gets moved into the AFK channel, in seconds.
     attr_reader :afk_timeout
@@ -2579,7 +2627,6 @@ module Discordrb
 
       @large = data['large']
       @member_count = data['member_count']
-      @verification_level = [:none, :low, :medium, :high][data['verification_level']]
       @splash_id = nil
       @embed = nil
       @features = data['features'].map { |element| element.downcase.to_sym }
@@ -2657,7 +2704,15 @@ module Discordrb
     # @note For internal use only
     # @!visibility private
     def cache_embed
-      @embed ||= JSON.parse(API::Server.resolve(@bot.token, @id))['embed_enabled']
+      data = JSON.parse(API::Server.resolve(@bot.token, @id))
+      @embed ||= data['embed_enabled']
+      @embed_channel_id ||= data['embed_channel_id']
+      begin
+        @embed_channel = @bot.channel(@embed_channel_id, self) if @embed_channel_id.nonzero? && (!@embed_channel || @embed_channel_id != @embed_channel.id)
+      rescue Discordrb::Errors::NoPermission
+        LOGGER.debug("Embed channel #{@embed_channel_id} on server #{@id} is unreachable, setting to nil even though one exists")
+        @embed_channel = nil
+      end
     end
 
     # @return [true, false] whether or not the server has widget enabled
@@ -2665,6 +2720,16 @@ module Discordrb
       cache_embed if @embed.nil?
       @embed
     end
+    alias_method :widget_enabled, :embed?
+    alias_method :widget?, :embed?
+    alias_method :embed_enabled, :embed?
+
+    # @return [Channel, nil] the channel the server embed will make a invite for.
+    def embed_channel
+      cache_embed if @embed.nil?
+      @embed_channel
+    end
+    alias_method :widget_channel, :embed_channel
 
     # @param include_idle [true, false] Whether to count idle members as online.
     # @param include_bots [true, false] Whether to include bot accounts in the count.
@@ -2690,12 +2755,13 @@ module Discordrb
 
     # Prunes (kicks) an amount of members for inactivity
     # @param days [Integer] the number of days to consider for inactivity (between 1 and 30)
+    # @param reason [String] The reason the for the prune.
     # @return [Integer] the number of members removed at the end of the operation
     # @raise [ArgumentError] if days is not between 1 and 30 (inclusive)
-    def begin_prune(days)
+    def begin_prune(days, reason = nil)
       raise ArgumentError, 'Days must be between 1 and 30' unless days.between?(1, 30)
 
-      response = JSON.parse API::Server.begin_prune(@bot.token, @id, days)
+      response = JSON.parse API::Server.begin_prune(@bot.token, @id, days, reason)
       response['pruned']
     end
 
@@ -2831,12 +2897,13 @@ module Discordrb
     # @param bitrate [Integer] the bitrate of this channel, if it will be a voice channel
     # @param user_limit [Integer] the user limit of this channel, if it will be a voice channel
     # @param permission_overwrites [Array<Hash>, Array<Overwrite>] permission overwrites for this channel
+    # @param reason [String] The reason the for the creation of this channel.
     # @return [Channel] the created channel.
     # @raise [ArgumentError] if type is not 0 or 2
-    def create_channel(name, type = 0, bitrate: nil, user_limit: nil, permission_overwrites: [])
+    def create_channel(name, type = 0, bitrate: nil, user_limit: nil, permission_overwrites: [], reason: nil)
       raise ArgumentError, 'Channel type must be either 0 (text) or 2 (voice)!' unless [0, 2].include?(type)
       permission_overwrites.map! { |e| e.is_a?(Overwrite) ? e.to_hash : e }
-      response = API::Server.create_channel(@bot.token, @id, name, type, bitrate, user_limit, permission_overwrites)
+      response = API::Server.create_channel(@bot.token, @id, name, type, bitrate, user_limit, permission_overwrites, reason)
       Channel.new(JSON.parse(response), @bot)
     end
 
@@ -2848,9 +2915,10 @@ module Discordrb
     # @param hoist [true, false]
     # @param mentionable [true, false]
     # @param packed_permissions [Integer] The packed permissions to write.
+    # @param reason [String] The reason the for the creation of this role.
     # @return [Role] the created role.
-    def create_role(name: 'new role', colour: 0, hoist: false, mentionable: false, packed_permissions: 104_324_161)
-      response = API::Server.create_role(@bot.token, @id, name, colour, hoist, mentionable, packed_permissions)
+    def create_role(name: 'new role', colour: 0, hoist: false, mentionable: false, packed_permissions: 104_324_161, reason: nil)
+      response = API::Server.create_role(@bot.token, @id, name, colour, hoist, mentionable, packed_permissions, reason)
 
       role = Role.new(JSON.parse(response), @bot, self)
       @roles << role
@@ -2866,20 +2934,23 @@ module Discordrb
     # Bans a user from this server.
     # @param user [User, #resolve_id] The user to ban.
     # @param message_days [Integer] How many days worth of messages sent by the user should be deleted.
-    def ban(user, message_days = 0)
-      API::Server.ban_user(@bot.token, @id, user.resolve_id, message_days)
+    # @param reason [String] The reason the user is being banned.
+    def ban(user, message_days = 0, reason: nil)
+      API::Server.ban_user(@bot.token, @id, user.resolve_id, message_days, reason)
     end
 
     # Unbans a previously banned user from this server.
     # @param user [User, #resolve_id] The user to unban.
-    def unban(user)
-      API::Server.unban_user(@bot.token, @id, user.resolve_id)
+    # @param reason [String] The reason the user is being unbanned.
+    def unban(user, reason = nil)
+      API::Server.unban_user(@bot.token, @id, user.resolve_id, reason)
     end
 
     # Kicks a user from this server.
     # @param user [User, #resolve_id] The user to kick.
-    def kick(user)
-      API::Server.remove_member(@bot.token, @id, user.resolve_id)
+    # @param reason [String] The reason the user is being kicked.
+    def kick(user, reason = nil)
+      API::Server.remove_member(@bot.token, @id, user.resolve_id, reason)
     end
 
     # Forcibly moves a user into a different voice channel. Only works if the bot has the permission needed.
@@ -2998,14 +3069,25 @@ module Discordrb
       @region_id = new_data[:region] || new_data['region'] || @region_id
       @icon_id = new_data[:icon] || new_data['icon'] || @icon_id
       @afk_timeout = new_data[:afk_timeout] || new_data['afk_timeout'].to_i || @afk_timeout
-
       @afk_channel_id = new_data[:afk_channel_id] || new_data['afk_channel_id'].to_i || @afk_channel.id
+      @embed_channel_id = new_data[:embed_channel_id] || new_data['embed_channel_id'].to_i || @embed_channel.id
+      @embed = new_data[:embed_enabled] || new_data['embed_enabled'] || @embed
+      @verification_level = [:none, :low, :medium, :high, :very_high][new_data['verification_level']] || @verification_level
+      @explicit_content_filter = [:none, :exclude_roles, :all][new_data['explicit_content_filter']] || @explicit_content_filter
+      @default_message_notifications = [:all, :mentions][new_data['default_message_notifications']] || @default_message_notifications
 
       begin
         @afk_channel = @bot.channel(@afk_channel_id, self) if @afk_channel_id.nonzero? && (!@afk_channel || @afk_channel_id != @afk_channel.id)
       rescue Discordrb::Errors::NoPermission
         LOGGER.debug("AFK channel #{@afk_channel_id} on server #{@id} is unreachable, setting to nil even though one exists")
         @afk_channel = nil
+      end
+
+      begin
+        @embed_channel = @bot.channel(@embed_channel_id, self) if @embed_channel_id.nonzero? && (!@embed_channel || @embed_channel_id != @embed_channel.id)
+      rescue Discordrb::Errors::NoPermission
+        LOGGER.debug("Embed channel #{@embed_channel_id} on server #{@id} is unreachable, setting to nil even though one exists")
+        @embed_channel = nil
       end
     end
 
@@ -3184,6 +3266,7 @@ module Discordrb
     # @option data [String, #read, nil] :avatar The new avatar, in base64-encoded JPG format, or nil to delete the avatar.
     # @option data [Channel, String, Integer, #resolve_id] :channel The channel the webhook should use.
     # @option data [String] :name The webhook's new name.
+    # @option data [String] :reason The reason for the webhook changes.
     def update(data)
       # Only pass a value for avatar if the key is defined as sending nil will delete the
       data[:avatar] = avatarise(data[:avatar]) if data.key?(:avatar)
@@ -3193,11 +3276,12 @@ module Discordrb
     end
 
     # Deletes the webhook
-    def delete
+    # @param reason [String] The reason the invite is being deleted.
+    def delete(reason = nil)
       if token?
-        API::Webhook.token_delete_webhook(@token, @id)
+        API::Webhook.token_delete_webhook(@token, @id, reason)
       else
-        API::Webhook.delete_webhook(@bot.token, @id)
+        API::Webhook.delete_webhook(@bot.token, @id, reason)
       end
     end
 
@@ -3236,10 +3320,11 @@ module Discordrb
     end
 
     def update_webhook(new_data)
+      reason = new_data.delete(:reason)
       data = JSON.parse(if token?
-                          API::Webhook.token_update_webhook(@token, @id, new_data)
+                          API::Webhook.token_update_webhook(@token, @id, new_data, reason)
                         else
-                          API::Webhook.update_webhook(@bot.token, @id, new_data)
+                          API::Webhook.update_webhook(@bot.token, @id, new_data, reason)
                         end)
       # Only update cache if API call worked
       update_internal(data) if data['name']

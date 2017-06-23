@@ -16,7 +16,7 @@ module Discordrb::API::Channel
 
   # Update a channel's data
   # https://discordapp.com/developers/docs/resources/channel#modify-channel
-  def update(token, channel_id, name, topic, position, bitrate, user_limit)
+  def update(token, channel_id, name, topic, position, bitrate, user_limit, reason)
     Discordrb::API.request(
       :channels_cid,
       channel_id,
@@ -24,19 +24,21 @@ module Discordrb::API::Channel
       "#{Discordrb::API.api_base}/channels/#{channel_id}",
       { name: name, position: position, topic: topic, bitrate: bitrate, user_limit: user_limit }.to_json,
       Authorization: token,
-      content_type: :json
+      content_type: :json,
+      'X-Audit-Log-Reason': reason
     )
   end
 
   # Delete a channel
   # https://discordapp.com/developers/docs/resources/channel#deleteclose-channel
-  def delete(token, channel_id)
+  def delete(token, channel_id, reason)
     Discordrb::API.request(
       :channels_cid,
       channel_id,
       :delete,
       "#{Discordrb::API.api_base}/channels/#{channel_id}",
-      Authorization: token
+      Authorization: token,
+      'X-Audit-Log-Reason': reason
     )
   end
 
@@ -203,7 +205,7 @@ module Discordrb::API::Channel
 
   # Update a channels permission for a role or member
   # https://discordapp.com/developers/docs/resources/channel#edit-channel-permissions
-  def update_permission(token, channel_id, overwrite_id, allow, deny, type)
+  def update_permission(token, channel_id, overwrite_id, allow, deny, type, reason)
     Discordrb::API.request(
       :channels_cid_permissions_oid,
       channel_id,
@@ -211,7 +213,8 @@ module Discordrb::API::Channel
       "#{Discordrb::API.api_base}/channels/#{channel_id}/permissions/#{overwrite_id}",
       { type: type, id: overwrite_id, allow: allow, deny: deny }.to_json,
       Authorization: token,
-      content_type: :json
+      content_type: :json,
+      'X-Audit-Log-Reason': reason
     )
   end
 
@@ -229,7 +232,7 @@ module Discordrb::API::Channel
 
   # Create an instant invite from a server or a channel id
   # https://discordapp.com/developers/docs/resources/channel#create-channel-invite
-  def create_invite(token, channel_id, max_age = 0, max_uses = 0, temporary = false, unique = false)
+  def create_invite(token, channel_id, max_age = 0, max_uses = 0, temporary = false, unique = false, reason = nil)
     Discordrb::API.request(
       :channels_cid_invites,
       channel_id,
@@ -237,19 +240,21 @@ module Discordrb::API::Channel
       "#{Discordrb::API.api_base}/channels/#{channel_id}/invites",
       { max_age: max_age, max_uses: max_uses, temporary: temporary, unique: unique }.to_json,
       Authorization: token,
-      content_type: :json
+      content_type: :json,
+      'X-Audit-Log-Reason': reason
     )
   end
 
   # Delete channel permission
   # https://discordapp.com/developers/docs/resources/channel#delete-channel-permission
-  def delete_permission(token, channel_id, overwrite_id)
+  def delete_permission(token, channel_id, overwrite_id, reason)
     Discordrb::API.request(
       :channels_cid_permissions_oid,
       channel_id,
       :delete,
       "#{Discordrb::API.api_base}/channels/#{channel_id}/permissions/#{overwrite_id}",
-      Authorization: token
+      Authorization: token,
+      'X-Audit-Log-Reason': reason
     )
   end
 
@@ -374,7 +379,7 @@ module Discordrb::API::Channel
 
   # Create a webhook
   # https://discordapp.com/developers/docs/resources/webhook#create-webhook
-  def create_webhook(token, channel_id, name, avatar = nil)
+  def create_webhook(token, channel_id, name, avatar = nil, reason = nil)
     Discordrb::API.request(
       :channels_cid_webhooks,
       channel_id,
@@ -382,7 +387,8 @@ module Discordrb::API::Channel
       "#{Discordrb::API.api_base}/channels/#{channel_id}/webhooks",
       { name: name, avatar: avatar }.to_json,
       Authorization: token,
-      content_type: :json
+      content_type: :json,
+      'X-Audit-Log-Reason': reason
     )
   end
 
