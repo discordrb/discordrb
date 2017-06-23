@@ -45,6 +45,15 @@ module Discordrb::Events
           else
             a == e
           end
+        end,
+        matches_all(@attributes[:webhook], event) do |a, e|
+          a == if a.is_a? String
+                 e.name
+               elsif a.is_a? Integer
+                 e.id
+               else
+                 e
+               end
         end
       ].reduce(true, &:&)
     end
