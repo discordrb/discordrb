@@ -10,7 +10,7 @@ module Discordrb::Events
     # @return [Channel] the channel on which a user started typing.
     attr_reader :channel
 
-    # @return [Member] the user that started typing.
+    # @return [User, Member, Recipient] the user that started typing.
     attr_reader :user
     alias_method :member, :user
 
