@@ -3378,7 +3378,6 @@ module Discordrb
     # @!visibility private
     def initialize(server, bot, data)
       @bot = bot
-      @id = data['id'].resolve_id
       @server = server
       @users = {}
       @entries = data['audit_log_entries'].map { |entry| Entry.new(self, @server, @bot, entry) }
