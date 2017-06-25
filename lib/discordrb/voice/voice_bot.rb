@@ -2,6 +2,7 @@
 
 require 'discordrb/voice/encoder'
 require 'discordrb/voice/network'
+require 'discordrb/voice/listener'
 require 'discordrb/logger'
 
 # Voice support
@@ -164,6 +165,12 @@ module Discordrb::Voice
       @has_stopped_playing = false
       sleep IDEAL_LENGTH / 1000.0 until @has_stopped_playing
       @has_stopped_playing = false
+    end
+
+    # Creates a listener.
+    # @return [Listener] A class that can be used to listen to the voice channel.
+    def listener
+      @listener ||= Listener.new @ws
     end
 
     # Permanently disconnects from the voice channel; to reconnect you will have to call {Bot#voice_connect} again.
