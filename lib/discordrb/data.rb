@@ -3480,6 +3480,8 @@ module Discordrb
         "<AuditLogs::Entry id=#{@id} action=#{@action} reason=#{@reason} action_type=#{@action_type} target_type=#{@target_type} count=#{@count} days=#{@days} members_removed=#{@members_removed}>"
       end
 
+      # Process action changes
+      # @note For internal use only
       # @!visibility private
       def process_changes(changes)
         return unless changes
@@ -3546,6 +3548,9 @@ module Discordrb
       @users[id.resolve_id]
     end
 
+    # Process user objects given by the request
+    # @note For internal use only
+    # @!visibility private
     def process_users(users)
       users.each do |element|
         user = User.new(element, self, @bot)
@@ -3553,6 +3558,8 @@ module Discordrb
       end
     end
 
+    # Find the type of target by it's action number
+    # @note For internal use only
     # @!visibility private
     def self.target_type_for(action)
       case action
@@ -3568,6 +3575,8 @@ module Discordrb
       end
     end
 
+    # Find the type of action by it's action number
+    # @note For internal use only
     # @!visibility private
     def self.action_type_for(action)
       action = Actions[action]
