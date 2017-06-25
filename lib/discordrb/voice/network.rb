@@ -34,7 +34,7 @@ module Discordrb::Voice
     alias_method :encrypted?, :encrypted
 
     # Sets the secret key used for encryption
-    attr_writer :secret_key
+    attr_accessor :secret_key
 
     # Creates a new UDP connection. Only creates a socket as the discovery reply may come before the data is
     # initialized.
@@ -92,6 +92,21 @@ module Discordrb::Voice
       send_packet(discovery_packet)
     end
 
+    # Create a thread for a listener
+    # @param listener [Listener] the listener to send data to
+    def start_thread(listener)
+      @thread ||= Thread.new do
+                    loop do
+                      listener.handle_packet(@socket.recv(1920).unpack('C*'))
+                    end
+                  end
+    end
+
+    # Kill an occuring thread
+    def kill_thread
+      Thread.kill @thread if @thread
+    end
+
     private
 
     # Encrypts audio data using RbNaCl
@@ -119,6 +134,12 @@ module Discordrb::Voice
   class VoiceWS
     # @return [VoiceUDP] the UDP voice connection over which the actual audio data is sent.
     attr_reader :udp
+    
+    # @return [Hash<Integer, User>] the object matching users with their SSRCs.
+    attr_reader :users
+    
+    # @return [true, false] signifies if the websocket client is done with initial connection.
+    attr_reader :ready
 
     # Makes a new voice websocket client, but doesn't connect it (see {#connect} for that)
     # @param channel [Channel] The voice channel to connect to
@@ -133,6 +154,8 @@ module Discordrb::Voice
       @bot = bot
       @token = token
       @session = session
+      @users = {}
+      @ready = false
 
       @endpoint = endpoint.gsub(':80', '')
 
@@ -230,6 +253,15 @@ module Discordrb::Voice
         @ws_data = packet['d']
         @ready = true
         @udp.secret_key = @ws_data['secret_key'].pack('C*')
+      when 5
+        # Opcode 5 comes in when a user speaks, adding a user to the {users} object.
+        @ws_data = packet['d']
+        if @users[@ws_data['ssrc']].nil?
+          user = @bot.user(@ws_data['user_id'])
+          Discordrb::LOGGER.warn "Mapped packet by #{user.username}##{user.discriminator} (#{user.id})"
+          Discordrb::LOGGER.warn "SSRC: #{@ws_data['ssrc']}"
+        end
+        @users[@ws_data['ssrc']] ||= @bot.user(@ws_data['user_id'])
       end
     end
 
