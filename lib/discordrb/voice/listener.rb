@@ -70,7 +70,7 @@ module Discordrb::Voice
         nonce[i] = message[i]
       end
       message.slice!(0..11)
-      Discordrb::LOGGER.warn "Decoding packet by #{user.username}##{user.discriminator} (#{user.id})"
+      Discordrb::LOGGER.debug "Decoding packet by #{user.username}##{user.discriminator} (#{user.id})"
       raise 'No secret key found, despite encryption being enabled!' unless @udp.secret_key
       box = RbNaCl::SecretBox.new(@udp.secret_key)
       data = box.decrypt(nonce.pack('C*'), message.pack('C*'))
