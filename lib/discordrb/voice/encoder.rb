@@ -103,4 +103,24 @@ module Discordrb::Voice
       @use_avconv ? "-vol #{(@filter_volume * 256).ceil}" : "-af volume=#{@filter_volume}"
     end
   end
+
+  # This  class decodes audio sent by Discord via UDP.
+  class Decoder
+    # Create a new decoder
+    def initialize
+      @sample_rate = 48_000
+      @frame_size = 960
+      @channels = 2
+
+      raise LoadError, 'Opus unavailable - voice not supported! Please install opus for voice support to work.' unless OPUS_AVAILABLE
+      @opus = Opus::Decoder.new(@sample_rate, @frame_size, @channels)
+    end
+
+    # Decodes the given buffer using opus.
+    # @param buffer [String] An encoded opus buffer.
+    # @return [String] A decoded opus buffer.
+    def decode(buffer)
+      @opus.decode(buffer)
+    end
+  end
 end
