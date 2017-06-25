@@ -7,7 +7,6 @@ require 'discordrb/logger'
 module Discordrb::Voice
   # This class receives voice data from a UDP connection.
   class Listener
-  	attr_reader :ws # DEBUG
     # Create a listener
     def initialize(ws)
       @decoder = Decoder.new
