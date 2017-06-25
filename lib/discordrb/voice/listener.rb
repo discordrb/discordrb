@@ -41,20 +41,18 @@ module Discordrb::Voice
     # @note For internal use only
     # @visibility private
     def handle_packet(message)
-      Discordrb::LOGGER.debug "Received UDP packet"
+      Discordrb::LOGGER.debug 'Received UDP packet'
       ssrc = (message[8] * 0x1000000) + ((message[8 + 1] << 16) | (message[8 + 2] << 8) | message[8 + 3]).to_s.to_i.abs
       Discordrb::LOGGER.debug "Found packet by SSRC #{ssrc}"
       user = @ws.users[ssrc]
       if user
-      	Discordrb::LOGGER.debug "Identified packet by #{user.username}##{user.discriminator} (#{user.id})"
-      	if @queue[ssrc].nil?
-      	  decode_packet(message, user)
-      	else
-      	  @queue[ssrc].push message
-      	  @queue[ssrc].each do |m|
-      	    decode_packet(m, user)
-      	  end
-      	  @queue.delete ssrc
+        Discordrb::LOGGER.debug "Identified packet by #{user.username}##{user.discriminator} (#{user.id})"
+        if @queue[ssrc].nil?
+          decode_packet(message, user)
+        else
+          @queue[ssrc].push message
+          @queue[ssrc].each { |m| decode_packet(m, user) }
+          @queue.delete ssrc
         end
       else
         @queue[ssrc] ||= []
@@ -84,9 +82,8 @@ module Discordrb::Voice
         block.call(pcm, user)
       end
     rescue RbNaCl::CryptoError => e
-      Discordrb::LOGGER.warn("Failed to decrypt voice packet")
-      Discordrb::LOGGER.warn("Reason: #{e}")
-      e.backtrace.each { |r| p r }
+      Discordrb::LOGGER.warn 'Failed to decrypt voice packet'
+      Discordrb::LOGGER.warn "Reason: #{e}"
     end
   end
 end
