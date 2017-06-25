@@ -134,10 +134,10 @@ module Discordrb::Voice
   class VoiceWS
     # @return [VoiceUDP] the UDP voice connection over which the actual audio data is sent.
     attr_reader :udp
-    
+
     # @return [Hash<Integer, User>] the object matching users with their SSRCs.
     attr_reader :users
-    
+
     # @return [true, false] signifies if the websocket client is done with initial connection.
     attr_reader :ready
 
