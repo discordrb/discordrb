@@ -258,8 +258,8 @@ module Discordrb::Voice
         @ws_data = packet['d']
         if @users[@ws_data['ssrc']].nil?
           user = @bot.user(@ws_data['user_id'])
-          Discordrb::LOGGER.warn "Mapped packet by #{user.username}##{user.discriminator} (#{user.id})"
-          Discordrb::LOGGER.warn "SSRC: #{@ws_data['ssrc']}"
+          Discordrb::LOGGER.debug "Mapped packet by #{user.username}##{user.discriminator} (#{user.id})"
+          Discordrb::LOGGER.debug "SSRC: #{@ws_data['ssrc']}"
         end
         @users[@ws_data['ssrc']] ||= @bot.user(@ws_data['user_id'])
       end
