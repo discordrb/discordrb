@@ -304,6 +304,7 @@ module Discordrb::Voice
     # Disconnects the websocket and kills the thread
     def destroy
       @heartbeat_running = false
+      @odp.kill_thread
     end
 
     private
