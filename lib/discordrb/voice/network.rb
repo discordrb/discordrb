@@ -256,11 +256,6 @@ module Discordrb::Voice
       when 5
         # Opcode 5 comes in when a user speaks, adding a user to the {users} object.
         @ws_data = packet['d']
-        if @users[@ws_data['ssrc']].nil?
-          user = @bot.user(@ws_data['user_id'])
-          Discordrb::LOGGER.debug "Mapped packet by #{user.username}##{user.discriminator} (#{user.id})"
-          Discordrb::LOGGER.debug "SSRC: #{@ws_data['ssrc']}"
-        end
         @users[@ws_data['ssrc']] ||= @bot.user(@ws_data['user_id'])
       end
     end
