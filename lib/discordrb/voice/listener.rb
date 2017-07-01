@@ -69,15 +69,13 @@ module Discordrb::Voice
       end
       message.slice!(0..11)
       Discordrb::LOGGER.debug "Decoding packet by #{user.username}##{user.discriminator} (#{user.id})"
-      raise 'No secret key found, despite encryption being enabled!' unless @udp.secret_key
+      raise 'No secret key found!' unless @udp.secret_key
       box = RbNaCl::SecretBox.new(@udp.secret_key)
       data = box.decrypt(nonce.pack('C*'), message.pack('C*'))
-      Discordrb::LOGGER.debug "Sending opus data to blocks by #{user.username}##{user.discriminator} (#{user.id})"
       @opus_blocks.each do |block|
         block.call(data, user)
       end
       pcm = @decoder.decode(data)
-      Discordrb::LOGGER.debug "Sending PCM data to blocks by #{user.username}##{user.discriminator} (#{user.id})"
       @pcm_blocks.each do |block|
         block.call(pcm, user)
       end
