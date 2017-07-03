@@ -1419,9 +1419,8 @@ module Discordrb
 
     # Deletes a message on this channel. Mostly useful in case a message needs to be deleted when only the ID is known
     # @param message [Message, String, Integer, #resolve_id] The message that should be deleted.
-    # @param reason [String] The reason the for the message deletion.
-    def delete_message(message, reason = nil)
-      API::Channel.delete_message(@bot.token, @id, message.resolve_id, reason)
+    def delete_message(message)
+      API::Channel.delete_message(@bot.token, @id, message.resolve_id)
     end
 
     # Permanently deletes this channel
