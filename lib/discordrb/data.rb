@@ -1008,8 +1008,9 @@ module Discordrb
     end
 
     # Deletes this role. This cannot be undone without recreating the role!
-    def delete
-      API::Server.delete_role(@bot.token, @server.id, @id)
+    # @param reason [String] the reason for this role's deletion
+    def delete(reason = nil)
+      API::Server.delete_role(@bot.token, @server.id, @id, reason)
       @server.delete_role(@id)
     end
 
