@@ -16,7 +16,7 @@ module Discordrb::API::Channel
 
   # Update a channel's data
   # https://discordapp.com/developers/docs/resources/channel#modify-channel
-  def update(token, channel_id, name, topic, position, bitrate, user_limit, reason)
+  def update(token, channel_id, name, topic, position, bitrate, user_limit, reason = nil)
     Discordrb::API.request(
       :channels_cid,
       channel_id,
@@ -31,7 +31,7 @@ module Discordrb::API::Channel
 
   # Delete a channel
   # https://discordapp.com/developers/docs/resources/channel#deleteclose-channel
-  def delete(token, channel_id, reason)
+  def delete(token, channel_id, reason = nil)
     Discordrb::API.request(
       :channels_cid,
       channel_id,
@@ -205,7 +205,7 @@ module Discordrb::API::Channel
 
   # Update a channels permission for a role or member
   # https://discordapp.com/developers/docs/resources/channel#edit-channel-permissions
-  def update_permission(token, channel_id, overwrite_id, allow, deny, type, reason)
+  def update_permission(token, channel_id, overwrite_id, allow, deny, type, reason = nil)
     Discordrb::API.request(
       :channels_cid_permissions_oid,
       channel_id,
@@ -247,7 +247,7 @@ module Discordrb::API::Channel
 
   # Delete channel permission
   # https://discordapp.com/developers/docs/resources/channel#delete-channel-permission
-  def delete_permission(token, channel_id, overwrite_id, reason)
+  def delete_permission(token, channel_id, overwrite_id, reason = nil)
     Discordrb::API.request(
       :channels_cid_permissions_oid,
       channel_id,
