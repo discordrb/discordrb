@@ -603,7 +603,7 @@ module Discordrb
       role_ids = role_id_array(role)
 
       if role_ids.count == 1
-        API::Server.add_member_role(@bot.token, @server.id, @user.id, role_ids[0], reason: reason)
+        API::Server.add_member_role(@bot.token, @server.id, @user.id, role_ids[0], reason)
       else
         old_role_ids = @roles.map(&:id)
         new_role_ids = (old_role_ids + role_ids).uniq
@@ -618,7 +618,7 @@ module Discordrb
       role_ids = role_id_array(role)
 
       if role_ids.count == 1
-        API::Server.remove_member_role(@bot.token, @server.id, @user.id, role_ids[0], reason: reason)
+        API::Server.remove_member_role(@bot.token, @server.id, @user.id, role_ids[0], reason)
       else
         old_role_ids = @roles.map(&:id)
         new_role_ids = old_role_ids.reject { |i| role_ids.include?(i) }
