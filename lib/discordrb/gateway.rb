@@ -478,7 +478,7 @@ module Discordrb
 
     # Whether the URI is secure (connection should be encrypted)
     def secure_uri?(uri)
-      %w(https wss).include? uri.scheme
+      %w[https wss].include? uri.scheme
     end
 
     # The port we should connect to, if the URI doesn't have one set.
