@@ -66,15 +66,15 @@ module Discordrb
     def mode=(value)
       case value
       when :debug
-        @enabled_modes = [:debug, :good, :info, :warn, :error, :out, :in, :ratelimit]
+        @enabled_modes = %i[debug good info warn error out in ratelimit]
       when :verbose
-        @enabled_modes = [:good, :info, :warn, :error, :out, :in, :ratelimit]
+        @enabled_modes = %i[good info warn error out in ratelimit]
       when :normal
-        @enabled_modes = [:info, :warn, :error, :ratelimit]
+        @enabled_modes = %i[info warn error ratelimit]
       when :quiet
-        @enabled_modes = [:warn, :error]
+        @enabled_modes = %i[warn error]
       when :silent
-        @enabled_modes = []
+        @enabled_modes = %i[]
       end
     end
 

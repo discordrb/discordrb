@@ -6,14 +6,14 @@ module Discordrb
       described_class.new(token: 'fake_token')
     end
 
-    fixture :server_data, [:emoji, :emoji_server]
+    fixture :server_data, %i[emoji emoji_server]
     fixture_property :server_id, :server_data, ['id'], :to_i
 
     # TODO: Use some way of mocking the API instead of setting the server to not exist
     let!(:server) { Discordrb::Server.new(server_data, bot, false) }
 
-    fixture :dispatch_event, [:emoji, :dispatch_event]
-    fixture :dispatch_add, [:emoji, :dispatch_add]
+    fixture :dispatch_event, %i[moji dispatch_event]
+    fixture :dispatch_add, %i[emoji dispatch_add]
 
     fixture_property :emoji_1_name, :dispatch_add, ['emojis', 0, 'name']
     fixture_property :emoji_3_name, :dispatch_add, ['emojis', 2, 'name']
@@ -22,8 +22,8 @@ module Discordrb
     fixture_property :emoji_2_id, :dispatch_add, ['emojis', 1, 'id'], :to_i
     fixture_property :emoji_3_id, :dispatch_add, ['emojis', 2, 'id'], :to_i
 
-    fixture :dispatch_remove, [:emoji, :dispatch_remove]
-    fixture :dispatch_update, [:emoji, :dispatch_update]
+    fixture :dispatch_remove, %i[emoji dispatch_remove]
+    fixture :dispatch_update, %i[emoji dispatch_update]
 
     fixture_property :edited_emoji_name, :dispatch_update, ['emojis', 1, 'name']
 

@@ -221,7 +221,7 @@ module Discordrb::Events
   end
 
   describe ServerEmojiChangeEvent do
-    fixture :dispatch, [:emoji, :dispatch]
+    fixture :dispatch, %i[emoji dispatch]
 
     fixture_property :emoji_1_id, :dispatch, ['emojis', 0, 'id'], :to_i
     fixture_property :emoji_2_id, :dispatch, ['emojis', 1, 'id'], :to_i

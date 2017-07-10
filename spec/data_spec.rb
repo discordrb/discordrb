@@ -42,23 +42,23 @@ module Discordrb
       described_class.new(webhook_data, bot)
     end
 
-    fixture :webhook_data, [:webhook]
+    fixture :webhook_data, %i[webhook]
     fixture_property :webhook_name, :webhook_data, ['name']
     fixture_property :webhook_channel_id, :webhook_data, ['channel_id'], :to_i
     fixture_property :webhook_id, :webhook_data, ['id'], :to_i
     fixture_property :webhook_token, :webhook_data, ['token']
     fixture_property :webhook_avatar, :webhook_data, ['avatar']
 
-    fixture :update_name_data, [:webhook, :update_name]
+    fixture :update_name_data, %i[webhook update_name]
     fixture_property :edited_webhook_name, :update_name_data, ['name']
 
-    fixture :update_avatar_data, [:webhook, :update_avatar]
+    fixture :update_avatar_data, %i[webhook update_avatar]
     fixture_property :edited_webhook_avatar, :update_channel_data, ['avatar']
 
-    fixture :update_channel_data, [:webhook, :update_channel]
+    fixture :update_channel_data, %i[webhook update_channel]
     fixture_property :edited_webhook_channel_id, :update_channel_data, ['channel_id']
 
-    fixture :avatar_data, [:avatar]
+    fixture :avatar_data, %i[avatar]
     fixture_property :avatar_string, :avatar_data, ['avatar']
 
     describe '#initialize' do

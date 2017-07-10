@@ -254,7 +254,7 @@ module Discordrb
       @discriminator == Message::ZERO_DISCRIM
     end
 
-    [:offline, :idle, :online].each do |e|
+    %i[offline idle online].each do |e|
       define_method(e.to_s + '?') do
         @status.to_sym == e
       end
@@ -2554,7 +2554,7 @@ module Discordrb
       @type = data['type']
       @account = IntegrationAccount.new(data['account'])
       @synced_at = Time.parse(data['synced_at'])
-      @expire_behaviour = [:remove, :kick][data['expire_behavior']]
+      @expire_behaviour = %i[remove kick][data['expire_behavior']]
       @expire_grace_period = data['expire_grace_period']
       @user = @bot.ensure_user(data['user'])
       @role = server.role(data['role_id']) || nil
@@ -3072,9 +3072,9 @@ module Discordrb
       @afk_channel_id = new_data[:afk_channel_id] || new_data['afk_channel_id'].to_i || @afk_channel.id
       @embed_channel_id = new_data[:embed_channel_id] || new_data['embed_channel_id'].to_i || @embed_channel.id
       @embed = new_data[:embed_enabled] || new_data['embed_enabled'] || @embed
-      @verification_level = [:none, :low, :medium, :high, :very_high][new_data['verification_level']] || @verification_level
-      @explicit_content_filter = [:none, :exclude_roles, :all][new_data['explicit_content_filter']] || @explicit_content_filter
-      @default_message_notifications = [:all, :mentions][new_data['default_message_notifications']] || @default_message_notifications
+      @verification_level = %i[none low medium high very_high][new_data['verification_level']] || @verification_level
+      @explicit_content_filter = %i[none exclude_roles all][new_data['explicit_content_filter']] || @explicit_content_filter
+      @default_message_notifications = %i[all mentions][new_data['default_message_notifications']] || @default_message_notifications
 
       begin
         @afk_channel = @bot.channel(@afk_channel_id, self) if @afk_channel_id.nonzero? && (!@afk_channel || @afk_channel_id != @afk_channel.id)
