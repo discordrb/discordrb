@@ -16,7 +16,7 @@ module Discordrb::API::Invite
 
   # Delete an invite by code
   # https://discordapp.com/developers/docs/resources/invite#delete-invite
-  def delete(token, code, reason)
+  def delete(token, code, reason = nil)
     Discordrb::API.request(
       :invites_code,
       nil,

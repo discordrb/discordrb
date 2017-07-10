@@ -27,7 +27,7 @@ module Discordrb::API::Webhook
 
   # Update a webhook
   # https://discordapp.com/developers/docs/resources/webhook#modify-webhook
-  def update_webhook(token, webhook_id, data, reason)
+  def update_webhook(token, webhook_id, data, reason = nil)
     Discordrb::API.request(
       :webhooks_wid,
       webhook_id,
@@ -42,7 +42,7 @@ module Discordrb::API::Webhook
 
   # Update a webhook via webhook token
   # https://discordapp.com/developers/docs/resources/webhook#modify-webhook-with-token
-  def token_update_webhook(webhook_token, webhook_id, data, reason)
+  def token_update_webhook(webhook_token, webhook_id, data, reason = nil)
     Discordrb::API.request(
       :webhooks_wid,
       webhook_id,
@@ -56,7 +56,7 @@ module Discordrb::API::Webhook
 
   # Deletes a webhook
   # https://discordapp.com/developers/docs/resources/webhook#delete-webhook
-  def delete_webhook(token, webhook_id, reason)
+  def delete_webhook(token, webhook_id, reason = nil)
     Discordrb::API.request(
       :webhooks_wid,
       webhook_id,
@@ -69,7 +69,7 @@ module Discordrb::API::Webhook
 
   # Deletes a webhook via webhook token
   # https://discordapp.com/developers/docs/resources/webhook#delete-webhook-with-token
-  def token_delete_webhook(webhook_token, webhook_id, reason)
+  def token_delete_webhook(webhook_token, webhook_id, reason = nil)
     Discordrb::API.request(
       :webhooks_wid,
       webhook_id,

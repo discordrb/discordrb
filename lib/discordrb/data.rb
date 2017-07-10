@@ -1008,8 +1008,9 @@ module Discordrb
     end
 
     # Deletes this role. This cannot be undone without recreating the role!
-    def delete
-      API::Server.delete_role(@bot.token, @server.id, @id)
+    # @param reason [String] the reason for this role's deletion
+    def delete(reason = nil)
+      API::Server.delete_role(@bot.token, @server.id, @id, reason)
       @server.delete_role(@id)
     end
 
@@ -1419,9 +1420,8 @@ module Discordrb
 
     # Deletes a message on this channel. Mostly useful in case a message needs to be deleted when only the ID is known
     # @param message [Message, String, Integer, #resolve_id] The message that should be deleted.
-    # @param reason [String] The reason the for the message deletion.
-    def delete_message(message, reason = nil)
-      API::Channel.delete_message(@bot.token, @id, message.resolve_id, reason)
+    def delete_message(message)
+      API::Channel.delete_message(@bot.token, @id, message.resolve_id)
     end
 
     # Permanently deletes this channel
