@@ -360,12 +360,12 @@ module Discordrb::API::Server
   end
 
   # Gets a server's audit logs
-  def audit_logs(token, server_id, limit, userid = nil, actiontype = nil)
+  def audit_logs(token, server_id, limit, userid = nil, actiontype = nil, before = nil)
     Discordrb::API.request(
       :guilds_sid_auditlogs,
       server_id,
       :get,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}/audit-logs?limit=#{limit}#{"&user_id=#{userid}" if userid}#{"&action_type=#{actiontype}" if actiontype}",
+      "#{Discordrb::API.api_base}/guilds/#{server_id}/audit-logs?limit=#{limit}#{"&user_id=#{userid}" if userid}#{"&action_type=#{actiontype}" if actiontype}#{"&before=#{before}" if before}",
       Authorization: token
     )
   end
