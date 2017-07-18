@@ -2688,7 +2688,7 @@ module Discordrb
     # @param action [Symbol] The action to only include.
     # @param user [User, #resolve_id] The user to filter entries to.
     # @param limit [Integer] The amount of entries to limit it to.
-    # @param before [Entry, string] The entry to use to not include all entries after it.
+    # @param before [Entry, #resolve_id] The entry to use to not include all entries after it.
     # @return [AuditLogs] the server's audit logs.
     def audit_logs(action: nil, user: nil, limit: 50, before: nil)
       raise 'Invalid audit log action!' if action && AuditLogs::Actions.key(action).nil?
