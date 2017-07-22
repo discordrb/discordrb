@@ -271,7 +271,7 @@ module Discordrb::Commands
     private
 
     def divide_chain(chain)
-      chain_args_index = @attributes[:chain_args_delim].empty? ? nil : chain.index(@attributes[:chain_args_delim])
+      chain_args_index = chain.index(@attributes[:chain_args_delim]) unless @attributes[:chain_args_delim].empty?
       chain_args = []
 
       if chain_args_index
