@@ -1248,6 +1248,10 @@ module Discordrb
     # @return [Integer] the channel's position on the channel list
     attr_reader :position
 
+    # @return [true, false] if this channel is marked as nsfw
+    attr_reader :nsfw
+    alias_method :nsfw?, :nsfw
+
     # @return [true, false] whether or not this channel is a PM or group channel.
     def private?
       pm? || group?
@@ -1275,6 +1279,7 @@ module Discordrb
       @bitrate = data['bitrate']
       @user_limit = data['user_limit']
       @position = data['position']
+      @nsfw = data['nsfw']
 
       if private?
         @recipients = []
@@ -1326,6 +1331,17 @@ module Discordrb
     # @return [true, false] whether or not this channel is a group channel.
     def group?
       @type == 3
+    end
+
+    # Sets whether this channel is NSFW
+    # @param value [true, false]
+    # @raise [ArguementError] if value isn't one of true, false
+    def nsfw=(value)
+      raise ArgumentError, 'nsfw value must be true or false' unless value.is_a?(TrueClass) || value.is_a?(FalseClass)
+      @nsfw = value
+      update_channel_data
+
+      @nsfw
     end
 
     # This channel's permission overwrites
@@ -1540,6 +1556,7 @@ module Discordrb
       @bitrate = other.bitrate
       @user_limit = other.user_limit
       @permission_overwrites = other.permission_overwrites
+      @nsfw = other.nsfw
     end
 
     # The list of users currently in this channel. For a voice channel, it will return all the members currently
@@ -1761,7 +1778,7 @@ module Discordrb
     end
 
     def update_channel_data
-      API::Channel.update(@bot.token, @id, @name, @topic, @position, @bitrate, @user_limit, nil)
+      API::Channel.update(@bot.token, @id, @name, @topic, @position, @bitrate, @user_limit, @nsfw, nil)
     end
   end
 
