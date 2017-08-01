@@ -3448,6 +3448,7 @@ module Discordrb
         return @target if @target_cached
         @target = process_target(@data['target_id'], @target_type)
         @target_cached = true
+        return @target
       end
 
       # @return [Member, User] the user that is executing this action. Can be a User object if the user no longer exists in the server.
