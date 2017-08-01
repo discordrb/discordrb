@@ -3374,6 +3374,9 @@ module Discordrb
     # @return [Array<User>] the users included in the audit logs.
     attr_reader :users
 
+    # @return [Array<Webhook>] the users included in the audit logs.
+    attr_reader :webhooks
+
     # @return [Array<Entry>] the entries listed in the audit logs.
     attr_reader :entries
 
@@ -3382,7 +3385,11 @@ module Discordrb
       @bot = bot
       @server = server
       @users = {}
+      @webhooks = {}
       @entries = data['audit_log_entries'].map { |entry| Entry.new(self, @server, @bot, entry) }
+
+      process_users(data['users'])
+      process_webhooks(data['webhooks'])
     end
 
     # An entry in a server's audit logs.
@@ -3472,7 +3479,7 @@ module Discordrb
         when :user, :message then @server.member(id) || @bot.user(id) || @logs.user(id)
         when :role then @server.role(id)
         when :invite then @bot.invite(@data['changes'].find { |change| change['key'] == 'code' }.values.delete_if { |v| v == 'code' }.first)
-        when :webhook then @server.webhooks.find { |webhook| webhook.id == id }
+        when :webhook then @server.webhooks.find { |webhook| webhook.id == id } || @logs.webhook(id)
         when :emoji then @server.emoji[id]
         end
       end
@@ -3543,11 +3550,18 @@ module Discordrb
     end
     alias_method :first, :latest
 
-    # Gets a member in the audit logs data based on user ID
+    # Gets a user in the audit logs data based on user ID
     # @note This only uses data given by the audit logs request
     # @param id [Integer] The user ID to look for
     def user(id)
       @users[id.resolve_id]
+    end
+
+    # Gets a webhook in the audit logs data based on webhook ID
+    # @note This only uses data given by the audit logs request
+    # @param id [Integer] The webhook ID to look for
+    def webhook(id)
+      @webhook[id.resolve_id]
     end
 
     # Process user objects given by the request
@@ -3555,8 +3569,18 @@ module Discordrb
     # @!visibility private
     def process_users(users)
       users.each do |element|
-        user = User.new(element, self, @bot)
+        user = User.new(element, @bot)
         @users[user.id] = user
+      end
+    end
+
+    # Process webhook objects given by the request
+    # @note For internal use only
+    # @!visibility private
+    def process_webhooks(webhooks)
+      users.each do |element|
+        webhook = Webhook.new(element, @bot)
+        @webhooks[webhook.id] = webhook
       end
     end
 
