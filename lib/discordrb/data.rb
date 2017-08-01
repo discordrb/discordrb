@@ -3446,9 +3446,8 @@ module Discordrb
       # @return [Server, Channel, Member, User, Role, Invite, Webhook, Emoji, nil] the target being performed on.
       def target
         return @target if @target_cached
-        @target = process_target(@data['target_id'], @target_type)
         @target_cached = true
-        return @target
+        @target = process_target(@data['target_id'], @target_type)
       end
 
       # @return [Member, User] the user that is executing this action. Can be a User object if the user no longer exists in the server.
