@@ -228,11 +228,27 @@ module Discordrb
       results
     end
 
-    # Finds a user given its username.
-    # @param username [String] The username to look for.
-    # @return [Array<User>] The array of users that were found. May be empty if none were found.
-    def find_user(username)
-      @users.values.find_all { |e| e.username == username }
+    # Finds a user given its username or username & discriminator.
+    # @overload find_user(username)
+    #   Find all cached users with a certain username.
+    #   @param username [String] The username to look for.
+    #   @return [Array<User>] The array of users that were found. May be empty if none were found.
+    # @overload find_user(username, discrim)
+    #   Find a cached user with a certain username and discriminator.
+    #   Find a user by name and discriminator
+    #   @param username [String] The username to look for.
+    #   @param discrim [String] The user's discriminator
+    #   @return [User, nil] The user that was found, or `nil` if none was found
+    # @note This method only searches through users that have been cached. Users that have not yet been cached
+    #   by the bot but still share a connection with the user (mutual server) will not be found.
+    # @example Find users by name
+    #   bot.find_user('z64') #=> Array<User>
+    # @example Find a user by name and discriminator
+    #   bot.find_user('z64', '2639') #=> User
+    def find_user(username, discrim = nil)
+      users = @users.values.find_all { |e| e.username == username }
+      return users.find { |u| u.discrim == discrim } if discrim
+      users
     end
   end
 end
