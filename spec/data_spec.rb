@@ -155,7 +155,7 @@ module Discordrb
 
     describe '#avatar_url' do
       context 'avatar is set' do
-        it 'calls the API helper' do
+        it 'calls the correct API helper' do
           expect(API::User).to receive(:avatar_url).with(webhook_id, webhook_avatar)
           webhook.avatar_url
         end
@@ -164,13 +164,9 @@ module Discordrb
       context 'avatar is not set' do
         before { webhook.instance_variable_set(:@avatar, nil) }
 
-        it 'doesn\'t call API' do
-          expect(API::User).not_to receive(:avatar_url)
+        it 'calls the correct API helper' do
+          expect(API::User).to receive(:default_avatar)
           webhook.avatar_url
-        end
-
-        it 'returns nil' do
-          expect(webhook.avatar_url).to eq nil
         end
       end
     end
