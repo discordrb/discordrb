@@ -36,11 +36,13 @@ In addition to this, if you're on Windows and want to use voice functionality, y
 
 ## Installation
 
-### Linux
+### Linux / macOS
 
-On Linux, it should be as simple as running:
+Using [Bundler](http://bundler.io/#getting-started), you can add discordrb to your Gemfile:
 
-    gem install discordrb
+    gem 'discordrb'
+
+And then install via `bundle install`.
 
 ### Windows
 
