@@ -3371,10 +3371,10 @@ module Discordrb
       72 => :message_delete
     }.freeze
 
-    # @return [Array<User>] the users included in the audit logs.
+    # @return [Hash<String, User>] the users included in the audit logs.
     attr_reader :users
 
-    # @return [Array<Webhook>] the users included in the audit logs.
+    # @return [Hash<String, Webhook>] the webhooks included in the audit logs.
     attr_reader :webhooks
 
     # @return [Array<Entry>] the entries listed in the audit logs.
@@ -3552,14 +3552,14 @@ module Discordrb
 
     # Gets a user in the audit logs data based on user ID
     # @note This only uses data given by the audit logs request
-    # @param id [Integer] The user ID to look for
+    # @param id [#resolve_id] The user ID to look for
     def user(id)
       @users[id.resolve_id]
     end
 
     # Gets a webhook in the audit logs data based on webhook ID
     # @note This only uses data given by the audit logs request
-    # @param id [Integer] The webhook ID to look for
+    # @param id [#resolve_id] The webhook ID to look for
     def webhook(id)
       @webhook[id.resolve_id]
     end
@@ -3578,7 +3578,7 @@ module Discordrb
     # @note For internal use only
     # @!visibility private
     def process_webhooks(webhooks)
-      users.each do |element|
+      webhooks.each do |element|
         webhook = Webhook.new(element, @bot)
         @webhooks[webhook.id] = webhook
       end
