@@ -23,7 +23,9 @@ See also: [Documentation](http://www.rubydoc.info/gems/discordrb), [Tutorials](h
 ## Dependencies
 
 * Ruby 2.1+
-* An installed build system for native extensions (on Windows, try the [DevKit](http://rubyinstaller.org/downloads/); installation instructions [here](https://github.com/oneclick/rubyinstaller/wiki/Development-Kit#quick-start) - you only need to do the quick start)
+* An installed build system for native extensions (on Windows for Ruby < 2.4, try the [DevKit](http://rubyinstaller.org/downloads/); installation instructions [here](https://github.com/oneclick/rubyinstaller/wiki/Development-Kit#quick-start) - you only need to do the quick start)
+
+> **Note:** RubyInstaller for Ruby versions 2.4+ will install the DevKit as the last step of the installation. 
 
 ### Voice dependencies
 
@@ -36,23 +38,27 @@ In addition to this, if you're on Windows and want to use voice functionality, y
 
 ## Installation
 
-### Linux / macOS
-
 Using [Bundler](http://bundler.io/#getting-started), you can add discordrb to your Gemfile:
 
     gem 'discordrb'
 
 And then install via `bundle install`.
 
-### Windows
-
-On Windows, to install discordrb, run this in a shell **(make sure you have the DevKit installed! See the [Dependencies](https://github.com/meew0/discordrb#dependencies) section)**:
-
-    gem install discordrb --platform=ruby
-
-Run the [ping example](https://github.com/meew0/discordrb/blob/master/examples/ping.rb) to verify that the installation works (make sure to replace the username and password in there with your own or your bots'!):
+Run the [ping example](https://github.com/meew0/discordrb/blob/master/examples/ping.rb) to verify that the installation works (make sure to replace the token and client ID in there with your bots'!):
 
     ruby ping.rb
+
+Alternatively, while Bundler is the recommended option, you can also install discordrb without it.
+
+### Linux / macOS
+
+    gem install discordrb
+
+### Windows 
+
+> **Make sure you have the DevKit installed! See the [Dependencies](https://github.com/meew0/discordrb#dependencies) section)**
+
+    gem install discordrb --platform=ruby
 
 #### Troubleshooting
 
@@ -69,6 +75,9 @@ You're missing the development kit required to build native extensions. Download
 Then reinstall discordrb:
 
     gem uninstall discordrb
+    bundle install
+
+    # Or, if you didn't use bundler:
     gem install discordrb
 
 **If Ruby complains about `ffi_c` not being able to be found:**
@@ -100,6 +109,8 @@ bot.run
 ```
 
 This bot responds to every "Ping!" with a "Pong!".
+
+See [additional examples here](https://github.com/meew0/discordrb/tree/master/examples).
 
 ## Support
 
