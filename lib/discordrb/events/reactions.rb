@@ -20,10 +20,14 @@ module Discordrb::Events
       @channel_id = data['channel_id'].to_i
     end
 
-    # @return [User] the user that reacted to this message.
+    # @return [User, Member] the user that reacted to this message, or member if a server exists.
     def user
       # Cache the user so we don't do requests all the time
-      @user ||= @bot.user(@user_id)
+      @user ||= if server
+                  @server.member(@user_id)
+                else
+                  @bot.user(@user_id)
+                end
     end
 
     # @return [Message] the message that was reacted to.
@@ -34,6 +38,11 @@ module Discordrb::Events
     # @return [Channel] the channel that was reacted in.
     def channel
       @channel ||= @bot.channel(@channel_id)
+    end
+
+    # @return [Server, nil] the server that was reacted in. If reacted in a PM channel, it will be nil.
+    def server
+      @server ||= @channel.server
     end
   end
 
