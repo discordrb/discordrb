@@ -129,7 +129,7 @@ module Discordrb::API::User
     )
   end
 
-  # Returns one of the "default" discord avatards from the CDN given a discriminator
+  # Returns one of the "default" discord avatars from the CDN given a discriminator
   def default_avatar(discrim = 0)
     index = discrim.to_i % 5
     "#{Discordrb::API.cdn_url}/embed/avatars/#{index}.png"
