@@ -38,6 +38,8 @@ In addition to this, if you're on Windows and want to use voice functionality, y
 
 ## Installation
 
+### With Bundler
+
 Using [Bundler](http://bundler.io/#getting-started), you can add discordrb to your Gemfile:
 
     gem 'discordrb'
@@ -48,13 +50,15 @@ Run the [ping example](https://github.com/meew0/discordrb/blob/master/examples/p
 
     ruby ping.rb
 
+### With Gem
+
 Alternatively, while Bundler is the recommended option, you can also install discordrb without it.
 
-### Linux / macOS
+#### Linux / macOS
 
     gem install discordrb
 
-### Windows 
+#### Windows 
 
 > **Make sure you have the DevKit installed! See the [Dependencies](https://github.com/meew0/discordrb#dependencies) section)**
 
