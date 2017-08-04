@@ -29,6 +29,19 @@ module Discordrb
         expect { channel.delete_messages(messages, true) }.to raise_error(ArgumentError)
       end
     end
+
+    describe '#nsfw=' do
+      it 'should call #update_data' do
+        expect(channel).to receive(:update_channel_data)
+        channel.nsfw = true
+      end
+
+      it 'should change the cached value' do
+        allow(channel).to receive(:update_channel_data)
+        channel.nsfw = true
+        expect(channel.nsfw).to eq true
+      end
+    end
   end
 
   describe Webhook do
