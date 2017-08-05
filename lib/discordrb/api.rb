@@ -138,6 +138,8 @@ module Discordrb::API
     response
   end
 
+  # Handles premeptive ratelimiting by waiting the given mutex by the difference of the Date header to the
+  # X-Ratelimit-Reset header in the given response, thus making sure we don't get 429'd in any subsequent requests.
   def handle_preemptive_rl(response, mutex, key)
     Discordrb::LOGGER.ratelimit "RL bucket depletion detected! Date: #{response.headers[:date]} Reset: #{response.headers[:x_ratelimit_reset]}"
 
