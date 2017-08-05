@@ -140,7 +140,7 @@ module Discordrb::API
   end
 
   def handle_preemptive_rl(response, mutex, key)
-    Discordrb::LOGGER.debug "RL bucket depletion detected! Date: #{response.headers[:date]} Reset: #{response.headers[:x_ratelimit_reset]}"
+    Discordrb::LOGGER.ratelimit "RL bucket depletion detected! Date: #{response.headers[:date]} Reset: #{response.headers[:x_ratelimit_reset]}"
 
     now = Time.rfc2822(response.headers[:date])
     reset = Time.at(response.headers[:x_ratelimit_reset].to_i)
