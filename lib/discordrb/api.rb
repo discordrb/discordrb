@@ -114,7 +114,6 @@ module Discordrb::API
         if response
           handle_preemptive_rl(response, mutex, key) if response.headers[:x_ratelimit_remaining] == '0' && !mutex.locked?
         else
-          # technically this should never happen... but you know.
           Discordrb::LOGGER.ratelimit('Response was nil when trying to preemptively rate limit!!')
         end
       end
