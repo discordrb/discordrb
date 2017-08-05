@@ -104,20 +104,19 @@ module Discordrb::API
       # If the global mutex happens to be locked right now, wait for that as well.
       mutex_wait(@global_mutex) if @global_mutex.locked?
 
-      response = raw_request(type, attributes)
-
-      if response.headers[:x_ratelimit_remaining] == '0' && !mutex.locked?
-        Discordrb::LOGGER.ratelimit "RL bucket depletion detected! Date: #{response.headers[:date]} Reset: #{response.headers[:x_ratelimit_reset]}"
-
-        now = Time.rfc2822(response.headers[:date])
-        reset = Time.at(response.headers[:x_ratelimit_reset].to_i)
-
-        delta = reset - now
-
-        Discordrb::LOGGER.ratelimit("Locking RL mutex (key: #{key}) for #{delta} seconds preemptively")
-        trace("preemptive #{key.join(' ')}")
-
-        sync_wait(delta, mutex)
+      response = nil
+      begin
+        response = raw_request(type, attributes)
+      rescue RestClient::Exception => e
+        response = e.response
+        raise e
+      ensure
+        if response
+          handle_preemptive_rl(response, mutex, key) if response.headers[:x_ratelimit_remaining] == '0' && !mutex.locked?
+        else
+          # technically this should never happen... but you know.
+          Discordrb::LOGGER.ratelimit('Response was nil when trying to preemptively rate limit!!')
+        end
       end
     rescue RestClient::TooManyRequests => e
       # If the 429 is from the global RL, then we have to use the global mutex instead.
@@ -138,6 +137,18 @@ module Discordrb::API
     end
 
     response
+  end
+
+  def handle_preemptive_rl(response, mutex, key)
+    Discordrb::LOGGER.debug "RL bucket depletion detected! Date: #{response.headers[:date]} Reset: #{response.headers[:x_ratelimit_reset]}"
+
+    now = Time.rfc2822(response.headers[:date])
+    reset = Time.at(response.headers[:x_ratelimit_reset].to_i)
+
+    delta = reset - now
+
+    Discordrb::LOGGER.warn("Locking RL mutex (key: #{key}) for #{delta} seconds preemptively")
+    sync_wait(delta, mutex)
   end
 
   # Perform rate limit tracing. All this method does is log the current backtrace to the console with the `:ratelimit`
