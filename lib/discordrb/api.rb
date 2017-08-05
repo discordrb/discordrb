@@ -112,7 +112,7 @@ module Discordrb::API
         raise e
       ensure
         if response
-          handle_preemptive_rl(response, mutex, key) if response.headers[:x_ratelimit_remaining] == '0' && !mutex.locked?
+          handle_preemptive_rl(response.headers, mutex, key) if response.headers[:x_ratelimit_remaining] == '0' && !mutex.locked?
         else
           Discordrb::LOGGER.ratelimit('Response was nil when trying to preemptively rate limit!!')
         end
@@ -139,12 +139,12 @@ module Discordrb::API
   end
 
   # Handles premeptive ratelimiting by waiting the given mutex by the difference of the Date header to the
-  # X-Ratelimit-Reset header in the given response, thus making sure we don't get 429'd in any subsequent requests.
-  def handle_preemptive_rl(response, mutex, key)
-    Discordrb::LOGGER.ratelimit "RL bucket depletion detected! Date: #{response.headers[:date]} Reset: #{response.headers[:x_ratelimit_reset]}"
+  # X-Ratelimit-Reset header, thus making sure we don't get 429'd in any subsequent requests.
+  def handle_preemptive_rl(headers, mutex, key)
+    Discordrb::LOGGER.ratelimit "RL bucket depletion detected! Date: #{headers[:date]} Reset: #{headers[:x_ratelimit_reset]}"
 
-    now = Time.rfc2822(response.headers[:date])
-    reset = Time.at(response.headers[:x_ratelimit_reset].to_i)
+    now = Time.rfc2822(headers[:date])
+    reset = Time.at(headers[:x_ratelimit_reset].to_i)
 
     delta = reset - now
 
