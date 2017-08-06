@@ -58,7 +58,8 @@ bot.message(content: '!time') do |event|
   message.react CROSS_MARK
 
   # Add an await for a ReactionAddEvent, that will only trigger for reactions
-  # that match our CROSS_MARK emoji.
+  # that match our CROSS_MARK emoji. This time, I'm using interpolation to make the
+  # await key unique for this event so that multiple awaits can exist.
   bot.add_await(:"delete_#{message.id}", Discordrb::Events::ReactionAddEvent, emoji: CROSS_MARK) do |reaction_event|
     # Since this code will run on every CROSS_MARK reaction, it might not
     # be on our time message we sent earlier. We use `next` to skip the rest
