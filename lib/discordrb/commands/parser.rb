@@ -195,10 +195,14 @@ module Discordrb::Commands
       chain_to_split = @chain
 
       # Don't break if a command is called the same thing as the chain delimiter
-      chain_to_split = chain_to_split.slice(1..-1) if chain_to_split.start_with?(@attributes[:chain_delimiter])
+      chain_to_split = chain_to_split.slice(1..-1) if !@attributes[:chain_delimiter].empty? && chain_to_split.start_with?(@attributes[:chain_delimiter])
 
       first = true
-      split_chain = chain_to_split.split(@attributes[:chain_delimiter])
+      split_chain = if @attributes[:chain_delimiter].empty?
+                      [chain_to_split]
+                    else
+                      chain_to_split.split(@attributes[:chain_delimiter])
+                    end
       split_chain.each do |command|
         command = @attributes[:chain_delimiter] + command if first && @chain.start_with?(@attributes[:chain_delimiter])
         first = false
@@ -267,7 +271,7 @@ module Discordrb::Commands
     private
 
     def divide_chain(chain)
-      chain_args_index = chain.index @attributes[:chain_args_delim]
+      chain_args_index = chain.index(@attributes[:chain_args_delim]) unless @attributes[:chain_args_delim].empty?
       chain_args = []
 
       if chain_args_index

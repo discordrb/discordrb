@@ -54,19 +54,19 @@ module Discordrb::Commands
     # @option attributes [Array<String, Integer, Channel>] :channels The channels this command bot accepts commands on.
     #   Superseded if a command has a 'channels' attribute.
     # @option attributes [String] :previous Character that should designate the result of the previous command in
-    #   a command chain (see :advanced_functionality). Default is '~'.
+    #   a command chain (see :advanced_functionality). Default is '~'. Set to an empty string to disable.
     # @option attributes [String] :chain_delimiter Character that should designate that a new command begins in the
-    #   command chain (see :advanced_functionality). Default is '>'.
+    #   command chain (see :advanced_functionality). Default is '>'. Set to an empty string to disable.
     # @option attributes [String] :chain_args_delim Character that should separate the command chain arguments from the
-    #   chain itself (see :advanced_functionality). Default is ':'.
+    #   chain itself (see :advanced_functionality). Default is ':'. Set to an empty string to disable.
     # @option attributes [String] :sub_chain_start Character that should start a sub-chain (see
-    #   :advanced_functionality). Default is '['.
+    #   :advanced_functionality). Default is '['. Set to an empty string to disable.
     # @option attributes [String] :sub_chain_end Character that should end a sub-chain (see
-    #   :advanced_functionality). Default is ']'.
+    #   :advanced_functionality). Default is ']'. Set to an empty string to disable.
     # @option attributes [String] :quote_start Character that should start a quoted string (see
-    #   :advanced_functionality). Default is '"'.
+    #   :advanced_functionality). Default is '"'. Set to an empty string to disable.
     # @option attributes [String] :quote_end Character that should end a quoted string (see
-    #   :advanced_functionality). Default is '"'.
+    #   :advanced_functionality). Default is '"' or the same as :quote_start. Set to an empty string to disable.
     # @option attributes [true, false] :ignore_bots Whether the bot should ignore bot accounts or not. Default is false.
     def initialize(attributes = {})
       super(
@@ -126,7 +126,7 @@ module Discordrb::Commands
         quote_start: attributes[:quote_start] || '"',
 
         # Quoted mode ending character
-        quote_end: attributes[:quote_end] || '"'
+        quote_end: attributes[:quote_end] || attributes[:quote_start] || '"'
       }
 
       @permissions = {
