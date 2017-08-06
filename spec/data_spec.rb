@@ -41,6 +41,17 @@ module Discordrb
         channel.nsfw = true
         expect(channel.nsfw).to eq true
       end
+
+      context 'when the API raises an error' do
+        it 'should not change the cached value' do
+          allow(channel).to receive(:update_channel_data).and_raise(Discordrb::Errors::NoPermission)
+          begin
+            channel.nsfw = true
+          rescue Discordrb::Errors::NoPermission
+            expect(channel.nsfw).to eq false
+          end
+        end
+      end
     end
   end
 
