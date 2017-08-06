@@ -46,6 +46,8 @@ end
 # We can also manually register an await for specific kinds of events.
 # Here, we'll write a command that shows the current time and allows
 # the user to delete the message with a reaction.
+# We'll be using Bot#add_await to do this:
+# http://www.rubydoc.info/gems/discordrb/Discordrb%2FBot:add_await
 
 # the unicode ":x:" emoji
 CROSS_MARK = "\u274c".freeze
