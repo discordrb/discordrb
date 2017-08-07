@@ -1339,10 +1339,9 @@ module Discordrb
     # @raise [ArguementError] if value isn't one of true, false
     def nsfw=(value)
       raise ArgumentError, 'nsfw value must be true or false' unless value.is_a?(TrueClass) || value.is_a?(FalseClass)
-      @nsfw = value
       update_channel_data
 
-      @nsfw
+      @nsfw = value
     end
 
     # This channel's permission overwrites
@@ -1450,32 +1449,32 @@ module Discordrb
     # Sets this channel's name. The name must be alphanumeric with dashes, unless this is a voice channel (then there are no limitations)
     # @param name [String] The new name.
     def name=(name)
-      @name = name
       update_channel_data
+      @name = name
     end
 
     # Sets this channel's topic.
     # @param topic [String] The new topic.
     def topic=(topic)
       raise 'Tried to set topic on voice channel' if voice?
-      @topic = topic
       update_channel_data
+      @topic = topic
     end
 
     # Sets this channel's bitrate.
     # @param bitrate [Integer] The new bitrate (in bps). Number has to be between 8000-96000 (128000 for VIP servers)
     def bitrate=(bitrate)
       raise 'Tried to set bitrate on text channel' if text?
-      @bitrate = bitrate
       update_channel_data
+      @bitrate = bitrate
     end
 
     # Sets this channel's user limit.
     # @param limit [Integer] The new user limit. `0` for unlimited, has to be a number between 0-99
     def user_limit=(limit)
       raise 'Tried to set user_limit on text channel' if text?
-      @user_limit = limit
       update_channel_data
+      @user_limit = limit
     end
 
     alias_method :limit=, :user_limit=
@@ -1483,8 +1482,8 @@ module Discordrb
     # Sets this channel's position in the list.
     # @param position [Integer] The new position.
     def position=(position)
-      @position = position
       update_channel_data
+      @position = position
     end
 
     # Updates this channel's settings.
