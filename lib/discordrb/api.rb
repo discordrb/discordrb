@@ -104,20 +104,18 @@ module Discordrb::API
       # If the global mutex happens to be locked right now, wait for that as well.
       mutex_wait(@global_mutex) if @global_mutex.locked?
 
-      response = raw_request(type, attributes)
-
-      if response.headers[:x_ratelimit_remaining] == '0' && !mutex.locked?
-        Discordrb::LOGGER.ratelimit "RL bucket depletion detected! Date: #{response.headers[:date]} Reset: #{response.headers[:x_ratelimit_reset]}"
-
-        now = Time.rfc2822(response.headers[:date])
-        reset = Time.at(response.headers[:x_ratelimit_reset].to_i)
-
-        delta = reset - now
-
-        Discordrb::LOGGER.ratelimit("Locking RL mutex (key: #{key}) for #{delta} seconds preemptively")
-        trace("preemptive #{key.join(' ')}")
-
-        sync_wait(delta, mutex)
+      response = nil
+      begin
+        response = raw_request(type, attributes)
+      rescue RestClient::Exception => e
+        response = e.response
+        raise e
+      ensure
+        if response
+          handle_preemptive_rl(response.headers, mutex, key) if response.headers[:x_ratelimit_remaining] == '0' && !mutex.locked?
+        else
+          Discordrb::LOGGER.ratelimit('Response was nil before trying to preemptively rate limit!')
+        end
       end
     rescue RestClient::TooManyRequests => e
       # If the 429 is from the global RL, then we have to use the global mutex instead.
@@ -138,6 +136,20 @@ module Discordrb::API
     end
 
     response
+  end
+
+  # Handles premeptive ratelimiting by waiting the given mutex by the difference of the Date header to the
+  # X-Ratelimit-Reset header, thus making sure we don't get 429'd in any subsequent requests.
+  def handle_preemptive_rl(headers, mutex, key)
+    Discordrb::LOGGER.ratelimit "RL bucket depletion detected! Date: #{headers[:date]} Reset: #{headers[:x_ratelimit_reset]}"
+
+    now = Time.rfc2822(headers[:date])
+    reset = Time.at(headers[:x_ratelimit_reset].to_i)
+
+    delta = reset - now
+
+    Discordrb::LOGGER.warn("Locking RL mutex (key: #{key}) for #{delta} seconds preemptively")
+    sync_wait(delta, mutex)
   end
 
   # Perform rate limit tracing. All this method does is log the current backtrace to the console with the `:ratelimit`
