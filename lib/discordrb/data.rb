@@ -2666,7 +2666,7 @@ module Discordrb
 
     # The default channel is the text channel on this server with the highest position
     # that the client has Read Messages permission on.
-    # @return [Channel] The default channel on this server
+    # @return [Channel, nil] The default channel on this server, or nil if there are no channels that the bot can read
     def default_channel
       text_channels.sort_by { |e| [e.position, e.id] }.find do |e|
         overwrite = e.permission_overwrites[id]
