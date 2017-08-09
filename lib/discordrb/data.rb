@@ -1563,9 +1563,7 @@ module Discordrb
     # in that channel. For a text channel, it will return all online members that have permission to read it.
     # @return [Array<Member>] the users in this channel
     def users
-      if default_channel?
-        @server.online_members(include_idle: true)
-      elsif text?
+      if text?
         @server.online_members(include_idle: true).select { |u| u.can_read_messages? self }
       elsif voice?
         @server.voice_states.map { |id, voice_state| @server.member(id) if !voice_state.voice_channel.nil? && voice_state.voice_channel.id == @id }.compact
@@ -2666,9 +2664,18 @@ module Discordrb
       @owner = member(@owner_id) if exists
     end
 
-    # @return [Channel] The default channel on this server (usually called #general)
+    # The default channel is the text channel on this server with the highest position
+    # that the client has Read Messages permission on.
+    # @return [Channel] The default channel on this server
     def default_channel
-      @bot.channel(@id)
+      text_channels.sort_by { |e| [e.position, e.id] }.find do |e|
+        overwrite = e.permission_overwrites[id]
+        if overwrite
+          overwrite.allow.read_messages || overwrite.allow.read_messages == overwrite.deny.read_messages
+        else
+          everyone_role.permissions.read_messages
+        end
+      end
     end
 
     alias_method :general_channel, :default_channel
