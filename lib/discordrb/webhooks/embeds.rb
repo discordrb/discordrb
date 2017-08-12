@@ -30,7 +30,7 @@ module Discordrb::Webhooks
     # @return [Time, nil] timestamp for this embed. Will be displayed just below the title.
     attr_accessor :timestamp
 
-    # @return [Integer, nil] the colour of the bar to the side, in decimal form, or `nil` if none was set during initialization
+    # @return [Integer, nil] the colour of the bar to the side, in decimal form
     attr_reader :colour
     alias_method :color, :colour
 
