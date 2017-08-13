@@ -18,23 +18,19 @@ module Discordrb::Webhooks
       @fields = fields
     end
 
-    # The title of this embed that will be displayed above everything else.
-    # @return [String]
+    # @return [String, nil] title of the embed that will be displayed above everything else.
     attr_accessor :title
 
-    # The description for this embed.
-    # @return [String]
+    # @return [String, nil] description for this embed
     attr_accessor :description
 
-    # The URL the title should point to.
-    # @return [String]
+    # @return [String, nil] URL the title should point to
     attr_accessor :url
 
-    # The timestamp for this embed. Will be displayed just below the title.
-    # @return [Time]
+    # @return [Time, nil] timestamp for this embed. Will be displayed just below the title.
     attr_accessor :timestamp
 
-    # @return [Integer] the colour of the bar to the side, in decimal form.
+    # @return [Integer, nil] the colour of the bar to the side, in decimal form
     attr_reader :colour
     alias_method :color, :colour
 
@@ -55,31 +51,27 @@ module Discordrb::Webhooks
 
     alias_method :color=, :colour=
 
-    # The footer for this embed.
     # @example Add a footer to an embed
     #   embed.footer = Discordrb::Webhooks::EmbedFooter.new(text: 'Hello', icon_url: 'https://i.imgur.com/j69wMDu.jpg')
-    # @return [EmbedFooter]
+    # @return [EmbedFooter, nil] footer for this embed
     attr_accessor :footer
 
-    # The image for this embed.
     # @see EmbedImage
     # @example Add a image to an embed
     #   embed.image = Discordrb::Webhooks::EmbedImage.new(url: 'https://i.imgur.com/PcMltU7.jpg')
-    # @return [EmbedImage]
+    # @return [EmbedImage, nil] image for this embed
     attr_accessor :image
 
-    # The thumbnail for this embed.
     # @see EmbedThumbnail
     # @example Add a thumbnail to an embed
     #   embed.thumbnail = Discordrb::Webhooks::EmbedThumbnail.new(url: 'https://i.imgur.com/xTG3a1I.jpg')
-    # @return [EmbedThumbnail]
+    # @return [EmbedThumbnail, nil] thumbnail for this embed
     attr_accessor :thumbnail
 
-    # The author for this embed.
     # @see EmbedAuthor
     # @example Add a author to an embed
     #   embed.author = Discordrb::Webhooks::EmbedAuthor.new(name: 'meew0', url: 'https://github.com/meew0', icon_url: 'https://avatars2.githubusercontent.com/u/3662915?v=3&s=466')
-    # @return [EmbedAuthor]
+    # @return [EmbedAuthor, nil] author for this embed
     attr_accessor :author
 
     # Add a field object to this embed.
@@ -100,7 +92,7 @@ module Discordrb::Webhooks
     end
 
     # @return [Array<EmbedField>] the fields attached to this embed.
-    attr_reader :fields
+    attr_accessor :fields
 
     # @return [Hash] a hash representation of this embed, to be converted to JSON.
     def to_hash
@@ -124,6 +116,12 @@ module Discordrb::Webhooks
   # An embed's footer will be displayed at the very bottom of an embed, together with the timestamp. An icon URL can be
   # set together with some text to be displayed.
   class EmbedFooter
+    # @return [String, nil] text to be displayed in the footer
+    attr_accessor :text
+
+    # @return [String, nil] URL to an icon to be showed alongside the text
+    attr_accessor :icon_url
+
     # Creates a new footer object.
     # @param text [String, nil] The text to be displayed in the footer.
     # @param icon_url [String, nil] The URL to an icon to be showed alongside the text.
@@ -143,6 +141,9 @@ module Discordrb::Webhooks
 
   # An embed's image will be displayed at the bottom, in large format. It will replace a footer icon URL if one is set.
   class EmbedImage
+    # @return [String, nil] URL of the image
+    attr_accessor :url
+
     # Creates a new image object.
     # @param url [String, nil] The URL of the image.
     def initialize(url: nil)
@@ -160,6 +161,9 @@ module Discordrb::Webhooks
   # An embed's thumbnail will be displayed at the right of the message, next to the description and fields. When clicked
   # it will point to the embed URL.
   class EmbedThumbnail
+    # @return [String, nil] URL of the thumbnail
+    attr_accessor :url
+
     # Creates a new thumbnail object.
     # @param url [String, nil] The URL of the thumbnail.
     def initialize(url: nil)
@@ -176,6 +180,15 @@ module Discordrb::Webhooks
 
   # An embed's author will be shown at the top to indicate who "authored" the particular event the webhook was sent for.
   class EmbedAuthor
+    # @return [String, nil] name of the author
+    attr_accessor :name
+
+    # @return [String, nil] URL the name should link to
+    attr_accessor :url
+
+    # @return [String, nil] URL of the icon to be displayed next to the author
+    attr_accessor :icon_url
+
     # Creates a new author object.
     # @param name [String, nil] The name of the author.
     # @param url [String, nil] The URL the name should link to.
@@ -198,11 +211,20 @@ module Discordrb::Webhooks
 
   # A field is a small block of text with a header that can be relatively freely layouted with other fields.
   class EmbedField
+    # @return [String, nil] name of the field, displayed in bold at the top of the field.
+    attr_accessor :name
+
+    # @return [String, nil] value of the field, displayed in normal text below the name.
+    attr_accessor :value
+
+    # @return [true, false] whether the field should be displayed inline with other fields.
+    attr_accessor :inline
+
     # Creates a new field object.
-    # @param name [String, nil] The name of the field, displayed in bold at the top.
+    # @param name [String, nil] The name of the field, displayed in bold at the top of the field.
     # @param value [String, nil] The value of the field, displayed in normal text below the name.
-    # @param inline [true, false] Whether the field should be displayed in-line with other fields.
-    def initialize(name: nil, value: nil, inline: nil)
+    # @param inline [true, false] Whether the field should be displayed inline with other fields.
+    def initialize(name: nil, value: nil, inline: false)
       @name = name
       @value = value
       @inline = inline
