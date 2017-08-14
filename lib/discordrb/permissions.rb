@@ -56,6 +56,7 @@ module Discordrb
     end
 
     alias_method :can_administrate=, :can_administrator=
+    alias_method :administrate, :administrator
 
     attr_reader :bits
 
