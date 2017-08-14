@@ -392,6 +392,20 @@ module Discordrb
       send_packet(Opcodes::REQUEST_MEMBERS, data)
     end
 
+    # Sends a custom packet over the connection. This can be useful to implement future yet unimplemented functionality
+    # or for testing. You probably shouldn't use this unless you know what you're doing.
+    # @param op [Integer] The opcode the packet should be sent as. Can be one of {Opcodes} or a custom value if
+    #   necessary.
+    # @param packet [Object] Some arbitrary JSON-serialisable data that should be sent as the `d` field.
+    def send_packet(op, packet)
+      data = {
+        op: op,
+        d: packet
+      }
+
+      send(data.to_json)
+    end
+
     private
 
     def setup_heartbeats(interval)
@@ -729,15 +743,6 @@ module Discordrb
       else
         LOGGER.error("The websocket connection has closed: #{e.inspect}")
       end
-    end
-
-    def send_packet(op, packet)
-      data = {
-        op: op,
-        d: packet
-      }
-
-      send(data.to_json)
     end
 
     def send(data, type = :text)
