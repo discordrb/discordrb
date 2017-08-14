@@ -406,6 +406,15 @@ module Discordrb
       send(data.to_json)
     end
 
+    # Sends custom raw data over the connection. Only useful for testing; even if you know what you're doing you
+    # probably want to use {#send_packet} instead.
+    # @param data [String] The data to send.
+    # @param type [Symbol] The type the WebSocket frame should have; either `:text`, `:binary`, `:ping`, `:pong`, or
+    #   `:close`.
+    def send_raw(data, type = :text)
+      send(data, type)
+    end
+
     private
 
     def setup_heartbeats(interval)
