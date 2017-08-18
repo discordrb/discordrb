@@ -157,24 +157,17 @@ module Discordrb
     # @overload emoji(id)
     #   Return an emoji by its ID
     #   @param id [Integer, #resolve_id] The emoji's ID.
-    #   @return emoji [GlobalEmoji, nil] the emoji object. `nil` if the emoji was not found.
+    #   @return emoji [Emoji, nil] the emoji object. `nil` if the emoji was not found.
     # @overload emoji
     #   The list of emoji the bot can use.
-    #   @return [Array<GlobalEmoji>] the emoji available.
+    #   @return [Array<Emoji>] the emoji available.
     def emoji(id = nil)
       gateway_check
       if id
-        emoji
         id = id.resolve_id
-        @emoji.find { |sth| sth.id == id }
+        emoji.find { |e| e.id == id }
       else
-        emoji = {}
-        @servers.each do |_, server|
-          server.emoji.values.each do |element|
-            emoji[element.name] = GlobalEmoji.new(element, self)
-          end
-        end
-        @emoji = emoji.values
+        @servers.map { |_, server| server.emoji.values }.flatten
       end
     end
 
