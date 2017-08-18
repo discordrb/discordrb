@@ -2299,7 +2299,7 @@ module Discordrb
     end
 
     # Reacts to a message
-    # @param reaction [String, #to_reaction] the unicode emoji, Emoji, or GlobalEmoji
+    # @param reaction [String, #to_reaction] the unicode emoji or {Emoji}
     def create_reaction(reaction)
       reaction = reaction.to_reaction if reaction.respond_to?(:to_reaction)
       API::Channel.create_reaction(@bot.token, @channel.id, @id, reaction)
@@ -2309,7 +2309,7 @@ module Discordrb
     alias_method :react, :create_reaction
 
     # Returns the list of users who reacted with a certain reaction
-    # @param reaction [String, #to_reaction] the unicode emoji, Emoji, or GlobalEmoji
+    # @param reaction [String, #to_reaction] the unicode emoji or {Emoji}
     # @return [Array<User>] the users who used this reaction
     def reacted_with(reaction)
       reaction = reaction.to_reaction if reaction.respond_to?(:to_reaction)
