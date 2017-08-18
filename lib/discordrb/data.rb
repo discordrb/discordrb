@@ -2431,61 +2431,6 @@ module Discordrb
     end
   end
 
-  # Emoji that is not tailored to a server
-  class GlobalEmoji
-    include IDObject
-
-    # @return [String] the emoji name
-    attr_reader :name
-
-    # @return [Hash<Integer => Array<Role>>] roles this emoji is active for in every server
-    attr_reader :role_associations
-
-    def initialize(data, bot)
-      @bot = bot
-      @roles = nil
-
-      @name = data.name
-      @id = data.id
-      @role_associations = Hash.new([])
-      @role_associations[data.server.id] = data.roles
-    end
-
-    # @return [String] the layout to mention it (or have it used) in a message
-    def mention
-      "<:#{@name}:#{@id}>"
-    end
-
-    alias_method :use, :mention
-    alias_method :to_s, :mention
-
-    # @return [String] the layout to use this emoji in a reaction
-    def to_reaction
-      "#{@name}:#{@id}"
-    end
-
-    # @return [String] the icon URL of the emoji
-    def icon_url
-      API.emoji_icon_url(@id)
-    end
-
-    # The inspect method is overwritten to give more useful output
-    def inspect
-      "<GlobalEmoji name=#{@name} id=#{@id}>"
-    end
-
-    # @!visibility private
-    def process_roles(roles)
-      new_roles = []
-      return unless roles
-      roles.each do
-        role = server.role(role_id)
-        new_roles << role
-      end
-      new_roles
-    end
-  end
-
   # Basic attributes a server should have
   module ServerAttributes
     # @return [String] this server's name.
