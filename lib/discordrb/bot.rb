@@ -163,11 +163,13 @@ module Discordrb
     #   @return [Array<Emoji>] the emoji available.
     def emoji(id = nil)
       gateway_check
+
+      emoji_hash = @servers.values.map(&:emoji).reduce(&:merge)
       if id
         id = id.resolve_id
-        emoji.find { |e| e.id == id }
+        emoji_hash[id]
       else
-        @servers.map { |_, server| server.emoji.values }.flatten
+        emoji_hash.values
       end
     end
 
