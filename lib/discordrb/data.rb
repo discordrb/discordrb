@@ -2693,8 +2693,8 @@ module Discordrb
     def audit_logs(action: nil, user: nil, limit: 50, before: nil)
       raise 'Invalid audit log action!' if action && AuditLogs::Actions.key(action).nil?
       action = AuditLogs::Actions.key(action)
-      user = user.resolve_id if user.respond_to? :resolve_id
-      before = before.resolve_id if before.respond_to? :resolve_id
+      user = user.resolve_id if user
+      before = before.resolve_id if before
       AuditLogs.new(self, @bot, JSON.parse(API::Server.audit_logs(@bot.token, @id, limit, user, action, before)))
     end
 
