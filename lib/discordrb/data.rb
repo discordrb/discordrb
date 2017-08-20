@@ -1987,12 +1987,21 @@ module Discordrb
     # @return [String, nil] the URL of the author's website. `nil` is there is no URL
     attr_reader :url
 
+    # @return [String, nil] the icon of the author, if present
+    attr_reader :icon_url
+
+
+    # @return [String, nil] the discord proxy URL, if an icon_url was present
+    attr_reader :proxy_icon_url
+
     # @!visibility private
     def initialize(data, embed)
       @embed = embed
 
       @name = data['name']
       @url = data['url']
+      @icon_url = data['icon_url']
+      @proxy_url = data['proxy_icon_url']
     end
   end
 
