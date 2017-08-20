@@ -1990,7 +1990,6 @@ module Discordrb
     # @return [String, nil] the icon of the author, if present
     attr_reader :icon_url
 
-
     # @return [String, nil] the discord proxy URL, if an icon_url was present
     attr_reader :proxy_icon_url
 
