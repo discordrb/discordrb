@@ -1727,6 +1727,14 @@ module Discordrb
       webhooks.map { |webhook_data| Webhook.new(webhook_data, @bot) }
     end
 
+    # Requests a list of Invites to the channel
+    # @return [Array<Invite>] invites to the channel.
+    def invites
+      raise 'Tried to request invites from a non-server channel' unless server
+      invites = JSON.parse(API::Channel.invites(@bot.token, @id))
+      invites.map { |invite_data| Invite.new(invite_data, @bot) }
+    end
+
     # The inspect method is overwritten to give more useful output
     def inspect
       "<Channel name=#{@name} id=#{@id} topic=\"#{@topic}\" type=#{@type} position=#{@position} server=#{@server}>"
@@ -3019,6 +3027,13 @@ module Discordrb
     def webhooks
       webhooks = JSON.parse(API::Server.webhooks(@bot.token, @id))
       webhooks.map { |webhook| Webhook.new(webhook, @bot) }
+    end
+
+    # Requests a list of Invites to the server
+    # @return [Array<Invite>] invites to the server.
+    def invites
+      invites = JSON.parse(API::Server.invites(@bot.token, @id))
+      invites.map { |invite| Invite.new(invite, @bot) }
     end
 
     # Processes a GUILD_MEMBERS_CHUNK packet, specifically the members field
