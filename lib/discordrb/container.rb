@@ -37,7 +37,7 @@ module Discordrb
       register_event(MessageEvent, attributes, block)
     end
 
-    # This **event** is raised when the READY packet is received, i. e. servers and channels have finished
+    # This **event** is raised when the READY packet is received, i.e. servers and channels have finished
     # initialization. It's the recommended way to do things when the bot has finished starting up.
     # @param attributes [Hash] Event attributes, none in this particular case
     # @yield The block is executed when the event is raised.
@@ -305,7 +305,7 @@ module Discordrb
       register_event(UserUnbanEvent, attributes, block)
     end
 
-    # This **event** is raised when a server is created respective to the bot, i. e. the bot joins a server or creates
+    # This **event** is raised when a server is created respective to the bot, i.e. the bot joins a server or creates
     # a new one itself. It should never be necessary to listen to this event as it will only ever be triggered by
     # things the bot itself does, but one can never know.
     # @param attributes [Hash] The event's attributes.
@@ -499,7 +499,7 @@ module Discordrb
     # Returns the event class for a handler class type
     # @see #handler_class
     # @param handler_class [Class] The handler type
-    # @return [Class, nil] the event type, or nil if the handler_class isn't a handler class (i. e. ends with Handler)
+    # @return [Class, nil] the event type, or nil if the handler_class isn't a handler class (i.e. ends with Handler)
     def self.event_class(handler_class)
       class_name = handler_class.to_s
       return nil unless class_name.end_with? 'Handler'

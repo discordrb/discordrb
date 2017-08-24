@@ -167,7 +167,7 @@ module Discordrb
       LOGGER.debug('Confirmation received! Exiting run.')
     end
 
-    # Prevents all further execution until the websocket thread stops (e. g. through a closed connection).
+    # Prevents all further execution until the websocket thread stops (e.g. through a closed connection).
     def sync
       @ws_thread.join
     end
@@ -463,7 +463,7 @@ module Discordrb
           wait_for_reconnect
         end
 
-        # Restart the loop, i. e. reconnect
+        # Restart the loop, i.e. reconnect
       end
     end
 
