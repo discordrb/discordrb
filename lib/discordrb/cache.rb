@@ -187,9 +187,9 @@ module Discordrb
     #
     #    * An {Invite} object
     #    * The code for an invite
-    #    * A fully qualified invite URL (e. g. `https://discordapp.com/invite/0A37aN7fasF7n83q`)
-    #    * A short invite URL with protocol (e. g. `https://discord.gg/0A37aN7fasF7n83q`)
-    #    * A short invite URL without protocol (e. g. `discord.gg/0A37aN7fasF7n83q`)
+    #    * A fully qualified invite URL (e.g. `https://discordapp.com/invite/0A37aN7fasF7n83q`)
+    #    * A short invite URL with protocol (e.g. `https://discord.gg/0A37aN7fasF7n83q`)
+    #    * A short invite URL without protocol (e.g. `discord.gg/0A37aN7fasF7n83q`)
     # @return [String] Only the code for the invite.
     def resolve_invite_code(invite)
       invite = invite.code if invite.is_a? Discordrb::Invite

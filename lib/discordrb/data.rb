@@ -353,7 +353,7 @@ module Discordrb
       defined_permission?(action, channel)
     end
 
-    # Checks whether this user has a particular permission defined (i. e. not implicit, through for example
+    # Checks whether this user has a particular permission defined (i.e. not implicit, through for example
     # Manage Roles)
     # @param action [Symbol] The permission that should be checked. See also {Permissions::Flags} for a list.
     # @param channel [Channel, nil] If channel overrides should be checked too, this channel specifies where the overrides should be checked.
@@ -798,7 +798,7 @@ module Discordrb
 
     # Changes the bot's avatar.
     # @param avatar [String, #read] A JPG file to be used as the avatar, either
-    #  something readable (e. g. File Object) or as a data URL.
+    #  something readable (e.g. File Object) or as a data URL.
     def avatar=(avatar)
       if avatar.respond_to? :read
         # Set the file to binary mode if supported, so we don't get problems with Windows
@@ -1510,9 +1510,9 @@ module Discordrb
     #   @param reason [String] The reason the for defining the overwrite.
     # @overload define_overwrite(thing, allow, deny)
     #   @param thing [User, Role] What to define an overwrite for.
-    #   @param allow [#bits, Permissions, Integer] The permission sets that should receive an `allow` override (i. e. a
+    #   @param allow [#bits, Permissions, Integer] The permission sets that should receive an `allow` override (i.e. a
     #     green checkmark on Discord)
-    #   @param deny [#bits, Permissions, Integer] The permission sets that should receive a `deny` override (i. e. a red
+    #   @param deny [#bits, Permissions, Integer] The permission sets that should receive a `deny` override (i.e. a red
     #     cross on Discord)
     #   @param reason [String] The reason the for defining the overwrite.
     #   @example Define a permission overwrite for a user that can then mention everyone and use TTS, but not create any invites
@@ -2548,7 +2548,7 @@ module Discordrb
     include IDObject
     include ServerAttributes
 
-    # @return [String] the ID of the region the server is on (e. g. `amsterdam`).
+    # @return [String] the ID of the region the server is on (e.g. `amsterdam`).
     attr_reader :region_id
 
     # @return [Member] The server owner.
@@ -2621,7 +2621,7 @@ module Discordrb
       @chunked = false
       @processed_chunk_members = 0
 
-      # Only get the owner of the server actually exists (i. e. not for ServerDeleteEvent)
+      # Only get the owner of the server actually exists (i.e. not for ServerDeleteEvent)
       @owner = member(@owner_id) if exists
     end
 
@@ -2894,7 +2894,7 @@ module Discordrb
     end
 
     # Creates a role on this server which can then be modified. It will be initialized
-    # with the regular role defaults the client uses unless specified, i. e. name is "new role",
+    # with the regular role defaults the client uses unless specified, i.e. name is "new role",
     # permissions are the default, colour is the default etc.
     # @param name [String] Name of the role to create
     # @param colour [ColourRGB] The roles colour

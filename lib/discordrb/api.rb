@@ -98,7 +98,7 @@ module Discordrb::API
     begin
       mutex = @mutexes[key] ||= Mutex.new
 
-      # Lock and unlock, i. e. wait for the mutex to unlock and don't do anything with it afterwards
+      # Lock and unlock, i.e. wait for the mutex to unlock and don't do anything with it afterwards
       mutex_wait(mutex)
 
       # If the global mutex happens to be locked right now, wait for that as well.
