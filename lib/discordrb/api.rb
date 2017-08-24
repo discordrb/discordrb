@@ -54,7 +54,7 @@ module Discordrb::API
     required = "DiscordBot (https://github.com/meew0/discordrb, v#{Discordrb::VERSION})"
     @bot_name ||= ''
 
-    "rest-client/#{RestClient::VERSION} #{RUBY_ENGINE}/#{RUBY_VERSION}p#{RUBY_PATCHLEVEL} discordrb/#{Discordrb::VERSION} #{required} #{@bot_name}"
+    "#{required} rest-client/#{RestClient::VERSION} #{RUBY_ENGINE}/#{RUBY_VERSION}p#{RUBY_PATCHLEVEL} discordrb/#{Discordrb::VERSION} #{@bot_name}"
   end
 
   # Resets all rate limit mutexes
