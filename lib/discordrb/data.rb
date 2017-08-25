@@ -3116,13 +3116,13 @@ module Discordrb
     private
 
     def update_server_data(new_data)
-      API::Server.update(@bot.token, @id,
-                         new_data[:name] || @name,
-                         new_data[:region] || @region,
-                         new_data[:icon_id] || @icon_id,
-                         new_data[:afk_channel_id] || @afk_channel_id,
-                         new_data[:afk_timeout] || @afk_timeout)
-      update_data(new_data)
+      response = JSON.parse(API::Server.update(@bot.token, @id,
+                                               new_data[:name] || @name,
+                                               new_data[:region] || @region,
+                                               new_data[:icon_id] || @icon_id,
+                                               new_data[:afk_channel_id] || @afk_channel_id,
+                                               new_data[:afk_timeout] || @afk_timeout))
+      update_data(response)
     end
 
     def process_roles(roles)
