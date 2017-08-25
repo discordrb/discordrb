@@ -2588,9 +2588,6 @@ module Discordrb
     # @return [Integer] the amount of time after which a voice user gets moved into the AFK channel, in seconds.
     attr_reader :afk_timeout
 
-    # @return [Channel, nil] the AFK voice channel of this server, or nil if none is set
-    attr_reader :afk_channel
-
     # @return [Hash<Integer => VoiceState>] the hash (user ID => voice state) of voice states of members on this server
     attr_reader :voice_states
 
@@ -2599,14 +2596,13 @@ module Discordrb
       @bot = bot
       @owner_id = data['owner_id'].to_i
       @id = data['id'].to_i
-      
+
       process_channels(data['channels'])
       update_data(data)
 
       @large = data['large']
       @member_count = data['member_count']
       @splash_id = nil
-      @embed = nil
       @features = data['features'].map { |element| element.downcase.to_sym }
       @members = {}
       @voice_states = {}
@@ -2686,24 +2682,9 @@ module Discordrb
       integration.map { |element| Integration.new(element, @bot, self) }
     end
 
-    # Cache @embed
-    # @note For internal use only
-    # @!visibility private
-    def cache_embed
-      data = JSON.parse(API::Server.resolve(@bot.token, @id))
-      @embed ||= data['embed_enabled']
-      @embed_channel_id ||= data['embed_channel_id']
-      begin
-        @embed_channel = @bot.channel(@embed_channel_id, self) if @embed_channel_id.nonzero? && (!@embed_channel || @embed_channel_id != @embed_channel.id)
-      rescue Discordrb::Errors::NoPermission
-        LOGGER.debug("Embed channel #{@embed_channel_id} on server #{@id} is unreachable, setting to nil even though one exists")
-        @embed_channel = nil
-      end
-    end
-
     # @return [true, false] whether or not the server has widget enabled
     def embed?
-      cache_embed if @embed.nil?
+      update_data if @embed.nil?
       @embed
     end
     alias_method :widget_enabled, :embed?
@@ -2712,8 +2693,8 @@ module Discordrb
 
     # @return [Channel, nil] the channel the server embed will make a invite for.
     def embed_channel
-      cache_embed if @embed.nil?
-      @embed_channel
+      update_data if @embed.nil?
+      @bot.channel(@embed_channel_id) if @embed_channel_id
     end
     alias_method :widget_channel, :embed_channel
 
@@ -2766,7 +2747,7 @@ module Discordrb
     # @return [String, nil] the widget URL to the server that displays the amount of online members in a
     #   stylish way. `nil` if the widget is not enabled.
     def widget_url
-      cache_embed if @embed.nil?
+      update_data if @embed.nil?
       return nil unless @embed
       API.widget_url(@id)
     end
@@ -2780,8 +2761,8 @@ module Discordrb
     # @return [String, nil] the widget banner URL to the server that displays the amount of online members,
     #   server icon and server name in a stylish way. `nil` if the widget is not enabled.
     def widget_banner_url(style)
+      update_data if @embed.nil?
       return nil unless @embed
-      cache_embed if @embed.nil?
       API.widget_url(@id, style)
     end
 
@@ -3055,10 +3036,16 @@ module Discordrb
       @processed_chunk_members = 0
     end
 
+    # @return [Channel, nil] the AFK voice channel of this server, or nil if none is set
+    def afk_channel
+      @bot.channel(@afk_channel_id) if @afk_channel_id
+    end
+
     # Updates the cached data with new data
     # @note For internal use only
     # @!visibility private
-    def update_data(new_data)
+    def update_data(new_data = nil)
+      new_data ||= JSON.parse(API::Server.resolve(@bot.token, @id))
       @name = new_data[:name] || new_data['name'] || @name
       @region_id = new_data[:region] || new_data['region'] || @region_id
       @icon_id = new_data[:icon] || new_data['icon'] || @icon_id
@@ -3069,20 +3056,6 @@ module Discordrb
       @verification_level = %i[none low medium high very_high][new_data['verification_level']] || @verification_level
       @explicit_content_filter = %i[none exclude_roles all][new_data['explicit_content_filter']] || @explicit_content_filter
       @default_message_notifications = %i[all mentions][new_data['default_message_notifications']] || @default_message_notifications
-
-      begin
-        @afk_channel = @bot.channel(@afk_channel_id, self) if @afk_channel_id.nonzero? && (!@afk_channel || @afk_channel_id != @afk_channel.id)
-      rescue Discordrb::Errors::NoPermission
-        LOGGER.debug("AFK channel #{@afk_channel_id} on server #{@id} is unreachable, setting to nil even though one exists")
-        @afk_channel = nil
-      end
-
-      begin
-        @embed_channel = @bot.channel(@embed_channel_id, self) if @embed_channel_id.nonzero? && (!@embed_channel || @embed_channel_id != @embed_channel.id)
-      rescue Discordrb::Errors::NoPermission
-        LOGGER.debug("Embed channel #{@embed_channel_id} on server #{@id} is unreachable, setting to nil even though one exists")
-        @embed_channel = nil
-      end
     end
 
     # Adds a channel to this server's cache
