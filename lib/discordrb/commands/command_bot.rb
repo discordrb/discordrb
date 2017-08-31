@@ -283,7 +283,7 @@ module Discordrb::Commands
             nil
           end
         else
-          raise ArgumentError, "#{type} doesn't implement from_argument"
+          raise ArgumentError, "#{types[i]} doesn't implement from_argument"
         end
       end
     end
