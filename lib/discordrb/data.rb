@@ -2911,10 +2911,12 @@ module Discordrb
       role
     end
 
-    # @return [Array<User>] a list of banned users on this server.
+    # @return [Array<ServerBan>] a list of banned users on this server and the reason they were banned.
     def bans
-      users = JSON.parse(API::Server.bans(@bot.token, @id))
-      users.map { |e| User.new(e['user'], @bot) }
+      response = JSON.parse(API::Server.bans(@bot.token, @id))
+      response.map do |e|
+        ServerBan.new(self, User.new(e['user'], @bot), e['reason'])
+      end
     end
 
     # Bans a user from this server.
@@ -3187,6 +3189,34 @@ module Discordrb
         update_voice_state(element)
       end
     end
+  end
+
+  # A ban entry on a server
+  class ServerBan
+    # @return [String, nil] the reason the user was banned, if provided
+    attr_reader :reason
+
+    # @return [User] the user that was banned
+    attr_reader :user
+
+    # @return [Server] the server this ban belongs to
+    attr_reader :server
+
+    # @!visibility private
+    def initialize(server, user, reason)
+      @server = server
+      @user = user
+      @reason = reason
+    end
+
+    # Removes this ban on the associated user in the server
+    # @param reason [String] the reason for removing the ban
+    def remove(reason = nil)
+      @server.unban(user, reason)
+    end
+
+    alias_method :unban, :remove
+    alias_method :lift, :remove
   end
 
   # A webhook on a server channel
