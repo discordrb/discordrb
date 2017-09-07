@@ -52,10 +52,6 @@ To run the bot while using bundler:
 
     bundle exec ruby ping.rb
 
-But if you are using Gem, you do not need to include the `bundle exec` part:
-
-    ruby ping.rb
-
 ### With Gem
 
 Alternatively, while Bundler is the recommended option, you can also install discordrb without it.
@@ -69,6 +65,10 @@ Alternatively, while Bundler is the recommended option, you can also install dis
 > **Make sure you have the DevKit installed! See the [Dependencies](https://github.com/meew0/discordrb#dependencies) section)**
 
     gem install discordrb --platform=ruby
+    
+To run the bot with Gem, unlike bundler you can just do:
+ 
+    ruby ping.rb
 
 #### Troubleshooting
 
