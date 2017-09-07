@@ -66,7 +66,7 @@ Alternatively, while Bundler is the recommended option, you can also install dis
 
     gem install discordrb --platform=ruby
     
-To run the bot with Gem, unlike bundler you can just do:
+To run the bot with Gem:
  
     ruby ping.rb
 
