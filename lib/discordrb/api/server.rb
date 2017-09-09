@@ -97,17 +97,16 @@ module Discordrb::API::Server
   end
 
   # Update a channels position
-  # https://discordapp.com/developers/docs/resources/guild#modify-guild-channel
-  def update_channel(token, server_id, channel_id, position, reason = nil)
+  # https://discordapp.com/developers/docs/resources/guild#modify-guild-channel-positions
+  def update_channel_positions(token, server_id, positions)
     Discordrb::API.request(
       :guilds_sid_channels,
       server_id,
       :patch,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/channels",
-      { id: channel_id, position: position }.to_json,
+      positions.to_json,
       Authorization: token,
-      content_type: :json,
-      'X-Audit-Log-Reason': reason
+      content_type: :json
     )
   end
 

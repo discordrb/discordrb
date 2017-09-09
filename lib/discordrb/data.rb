@@ -1231,11 +1231,23 @@ module Discordrb
   class Channel
     include IDObject
 
+    # Map of channel types
+    TYPES = {
+      text: 0,
+      dm: 1,
+      voice: 2,
+      group: 3,
+      category: 4
+    }.freeze
+
     # @return [String] this channel's name.
     attr_reader :name
 
     # @return [Server, nil] the server this channel is on. If this channel is a PM channel, it will be nil.
     attr_reader :server
+
+    # @return [Integer, nil] the ID of the parent channel, if this channel is inside a cateogry
+    attr_reader :parent_id
 
     # @return [Integer] the type of this channel (0: text, 1: private, 2: voice, 3: group)
     attr_reader :type
@@ -1290,6 +1302,7 @@ module Discordrb
       @bitrate = data['bitrate']
       @user_limit = data['user_limit']
       @position = data['position']
+      @parent_id = data['parent_id'].to_i if data['parent_id']
 
       if private?
         @recipients = []
@@ -1345,6 +1358,30 @@ module Discordrb
       @type == 3
     end
 
+    # @return [true, false]
+    def category?
+      @type == 4
+    end
+
+    # @return [Channel, nil] the category channel, if this channel is in a category
+    def category
+      @bot.channel(@parent_id) if @parent_id
+    end
+
+    alias_method :parent, :category
+
+    # Sets this channels parent category
+    # @param channel [Channel, #resolve_id] the target category channel
+    # @raise [ArgumentError] if the target channel isn't a category
+    def category=(channel)
+      channel = @bot.channel(channel)
+      raise ArgumentError, 'Cannot set parent category to a channel that isn\'t a category' unless channel.category?
+      @parent_id = channel.id
+      update_channel_data
+    end
+
+    alias_method :parent=, :category=
+
     # Sets whether this channel is NSFW
     # @param value [true, false]
     # @raise [ArguementError] if value isn't one of true, false
@@ -1370,6 +1407,51 @@ module Discordrb
     end
 
     alias_method :overwrites, :permission_overwrites
+
+    # Bulk sets this channels permission overwrites
+    # @param overwrites [Array<Overwrite>]
+    def permission_overwrites=(overwrites)
+      @permission_overwrites = overwrites
+      update_channel_data
+    end
+
+    # Syncs this channels overwrites with its parent category
+    # @raises [RuntimeError] if this channel is not in a category
+    def sync_overwrites
+      raise 'Cannot sync overwrites on a channel with no parent category' unless parent
+      self.permission_overwrites = parent.permission_overwrites
+    end
+
+    alias_method :sync, :sync_overwrites
+
+    # @return [true, false, nil] whether this channels permissions match the permission overwrites of the category that it's in, or nil if it is not in a category
+    def synchronized?
+      return unless parent
+      permission_overwrites == parent.permission_overwrites
+    end
+
+    alias_method :synced?, :synchronized?
+
+    # Returns the children of this channel, if it is a category. Otherwise returns an empty array.
+    # @return [Array<Channel>]
+    def children
+      return [] unless category?
+      server.channels.select { |c| c.parent_id == id }
+    end
+
+    alias_method :channels, :children
+
+    # Returns the text channels in this category, if it is a category channel. Otherwise returns an empty array.
+    # @return [Array<Channel>]
+    def text_channels
+      children.select(&:text?)
+    end
+
+    # Returns the voice channels in this category, if it is a category channel. Otherwise returns an empty array.
+    # @return [Array<Channel>]
+    def voice_channels
+      children.select(&:voice?)
+    end
 
     # @return [Overwrite] any member-type permission overwrites on this channel
     def member_overwrites
@@ -1570,6 +1652,7 @@ module Discordrb
       @user_limit = other.user_limit
       @permission_overwrites = other.permission_overwrites
       @nsfw = other.nsfw
+      @parent_id = other.parent_id
     end
 
     # The list of users currently in this channel. For a voice channel, it will return all the members currently
@@ -1817,7 +1900,8 @@ module Discordrb
     end
 
     def update_channel_data
-      API::Channel.update(@bot.token, @id, @name, @topic, @position, @bitrate, @user_limit, @nsfw, nil)
+      overwrites = @permission_overwrites.map { |_, v| v.to_hash }
+      API::Channel.update(@bot.token, @id, @name, @topic, @position, @bitrate, @user_limit, @nsfw, overwrites, @parent_id, nil)
     end
   end
 
@@ -2842,6 +2926,16 @@ module Discordrb
       @channels.select(&:voice?)
     end
 
+    # @return [Array<Channel>] an array of category channels on this server
+    def categories
+      @channels.select(&:category?)
+    end
+
+    # @return [Array<Channel>] an array of channels on this server that are not in a category
+    def orphan_channels
+      @channels.reject { |c| c.parent || c.category? }
+    end
+
     # @return [String, nil] the widget URL to the server that displays the amount of online members in a
     #   stylish way. `nil` if the widget is not enabled.
     def widget_url
@@ -2958,16 +3052,17 @@ module Discordrb
 
     # Creates a channel on this server with the given name.
     # @param name [String] Name of the channel to create
-    # @param type [Integer] Type of channel to create (0: text, 2: voice)
+    # @param type [Integer, Symbol] Type of channel to create (0: text, 2: voice, 4: category)
     # @param bitrate [Integer] the bitrate of this channel, if it will be a voice channel
     # @param user_limit [Integer] the user limit of this channel, if it will be a voice channel
     # @param permission_overwrites [Array<Hash>, Array<Overwrite>] permission overwrites for this channel
     # @param nsfw [true, false] whether this channel should be created as nsfw
     # @param reason [String] The reason the for the creation of this channel.
     # @return [Channel] the created channel.
-    # @raise [ArgumentError] if type is not 0 or 2
+    # @raise [ArgumentError] if type is not 0 (text), 2 (voice), or 4 (category)
     def create_channel(name, type = 0, bitrate: nil, user_limit: nil, permission_overwrites: [], nsfw: false, reason: nil)
-      raise ArgumentError, 'Channel type must be either 0 (text) or 2 (voice)!' unless [0, 2].include?(type)
+      type = Channel::TYPES[type] if type.is_a?(Symbol)
+      raise ArgumentError, 'Channel type must be either 0 (text), 2 (voice), or 4 (category)!' unless [0, 2, 4].include?(type)
       permission_overwrites.map! { |e| e.is_a?(Overwrite) ? e.to_hash : e }
       response = API::Server.create_channel(@bot.token, @id, name, type, bitrate, user_limit, permission_overwrites, nsfw, reason)
       Channel.new(JSON.parse(response), @bot)
