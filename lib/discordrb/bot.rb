@@ -379,6 +379,8 @@ module Discordrb
     # @param file [File] The file that should be sent.
     # @param caption [string] The caption for the file.
     # @param tts [true, false] Whether or not this file's caption should be sent using Discord text-to-speech.
+    # @example Send a file from disk
+    #   bot.send_file(83281822225530880, File.open('rubytaco.png', 'r'))
     def send_file(channel, file, caption: nil, tts: false)
       channel = channel.resolve_id
       response = API::Channel.upload_file(token, channel, file, caption: caption, tts: tts)

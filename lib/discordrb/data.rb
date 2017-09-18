@@ -201,6 +201,8 @@ module Discordrb
     # @param file [File] The file to send to the user
     # @param caption [String] The caption of the file being sent
     # @return [Message] the message sent to this user.
+    # @example Send a file from disk
+    #   user.send_file(File.open('rubytaco.png', 'r'))
     def send_file(file, caption = nil)
       pm.send_file(file, caption: caption)
     end
@@ -1430,6 +1432,8 @@ module Discordrb
     # @param file [File] The file to send. There's no clear size limit for this, you'll have to attempt it for yourself (most non-image files are fine, large images may fail to embed)
     # @param caption [string] The caption for the file.
     # @param tts [true, false] Whether or not this file's caption should be sent using Discord text-to-speech.
+    # @example Send a file from disk
+    #   channel.send_file(File.open('rubytaco.png', 'r'))
     def send_file(file, caption: nil, tts: false)
       @bot.send_file(@id, file, caption: caption, tts: tts)
     end
