@@ -157,7 +157,7 @@ module Discordrb
     # @overload emoji(id)
     #   Return an emoji by its ID
     #   @param id [Integer, #resolve_id] The emoji's ID.
-    #   @return emoji [Emoji, nil] the emoji object. `nil` if the emoji was not found.
+    #   @return [Emoji, nil] the emoji object. `nil` if the emoji was not found.
     # @overload emoji
     #   The list of emoji the bot can use.
     #   @return [Array<Emoji>] the emoji available.
