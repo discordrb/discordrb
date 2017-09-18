@@ -2124,7 +2124,7 @@ module Discordrb
     # @return [Array<Embed>] the embed objects contained in this message.
     attr_reader :embeds
 
-    # @return [Hash<String, Reaction>] the reaction objects attached to this message keyed by the name of the reaction
+    # @return [Hash<String => Reaction>] the reaction objects attached to this message keyed by the name of the reaction
     attr_reader :reactions
 
     # @return [true, false] whether the message used Text-To-Speech (TTS) or not.
@@ -2564,7 +2564,7 @@ module Discordrb
     # @return [Array<Role>] an array of all the roles created on this server.
     attr_reader :roles
 
-    # @return [Hash<Integer, Emoji>] a hash of all the emoji available on this server.
+    # @return [Hash<Integer => Emoji>] a hash of all the emoji available on this server.
     attr_reader :emoji
     alias_method :emojis, :emoji
 
