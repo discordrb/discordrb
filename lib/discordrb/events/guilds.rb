@@ -82,6 +82,7 @@ module Discordrb::Events
       process_emoji(data)
     end
 
+    # @!visibility private
     def process_emoji(data)
       @emoji = data['emojis'].map do |e|
         @server.emoji[e['id']]

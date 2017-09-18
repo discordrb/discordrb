@@ -584,6 +584,7 @@ module Discordrb
       raise_event(HeartbeatEvent.new(self))
     end
 
+    # Makes the bot leave any groups with no recipients remaining
     def prune_empty_groups
       @channels.each_value do |channel|
         channel.leave_group if channel.group? && channel.recipients.empty?
