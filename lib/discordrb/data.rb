@@ -3053,6 +3053,24 @@ module Discordrb
       update_server_data(afk_timeout: afk_timeout)
     end
 
+    # Sets the verification level of the server
+    # @param verification_level [Integer] The verification level from 0-4
+    def verification_level=(verification_level)
+      update_server_data(verification_level: verification_level)
+    end
+
+    # Sets the default message notification level
+    # @param default_message_notifications [Integer] The default message notificiation 0-1
+    def default_message_notifications=(default_message_notifications)
+      update_server_data(default_message_notifications: default_message_notifications)
+    end
+
+    # Sets the server splash 
+    # @param splash [String] The splash hash
+    def splash=(splash)
+      update_server_data(splash: splash)
+    end
+
     # @return [true, false] whether this server has any emoji or not.
     def any_emoji?
       @emoji.any?
@@ -3112,7 +3130,7 @@ module Discordrb
       @region_id = new_data[:region] || new_data['region'] || @region_id
       @icon_id = new_data[:icon] || new_data['icon'] || @icon_id
       @afk_timeout = new_data[:afk_timeout] || new_data['afk_timeout'] || @afk_timeout
-
+      
       afk_channel_id = new_data[:afk_channel_id] || new_data['afk_channel_id'] || @afk_channel
       @afk_channel_id = afk_channel_id.nil? ? nil : afk_channel_id.resolve_id
       embed_channel_id = new_data[:embed_channel_id] || new_data['embed_channel_id'] || @embed_channel
@@ -3121,9 +3139,10 @@ module Discordrb
       @system_channel_id = system_channel_id.nil? ? nil : system_channel_id.resolve_id
 
       @embed_enabled = new_data[:embed_enabled] || new_data['embed_enabled']
-      @verification_level = %i[none low medium high very_high][new_data['verification_level']] || @verification_level
-      @explicit_content_filter = %i[none exclude_roles all][new_data['explicit_content_filter']] || @explicit_content_filter
-      @default_message_notifications = %i[all mentions][new_data['default_message_notifications']] || @default_message_notifications
+      @splash = new_data[:splash_id] || new_data['splash_id'] || @splash_id
+      @verification_level = VERIFICATION_LEVELS[new_data['verification_level']] || @verification_level
+      @explicit_content_filter = FILTER_LEVELS[new_data['explicit_content_filter']] || @explicit_content_filter
+      @default_message_notifications = NOTIFICATION_LEVELS[new_data['default_message_notifications']] || @default_message_notifications
     end
 
     # Adds a channel to this server's cache
@@ -3163,6 +3182,11 @@ module Discordrb
                                                new_data[:region] || @region_id,
                                                new_data[:icon_id] || @icon_id,
                                                new_data[:afk_channel_id] || @afk_channel_id,
+                                               new_data[:afk_timeout] || @afk_timeout,
+                                               new_data[:splash] || @splash,
+                                               new_data[:default_message_notifications] || @default_message_notifications,
+                                               new_data[:verification_level] || @verification_level,
+                                               new_data[:explicit_content_filter] || @explicit_content_filter,
                                                new_data[:system_channel_id] || @system_channel_id,
                                                new_data[:afk_timeout] || @afk_timeout))
       update_data(response)
