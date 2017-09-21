@@ -2606,6 +2606,9 @@ module Discordrb
     # @return [Symbol] the default message notifications settings of the server (:all = 'All messages', :mentions = 'Only @mentions').
     attr_reader :default_message_notifications
 
+    # @return [String] The server splash hash
+    attr_reader :splash
+
     # @return [Integer] the amount of time after which a voice user gets moved into the AFK channel, in seconds.
     attr_reader :afk_timeout
 
@@ -3053,9 +3056,19 @@ module Discordrb
       update_server_data(afk_timeout: afk_timeout)
     end
 
+    VERIFICATION_LEVELS = {
+      none: 0,
+      low: => 1,
+      medium: => 2,
+      high: => 3,
+      very_high: => 4
+    }.freeze
+
     # Sets the verification level of the server
-    # @param verification_level [Integer] The verification level from 0-4
+    # @param verification_level [Integer] The verification level from 0-4 OR Symbol
     def verification_level=(verification_level)
+      verification_level = VERIFICATION_LEVELS[verification_level] if verification_level.is_a?(Symbol)
+
       update_server_data(verification_level: verification_level)
     end
 
