@@ -3065,23 +3065,23 @@ module Discordrb
     }.freeze
 
     # Sets the verification level of the server
-    # @param verification_level [Integer] The verification level from 0-4 OR Symbol
-    def verification_level=(verification_level)
-      verification_level = VERIFICATION_LEVELS[verification_level] if verification_level.is_a?(Symbol)
+    # @param level [Integer] The verification level from 0-4 OR Symbol
+    def verification_level=(level)
+      level = VERIFICATION_LEVELS[level] if level.is_a?(Symbol)
 
-      update_server_data(verification_level: verification_level)
+      update_server_data(verification_level: level)
     end
 
     # Sets the default message notification level
-    # @param default_message_notifications [Integer] The default message notificiation 0-1
-    def default_message_notifications=(default_message_notifications)
-      update_server_data(default_message_notifications: default_message_notifications)
+    # @param notifications [Integer] The default message notificiation 0-1
+    def default_message_notifications=(notifications)
+      update_server_data(default_message_notifications: notifications)
     end
 
     # Sets the server splash 
-    # @param splash [String] The splash hash
-    def splash=(splash)
-      update_server_data(splash: splash)
+    # @param splash_hash [String] The splash hash
+    def splash=(splash_hash)
+      update_server_data(splash: splash_hash)
     end
 
     # @return [true, false] whether this server has any emoji or not.
