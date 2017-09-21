@@ -3065,7 +3065,7 @@ module Discordrb
     }.freeze
 
     # Sets the verification level of the server
-    # @param level [Integer] The verification level from 0-4 OR Symbol
+    # @param level [Integer, Symbol] The verification level from 0-4 or Symbol (see {VERIFICATION_LEVELS})
     def verification_level=(level)
       level = VERIFICATION_LEVELS[level] if level.is_a?(Symbol)
 
