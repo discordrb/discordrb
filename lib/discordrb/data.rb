@@ -2291,7 +2291,7 @@ module Discordrb
 
                     unless member
                       Discordrb::LOGGER.debug("Member with ID #{data['author']['id']} not cached (possibly left the server).")
-                      member = @bot.user(data['author']['id'].to_i)
+                      member = @bot.ensure_user(data['author'])
                     end
 
                     member
