@@ -3058,10 +3058,10 @@ module Discordrb
 
     VERIFICATION_LEVELS = {
       none: 0,
-      low: => 1,
-      medium: => 2,
-      high: => 3,
-      very_high: => 4
+      low: 1,
+      medium: 2,
+      high: 3,
+      very_high: 4
     }.freeze
 
     # Sets the verification level of the server
