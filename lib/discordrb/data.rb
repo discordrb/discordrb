@@ -2727,6 +2727,24 @@ module Discordrb
 
     alias_method :online_users, :online_members
 
+    # Adds a member to this guild that has granted this bot's application an OAuth2 access token
+    # with the `guilds.join` scope.
+    # For more information about Discord's OAuth2 implementation, see: https://discordapp.com/developers/docs/topics/oauth2
+    # @note Your bot must be present in this server, and have permission to create instant invites for this to work.
+    # @param user [Integer, User, #resolve_id] the user, or ID of the user to add to this server
+    # @param access_token [String] the OAuth2 Bearer token that has been granted the `guilds.join` scope
+    # @param nick [String] the nickname to give this member upon joining
+    # @param roles [Role, Array<Integer, Role, #resolve_id>] the role (or roles) to give this member upon joining
+    # @param deaf [true, false] whether this member will be server deafened upon joining
+    # @param mute [true, false] whether this member will be server muted upon joining
+    # @return [Member] the created member
+    def add_member_using_token(user, access_token, nick: nil, roles: [], deaf: false, mute: false)
+      user_id = user.resolve_id
+      roles = roles.is_a?(Array) ? roles.map(&:resolve_id) : [roles.resolve_id]
+      response = JSON.parse(API::Server.add_member(@bot.token, @id, user_id, access_token, nick, roles, deaf, mute))
+      add_member Member.new(response, self, @bot)
+    end
+
     # Returns the amount of members that are candidates for pruning
     # @param days [Integer] the number of days to consider for inactivity
     # @return [Integer] number of members to be removed
@@ -2823,8 +2841,8 @@ module Discordrb
     # @note For internal use only
     # @!visibility private
     def add_member(member)
-      @members[member.id] = member
       @member_count += 1
+      @members[member.id] = member
     end
 
     # Removes a member from the member cache.

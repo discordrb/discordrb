@@ -460,4 +460,18 @@ module Discordrb::API::Server
       Authorization: token
     )
   end
+
+  # Adds a member to a server with an OAuth2 Bearer token that has been granted `guilds.join`
+  # https://discordapp.com/developers/docs/resources/guild#add-guild-member
+  def add_member(token, server_id, user_id, access_token, nick = nil, roles = [], mute = false, deaf = false)
+    Discordrb::API.request(
+      :guilds_sid_members_uid,
+      server_id,
+      :put,
+      "#{Discordrb::API.api_base}/guilds/#{server_id}/members/#{user_id}",
+      { access_token: access_token, nick: nick, roles: roles, mute: mute, deaf: deaf }.to_json,
+      content_type: :json,
+      Authorization: token
+    )
+  end
 end
