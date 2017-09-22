@@ -2606,9 +2606,6 @@ module Discordrb
     # @return [Symbol] the default message notifications settings of the server (:all = 'All messages', :mentions = 'Only @mentions').
     attr_reader :default_message_notifications
 
-    # @return [String] The server splash hash
-    attr_reader :splash
-
     # @return [Integer] the amount of time after which a voice user gets moved into the AFK channel, in seconds.
     attr_reader :afk_timeout
 
@@ -3056,6 +3053,7 @@ module Discordrb
       update_server_data(afk_timeout: afk_timeout)
     end
 
+    # A map of possible server verification levels to symbol names
     VERIFICATION_LEVELS = {
       none: 0,
       low: 1,
