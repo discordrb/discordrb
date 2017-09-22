@@ -3080,7 +3080,7 @@ module Discordrb
 
     alias_method :notification_level=, :default_message_notifications=
 
-    # Sets the server splash 
+    # Sets the server splash
     # @param splash_hash [String] The splash hash
     def splash=(splash_hash)
       update_server_data(splash: splash_hash)
