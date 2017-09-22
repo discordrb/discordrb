@@ -3078,10 +3078,18 @@ module Discordrb
       update_server_data(default_message_notifications: notifications)
     end
 
+    alias_method :notification_level=, :default_message_notifications=
+
     # Sets the server splash 
     # @param splash_hash [String] The splash hash
     def splash=(splash_hash)
       update_server_data(splash: splash_hash)
+    end
+
+    # Sets the server content filter
+    # @param filter [Integer] The content filter from 0-2
+    def explicit_content_filter=(filter)
+      update_server_data(explicit_content_filter: filter)
     end
 
     # @return [true, false] whether this server has any emoji or not.
@@ -3200,8 +3208,7 @@ module Discordrb
                                                new_data[:default_message_notifications] || @default_message_notifications,
                                                new_data[:verification_level] || @verification_level,
                                                new_data[:explicit_content_filter] || @explicit_content_filter,
-                                               new_data[:system_channel_id] || @system_channel_id,
-                                               new_data[:afk_timeout] || @afk_timeout))
+                                               new_data[:system_channel_id] || @system_channel_id))
       update_data(response)
     end
 

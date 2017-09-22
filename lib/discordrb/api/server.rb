@@ -30,13 +30,21 @@ module Discordrb::API::Server
 
   # Update a server
   # https://discordapp.com/developers/docs/resources/guild#modify-guild
+<<<<<<< HEAD
   def update(token, server_id, name, region, icon, afk_channel_id, afk_timeout, splash, default_message_notifications, verification_level, explicit_content_filter, system_channel_id, reason = nil)
+=======
+  def update(token, server_id, name, region, icon, afk_channel_id, afk_timeout, splash, default_message_notifications, verification_level, explicit_content_filter, reason = nil)
+>>>>>>> Add some more setters and such
     Discordrb::API.request(
       :guilds_sid,
       server_id,
       :patch,
       "#{Discordrb::API.api_base}/guilds/#{server_id}",
+<<<<<<< HEAD
       { name: name, region: region, icon: icon, afk_channel_id: afk_channel_id, afk_timeout: afk_timeout, splash: splash, default_message_notifications: default_message_notifications, verification_level: verification_level, explicit_content_filter: explicit_content_filter, system_channel_id: system_channel_id }.to_json,
+=======
+      { name: name, region: region, icon: icon, afk_channel_id: afk_channel_id, afk_timeout: afk_timeout, splash: splash, default_message_notifications: default_message_notifications, verification_level: verification_level, explicit_content_filter: explicit_content_filter }.to_json,
+>>>>>>> Add some more setters and such
       Authorization: token,
       content_type: :json,
       'X-Audit-Log-Reason': reason
