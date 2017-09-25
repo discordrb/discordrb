@@ -1371,6 +1371,52 @@ module Discordrb
 
     alias_method :parent=, :category=
 
+    # How many channels are, at most, provided as context for a channel move operation
+    CHANNEL_MOVE_CONTEXT = 10
+
+    # Sorts this channel to follow another channel.
+    # @param other [Channel, #resolve_id] The channel below which this channel should be sorted.
+    def sort_after(other)
+      other = @bot.channel(other)
+
+      # Position values in Discord channels are unique for a given channel type, but not unique over multiple types
+      raise ArgumentError, 'Can only sort a channel after a channel of the same type!' unless other.type == @type
+      relevant_channels = @server.channels.select { |e| e.type == @type }
+
+      # The channels need to be sorted by position so the indices are correct
+      relevant_channels.sort_by!(&:position)
+
+      other_index = relevant_channels.index { |e| e.id == other.id }
+
+      # Argument for the final `update_channel_positions` API call
+      move_argument = []
+
+      if other.position < @position
+        # The channel is being moved *up* so the current channel must be at the top, followed by the context channels.
+        # As the current channel will be moved *after* the `other` channel, the index (of the `other` channel) must be
+        # incremented by one.
+        move_argument << { id: @id, position: other_index + 1, parent_id: other.category ? other.category.id : nil }
+
+        # Provide Discord with following channels
+        move_argument += process_channel_array(relevant_channels[(other_index + 1)..(other_index + CHANNEL_MOVE_CONTEXT + 1)])
+      else
+        # The channel is being moved *down* so the current channel must be at the bottom, preceded by the context
+        # channels. Hence, the context channels are added first.
+        lower_bound = [0, other_index - CHANNEL_MOVE_CONTEXT].max # Make sure the lower bound is 0 or greater
+        process_result = process_channel_array(relevant_channels[lower_bound..other_index])
+
+        # Because process_channel_array will add 1 to the first channels (before the current one), we need to subtract
+        # 1 from every position, otherwise e.g. the first channel on a server would have a set position of 1
+        process_result.each { |e| e[:position] -= 1 }
+        move_argument += process_result
+
+        # Now add the current channel
+        move_argument << { id: @id, position: other_index, parent_id: other.category ? other.category.id : nil }
+      end
+
+      API::Server.update_channel_positions(@bot.token, @server.id, move_argument)
+    end
+
     # Sets whether this channel is NSFW
     # @param value [true, false]
     # @raise [ArguementError] if value isn't one of true, false
@@ -1851,6 +1897,26 @@ module Discordrb
       end
 
       API::Channel.bulk_delete_messages(@bot.token, @id, ids)
+    end
+
+    # Turns an array of channels into an array of hashes suitable for a `update_channel_positions` call. Also skips
+    # over the current channel's ID and shifts the positions accordingly.
+    def process_channel_array(channels)
+      encountered_current = false
+      result = []
+
+      channels.each do |e|
+        if e.id == @id
+          encountered_current = true
+          next
+        end
+
+        new_position = e.position
+        new_position += 1 unless encountered_current
+        result << { id: e.id, position: new_position }
+      end
+
+      result
     end
 
     def update_channel_data
