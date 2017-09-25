@@ -65,7 +65,7 @@ bot.message(content: '!time') do |event|
   bot.add_await(:"delete_#{message.id}", Discordrb::Events::ReactionAddEvent, emoji: CROSS_MARK) do |reaction_event|
     # Since this code will run on every CROSS_MARK reaction, it might not
     # be on our time message we sent earlier. We use `next` to skip the rest
-    # of the block unless it was our message that reacted to.
+    # of the block unless it was our message that was reacted to.
     next true unless reaction_event.message.id == message.id
 
     # Delete the matching message.
