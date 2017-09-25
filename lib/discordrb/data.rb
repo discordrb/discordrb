@@ -1424,6 +1424,68 @@ module Discordrb
 
     alias_method :parent=, :category=
 
+    # Sorts this channel's position to follow another channel.
+    # @param other [Channel, #resolve_id, nil] The channel below which this channel should be sorted. If the given
+    #   channel is a category, this channel will be sorted at the top of that category. If it is `nil`, the channel will
+    #   be sorted at the top of the channel list.
+    # @param lock_permissions [true, false] Whether the channel's permissions should be synced to the category's
+    def sort_after(other = nil, lock_permissions = false)
+      other = @bot.channel(other.resolve_id) if other
+
+      # Container for the API request payload
+      move_argument = []
+
+      if other
+        raise ArgumentError, 'Can only sort a channel after a channel of the same type!' unless other.category? || (@type == other.type)
+
+        # Store `others` parent (or if `other` is a category itself)
+        parent = if category? && other.category?
+                   # If we're sorting two categories, there is no new parent
+                   nil
+                 elsif other.category?
+                   # `other` is the category this channel will be moved into
+                   other
+                 else
+                   # `other`'s parent is the category this channel will be
+                   # moved into (if it exists)
+                   other.parent
+                 end
+      end
+
+      # Collect and sort the IDs within the context (category or not) that we
+      # need to form our payload with
+      ids = if parent
+              parent.children
+            else
+              @server.channels.reject(&:parent_id).select { |c| c.type == @type }
+            end.sort_by(&:position).map(&:id)
+
+      # Move our channel ID after the target ID by deleting it,
+      # getting the index of `other`, and inserting it after.
+      ids.delete(@id) if ids.include?(@id)
+      index = other ? (ids.index { |c| c == other.id } || -1) + 1 : 0
+      ids.insert(index, @id)
+
+      # Generate `move_argument`, making the positions in order from how
+      # we have sorted them in the above logic
+      ids.each_with_index do |id, pos|
+        # These keys are present in each element
+        hash = { id: id, position: pos }
+
+        # Conditionally add `lock_permissions` and `parent_id` if we're
+        # iterating past ourself
+        if id == @id
+          hash[:lock_permissions] = true if lock_permissions
+          hash[:parent_id] = parent.nil? ? nil : parent.id
+        end
+
+        # Add it to the stack
+        move_argument << hash
+      end
+
+      API::Server.update_channel_positions(@bot.token, @server.id, move_argument)
+    end
+
     # Sets whether this channel is NSFW
     # @param nsfw [true, false]
     # @raise [ArguementError] if value isn't one of true, false
