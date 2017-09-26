@@ -1375,27 +1375,67 @@ module Discordrb
     CHANNEL_MOVE_CONTEXT = 10
 
     # Sorts this channel to follow another channel.
-    # @param other [Channel, #resolve_id] The channel below which this channel should be sorted.
+    # @param other [Channel, #resolve_id, nil] The channel below which this channel should be sorted. If the given
+    #   channel is a category, this channel will be sorted at the top of that category. If it is `nil`, the channel will
+    #   be sorted at the top of the channel list.
     def sort_after(other)
-      other = @bot.channel(other)
-
-      # Position values in Discord channels are unique for a given channel type, but not unique over multiple types
-      raise ArgumentError, 'Can only sort a channel after a channel of the same type!' unless other.type == @type
       relevant_channels = @server.channels.select { |e| e.type == @type }
 
       # The channels need to be sorted by position so the indices are correct
       relevant_channels.sort_by!(&:position)
 
-      other_index = relevant_channels.index { |e| e.id == other.id }
+      other = @bot.channel(other) if other
+
+      if other && !other.category?
+        # We were given a concrete channel to sort after. Find its index
+        # Position values in Discord channels are unique for a given channel type, but not unique over multiple types
+        raise ArgumentError, 'Can only sort a channel after a channel of the same type!' unless other.type == @type
+
+        other_index = relevant_channels.index { |e| e.id == other.id }
+
+        # Whether the current channel is being moved up (true) or down (false)
+        move_up = (other.position < @position)
+
+        # Category to move into
+        destination_category_id = other.category ? other.category.id : nil
+      elsif other
+        # The given channel is a category, so the current channel should be sorted at the beginning of that category.
+        # First, find the category to sort into. (Simply the given channel)
+        category = other
+
+        # Now find the first channel that has a category with a position greater or equal to the category the current
+        # channel should be sorted into. This lets us decrement the index to find the last channel that is above the
+        # category to sort into.
+        first_channel_after_category = relevant_channels.index { |e| e.category && e.category.id == other.id }
+
+        if first_channel_after_category
+          # We found the channel; decrement the index
+          other_index = first_channel_after_category - 1
+          move_up = (relevant_channels[other_index].position < @position)
+        else
+          # There is no channel after the category, which means that the category to be sorted into is one of a bunch
+          # of empty categories at the bottom. Use the last channel's index.
+          other_index = relevant_channels.length - 1
+          move_up = false
+        end
+
+        destination_category_id = category.id
+      else
+        # The current channel should be sorted at the very top of the list -- set other_index to -1 (will get
+        # incremented to 0 later on)
+        other_index = -1
+        move_up = true
+        destination_category_id = nil
+      end
 
       # Argument for the final `update_channel_positions` API call
       move_argument = []
 
-      if other.position < @position
+      if move_up
         # The channel is being moved *up* so the current channel must be at the top, followed by the context channels.
         # As the current channel will be moved *after* the `other` channel, the index (of the `other` channel) must be
         # incremented by one.
-        move_argument << { id: @id, position: other_index + 1, parent_id: other.category ? other.category.id : nil }
+        move_argument << { id: @id, position: other_index + 1, parent_id: destination_category_id }
 
         # Provide Discord with following channels
         move_argument += process_channel_array(relevant_channels[(other_index + 1)..(other_index + CHANNEL_MOVE_CONTEXT + 1)])
@@ -1411,7 +1451,7 @@ module Discordrb
         move_argument += process_result
 
         # Now add the current channel
-        move_argument << { id: @id, position: other_index, parent_id: other.category ? other.category.id : nil }
+        move_argument << { id: @id, position: other_index, parent_id: destination_category_id }
       end
 
       API::Server.update_channel_positions(@bot.token, @server.id, move_argument)
