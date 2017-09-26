@@ -1378,7 +1378,9 @@ module Discordrb
     # @param other [Channel, #resolve_id, nil] The channel below which this channel should be sorted. If the given
     #   channel is a category, this channel will be sorted at the top of that category. If it is `nil`, the channel will
     #   be sorted at the top of the channel list.
-    def sort_after(other)
+    # @param lock_permissions [true, false] Whether the channel's permissions should be synced to the category's
+    #   permissions. Only applicable if the channel is sorted into another category.
+    def sort_after(other, lock_permissions = false)
       relevant_channels = @server.channels.select { |e| e.type == @type }
 
       # The channels need to be sorted by position so the indices are correct
@@ -1435,7 +1437,7 @@ module Discordrb
         # The channel is being moved *up* so the current channel must be at the top, followed by the context channels.
         # As the current channel will be moved *after* the `other` channel, the index (of the `other` channel) must be
         # incremented by one.
-        move_argument << { id: @id, position: other_index + 1, parent_id: destination_category_id }
+        move_argument << { id: @id, position: other_index + 1, parent_id: destination_category_id, lock_permissions: lock_permissions }
 
         # Provide Discord with following channels
         move_argument += process_channel_array(relevant_channels[(other_index + 1)..(other_index + CHANNEL_MOVE_CONTEXT + 1)])
@@ -1451,7 +1453,7 @@ module Discordrb
         move_argument += process_result
 
         # Now add the current channel
-        move_argument << { id: @id, position: other_index, parent_id: destination_category_id }
+        move_argument << { id: @id, position: other_index, parent_id: destination_category_id, lock_permissions: lock_permissions }
       end
 
       API::Server.update_channel_positions(@bot.token, @server.id, move_argument)
