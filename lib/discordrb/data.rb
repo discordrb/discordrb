@@ -3520,9 +3520,12 @@ module Discordrb
         @key = data['key']
         @old = data['old_value']
         @new = data['new_value']
-        return unless @key == 'permissions'
-        @old = Permissions.new(@old) if @old
-        @new = Permissions.new(@new) if @new
+
+        @old = Permissions.new(@old) if @old && @key == 'permissions'
+        @new = Permissions.new(@new) if @new && @key == 'permissions'
+
+        @old = @old.map { |o| Overwrite.new(o['id'], o['type'].to_sym, o['allow'], o['deny']) } if @old && @key == 'permission_overwrites'
+        @new = @new.map { |o| Overwrite.new(o['id'], o['type'].to_sym, o['allow'], o['deny']) } if @new && @key == 'permission_overwrites'
       end
     end
 
