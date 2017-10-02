@@ -3455,7 +3455,7 @@ module Discordrb
         return @target if @target_cached
         @target = process_target(@data['target_id'], @target_type)
         @target_cached = true
-        return @target
+        @target
       end
 
       # @return [Member, User] the user that is executing this action. Can be a User object if the user no longer exists in the server.
@@ -3534,32 +3534,32 @@ module Discordrb
 
       # @return [Channel, nil] the channel that was previously used in the server widget. Only present if the key for this change is `widget_channel_id`.
       def old_widget_channel
-         @bot.channel(@old, @server) if @old && @key == 'widget_channel_id'
+        @bot.channel(@old, @server) if @old && @key == 'widget_channel_id'
       end
 
       # @return [Channel, nil] the channel that is used in the server widget prior to this change. Only present if the key for this change is `widget_channel_id`.
       def new_widget_channel
-         @bot.channel(@new, @server) if @new && @key == 'widget_channel_id'
+        @bot.channel(@new, @server) if @new && @key == 'widget_channel_id'
       end
 
       # @return [Channel, nil] the channel that was previously used in the server as an AFK channel. Only present if the key for this change is `afk_channel_id`.
       def old_afk_channel
-         @bot.channel(@old, @server) if @old && @key == 'afk_channel_id'
+        @bot.channel(@old, @server) if @old && @key == 'afk_channel_id'
       end
 
       # @return [Channel, nil] the channel that is used in the server as an AFK channel prior to this change. Only present if the key for this change is `afk_channel_id`.
       def new_afk_channel
-         @bot.channel(@new, @server) if @new && @key == 'afk_channel_id'
+        @bot.channel(@new, @server) if @new && @key == 'afk_channel_id'
       end
 
       # @return [Member, User, nil] the member that used to be the owner of the server. Only present if the for key for this change is `owner_id`.
       def old_owner
-         @server.member(@old) || @bot.user(@old) || @logs.user(@old) if @old && @key == 'owner_id'
+        @server.member(@old) || @bot.user(@old) || @logs.user(@old) if @old && @key == 'owner_id'
       end
 
       # @return [Member, User, nil] the member that is now the owner of the server prior to this change. Only present if the key for this change is `owner_id`.
       def new_owner
-         @server.member(@new) || @bot.user(@new) || @logs.user(@new) if @new && @key == 'owner_id'
+        @server.member(@new) || @bot.user(@new) || @logs.user(@new) if @new && @key == 'owner_id'
       end
     end
 
