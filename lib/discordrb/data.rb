@@ -3468,7 +3468,7 @@ module Discordrb
       # @return [Channel, nil] the amount of messages deleted. Won't be nil if the action is `:message_delete`.
       def channel
         return nil unless @channel_id
-        @channel ||= @bot.channel(@channel_id, @server)
+        @channel ||= @bot.channel(@channel_id, @server, bot, self)
       end
 
       # @!visibility private
@@ -3496,7 +3496,7 @@ module Discordrb
       def process_changes(changes)
         return unless changes
         changes.each do |element|
-          change = Change.new(element)
+          change = Change.new(element, @server)
           @changes[change.key] = change
         end
       end
@@ -3508,25 +3508,58 @@ module Discordrb
       # @note You should check with the Discord API Documentation on what key gives out what value.
       attr_reader :key
 
-      # @return [String, Integer, true, false, Permissions, nil] the value that was changed from.
+      # @return [String, Integer, true, false, Permissions, Overwrite, nil] the value that was changed from.
       attr_reader :old
       alias_method :old_value, :old
 
-      # @return [String, Integer, true, false, Permissions, nil] the value that was changed to.
+      # @return [String, Integer, true, false, Permissions, Overwrite, nil] the value that was changed to.
       attr_reader :new
       alias_method :new_value, :new
 
       # @!visibility private
-      def initialize(data)
+      def initialize(data, server, bot, logs)
         @key = data['key']
         @old = data['old_value']
         @new = data['new_value']
+        @server = server
+        @bot = bot
+        @logs = logs
 
         @old = Permissions.new(@old) if @old && @key == 'permissions'
         @new = Permissions.new(@new) if @new && @key == 'permissions'
 
         @old = @old.map { |o| Overwrite.new(o['id'], o['type'].to_sym, o['allow'], o['deny']) } if @old && @key == 'permission_overwrites'
         @new = @new.map { |o| Overwrite.new(o['id'], o['type'].to_sym, o['allow'], o['deny']) } if @new && @key == 'permission_overwrites'
+      end
+
+      # @return [Channel, nil] the channel that was previously used in the server widget. Only present if the key for this change is `widget_channel_id`.
+      def old_widget_channel
+         @bot.channel(@old, @server) if @old && @key == 'widget_channel_id'
+      end
+
+      # @return [Channel, nil] the channel that is used in the server widget prior to this change. Only present if the key for this change is `widget_channel_id`.
+      def new_widget_channel
+         @bot.channel(@new, @server) if @new && @key == 'widget_channel_id'
+      end
+
+      # @return [Channel, nil] the channel that was previously used in the server as an AFK channel. Only present if the key for this change is `afk_channel_id`.
+      def old_afk_channel
+         @bot.channel(@old, @server) if @old && @key == 'afk_channel_id'
+      end
+
+      # @return [Channel, nil] the channel that is used in the server as an AFK channel prior to this change. Only present if the key for this change is `afk_channel_id`.
+      def new_afk_channel
+         @bot.channel(@new, @server) if @new && @key == 'afk_channel_id'
+      end
+
+      # @return [Member, User, nil] the member that used to be the owner of the server. Only present if the for key for this change is `owner_id`.
+      def old_owner
+         @server.member(@old) || @bot.user(@old) || @logs.user(@old) if @old && @key == 'owner_id'
+      end
+
+      # @return [Member, User, nil] the member that is now the owner of the server prior to this change. Only present if the key for this change is `owner_id`.
+      def new_owner
+         @server.member(@new) || @bot.user(@new) || @logs.user(@new) if @new && @key == 'owner_id'
       end
     end
 
