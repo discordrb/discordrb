@@ -3049,9 +3049,13 @@ module Discordrb
       @name = new_data[:name] || new_data['name'] || @name
       @region_id = new_data[:region] || new_data['region'] || @region_id
       @icon_id = new_data[:icon] || new_data['icon'] || @icon_id
-      @afk_timeout = new_data[:afk_timeout] || new_data['afk_timeout'].to_i || @afk_timeout
-      @afk_channel_id = new_data[:afk_channel_id] || new_data['afk_channel_id'].to_i || @afk_channel.id
-      @embed_channel_id = new_data[:embed_channel_id] || new_data['embed_channel_id'].to_i || @embed_channel.id
+      @afk_timeout = new_data[:afk_timeout] || new_data['afk_timeout'] || @afk_timeout
+
+      afk_channel_id = new_data[:afk_channel_id] || new_data['afk_channel_id'] || @afk_channel
+      @afk_channel_id = afk_channel_id.nil? ? nil : afk_channel_id.resolve_id
+      embed_channel_id = new_data[:embed_channel_id] || new_data['embed_channel_id'] || @embed_channel
+      @embed_channel_id = embed_channel_id.nil? ? nil : embed_channel_id.resolve_id
+
       @embed = new_data[:embed_enabled] || new_data['embed_enabled'] || @embed
       @verification_level = %i[none low medium high very_high][new_data['verification_level']] || @verification_level
       @explicit_content_filter = %i[none exclude_roles all][new_data['explicit_content_filter']] || @explicit_content_filter
