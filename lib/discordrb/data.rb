@@ -2897,14 +2897,24 @@ module Discordrb
     # with the regular role defaults the client uses unless specified, i.e. name is "new role",
     # permissions are the default, colour is the default etc.
     # @param name [String] Name of the role to create
-    # @param colour [ColourRGB] The roles colour
+    # @param colour [Integer, ColourRGB, #combined] The roles colour
     # @param hoist [true, false]
     # @param mentionable [true, false]
-    # @param packed_permissions [Integer] The packed permissions to write.
+    # @param permissions [Integer, Array<Symbol>, Permissions, #bits] The permissions to write to the new role.
     # @param reason [String] The reason the for the creation of this role.
     # @return [Role] the created role.
-    def create_role(name: 'new role', colour: 0, hoist: false, mentionable: false, packed_permissions: 104_324_161, reason: nil)
-      response = API::Server.create_role(@bot.token, @id, name, colour, hoist, mentionable, packed_permissions, reason)
+    def create_role(name: 'new role', colour: 0, hoist: false, mentionable: false, permissions: 104_324_161, reason: nil)
+      colour = colour.respond_to?(:combined) ? colour.combined : colour
+
+      permissions = if permissions.is_a?(Array)
+                      Permissions.bits(permissions)
+                    elsif permissions.respond_to?(:bits)
+                      permissions.bits
+                    else
+                      permissions
+                    end
+
+      response = API::Server.create_role(@bot.token, @id, name, colour, hoist, mentionable, permissions, reason)
 
       role = Role.new(JSON.parse(response), @bot, self)
       @roles << role
