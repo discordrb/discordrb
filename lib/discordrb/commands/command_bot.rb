@@ -16,7 +16,8 @@ module Discordrb::Commands
     # @return [Hash] this bot's attributes.
     attr_reader :attributes
 
-    # @return [String] the prefix commands are triggered with.
+    # @return [String, Array<String>, #call] the prefix commands are triggered with.
+    # @see #initialize
     attr_reader :prefix
 
     include CommandContainer
