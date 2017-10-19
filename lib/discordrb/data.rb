@@ -1596,7 +1596,7 @@ module Discordrb
 
     # Returns a single message from this channel's history by ID.
     # @param message_id [Integer] The ID of the message to retrieve.
-    # @return [Message] the retrieved message.
+    # @return [Message, nil] the retrieved message, or `nil` if it couldn't be found.
     def load_message(message_id)
       response = API::Channel.message(@bot.token, @id, message_id)
       return Message.new(JSON.parse(response), @bot)
