@@ -97,7 +97,7 @@ module Discordrb
       LOGGER.out("Resolving server #{id}")
       begin
         response = API::Server.resolve(token, id)
-      rescue RestClient::ResourceNotFound
+      rescue Discordrb::Errors::NoPermission
         return nil
       end
       server = Server.new(JSON.parse(response), self)
