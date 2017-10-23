@@ -598,7 +598,7 @@ module Discordrb
     end
 
     # Adds one or more roles to this member.
-    # @param role [Role, Array<Role>] The role(s) to add.
+    # @param role [Role, Array<Role, #resolve_id>, #resolve_id] The role(s) to add.
     # @param reason [String] The reason the user's roles are being changed.
     def add_role(role, reason = nil)
       role_ids = role_id_array(role)
