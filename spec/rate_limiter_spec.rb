@@ -36,6 +36,13 @@ describe Discordrb::Commands::Bucket do
       expect(b.rate_limited?(:a)).to be_truthy
     end
 
+    it 'should allow to be passed a custom increment' do
+      b = BUCKET.new(5, 5, nil)
+      expect(b.rate_limited?(:a, increment: 2)).to be_falsy
+      expect(b.rate_limited?(:a, increment: 2)).to be_falsy
+      expect(b.rate_limited?(:a, increment: 2)).to be_truthy
+    end
+
     it 'should not rate limit after the limit ran out' do
       b = BUCKET.new(2, 5, nil)
       expect(b.rate_limited?(:a)).to be_falsy
