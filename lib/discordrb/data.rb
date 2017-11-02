@@ -1280,7 +1280,7 @@ module Discordrb
       @bitrate = data['bitrate']
       @user_limit = data['user_limit']
       @position = data['position']
-      @nsfw = data['nsfw'] || false
+      @nsfw = data['nsfw'] || false || data['name'].start_with?('nsfw')
 
       if private?
         @recipients = []
