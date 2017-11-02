@@ -3070,10 +3070,18 @@ module Discordrb
       update_server_data(verification_level: level)
     end
 
+    # A map of possible message notification levels to symbol names
+    NOTIFICATION_LEVELS = {
+      all_messages: 0,
+      only_mentions: 1
+    }.freeze
+
     # Sets the default message notification level
-    # @param notifications [Integer] The default message notificiation 0-1
-    def default_message_notifications=(notifications)
-      update_server_data(default_message_notifications: notifications)
+    # @param notifications [Integer, Symbol] The default message notificiation 0-1 or Symbol (see {NOTIFICATION_LEVELS})
+    def default_message_notifications=(notification_level)
+      notification_level = NOTIFICATION_LEVELS[notification_level] if notification_level.is_a?(Symbol)
+
+      update_server_data(default_message_notifications: notification_level)
     end
 
     alias_method :notification_level=, :default_message_notifications=
@@ -3084,10 +3092,19 @@ module Discordrb
       update_server_data(splash: splash_hash)
     end
 
+    # A map of possible content filter levels to symbol names
+    FILTER_LEVELS = {
+      disabled: 0,
+      members_without_roles: 1,
+      all_members: 2
+    }.freeze
+
     # Sets the server content filter
-    # @param filter [Integer] The content filter from 0-2
-    def explicit_content_filter=(filter)
-      update_server_data(explicit_content_filter: filter)
+    # @param filter [Integer, Symbol] The content filter from 0-2 or Symbol (see {FILTER_LEVELS})
+    def explicit_content_filter=(filter_level)
+      filter_level = FILTER_LEVELS[filter_level] if filter_level.is_a?(Symbol)
+
+      update_server_data(explicit_content_filter: filter_level)
     end
 
     # @return [true, false] whether this server has any emoji or not.
