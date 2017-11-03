@@ -1280,7 +1280,6 @@ module Discordrb
       @bitrate = data['bitrate']
       @user_limit = data['user_limit']
       @position = data['position']
-      @nsfw = data['nsfw'] || false || data['name'].start_with?('nsfw')
 
       if private?
         @recipients = []
@@ -1304,6 +1303,8 @@ module Discordrb
                     bot.server(data['guild_id'].to_i)
                   end
       end
+
+      @nsfw = data['nsfw'] || false || @name.start_with?('nsfw')
 
       # Populate permission overwrites
       @permission_overwrites = {}
