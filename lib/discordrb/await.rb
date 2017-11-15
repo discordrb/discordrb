@@ -41,7 +41,7 @@ module Discordrb
     # @return [Array] This await's key and whether or not it should be deleted. If there was no match, both are nil.
     def match(event)
       dummy_handler = EventContainer.handler_class(@type).new(@attributes, @bot)
-      return [nil, nil] unless dummy_handler.matches?(event)
+      return [nil, nil] unless event.instance_of?(@type) && dummy_handler.matches?(event)
 
       should_delete = nil
       should_delete = true if (@block && @block.call(event) != false) || !@block
