@@ -449,14 +449,15 @@ module Discordrb
     # @param url [String, nil] The Twitch URL to display as a stream. nil for no stream.
     # @param since [Integer] When this status was set.
     # @param afk [true, false] Whether the bot is AFK.
+    # @param game_type [Integer] The type of game status to display.
     # @see Gateway#send_status_update
-    def update_status(status, game, url, since = 0, afk = false)
+    def update_status(status, game, url, since = 0, afk = false, game_type = 0)
       gateway_check
 
       @game = game
       @status = status
       @streamurl = url
-      type = url ? 1 : 0
+      type = url ? 1 : game_type
 
       game_obj = game || url ? { 'name' => game, 'url' => url, 'type' => type } : nil
       @gateway.send_status_update(status, since, game_obj, afk)
@@ -471,6 +472,26 @@ module Discordrb
     def game=(name)
       gateway_check
       update_status(@status, name, nil)
+      name
+    end
+
+    alias_method :playing=, :game=
+
+    # Sets the current listening status to the specified name.
+    # @param name [String] The thing to be listened to.
+    # @return [String] The thing that is now being listened to.
+    def listening=(name)
+      gateway_check
+      update_status(@status, name, nil, nil, nil, 2)
+      name
+    end
+
+    # Sets the current watching status to the specified name.
+    # @param name [String] The thing to be watched.
+    # @return [String] The thing that is now being watched.
+    def watching=(name)
+      gateway_check
+      update_status(@status, name, nil, nil, nil, 3)
       name
     end
 
