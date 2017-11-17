@@ -444,12 +444,12 @@ module Discordrb
     end
 
     # Updates presence status.
-    # @param status [String] The status the bot should show up as.
-    # @param game [String, nil] The name of the game to be played/stream name on the stream.
+    # @param status [String] The status the bot should show up as. Can be `online`, `dnd`, `idle`, or `invisible`
+    # @param game [String, nil] The name of the game to be played/watched/listened to/stream name on the stream.
     # @param url [String, nil] The Twitch URL to display as a stream. nil for no stream.
     # @param since [Integer] When this status was set.
     # @param afk [true, false] Whether the bot is AFK.
-    # @param game_type [Integer] The type of game status to display.
+    # @param game_type [Integer] The type of game status to display. Can be 0 (Playing), 1 (Streaming), 2 (Listening), 3 (Watching)
     # @see Gateway#send_status_update
     def update_status(status, game, url, since = 0, afk = false, game_type = 0)
       gateway_check
