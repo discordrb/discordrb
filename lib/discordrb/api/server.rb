@@ -397,6 +397,33 @@ module Discordrb::API::Server
     )
   end
 
+  # Retrieves a server's embed information
+  # https://discordapp.com/developers/docs/resources/guild#get-guild-embed
+  def embed(token, server_id)
+    Discordrb::API.request(
+      :guilds_sid_embed,
+      server_id,
+      :get,
+      "#{Discordrb::API.api_base}/guilds/#{server_id}/embed",
+      Authorization: token
+    )
+  end
+
+  # Modify a server's embed settings
+  # https://discordapp.com/developers/docs/resources/guild#modify-guild-embed
+  def modify_embed(token, server_id, enabled, channel_id, reason = nil)
+    Discordrb::API.request(
+      :guilds_sid_embed,
+      server_id,
+      :patch,
+      "#{Discordrb::API.api_base}/guilds/#{server_id}/embed",
+      { enabled: enabled, channel_id: channel_id }.to_json,
+      Authorization: token,
+      'X-Audit-Log-Reason': reason,
+      content_type: :json
+    )
+  end
+
   # Adds a custom emoji
   def add_emoji(token, server_id, image, name, reason = nil)
     Discordrb::API.request(
