@@ -2992,7 +2992,7 @@ module Discordrb
 
     # Sets the server's system channel.
     # @param system_channel [Channel, nil] The new system channel, or `nil` should it be disabled.
-    def system_channel=(afk_channel)
+    def system_channel=(system_channel)
       update_server_data(system_channel_id: system_channel.resolve_id)
     end
 
