@@ -2990,6 +2990,12 @@ module Discordrb
       update_server_data(afk_channel_id: afk_channel.resolve_id)
     end
 
+    # Sets the server's system channel.
+    # @param system_channel [Channel, nil] The new system channel, or `nil` should it be disabled.
+    def system_channel=(afk_channel)
+      update_server_data(system_channel_id: system_channel.resolve_id)
+    end
+
     # Sets the amount of time after which a user gets moved into the AFK channel.
     # @param afk_timeout [Integer] The AFK timeout, in seconds.
     def afk_timeout=(afk_timeout)
@@ -3041,6 +3047,11 @@ module Discordrb
       @bot.channel(@afk_channel_id) if @afk_channel_id
     end
 
+    # @return [Channel, nil] the system channel of this server, or nil if none is set
+    def system_channel
+      @bot.channel(@system_channel_id) if @system_channel_id
+    end
+
     # Updates the cached data with new data
     # @note For internal use only
     # @!visibility private
@@ -3055,6 +3066,8 @@ module Discordrb
       @afk_channel_id = afk_channel_id.nil? ? nil : afk_channel_id.resolve_id
       embed_channel_id = new_data[:embed_channel_id] || new_data['embed_channel_id'] || @embed_channel
       @embed_channel_id = embed_channel_id.nil? ? nil : embed_channel_id.resolve_id
+      system_channel_id = new_data[:system_channel_id] || new_data['system_channel_id'] || @system_channel
+      @system_channel_id = system_channel_id.nil? ? nil : system_channel_id.resolve_id
 
       @embed = new_data[:embed_enabled] || new_data['embed_enabled'] || @embed
       @verification_level = %i[none low medium high very_high][new_data['verification_level']] || @verification_level
@@ -3088,7 +3101,7 @@ module Discordrb
 
     # The inspect method is overwritten to give more useful output
     def inspect
-      "<Server name=#{@name} id=#{@id} large=#{@large} region=#{@region} owner=#{@owner} afk_channel_id=#{@afk_channel_id} afk_timeout=#{@afk_timeout}>"
+      "<Server name=#{@name} id=#{@id} large=#{@large} region=#{@region} owner=#{@owner} afk_channel_id=#{@afk_channel_id} system_channel_id=#{@system_channel_id} afk_timeout=#{@afk_timeout}>"
     end
 
     private
@@ -3099,6 +3112,7 @@ module Discordrb
                                                new_data[:region] || @region_id,
                                                new_data[:icon_id] || @icon_id,
                                                new_data[:afk_channel_id] || @afk_channel_id,
+                                               new_data[:system_channel_id] || @system_channel_id,
                                                new_data[:afk_timeout] || @afk_timeout))
       update_data(response)
     end
