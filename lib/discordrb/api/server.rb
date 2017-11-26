@@ -30,13 +30,13 @@ module Discordrb::API::Server
 
   # Update a server
   # https://discordapp.com/developers/docs/resources/guild#modify-guild
-  def update(token, server_id, name, region, icon, afk_channel_id, afk_timeout, reason = nil)
+  def update(token, server_id, name, region, icon, afk_channel_id, system_channel_id, afk_timeout, reason = nil)
     Discordrb::API.request(
       :guilds_sid,
       server_id,
       :patch,
       "#{Discordrb::API.api_base}/guilds/#{server_id}",
-      { name: name, region: region, icon: icon, afk_channel_id: afk_channel_id, afk_timeout: afk_timeout }.to_json,
+      { name: name, region: region, icon: icon, afk_channel_id: afk_channel_id, system_channel_id: system_channel_id, afk_timeout: afk_timeout }.to_json,
       Authorization: token,
       content_type: :json,
       'X-Audit-Log-Reason': reason
