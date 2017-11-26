@@ -2991,7 +2991,7 @@ module Discordrb
     end
 
     # Sets the server's system channel.
-    # @param system_channel [Channel, nil] The new system channel, or `nil` should it be disabled.
+    # @param system_channel [Channel, String, Integer, #resolve_id, nil] The new system channel, or `nil` should it be disabled.
     def system_channel=(system_channel)
       update_server_data(system_channel_id: system_channel.resolve_id)
     end
@@ -3047,7 +3047,7 @@ module Discordrb
       @bot.channel(@afk_channel_id) if @afk_channel_id
     end
 
-    # @return [Channel, nil] the system channel of this server, or nil if none is set
+    # @return [Channel, nil] the system channel (used for automatic welcome messages) of a server, or nil if none is set
     def system_channel
       @bot.channel(@system_channel_id) if @system_channel_id
     end
