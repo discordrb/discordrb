@@ -2683,17 +2683,17 @@ module Discordrb
     end
 
     # @return [true, false] whether or not the server has widget enabled
-    def embed?
-      update_data if @embed.nil?
-      @embed
+    def embed_enabled?
+      update_data if @embed_enabled.nil?
+      @embed_enabled
     end
-    alias_method :widget_enabled, :embed?
-    alias_method :widget?, :embed?
-    alias_method :embed_enabled, :embed?
+    alias_method :widget_enabled, :embed_enabled?
+    alias_method :widget?, :embed_enabled?
+    alias_method :embed?, :embed_enabled?
 
     # @return [Channel, nil] the channel the server embed will make a invite for.
     def embed_channel
-      update_data if @embed.nil?
+      update_data if @embed_enabled.nil?
       @bot.channel(@embed_channel_id) if @embed_channel_id
     end
     alias_method :widget_channel, :embed_channel
@@ -2747,8 +2747,8 @@ module Discordrb
     # @return [String, nil] the widget URL to the server that displays the amount of online members in a
     #   stylish way. `nil` if the widget is not enabled.
     def widget_url
-      update_data if @embed.nil?
-      return nil unless @embed
+      update_data if @embed_enabled.nil?
+      return unless @embed_enabled
       API.widget_url(@id)
     end
 
@@ -2761,8 +2761,8 @@ module Discordrb
     # @return [String, nil] the widget banner URL to the server that displays the amount of online members,
     #   server icon and server name in a stylish way. `nil` if the widget is not enabled.
     def widget_banner_url(style)
-      update_data if @embed.nil?
-      return nil unless @embed
+      update_data if @embed_enabled.nil?
+      return unless @embed_enabled
       API.widget_url(@id, style)
     end
 
@@ -3056,7 +3056,7 @@ module Discordrb
       embed_channel_id = new_data[:embed_channel_id] || new_data['embed_channel_id'] || @embed_channel
       @embed_channel_id = embed_channel_id.nil? ? nil : embed_channel_id.resolve_id
 
-      @embed = new_data[:embed_enabled] || new_data['embed_enabled'] || @embed
+      @embed_enabled = new_data[:embed_enabled] || new_data['embed_enabled']
       @verification_level = %i[none low medium high very_high][new_data['verification_level']] || @verification_level
       @explicit_content_filter = %i[none exclude_roles all][new_data['explicit_content_filter']] || @explicit_content_filter
       @default_message_notifications = %i[all mentions][new_data['default_message_notifications']] || @default_message_notifications
