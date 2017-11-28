@@ -54,7 +54,6 @@ module Discordrb::Commands
     # @return [Command] The command that was added.
     def command(name, attributes = {}, &block)
       @commands ||= {}
-      attributes[:rescue] ||= @attributes[:rescue]
       if name.is_a? Array
         new_command = nil
 
