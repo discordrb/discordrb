@@ -106,9 +106,10 @@ module Discordrb::Commands
     rescue LocalJumpError # occurs when breaking
       nil
     rescue => exception # Something went wrong inside our @block!
-      if @attributes[:rescue]
-        event.respond(@attributes[:rescue].gsub('%exception%', exception.message)) if @attributes[:rescue].is_a?(String)
-        @attributes[:rescue].call(event, exception) if @attributes[:rescue].respond_to?(:call)
+      rescue_value = @attributes[:rescue] || event.bot.attributes[:rescue]
+      if rescue_value
+        event.respond(rescue_value.gsub('%exception%', exception.message)) if rescue_value.is_a?(String)
+        rescue_value.call(event, exception) if rescue_value.respond_to?(:call)
       end
 
       raise exception
