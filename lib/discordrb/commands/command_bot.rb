@@ -127,7 +127,10 @@ module Discordrb::Commands
         quote_start: attributes[:quote_start] || '"',
 
         # Quoted mode ending character
-        quote_end: attributes[:quote_end] || attributes[:quote_start] || '"'
+        quote_end: attributes[:quote_end] || attributes[:quote_start] || '"',
+
+        # Default block for handling internal exceptions, or a string to respond with
+        rescue: attributes[:rescue]
       }
 
       @permissions = {

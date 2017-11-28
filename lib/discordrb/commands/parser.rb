@@ -57,7 +57,10 @@ module Discordrb::Commands
         rate_limit_message: attributes[:rate_limit_message],
 
         # Rate limiting bucket (nil for no rate limiting)
-        bucket: attributes[:bucket]
+        bucket: attributes[:bucket],
+
+        # Block for handling internal exceptions, or a string to respond with
+        rescue: attributes[:rescue]
       }
 
       @block = block
@@ -102,6 +105,13 @@ module Discordrb::Commands
       event.drain_into(result)
     rescue LocalJumpError # occurs when breaking
       nil
+    rescue => exception # Something went wrong inside our @block!
+      if @attributes[:rescue]
+        event.respond(@attributes[:rescue].gsub('%exception%', exception.message)) if @attributes[:rescue].is_a?(String)
+        @attributes[:rescue].call(event, exception) if @attributes[:rescue].respond_to?(:call)
+      end
+
+      raise exception
     end
   end
 
