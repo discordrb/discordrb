@@ -3176,9 +3176,9 @@ module Discordrb
 
       @embed_enabled = new_data[:embed_enabled] || new_data['embed_enabled']
       @splash = new_data[:splash_id] || new_data['splash_id'] || @splash_id
-      @verification_level = VERIFICATION_LEVELS[new_data['verification_level']] || @verification_level
-      @explicit_content_filter = FILTER_LEVELS[new_data['explicit_content_filter']] || @explicit_content_filter
-      @default_message_notifications = NOTIFICATION_LEVELS[new_data['default_message_notifications']] || @default_message_notifications
+      @verification_level = VERIFICATION_LEVELS[new_data[:verification_level]] || VERIFICATION_LEVELS[new_data['verification_level']] || @verification_level
+      @explicit_content_filter = FILTER_LEVELS[new_data[:explicit_content_filter]] || FILTER_LEVELS[new_data['explicit_content_filter']] || @explicit_content_filter
+      @default_message_notifications = NOTIFICATION_LEVELS[new_data[:default_message_notifications]] || NOTIFICATION_LEVELS[new_data['default_message_notifications']] || @default_message_notifications
     end
 
     # Adds a channel to this server's cache
