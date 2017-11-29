@@ -3166,7 +3166,7 @@ module Discordrb
       @region_id = new_data[:region] || new_data['region'] || @region_id
       @icon_id = new_data[:icon] || new_data['icon'] || @icon_id
       @afk_timeout = new_data[:afk_timeout] || new_data['afk_timeout'] || @afk_timeout
-      
+
       afk_channel_id = new_data[:afk_channel_id] || new_data['afk_channel_id'] || @afk_channel
       @afk_channel_id = afk_channel_id.nil? ? nil : afk_channel_id.resolve_id
       embed_channel_id = new_data[:embed_channel_id] || new_data['embed_channel_id'] || @embed_channel
