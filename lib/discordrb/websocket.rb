@@ -2,6 +2,8 @@
 
 require 'websocket-client-simple'
 
+Discordrb::LOGGER.debug "Using WSCS version: #{WebSocket::Client::Simple::VERSION}"
+
 # The WSCS module which we're hooking
 # @see Websocket::Client::Simple::Client
 module WebSocket::Client::Simple
