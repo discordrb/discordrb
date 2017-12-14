@@ -30,7 +30,7 @@ module Discordrb
     #   will be passed as the first parameter to the handler.
     def initialize(endpoint, open_handler, message_handler, close_handler, error_handler)
       Discordrb::LOGGER.debug "Using WSCS version: #{WebSocket::Client::Simple::VERSION}"
-      
+
       @open_handler = open_handler
       @message_handler = message_handler
       @close_handler = close_handler
