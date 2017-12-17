@@ -1797,7 +1797,7 @@ module Discordrb
         message = "Attempted to bulk_delete message #{e} which is too old (min = #{min_snowflake})"
         raise ArgumentError, message if strict
         Discordrb::LOGGER.warn(message)
-        false
+        true
       end
 
       API::Channel.bulk_delete_messages(@bot.token, @id, ids)
