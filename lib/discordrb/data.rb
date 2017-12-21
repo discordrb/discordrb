@@ -3053,6 +3053,60 @@ module Discordrb
       update_server_data(afk_timeout: afk_timeout)
     end
 
+    # A map of possible server verification levels to symbol names
+    VERIFICATION_LEVELS = {
+      none: 0,
+      low: 1,
+      medium: 2,
+      high: 3,
+      very_high: 4
+    }.freeze
+
+    # Sets the verification level of the server
+    # @param level [Integer, Symbol] The verification level from 0-4 or Symbol (see {VERIFICATION_LEVELS})
+    def verification_level=(level)
+      level = VERIFICATION_LEVELS[level] if level.is_a?(Symbol)
+
+      update_server_data(verification_level: level)
+    end
+
+    # A map of possible message notification levels to symbol names
+    NOTIFICATION_LEVELS = {
+      all_messages: 0,
+      only_mentions: 1
+    }.freeze
+
+    # Sets the default message notification level
+    # @param notifications [Integer, Symbol] The default message notificiation 0-1 or Symbol (see {NOTIFICATION_LEVELS})
+    def default_message_notifications=(notification_level)
+      notification_level = NOTIFICATION_LEVELS[notification_level] if notification_level.is_a?(Symbol)
+
+      update_server_data(default_message_notifications: notification_level)
+    end
+
+    alias_method :notification_level=, :default_message_notifications=
+
+    # Sets the server splash
+    # @param splash_hash [String] The splash hash
+    def splash=(splash_hash)
+      update_server_data(splash: splash_hash)
+    end
+
+    # A map of possible content filter levels to symbol names
+    FILTER_LEVELS = {
+      disabled: 0,
+      members_without_roles: 1,
+      all_members: 2
+    }.freeze
+
+    # Sets the server content filter
+    # @param filter [Integer, Symbol] The content filter from 0-2 or Symbol (see {FILTER_LEVELS})
+    def explicit_content_filter=(filter_level)
+      filter_level = FILTER_LEVELS[filter_level] if filter_level.is_a?(Symbol)
+
+      update_server_data(explicit_content_filter: filter_level)
+    end
+
     # @return [true, false] whether this server has any emoji or not.
     def any_emoji?
       @emoji.any?
@@ -3121,9 +3175,10 @@ module Discordrb
       @system_channel_id = system_channel_id.nil? ? nil : system_channel_id.resolve_id
 
       @embed_enabled = new_data[:embed_enabled] || new_data['embed_enabled']
-      @verification_level = %i[none low medium high very_high][new_data['verification_level']] || @verification_level
-      @explicit_content_filter = %i[none exclude_roles all][new_data['explicit_content_filter']] || @explicit_content_filter
-      @default_message_notifications = %i[all mentions][new_data['default_message_notifications']] || @default_message_notifications
+      @splash = new_data[:splash_id] || new_data['splash_id'] || @splash_id
+      @verification_level = VERIFICATION_LEVELS[new_data[:verification_level]] || VERIFICATION_LEVELS[new_data['verification_level']] || @verification_level
+      @explicit_content_filter = FILTER_LEVELS[new_data[:explicit_content_filter]] || FILTER_LEVELS[new_data['explicit_content_filter']] || @explicit_content_filter
+      @default_message_notifications = NOTIFICATION_LEVELS[new_data[:default_message_notifications]] || NOTIFICATION_LEVELS[new_data['default_message_notifications']] || @default_message_notifications
     end
 
     # Adds a channel to this server's cache
@@ -3163,8 +3218,12 @@ module Discordrb
                                                new_data[:region] || @region_id,
                                                new_data[:icon_id] || @icon_id,
                                                new_data[:afk_channel_id] || @afk_channel_id,
-                                               new_data[:system_channel_id] || @system_channel_id,
-                                               new_data[:afk_timeout] || @afk_timeout))
+                                               new_data[:afk_timeout] || @afk_timeout,
+                                               new_data[:splash] || @splash,
+                                               new_data[:default_message_notifications] || @default_message_notifications,
+                                               new_data[:verification_level] || @verification_level,
+                                               new_data[:explicit_content_filter] || @explicit_content_filter,
+                                               new_data[:system_channel_id] || @system_channel_id))
       update_data(response)
     end
 

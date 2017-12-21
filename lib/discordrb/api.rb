@@ -184,8 +184,8 @@ module Discordrb::API
   end
 
   # Make a splash URL from server and splash IDs
-  def splash_url(server_id, splash_id)
-    "https://cdn.discordapp.com/splashes/#{server_id}/#{splash_id}.jpg"
+  def splash_url(server_id, splash_id, format = 'webp')
+    "#{cdn_url}/splashes/#{server_id}/#{splash_id}.#{format}"
   end
 
   # Make an emoji icon URL from emoji ID
