@@ -122,6 +122,10 @@ This bot responds to every "Ping!" with a "Pong!".
 
 See [additional examples here](https://github.com/meew0/discordrb/tree/master/examples).
 
+You can find examples of projects that use discordrb by [searching for the discordrb topic on GitHub](https://github.com/topics/discordrb).
+
+If you've made an open source project on GitHub that uses discordrb, consider adding the `discordrb` topic to your repo!
+
 ## Support
 
 You can find me (@meew0, ID 66237334693085184) on the unofficial Discord API server - if you have a question, just ask there, I or somebody else will probably answer you: https://discord.gg/3Trm6FW
