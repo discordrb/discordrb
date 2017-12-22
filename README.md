@@ -4,7 +4,7 @@
 [![Inline docs](http://inch-ci.org/github/meew0/discordrb.svg?branch=master&style=shields)](http://inch-ci.org/github/meew0/discordrb)
 [![Code Climate](https://codeclimate.com/github/meew0/discordrb/badges/gpa.svg)](https://codeclimate.com/github/meew0/discordrb)
 [![Test Coverage](https://codeclimate.com/github/meew0/discordrb/badges/coverage.svg)](https://codeclimate.com/github/meew0/discordrb/coverage)
-[![Join Discord](https://img.shields.io/badge/discord-join-7289DA.svg)](https://discord.gg/3Trm6FW)
+[![Join Discord](https://img.shields.io/badge/discord-join-7289DA.svg)](https://discord.gg/cyK3Hjm)
 # discordrb
 
 An implementation of the [Discord](https://discordapp.com/) API using Ruby.
