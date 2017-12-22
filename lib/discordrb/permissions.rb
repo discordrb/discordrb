@@ -3,45 +3,19 @@
 module Discordrb
   # List of permissions Discord uses
   class Permissions
-    # This hash maps bit positions to logical permissions.
-    # I'm not sure what the unlabeled bits are reserved for.
-    Flags = {
-      # Bit => Permission # Value
-      0 => :create_instant_invite, # 1
-      1 => :kick_members,          # 2
-      2 => :ban_members,           # 4
-      3 => :administrator,         # 8
-      4 => :manage_channels,       # 16
-      5 => :manage_server,         # 32
-      6 => :add_reactions,         # 64
-      7 => :view_audit_log,        # 128
-      # 8                          # 256
-      # 9                          # 512
-      10 => :read_messages,        # 1024
-      11 => :send_messages,        # 2048
-      12 => :send_tts_messages,    # 4096
-      13 => :manage_messages,      # 8192
-      14 => :embed_links,          # 16384
-      15 => :attach_files,         # 32768
-      16 => :read_message_history, # 65536
-      17 => :mention_everyone,     # 131072
-      18 => :use_external_emoji,   # 262144
-      # 19                         # 524288
-      20 => :connect,              # 1048576
-      21 => :speak,                # 2097152
-      22 => :mute_members,         # 4194304
-      23 => :deafen_members,       # 8388608
-      24 => :move_members,         # 16777216
-      25 => :use_voice_activity,   # 33554432
-      26 => :change_nickname,      # 67108864
-      27 => :manage_nicknames,     # 134217728
-      28 => :manage_roles,         # 268435456, also Manage Permissions
-      29 => :manage_webhooks,      # 536870912
-      30 => :manage_emojis         # 1073741824
-    }.freeze
+    # @!macro [attach] add_flag
+    #   @method can_$2=(value)
+    #     Sets whether this resource can `$2`
+    #     @param value [true, false]
+    # @!macro [attach] add_flag
+    #   @method $2
+    #     @return [true, false] whether this resouce can `$2`
+    def self.add_flag(position, flag)
+      @@flags ||= {}
+      @@flags[position] = flag
 
-    Flags.each do |position, flag|
       attr_reader flag
+
       define_method "can_#{flag}=" do |value|
         new_bits = @bits
         if value
@@ -54,6 +28,35 @@ module Discordrb
         init_vars
       end
     end
+
+    add_flag(0, :create_instant_invite)
+    add_flag(1, :kick_members)
+    add_flag(2, :ban_members)
+    add_flag(3, :administrator)
+    add_flag(4, :manage_channels)
+    add_flag(5, :manage_server)
+    add_flag(6, :add_reactions)
+    add_flag(7, :view_audit_log)
+    add_flag(10, :read_messages)
+    add_flag(11, :send_messages)
+    add_flag(12, :send_tts_messages)
+    add_flag(13, :manage_messages)
+    add_flag(14, :embed_links)
+    add_flag(15, :attach_files)
+    add_flag(16, :read_message_history)
+    add_flag(17, :mention_everyone)
+    add_flag(18, :use_external_emoji)
+    add_flag(20, :connect)
+    add_flag(21, :speak)
+    add_flag(22, :mute_members)
+    add_flag(23, :deafen_members)
+    add_flag(24, :move_members)
+    add_flag(25, :use_voice_activity)
+    add_flag(26, :change_nickname)
+    add_flag(27, :manage_nicknames)
+    add_flag(28, :manage_roles)
+    add_flag(29, :manage_webhooks)
+    add_flag(30, :manage_emojis)
 
     alias_method :can_administrate=, :can_administrator=
     alias_method :administrate, :administrator
@@ -69,7 +72,7 @@ module Discordrb
 
     # Initialize the instance variables based on the bitset.
     def init_vars
-      Flags.each do |position, flag|
+      @@flags.each do |position, flag|
         flag_set = ((@bits >> position) & 0x1) == 1
         instance_variable_set "@#{flag}", flag_set
       end
@@ -85,7 +88,7 @@ module Discordrb
     def self.bits(list)
       value = 0
 
-      Flags.each do |position, flag|
+      @@flags.each do |position, flag|
         value += 2**position if list.include? flag
       end
 
