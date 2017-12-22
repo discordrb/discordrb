@@ -68,19 +68,19 @@ module Discordrb::API::Channel
 
   # Send a message to a channel
   # https://discordapp.com/developers/docs/resources/channel#create-message
-  def create_message(token, channel_id, message, tts = false, embed = nil) # send message
+  def create_message(token, channel_id, message, tts = false, embed = nil, nonce = nil) # send message
     Discordrb::API.request(
       :channels_cid_messages_mid,
       channel_id,
       :post,
       "#{Discordrb::API.api_base}/channels/#{channel_id}/messages",
-      { content: message, tts: tts, embed: embed }.to_json,
+      { content: message, tts: tts, embed: embed, nonce: nonce }.to_json,
       Authorization: token,
       content_type: :json
     )
   rescue RestClient::BadRequest => e
     parsed = JSON.parse(e.response.body)
-    raise Discordrb::Errors::MessageTooLong, "Message over the character limit (#{message.length} > 2000)" if parsed['content'] && parsed['content'].is_a?(Array) && parsed['content'].first == 'Must be 2000 or fewer characters long.'
+    raise Discordrb::Errors::MessageTooLong, "Message over the character limit (#{message.length} > 2000)" if parsed['content'] && parsed['content'].is_a?(Array) && parsed['content'].first == 'Must be 2000 or fewer in length.'
     raise
   end
 

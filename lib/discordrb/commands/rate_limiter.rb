@@ -37,8 +37,9 @@ module Discordrb::Commands
     # Performs a rate limiting request
     # @param thing [#resolve_id, Integer, Symbol] The particular thing that should be rate-limited (usually a user/channel, but you can also choose arbitrary integers or symbols)
     # @param rate_limit_time [Time] The time to base the rate limiting on, only useful for testing.
+    # @param increment [Integer] How much to increment the rate-limit counter. Default is 1.
     # @return [Integer, false] the waiting time until the next request, in seconds, or false if the request succeeded
-    def rate_limited?(thing, rate_limit_time = nil)
+    def rate_limited?(thing, rate_limit_time = nil, increment: 1)
       key = resolve_key thing
       limit_hash = @bucket[key]
 
@@ -47,7 +48,7 @@ module Discordrb::Commands
         @bucket[key] = {
           last_time: Time.now,
           set_time: Time.now,
-          count: 1
+          count: increment
         }
 
         return false
@@ -56,7 +57,7 @@ module Discordrb::Commands
       # Define the time at which we're being rate limited once so it doesn't get inaccurate
       rate_limit_time ||= Time.now
 
-      if @limit && (limit_hash[:count] + 1) > @limit
+      if @limit && (limit_hash[:count] + increment) > @limit
         # Second case: Count is over the limit and the time has not run out yet
         return (limit_hash[:set_time] + @time_span) - rate_limit_time if @time_span && rate_limit_time < (limit_hash[:set_time] + @time_span)
 
@@ -72,7 +73,7 @@ module Discordrb::Commands
       else
         # Fifth case: no rate limiting at all! Increment the count, set the last_time, and return false
         limit_hash[:last_time] = rate_limit_time
-        limit_hash[:count] += 1
+        limit_hash[:count] += increment
         false
       end
     end
@@ -104,13 +105,14 @@ module Discordrb::Commands
     # Performs a rate limit request.
     # @param key [Symbol] Which bucket to perform the request for.
     # @param thing [#resolve_id, Integer, Symbol] What should be rate-limited.
+    # @param increment (see Bucket#rate_limited?)
     # @see Bucket#rate_limited?
     # @return [Integer, false] How much time to wait or false if the request succeeded.
-    def rate_limited?(key, thing)
+    def rate_limited?(key, thing, increment: 1)
       # Check whether the bucket actually exists
       return false unless @buckets && @buckets[key]
 
-      @buckets[key].rate_limited?(thing)
+      @buckets[key].rate_limited?(thing, increment: increment)
     end
 
     # Cleans all buckets

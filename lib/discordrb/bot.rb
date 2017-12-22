@@ -78,7 +78,8 @@ module Discordrb
     # @param token [String] The token that should be used to log in. If your bot is a bot account, you have to specify
     #   this. If you're logging in as a user, make sure to also set the account type to :user so discordrb doesn't think
     #   you're trying to log in as a bot.
-    # @param client_id [Integer] If you're logging in as a bot, the bot's client ID.
+    # @param client_id [Integer] If you're logging in as a bot, the bot's client ID. This is optional, and may be fetched
+    #   from the API by calling {Bot#bot_application} (see {Application}).
     # @param type [Symbol] This parameter lets you manually overwrite the account type. This needs to be set when
     #   logging in as a user, otherwise discordrb will treat you as a bot account. Valid values are `:user` and `:bot`.
     # @param name [String] Your bot's name. This will be sent to Discord with any API requests, who will use this to
@@ -157,7 +158,7 @@ module Discordrb
     # @overload emoji(id)
     #   Return an emoji by its ID
     #   @param id [Integer, #resolve_id] The emoji's ID.
-    #   @return emoji [Emoji, nil] the emoji object. `nil` if the emoji was not found.
+    #   @return [Emoji, nil] the emoji object. `nil` if the emoji was not found.
     # @overload emoji
     #   The list of emoji the bot can use.
     #   @return [Array<Emoji>] the emoji available.
@@ -379,6 +380,8 @@ module Discordrb
     # @param file [File] The file that should be sent.
     # @param caption [string] The caption for the file.
     # @param tts [true, false] Whether or not this file's caption should be sent using Discord text-to-speech.
+    # @example Send a file from disk
+    #   bot.send_file(83281822225530880, File.open('rubytaco.png', 'r'))
     def send_file(channel, file, caption: nil, tts: false)
       channel = channel.resolve_id
       response = API::Channel.upload_file(token, channel, file, caption: caption, tts: tts)
@@ -443,25 +446,26 @@ module Discordrb
     end
 
     # Updates presence status.
-    # @param status [String] The status the bot should show up as.
-    # @param game [String, nil] The name of the game to be played/stream name on the stream.
+    # @param status [String] The status the bot should show up as. Can be `online`, `dnd`, `idle`, or `invisible`
+    # @param activity [String, nil] The name of the activity to be played/watched/listened to/stream name on the stream.
     # @param url [String, nil] The Twitch URL to display as a stream. nil for no stream.
     # @param since [Integer] When this status was set.
     # @param afk [true, false] Whether the bot is AFK.
+    # @param activity_type [Integer] The type of activity status to display. Can be 0 (Playing), 1 (Streaming), 2 (Listening), 3 (Watching)
     # @see Gateway#send_status_update
-    def update_status(status, game, url, since = 0, afk = false)
+    def update_status(status, activity, url, since = 0, afk = false, activity_type = 0)
       gateway_check
 
-      @game = game
+      @activity = activity
       @status = status
       @streamurl = url
-      type = url ? 1 : 0
+      type = url ? 1 : activity_type
 
-      game_obj = game || url ? { 'name' => game, 'url' => url, 'type' => type } : nil
-      @gateway.send_status_update(status, since, game_obj, afk)
+      activity_obj = activity || url ? { 'name' => activity, 'url' => url, 'type' => type } : nil
+      @gateway.send_status_update(status, since, activity_obj, afk)
 
       # Update the status in the cache
-      profile.update_presence('status' => status.to_s, 'game' => game_obj)
+      profile.update_presence('status' => status.to_s, 'game' => activity_obj)
     end
 
     # Sets the currently playing game to the specified game.
@@ -470,6 +474,26 @@ module Discordrb
     def game=(name)
       gateway_check
       update_status(@status, name, nil)
+      name
+    end
+
+    alias_method :playing=, :game=
+
+    # Sets the current listening status to the specified name.
+    # @param name [String] The thing to be listened to.
+    # @return [String] The thing that is now being listened to.
+    def listening=(name)
+      gateway_check
+      update_status(@status, name, nil, nil, nil, 2)
+      name
+    end
+
+    # Sets the current watching status to the specified name.
+    # @param name [String] The thing to be watched.
+    # @return [String] The thing that is now being watched.
+    def watching=(name)
+      gateway_check
+      update_status(@status, name, nil, nil, nil, 3)
       name
     end
 
@@ -486,7 +510,7 @@ module Discordrb
     # Sets status to online.
     def online
       gateway_check
-      update_status(:online, @game, @streamurl)
+      update_status(:online, @activity, @streamurl)
     end
 
     alias_method :on, :online
@@ -494,7 +518,7 @@ module Discordrb
     # Sets status to idle.
     def idle
       gateway_check
-      update_status(:idle, @game, nil)
+      update_status(:idle, @activity, nil)
     end
 
     alias_method :away, :idle
@@ -502,13 +526,13 @@ module Discordrb
     # Sets the bot's status to DnD (red icon).
     def dnd
       gateway_check
-      update_status(:dnd, @game, nil)
+      update_status(:dnd, @activity, nil)
     end
 
     # Sets the bot's status to invisible (appears offline).
     def invisible
       gateway_check
-      update_status(:invisible, @game, nil)
+      update_status(:invisible, @activity, nil)
     end
 
     # Sets debug mode. If debug mode is on, many things will be outputted to STDOUT.
@@ -582,6 +606,7 @@ module Discordrb
       raise_event(HeartbeatEvent.new(self))
     end
 
+    # Makes the bot leave any groups with no recipients remaining
     def prune_empty_groups
       @channels.each_value do |channel|
         channel.leave_group if channel.group? && channel.recipients.empty?

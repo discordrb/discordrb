@@ -201,6 +201,8 @@ module Discordrb
     # @param file [File] The file to send to the user
     # @param caption [String] The caption of the file being sent
     # @return [Message] the message sent to this user.
+    # @example Send a file from disk
+    #   user.send_file(File.open('rubytaco.png', 'r'))
     def send_file(file, caption = nil)
       pm.send_file(file, caption: caption)
     end
@@ -598,7 +600,7 @@ module Discordrb
     end
 
     # Adds one or more roles to this member.
-    # @param role [Role, Array<Role>] The role(s) to add.
+    # @param role [Role, Array<Role, #resolve_id>, #resolve_id] The role(s) to add.
     # @param reason [String] The reason the user's roles are being changed.
     def add_role(role, reason = nil)
       role_ids = role_id_array(role)
@@ -1280,7 +1282,6 @@ module Discordrb
       @bitrate = data['bitrate']
       @user_limit = data['user_limit']
       @position = data['position']
-      @nsfw = data['nsfw']
 
       if private?
         @recipients = []
@@ -1304,6 +1305,8 @@ module Discordrb
                     bot.server(data['guild_id'].to_i)
                   end
       end
+
+      @nsfw = data['nsfw'] || false || @name.start_with?('nsfw')
 
       # Populate permission overwrites
       @permission_overwrites = {}
@@ -1430,6 +1433,8 @@ module Discordrb
     # @param file [File] The file to send. There's no clear size limit for this, you'll have to attempt it for yourself (most non-image files are fine, large images may fail to embed)
     # @param caption [string] The caption for the file.
     # @param tts [true, false] Whether or not this file's caption should be sent using Discord text-to-speech.
+    # @example Send a file from disk
+    #   channel.send_file(File.open('rubytaco.png', 'r'))
     def send_file(file, caption: nil, tts: false)
       @bot.send_file(@id, file, caption: caption, tts: tts)
     end
@@ -1596,7 +1601,7 @@ module Discordrb
 
     # Returns a single message from this channel's history by ID.
     # @param message_id [Integer] The ID of the message to retrieve.
-    # @return [Message] the retrieved message.
+    # @return [Message, nil] the retrieved message, or `nil` if it couldn't be found.
     def load_message(message_id)
       response = API::Channel.message(@bot.token, @id, message_id)
       return Message.new(JSON.parse(response), @bot)
@@ -1614,15 +1619,33 @@ module Discordrb
     end
 
     # Delete the last N messages on this channel.
-    # @param amount [Integer] How many messages to delete. Must be a value between 2 and 100 (Discord limitation)
+    # @param amount [Integer] The amount of message history to consider for pruning. Must be a value between 2 and 100 (Discord limitation)
     # @param strict [true, false] Whether an error should be raised when a message is reached that is too old to be bulk
     #   deleted. If this is false only a warning message will be output to the console.
     # @raise [ArgumentError] if the amount of messages is not a value between 2 and 100
-    def prune(amount, strict = false)
-      raise ArgumentError, 'Can only prune between 2 and 100 messages!' unless amount.between?(2, 100)
+    # @yield [message] Yields each message in this channels history for filtering the messages to delete
+    # @example Pruning messages from a specific user ID
+    #   channel.prune(100) { |m| m.author.id == 83283213010599936 }
+    # @return [Integer] The amount of messages that were successfully deleted
+    def prune(amount, strict = false, &block)
+      raise ArgumentError, 'Can only delete between 1 and 100 messages!' unless amount.between?(1, 100)
 
-      messages = history_ids(amount)
-      bulk_delete(messages, strict)
+      messages =
+        if block_given?
+          history(amount).select(&block).map(&:id)
+        else
+          history_ids(amount)
+        end
+
+      case messages.size
+      when 0
+        0
+      when 1
+        API::Channel.delete_message(@bot.token, @id, messages.first)
+        1
+      else
+        bulk_delete(messages, strict)
+      end
     end
 
     # Deletes a collection of messages
@@ -1630,6 +1653,7 @@ module Discordrb
     # @param strict [true, false] Whether an error should be raised when a message is reached that is too old to be bulk
     #   deleted. If this is false only a warning message will be output to the console.
     # @raise [ArgumentError] if the amount of messages is not a value between 2 and 100
+    # @return [Integer] The amount of messages that were successfully deleted
     def delete_messages(messages, strict = false)
       raise ArgumentError, 'Can only delete between 2 and 100 messages!' unless messages.count.between?(2, 100)
 
@@ -1777,10 +1801,11 @@ module Discordrb
         message = "Attempted to bulk_delete message #{e} which is too old (min = #{min_snowflake})"
         raise ArgumentError, message if strict
         Discordrb::LOGGER.warn(message)
-        false
+        true
       end
 
       API::Channel.bulk_delete_messages(@bot.token, @id, ids)
+      ids.size
     end
 
     def update_channel_data
@@ -2120,7 +2145,7 @@ module Discordrb
     # @return [Array<Embed>] the embed objects contained in this message.
     attr_reader :embeds
 
-    # @return [Hash<String, Reaction>] the reaction objects attached to this message keyed by the name of the reaction
+    # @return [Hash<String => Reaction>] the reaction objects attached to this message keyed by the name of the reaction
     attr_reader :reactions
 
     # @return [true, false] whether the message used Text-To-Speech (TTS) or not.
@@ -2560,7 +2585,7 @@ module Discordrb
     # @return [Array<Role>] an array of all the roles created on this server.
     attr_reader :roles
 
-    # @return [Hash<Integer, Emoji>] a hash of all the emoji available on this server.
+    # @return [Hash<Integer => Emoji>] a hash of all the emoji available on this server.
     attr_reader :emoji
     alias_method :emojis, :emoji
 
@@ -2588,9 +2613,6 @@ module Discordrb
     # @return [Integer] the amount of time after which a voice user gets moved into the AFK channel, in seconds.
     attr_reader :afk_timeout
 
-    # @return [Channel, nil] the AFK voice channel of this server, or nil if none is set
-    attr_reader :afk_channel
-
     # @return [Hash<Integer => VoiceState>] the hash (user ID => voice state) of voice states of members on this server
     attr_reader :voice_states
 
@@ -2599,12 +2621,13 @@ module Discordrb
       @bot = bot
       @owner_id = data['owner_id'].to_i
       @id = data['id'].to_i
+
+      process_channels(data['channels'])
       update_data(data)
 
       @large = data['large']
       @member_count = data['member_count']
       @splash_id = nil
-      @embed = nil
       @features = data['features'].map { |element| element.downcase.to_sym }
       @members = {}
       @voice_states = {}
@@ -2614,7 +2637,6 @@ module Discordrb
       process_emoji(data['emojis'])
       process_members(data['members'])
       process_presences(data['presences'])
-      process_channels(data['channels'])
       process_voice_states(data['voice_states'])
 
       # Whether this server's members have been chunked (resolved using op 8 and GUILD_MEMBERS_CHUNK) yet
@@ -2685,34 +2707,19 @@ module Discordrb
       integration.map { |element| Integration.new(element, @bot, self) }
     end
 
-    # Cache @embed
-    # @note For internal use only
-    # @!visibility private
-    def cache_embed
-      data = JSON.parse(API::Server.resolve(@bot.token, @id))
-      @embed ||= data['embed_enabled']
-      @embed_channel_id ||= data['embed_channel_id']
-      begin
-        @embed_channel = @bot.channel(@embed_channel_id, self) if @embed_channel_id.nonzero? && (!@embed_channel || @embed_channel_id != @embed_channel.id)
-      rescue Discordrb::Errors::NoPermission
-        LOGGER.debug("Embed channel #{@embed_channel_id} on server #{@id} is unreachable, setting to nil even though one exists")
-        @embed_channel = nil
-      end
-    end
-
     # @return [true, false] whether or not the server has widget enabled
-    def embed?
-      cache_embed if @embed.nil?
-      @embed
+    def embed_enabled?
+      update_data if @embed_enabled.nil?
+      @embed_enabled
     end
-    alias_method :widget_enabled, :embed?
-    alias_method :widget?, :embed?
-    alias_method :embed_enabled, :embed?
+    alias_method :widget_enabled, :embed_enabled?
+    alias_method :widget?, :embed_enabled?
+    alias_method :embed?, :embed_enabled?
 
     # @return [Channel, nil] the channel the server embed will make a invite for.
     def embed_channel
-      cache_embed if @embed.nil?
-      @embed_channel
+      update_data if @embed_enabled.nil?
+      @bot.channel(@embed_channel_id) if @embed_channel_id
     end
     alias_method :widget_channel, :embed_channel
 
@@ -2726,6 +2733,24 @@ module Discordrb
     end
 
     alias_method :online_users, :online_members
+
+    # Adds a member to this guild that has granted this bot's application an OAuth2 access token
+    # with the `guilds.join` scope.
+    # For more information about Discord's OAuth2 implementation, see: https://discordapp.com/developers/docs/topics/oauth2
+    # @note Your bot must be present in this server, and have permission to create instant invites for this to work.
+    # @param user [Integer, User, #resolve_id] the user, or ID of the user to add to this server
+    # @param access_token [String] the OAuth2 Bearer token that has been granted the `guilds.join` scope
+    # @param nick [String] the nickname to give this member upon joining
+    # @param roles [Role, Array<Integer, Role, #resolve_id>] the role (or roles) to give this member upon joining
+    # @param deaf [true, false] whether this member will be server deafened upon joining
+    # @param mute [true, false] whether this member will be server muted upon joining
+    # @return [Member] the created member
+    def add_member_using_token(user, access_token, nick: nil, roles: [], deaf: false, mute: false)
+      user_id = user.resolve_id
+      roles = roles.is_a?(Array) ? roles.map(&:resolve_id) : [roles.resolve_id]
+      response = JSON.parse(API::Server.add_member(@bot.token, @id, user_id, access_token, nick, roles, deaf, mute))
+      add_member Member.new(response, self, @bot)
+    end
 
     # Returns the amount of members that are candidates for pruning
     # @param days [Integer] the number of days to consider for inactivity
@@ -2765,8 +2790,8 @@ module Discordrb
     # @return [String, nil] the widget URL to the server that displays the amount of online members in a
     #   stylish way. `nil` if the widget is not enabled.
     def widget_url
-      cache_embed if @embed.nil?
-      return nil unless @embed
+      update_data if @embed_enabled.nil?
+      return unless @embed_enabled
       API.widget_url(@id)
     end
 
@@ -2779,8 +2804,8 @@ module Discordrb
     # @return [String, nil] the widget banner URL to the server that displays the amount of online members,
     #   server icon and server name in a stylish way. `nil` if the widget is not enabled.
     def widget_banner_url(style)
-      return nil unless @embed
-      cache_embed if @embed.nil?
+      update_data if @embed_enabled.nil?
+      return unless @embed_enabled
       API.widget_url(@id, style)
     end
 
@@ -2823,8 +2848,8 @@ module Discordrb
     # @note For internal use only
     # @!visibility private
     def add_member(member)
-      @members[member.id] = member
       @member_count += 1
+      @members[member.id] = member
     end
 
     # Removes a member from the member cache.
@@ -2897,24 +2922,36 @@ module Discordrb
     # with the regular role defaults the client uses unless specified, i.e. name is "new role",
     # permissions are the default, colour is the default etc.
     # @param name [String] Name of the role to create
-    # @param colour [ColourRGB] The roles colour
+    # @param colour [Integer, ColourRGB, #combined] The roles colour
     # @param hoist [true, false]
     # @param mentionable [true, false]
-    # @param packed_permissions [Integer] The packed permissions to write.
+    # @param permissions [Integer, Array<Symbol>, Permissions, #bits] The permissions to write to the new role.
     # @param reason [String] The reason the for the creation of this role.
     # @return [Role] the created role.
-    def create_role(name: 'new role', colour: 0, hoist: false, mentionable: false, packed_permissions: 104_324_161, reason: nil)
-      response = API::Server.create_role(@bot.token, @id, name, colour, hoist, mentionable, packed_permissions, reason)
+    def create_role(name: 'new role', colour: 0, hoist: false, mentionable: false, permissions: 104_324_161, reason: nil)
+      colour = colour.respond_to?(:combined) ? colour.combined : colour
+
+      permissions = if permissions.is_a?(Array)
+                      Permissions.bits(permissions)
+                    elsif permissions.respond_to?(:bits)
+                      permissions.bits
+                    else
+                      permissions
+                    end
+
+      response = API::Server.create_role(@bot.token, @id, name, colour, hoist, mentionable, permissions, reason)
 
       role = Role.new(JSON.parse(response), @bot, self)
       @roles << role
       role
     end
 
-    # @return [Array<User>] a list of banned users on this server.
+    # @return [Array<ServerBan>] a list of banned users on this server and the reason they were banned.
     def bans
-      users = JSON.parse(API::Server.bans(@bot.token, @id))
-      users.map { |e| User.new(e['user'], @bot) }
+      response = JSON.parse(API::Server.bans(@bot.token, @id))
+      response.map do |e|
+        ServerBan.new(self, User.new(e['user'], @bot), e['reason'])
+      end
     end
 
     # Bans a user from this server.
@@ -3008,10 +3045,70 @@ module Discordrb
       update_server_data(afk_channel_id: afk_channel.resolve_id)
     end
 
+    # Sets the server's system channel.
+    # @param system_channel [Channel, String, Integer, #resolve_id, nil] The new system channel, or `nil` should it be disabled.
+    def system_channel=(system_channel)
+      update_server_data(system_channel_id: system_channel.resolve_id)
+    end
+
     # Sets the amount of time after which a user gets moved into the AFK channel.
     # @param afk_timeout [Integer] The AFK timeout, in seconds.
     def afk_timeout=(afk_timeout)
       update_server_data(afk_timeout: afk_timeout)
+    end
+
+    # A map of possible server verification levels to symbol names
+    VERIFICATION_LEVELS = {
+      none: 0,
+      low: 1,
+      medium: 2,
+      high: 3,
+      very_high: 4
+    }.freeze
+
+    # Sets the verification level of the server
+    # @param level [Integer, Symbol] The verification level from 0-4 or Symbol (see {VERIFICATION_LEVELS})
+    def verification_level=(level)
+      level = VERIFICATION_LEVELS[level] if level.is_a?(Symbol)
+
+      update_server_data(verification_level: level)
+    end
+
+    # A map of possible message notification levels to symbol names
+    NOTIFICATION_LEVELS = {
+      all_messages: 0,
+      only_mentions: 1
+    }.freeze
+
+    # Sets the default message notification level
+    # @param notifications [Integer, Symbol] The default message notificiation 0-1 or Symbol (see {NOTIFICATION_LEVELS})
+    def default_message_notifications=(notification_level)
+      notification_level = NOTIFICATION_LEVELS[notification_level] if notification_level.is_a?(Symbol)
+
+      update_server_data(default_message_notifications: notification_level)
+    end
+
+    alias_method :notification_level=, :default_message_notifications=
+
+    # Sets the server splash
+    # @param splash_hash [String] The splash hash
+    def splash=(splash_hash)
+      update_server_data(splash: splash_hash)
+    end
+
+    # A map of possible content filter levels to symbol names
+    FILTER_LEVELS = {
+      disabled: 0,
+      members_without_roles: 1,
+      all_members: 2
+    }.freeze
+
+    # Sets the server content filter
+    # @param filter [Integer, Symbol] The content filter from 0-2 or Symbol (see {FILTER_LEVELS})
+    def explicit_content_filter=(filter_level)
+      filter_level = FILTER_LEVELS[filter_level] if filter_level.is_a?(Symbol)
+
+      update_server_data(explicit_content_filter: filter_level)
     end
 
     # @return [true, false] whether this server has any emoji or not.
@@ -3054,34 +3151,38 @@ module Discordrb
       @processed_chunk_members = 0
     end
 
+    # @return [Channel, nil] the AFK voice channel of this server, or nil if none is set
+    def afk_channel
+      @bot.channel(@afk_channel_id) if @afk_channel_id
+    end
+
+    # @return [Channel, nil] the system channel (used for automatic welcome messages) of a server, or nil if none is set
+    def system_channel
+      @bot.channel(@system_channel_id) if @system_channel_id
+    end
+
     # Updates the cached data with new data
     # @note For internal use only
     # @!visibility private
-    def update_data(new_data)
+    def update_data(new_data = nil)
+      new_data ||= JSON.parse(API::Server.resolve(@bot.token, @id))
       @name = new_data[:name] || new_data['name'] || @name
       @region_id = new_data[:region] || new_data['region'] || @region_id
       @icon_id = new_data[:icon] || new_data['icon'] || @icon_id
-      @afk_timeout = new_data[:afk_timeout] || new_data['afk_timeout'].to_i || @afk_timeout
-      @afk_channel_id = new_data[:afk_channel_id] || new_data['afk_channel_id'].to_i || @afk_channel.id
-      @embed_channel_id = new_data[:embed_channel_id] || new_data['embed_channel_id'].to_i || @embed_channel.id
-      @embed = new_data[:embed_enabled] || new_data['embed_enabled'] || @embed
-      @verification_level = %i[none low medium high very_high][new_data['verification_level']] || @verification_level
-      @explicit_content_filter = %i[none exclude_roles all][new_data['explicit_content_filter']] || @explicit_content_filter
-      @default_message_notifications = %i[all mentions][new_data['default_message_notifications']] || @default_message_notifications
+      @afk_timeout = new_data[:afk_timeout] || new_data['afk_timeout'] || @afk_timeout
 
-      begin
-        @afk_channel = @bot.channel(@afk_channel_id, self) if @afk_channel_id.nonzero? && (!@afk_channel || @afk_channel_id != @afk_channel.id)
-      rescue Discordrb::Errors::NoPermission
-        LOGGER.debug("AFK channel #{@afk_channel_id} on server #{@id} is unreachable, setting to nil even though one exists")
-        @afk_channel = nil
-      end
+      afk_channel_id = new_data[:afk_channel_id] || new_data['afk_channel_id'] || @afk_channel
+      @afk_channel_id = afk_channel_id.nil? ? nil : afk_channel_id.resolve_id
+      embed_channel_id = new_data[:embed_channel_id] || new_data['embed_channel_id'] || @embed_channel
+      @embed_channel_id = embed_channel_id.nil? ? nil : embed_channel_id.resolve_id
+      system_channel_id = new_data[:system_channel_id] || new_data['system_channel_id'] || @system_channel
+      @system_channel_id = system_channel_id.nil? ? nil : system_channel_id.resolve_id
 
-      begin
-        @embed_channel = @bot.channel(@embed_channel_id, self) if @embed_channel_id.nonzero? && (!@embed_channel || @embed_channel_id != @embed_channel.id)
-      rescue Discordrb::Errors::NoPermission
-        LOGGER.debug("Embed channel #{@embed_channel_id} on server #{@id} is unreachable, setting to nil even though one exists")
-        @embed_channel = nil
-      end
+      @embed_enabled = new_data[:embed_enabled] || new_data['embed_enabled']
+      @splash = new_data[:splash_id] || new_data['splash_id'] || @splash_id
+      @verification_level = VERIFICATION_LEVELS[new_data[:verification_level]] || VERIFICATION_LEVELS[new_data['verification_level']] || @verification_level
+      @explicit_content_filter = FILTER_LEVELS[new_data[:explicit_content_filter]] || FILTER_LEVELS[new_data['explicit_content_filter']] || @explicit_content_filter
+      @default_message_notifications = NOTIFICATION_LEVELS[new_data[:default_message_notifications]] || NOTIFICATION_LEVELS[new_data['default_message_notifications']] || @default_message_notifications
     end
 
     # Adds a channel to this server's cache
@@ -3110,7 +3211,7 @@ module Discordrb
 
     # The inspect method is overwritten to give more useful output
     def inspect
-      "<Server name=#{@name} id=#{@id} large=#{@large} region=#{@region} owner=#{@owner} afk_channel_id=#{@afk_channel_id} afk_timeout=#{@afk_timeout}>"
+      "<Server name=#{@name} id=#{@id} large=#{@large} region=#{@region} owner=#{@owner} afk_channel_id=#{@afk_channel_id} system_channel_id=#{@system_channel_id} afk_timeout=#{@afk_timeout}>"
     end
 
     private
@@ -3121,7 +3222,12 @@ module Discordrb
                                                new_data[:region] || @region_id,
                                                new_data[:icon_id] || @icon_id,
                                                new_data[:afk_channel_id] || @afk_channel_id,
-                                               new_data[:afk_timeout] || @afk_timeout))
+                                               new_data[:afk_timeout] || @afk_timeout,
+                                               new_data[:splash] || @splash,
+                                               new_data[:default_message_notifications] || @default_message_notifications,
+                                               new_data[:verification_level] || @verification_level,
+                                               new_data[:explicit_content_filter] || @explicit_content_filter,
+                                               new_data[:system_channel_id] || @system_channel_id))
       update_data(response)
     end
 
@@ -3187,6 +3293,34 @@ module Discordrb
         update_voice_state(element)
       end
     end
+  end
+
+  # A ban entry on a server
+  class ServerBan
+    # @return [String, nil] the reason the user was banned, if provided
+    attr_reader :reason
+
+    # @return [User] the user that was banned
+    attr_reader :user
+
+    # @return [Server] the server this ban belongs to
+    attr_reader :server
+
+    # @!visibility private
+    def initialize(server, user, reason)
+      @server = server
+      @user = user
+      @reason = reason
+    end
+
+    # Removes this ban on the associated user in the server
+    # @param reason [String] the reason for removing the ban
+    def remove(reason = nil)
+      @server.unban(user, reason)
+    end
+
+    alias_method :unban, :remove
+    alias_method :lift, :remove
   end
 
   # A webhook on a server channel

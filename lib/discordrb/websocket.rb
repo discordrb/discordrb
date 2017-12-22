@@ -2,8 +2,6 @@
 
 require 'websocket-client-simple'
 
-puts "Using WSCS version: #{WebSocket::Client::Simple::VERSION}"
-
 # The WSCS module which we're hooking
 # @see Websocket::Client::Simple::Client
 module WebSocket::Client::Simple
@@ -31,6 +29,8 @@ module Discordrb
     # @param error_handler [#call] The handler that should be called when an error occurs in another handler. The error
     #   will be passed as the first parameter to the handler.
     def initialize(endpoint, open_handler, message_handler, close_handler, error_handler)
+      Discordrb::LOGGER.debug "Using WSCS version: #{WebSocket::Client::Simple::VERSION}"
+
       @open_handler = open_handler
       @message_handler = message_handler
       @close_handler = close_handler

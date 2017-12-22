@@ -79,8 +79,11 @@ module Discordrb::API
   # @param attributes [Array] The attributes for the request.
   def raw_request(type, attributes)
     RestClient.send(type, *attributes)
-  rescue RestClient::Forbidden
-    raise Discordrb::Errors::NoPermission, "The bot doesn't have the required permission to do this!"
+  rescue RestClient::Forbidden => e
+    # HACK: for #request, dynamically inject restclient's response into NoPermission - this allows us to ratelimit
+    noprm = Discordrb::Errors::NoPermission.new
+    noprm.define_singleton_method(:_rc_response) { e.response }
+    raise noprm, "The bot doesn't have the required permission to do this!"
   rescue RestClient::BadGateway
     Discordrb::LOGGER.warn('Got a 502 while sending a request! Not a big deal, retrying the request')
     retry
@@ -109,6 +112,14 @@ module Discordrb::API
         response = raw_request(type, attributes)
       rescue RestClient::Exception => e
         response = e.response
+        raise e
+      rescue Discordrb::Errors::NoPermission => e
+        if e.respond_to?(:_rc_response)
+          response = e._rc_response
+        else
+          Discordrb::LOGGER.warn("NoPermission doesn't respond_to? _rc_response!")
+        end
+
         raise e
       ensure
         if response
@@ -184,8 +195,8 @@ module Discordrb::API
   end
 
   # Make a splash URL from server and splash IDs
-  def splash_url(server_id, splash_id)
-    "https://cdn.discordapp.com/splashes/#{server_id}/#{splash_id}.jpg"
+  def splash_url(server_id, splash_id, format = 'webp')
+    "#{cdn_url}/splashes/#{server_id}/#{splash_id}.#{format}"
   end
 
   # Make an emoji icon URL from emoji ID

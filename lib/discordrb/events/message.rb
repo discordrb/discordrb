@@ -118,6 +118,8 @@ module Discordrb::Events
     # @param file [File] The file to send to the channel
     # @param caption [String] The caption attached to the file
     # @return [Discordrb::Message] the message that was sent
+    # @example Send a file from disk
+    #   event.send_file(File.open('rubytaco.png', 'r'))
     def send_file(file, caption: nil)
       @message.channel.send_file(file, caption: caption)
     end

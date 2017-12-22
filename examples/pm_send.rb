@@ -2,7 +2,7 @@
 
 require 'discordrb'
 
-bot = Discordrb::Bot.new token: 'B0T.T0KEN.here', client_id: 160123456789876543
+bot = Discordrb::Bot.new token: 'B0T.T0KEN.here'
 
 # The `mention` event is called if the bot is *directly mentioned*, i.e. not using a role mention or @everyone/@here.
 bot.mention do |event|

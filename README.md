@@ -4,7 +4,7 @@
 [![Inline docs](http://inch-ci.org/github/meew0/discordrb.svg?branch=master&style=shields)](http://inch-ci.org/github/meew0/discordrb)
 [![Code Climate](https://codeclimate.com/github/meew0/discordrb/badges/gpa.svg)](https://codeclimate.com/github/meew0/discordrb)
 [![Test Coverage](https://codeclimate.com/github/meew0/discordrb/badges/coverage.svg)](https://codeclimate.com/github/meew0/discordrb/coverage)
-[![Join Discord](https://img.shields.io/badge/discord-join-7289DA.svg)](https://discord.gg/0SBTUU1wZTWfFQL2)
+[![Join Discord](https://img.shields.io/badge/discord-join-7289DA.svg)](https://discord.gg/cyK3Hjm)
 # discordrb
 
 An implementation of the [Discord](https://discordapp.com/) API using Ruby.
@@ -109,7 +109,7 @@ You can make a simple bot like this:
 ```ruby
 require 'discordrb'
 
-bot = Discordrb::Bot.new token: '<token here>', client_id: 168123456789123456
+bot = Discordrb::Bot.new token: '<token here>'
 
 bot.message(with_text: 'Ping!') do |event|
   event.respond 'Pong!'
@@ -122,9 +122,13 @@ This bot responds to every "Ping!" with a "Pong!".
 
 See [additional examples here](https://github.com/meew0/discordrb/tree/master/examples).
 
+You can find examples of projects that use discordrb by [searching for the discordrb topic on GitHub](https://github.com/topics/discordrb).
+
+If you've made an open source project on GitHub that uses discordrb, consider adding the `discordrb` topic to your repo!
+
 ## Support
 
-You can find me (@meew0, ID 66237334693085184) on the unofficial Discord API server - if you have a question, just ask there, I or somebody else will probably answer you: https://discord.gg/0SBTUU1wZTWfFQL2
+You can find me (@meew0, ID 66237334693085184) on the unofficial Discord API server - if you have a question, just ask there, I or somebody else will probably answer you: https://discord.gg/3Trm6FW
 
 ## Development
 
