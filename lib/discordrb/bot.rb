@@ -158,7 +158,7 @@ module Discordrb
     # @overload emoji(id)
     #   Return an emoji by its ID
     #   @param id [Integer, #resolve_id] The emoji's ID.
-    #   @return emoji [Emoji, nil] the emoji object. `nil` if the emoji was not found.
+    #   @return [Emoji, nil] the emoji object. `nil` if the emoji was not found.
     # @overload emoji
     #   The list of emoji the bot can use.
     #   @return [Array<Emoji>] the emoji available.
@@ -380,6 +380,8 @@ module Discordrb
     # @param file [File] The file that should be sent.
     # @param caption [string] The caption for the file.
     # @param tts [true, false] Whether or not this file's caption should be sent using Discord text-to-speech.
+    # @example Send a file from disk
+    #   bot.send_file(83281822225530880, File.open('rubytaco.png', 'r'))
     def send_file(channel, file, caption: nil, tts: false)
       channel = channel.resolve_id
       response = API::Channel.upload_file(token, channel, file, caption: caption, tts: tts)
@@ -604,6 +606,7 @@ module Discordrb
       raise_event(HeartbeatEvent.new(self))
     end
 
+    # Makes the bot leave any groups with no recipients remaining
     def prune_empty_groups
       @channels.each_value do |channel|
         channel.leave_group if channel.group? && channel.recipients.empty?

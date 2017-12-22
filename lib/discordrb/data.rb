@@ -201,6 +201,8 @@ module Discordrb
     # @param file [File] The file to send to the user
     # @param caption [String] The caption of the file being sent
     # @return [Message] the message sent to this user.
+    # @example Send a file from disk
+    #   user.send_file(File.open('rubytaco.png', 'r'))
     def send_file(file, caption = nil)
       pm.send_file(file, caption: caption)
     end
@@ -1431,6 +1433,8 @@ module Discordrb
     # @param file [File] The file to send. There's no clear size limit for this, you'll have to attempt it for yourself (most non-image files are fine, large images may fail to embed)
     # @param caption [string] The caption for the file.
     # @param tts [true, false] Whether or not this file's caption should be sent using Discord text-to-speech.
+    # @example Send a file from disk
+    #   channel.send_file(File.open('rubytaco.png', 'r'))
     def send_file(file, caption: nil, tts: false)
       @bot.send_file(@id, file, caption: caption, tts: tts)
     end
@@ -2141,7 +2145,7 @@ module Discordrb
     # @return [Array<Embed>] the embed objects contained in this message.
     attr_reader :embeds
 
-    # @return [Hash<String, Reaction>] the reaction objects attached to this message keyed by the name of the reaction
+    # @return [Hash<String => Reaction>] the reaction objects attached to this message keyed by the name of the reaction
     attr_reader :reactions
 
     # @return [true, false] whether the message used Text-To-Speech (TTS) or not.
@@ -2581,7 +2585,7 @@ module Discordrb
     # @return [Array<Role>] an array of all the roles created on this server.
     attr_reader :roles
 
-    # @return [Hash<Integer, Emoji>] a hash of all the emoji available on this server.
+    # @return [Hash<Integer => Emoji>] a hash of all the emoji available on this server.
     attr_reader :emoji
     alias_method :emojis, :emoji
 

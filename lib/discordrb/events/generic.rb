@@ -19,7 +19,7 @@ module Discordrb::Events
   #  2. A single attribute, negated
   #  3. An array of attributes, not negated
   #  4. An array of attributes, not negated
-  # Note that it doesn't allow an array of negated attributes. For info on negation stuff, see {not!}
+  # Note that it doesn't allow an array of negated attributes. For info on negation stuff, see {::#not!}
   # @param attributes [Object, Array<Object>, Negated<Object>, Negated<Array<Object>>, nil] One or more attributes to
   #   compare to the to_check value.
   # @param to_check [Object] What to compare the attributes to.

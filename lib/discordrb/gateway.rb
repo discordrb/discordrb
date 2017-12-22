@@ -100,6 +100,7 @@ module Discordrb
       @invalid = false
     end
 
+    # Flags this session as suspended, so we know not to try and send heartbeats, etc. to the gateway until we've reconnected
     def suspend
       @suspended = true
     end
@@ -108,10 +109,12 @@ module Discordrb
       @suspended
     end
 
+    # Flags this session as no longer being suspended, so we can resume
     def resume
       @suspended = false
     end
 
+    # Flags this session as being invalid
     def invalidate
       @invalid = true
     end
