@@ -12,9 +12,22 @@ module Discordrb::Events
     # Sends a message to the channel this message was sent in, right now. It is usually preferable to use {#<<} instead
     # because it avoids rate limiting problems
     # @param content [String] The message to send to the channel
+    # @param tts [true, false] Whether or not this message should be sent using Discord text-to-speech.
+    # @param embed [Hash, Discordrb::Webhooks::Embed, nil] The rich embed to append to this message.
     # @return [Discordrb::Message] the message that was sent
-    def send_message(content)
-      channel.send_message(content)
+    def send_message(content, tts = false, embed = nil)
+      channel.send_message(content, tts, embed)
+    end
+
+    # The same as {#send_message}, but yields a {Webhooks::Embed} for easy building of embedded content inside a block.
+    # @see Channel#send_embed
+    # @param message [String] The message that should be sent along with the embed. If this is the empty string, only the embed will be shown.
+    # @param embed [Discordrb::Webhooks::Embed, nil] The embed to start the building process with, or nil if one should be created anew.
+    # @yield [embed] Yields the embed to allow for easy building inside a block.
+    # @yieldparam embed [Discordrb::Webhooks::Embed] The embed from the parameters, or a new one.
+    # @return [Message] The resulting message.
+    def send_embed(message = '', embed = nil, &block)
+      channel.send_embed(message, embed, &block)
     end
 
     # Sends a temporary message to the channel this message was sent in, right now.
@@ -97,14 +110,6 @@ module Discordrb::Events
       @channel = message.channel
       @saved_message = ''
       @file = nil
-    end
-
-    # Sends a message to the channel this message was sent in, right now. It is usually preferable to use {#<<} instead
-    # because it avoids rate limiting problems
-    # @param content [String] The message to send to the channel
-    # @return [Discordrb::Message] the message that was sent
-    def send_message(content)
-      @message.channel.send_message(content)
     end
 
     # Sends file with a caption to the channel this message was sent in, right now.
