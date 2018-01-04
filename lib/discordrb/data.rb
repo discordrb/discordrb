@@ -882,7 +882,7 @@ module Discordrb
     # @return [true, false] whether or not this role should be displayed separately from other users
     attr_reader :hoist
 
-    # @return [true, false] whether or not this role is managed by an integration or bot
+    # @return [true, false] whether or not this role is managed by an integration or a bot
     attr_reader :managed
     alias_method :managed?, :managed
 
