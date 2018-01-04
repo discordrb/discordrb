@@ -2716,7 +2716,7 @@ module Discordrb
     alias_method :widget?, :embed_enabled?
     alias_method :embed?, :embed_enabled?
 
-    # @return [Channel, nil] the channel the server embed will make a invite for.
+    # @return [Channel, nil] the channel the server embed will make an invite for.
     def embed_channel
       update_data if @embed_enabled.nil?
       @bot.channel(@embed_channel_id) if @embed_channel_id
