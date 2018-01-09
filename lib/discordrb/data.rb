@@ -1010,6 +1010,25 @@ module Discordrb
       @permissions.bits = packed if update_perms
     end
 
+    # Moves this role above another role in the list.
+    # @param other [Role, #resolve_id, nil] The role above which this role should be moved. If it is `nil`,
+    #   the role will be moved above the @everyone role.
+    # @return [Integer] the new position of this role
+    def sort_above(other = nil)
+      other = @server.role(other.resolve_id) if other
+      roles = @server.roles.sort_by(&:position)
+      roles.delete_at(@position)
+
+      index = other ? roles.index { |role| role.id == other.id } + 1 : 1
+      roles.insert(index, self)
+
+      updated_roles = roles.map.with_index { |role, position| { id: role.id, position: position } }
+      @server.update_role_positions(updated_roles)
+      index
+    end
+
+    alias_method :move_above, :sort_above
+
     # Deletes this role. This cannot be undone without recreating the role!
     # @param reason [String] the reason for this role's deletion
     def delete(reason = nil)
@@ -3000,6 +3019,17 @@ module Discordrb
       @channels.each do |channel|
         overwrites = channel.permission_overwrites.reject { |id, _| id == role_id }
         channel.update_overwrites(overwrites)
+      end
+    end
+
+    # Updates the positions of all roles on the server
+    # @note For internal use only
+    # @!visibility private
+    def update_role_positions(role_positions)
+      response = JSON.parse(API::Server.update_role_positions(@bot.token, @id, role_positions))
+      response.each do |data|
+        updated_role = Role.new(data, @bot, self)
+        role(updated_role.id).update_from(updated_role)
       end
     end
 

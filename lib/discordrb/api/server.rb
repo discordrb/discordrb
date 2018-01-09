@@ -254,6 +254,20 @@ module Discordrb::API::Server
     )
   end
 
+  # Update role positions
+  # https://discordapp.com/developers/docs/resources/guild#modify-guild-role-positions
+  def update_role_positions(token, server_id, roles)
+    Discordrb::API.request(
+      :guilds_sid_roles,
+      server_id,
+      :patch,
+      "#{Discordrb::API.api_base}/guilds/#{server_id}/roles",
+      roles.to_json,
+      Authorization: token,
+      content_type: :json
+    )
+  end
+
   # Delete a role
   # https://discordapp.com/developers/docs/resources/guild#delete-guild-role
   def delete_role(token, server_id, role_id, reason = nil)
