@@ -271,33 +271,6 @@ module Discordrb::API::Server
 
   # Adds a single role to a member
   # https://discordapp.com/developers/docs/resources/guild#add-guild-member-role
-  def add_member_role(token, server_id, user_id, role_id, reason = nil)
-    Discordrb::API.request(
-      :guilds_sid_members_uid_roles_rid,
-      server_id,
-      :put,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}/members/#{user_id}/roles/#{role_id}",
-      nil,
-      Authorization: token,
-      'X-Audit-Log-Reason': reason
-    )
-  end
-
-  # Removes a single role from a member
-  # https://discordapp.com/developers/docs/resources/guild#remove-guild-member-role
-  def remove_member_role(token, server_id, user_id, role_id, reason = nil)
-    Discordrb::API.request(
-      :guilds_sid_members_uid_roles_rid,
-      server_id,
-      :delete,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}/members/#{user_id}/roles/#{role_id}",
-      Authorization: token,
-      'X-Audit-Log-Reason': reason
-    )
-  end
-
-  # Adds a single role to a member
-  # https://discordapp.com/developers/docs/resources/guild#add-guild-member-role
   def add_member_role(token, server_id, user_id, role_id)
     Discordrb::API.request(
       :guilds_sid_members_uid_roles_rid,
@@ -494,17 +467,6 @@ module Discordrb::API::Server
       server_id,
       :get,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/webhooks",
-      Authorization: token
-    )
-  end
-
-  # Available voice regions for this server
-  def regions(token, server_id)
-    Discordrb::API.request(
-      :guilds_sid_regions,
-      server_id,
-      :get,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}/regions",
       Authorization: token
     )
   end
