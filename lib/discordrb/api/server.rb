@@ -30,13 +30,13 @@ module Discordrb::API::Server
 
   # Update a server
   # https://discordapp.com/developers/docs/resources/guild#modify-guild
-  def update(token, server_id, name, region, icon, afk_channel_id, afk_timeout, reason = nil)
+  def update(token, server_id, name, region, icon, afk_channel_id, afk_timeout, splash, default_message_notifications, verification_level, explicit_content_filter, system_channel_id, reason = nil)
     Discordrb::API.request(
       :guilds_sid,
       server_id,
       :patch,
       "#{Discordrb::API.api_base}/guilds/#{server_id}",
-      { name: name, region: region, icon: icon, afk_channel_id: afk_channel_id, afk_timeout: afk_timeout }.to_json,
+      { name: name, region: region, icon: icon, afk_channel_id: afk_channel_id, afk_timeout: afk_timeout, splash: splash, default_message_notifications: default_message_notifications, verification_level: verification_level, explicit_content_filter: explicit_content_filter, system_channel_id: system_channel_id }.to_json,
       Authorization: token,
       content_type: :json,
       'X-Audit-Log-Reason': reason
@@ -188,10 +188,9 @@ module Discordrb::API::Server
       :guilds_sid_bans_uid,
       server_id,
       :put,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}/bans/#{user_id}?delete-message-days=#{message_days}",
+      "#{Discordrb::API.api_base}/guilds/#{server_id}/bans/#{user_id}?delete-message-days=#{message_days}#{reason ? "&reason=#{reason}" : ''}",
       nil,
-      Authorization: token,
-      'X-Audit-Log-Reason': reason
+      Authorization: token
     )
   end
 
@@ -467,6 +466,20 @@ module Discordrb::API::Server
       server_id,
       :get,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/webhooks",
+      Authorization: token
+    )
+  end
+
+  # Adds a member to a server with an OAuth2 Bearer token that has been granted `guilds.join`
+  # https://discordapp.com/developers/docs/resources/guild#add-guild-member
+  def add_member(token, server_id, user_id, access_token, nick = nil, roles = [], mute = false, deaf = false)
+    Discordrb::API.request(
+      :guilds_sid_members_uid,
+      server_id,
+      :put,
+      "#{Discordrb::API.api_base}/guilds/#{server_id}/members/#{user_id}",
+      { access_token: access_token, nick: nick, roles: roles, mute: mute, deaf: deaf }.to_json,
+      content_type: :json,
       Authorization: token
     )
   end

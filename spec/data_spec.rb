@@ -28,6 +28,18 @@ module Discordrb
         messages = [1, 2, 3]
         expect { channel.delete_messages(messages, true) }.to raise_error(ArgumentError)
       end
+
+      it 'should remove old messages in non-strict mode' do
+        allow(IDObject).to receive(:synthesise).and_return(4)
+        messages = [1, 2, 3, 4]
+
+        # Suppresses some noisy WARN logging from specs output
+        allow(LOGGER).to receive(:warn)
+        allow(API::Channel).to receive(:bulk_delete_messages)
+
+        channel.delete_messages(messages)
+        expect(messages).to eq [4]
+      end
     end
 
     describe '#nsfw=' do
