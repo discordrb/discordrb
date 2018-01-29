@@ -3582,16 +3582,16 @@ module Discordrb
         @action_type = AuditLogs.action_type_for(data['action_type'])
         @target_type = AuditLogs.target_type_for(data['action_type'])
         @target_cached = false
-        
+
         # Sets the 'changes' variable to a empty hash if there are no special actions.
         @changes = {} unless @action == :message_delete || @action == :member_prune || @action == :member_role_update
-        
+
         # Sets the 'changes' variable to a RoleChange class if theres a role update.
         @changes = RoleChange.new(data['changes'][0], @server) if @action == :member_role_update
 
         process_changes(data['changes']) unless @action == :member_role_update
         return unless data.include?('options')
-        
+
         # Checks and sets variables for special action options.
         @count = data['options']['count'].to_i unless data['options']['count'].nil?
         @channel_id = data['options']['channel'].to_i unless data['options']['channel'].nil?
