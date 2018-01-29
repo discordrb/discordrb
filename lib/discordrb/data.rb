@@ -3371,10 +3371,10 @@ module Discordrb
       72 => :message_delete
     }.freeze
 
-    # @return [Hash<String, User>] the users included in the audit logs.
+    # @return [Hash<String => User>] the users included in the audit logs.
     attr_reader :users
 
-    # @return [Hash<String, Webhook>] the webhooks included in the audit logs.
+    # @return [Hash<String => Webhook>] the webhooks included in the audit logs.
     attr_reader :webhooks
 
     # @return [Array<Entry>] the entries listed in the audit logs.
