@@ -44,6 +44,9 @@ module Discordrb::Commands
     #   command will be available again.
     # @option attributes [Symbol] :bucket The rate limit bucket that should be used for rate limiting. No rate limiting
     #   will be done if unspecified or nil.
+    # @option attributes [String, #call] :rescue A string to respond with, or a block to be called in the event an exception
+    #   is raised internally. If given a String, `%exception%` will be substituted with the exception's `#message`. If given
+    #   a `Proc`, it will be passed the `CommandEvent` along with the `Exception`.
     # @yield The block is executed when the command is executed.
     # @yieldparam event [CommandEvent] The event of the message that contained the command.
     # @note `LocalJumpError`s are rescued from internally, giving bots the opportunity to use `return` or `break` in

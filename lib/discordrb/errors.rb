@@ -102,6 +102,9 @@ module Discordrb
     # Unknown User
     UnknownUser = Code(10_013)
 
+    # Unknown Emoji
+    UnknownEmoji = Code(10_014)
+
     # Bots cannot use this endpoint
     EndpointNotForBots = Code(20_001)
 
@@ -114,6 +117,18 @@ module Discordrb
     # Maximum number of friends reached (1000)
     FriendLimitReached = Code(30_002)
 
+    # Maximum number of pins reached (50)
+    PinLimitReached = Code(30_003)
+
+    # Maximum number of guild roles reached (250)
+    RoleLimitReached = Code(30_005)
+
+    # Too many reactions
+    ReactionLimitReached = Code(30_010)
+
+    # Maximum number of guild channels reached (500)
+    ChannelLimitReached = Code(30_013)
+
     # Unauthorized
     Unauthorized = Unauthorised = Code(40_001)
 
@@ -124,7 +139,7 @@ module Discordrb
     InvalidAccountType = Code(50_002)
 
     # Cannot execute action on a DM channel
-    InvalidForDM = Code(50_003)
+    InvalidActionForDM = Code(50_003)
 
     # Embed Disabled
     EmbedDisabled = Code(50_004)
@@ -164,5 +179,23 @@ module Discordrb
 
     # Provided too few or too many messages to delete. Must provide at least 2 and fewer than 100 messages to delete.
     InvalidBulkDeleteCount = Code(50_016)
+
+    # A message can only be pinned to the channel it was sent in
+    CannotPinInDifferentChannel = Code(50_019)
+
+    # Cannot execute action on a system message
+    InvalidActionForSystemMessage = Code(50_021)
+
+    # A message provided was too old to bulk delete
+    MessageTooOld = Code(50_034)
+
+    # Invalid Form Body
+    InvalidFormBody = Code(50_035)
+
+    # An invite was accepted to a guild the application's bot is not in
+    MissingBotMember = Code(50_036)
+
+    # Reaction Blocked
+    ReactionBlocked = Code(90_001)
   end
 end

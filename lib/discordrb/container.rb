@@ -472,6 +472,7 @@ module Discordrb
     def add_handler(handler)
       clazz = EventContainer.event_class(handler.class)
       @event_handlers ||= {}
+      @event_handlers[clazz] ||= []
       @event_handlers[clazz] << handler
     end
 
