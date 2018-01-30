@@ -1103,6 +1103,14 @@ module Discordrb
     # @return [String] this invite's code
     attr_reader :code
 
+    # @return [Integer, nil] the amount of members in the server. Will be nil if it has not been resolved (not in channels).
+    attr_reader :members
+    alias_method :users, :members
+
+    # @return [Integer, nil] the amount of online members in the server. Will be nil if it has not been resolved (not in channels). 
+    attr_reader :online_members
+    alias_method :online_users, :online_members
+
     # @!visibility private
     def initialize(data, bot)
       @bot = bot
@@ -1113,6 +1121,8 @@ module Discordrb
       @inviter = data['inviter'] ? (@bot.user(data['inviter']['id'].to_i) || User.new(data['inviter'], bot)) : nil
       @temporary = data['temporary']
       @revoked = data['revoked']
+      @online_members = data['approximate_presence_count']
+      @members = data['approximate_member_count']
 
       @code = data['code']
     end
