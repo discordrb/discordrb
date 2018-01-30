@@ -1107,7 +1107,7 @@ module Discordrb
     attr_reader :members
     alias_method :users, :members
 
-    # @return [Integer, nil] the amount of online members in the server. Will be nil if it has not been resolved (not in channels). 
+    # @return [Integer, nil] the amount of online members in the server. Will be nil if it has not been resolved (not in channels).
     attr_reader :online_members
     alias_method :online_users, :online_members
 
