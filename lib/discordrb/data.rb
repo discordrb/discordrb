@@ -2684,7 +2684,7 @@ module Discordrb
       return nil unless request
 
       member = @bot.member(self, id)
-      @members[id] = member
+      @members[id] = member unless member.nil?
     rescue
       nil
     end
