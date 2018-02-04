@@ -2600,16 +2600,6 @@ module Discordrb
     # @return [Integer] the absolute number of members on this server, offline or not.
     attr_reader :member_count
 
-    # @return [Symbol] the verification level of the server (:none = none, :low = 'Must have a verified email on their Discord account', :medium = 'Has to be registered with Discord for at least 5 minutes', :high = 'Has to be a member of this server for at least 10 minutes', :very_high = 'Must have a verified phone on their Discord account').
-    attr_reader :verification_level
-
-    # @return [Symbol] the explicit content filter level of the server (:none = 'Don't scan any messages.', :exclude_roles = 'Scan messages for members without a role.', :all = 'Scan messages sent by all members.').
-    attr_reader :explicit_content_filter
-    alias_method :content_filter_level, :explicit_content_filter
-
-    # @return [Symbol] the default message notifications settings of the server (:all = 'All messages', :mentions = 'Only @mentions').
-    attr_reader :default_message_notifications
-
     # @return [Integer] the amount of time after which a voice user gets moved into the AFK channel, in seconds.
     attr_reader :afk_timeout
 
@@ -3066,6 +3056,11 @@ module Discordrb
       very_high: 4
     }.freeze
 
+    # @return [Symbol] the verification level of the server (:none = none, :low = 'Must have a verified email on their Discord account', :medium = 'Has to be registered with Discord for at least 5 minutes', :high = 'Has to be a member of this server for at least 10 minutes', :very_high = 'Must have a verified phone on their Discord account').
+    def verification_level
+      VERIFICATION_LEVELS.key @verification_level
+    end
+
     # Sets the verification level of the server
     # @param level [Integer, Symbol] The verification level from 0-4 or Symbol (see {VERIFICATION_LEVELS})
     def verification_level=(level)
@@ -3079,6 +3074,11 @@ module Discordrb
       all_messages: 0,
       only_mentions: 1
     }.freeze
+
+    # @return [Symbol] the default message notifications settings of the server (:all = 'All messages', :mentions = 'Only @mentions').
+    def default_message_notifications
+      NOTIFICATION_LEVELS.key @default_message_notifications
+    end
 
     # Sets the default message notification level
     # @param notifications [Integer, Symbol] The default message notificiation 0-1 or Symbol (see {NOTIFICATION_LEVELS})
@@ -3102,6 +3102,13 @@ module Discordrb
       members_without_roles: 1,
       all_members: 2
     }.freeze
+
+    # @return [Symbol] the explicit content filter level of the server (:none = 'Don't scan any messages.', :exclude_roles = 'Scan messages for members without a role.', :all = 'Scan messages sent by all members.').
+    def explicit_content_filter
+      FILTER_LEVELS.key @explicit_content_filter
+    end
+
+    alias_method :content_filter_level, :explicit_content_filter
 
     # Sets the server content filter
     # @param filter [Integer, Symbol] The content filter from 0-2 or Symbol (see {FILTER_LEVELS})
@@ -3180,9 +3187,10 @@ module Discordrb
 
       @embed_enabled = new_data[:embed_enabled] || new_data['embed_enabled']
       @splash = new_data[:splash_id] || new_data['splash_id'] || @splash_id
-      @verification_level = VERIFICATION_LEVELS[new_data[:verification_level]] || VERIFICATION_LEVELS[new_data['verification_level']] || @verification_level
-      @explicit_content_filter = FILTER_LEVELS[new_data[:explicit_content_filter]] || FILTER_LEVELS[new_data['explicit_content_filter']] || @explicit_content_filter
-      @default_message_notifications = NOTIFICATION_LEVELS[new_data[:default_message_notifications]] || NOTIFICATION_LEVELS[new_data['default_message_notifications']] || @default_message_notifications
+
+      @verification_level = new_data[:verification_level] || new_data['verification_level'] || @verification_level
+      @explicit_content_filter = new_data[:explicit_content_filter] || new_data['explicit_content_filter'] || @explicit_content_filter
+      @default_message_notifications = new_data[:default_message_notifications] || new_data['default_message_notifications'] || @default_message_notifications
     end
 
     # Adds a channel to this server's cache
