@@ -1092,7 +1092,7 @@ module Discordrb
     attr_reader :inviter
     alias_method :user, :inviter
 
-    # @return [true, false] whether or not this invite is temporary.
+    # @return [true, false] whether or not this invite grants temporary membership. If someone joins a server with this invite, they will be removed from the server when they go offline unless they've received a role.
     attr_reader :temporary
     alias_method :temporary?, :temporary
 
