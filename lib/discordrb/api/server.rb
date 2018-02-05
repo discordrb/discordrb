@@ -270,28 +270,26 @@ module Discordrb::API::Server
 
   # Adds a single role to a member
   # https://discordapp.com/developers/docs/resources/guild#add-guild-member-role
-  def add_member_role(token, server_id, user_id, role_id, reason = nil)
+  def add_member_role(token, server_id, user_id, role_id)
     Discordrb::API.request(
       :guilds_sid_members_uid_roles_rid,
       server_id,
       :put,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/members/#{user_id}/roles/#{role_id}",
       nil,
-      Authorization: token,
-      'X-Audit-Log-Reason': reason
+      Authorization: token
     )
   end
 
   # Removes a single role from a member
   # https://discordapp.com/developers/docs/resources/guild#remove-guild-member-role
-  def remove_member_role(token, server_id, user_id, role_id, reason = nil)
+  def remove_member_role(token, server_id, user_id, role_id)
     Discordrb::API.request(
       :guilds_sid_members_uid_roles_rid,
       server_id,
       :delete,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/members/#{user_id}/roles/#{role_id}",
-      Authorization: token,
-      'X-Audit-Log-Reason': reason
+      Authorization: token
     )
   end
 
@@ -329,6 +327,18 @@ module Discordrb::API::Server
       server_id,
       :get,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/invites",
+      Authorization: token
+    )
+  end
+
+  # Gets a server's audit logs
+  # https://discordapp.com/developers/docs/resources/audit-log#get-guild-audit-log
+  def audit_logs(token, server_id, limit, userid = nil, actiontype = nil, before = nil)
+    Discordrb::API.request(
+      :guilds_sid_auditlogs,
+      server_id,
+      :get,
+      "#{Discordrb::API.api_base}/guilds/#{server_id}/audit-logs?limit=#{limit}#{"&user_id=#{userid}" if userid}#{"&action_type=#{actiontype}" if actiontype}#{"&before=#{before}" if before}",
       Authorization: token
     )
   end
