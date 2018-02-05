@@ -1103,6 +1103,12 @@ module Discordrb
     # @return [String] this invite's code
     attr_reader :code
 
+    # @return [Integer, nil] the invites max age before it expires, or nil if it's unknown. If the max age is 0, the invite will never expire unless it's deleted.
+    attr_reader :max_age
+
+    # @return [Time, nil] when this invite was created, or nil if it's unknown
+    attr_reader :created_at
+
     # @!visibility private
     def initialize(data, bot)
       @bot = bot
@@ -1113,6 +1119,8 @@ module Discordrb
       @inviter = data['inviter'] ? (@bot.user(data['inviter']['id'].to_i) || User.new(data['inviter'], bot)) : nil
       @temporary = data['temporary']
       @revoked = data['revoked']
+      @max_age = data['max_age']
+      @created_at = data['created_at']
 
       @code = data['code']
     end
@@ -1132,7 +1140,7 @@ module Discordrb
 
     # The inspect method is overwritten to give more useful output
     def inspect
-      "<Invite code=#{@code} channel=#{@channel} uses=#{@uses} temporary=#{@temporary} revoked=#{@revoked}>"
+      "<Invite code=#{@code} channel=#{@channel} uses=#{@uses} temporary=#{@temporary} revoked=#{@revoked} created_at=#{@created_at} max_age=#{@max_age}>"
     end
 
     # Creates an invite URL.
