@@ -2705,9 +2705,18 @@ module Discordrb
       integration.map { |element| Integration.new(element, @bot, self) }
     end
 
+    # Cache @embed
+    # @note For internal use only
+    # @!visibility private
+    def cache_embed_data
+      data = JSON.parse(API::Server.embed(@bot.token, @id))
+      @embed_enabled = data['enabled']
+      @embed_channel_id = data['channel_id']
+    end
+
     # @return [true, false] whether or not the server has widget enabled
     def embed_enabled?
-      update_data if @embed_enabled.nil?
+      cache_embed_data if @embed_enabled.nil?
       @embed_enabled
     end
     alias_method :widget_enabled, :embed_enabled?
@@ -2716,10 +2725,58 @@ module Discordrb
 
     # @return [Channel, nil] the channel the server embed will make a invite for.
     def embed_channel
-      update_data if @embed_enabled.nil?
+      cache_embed_data if @embed_enabled.nil?
       @bot.channel(@embed_channel_id) if @embed_channel_id
     end
     alias_method :widget_channel, :embed_channel
+
+    # Sets whether this server's embed (widget) is enabled
+    # @param value [true, false]
+    def embed_enabled=(value)
+      modify_embed(value, embed_channel)
+    end
+
+    alias_method :widget_enabled=, :embed_enabled=
+
+    # Sets whether this server's embed (widget) is enabled
+    # @param value [true, false]
+    # @param reason [String, nil] the reason to be shown in the audit log for this action
+    def set_embed_enabled(value, reason = nil)
+      modify_embed(value, embed_channel, reason)
+    end
+
+    alias_method :set_widget_enabled, :set_embed_enabled
+
+    # Changes the channel on the server's embed (widget)
+    # @param channel [Channel, String, Integer, #resolve_id] the channel to be referenced by the embed
+    def embed_channel=(channel)
+      modify_embed(embed?, channel)
+    end
+
+    alias_method :widget_channel=, :embed_channel=
+
+    # Changes the channel on the server's embed (widget)
+    # @param channel [Channel, String, Integer, #resolve_id] the channel to be referenced by the embed
+    # @param reason [String, nil] the reason to be shown in the audit log for this action
+    def set_embed_channel(channel, reason = nil)
+      modify_embed(embed?, channel, reason)
+    end
+
+    alias_method :set_widget_channel, :set_embed_channel
+
+    # Changes the channel on the server's embed (widget), and sets whether it is enabled.
+    # @param enabled [true, false] whether the embed (widget) is enabled
+    # @param channel [Channel, String, Integer, #resolve_id] the channel to be referenced by the embed
+    # @param reason [String, nil] the reason to be shown in the audit log for this action
+    def modify_embed(enabled, channel, reason = nil)
+      cache_embed_data if @embed_enabled.nil?
+      channel_id = channel ? channel.resolve_id : @embed_channel_id
+      response = JSON.parse(API::Server.modify_embed(@bot.token, @id, enabled, channel_id, reason))
+      @embed_enabled = response['enabled']
+      @embed_channel_id = response['channel_id']
+    end
+
+    alias_method :modify_widget, :modify_embed
 
     # @param include_idle [true, false] Whether to count idle members as online.
     # @param include_bots [true, false] Whether to include bot accounts in the count.
