@@ -882,7 +882,7 @@ module Discordrb
     # @return [true, false] whether or not this role should be displayed separately from other users
     attr_reader :hoist
 
-    # @return [true, false] whether or not this role is managed by a integration or bot
+    # @return [true, false] whether or not this role is managed by an integration or a bot
     attr_reader :managed
     alias_method :managed?, :managed
 
@@ -2723,7 +2723,7 @@ module Discordrb
     alias_method :widget?, :embed_enabled?
     alias_method :embed?, :embed_enabled?
 
-    # @return [Channel, nil] the channel the server embed will make a invite for.
+    # @return [Channel, nil] the channel the server embed will make an invite for.
     def embed_channel
       cache_embed_data if @embed_enabled.nil?
       @bot.channel(@embed_channel_id) if @embed_channel_id
