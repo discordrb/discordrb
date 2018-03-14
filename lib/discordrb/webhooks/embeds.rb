@@ -112,7 +112,7 @@ module Discordrb::Webhooks
     # @return [Array<EmbedField>] the fields attached to this embed.
     attr_reader :fields
 
-    # @param [Array<EmbedField>] the fields attached to this embed. number of fields must inside of 25
+    # @param [Array<EmbedField>] the fields attached to this embed. number of fields must inside of 25.
     def fields=(fields)
       raise ArgumentError, 'Number of fields must inside of 25' if fields && fields.length > FIELDS_LIMIT
       @fields = fields
@@ -285,7 +285,7 @@ module Discordrb::Webhooks
     # @return [String, nil] value of the field, displayed in normal text below the name.
     attr_reader :value
 
-    # @param value [String] value of the field, displayed in normal text below the name.
+    # @param value [String] value of the field, displayed in normal text below the name. value length must inside 1024 characters and not empty.
     def value=(value)
       raise ArgumentError, 'Value length must inside of 1024 characters.' if value.length > VALUE_LIMIT
       raise ArgumentError, 'Value must not empty.' if value.empty?
