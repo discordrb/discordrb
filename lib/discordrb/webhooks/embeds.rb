@@ -17,7 +17,7 @@ module Discordrb::Webhooks
       @author = author
       self.fields = fields
     end
-    
+
     # see https://discordapp.com/developers/docs/resources/channel#embed-limits
     TITLE_LIMIT = 256
     DESCRIPTION_LIMIT = 2048
@@ -26,19 +26,19 @@ module Discordrb::Webhooks
 
     # @return [String, nil] title of the embed that will be displayed above everything else.
     attr_reader :title
-    
+
     # @param title [String, nil] title of the embed that will be displayed above everything else. title length must inside of 256 characters.
     def title=(title)
-      raise ArgumentError, "Title length must inside of 256 characters." if title && title.length > TITLE_LIMIT
+      raise ArgumentError, 'Title length must inside of 256 characters.' if title && title.length > TITLE_LIMIT
       @title = title
     end
 
     # @return [String, nil] description for this embed.
     attr_reader :description
-    
+
     # @param description [String, nil] description for this embed. description length must inside of 2048 characters.
     def description=(description)
-      raise ArgumentError, "Description length must inside of 2048 characters." if description && description.length > DESCRIPTION_LIMIT
+      raise ArgumentError, 'Description length must inside of 2048 characters.' if description && description.length > DESCRIPTION_LIMIT
       @description = description
     end
 
@@ -111,7 +111,7 @@ module Discordrb::Webhooks
 
     # @return [Array<EmbedField>] the fields attached to this embed.
     attr_reader :fields
-    
+
     # @param [Array<EmbedField>] the fields attached to this embed. number of fields must inside of 25
     def fields=(fields)
       raise ArgumentError, 'Number of fields must inside of 25' if fields && fields.length > FIELDS_LIMIT
@@ -136,17 +136,17 @@ module Discordrb::Webhooks
         fields: @fields.map(&:to_hash)
       }
     end
-    
+
     # see https://discordapp.com/developers/docs/resources/channel#embed-limits
     private def check_all_characters_length
       if (
-           (@title&.length||0)+
-           (@description&.length||0)+
-           (@url&.length||0)+
-           (@footer&.text&.length||0)+
-           (@author&.name&.length||0)+
-           (@fields.map{|f|f.name.length+f.value.length}.inject(:+)||0)
-         ) > STRUCTURE_ALL_CHARACTERS_LIMIT
+           (@title ? @title.length : 0) +
+           (@description ? @description.length : 0) +
+           (@url ? @url.length : 0) +
+           (@footer && @footer.text ? @footer.text.length : 0) +
+           (@author && @author.name ? @author.text.length : 0) +
+           (@fields.map { |f| f.name.length + f.value.length }.inject(:+) || 0)
+      ) > STRUCTURE_ALL_CHARACTERS_LIMIT
         raise ArgumentError, 'structure all characters must inside 6000 characters.'
       end
     end
@@ -157,10 +157,10 @@ module Discordrb::Webhooks
   class EmbedFooter
     # see https://discordapp.com/developers/docs/resources/channel#embed-limits
     TEXT_LIMIT = 2048
-    
+
     # @return [String, nil] text to be displayed in the footer.
     attr_reader :text
-    
+
     # @param [String, nil] text to be displayed in the footer. text length must inside of 2048 characters.
     def text=(text)
       raise ArgumentError, 'Text length must inside of 2048 characters.' if text && text.length > TEXT_LIMIT
@@ -230,10 +230,10 @@ module Discordrb::Webhooks
   class EmbedAuthor
     # see https://discordapp.com/developers/docs/resources/channel#embed-limits
     NAME_LIMIT = 256
-    
+
     # @return [String, nil] name of the author.
     attr_reader :name
-    
+
     # @param [String, nil] name of the author. name length must inside of 256 characters.
     def name=(name)
       raise ArgumentError, 'Name length must inside of 256 characters.' if name && name.length > NAME_LIMIT
@@ -271,10 +271,10 @@ module Discordrb::Webhooks
     # see https://discordapp.com/developers/docs/resources/channel#embed-limits
     NAME_LIMIT = 256
     VALUE_LIMIT = 1024
-    
+
     # @return [String, nil] name of the field, displayed in bold at the top of the field.
     attr_reader :name
-    
+
     # @param name [String] name of the field, displayed in bold at the top of the field. name length must inside 256 characters and not empty.
     def name=(name)
       raise ArgumentError, 'Name length must inside of 256 characters.' if name.length > NAME_LIMIT
@@ -284,7 +284,7 @@ module Discordrb::Webhooks
 
     # @return [String, nil] value of the field, displayed in normal text below the name.
     attr_reader :value
-    
+
     # @param value [String] value of the field, displayed in normal text below the name.
     def value=(value)
       raise ArgumentError, 'Value length must inside of 1024 characters.' if value.length > VALUE_LIMIT

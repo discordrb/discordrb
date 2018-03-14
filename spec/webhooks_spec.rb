@@ -77,121 +77,121 @@ describe Discordrb::Webhooks do
         expect { embed.colour = [2000, 1, 2] }.to raise_error(ArgumentError)
       end
     end
-    
+
     describe 'Embed Limits' do
       it 'should raise if title length is over 256 characters' do
         embed = Discordrb::Webhooks::Embed.new
-        
+
         expect { embed.title = nil }.not_to raise_error
-        expect { embed.title = 'a'*256 }.not_to raise_error
-        expect { embed.title = 'a'*257 }.to raise_error(ArgumentError)
-        
+        expect { embed.title = 'a' * 256 }.not_to raise_error
+        expect { embed.title = 'a' * 257 }.to raise_error(ArgumentError)
+
         expect { Discordrb::Webhooks::Embed.new(title: nil) }.not_to raise_error
-        expect { Discordrb::Webhooks::Embed.new(title: 'a'*256) }.not_to raise_error
-        expect { Discordrb::Webhooks::Embed.new(title: 'a'*257) }.to raise_error(ArgumentError)
+        expect { Discordrb::Webhooks::Embed.new(title: 'a' * 256) }.not_to raise_error
+        expect { Discordrb::Webhooks::Embed.new(title: 'a' * 257) }.to raise_error(ArgumentError)
       end
-      
+
       it 'should raise if description length is over 2048 characters' do
         embed = Discordrb::Webhooks::Embed.new
-        
+
         expect { embed.description = nil }.not_to raise_error
-        expect { embed.description = 'a'*2048 }.not_to raise_error
-        expect { embed.description = 'a'*2049 }.to raise_error(ArgumentError)
-        
+        expect { embed.description = 'a' * 2048 }.not_to raise_error
+        expect { embed.description = 'a' * 2049 }.to raise_error(ArgumentError)
+
         expect { Discordrb::Webhooks::Embed.new(description: nil) }.not_to raise_error
-        expect { Discordrb::Webhooks::Embed.new(description: 'a'*2048) }.not_to raise_error
-        expect { Discordrb::Webhooks::Embed.new(description: 'a'*2049) }.to raise_error(ArgumentError)
+        expect { Discordrb::Webhooks::Embed.new(description: 'a' * 2048) }.not_to raise_error
+        expect { Discordrb::Webhooks::Embed.new(description: 'a' * 2049) }.to raise_error(ArgumentError)
       end
-      
+
       it 'should raise if number of fields must inside of 25' do
         embed = Discordrb::Webhooks::Embed.new
-        
+
         field = Discordrb::Webhooks::EmbedField.new(name: 'a', value: 'a')
-        
+
         expect { embed.fields = Array.new(25, field) }.not_to raise_error
         expect { embed.fields = Array.new(26, field) }.to raise_error(ArgumentError)
-        
+
         expect { Discordrb::Webhooks::Embed.new(fields: Array.new(25, field)) }.not_to raise_error
         expect { Discordrb::Webhooks::Embed.new(fields: Array.new(26, field)) }.to raise_error(ArgumentError)
       end
-      
+
       it 'should raise if field name length is over 246 characters' do
         field = Discordrb::Webhooks::EmbedField.new
-        
-        expect { field.name = 'a'*256 }.not_to raise_error
-        expect { field.name = 'a'*257 }.to raise_error(ArgumentError)
-        
-        expect { Discordrb::Webhooks::EmbedField.new(name: 'a'*256) }.not_to raise_error
-        expect { Discordrb::Webhooks::EmbedField.new(name: 'a'*257) }.to raise_error(ArgumentError)
+
+        expect { field.name = 'a' * 256 }.not_to raise_error
+        expect { field.name = 'a' * 257 }.to raise_error(ArgumentError)
+
+        expect { Discordrb::Webhooks::EmbedField.new(name: 'a' * 256) }.not_to raise_error
+        expect { Discordrb::Webhooks::EmbedField.new(name: 'a' * 257) }.to raise_error(ArgumentError)
       end
-      
+
       it 'should raise if field value length is over 1024 characters' do
         field = Discordrb::Webhooks::EmbedField.new
-        
-        expect { field.value = 'a'*1024 }.not_to raise_error
-        expect { field.value = 'a'*1025 }.to raise_error(ArgumentError)
-        
-        expect { Discordrb::Webhooks::EmbedField.new(value: 'a'*1024) }.not_to raise_error
-        expect { Discordrb::Webhooks::EmbedField.new(value: 'a'*1025) }.to raise_error(ArgumentError)
+
+        expect { field.value = 'a' * 1024 }.not_to raise_error
+        expect { field.value = 'a' * 1025 }.to raise_error(ArgumentError)
+
+        expect { Discordrb::Webhooks::EmbedField.new(value: 'a' * 1024) }.not_to raise_error
+        expect { Discordrb::Webhooks::EmbedField.new(value: 'a' * 1025) }.to raise_error(ArgumentError)
       end
-      
+
       it 'should raise if field name is empty' do
         field = Discordrb::Webhooks::EmbedField.new
-        
+
         expect { field.name = 'a' }.not_to raise_error
         expect { field.name = '' }.to raise_error(ArgumentError)
-        
+
         expect { Discordrb::Webhooks::EmbedField.new(name: 'a') }.not_to raise_error
         expect { Discordrb::Webhooks::EmbedField.new(name: '') }.to raise_error(ArgumentError)
       end
-      
+
       it 'should raise if field value is empty' do
         field = Discordrb::Webhooks::EmbedField.new
-        
+
         expect { field.value = 'a' }.not_to raise_error
         expect { field.value = '' }.to raise_error(ArgumentError)
-        
+
         expect { Discordrb::Webhooks::EmbedField.new(value: 'a') }.not_to raise_error
         expect { Discordrb::Webhooks::EmbedField.new(value: '') }.to raise_error(ArgumentError)
       end
-      
+
       it 'should raise if footer text length is over 2048 characters' do
         footer = Discordrb::Webhooks::EmbedFooter.new
-        
+
         expect { footer.text = nil }.not_to raise_error
-        expect { footer.text = 'a'*2048 }.not_to raise_error
-        expect { footer.text = 'a'*2049 }.to raise_error(ArgumentError)
-        
+        expect { footer.text = 'a' * 2048 }.not_to raise_error
+        expect { footer.text = 'a' * 2049 }.to raise_error(ArgumentError)
+
         expect { Discordrb::Webhooks::EmbedFooter.new(text: nil) }.not_to raise_error
-        expect { Discordrb::Webhooks::EmbedFooter.new(text: 'a'*2048) }.not_to raise_error
-        expect { Discordrb::Webhooks::EmbedFooter.new(text: 'a'*2049) }.to raise_error(ArgumentError)
+        expect { Discordrb::Webhooks::EmbedFooter.new(text: 'a' * 2048) }.not_to raise_error
+        expect { Discordrb::Webhooks::EmbedFooter.new(text: 'a' * 2049) }.to raise_error(ArgumentError)
       end
-      
+
       it 'should raise if author name length is over 256 characters' do
         author = Discordrb::Webhooks::EmbedAuthor.new
-        
+
         expect { author.name = nil }.not_to raise_error
-        expect { author.name = 'a'*256 }.not_to raise_error
-        expect { author.name = 'a'*257 }.to raise_error(ArgumentError)
-        
+        expect { author.name = 'a' * 256 }.not_to raise_error
+        expect { author.name = 'a' * 257 }.to raise_error(ArgumentError)
+
         expect { Discordrb::Webhooks::EmbedAuthor.new(name: nil) }.not_to raise_error
-        expect { Discordrb::Webhooks::EmbedAuthor.new(name: 'a'*256) }.not_to raise_error
-        expect { Discordrb::Webhooks::EmbedAuthor.new(name: 'a'*257) }.to raise_error(ArgumentError)
+        expect { Discordrb::Webhooks::EmbedAuthor.new(name: 'a' * 256) }.not_to raise_error
+        expect { Discordrb::Webhooks::EmbedAuthor.new(name: 'a' * 257) }.to raise_error(ArgumentError)
       end
-      
+
       it 'should raise if structure all characters over 6000 characters.' do
         # 6000 characters
         embed = Discordrb::Webhooks::Embed.new(
           fields: [
-            Discordrb::Webhooks::EmbedField.new(name: 'a'*100, value: 'b'*900),
-            Discordrb::Webhooks::EmbedField.new(name: 'a'*100, value: 'b'*900),
-            Discordrb::Webhooks::EmbedField.new(name: 'a'*100, value: 'b'*900),
-            Discordrb::Webhooks::EmbedField.new(name: 'a'*100, value: 'b'*900),
-            Discordrb::Webhooks::EmbedField.new(name: 'a'*100, value: 'b'*900),
-            Discordrb::Webhooks::EmbedField.new(name: 'a'*100, value: 'b'*900),
-          ],
+            Discordrb::Webhooks::EmbedField.new(name: 'a' * 100, value: 'b' * 900),
+            Discordrb::Webhooks::EmbedField.new(name: 'a' * 100, value: 'b' * 900),
+            Discordrb::Webhooks::EmbedField.new(name: 'a' * 100, value: 'b' * 900),
+            Discordrb::Webhooks::EmbedField.new(name: 'a' * 100, value: 'b' * 900),
+            Discordrb::Webhooks::EmbedField.new(name: 'a' * 100, value: 'b' * 900),
+            Discordrb::Webhooks::EmbedField.new(name: 'a' * 100, value: 'b' * 900)
+          ]
         )
-        
+
         expect { embed.to_hash }.not_to raise_error
         embed.title = 'a'
         expect { embed.to_hash }.to raise_error(ArgumentError)
