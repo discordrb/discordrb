@@ -14,6 +14,7 @@ An implementation of the [Discord](https://discordapp.com/) API using Ruby.
 * [Dependencies](https://github.com/meew0/discordrb#dependencies)
 * [Installation](https://github.com/meew0/discordrb#installation)
 * [Usage](https://github.com/meew0/discordrb#usage)
+* [Webhooks Client](https://github.com/meew0/discordrb#webhooks-client)
 * [Support](https://github.com/meew0/discordrb#support)
 * [Development](https://github.com/meew0/discordrb#development), [Contributing](https://github.com/meew0/discordrb#contributing)
 * [License](https://github.com/meew0/discordrb#license)
@@ -141,6 +142,34 @@ See [additional examples here](https://github.com/meew0/discordrb/tree/master/ex
 You can find examples of projects that use discordrb by [searching for the discordrb topic on GitHub](https://github.com/topics/discordrb).
 
 If you've made an open source project on GitHub that uses discordrb, consider adding the `discordrb` topic to your repo!
+
+## Webhooks Client
+
+Also included is a webhooks client, which can be used as a separate gem `discordrb-webhooks`. This special client can be used to form requests to Discord webhook URLs in a high-level manner.
+
+- [`discordrb-webhooks` documentation](http://www.rubydoc.info/gems/discordrb-webhooks)
+- [More information about webhooks](https://support.discordapp.com/hc/en-us/articles/228383668-Intro-to-Webhooks)
+- [Embed visualizer tool](https://leovoel.github.io/embed-visualizer/) - Includes a discordrb code generator for forming embeds
+
+### Usage
+
+```ruby
+require 'discordrb/webhooks'
+
+WEBHOOK_URL = 'https://discordapp.com/api/webhooks/424070213278105610/yByxDncRvHi02mhKQheviQI2erKkfRRwFcEp0MMBfib1ds6ZHN13xhPZNS2-fJo_ApSw'.freeze
+
+client = Discordrb::Webhooks::Client.new(url: WEBHOOK_URL)
+client.execute do |builder|
+  builder.content = 'Hello world!'
+  builder.add_embed do |embed|
+    embed.title = 'Embed title'
+    embed.description = 'Embed description'
+    embed.timestamp = Time.now
+  end
+end
+```
+
+**Note:** The `discordrb` gem relies on `discordrb-webhooks`. If you already have `discordrb` installed, `require 'discordrb/webhooks'` will include all of the `Webhooks` features as well.
 
 ## Support
 
