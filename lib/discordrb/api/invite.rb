@@ -9,7 +9,7 @@ module Discordrb::API::Invite
       :invite_code,
       nil,
       :get,
-      "#{Discordrb::API.api_base}/invite/#{invite_code}#{counts ? '?with_count=true' : ''}",
+      "#{Discordrb::API.api_base}/invite/#{invite_code}#{counts ? '?with_counts=true' : ''}",
       Authorization: token
     )
   end
