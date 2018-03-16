@@ -1104,12 +1104,12 @@ module Discordrb
     attr_reader :code
 
     # @return [Integer, nil] the amount of members in the server. Will be nil if it has not been resolved.
-    attr_reader :members
-    alias_method :users, :members
+    attr_reader :member_count
+    alias_method :user_count, :member_count
 
     # @return [Integer, nil] the amount of online members in the server. Will be nil if it has not been resolved.
-    attr_reader :online_members
-    alias_method :online_users, :online_members
+    attr_reader :online_member_count
+    alias_method :online_user_count, :online_member_count
 
     # @return [Integer, nil] the invites max age before it expires, or nil if it's unknown. If the max age is 0, the invite will never expire unless it's deleted.
     attr_reader :max_age
@@ -1127,8 +1127,8 @@ module Discordrb
       @inviter = data['inviter'] ? (@bot.user(data['inviter']['id'].to_i) || User.new(data['inviter'], bot)) : nil
       @temporary = data['temporary']
       @revoked = data['revoked']
-      @online_members = data['approximate_presence_count']
-      @members = data['approximate_member_count']
+      @online_member_count = data['approximate_presence_count']
+      @member_count = data['approximate_member_count']
       @max_age = data['max_age']
       @created_at = data['created_at']
 
