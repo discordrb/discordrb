@@ -882,7 +882,7 @@ module Discordrb
     # @return [true, false] whether or not this role should be displayed separately from other users
     attr_reader :hoist
 
-    # @return [true, false] whether or not this role is managed by a integration or bot
+    # @return [true, false] whether or not this role is managed by an integration or a bot
     attr_reader :managed
     alias_method :managed?, :managed
 
@@ -1092,7 +1092,7 @@ module Discordrb
     attr_reader :inviter
     alias_method :user, :inviter
 
-    # @return [true, false] whether or not this invite is temporary.
+    # @return [true, false] whether or not this invite grants temporary membership. If someone joins a server with this invite, they will be removed from the server when they go offline unless they've received a role.
     attr_reader :temporary
     alias_method :temporary?, :temporary
 
@@ -1110,6 +1110,11 @@ module Discordrb
     # @return [Integer, nil] the amount of online members in the server. Will be nil if it has not been resolved (not in channels).
     attr_reader :online_members
     alias_method :online_users, :online_members
+    # @return [Integer, nil] the invites max age before it expires, or nil if it's unknown. If the max age is 0, the invite will never expire unless it's deleted.
+    attr_reader :max_age
+
+    # @return [Time, nil] when this invite was created, or nil if it's unknown
+    attr_reader :created_at
 
     # @!visibility private
     def initialize(data, bot)
@@ -1123,6 +1128,8 @@ module Discordrb
       @revoked = data['revoked']
       @online_members = data['approximate_presence_count']
       @members = data['approximate_member_count']
+      @max_age = data['max_age']
+      @created_at = data['created_at']
 
       @code = data['code']
     end
@@ -1142,7 +1149,7 @@ module Discordrb
 
     # The inspect method is overwritten to give more useful output
     def inspect
-      "<Invite code=#{@code} channel=#{@channel} uses=#{@uses} temporary=#{@temporary} revoked=#{@revoked}>"
+      "<Invite code=#{@code} channel=#{@channel} uses=#{@uses} temporary=#{@temporary} revoked=#{@revoked} created_at=#{@created_at} max_age=#{@max_age}>"
     end
 
     # Creates an invite URL.
@@ -1233,11 +1240,23 @@ module Discordrb
   class Channel
     include IDObject
 
+    # Map of channel types
+    TYPES = {
+      text: 0,
+      dm: 1,
+      voice: 2,
+      group: 3,
+      category: 4
+    }.freeze
+
     # @return [String] this channel's name.
     attr_reader :name
 
     # @return [Server, nil] the server this channel is on. If this channel is a PM channel, it will be nil.
     attr_reader :server
+
+    # @return [Integer, nil] the ID of the parent channel, if this channel is inside a cateogry
+    attr_reader :parent_id
 
     # @return [Integer] the type of this channel (0: text, 1: private, 2: voice, 3: group)
     attr_reader :type
@@ -1292,6 +1311,7 @@ module Discordrb
       @bitrate = data['bitrate']
       @user_limit = data['user_limit']
       @position = data['position']
+      @parent_id = data['parent_id'].to_i if data['parent_id']
 
       if private?
         @recipients = []
@@ -1347,6 +1367,30 @@ module Discordrb
       @type == 3
     end
 
+    # @return [true, false]
+    def category?
+      @type == 4
+    end
+
+    # @return [Channel, nil] the category channel, if this channel is in a category
+    def category
+      @bot.channel(@parent_id) if @parent_id
+    end
+
+    alias_method :parent, :category
+
+    # Sets this channels parent category
+    # @param channel [Channel, #resolve_id] the target category channel
+    # @raise [ArgumentError] if the target channel isn't a category
+    def category=(channel)
+      channel = @bot.channel(channel)
+      raise ArgumentError, 'Cannot set parent category to a channel that isn\'t a category' unless channel.category?
+      @parent_id = channel.id
+      update_channel_data
+    end
+
+    alias_method :parent=, :category=
+
     # Sets whether this channel is NSFW
     # @param value [true, false]
     # @raise [ArguementError] if value isn't one of true, false
@@ -1372,6 +1416,51 @@ module Discordrb
     end
 
     alias_method :overwrites, :permission_overwrites
+
+    # Bulk sets this channels permission overwrites
+    # @param overwrites [Array<Overwrite>]
+    def permission_overwrites=(overwrites)
+      @permission_overwrites = overwrites
+      update_channel_data
+    end
+
+    # Syncs this channels overwrites with its parent category
+    # @raises [RuntimeError] if this channel is not in a category
+    def sync_overwrites
+      raise 'Cannot sync overwrites on a channel with no parent category' unless parent
+      self.permission_overwrites = parent.permission_overwrites
+    end
+
+    alias_method :sync, :sync_overwrites
+
+    # @return [true, false, nil] whether this channels permissions match the permission overwrites of the category that it's in, or nil if it is not in a category
+    def synchronized?
+      return unless parent
+      permission_overwrites == parent.permission_overwrites
+    end
+
+    alias_method :synced?, :synchronized?
+
+    # Returns the children of this channel, if it is a category. Otherwise returns an empty array.
+    # @return [Array<Channel>]
+    def children
+      return [] unless category?
+      server.channels.select { |c| c.parent_id == id }
+    end
+
+    alias_method :channels, :children
+
+    # Returns the text channels in this category, if it is a category channel. Otherwise returns an empty array.
+    # @return [Array<Channel>]
+    def text_channels
+      children.select(&:text?)
+    end
+
+    # Returns the voice channels in this category, if it is a category channel. Otherwise returns an empty array.
+    # @return [Array<Channel>]
+    def voice_channels
+      children.select(&:voice?)
+    end
 
     # @return [Overwrite] any member-type permission overwrites on this channel
     def member_overwrites
@@ -1572,6 +1661,7 @@ module Discordrb
       @user_limit = other.user_limit
       @permission_overwrites = other.permission_overwrites
       @nsfw = other.nsfw
+      @parent_id = other.parent_id
     end
 
     # The list of users currently in this channel. For a voice channel, it will return all the members currently
@@ -1819,7 +1909,8 @@ module Discordrb
     end
 
     def update_channel_data
-      API::Channel.update(@bot.token, @id, @name, @topic, @position, @bitrate, @user_limit, @nsfw, nil)
+      overwrites = @permission_overwrites.map { |_, v| v.to_hash }
+      API::Channel.update(@bot.token, @id, @name, @topic, @position, @bitrate, @user_limit, @nsfw, overwrites, @parent_id, nil)
     end
   end
 
@@ -2209,7 +2300,7 @@ module Discordrb
 
                     unless member
                       Discordrb::LOGGER.debug("Member with ID #{data['author']['id']} not cached (possibly left the server).")
-                      member = @bot.user(data['author']['id'].to_i)
+                      member = @bot.ensure_user(data['author'])
                     end
 
                     member
@@ -2610,16 +2701,6 @@ module Discordrb
     # @return [Integer] the absolute number of members on this server, offline or not.
     attr_reader :member_count
 
-    # @return [Symbol] the verification level of the server (:none = none, :low = 'Must have a verified email on their Discord account', :medium = 'Has to be registered with Discord for at least 5 minutes', :high = 'Has to be a member of this server for at least 10 minutes', :very_high = 'Must have a verified phone on their Discord account').
-    attr_reader :verification_level
-
-    # @return [Symbol] the explicit content filter level of the server (:none = 'Don't scan any messages.', :exclude_roles = 'Scan messages for members without a role.', :all = 'Scan messages sent by all members.').
-    attr_reader :explicit_content_filter
-    alias_method :content_filter_level, :explicit_content_filter
-
-    # @return [Symbol] the default message notifications settings of the server (:all = 'All messages', :mentions = 'Only @mentions').
-    attr_reader :default_message_notifications
-
     # @return [Integer] the amount of time after which a voice user gets moved into the AFK channel, in seconds.
     attr_reader :afk_timeout
 
@@ -2694,7 +2775,7 @@ module Discordrb
       return nil unless request
 
       member = @bot.member(self, id)
-      @members[id] = member
+      @members[id] = member unless member.nil?
     rescue
       nil
     end
@@ -2717,21 +2798,78 @@ module Discordrb
       integration.map { |element| Integration.new(element, @bot, self) }
     end
 
+    # Cache @embed
+    # @note For internal use only
+    # @!visibility private
+    def cache_embed_data
+      data = JSON.parse(API::Server.embed(@bot.token, @id))
+      @embed_enabled = data['enabled']
+      @embed_channel_id = data['channel_id']
+    end
+
     # @return [true, false] whether or not the server has widget enabled
     def embed_enabled?
-      update_data if @embed_enabled.nil?
+      cache_embed_data if @embed_enabled.nil?
       @embed_enabled
     end
     alias_method :widget_enabled, :embed_enabled?
     alias_method :widget?, :embed_enabled?
     alias_method :embed?, :embed_enabled?
 
-    # @return [Channel, nil] the channel the server embed will make a invite for.
+    # @return [Channel, nil] the channel the server embed will make an invite for.
     def embed_channel
-      update_data if @embed_enabled.nil?
+      cache_embed_data if @embed_enabled.nil?
       @bot.channel(@embed_channel_id) if @embed_channel_id
     end
     alias_method :widget_channel, :embed_channel
+
+    # Sets whether this server's embed (widget) is enabled
+    # @param value [true, false]
+    def embed_enabled=(value)
+      modify_embed(value, embed_channel)
+    end
+
+    alias_method :widget_enabled=, :embed_enabled=
+
+    # Sets whether this server's embed (widget) is enabled
+    # @param value [true, false]
+    # @param reason [String, nil] the reason to be shown in the audit log for this action
+    def set_embed_enabled(value, reason = nil)
+      modify_embed(value, embed_channel, reason)
+    end
+
+    alias_method :set_widget_enabled, :set_embed_enabled
+
+    # Changes the channel on the server's embed (widget)
+    # @param channel [Channel, String, Integer, #resolve_id] the channel to be referenced by the embed
+    def embed_channel=(channel)
+      modify_embed(embed?, channel)
+    end
+
+    alias_method :widget_channel=, :embed_channel=
+
+    # Changes the channel on the server's embed (widget)
+    # @param channel [Channel, String, Integer, #resolve_id] the channel to be referenced by the embed
+    # @param reason [String, nil] the reason to be shown in the audit log for this action
+    def set_embed_channel(channel, reason = nil)
+      modify_embed(embed?, channel, reason)
+    end
+
+    alias_method :set_widget_channel, :set_embed_channel
+
+    # Changes the channel on the server's embed (widget), and sets whether it is enabled.
+    # @param enabled [true, false] whether the embed (widget) is enabled
+    # @param channel [Channel, String, Integer, #resolve_id] the channel to be referenced by the embed
+    # @param reason [String, nil] the reason to be shown in the audit log for this action
+    def modify_embed(enabled, channel, reason = nil)
+      cache_embed_data if @embed_enabled.nil?
+      channel_id = channel ? channel.resolve_id : @embed_channel_id
+      response = JSON.parse(API::Server.modify_embed(@bot.token, @id, enabled, channel_id, reason))
+      @embed_enabled = response['enabled']
+      @embed_channel_id = response['channel_id']
+    end
+
+    alias_method :modify_widget, :modify_embed
 
     # @param include_idle [true, false] Whether to count idle members as online.
     # @param include_bots [true, false] Whether to include bot accounts in the count.
@@ -2795,6 +2933,16 @@ module Discordrb
     # @return [Array<Channel>] an array of voice channels on this server
     def voice_channels
       @channels.select(&:voice?)
+    end
+
+    # @return [Array<Channel>] an array of category channels on this server
+    def categories
+      @channels.select(&:category?)
+    end
+
+    # @return [Array<Channel>] an array of channels on this server that are not in a category
+    def orphan_channels
+      @channels.reject { |c| c.parent || c.category? }
     end
 
     # @return [String, nil] the widget URL to the server that displays the amount of online members in a
@@ -2913,16 +3061,17 @@ module Discordrb
 
     # Creates a channel on this server with the given name.
     # @param name [String] Name of the channel to create
-    # @param type [Integer] Type of channel to create (0: text, 2: voice)
+    # @param type [Integer, Symbol] Type of channel to create (0: text, 2: voice, 4: category)
     # @param bitrate [Integer] the bitrate of this channel, if it will be a voice channel
     # @param user_limit [Integer] the user limit of this channel, if it will be a voice channel
     # @param permission_overwrites [Array<Hash>, Array<Overwrite>] permission overwrites for this channel
     # @param nsfw [true, false] whether this channel should be created as nsfw
     # @param reason [String] The reason the for the creation of this channel.
     # @return [Channel] the created channel.
-    # @raise [ArgumentError] if type is not 0 or 2
+    # @raise [ArgumentError] if type is not 0 (text), 2 (voice), or 4 (category)
     def create_channel(name, type = 0, bitrate: nil, user_limit: nil, permission_overwrites: [], nsfw: false, reason: nil)
-      raise ArgumentError, 'Channel type must be either 0 (text) or 2 (voice)!' unless [0, 2].include?(type)
+      type = Channel::TYPES[type] if type.is_a?(Symbol)
+      raise ArgumentError, 'Channel type must be either 0 (text), 2 (voice), or 4 (category)!' unless [0, 2, 4].include?(type)
       permission_overwrites.map! { |e| e.is_a?(Overwrite) ? e.to_hash : e }
       response = API::Server.create_channel(@bot.token, @id, name, type, bitrate, user_limit, permission_overwrites, nsfw, reason)
       Channel.new(JSON.parse(response), @bot)
@@ -3076,6 +3225,11 @@ module Discordrb
       very_high: 4
     }.freeze
 
+    # @return [Symbol] the verification level of the server (:none = none, :low = 'Must have a verified email on their Discord account', :medium = 'Has to be registered with Discord for at least 5 minutes', :high = 'Has to be a member of this server for at least 10 minutes', :very_high = 'Must have a verified phone on their Discord account').
+    def verification_level
+      VERIFICATION_LEVELS.key @verification_level
+    end
+
     # Sets the verification level of the server
     # @param level [Integer, Symbol] The verification level from 0-4 or Symbol (see {VERIFICATION_LEVELS})
     def verification_level=(level)
@@ -3089,6 +3243,11 @@ module Discordrb
       all_messages: 0,
       only_mentions: 1
     }.freeze
+
+    # @return [Symbol] the default message notifications settings of the server (:all = 'All messages', :mentions = 'Only @mentions').
+    def default_message_notifications
+      NOTIFICATION_LEVELS.key @default_message_notifications
+    end
 
     # Sets the default message notification level
     # @param notifications [Integer, Symbol] The default message notificiation 0-1 or Symbol (see {NOTIFICATION_LEVELS})
@@ -3112,6 +3271,13 @@ module Discordrb
       members_without_roles: 1,
       all_members: 2
     }.freeze
+
+    # @return [Symbol] the explicit content filter level of the server (:none = 'Don't scan any messages.', :exclude_roles = 'Scan messages for members without a role.', :all = 'Scan messages sent by all members.').
+    def explicit_content_filter
+      FILTER_LEVELS.key @explicit_content_filter
+    end
+
+    alias_method :content_filter_level, :explicit_content_filter
 
     # Sets the server content filter
     # @param filter [Integer, Symbol] The content filter from 0-2 or Symbol (see {FILTER_LEVELS})
@@ -3190,9 +3356,10 @@ module Discordrb
 
       @embed_enabled = new_data[:embed_enabled] || new_data['embed_enabled']
       @splash = new_data[:splash_id] || new_data['splash_id'] || @splash_id
-      @verification_level = VERIFICATION_LEVELS[new_data[:verification_level]] || VERIFICATION_LEVELS[new_data['verification_level']] || @verification_level
-      @explicit_content_filter = FILTER_LEVELS[new_data[:explicit_content_filter]] || FILTER_LEVELS[new_data['explicit_content_filter']] || @explicit_content_filter
-      @default_message_notifications = NOTIFICATION_LEVELS[new_data[:default_message_notifications]] || NOTIFICATION_LEVELS[new_data['default_message_notifications']] || @default_message_notifications
+
+      @verification_level = new_data[:verification_level] || new_data['verification_level'] || @verification_level
+      @explicit_content_filter = new_data[:explicit_content_filter] || new_data['explicit_content_filter'] || @explicit_content_filter
+      @default_message_notifications = new_data[:default_message_notifications] || new_data['default_message_notifications'] || @default_message_notifications
     end
 
     # Adds a channel to this server's cache

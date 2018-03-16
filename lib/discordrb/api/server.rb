@@ -97,17 +97,16 @@ module Discordrb::API::Server
   end
 
   # Update a channels position
-  # https://discordapp.com/developers/docs/resources/guild#modify-guild-channel
-  def update_channel(token, server_id, channel_id, position, reason = nil)
+  # https://discordapp.com/developers/docs/resources/guild#modify-guild-channel-positions
+  def update_channel_positions(token, server_id, positions)
     Discordrb::API.request(
       :guilds_sid_channels,
       server_id,
       :patch,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/channels",
-      { id: channel_id, position: position }.to_json,
+      positions.to_json,
       Authorization: token,
-      content_type: :json,
-      'X-Audit-Log-Reason': reason
+      content_type: :json
     )
   end
 
@@ -394,6 +393,33 @@ module Discordrb::API::Server
       "#{Discordrb::API.api_base}/guilds/#{server_id}/integrations/#{integration_id}/sync",
       nil,
       Authorization: token
+    )
+  end
+
+  # Retrieves a server's embed information
+  # https://discordapp.com/developers/docs/resources/guild#get-guild-embed
+  def embed(token, server_id)
+    Discordrb::API.request(
+      :guilds_sid_embed,
+      server_id,
+      :get,
+      "#{Discordrb::API.api_base}/guilds/#{server_id}/embed",
+      Authorization: token
+    )
+  end
+
+  # Modify a server's embed settings
+  # https://discordapp.com/developers/docs/resources/guild#modify-guild-embed
+  def modify_embed(token, server_id, enabled, channel_id, reason = nil)
+    Discordrb::API.request(
+      :guilds_sid_embed,
+      server_id,
+      :patch,
+      "#{Discordrb::API.api_base}/guilds/#{server_id}/embed",
+      { enabled: enabled, channel_id: channel_id }.to_json,
+      Authorization: token,
+      'X-Audit-Log-Reason': reason,
+      content_type: :json
     )
   end
 

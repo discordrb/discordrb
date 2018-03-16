@@ -92,7 +92,7 @@ module Discordrb
       timestamp = Time.now.strftime(LOG_TIMESTAMP_FORMAT)
 
       # Redact token if set
-      log = if @token
+      log = if @token && @token != ''
               message.to_s.gsub(@token, 'REDACTED_TOKEN')
             else
               message.to_s
