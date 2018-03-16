@@ -4,12 +4,12 @@ module Discordrb::API::Invite
 
   # Resolve an invite
   # https://discordapp.com/developers/docs/resources/invite#get-invite
-  def resolve(token, invite_code)
+  def resolve(token, invite_code, counts = true)
     Discordrb::API.request(
       :invite_code,
       nil,
       :get,
-      "#{Discordrb::API.api_base}/invite/#{invite_code}",
+      "#{Discordrb::API.api_base}/invite/#{invite_code}#{counts ? '?with_counts=true' : ''}",
       Authorization: token
     )
   end
