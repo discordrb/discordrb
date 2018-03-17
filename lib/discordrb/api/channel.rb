@@ -16,13 +16,15 @@ module Discordrb::API::Channel
 
   # Update a channel's data
   # https://discordapp.com/developers/docs/resources/channel#modify-channel
-  def update(token, channel_id, name, topic, position, bitrate, user_limit, nsfw, permission_overwrites, parent_id, reason = nil)
+  def update(token, channel_id, name, topic, position, bitrate, user_limit, nsfw, permission_overwrites = nil, parent_id = nil, reason = nil)
+    data = { name: name, position: position, topic: topic, bitrate: bitrate, user_limit: user_limit, nsfw: nsfw, parent_id: parent_id }
+    data[:permission_overwrites] = permission_overwrites unless permission_overwrites.nil?
     Discordrb::API.request(
       :channels_cid,
       channel_id,
       :patch,
       "#{Discordrb::API.api_base}/channels/#{channel_id}",
-      { name: name, position: position, topic: topic, bitrate: bitrate, user_limit: user_limit, nsfw: nsfw, permission_overwrites: permission_overwrites, parent_id: parent_id }.to_json,
+      data.to_json,
       Authorization: token,
       content_type: :json,
       'X-Audit-Log-Reason': reason
