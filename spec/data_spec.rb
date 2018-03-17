@@ -13,6 +13,101 @@ module Discordrb
       described_class.new(data, bot, double('server'))
     end
 
+    shared_examples 'a Channel property' do |property_name|
+      it 'should call #update_channel_data' do
+        expect(channel).to receive(:update_channel_data)
+        channel.__send__("#{property_name}=", set_value)
+      end
+
+      it 'should change the cached value' do
+        allow(channel).to receive(:update_channel_data) do |t|
+          test_data = data.merge(t)
+          channel.update_data(test_data)
+        end
+        channel.__send__("#{property_name}=", set_value)
+        expect(channel.__send__(property_name)).to eq(test_value)
+      end
+
+      context 'when the API raises an error' do
+        it 'should not change the cached value' do
+          allow(channel).to receive(:update_channel_data).and_raise(Discordrb::Errors::NoPermission)
+          begin
+            channel.__send__("#{property_name}=", set_value)
+          rescue Discordrb::Errors::NoPermission
+            expect(channel.__send__(property_name)).to eq(default_value)
+          end
+        end
+      end
+    end
+
+    describe '#name=' do
+      let(:default_value) { data['name'] }
+      let(:set_value) { 'Test' }
+      let(:test_value) { 'Test' }
+      it_behaves_like 'a Channel property', :name
+    end
+
+    describe '#topic=' do
+      let(:default_value) { data['topic'] }
+      let(:set_value) { 'Lorem ipsum dolor sit amet...' }
+      let(:test_value) { 'Lorem ipsum dolor sit amet...' }
+      it_behaves_like 'a Channel property', :topic
+    end
+
+    describe '#nsfw=' do
+      context 'when toggled from false to true' do
+        let(:default_value) { false }
+        let(:set_value) { true }
+        let(:test_value) { true }
+        it_behaves_like 'a Channel property', :nsfw
+      end
+
+      context 'when toggled from true to false' do
+        subject(:channel) do
+          bot = double('bot')
+          allow(bot).to receive(:token) { 'fake token' }
+          described_class.new(data.merge('nsfw' => true), bot, double('server'))
+        end
+        let(:default_value) { true }
+        let(:set_value) { false }
+        let(:test_value) { false }
+        it_behaves_like 'a Channel property', :nsfw
+      end
+    end
+
+    describe '#permission_overwrites=' do
+      context 'when permissions_overwrites are explicitly set' do
+        let(:default_value) do
+          data['permission_overwrites'].map { |el| [el['id'].to_i, Overwrite.from_hash(el)] }.to_h
+        end
+        test_data = { 'allow' => 0, 'deny' => 1, 'id' => '123', 'type' => 'role' }
+        let(:set_value) { [test_data] }
+        let(:test_value) { { test_data['id'].to_i => Overwrite.from_hash(test_data) } }
+        it_behaves_like 'a Channel property', :permission_overwrites
+      end
+
+      context 'when permissions_overwrites are not set' do
+        let(:topic) { 'test' }
+        before do
+          expect(API).to receive(:request).with(:channels_cid,
+                                                kind_of(Numeric),
+                                                :patch,
+                                                instance_of(String),
+                                                instance_of(String),
+                                                instance_of(Hash)) do |*args|
+            json = JSON.parse(args[4], symbolize_names: true)
+            expect(json).to_not have_key(:permission_overwrites)
+            data['topic'] = topic
+            data.to_json
+          end
+        end
+
+        it 'should not send permissions_overwrites in the API call' do
+          subject.topic = topic
+        end
+      end
+    end
+
     describe '#delete_messages' do
       it 'should fail with more than 100 messages' do
         messages = [*1..101]
@@ -39,30 +134,6 @@ module Discordrb
 
         channel.delete_messages(messages)
         expect(messages).to eq [4]
-      end
-    end
-
-    describe '#nsfw=' do
-      it 'should call #update_data' do
-        expect(channel).to receive(:update_channel_data)
-        channel.nsfw = true
-      end
-
-      it 'should change the cached value' do
-        allow(channel).to receive(:update_channel_data)
-        channel.nsfw = true
-        expect(channel.nsfw).to eq true
-      end
-
-      context 'when the API raises an error' do
-        it 'should not change the cached value' do
-          allow(channel).to receive(:update_channel_data).and_raise(Discordrb::Errors::NoPermission)
-          begin
-            channel.nsfw = true
-          rescue Discordrb::Errors::NoPermission
-            expect(channel.nsfw).to eq false
-          end
-        end
       end
     end
   end
