@@ -96,9 +96,9 @@ module Discordrb::Voice
     # @param listener [Listener] the listener to send data to
     def start_thread(listener)
       @thread ||= Thread.new do
-         loop do
-           listener.handle_packet(@socket.recv(1920).unpack('C*'))
-         end
+        loop do
+          listener.handle_packet(@socket.recv(1920).unpack('C*'))
+        end
       end
     end
 
