@@ -104,7 +104,8 @@ module Discordrb::Commands
       result = @block.call(event, *arguments)
       event.drain_into(result)
     rescue LocalJumpError => ex # occurs when breaking
-      ex.exit_value
+      result = ex.exit_value
+      event.drain_into(result)
     rescue => exception # Something went wrong inside our @block!
       rescue_value = @attributes[:rescue] || event.bot.attributes[:rescue]
       if rescue_value
