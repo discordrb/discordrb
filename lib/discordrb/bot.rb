@@ -823,7 +823,12 @@ module Discordrb
       server_id = data['guild_id'].to_i
       server = @servers[server_id]
       new_role = Role.new(role_data, self, server)
-      server.add_role(new_role)
+      existing_role = server.role(new_role.id)
+      if existing_role
+        existing_role.update_from(new_role)
+      else
+        server.add_role(new_role)
+      end
     end
 
     # Internal handler for GUILD_ROLE_DELETE
