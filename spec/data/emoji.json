@@ -1,0 +1,14 @@
+{
+  "managed": false,
+  "name": "rubytaco",
+  "roles": ["403178127519383552"],
+  "user": {
+    "username": "z64",
+    "discriminator": "1337",
+    "id": "120571255635181568",
+    "avatar": "937d2fd2957106c08d2cb4da738780c6"
+  },
+  "require_colons": true,
+  "animated": false,
+  "id": "315242245274075157"
+}
