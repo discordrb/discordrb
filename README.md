@@ -77,7 +77,23 @@ To run the bot:
     ERROR:  Error installing discordrb:
             The 'websocket-driver' native gem requires installed build tools.
 
-You're missing the development kit required to build native extensions. Download the development kit [here](http://rubyinstaller.org/downloads/) (scroll down to "Development Kit", then choose the one for Ruby 2.0 and your system architecture) and extract it somewhere. Open a command prompt in that folder and run:
+You're missing the development kit required to build native extensions.
+
+##### RubyInstaller for ruby 2.4.3-2 and above
+
+RubyInstaller after version 2.3.3 now includes the development kit in the installer. If you do not have the development kit and have installed ruby using RubyInstaller, open a command prompt with administrator privileges and run:
+
+    ridk install
+
+Select option 3, and then run
+
+    ridk enable
+
+To enable the changes
+
+##### RubyInstaller for ruby 2.3.3 and below
+
+Download the development kit [here](http://rubyinstaller.org/downloads/) (scroll down to "Development Kit", then choose the one for Ruby 2.0 and your system architecture) and extract it somewhere. Open a command prompt in that folder and run:
 
     ruby dk.rb init
     ruby dk.rb install
