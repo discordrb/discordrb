@@ -14,6 +14,9 @@ describe Discordrb::Commands::CommandBot, order: :defined do
   let(:default_channel_id) { 123 }
   let(:default_channel_name) { 'test-channel' }
   let(:user_id) { 321 }
+  let(:user_roles) { [load_data_file(:text_channel), load_data_file(:text_channel)] }
+  let(:role_1) { user_roles[0].tap{ |r| r["id"] = 240172879361212417 }["id"] } # So we don't have the same ID in both roles.
+  let(:role_2) { user_roles[1]["id"].to_i }
   let(:test_channels) { TEST_CHANNELS }
   let(:first_channel) { test_channels[0] }
   let(:second_channel) { test_channels[1] }
@@ -39,6 +42,8 @@ describe Discordrb::Commands::CommandBot, order: :defined do
     allow(event).to receive(:author) do
       double('member').tap do |member|
         allow(member).to receive(:id) { user_id }
+        allow(member).to receive(:roles) { user_roles }
+        allow(member).to receive(:role?).and_call_original
         allow(member).to receive(:permission?) { true }
         allow(member).to receive(:webhook?) { false }
       end
@@ -114,6 +119,62 @@ describe Discordrb::Commands::CommandBot, order: :defined do
   end
 
   describe '#execute_command', order: :defined do
+    context 'with role filter', order: :defined do
+      bot = Discordrb::Commands::CommandBot.new(token: '', help_available: false)
+
+      describe 'required_roles' do
+        before do
+          # User has both roles.
+          bot.command :user_has_all, required_roles: [role_1, role_2] do
+            SIMPLE_RESPONSE
+          end
+
+          # User has only one of two roles.
+          bot.command :user_has_one, required_roles: [role_1, 123] do
+            SIMPLE_RESPONSE
+          end
+        end
+
+        it 'responds when the user has all the roles' do
+          plain_event = command_event_double_for_channel(first_channel)
+          result = bot.execute_command(:user_has_all, plain_event, [])
+          expect(result).to eq SIMPLE_RESPONSE
+        end
+
+        it 'does not respond with one role missing' do
+          plain_event = command_event_double_with_channel(first_channel)
+          result = bot.execute_command(:user_has_one, plain_event, [])
+          expect(result).to eq nil
+        end
+      end
+
+      describe 'allowed_roles' do
+        before do
+          # User has one role.
+          bot.command :user_has_one, required_roles: [role_1, 123] do
+            SIMPLE_RESPONSE
+          end
+
+          # User doesn't have any.
+          bot.command :user_has_none, required_roles: [123, 456] do
+            SIMPLE_RESPONSE
+          end
+        end
+
+        it 'responds when the user has at least one role' do
+          plain_event = command_event_double_with_channel(first_channel)
+          result = bot.execute_command(:user_has_one, plain_event, [])
+          expect(result).to eq SIMPLE_RESPONSE
+        end
+
+        it 'does not respond to a user with none of the roles' do
+          plain_event = command_event_double_with_channel(first_channel)
+          result = bot.execute_command(:any_role, plain_event, [])
+          expect(result).to eq nil
+        end
+      end
+    end
+
     context 'with channel filter', order: :defined do
       context 'when list is not initialized in bot parameters', order: :defined do
         bot = Discordrb::Commands::CommandBot.new(token: '', help_available: false)
