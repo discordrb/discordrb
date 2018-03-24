@@ -15,8 +15,8 @@ describe Discordrb::Commands::CommandBot, order: :defined do
   let(:default_channel_name) { 'test-channel' }
   let(:user_id) { 321 }
   let(:user_roles) { [load_data_file(:text_channel), load_data_file(:text_channel)] }
-  let(:role_1) { user_roles[0].tap{ |r| r["id"] = 240172879361212417 }["id"] } # So we don't have the same ID in both roles.
-  let(:role_2) { user_roles[1]["id"].to_i }
+  let(:role_1) { user_roles[0].tap { |r| r['id'] = 240_172_879_361_212_417 }['id'] } # So we don't have the same ID in both roles.
+  let(:role_2) { user_roles[1]['id'].to_i }
   let(:test_channels) { TEST_CHANNELS }
   let(:first_channel) { test_channels[0] }
   let(:second_channel) { test_channels[1] }
