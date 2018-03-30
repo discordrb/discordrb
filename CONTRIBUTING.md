@@ -10,4 +10,4 @@ For PRs, please make sure that you tested your code before every push; it's a li
 to a PR because of small avoidable oversights. (Huge bonus points if you're adding specs for your code! This project
 has very few specs in places where it should have more so every added spec is very much appreciated.)
 
-If you have any questions at all, don't be afraid to ask in the [discordrb channel on Discord](https://discord.gg/0SBTUU1wZTWfFQL2).
+If you have any questions at all, don't be afraid to ask in the [discordrb channel on Discord](https://discord.gg/cyK3Hjm).
