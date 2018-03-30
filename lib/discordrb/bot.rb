@@ -441,7 +441,7 @@ module Discordrb
         # Return nil if no role is found
         nil
       elsif /<(?<animated>a)?:(?<name>\w+):(?<id>\d+)>/ =~ mention
-        emoji(id) || Emoji.new({'animated' => !animated.nil?, 'name' => name, 'id' => id}, self, nil)
+        emoji(id) || Emoji.new({ 'animated' => !animated.nil?, 'name' => name, 'id' => id }, self, nil)
       end
     end
 
