@@ -103,13 +103,7 @@ module Discordrb
         type: nil, name: '', fancy_log: false, suppress_ready: false, parse_self: false,
         shard_id: nil, num_shards: nil, redact_token: true, ignore_bots: false
     )
-
-      LOGGER.mode = if log_mode.is_a? TrueClass # Specifically check for `true` because people might not have updated yet
-                      :debug
-                    else
-                      log_mode
-                    end
-
+      LOGGER.mode = log_mode
       LOGGER.token = token if redact_token
 
       @should_parse_self = parse_self
