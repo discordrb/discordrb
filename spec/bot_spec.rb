@@ -36,6 +36,17 @@ module Discordrb
       expect(bot.server(server_id).emoji.size).to eq(2)
     end
 
+    describe '#parse_mention' do
+      context 'with an uncached emoji' do
+        it 'returns an emoji with the available data' do
+          allow(bot).to receive(:emoji)
+          string = '<a:foo:123>'
+          emoji = bot.parse_mention(string)
+          expect([emoji.name, emoji.id, emoji.animated]).to eq ['foo', 123, true]
+        end
+      end
+    end
+
     describe '#handle_dispatch' do
       it 'handles GUILD_EMOJIS_UPDATE' do
         type = :GUILD_EMOJIS_UPDATE
