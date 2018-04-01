@@ -3109,20 +3109,29 @@ module Discordrb
     end
 
     # Creates a channel on this server with the given name.
+    # @note If parent is provided, permission overwrites have the follow behavior:
+    #
+    #  1. If overwrites is null, the new channel inherits the parent's permissions.
+    #  2. If overwrites is [], the new channel inherits the parent's permissions.
+    #  3. If you supply one or more overwrites, the channel will be created with those permissions and ignore the parents.
+    #
     # @param name [String] Name of the channel to create
     # @param type [Integer, Symbol] Type of channel to create (0: text, 2: voice, 4: category)
+    # @param topic [String] the topic of this channel, if it will be a text channel
     # @param bitrate [Integer] the bitrate of this channel, if it will be a voice channel
     # @param user_limit [Integer] the user limit of this channel, if it will be a voice channel
     # @param permission_overwrites [Array<Hash>, Array<Overwrite>] permission overwrites for this channel
     # @param nsfw [true, false] whether this channel should be created as nsfw
+    # @param parent [Channel, #resolve_id] parent category for this channel to be created in.
     # @param reason [String] The reason the for the creation of this channel.
     # @return [Channel] the created channel.
     # @raise [ArgumentError] if type is not 0 (text), 2 (voice), or 4 (category)
-    def create_channel(name, type = 0, bitrate: nil, user_limit: nil, permission_overwrites: [], nsfw: false, reason: nil)
+    def create_channel(name, type = 0, topic: nil, bitrate: nil, user_limit: nil, permission_overwrites: nil, parent: nil, nsfw: false, reason: nil)
       type = Channel::TYPES[type] if type.is_a?(Symbol)
       raise ArgumentError, 'Channel type must be either 0 (text), 2 (voice), or 4 (category)!' unless [0, 2, 4].include?(type)
-      permission_overwrites.map! { |e| e.is_a?(Overwrite) ? e.to_hash : e }
-      response = API::Server.create_channel(@bot.token, @id, name, type, bitrate, user_limit, permission_overwrites, nsfw, reason)
+      permission_overwrites.map! { |e| e.is_a?(Overwrite) ? e.to_hash : e } if permission_overwrites.is_a?(Array)
+      parent_id = parent.respond_to?(:resolve_id) ? parent.resolve_id : nil
+      response = API::Server.create_channel(@bot.token, @id, name, type, topic, bitrate, user_limit, permission_overwrites, parent_id, nsfw, reason)
       Channel.new(JSON.parse(response), @bot)
     end
 
