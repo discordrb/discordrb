@@ -2,7 +2,7 @@
 module RestClient
   # Utils contains the helper method that causes issues
   module Utils
-    # @note In Ruby versions greater than 2.4 on Windows, Discordrb's 
+    # @note In Ruby versions greater than 2.4 on Windows, Discordrb's
     # environment does not play nicely with the use of enumerators in
     # this specific function. The exact reason is unknown, but changing the use of
     # `Enumerator#next` into iteration via `Array#shift` prevents a silent crash.
