@@ -7,7 +7,7 @@ require 'discordrb/logger'
 
 # This fix in particular addresses an issue within RestClient, confirmed
 # in RestClient 2.0.2 but only within the Discordrb environment.
-if Gem::Verision.new(RUBY_VERSION) >= Gem::Version.new('2.5') && ENV['OS'] == 'Windows_NT'
+if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('2.5') && ENV['OS'] == 'Windows_NT'
   require 'rest-client/utils'
 end
 
