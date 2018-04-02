@@ -4,7 +4,12 @@ require 'discordrb/version'
 require 'discordrb/bot'
 require 'discordrb/commands/command_bot'
 require 'discordrb/logger'
-require 'rest-client/utils'
+
+# This fix in particular addresses an issue within RestClient, confirmed
+# in RestClient 2.0.2 but only within the Discordrb environment.
+if Gem::Verision.new(RUBY_VERSION) >= Gem::Version.new('2.5') && ENV['OS'] == 'Windows_NT'
+  require 'rest-client/utils'
+end
 
 # All discordrb functionality, to be extended by other files
 module Discordrb
