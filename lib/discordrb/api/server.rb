@@ -1,5 +1,3 @@
-require 'uri'
-
 # API calls for Server
 module Discordrb::API::Server
   module_function
@@ -185,11 +183,12 @@ module Discordrb::API::Server
   # Ban a user from a server and delete their messages from the last message_days days
   # https://discordapp.com/developers/docs/resources/guild#create-guild-ban
   def ban_user(token, server_id, user_id, message_days, reason = nil)
+    reason = URI.escape(reason) if reason
     Discordrb::API.request(
       :guilds_sid_bans_uid,
       server_id,
       :put,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}/bans/#{user_id}?delete-message-days=#{message_days}#{reason ? "&reason=#{URI.escape(reason)}" : ''}",
+      "#{Discordrb::API.api_base}/guilds/#{server_id}/bans/#{user_id}?delete-message-days=#{message_days}#{reason}" : ''}",
       nil,
       Authorization: token
     )
