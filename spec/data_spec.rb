@@ -28,6 +28,21 @@ module Discordrb
         expect(channel.__send__(property_name)).to eq(test_value)
       end
 
+      context 'when modifying a property' do
+        it 'should send an API call' do
+          expect(API).to receive(:request).with(:channels_cid,
+                                                data['id'].to_i,
+                                                :patch,
+                                                instance_of(String),
+                                                instance_of(String),
+                                                instance_of(Hash)) do
+            data[property_name.to_s] = set_value
+            data.to_json
+          end
+          channel.__send__("#{property_name}=", test_value)
+        end
+      end
+
       context 'when the API raises an error' do
         it 'should not change the cached value' do
           allow(channel).to receive(:update_channel_data).and_raise(Discordrb::Errors::NoPermission)
@@ -90,12 +105,12 @@ module Discordrb
         let(:topic) { 'test' }
 
         it 'should not send permissions_overwrites in the API call' do
-          expect(API).to receive(:request).with(:channels_cid,
-                                                kind_of(Numeric),
-                                                :patch,
-                                                instance_of(String),
-                                                instance_of(String),
-                                                instance_of(Hash)) do |*args|
+          allow(API).to receive(:request).with(:channels_cid,
+                                               data['id'].to_i,
+                                               :patch,
+                                               instance_of(String),
+                                               instance_of(String),
+                                               instance_of(Hash)) do |*args|
             json = JSON.parse(args[4], symbolize_names: true)
             expect(json).to_not have_key(:permission_overwrites)
             data['topic'] = topic
