@@ -88,7 +88,8 @@ module Discordrb
 
       context 'when permissions_overwrites are not set' do
         let(:topic) { 'test' }
-        before do
+
+        it 'should not send permissions_overwrites in the API call' do
           expect(API).to receive(:request).with(:channels_cid,
                                                 kind_of(Numeric),
                                                 :patch,
@@ -100,9 +101,6 @@ module Discordrb
             data['topic'] = topic
             data.to_json
           end
-        end
-
-        it 'should not send permissions_overwrites in the API call' do
           subject.topic = topic
         end
       end
