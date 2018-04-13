@@ -114,5 +114,11 @@ module Discordrb
 
       init_vars
     end
+
+    # Comparison based on permission bits
+    def ==(other)
+      false unless other.is_a? Discordrb::Permissions
+      bits == other.bits
+    end
   end
 end

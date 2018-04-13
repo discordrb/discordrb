@@ -1233,6 +1233,15 @@ module Discordrb
       @deny = deny.is_a?(Permissions) ? deny : Permissions.new(deny)
     end
 
+    # Comparison by attributes [:id, :type, :allow, :deny]
+    def ==(other)
+      false unless other.is_a? Discordrb::Overwrite
+      id == other.id &&
+        type == other.type &&
+        allow == other.allow &&
+        deny == other.deny
+    end
+
     # @return [Overwrite] create an overwrite from a hash payload
     # @!visibility private
     def self.from_hash(data)
@@ -1241,6 +1250,17 @@ module Discordrb
         type: data['type'],
         allow: Permissions.new(data['allow']),
         deny: Permissions.new(data['deny'])
+      )
+    end
+
+    # @return [Overwrite] copies an overwrite from another Overwrite
+    # @!visibility private
+    def self.from_other(other)
+      new(
+        other.id,
+        type: other.type,
+        allow: Permissions.new(other.allow.bits),
+        deny: Permissions.new(other.deny.bits)
       )
     end
 
@@ -1358,13 +1378,7 @@ module Discordrb
 
       @nsfw = data['nsfw'] || false || @name.start_with?('nsfw')
 
-      # Populate permission overwrites
-      @permission_overwrites = {}
-      return unless data['permission_overwrites']
-      data['permission_overwrites'].each do |element|
-        id = element['id'].to_i
-        @permission_overwrites[id] = Overwrite.from_hash element
-      end
+      process_permission_overwrites(data['permission_overwrites'])
     end
 
     # @return [true, false] whether or not this channel is a text channel
@@ -1405,20 +1419,17 @@ module Discordrb
     def category=(channel)
       channel = @bot.channel(channel)
       raise ArgumentError, 'Cannot set parent category to a channel that isn\'t a category' unless channel.category?
-      @parent_id = channel.id
-      update_channel_data
+      update_channel_data(parent_id: channel.id)
     end
 
     alias_method :parent=, :category=
 
     # Sets whether this channel is NSFW
-    # @param value [true, false]
+    # @param nsfw [true, false]
     # @raise [ArguementError] if value isn't one of true, false
-    def nsfw=(value)
-      raise ArgumentError, 'nsfw value must be true or false' unless value.is_a?(TrueClass) || value.is_a?(FalseClass)
-      update_channel_data
-
-      @nsfw = value
+    def nsfw=(nsfw)
+      raise ArgumentError, 'nsfw value must be true or false' unless nsfw.is_a?(TrueClass) || nsfw.is_a?(FalseClass)
+      update_channel_data(nsfw: nsfw)
     end
 
     # This channel's permission overwrites
@@ -1440,8 +1451,7 @@ module Discordrb
     # Bulk sets this channels permission overwrites
     # @param overwrites [Array<Overwrite>]
     def permission_overwrites=(overwrites)
-      @permission_overwrites = overwrites
-      update_channel_data
+      update_channel_data(permission_overwrites: overwrites)
     end
 
     # Syncs this channels overwrites with its parent category
@@ -1573,32 +1583,28 @@ module Discordrb
     # Sets this channel's name. The name must be alphanumeric with dashes, unless this is a voice channel (then there are no limitations)
     # @param name [String] The new name.
     def name=(name)
-      update_channel_data
-      @name = name
+      update_channel_data(name: name)
     end
 
     # Sets this channel's topic.
     # @param topic [String] The new topic.
     def topic=(topic)
       raise 'Tried to set topic on voice channel' if voice?
-      update_channel_data
-      @topic = topic
+      update_channel_data(topic: topic)
     end
 
     # Sets this channel's bitrate.
     # @param bitrate [Integer] The new bitrate (in bps). Number has to be between 8000-96000 (128000 for VIP servers)
     def bitrate=(bitrate)
       raise 'Tried to set bitrate on text channel' if text?
-      update_channel_data
-      @bitrate = bitrate
+      update_channel_data(bitrate: bitrate)
     end
 
     # Sets this channel's user limit.
     # @param limit [Integer] The new user limit. `0` for unlimited, has to be a number between 0-99
     def user_limit=(limit)
       raise 'Tried to set user_limit on text channel' if text?
-      update_channel_data
-      @user_limit = limit
+      update_channel_data(user_limit: limit)
     end
 
     alias_method :limit=, :user_limit=
@@ -1606,25 +1612,7 @@ module Discordrb
     # Sets this channel's position in the list.
     # @param position [Integer] The new position.
     def position=(position)
-      update_channel_data
-      @position = position
-    end
-
-    # Updates this channel's settings.
-    # @param name [String] Name of the channel to create
-    # @param bitrate [Integer] The new bitrate (in bps). Number has to be between 8000-96000 (128000 for VIP servers)
-    # @param user_limit [Integer] The new user limit. `0` for unlimited, has to be a number between 0-99
-    # @param topic [String] The new topic.
-    # @param position [Integer] The new position.
-    # @param reason [String] The reason the for the changes requested for this channel.
-    def update(name: @name, bitrate: @bitrate, user_limit: @user_limit, topic: @topic, position: @position, reason: nil)
-      API::Channel.create_channel(@bot.token, @id, name, type, bitrate, user_limit, permission_overwrites, reason)
-      @topic = topic
-      @name = name
-      @position = position
-      @topic = topic
-      @bitrate = bitrate
-      @user_limit = user_limit
+      update_channel_data(position: position)
     end
 
     # Defines a permission overwrite for this channel that sets the specified thing to the specified allow and deny
@@ -1906,6 +1894,22 @@ module Discordrb
       @recipients.delete(recipient)
     end
 
+    # Updates the cached data with new data
+    # @note For internal use only
+    # @!visibility private
+    def update_data(new_data = nil)
+      new_data ||= JSON.parse(API::Channel.resolve(@bot.token, @id))
+      @name = new_data[:name] || new_data['name'] || @name
+      @topic = new_data[:topic] || new_data['topic'] || @topic
+      @position = new_data[:position] || new_data['position'] || @position
+      @bitrate = new_data[:bitrate] || new_data['bitrate'] || @bitrate
+      @user_limit = new_data[:user_limit] || new_data['user_limit'] || @user_limit
+      new_nsfw = new_data.key?(:nsfw) ? new_data[:nsfw] : new_data['nsfw']
+      @nsfw = new_nsfw.nil? ? @nsfw : new_nsfw
+      @parent_id = new_data[:parent_id] || new_data['parent_id'] || @parent_id
+      process_permission_overwrites(new_data[:permission_overwrites] || new_data['permission_overwrites'])
+    end
+
     private
 
     # For bulk_delete checking
@@ -1928,9 +1932,35 @@ module Discordrb
       ids.size
     end
 
-    def update_channel_data
-      overwrites = @permission_overwrites.map { |_, v| v.to_hash }
-      API::Channel.update(@bot.token, @id, @name, @topic, @position, @bitrate, @user_limit, @nsfw, overwrites, @parent_id, nil)
+    def update_channel_data(new_data)
+      new_nsfw = new_data.key?(:nsfw) ? new_data[:nsfw] : new_data['nsfw']
+      new_nsfw = if new_nsfw.is_a?(TrueClass) || new_nsfw.is_a?(FalseClass)
+                   new_nsfw
+                 else
+                   @nsfw
+                 end
+      # send permission_overwrite only when explicitly set
+      overwrites = new_data[:permission_overwrites].map { |_, v| v.to_hash } if new_data[:permission_overwrites]
+      response = JSON.parse(API::Channel.update(@bot.token, @id,
+                                                new_data[:name] || @name,
+                                                new_data[:topic] || @topic,
+                                                new_data[:position] || @position,
+                                                new_data[:bitrate] || @bitrate,
+                                                new_data[:user_limit] || @user_limit,
+                                                new_nsfw,
+                                                overwrites,
+                                                new_data[:parent_id] || @parent_id))
+      update_data(response)
+    end
+
+    def process_permission_overwrites(overwrites)
+      # Populate permission overwrites
+      @permission_overwrites = {}
+      return unless overwrites
+      overwrites.each do |element|
+        id = element['id'].to_i
+        @permission_overwrites[id] = Overwrite.from_hash(element)
+      end
     end
   end
 
