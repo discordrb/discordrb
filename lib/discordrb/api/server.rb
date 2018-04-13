@@ -1,4 +1,4 @@
-e# API calls for Server
+# API calls for Server
 module Discordrb::API::Server
   module_function
 
@@ -188,7 +188,7 @@ module Discordrb::API::Server
       :guilds_sid_bans_uid,
       server_id,
       :put,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}/bans/#{user_id}?delete-message-days=#{message_days}#{reason}" : ''}",
+      "#{Discordrb::API.api_base}/guilds/#{server_id}/bans/#{user_id}?delete-message-days=#{message_days}&reason=#{reason}",
       nil,
       Authorization: token
     )
