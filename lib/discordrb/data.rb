@@ -2154,7 +2154,7 @@ module Discordrb
       @name = data['name']
       @url = data['url']
       @icon_url = data['icon_url']
-      @proxy_url = data['proxy_icon_url']
+      @proxy_icon_url = data['proxy_icon_url']
     end
   end
 
