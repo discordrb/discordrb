@@ -1757,7 +1757,7 @@ module Discordrb
     end
 
     # Deletes a collection of messages
-    # @param messages [Array<Message, Integer>] the messages (or message IDs) to delete. Total must be an amount between 2 and 100 (Discord limitation)
+    # @param messages [Array<Message, Integer, #resolve_id>] the messages (or message IDs) to delete. Total must be an amount between 2 and 100 (Discord limitation)
     # @param strict [true, false] Whether an error should be raised when a message is reached that is too old to be bulk
     #   deleted. If this is false only a warning message will be output to the console.
     # @raise [ArgumentError] if the amount of messages is not a value between 2 and 100
@@ -1933,14 +1933,9 @@ module Discordrb
     end
 
     def update_channel_data(new_data)
-      new_nsfw = new_data.key?(:nsfw) ? new_data[:nsfw] : new_data['nsfw']
-      new_nsfw = if new_nsfw.is_a?(TrueClass) || new_nsfw.is_a?(FalseClass)
-                   new_nsfw
-                 else
-                   @nsfw
-                 end
+      new_nsfw = new_data[:nsfw].is_a?(TrueClass) || new_data[:nsfw].is_a?(FalseClass) ? new_nsfw : @nsfw
       # send permission_overwrite only when explicitly set
-      overwrites = new_data[:permission_overwrites].map { |_, v| v.to_hash } if new_data[:permission_overwrites]
+      overwrites = new_data[:permission_overwrites] ? new_data[:permission_overwrites].map { |_, v| v.to_hash } : nil
       response = JSON.parse(API::Channel.update(@bot.token, @id,
                                                 new_data[:name] || @name,
                                                 new_data[:topic] || @topic,

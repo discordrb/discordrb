@@ -8,115 +8,171 @@ module Discordrb
     let(:data) { load_data_file(:text_channel) }
 
     subject(:channel) do
-      bot = double('bot')
-      allow(bot).to receive(:token) { 'fake token' }
-      described_class.new(data, bot, double('server'))
+      described_class.new(data, double('bot', token: 'token'), double)
     end
 
     shared_examples 'a Channel property' do |property_name|
-      it 'should call #update_channel_data' do
-        expect(channel).to receive(:update_channel_data)
-        channel.__send__("#{property_name}=", set_value)
-      end
-
-      it 'should change the cached value' do
-        allow(channel).to receive(:update_channel_data) do |t|
-          test_data = data.merge(t)
-          channel.update_data(test_data)
-        end
-        channel.__send__("#{property_name}=", set_value)
-        expect(channel.__send__(property_name)).to eq(test_value)
-      end
-
-      context 'when modifying a property' do
-        it 'should send an API call' do
-          expect(API).to receive(:request).with(:channels_cid,
-                                                data['id'].to_i,
-                                                :patch,
-                                                instance_of(String),
-                                                instance_of(String),
-                                                instance_of(Hash)) do
-            data[property_name.to_s] = set_value
-            data.to_json
-          end
-          channel.__send__("#{property_name}=", test_value)
-        end
-      end
-
-      context 'when the API raises an error' do
-        it 'should not change the cached value' do
-          allow(channel).to receive(:update_channel_data).and_raise(Discordrb::Errors::NoPermission)
-          begin
-            channel.__send__("#{property_name}=", set_value)
-          rescue Discordrb::Errors::NoPermission
-            expect(channel.__send__(property_name)).to eq(default_value)
-          end
-        end
+      it 'should call #update_channel_data with data' do
+        expect(channel).to receive(:update_channel_data).with(property_name => property_value)
+        channel.__send__("#{property_name}=", property_value)
       end
     end
 
     describe '#name=' do
-      let(:default_value) { data['name'] }
-      let(:set_value) { 'Test' }
-      let(:test_value) { 'Test' }
-      it_behaves_like 'a Channel property', :name
+      it_behaves_like 'a Channel property', :name do
+        let(:property_value) { double('name') }
+      end
     end
 
     describe '#topic=' do
-      let(:default_value) { data['topic'] }
-      let(:set_value) { 'Lorem ipsum dolor sit amet...' }
-      let(:test_value) { 'Lorem ipsum dolor sit amet...' }
-      it_behaves_like 'a Channel property', :topic
+      it_behaves_like 'a Channel property', :topic do
+        let(:property_value) { double('topic') }
+      end
     end
 
     describe '#nsfw=' do
       context 'when toggled from false to true' do
-        let(:default_value) { false }
-        let(:set_value) { true }
-        let(:test_value) { true }
-        it_behaves_like 'a Channel property', :nsfw
+        it_behaves_like 'a Channel property', :nsfw do
+          let(:property_value) { true }
+        end
       end
 
       context 'when toggled from true to false' do
-        subject(:channel) do
-          bot = double('bot')
-          allow(bot).to receive(:token) { 'fake token' }
-          described_class.new(data.merge('nsfw' => true), bot, double('server'))
+        subject(:channel) { described_class.new(data.merge('nsfw' => true), double, double) }
+        it_behaves_like 'a Channel property', :nsfw do
+          let(:property_value) { false }
         end
-        let(:default_value) { true }
-        let(:set_value) { false }
-        let(:test_value) { false }
-        it_behaves_like 'a Channel property', :nsfw
       end
     end
 
     describe '#permission_overwrites=' do
       context 'when permissions_overwrites are explicitly set' do
-        let(:default_value) do
-          data['permission_overwrites'].map { |el| [el['id'].to_i, Overwrite.from_hash(el)] }.to_h
+        it_behaves_like 'a Channel property', :permission_overwrites do
+          let(:property_value) { double('permission_overwrites') }
         end
-        test_data = { 'allow' => 0, 'deny' => 1, 'id' => '123', 'type' => 'role' }
-        let(:set_value) { [test_data] }
-        let(:test_value) { { test_data['id'].to_i => Overwrite.from_hash(test_data) } }
-        it_behaves_like 'a Channel property', :permission_overwrites
+      end
+    end
+
+    describe '#update_channel_data' do
+      shared_examples('API call') do |property_name, num|
+        it "should call the API with #{property_name}" do
+          allow(channel).to receive(:update_data)
+          allow(JSON).to receive(:parse)
+          data = double(property_name)
+          expectation = Array.new(num) { anything } << data << any_args
+          expect(API::Channel).to receive(:update).with(*expectation)
+          new_data = { property_name => data }
+          channel.__send__(:update_channel_data, new_data)
+        end
       end
 
-      context 'when permissions_overwrites are not set' do
-        let(:topic) { 'test' }
+      include_examples('API call', :name, 2)
+      include_examples('API call', :topic, 3)
+      include_examples('API call', :position, 4)
+      include_examples('API call', :bitrate, 5)
+      include_examples('API call', :user_limit, 6)
+      include_examples('API call', :parent_id, 9)
 
-        it 'should not send permissions_overwrites in the API call' do
-          allow(API).to receive(:request).with(:channels_cid,
-                                               data['id'].to_i,
-                                               :patch,
-                                               instance_of(String),
-                                               instance_of(String),
-                                               instance_of(Hash)) do |*args|
-            json = JSON.parse(args[4], symbolize_names: true)
-            expect(json).to_not have_key(:permission_overwrites)
-            data['topic'] = topic
-            data.to_json
+      context 'when permission_overwrite are not set' do
+        it 'should not send permission_overwrite' do
+          allow(channel).to receive(:update_data)
+          allow(JSON).to receive(:parse)
+          new_data = double('new data')
+          allow(new_data).to receive(:[])
+          allow(new_data).to receive(:[]).with(:permission_overwrites).and_return(false)
+          expect(API::Channel).to receive(:update).with(any_args, nil, anything)
+          channel.__send__(:update_channel_data, new_data)
+        end
+      end
+
+      context 'when passed a boolean for nsfw' do
+        it 'should pass the boolean' do
+          nsfw = double('nsfw')
+          channel.instance_variable_set(:@nsfw, nsfw)
+          allow(channel).to receive(:update_data)
+          allow(JSON).to receive(:parse)
+          new_data = double('new data')
+          allow(new_data).to receive(:[])
+          allow(new_data).to receive(:[]).with(:nsfw).and_return(1)
+          expect(API::Channel).to receive(:update).with(any_args, nsfw, anything, anything)
+          channel.__send__(:update_channel_data, new_data)
+        end
+      end
+
+      context 'when passed a non-boolean for nsfw' do
+        it 'should pass the cached value' do
+          nsfw = double('nsfw')
+          channel.instance_variable_set(:@nsfw, nsfw)
+          allow(channel).to receive(:update_data)
+          allow(JSON).to receive(:parse)
+          new_data = double('new data')
+          allow(new_data).to receive(:[])
+          allow(new_data).to receive(:[]).with(:nsfw).and_return(1)
+          expect(API::Channel).to receive(:update).with(any_args, nsfw, anything, anything)
+          channel.__send__(:update_channel_data, new_data)
+        end
+      end
+
+      it 'should call #update_data with new data' do
+        response_data = double('new data')
+        expect(channel).to receive(:update_data).with(response_data)
+        allow(JSON).to receive(:parse).and_return(response_data)
+        allow(API::Channel).to receive(:update)
+        channel.__send__(:update_channel_data, double('data', :[] => double('sub_data', map: double)))
+      end
+
+      context 'when NoPermission is raised' do
+        it 'should not call update_data' do
+          allow(API::Channel).to receive(:update).and_raise(Discordrb::Errors::NoPermission)
+          expect(channel).not_to receive(:update_data)
+          begin
+            channel.__send__(:update_channel_data, double('data', :[] => double('sub_data', map: double)))
+          rescue Discordrb::Errors::NoPermission
+            nil
           end
-          subject.topic = topic
+        end
+      end
+    end
+
+    describe '#update_data' do
+      shared_examples('update property data') do |property_name|
+        context 'when we have new data' do
+          it 'should assign the property' do
+            new_data = double('new data', :[] => nil, :key? => true)
+            test_data = double('test_data')
+            allow(new_data).to receive(:[]).with(property_name).and_return(test_data)
+            expect { channel.__send__(:update_data, new_data) }.to change { channel.__send__(property_name) }.to test_data
+          end
+        end
+        context 'when we don\'t have new data' do
+          it 'should keep the cached value' do
+            new_data = double('new data', :[] => double('property'), key?: double)
+            allow(new_data).to receive(:[]).with(property_name).and_return(nil)
+            allow(new_data).to receive(:[]).with(property_name.to_s).and_return(nil)
+            allow(channel).to receive(:process_permission_overwrites)
+            expect { channel.__send__(:update_data, new_data) }.not_to(change { channel.__send__(property_name) })
+          end
+        end
+      end
+
+      include_examples('update property data', :name)
+      include_examples('update property data', :topic)
+      include_examples('update property data', :position)
+      include_examples('update property data', :bitrate)
+      include_examples('update property data', :user_limit)
+      include_examples('update property data', :nsfw)
+      include_examples('update property data', :parent_id)
+
+      it 'should call process_permission_overwrites' do
+        allow(API::Channel).to receive(:resolve).and_return('{}')
+        expect(channel).to receive(:process_permission_overwrites)
+        channel.__send__(:update_data)
+      end
+
+      context 'when data is not provided' do
+        it 'should request it from the API' do
+          expect(API::Channel).to receive(:resolve).and_return('{}')
+          channel.__send__(:update_data)
         end
       end
     end
@@ -132,21 +188,64 @@ module Discordrb
         expect { channel.delete_messages(messages) }.to raise_error(ArgumentError)
       end
 
-      it 'should fail with old messages in strict mode' do
-        messages = [1, 2, 3]
-        expect { channel.delete_messages(messages, true) }.to raise_error(ArgumentError)
+      it 'should resolve message ids' do
+        message = double('message', resolve_id: double)
+        num = 3
+        messages = Array.new(num) { message } << 0
+        allow(channel).to receive(:bulk_delete)
+        expect(message).to receive(:resolve_id).exactly(num).times
+        channel.delete_messages(messages)
       end
 
-      it 'should remove old messages in non-strict mode' do
-        allow(IDObject).to receive(:synthesise).and_return(4)
-        messages = [1, 2, 3, 4]
-
-        # Suppresses some noisy WARN logging from specs output
-        allow(LOGGER).to receive(:warn)
-        allow(API::Channel).to receive(:bulk_delete_messages)
-
+      it 'should call #bulk_delete' do
+        messages = [1, 2, 3]
+        expect(channel).to receive(:bulk_delete)
         channel.delete_messages(messages)
-        expect(messages).to eq [4]
+      end
+    end
+
+    describe '#bulk_delete' do
+      it 'should log with old messages' do
+        messages = [1, 2, 3, 4]
+        allow(IDObject).to receive(:synthesise).and_return(3)
+        allow(API::Channel).to receive(:bulk_delete_messages)
+        expect(Discordrb::LOGGER).to receive(:warn).exactly(2).times
+        channel.__send__(:bulk_delete, messages)
+      end
+
+      context 'when in strict mode' do
+        it 'should raise ArgumentError with old messages' do
+          messages = [1, 2, 3]
+          expect { channel.__send__(:bulk_delete, messages, true) }.to raise_error(ArgumentError)
+        end
+      end
+
+      context 'when in non-strict mode' do
+        let('@bot'.to_sym) { double('bot', token: 'token') }
+
+        it 'should remove old messages ' do
+          allow(IDObject).to receive(:synthesise).and_return(4)
+          messages = [1, 2, 3, 4]
+
+          # Suppresses some noisy WARN logging from specs output
+          allow(LOGGER).to receive(:warn)
+          allow(API::Channel).to receive(:bulk_delete_messages)
+
+          channel.__send__(:delete_messages, messages)
+          expect(messages).to eq [4]
+        end
+      end
+    end
+
+    describe '#process_permission_overwrites' do
+      it 'should assign permission overwrites' do
+        overwrite = double('overwrite')
+        element = { 'id' => 1 }
+        overwrites = [element]
+        allow(Overwrite).to receive(:from_hash).and_call_original
+        allow(Overwrite).to receive(:from_hash).with(element).and_return(overwrite)
+        channel.__send__(:process_permission_overwrites, overwrites)
+        expect(channel.instance_variable_get(:@permission_overwrites)[1]).to eq(overwrite)
       end
     end
   end
