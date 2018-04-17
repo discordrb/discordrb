@@ -248,6 +248,50 @@ module Discordrb
         expect(channel.instance_variable_get(:@permission_overwrites)[1]).to eq(overwrite)
       end
     end
+
+    describe '#sort_after' do
+      it 'should call the API'
+
+      it 'should only send channels of its own type'
+
+      it 'should send only the rearranged channels'
+
+      it 'should return the new position'
+
+      context 'when other is not on this server' do
+        it 'should raise ArgumentError'
+      end
+
+      context 'when other is not of Channel, #resolve_id, nil' do
+        it 'should raise TypeError'
+      end
+
+      context 'when position doesn\'t change' do
+        it 'should not call the API'
+
+        it 'should log a warning'
+      end
+
+      context 'when other channel is not the same type' do
+        it 'should raise ArgumentError'
+      end
+
+      context 'when channel is not a category' do
+        context 'and when changing category' do
+          it 'should send new parent_id'
+
+          context 'with lock_permissions as false and permissions different' do
+            it 'should log that the permissions were not synced'
+          end
+        end
+      end
+
+      context 'when channel is a category' do
+        it 'should raise ArgumentError on non-categories'
+
+        it 'only send rearranged categories'
+      end
+    end
   end
 
   describe Message do
