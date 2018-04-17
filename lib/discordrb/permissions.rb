@@ -121,4 +121,98 @@ module Discordrb
       bits == other.bits
     end
   end
+
+  # Mixin to calculate resulting permissions from overrides etc.
+  module PermissionCalculator
+    # Checks whether this user can do the particular action, regardless of whether it has the permission defined,
+    # through for example being the server owner or having the Manage Roles permission
+    # @param action [Symbol] The permission that should be checked. See also {Permissions::FLAGS} for a list.
+    # @param channel [Channel, nil] If channel overrides should be checked too, this channel specifies where the overrides should be checked.
+    # @example Check if the bot can send messages to a specific channel in a server.
+    #   bot_profile = bot.profile.on(event.server)
+    #   can_send_messages = bot_profile.permission?(:send_messages, channel)
+    # @return [true, false] whether or not this user has the permission.
+    def permission?(action, channel = nil)
+      # If the member is the server owner, it irrevocably has all permissions.
+      return true if owner?
+
+      # First, check whether the user has Manage Roles defined.
+      # (Coincidentally, Manage Permissions is the same permission as Manage Roles, and a
+      # Manage Permissions deny overwrite will override Manage Roles, so we can just check for
+      # Manage Roles once and call it a day.)
+      return true if defined_permission?(:administrator, channel)
+
+      # Otherwise, defer to defined_permission
+      defined_permission?(action, channel)
+    end
+
+    # Checks whether this user has a particular permission defined (i.e. not implicit, through for example
+    # Manage Roles)
+    # @param action [Symbol] The permission that should be checked. See also {Permissions::FLAGS} for a list.
+    # @param channel [Channel, nil] If channel overrides should be checked too, this channel specifies where the overrides should be checked.
+    # @example Check if a member has the Manage Channels permission defined in the server.
+    #   has_manage_channels = member.defined_permission?(:manage_channels)
+    # @return [true, false] whether or not this user has the permission defined.
+    def defined_permission?(action, channel = nil)
+      # Get the permission the user's roles have
+      role_permission = defined_role_permission?(action, channel)
+
+      # Once we have checked the role permission, we have to check the channel overrides for the
+      # specific user
+      user_specific_override = permission_overwrite(action, channel, id) # Use the ID reader as members have no ID instance variable
+
+      # Merge the two permissions - if an override is defined, it has to be allow, otherwise we only care about the role
+      return role_permission unless user_specific_override
+
+      user_specific_override == :allow
+    end
+
+    # Define methods for querying permissions
+    Discordrb::Permissions::FLAGS.each_value do |flag|
+      define_method "can_#{flag}?" do |channel = nil|
+        permission? flag, channel
+      end
+    end
+
+    alias_method :can_administrate?, :can_administrator?
+
+    private
+
+    def defined_role_permission?(action, channel)
+      roles_to_check = [@server.everyone_role] + @roles
+
+      # For each role, check if
+      #   (1) the channel explicitly allows or permits an action for the role and
+      #   (2) if the user is allowed to do the action if the channel doesn't specify
+      roles_to_check.reduce(false) do |can_act, role|
+        # Get the override defined for the role on the channel
+        channel_allow = permission_overwrite(action, channel, role.id)
+        can_act = if channel_allow
+                    # If the channel has an override, check whether it is an allow - if yes,
+                    # the user can act, if not, it can't
+                    channel_allow == :allow
+                  else
+                    # Otherwise defer to the role
+                    role.permissions.instance_variable_get("@#{action}") || can_act
+                  end
+        can_act
+      end
+    end
+
+    def permission_overwrite(action, channel, id)
+      # If no overwrites are defined, or no channel is set, no overwrite will be present
+      return nil unless channel && channel.permission_overwrites[id]
+
+      # Otherwise, check the allow and deny objects
+      allow = channel.permission_overwrites[id].allow
+      deny = channel.permission_overwrites[id].deny
+      if allow.instance_variable_get("@#{action}")
+        :allow
+      elsif deny.instance_variable_get("@#{action}")
+        :deny
+      end
+
+      # If there's no variable defined, nil will implicitly be returned
+    end
+  end
 end
