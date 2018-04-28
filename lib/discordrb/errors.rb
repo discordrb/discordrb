@@ -53,6 +53,7 @@ module Discordrb
 
       classy
     end
+    # rubocop:enable Naming/MethodName
 
     # @param code [Integer] The code to check
     # @return [Class] the error class for the given code

@@ -185,7 +185,7 @@ module Discordrb::API::Server
   # Ban a user from a server and delete their messages from the last message_days days
   # https://discordapp.com/developers/docs/resources/guild#create-guild-ban
   def ban_user(token, server_id, user_id, message_days, reason = nil)
-    reason = URI.encode(reason) if reason
+    reason = URI.encode_www_form_component(reason) if reason
     Discordrb::API.request(
       :guilds_sid_bans_uid,
       server_id,

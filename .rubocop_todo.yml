@@ -13,24 +13,6 @@ Gemspec/RequiredRubyVersion:
   Exclude:
     - 'discordrb-webhooks.gemspec'
 
-# Offense count: 1
-# Configuration parameters: MaximumRangeSize.
-Lint/MissingCopEnableDirective:
-  Exclude:
-    - 'lib/discordrb/errors.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-Lint/UnneededRequireStatement:
-  Exclude:
-    - 'lib/discordrb/gateway.rb'
-
-# Offense count: 5
-Lint/UriEscapeUnescape:
-  Exclude:
-    - 'lib/discordrb/api/channel.rb'
-    - 'lib/discordrb/api/server.rb'
-
 # Offense count: 3
 # Configuration parameters: CheckForMethodsWithNoSideEffects.
 Lint/Void:

@@ -144,7 +144,7 @@ module Discordrb::API::Channel
   # Create a reaction on a message using this client
   # https://discordapp.com/developers/docs/resources/channel#create-reaction
   def create_reaction(token, channel_id, message_id, emoji)
-    emoji = URI.encode(emoji) unless emoji.ascii_only?
+    emoji = URI.encode_www_form_component(emoji) unless emoji.ascii_only?
     Discordrb::API.request(
       :channels_cid_messages_mid_reactions_emoji_me,
       channel_id,
@@ -159,7 +159,7 @@ module Discordrb::API::Channel
   # Delete this client's own reaction on a message
   # https://discordapp.com/developers/docs/resources/channel#delete-own-reaction
   def delete_own_reaction(token, channel_id, message_id, emoji)
-    emoji = URI.encode(emoji) unless emoji.ascii_only?
+    emoji = URI.encode_www_form_component(emoji) unless emoji.ascii_only?
     Discordrb::API.request(
       :channels_cid_messages_mid_reactions_emoji_me,
       channel_id,
@@ -172,7 +172,7 @@ module Discordrb::API::Channel
   # Delete another client's reaction on a message
   # https://discordapp.com/developers/docs/resources/channel#delete-user-reaction
   def delete_user_reaction(token, channel_id, message_id, emoji, user_id)
-    emoji = URI.encode(emoji) unless emoji.ascii_only?
+    emoji = URI.encode_www_form_component(emoji) unless emoji.ascii_only?
     Discordrb::API.request(
       :channels_cid_messages_mid_reactions_emoji_uid,
       channel_id,
@@ -185,7 +185,7 @@ module Discordrb::API::Channel
   # Get a list of clients who reacted with a specific reaction on a message
   # https://discordapp.com/developers/docs/resources/channel#get-reactions
   def get_reactions(token, channel_id, message_id, emoji)
-    emoji = URI.encode(emoji) unless emoji.ascii_only?
+    emoji = URI.encode_www_form_component(emoji) unless emoji.ascii_only?
     Discordrb::API.request(
       :channels_cid_messages_mid_reactions_emoji,
       channel_id,
