@@ -1,3 +1,5 @@
+inherit_from: .rubocop_todo.yml
+
 # Disable all metrics.
 Metrics/AbcSize:
   Enabled: false
@@ -34,7 +36,7 @@ Style/ClassAndModuleChildren:
   Enabled: false
 
 # Allow CamelCase constants as well as SCREAMING_SNAKE_CASE
-Style/ConstantName:
+Naming/ConstantName:
   Enabled: false
 
 # Allow 'Pokémon-style' exception handling
