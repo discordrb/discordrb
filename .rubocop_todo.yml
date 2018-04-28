@@ -54,12 +54,6 @@ Naming/UncommunicativeMethodParamName:
     - 'lib/discordrb/logger.rb'
     - 'lib/discordrb/voice/network.rb'
 
-# Offense count: 3
-# Cop supports --auto-correct.
-Performance/UnneededSort:
-  Exclude:
-    - 'lib/discordrb/data.rb'
-
 # Offense count: 1
 Security/Open:
   Exclude:
