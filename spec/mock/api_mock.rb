@@ -17,8 +17,6 @@ module APIMock
                      attributes[1].is_a?(Hash) ? nil : JSON.parse(attributes[1])
                    end
       @last_headers = attributes.last
-
-      @next_response ||= nil # rubocop:disable Naming/MemoizedInstanceVariableName
     end
   end
 end
