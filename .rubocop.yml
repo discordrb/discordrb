@@ -1,59 +1,32 @@
 inherit_from: .rubocop_todo.yml
 
-# Disable all metrics.
-Metrics/AbcSize:
-  Enabled: false
-
-Metrics/BlockNesting:
-  Enabled: false
-
-Metrics/BlockLength:
-  Enabled: false
-
-Metrics/ClassLength:
-  Enabled: false
-
-Metrics/ModuleLength:
-  Enabled: false
-
-Metrics/CyclomaticComplexity:
-  Enabled: false
-
-Metrics/LineLength:
-  Enabled: false
-
-Metrics/MethodLength:
-  Enabled: false
-
-Metrics/ParameterLists:
-  Enabled: false
-
-Metrics/PerceivedComplexity:
-  Enabled: false
-
-# Prefer compact module/class defs
-Style/ClassAndModuleChildren:
-  Enabled: false
-
-# Allow CamelCase constants as well as SCREAMING_SNAKE_CASE
-Naming/ConstantName:
-  Enabled: false
+AllCops:
+  TargetRubyVersion: 2.2
 
 # Allow 'Pokémon-style' exception handling
 Lint/RescueException:
   Enabled: false
 
-# Prefer |m, e| for the `reduce` block arguments
-Style/SingleLineBlockParams:
-  Methods:
-    - reduce: [m, e]
-    - inject: [m, e]
+# Disable all metrics.
+Metrics:
+  Enabled: false
 
-AllCops:
-  TargetRubyVersion: 2.2
+# REVIEW: Only 2 offenses if enabled, is there a rationale for this?
+# Allow CamelCase constants as well as SCREAMING_SNAKE_CASE
+Naming/ConstantName:
+  Enabled: false
 
-# https://stackoverflow.com/q/4763121
+# Ignore `eval` in the examples folder
+Security/Eval:
+  Exclude:
+    - examples/*
+
+# https://stackoverflow.com/q/4763121/
 Style/Alias:
+  Enabled: false
+
+# Prefer compact module/class defs
+Style/ClassAndModuleChildren:
   Enabled: false
 
 # So RuboCop doesn't complain about application IDs
@@ -61,7 +34,8 @@ Style/NumericLiterals:
   Exclude:
     - examples/*
 
-# Ignore `eval` in the examples folder
-Security/Eval:
-  Exclude:
-    - examples/*
+# Prefer |m, e| for the `reduce` block arguments
+Style/SingleLineBlockParams:
+  Methods:
+    - reduce: [m, e]
+    - inject: [m, e]
