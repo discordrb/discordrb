@@ -95,7 +95,7 @@ module Discordrb::Voice
 
       @encoder = Encoder.new
       @ws.connect
-    rescue => e
+    rescue StandardError => e
       Discordrb::LOGGER.log_exception(e)
       raise
     end
@@ -220,7 +220,7 @@ module Discordrb::Voice
 
         begin
           Process.kill('TERM', encoded_io.pid)
-        rescue => e
+        rescue StandardError => e
           Discordrb::LOGGER.warn('Failed to kill ffmpeg process! You *might* have a process leak now.')
           Discordrb::LOGGER.warn("Reason: #{e}")
         end

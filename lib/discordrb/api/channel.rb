@@ -72,7 +72,7 @@ module Discordrb::API::Channel
 
   # Send a message to a channel
   # https://discordapp.com/developers/docs/resources/channel#create-message
-  def create_message(token, channel_id, message, tts = false, embed = nil, nonce = nil) # send message
+  def create_message(token, channel_id, message, tts = false, embed = nil, nonce = nil)
     Discordrb::API.request(
       :channels_cid_messages_mid,
       channel_id,

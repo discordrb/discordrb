@@ -304,7 +304,7 @@ module Discordrb::Commands
         elsif types[i].respond_to?(:from_argument)
           begin
             types[i].from_argument arg
-          rescue
+          rescue StandardError
             nil
           end
         else
@@ -480,7 +480,7 @@ module Discordrb::Commands
           else
             event.respond result unless result.nil? || result.empty?
           end
-        rescue => e
+        rescue StandardError => e
           log_exception(e)
         ensure
           @event_threads.delete(t)

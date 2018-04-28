@@ -1814,9 +1814,9 @@ module Discordrb
     # @return [Message, nil] the retrieved message, or `nil` if it couldn't be found.
     def load_message(message_id)
       response = API::Channel.message(@bot.token, @id, message_id)
-      return Message.new(JSON.parse(response), @bot)
+      Message.new(JSON.parse(response), @bot)
     rescue RestClient::ResourceNotFound
-      return nil
+      nil
     end
 
     alias_method :message, :load_message
@@ -2951,7 +2951,7 @@ module Discordrb
 
       member = @bot.member(self, id)
       @members[id] = member unless member.nil?
-    rescue
+    rescue StandardError
       nil
     end
 

@@ -12,7 +12,7 @@ bot.command(:eval, help_available: false) do |event, *code|
 
   begin
     eval code.join(' ')
-  rescue
+  rescue StandardError
     'An error occurred 😞'
   end
 end

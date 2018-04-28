@@ -1315,7 +1315,7 @@ module Discordrb
         begin
           handler.call(event)
           handler.after_call(event)
-        rescue => e
+        rescue StandardError => e
           log_exception(e)
         ensure
           @event_threads.delete(t)
