@@ -55,11 +55,6 @@ Naming/UncommunicativeMethodParamName:
     - 'lib/discordrb/voice/network.rb'
 
 # Offense count: 1
-Security/Open:
-  Exclude:
-    - 'lib/discordrb/voice/voice_bot.rb'
-
-# Offense count: 1
 Style/CommentedKeyword:
   Exclude:
     - 'lib/discordrb/api/channel.rb'

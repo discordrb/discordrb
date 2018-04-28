@@ -255,7 +255,7 @@ module Discordrb::Voice
       stop_playing(true) if @playing
 
       @bot.debug "Reading DCA file #{file}"
-      input_stream = open(file)
+      input_stream = File.open(file)
 
       magic = input_stream.read(4)
       raise ArgumentError, 'Not a DCA1 file! The file might have been corrupted, please recreate it.' unless magic == 'DCA1'
