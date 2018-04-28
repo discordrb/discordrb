@@ -342,7 +342,7 @@ module Discordrb
   module PermissionCalculator
     # Checks whether this user can do the particular action, regardless of whether it has the permission defined,
     # through for example being the server owner or having the Manage Roles permission
-    # @param action [Symbol] The permission that should be checked. See also {Permissions::Flags} for a list.
+    # @param action [Symbol] The permission that should be checked. See also {Permissions::FLAGS} for a list.
     # @param channel [Channel, nil] If channel overrides should be checked too, this channel specifies where the overrides should be checked.
     # @example Check if the bot can send messages to a specific channel in a server.
     #   bot_profile = bot.profile.on(event.server)
@@ -364,7 +364,7 @@ module Discordrb
 
     # Checks whether this user has a particular permission defined (i.e. not implicit, through for example
     # Manage Roles)
-    # @param action [Symbol] The permission that should be checked. See also {Permissions::Flags} for a list.
+    # @param action [Symbol] The permission that should be checked. See also {Permissions::FLAGS} for a list.
     # @param channel [Channel, nil] If channel overrides should be checked too, this channel specifies where the overrides should be checked.
     # @example Check if a member has the Manage Channels permission defined in the server.
     #   has_manage_channels = member.defined_permission?(:manage_channels)
@@ -383,7 +383,7 @@ module Discordrb
     end
 
     # Define methods for querying permissions
-    Discordrb::Permissions::Flags.each_value do |flag|
+    Discordrb::Permissions::FLAGS.each_value do |flag|
       define_method "can_#{flag}?" do |channel = nil|
         permission? flag, channel
       end
@@ -2979,8 +2979,8 @@ module Discordrb
     # @param before [Entry, #resolve_id] The entry to use to not include all entries after it.
     # @return [AuditLogs] The server's audit logs.
     def audit_logs(action: nil, user: nil, limit: 50, before: nil)
-      raise 'Invalid audit log action!' if action && AuditLogs::Actions.key(action).nil?
-      action = AuditLogs::Actions.key(action)
+      raise 'Invalid audit log action!' if action && AuditLogs::ACTIONS.key(action).nil?
+      action = AuditLogs::ACTIONS.key(action)
       user = user.resolve_id if user
       before = before.resolve_id if before
       AuditLogs.new(self, @bot, JSON.parse(API::Server.audit_logs(@bot.token, @id, limit, user, action, before)))
@@ -3847,7 +3847,7 @@ module Discordrb
   # A server's audit logs
   class AuditLogs
     # The numbers associated with the type of action.
-    Actions = {
+    ACTIONS = {
       1 => :server_update,
       10 => :channel_create,
       11 => :channel_update,
@@ -3935,7 +3935,7 @@ module Discordrb
         @logs = logs
         @server = server
         @data = data
-        @action = Actions[data['action_type']]
+        @action = ACTIONS[data['action_type']]
         @reason = data['reason']
         @action_type = AuditLogs.action_type_for(data['action_type'])
         @target_type = AuditLogs.target_type_for(data['action_type'])
@@ -4144,7 +4144,7 @@ module Discordrb
     # @note For internal use only
     # @!visibility private
     def self.action_type_for(action)
-      action = Actions[action]
+      action = ACTIONS[action]
       return :create if %i[channel_create channel_overwrite_create member_ban_add role_create invite_create webhook_create emoji_create].include?(action)
       return :delete if %i[channel_delete channel_overwrite_delete member_kick member_prune member_ban_remove role_delete invite_delete webhook_delete emoji_delete message_delete].include?(action)
       return :update if %i[server_update channel_update channel_overwrite_update member_update member_role_update role_update invite_update webhook_update emoji_update].include?(action)

@@ -11,10 +11,20 @@ Lint/RescueException:
 Metrics:
   Enabled: false
 
-# REVIEW: Only 2 offenses if enabled, is there a rationale for this?
-# Allow CamelCase constants as well as SCREAMING_SNAKE_CASE
-Naming/ConstantName:
-  Enabled: false
+# Allow some common and/or obvious short method params
+Naming/UncommunicativeMethodParamName:
+  # Duplicate defaults to avoid overriding
+  AllowedNames:
+    - io
+    - id
+    - to
+    - by
+    - on
+    - in
+    - at
+    - ip
+    - e
+    - _
 
 # Ignore `eval` in the examples folder
 Security/Eval:

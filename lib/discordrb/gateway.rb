@@ -402,12 +402,12 @@ module Discordrb
 
     # Sends a custom packet over the connection. This can be useful to implement future yet unimplemented functionality
     # or for testing. You probably shouldn't use this unless you know what you're doing.
-    # @param op [Integer] The opcode the packet should be sent as. Can be one of {Opcodes} or a custom value if
+    # @param opcode [Integer] The opcode the packet should be sent as. Can be one of {Opcodes} or a custom value if
     #   necessary.
     # @param packet [Object] Some arbitrary JSON-serialisable data that should be sent as the `d` field.
-    def send_packet(op, packet)
+    def send_packet(opcode, packet)
       data = {
-        op: op,
+        op: opcode,
         d: packet
       }
 

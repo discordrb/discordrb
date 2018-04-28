@@ -18,7 +18,7 @@ module APIMock
                    end
       @last_headers = attributes.last
 
-      @next_response ||= nil
+      @next_response ||= nil # rubocop:disable Naming/MemoizedInstanceVariableName
     end
   end
 end
