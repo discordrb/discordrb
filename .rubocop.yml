@@ -13,7 +13,7 @@ Metrics:
 
 # Set max line length to avoid issues with generating todo file
 Metrics/LineLength:
-  Max: 80
+  Max: 100
 
 # Allow some common and/or obvious short method params
 Naming/UncommunicativeMethodParamName:
