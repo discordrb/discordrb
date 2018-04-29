@@ -1,5 +1,3 @@
-inherit_from: .rubocop_todo.yml
-
 AllCops:
   TargetRubyVersion: 2.2
 
@@ -10,10 +8,6 @@ Lint/RescueException:
 # Disable all metrics.
 Metrics:
   Enabled: false
-
-# Set max line length to avoid issues with generating todo file
-Metrics/LineLength:
-  Max: 100
 
 # Allow some common and/or obvious short method params
 Naming/UncommunicativeMethodParamName:

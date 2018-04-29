@@ -489,7 +489,6 @@ module Discordrb
     def game=(name)
       gateway_check
       update_status(@status, name, nil)
-      name
     end
 
     alias_method :playing=, :game=
@@ -500,7 +499,6 @@ module Discordrb
     def listening=(name)
       gateway_check
       update_status(@status, name, nil, nil, nil, 2)
-      name
     end
 
     # Sets the current watching status to the specified name.
@@ -509,7 +507,6 @@ module Discordrb
     def watching=(name)
       gateway_check
       update_status(@status, name, nil, nil, nil, 3)
-      name
     end
 
     # Sets the currently online stream to the specified name and Twitch URL.
