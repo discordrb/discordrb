@@ -261,7 +261,16 @@ module Discordrb
         channel.sort_after
       end
 
-      it 'should only send channels of its own type'
+      it 'should only send channels of its own type' do
+        channels = Array.new(10) { |i| double("channel #{i}", type: i % 4, parent_id: nil, position: i, id: i) }
+        allow(server).to receive(:channels).and_return(channels)
+        allow(server).to receive(:id).and_return(double)
+        non_text_channels = channels.reject { |e| e.type == 0 }
+
+        expect(API::Server).to receive(:update_channel_positions)
+          .with(any_args, an_array_excluding(*non_text_channels.map{ |e| {id: e.id, position: instance_of(Integer)} }))
+        channel.sort_after
+      end
 
       it 'should send only the rearranged channels'
 

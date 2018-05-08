@@ -99,6 +99,8 @@ RSpec::Matchers.define :something_not_including do |x|
   match { |actual| !actual.include?(x) }
 end
 
+RSpec::Matchers.define_negated_matcher :an_array_excluding, :include
+
 def load_data_file(*name)
   JSON.parse(File.read("#{File.dirname(__FILE__)}/data/#{name.join('/')}.json"))
 end
