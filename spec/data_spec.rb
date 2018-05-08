@@ -6,9 +6,12 @@ using APIMock
 module Discordrb
   describe Channel do
     let(:data) { load_data_file(:text_channel) }
+    let(:server) { double('server') }
 
     subject(:channel) do
-      described_class.new(data, double('bot', token: 'token'), double)
+      bot = double('bot')
+      allow(bot).to receive(:token) { 'fake token' }
+      described_class.new(data, bot, server)
     end
 
     shared_examples 'a Channel property' do |property_name|
@@ -250,7 +253,13 @@ module Discordrb
     end
 
     describe '#sort_after' do
-      it 'should call the API'
+      it 'should call the API' do
+        allow(server).to receive(:channels).and_return([])
+        allow(server).to receive(:id).and_return(double)
+        expect(API::Server).to receive(:update_channel_positions)
+
+        channel.sort_after
+      end
 
       it 'should only send channels of its own type'
 
