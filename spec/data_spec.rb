@@ -6,10 +6,11 @@ using APIMock
 module Discordrb
   describe Channel do
     let(:data) { load_data_file(:text_channel) }
+    # Instantiate the doubles here so we can apply mocks in the specs
+    let(:bot) { double('bot') }
     let(:server) { double('server') }
 
     subject(:channel) do
-      bot = double('bot')
       allow(bot).to receive(:token) { 'fake token' }
       described_class.new(data, bot, server)
     end
@@ -272,7 +273,19 @@ module Discordrb
         channel.sort_after
       end
 
-      it 'should send only the rearranged channels'
+      it 'should send only the rearranged channels' do
+        allow(bot).to receive(:channel).and_return(double('other channel', category?: nil, parent: nil, type: channel.type, id: 3))
+        allow(server).to receive(:id).and_return(double)
+        expected_channels = Array.new(2) { |i| double("channel #{i + 2}", type: channel.type, parent_id: nil, position: i + 2, id: i + 2, resolve_id: nil) }
+        all_channels = expected_channels.clone
+        excluded = double('channel 4', type: 0, parent_id: nil, position: 4, id: 4)
+        all_channels << excluded
+        allow(server).to receive(:channels).and_return(all_channels)
+
+        expect(API::Server).to receive(:update_channel_positions)
+          .with(any_args, an_array_excluding(*[excluded].map{ |e| {id: e.id, position: instance_of(Integer)} }))
+        channel.sort_after(expected_channels.last)
+      end
 
       it 'should return the new position'
 
