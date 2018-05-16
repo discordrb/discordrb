@@ -1,0 +1,2374 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Class: Discordrb::Voice::VoiceBot
+  
+    &mdash; Documentation by YARD 0.8.7.6
+  
+</title>
+
+  <link rel="stylesheet" href="../../css/style.css" type="text/css" charset="utf-8" />
+
+  <link rel="stylesheet" href="../../css/common.css" type="text/css" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  hasFrames = window.top.frames.main ? true : false;
+  relpath = '../../';
+  framesUrl = "../../frames.html#!Discordrb/Voice/VoiceBot.html";
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="../../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../../js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../../_index.html">Index (V)</a> &raquo;
+    <span class='title'><span class='object_link'><a href="../../Discordrb.html" title="Discordrb (module)">Discordrb</a></span></span> &raquo; <span class='title'><span class='object_link'><a href="../Voice.html" title="Discordrb::Voice (module)">Voice</a></span></span>
+     &raquo; 
+    <span class="title">VoiceBot</span>
+  
+
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="../../class_list.html">
+      Class List
+    </a>
+  
+    <a class="full_list_link" id="method_list_link"
+        href="../../method_list.html">
+      Method List
+    </a>
+  
+    <a class="full_list_link" id="file_list_link"
+        href="../../file_list.html">
+      File List
+    </a>
+  
+</div>
+      <div class="clear"></div>
+    </div>
+
+    <iframe id="search_frame"></iframe>
+
+    <div id="content"><h1>Class: Discordrb::Voice::VoiceBot
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+    <dt class="r1">Inherits:</dt>
+    <dd class="r1">
+      <span class="inheritName">Object</span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next">Discordrb::Voice::VoiceBot</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+      </dd>
+    
+  
+  
+    
+  
+    
+  
+  
+  
+    <dt class="r2 last">Defined in:</dt>
+    <dd class="r2 last">lib/discordrb/voice/voice_bot.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    
+<p>This class represents a connection to a Discord voice server and channel.
+It can be used to play audio files and streams and to control playback on
+currently playing tracks. The method <span class='object_link'><a href="../Bot.html#voice_connect-instance_method" title="Discordrb::Bot#voice_connect (method)">Bot#voice_connect</a></span> can be used to
+connect to a voice channel.</p>
+
+<p>discordrb does latency adjustments every now and then to improve playback
+quality. I made sure to put useful defaults for the adjustment parameters,
+but if the sound is patchy or too fast (or the speed varies a lot) you
+should check the parameters and adjust them to your connection:
+<span class='object_link'><a href="#adjust_interval-instance_method" title="Discordrb::Voice::VoiceBot#adjust_interval (method)">#adjust_interval</a></span>, <span class='object_link'><a href="#adjust_offset-instance_method" title="Discordrb::Voice::VoiceBot#adjust_offset (method)">#adjust_offset</a></span>, and
+<span class='object_link'><a href="#adjust_average-instance_method" title="Discordrb::Voice::VoiceBot#adjust_average (method)">#adjust_average</a></span>.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+
+
+
+  <h2>Instance Attribute Summary <small>(<a href="#" class="summary_toggle">collapse</a>)</small></h2>
+  <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#adjust_average-instance_method" title="#adjust_average (instance method)">- (true, false) <strong>adjust_average</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>This value determines whether or not the adjustment length should be
+averaged with the previous value.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#adjust_debug-instance_method" title="#adjust_debug (instance method)">- (true, false) <strong>adjust_debug</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Disable the debug message for length adjustment specifically, as it can get
+quite spammy with very low intervals.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#adjust_interval-instance_method" title="#adjust_interval (instance method)">- (Integer) <strong>adjust_interval</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>discordrb will occasionally measure the time it takes to send a packet, and
+adjust future delay times based on that data.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#adjust_offset-instance_method" title="#adjust_offset (instance method)">- (Integer) <strong>adjust_offset</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>This particular value is also important because ffmpeg may take longer to
+process the first few packets.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#channel-instance_method" title="#channel (instance method)">- (Channel) <strong>channel</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>The current voice channel.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#encoder-instance_method" title="#encoder (instance method)">- (Encoder) <strong>encoder</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>The encoder used to encode audio files into the format required by Discord.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#length_override-instance_method" title="#length_override (instance method)">- (Float) <strong>length_override</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>If this value is set, no length adjustments will ever be done and this
+value will always be used as the length (i. e. packets will be sent every N
+seconds).</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#stream_time-instance_method" title="#stream_time (instance method)">- (Integer<sup>?</sup>) <strong>stream_time</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>The amount of time the stream has been playing, or <code>nil</code> if
+nothing has been played yet.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#volume-instance_method" title="#volume (instance method)">- (Float) <strong>volume</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>The factor the audio&#39;s volume should be multiplied with.</p>
+</div></span>
+  
+</li>
+
+    
+  </ul>
+
+
+
+
+  
+    <h2>
+      Instance Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#continue-instance_method" title="#continue (instance method)">- (Object) <strong>continue</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Continue playback.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#destroy-instance_method" title="#destroy (instance method)">- (Object) <strong>destroy</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Permanently disconnects from the voice channel; to reconnect you will have
+to call <span class='object_link'><a href="../Bot.html#voice_connect-instance_method" title="Discordrb::Bot#voice_connect (method)">Bot#voice_connect</a></span> again.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#encrypted%3F-instance_method" title="#encrypted? (instance method)">- (true, false) <strong>encrypted?</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Whether audio data sent will be encrypted.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#filter_volume-instance_method" title="#filter_volume (instance method)">- (Integer) <strong>filter_volume</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>The volume used as a filter for ffmpeg/avconv.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#filter_volume%3D-instance_method" title="#filter_volume= (instance method)">- (Object) <strong>filter_volume=</strong>(value) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Set the filter volume.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#pause-instance_method" title="#pause (instance method)">- (Object) <strong>pause</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Pause playback.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#play-instance_method" title="#play (instance method)">- (Object) <strong>play</strong>(encoded_io) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Plays a stream of raw data to the channel.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#play_dca-instance_method" title="#play_dca (instance method)">- (Object) <strong>play_dca</strong>(file) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Plays a stream of audio data in the DCA format.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#play_file-instance_method" title="#play_file (instance method)">- (Object) <strong>play_file</strong>(file, options = &#39;&#39;) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Plays an encoded audio file of arbitrary format to the channel.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#play_io-instance_method" title="#play_io (instance method)">- (Object) <strong>play_io</strong>(io, options = &#39;&#39;) </a>
+    
+
+    
+      (also: #play_stream)
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Plays a stream of encoded audio data of arbitrary format to the channel.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#playing%3F-instance_method" title="#playing? (instance method)">- (true, false) <strong>playing?</strong> </a>
+    
+
+    
+      (also: #isplaying?)
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Whether it is playing sound or not.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#skip-instance_method" title="#skip (instance method)">- (Object) <strong>skip</strong>(secs) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Skips to a later time in the song.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#speaking%3D-instance_method" title="#speaking= (instance method)">- (Object) <strong>speaking=</strong>(value) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Sets whether or not the bot is speaking (green circle around user).</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#stop_playing-instance_method" title="#stop_playing (instance method)">- (Object) <strong>stop_playing</strong>(wait_for_confirmation = false) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Stops the current playback entirely.</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+  <div id="instance_attr_details" class="attr_details">
+    <h2>Instance Attribute Details</h2>
+    
+      
+      <span id="adjust_average=-instance_method"></span>
+      <div class="method_details first">
+  <h3 class="signature first" id="adjust_average-instance_method">
+  
+    - (<tt>true</tt>, <tt>false</tt>) <strong>adjust_average</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>This value determines whether or not the adjustment length should be
+averaged with the previous value. This may be useful on slower connections
+where latencies vary a lot. In general, it will make adjustments more
+smooth, but whether that is desired behaviour should be tried on a
+case-by-case basis.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>true</tt>, <tt>false</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>whether adjustment lengths should be averaged with the respective previous
+value.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+  <p class="tag_title">See Also:</p>
+  <ul class="see">
+    
+      <li><span class='object_link'><a href="#adjust_interval-instance_method" title="Discordrb::Voice::VoiceBot#adjust_interval (method)">#adjust_interval</a></span></li>
+    
+  </ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+55
+56
+57</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/voice/voice_bot.rb', line 55</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_adjust_average'>adjust_average</span>
+  <span class='ivar'>@adjust_average</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id="adjust_debug=-instance_method"></span>
+      <div class="method_details ">
+  <h3 class="signature " id="adjust_debug-instance_method">
+  
+    - (<tt>true</tt>, <tt>false</tt>) <strong>adjust_debug</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Disable the debug message for length adjustment specifically, as it can get
+quite spammy with very low intervals</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>true</tt>, <tt>false</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>whether length adjustment debug messages should be printed</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+  <p class="tag_title">See Also:</p>
+  <ul class="see">
+    
+      <li><span class='object_link'><a href="#adjust_interval-instance_method" title="Discordrb::Voice::VoiceBot#adjust_interval (method)">#adjust_interval</a></span></li>
+    
+  </ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+60
+61
+62</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/voice/voice_bot.rb', line 60</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_adjust_debug'>adjust_debug</span>
+  <span class='ivar'>@adjust_debug</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id="adjust_interval=-instance_method"></span>
+      <div class="method_details ">
+  <h3 class="signature " id="adjust_interval-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../../Integer.html" title="Integer (class)">Integer</a></span></tt>) <strong>adjust_interval</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>discordrb will occasionally measure the time it takes to send a packet, and
+adjust future delay times based on that data. This makes voice playback
+more smooth, because if packets are sent too slowly, the audio will sound
+patchy, and if they&#39;re sent too quickly, packets will “pile up” and
+occasionally skip some data or play parts back too fast. How often these
+measurements should be done depends a lot on the system, and if it&#39;s
+done too quickly, especially on slow connections, the playback speed will
+vary wildly; if it&#39;s done too slowly however, small errors will cause
+quality problems for a longer time.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../../Integer.html" title="Integer (class)">Integer</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>how frequently audio length adjustments should be done, in ideal packets
+(20 ms).</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+40
+41
+42</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/voice/voice_bot.rb', line 40</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_adjust_interval'>adjust_interval</span>
+  <span class='ivar'>@adjust_interval</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id="adjust_offset=-instance_method"></span>
+      <div class="method_details ">
+  <h3 class="signature " id="adjust_offset-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../../Integer.html" title="Integer (class)">Integer</a></span></tt>) <strong>adjust_offset</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>This particular value is also important because ffmpeg may take longer to
+process the first few packets. It is recommended to set this to 10 at
+maximum, otherwise it will take too long to make the first adjustment, but
+it shouldn&#39;t be any higher than <span class='object_link'><a href="#adjust_interval-instance_method" title="Discordrb::Voice::VoiceBot#adjust_interval (method)">#adjust_interval</a></span>, otherwise no
+adjustments will take place. If <span class='object_link'><a href="#adjust_interval-instance_method" title="Discordrb::Voice::VoiceBot#adjust_interval (method)">#adjust_interval</a></span> is at a value higher
+than 10, this value should not be changed at all.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../../Integer.html" title="Integer (class)">Integer</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the packet number (1 packet = 20 ms) at which length adjustments should
+start.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+  <p class="tag_title">See Also:</p>
+  <ul class="see">
+    
+      <li><span class='object_link'><a href="#adjust_interval-instance_method" title="Discordrb::Voice::VoiceBot#adjust_interval (method)">#adjust_interval</a></span></li>
+    
+  </ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+48
+49
+50</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/voice/voice_bot.rb', line 48</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_adjust_offset'>adjust_offset</span>
+  <span class='ivar'>@adjust_offset</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <div class="method_details ">
+  <h3 class="signature " id="channel-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../Channel.html" title="Discordrb::Channel (class)">Channel</a></span></tt>) <strong>channel</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the current voice channel</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../Channel.html" title="Discordrb::Channel (class)">Channel</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the current voice channel</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+25
+26
+27</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/voice/voice_bot.rb', line 25</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_channel'>channel</span>
+  <span class='ivar'>@channel</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <div class="method_details ">
+  <h3 class="signature " id="encoder-instance_method">
+  
+    - (<tt><span class='object_link'><a href="Encoder.html" title="Discordrb::Voice::Encoder (class)">Encoder</a></span></tt>) <strong>encoder</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the encoder used to encode audio files into the format required by
+Discord.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Encoder.html" title="Discordrb::Voice::Encoder (class)">Encoder</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the encoder used to encode audio files into the format required by Discord.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+31
+32
+33</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/voice/voice_bot.rb', line 31</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_encoder'>encoder</span>
+  <span class='ivar'>@encoder</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id="length_override=-instance_method"></span>
+      <div class="method_details ">
+  <h3 class="signature " id="length_override-instance_method">
+  
+    - (<tt>Float</tt>) <strong>length_override</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>If this value is set, no length adjustments will ever be done and this
+value will always be used as the length (i. e. packets will be sent every N
+seconds). Be careful not to set it too low as to not spam Discord&#39;s
+servers. The ideal length is 20 ms (accessible by the
+<span class='object_link'><a href="../Voice.html#IDEAL_LENGTH-constant" title="Discordrb::Voice::IDEAL_LENGTH (constant)">IDEAL_LENGTH</a></span> constant), this value should be slightly
+lower than that because encoding + sending takes time. Note that sending
+DCA files is significantly faster than sending regular audio files (usually
+about four times as fast), so you might want to set this value to something
+else if you&#39;re sending a DCA file.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Float</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the packet length that should be used instead of calculating it during the
+adjustments, in ms.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+69
+70
+71</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/voice/voice_bot.rb', line 69</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_length_override'>length_override</span>
+  <span class='ivar'>@length_override</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <div class="method_details ">
+  <h3 class="signature " id="stream_time-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../../Integer.html" title="Integer (class)">Integer</a></span></tt><sup>?</sup>) <strong>stream_time</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the amount of time the stream has been playing, or <code>nil</code>
+if nothing has been played yet.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../../Integer.html" title="Integer (class)">Integer</a></span></tt>, <tt>nil</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the amount of time the stream has been playing, or <code>nil</code> if
+nothing has been played yet.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+28
+29
+30</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/voice/voice_bot.rb', line 28</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_stream_time'>stream_time</span>
+  <span class='ivar'>@stream_time</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id="volume=-instance_method"></span>
+      <div class="method_details ">
+  <h3 class="signature " id="volume-instance_method">
+  
+    - (<tt>Float</tt>) <strong>volume</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>The factor the audio&#39;s volume should be multiplied with. <code>1</code>
+is no change in volume, <code>0</code> is completely silent,
+<code>0.5</code> is half the default volume and <code>2</code> is twice the
+default.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Float</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the volume for audio playback, <code>1.0</code> by default.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+74
+75
+76</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/voice/voice_bot.rb', line 74</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_volume'>volume</span>
+  <span class='ivar'>@volume</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+
+    
+      <div class="method_details first">
+  <h3 class="signature first" id="continue-instance_method">
+  
+    - (<tt>Object</tt>) <strong>continue</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Continue playback. This change may take up to 100 ms to take effect, which
+is usually negligible.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+136
+137
+138</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/voice/voice_bot.rb', line 136</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_continue'>continue</span>
+  <span class='ivar'>@paused</span> <span class='op'>=</span> <span class='kw'>false</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="destroy-instance_method">
+  
+    - (<tt>Object</tt>) <strong>destroy</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Permanently disconnects from the voice channel; to reconnect you will have
+to call <span class='object_link'><a href="../Bot.html#voice_connect-instance_method" title="Discordrb::Bot#voice_connect (method)">Bot#voice_connect</a></span> again.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+170
+171
+172
+173
+174</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/voice/voice_bot.rb', line 170</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_destroy'>destroy</span>
+  <span class='id identifier rubyid_stop_playing'>stop_playing</span>
+  <span class='ivar'>@bot</span><span class='period'>.</span><span class='id identifier rubyid_voice_destroy'>voice_destroy</span><span class='lparen'>(</span><span class='ivar'>@channel</span><span class='period'>.</span><span class='id identifier rubyid_server'>server</span><span class='period'>.</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='kw'>false</span><span class='rparen'>)</span>
+  <span class='ivar'>@ws</span><span class='period'>.</span><span class='id identifier rubyid_destroy'>destroy</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="encrypted?-instance_method">
+  
+    - (<tt>true</tt>, <tt>false</tt>) <strong>encrypted?</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns whether audio data sent will be encrypted.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>true</tt>, <tt>false</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>whether audio data sent will be encrypted.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+104
+105
+106</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/voice/voice_bot.rb', line 104</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_encrypted?'>encrypted?</span>
+  <span class='ivar'>@udp</span><span class='period'>.</span><span class='id identifier rubyid_encrypted?'>encrypted?</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="filter_volume-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../../Integer.html" title="Integer (class)">Integer</a></span></tt>) <strong>filter_volume</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the volume used as a filter for ffmpeg/avconv.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../../Integer.html" title="Integer (class)">Integer</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the volume used as a filter for ffmpeg/avconv.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+  <p class="tag_title">See Also:</p>
+  <ul class="see">
+    
+      <li><span class='object_link'><a href="#filter_volume%3D-instance_method" title="Discordrb::Voice::VoiceBot#filter_volume= (method)">#filter_volume=</a></span></li>
+    
+  </ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+117
+118
+119</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/voice/voice_bot.rb', line 117</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_filter_volume'>filter_volume</span>
+  <span class='ivar'>@encoder</span><span class='period'>.</span><span class='id identifier rubyid_filter_volume'>filter_volume</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="filter_volume=-instance_method">
+  
+    - (<tt>Object</tt>) <strong>filter_volume=</strong>(value) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Set the filter volume. This volume is applied as a filter for decoded audio
+data. It has the advantage that using it is much faster than regular
+volume, but it can only be changed before starting to play something.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>value</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../../Integer.html" title="Integer (class)">Integer</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The value to set the volume to. For possible values, see <span class='object_link'><a href="#volume-instance_method" title="Discordrb::Voice::VoiceBot#volume (method)">#volume</a></span></p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+111
+112
+113</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/voice/voice_bot.rb', line 111</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_filter_volume='>filter_volume=</span><span class='lparen'>(</span><span class='id identifier rubyid_value'>value</span><span class='rparen'>)</span>
+  <span class='ivar'>@encoder</span><span class='period'>.</span><span class='id identifier rubyid_filter_volume'>filter_volume</span> <span class='op'>=</span> <span class='id identifier rubyid_value'>value</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="pause-instance_method">
+  
+    - (<tt>Object</tt>) <strong>pause</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Pause playback. This is not instant; it may take up to 20 ms for this
+change to take effect. (This is usually negligible.)</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+123
+124
+125</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/voice/voice_bot.rb', line 123</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_pause'>pause</span>
+  <span class='ivar'>@paused</span> <span class='op'>=</span> <span class='kw'>true</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="play-instance_method">
+  
+    - (<tt>Object</tt>) <strong>play</strong>(encoded_io) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Plays a stream of raw data to the channel. All playback methods are
+blocking, i. e. they wait for the playback to finish before exiting the
+method. This doesn&#39;t cause a problem if you just use discordrb
+events/commands to play stuff, as these are fully threaded, but if you
+don&#39;t want this behaviour anyway, be sure to call these methods in
+separate threads.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>encoded_io</span>
+      
+      
+        <span class='type'>(<tt>IO</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>A stream of raw PCM data (s16le)</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/voice/voice_bot.rb', line 181</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_play'>play</span><span class='lparen'>(</span><span class='id identifier rubyid_encoded_io'>encoded_io</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_stop_playing'>stop_playing</span><span class='lparen'>(</span><span class='kw'>true</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='ivar'>@playing</span>
+  <span class='ivar'>@retry_attempts</span> <span class='op'>=</span> <span class='int'>3</span>
+  <span class='ivar'>@first_packet</span> <span class='op'>=</span> <span class='kw'>true</span>
+
+  <span class='id identifier rubyid_play_internal'>play_internal</span> <span class='kw'>do</span>
+    <span class='id identifier rubyid_buf'>buf</span> <span class='op'>=</span> <span class='kw'>nil</span>
+
+    <span class='comment'># Read some data from the buffer
+</span>    <span class='kw'>begin</span>
+      <span class='id identifier rubyid_buf'>buf</span> <span class='op'>=</span> <span class='id identifier rubyid_encoded_io'>encoded_io</span><span class='period'>.</span><span class='id identifier rubyid_readpartial'>readpartial</span><span class='lparen'>(</span><span class='const'>DATA_LENGTH</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='id identifier rubyid_encoded_io'>encoded_io</span>
+    <span class='kw'>rescue</span> <span class='const'>EOFError</span>
+      <span class='id identifier rubyid_raise'>raise</span> <span class='const'>IOError</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>File or stream not found!</span><span class='tstring_end'>&#39;</span></span> <span class='kw'>if</span> <span class='ivar'>@first_packet</span>
+
+      <span class='ivar'>@bot</span><span class='period'>.</span><span class='id identifier rubyid_debug'>debug</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>EOF while reading, breaking immediately</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+      <span class='kw'>next</span> <span class='symbol'>:stop</span>
+    <span class='kw'>end</span>
+
+    <span class='comment'># Check whether the buffer has enough data
+</span>    <span class='kw'>if</span> <span class='op'>!</span><span class='id identifier rubyid_buf'>buf</span> <span class='op'>||</span> <span class='id identifier rubyid_buf'>buf</span><span class='period'>.</span><span class='id identifier rubyid_length'>length</span> <span class='op'>!=</span> <span class='const'>DATA_LENGTH</span>
+      <span class='ivar'>@bot</span><span class='period'>.</span><span class='id identifier rubyid_debug'>debug</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>No data is available! Retrying </span><span class='embexpr_beg'>#{</span><span class='ivar'>@retry_attempts</span><span class='embexpr_end'>}</span><span class='tstring_content'> more times</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+      <span class='kw'>next</span> <span class='symbol'>:stop</span> <span class='kw'>if</span> <span class='ivar'>@retry_attempts</span><span class='period'>.</span><span class='id identifier rubyid_zero?'>zero?</span>
+
+      <span class='ivar'>@retry_attempts</span> <span class='op'>-=</span> <span class='int'>1</span>
+      <span class='kw'>next</span>
+    <span class='kw'>end</span>
+
+    <span class='comment'># Adjust volume
+</span>    <span class='id identifier rubyid_buf'>buf</span> <span class='op'>=</span> <span class='ivar'>@encoder</span><span class='period'>.</span><span class='id identifier rubyid_adjust_volume'>adjust_volume</span><span class='lparen'>(</span><span class='id identifier rubyid_buf'>buf</span><span class='comma'>,</span> <span class='ivar'>@volume</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='ivar'>@volume</span> <span class='op'>!=</span> <span class='float'>1.0</span>
+
+    <span class='ivar'>@first_packet</span> <span class='op'>=</span> <span class='kw'>false</span>
+
+    <span class='comment'># Encode data
+</span>    <span class='ivar'>@encoder</span><span class='period'>.</span><span class='id identifier rubyid_encode'>encode</span><span class='lparen'>(</span><span class='id identifier rubyid_buf'>buf</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
+
+  <span class='comment'># If the stream is a process, kill it
+</span>  <span class='kw'>if</span> <span class='id identifier rubyid_encoded_io'>encoded_io</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span> <span class='symbol'>:pid</span>
+    <span class='const'>Discordrb</span><span class='op'>::</span><span class='const'>LOGGER</span><span class='period'>.</span><span class='id identifier rubyid_debug'>debug</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Killing ffmpeg process with pid </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_encoded_io'>encoded_io</span><span class='period'>.</span><span class='id identifier rubyid_pid'>pid</span><span class='period'>.</span><span class='id identifier rubyid_inspect'>inspect</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+
+    <span class='kw'>begin</span>
+      <span class='const'>Process</span><span class='period'>.</span><span class='id identifier rubyid_kill'>kill</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>TERM</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_encoded_io'>encoded_io</span><span class='period'>.</span><span class='id identifier rubyid_pid'>pid</span><span class='rparen'>)</span>
+    <span class='kw'>rescue</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_e'>e</span>
+      <span class='const'>Discordrb</span><span class='op'>::</span><span class='const'>LOGGER</span><span class='period'>.</span><span class='id identifier rubyid_warn'>warn</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Failed to kill ffmpeg process! You *might* have a process leak now.</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+      <span class='const'>Discordrb</span><span class='op'>::</span><span class='const'>LOGGER</span><span class='period'>.</span><span class='id identifier rubyid_warn'>warn</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Reason: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_e'>e</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
+
+  <span class='comment'># Close the stream
+</span>  <span class='id identifier rubyid_encoded_io'>encoded_io</span><span class='period'>.</span><span class='id identifier rubyid_close'>close</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="play_dca-instance_method">
+  
+    - (<tt>Object</tt>) <strong>play_dca</strong>(file) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+  <div class="note notetag">
+    <strong>Note:</strong>
+    <div class='inline'>
+<p>DCA playback will not be affected by the volume modifier (<span class='object_link'><a href="#volume-instance_method" title="Discordrb::Voice::VoiceBot#volume (method)">#volume</a></span>)
+because the modifier operates on raw PCM, not opus data. Modifying the
+volume of DCA data would involve decoding it, multiplying the samples and
+re-encoding it, which defeats its entire purpose (no recoding).</p>
+</div>
+  </div>
+
+
+<p>Plays a stream of audio data in the DCA format. This format has the
+advantage that no recoding has to be done - the file contains the data
+exactly as Discord needs it.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Raises:</p>
+<ul class="raise">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>ArgumentError</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+  <p class="tag_title">See Also:</p>
+  <ul class="see">
+    
+      <li><a href="https://github.com/bwmarrin/dca" target="_parent" title="https://github.com/bwmarrin/dca">https://github.com/bwmarrin/dca</a></li>
+    
+      <li><span class='object_link'><a href="#play-instance_method" title="Discordrb::Voice::VoiceBot#play (method)">#play</a></span></li>
+    
+  </ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/voice/voice_bot.rb', line 254</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_play_dca'>play_dca</span><span class='lparen'>(</span><span class='id identifier rubyid_file'>file</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_stop_playing'>stop_playing</span><span class='lparen'>(</span><span class='kw'>true</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='ivar'>@playing</span>
+
+  <span class='ivar'>@bot</span><span class='period'>.</span><span class='id identifier rubyid_debug'>debug</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Reading DCA file </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_file'>file</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+  <span class='id identifier rubyid_input_stream'>input_stream</span> <span class='op'>=</span> <span class='id identifier rubyid_open'>open</span><span class='lparen'>(</span><span class='id identifier rubyid_file'>file</span><span class='rparen'>)</span>
+
+  <span class='id identifier rubyid_magic'>magic</span> <span class='op'>=</span> <span class='id identifier rubyid_input_stream'>input_stream</span><span class='period'>.</span><span class='id identifier rubyid_read'>read</span><span class='lparen'>(</span><span class='int'>4</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_raise'>raise</span> <span class='const'>ArgumentError</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Not a DCA1 file! The file might have been corrupted, please recreate it.</span><span class='tstring_end'>&#39;</span></span> <span class='kw'>unless</span> <span class='id identifier rubyid_magic'>magic</span> <span class='op'>==</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>DCA1</span><span class='tstring_end'>&#39;</span></span>
+
+  <span class='comment'># Read the metadata header, then read the metadata and discard it as we don&#39;t care about it
+</span>  <span class='id identifier rubyid_metadata_header'>metadata_header</span> <span class='op'>=</span> <span class='id identifier rubyid_input_stream'>input_stream</span><span class='period'>.</span><span class='id identifier rubyid_read'>read</span><span class='lparen'>(</span><span class='int'>4</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_unpack'>unpack</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>l&lt;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span>
+  <span class='id identifier rubyid_input_stream'>input_stream</span><span class='period'>.</span><span class='id identifier rubyid_read'>read</span><span class='lparen'>(</span><span class='id identifier rubyid_metadata_header'>metadata_header</span><span class='rparen'>)</span>
+
+  <span class='comment'># Play the data, without re-encoding it to opus
+</span>  <span class='id identifier rubyid_play_internal'>play_internal</span> <span class='kw'>do</span>
+    <span class='kw'>begin</span>
+      <span class='comment'># Read header
+</span>      <span class='id identifier rubyid_header_str'>header_str</span> <span class='op'>=</span> <span class='id identifier rubyid_input_stream'>input_stream</span><span class='period'>.</span><span class='id identifier rubyid_read'>read</span><span class='lparen'>(</span><span class='int'>2</span><span class='rparen'>)</span>
+
+      <span class='kw'>unless</span> <span class='id identifier rubyid_header_str'>header_str</span>
+        <span class='ivar'>@bot</span><span class='period'>.</span><span class='id identifier rubyid_debug'>debug</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Finished DCA parsing (header is nil)</span><span class='tstring_end'>&#39;</span></span>
+        <span class='kw'>next</span> <span class='symbol'>:stop</span>
+      <span class='kw'>end</span>
+
+      <span class='id identifier rubyid_header'>header</span> <span class='op'>=</span> <span class='id identifier rubyid_header_str'>header_str</span><span class='period'>.</span><span class='id identifier rubyid_unpack'>unpack</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>s&lt;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span>
+
+      <span class='id identifier rubyid_raise'>raise</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Negative header in DCA file! Your file is likely corrupted.</span><span class='tstring_end'>&#39;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_header'>header</span> <span class='op'>&lt;</span> <span class='int'>0</span>
+    <span class='kw'>rescue</span> <span class='const'>EOFError</span>
+      <span class='ivar'>@bot</span><span class='period'>.</span><span class='id identifier rubyid_debug'>debug</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Finished DCA parsing (EOFError)</span><span class='tstring_end'>&#39;</span></span>
+      <span class='kw'>next</span> <span class='symbol'>:stop</span>
+    <span class='kw'>end</span>
+
+    <span class='comment'># Read bytes
+</span>    <span class='id identifier rubyid_input_stream'>input_stream</span><span class='period'>.</span><span class='id identifier rubyid_read'>read</span><span class='lparen'>(</span><span class='id identifier rubyid_header'>header</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="play_file-instance_method">
+  
+    - (<tt>Object</tt>) <strong>play_file</strong>(file, options = &#39;&#39;) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Plays an encoded audio file of arbitrary format to the channel.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+  <p class="tag_title">See Also:</p>
+  <ul class="see">
+    
+      <li><span class='object_link'><a href="Encoder.html#encode_file-instance_method" title="Discordrb::Voice::Encoder#encode_file (method)">Encoder#encode_file</a></span></li>
+    
+      <li><span class='object_link'><a href="#play-instance_method" title="Discordrb::Voice::VoiceBot#play (method)">#play</a></span></li>
+    
+  </ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+236
+237
+238</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/voice/voice_bot.rb', line 236</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_play_file'>play_file</span><span class='lparen'>(</span><span class='id identifier rubyid_file'>file</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_play'>play</span> <span class='ivar'>@encoder</span><span class='period'>.</span><span class='id identifier rubyid_encode_file'>encode_file</span><span class='lparen'>(</span><span class='id identifier rubyid_file'>file</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="play_io-instance_method">
+  
+    - (<tt>Object</tt>) <strong>play_io</strong>(io, options = &#39;&#39;) 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='play_stream-instance_method'>play_stream</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Plays a stream of encoded audio data of arbitrary format to the channel.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+  <p class="tag_title">See Also:</p>
+  <ul class="see">
+    
+      <li><span class='object_link'><a href="Encoder.html#encode_io-instance_method" title="Discordrb::Voice::Encoder#encode_io (method)">Encoder#encode_io</a></span></li>
+    
+      <li><span class='object_link'><a href="#play-instance_method" title="Discordrb::Voice::VoiceBot#play (method)">#play</a></span></li>
+    
+  </ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+243
+244
+245</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/voice/voice_bot.rb', line 243</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_play_io'>play_io</span><span class='lparen'>(</span><span class='id identifier rubyid_io'>io</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_play'>play</span> <span class='ivar'>@encoder</span><span class='period'>.</span><span class='id identifier rubyid_encode_io'>encode_io</span><span class='lparen'>(</span><span class='id identifier rubyid_io'>io</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="playing?-instance_method">
+  
+    - (<tt>true</tt>, <tt>false</tt>) <strong>playing?</strong> 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='isplaying?-instance_method'>isplaying?</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns Whether it is playing sound or not.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>true</tt>, <tt>false</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Whether it is playing sound or not.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+  <p class="tag_title">See Also:</p>
+  <ul class="see">
+    
+      <li><span class='object_link'><a href="#play-instance_method" title="Discordrb::Voice::VoiceBot#play (method)">#play</a></span></li>
+    
+  </ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+129
+130
+131</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/voice/voice_bot.rb', line 129</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_playing?'>playing?</span>
+  <span class='ivar'>@playing</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="skip-instance_method">
+  
+    - (<tt>Object</tt>) <strong>skip</strong>(secs) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Skips to a later time in the song. It&#39;s impossible to go back without
+replaying the song.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>secs</span>
+      
+      
+        <span class='type'>(<tt>Float</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>How many seconds to skip forwards. Skipping will always be done in discrete
+intervals of 0.05 seconds, so if the given amount is smaller than that, it
+will be rounded up.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+143
+144
+145</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/voice/voice_bot.rb', line 143</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_skip'>skip</span><span class='lparen'>(</span><span class='id identifier rubyid_secs'>secs</span><span class='rparen'>)</span>
+  <span class='ivar'>@skips</span> <span class='op'>+=</span> <span class='lparen'>(</span><span class='id identifier rubyid_secs'>secs</span> <span class='op'>*</span> <span class='lparen'>(</span><span class='int'>1000</span> <span class='op'>/</span> <span class='const'>IDEAL_LENGTH</span><span class='rparen'>)</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_ceil'>ceil</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="speaking=-instance_method">
+  
+    - (<tt>Object</tt>) <strong>speaking=</strong>(value) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Sets whether or not the bot is speaking (green circle around user).</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>value</span>
+      
+      
+        <span class='type'>(<tt>true</tt>, <tt>false</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>whether or not the bot should be speaking.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+149
+150
+151
+152</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/voice/voice_bot.rb', line 149</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_speaking='>speaking=</span><span class='lparen'>(</span><span class='id identifier rubyid_value'>value</span><span class='rparen'>)</span>
+  <span class='ivar'>@playing</span> <span class='op'>=</span> <span class='id identifier rubyid_value'>value</span>
+  <span class='ivar'>@ws</span><span class='period'>.</span><span class='id identifier rubyid_send_speaking'>send_speaking</span><span class='lparen'>(</span><span class='id identifier rubyid_value'>value</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="stop_playing-instance_method">
+  
+    - (<tt>Object</tt>) <strong>stop_playing</strong>(wait_for_confirmation = false) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Stops the current playback entirely.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>wait_for_confirmation</span>
+      
+      
+        <span class='type'>(<tt>true</tt>, <tt>false</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>false</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Whether the method should wait for confirmation from the playback method
+that the playback has actually stopped.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/voice/voice_bot.rb', line 157</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_stop_playing'>stop_playing</span><span class='lparen'>(</span><span class='id identifier rubyid_wait_for_confirmation'>wait_for_confirmation</span> <span class='op'>=</span> <span class='kw'>false</span><span class='rparen'>)</span>
+  <span class='ivar'>@was_playing_before</span> <span class='op'>=</span> <span class='ivar'>@playing</span>
+  <span class='ivar'>@speaking</span> <span class='op'>=</span> <span class='kw'>false</span>
+  <span class='ivar'>@playing</span> <span class='op'>=</span> <span class='kw'>false</span>
+  <span class='id identifier rubyid_sleep'>sleep</span> <span class='const'>IDEAL_LENGTH</span> <span class='op'>/</span> <span class='float'>1000.0</span> <span class='kw'>if</span> <span class='ivar'>@was_playing_before</span>
+
+  <span class='kw'>return</span> <span class='kw'>unless</span> <span class='id identifier rubyid_wait_for_confirmation'>wait_for_confirmation</span>
+  <span class='ivar'>@has_stopped_playing</span> <span class='op'>=</span> <span class='kw'>false</span>
+  <span class='id identifier rubyid_sleep'>sleep</span> <span class='const'>IDEAL_LENGTH</span> <span class='op'>/</span> <span class='float'>1000.0</span> <span class='kw'>until</span> <span class='ivar'>@has_stopped_playing</span>
+  <span class='ivar'>@has_stopped_playing</span> <span class='op'>=</span> <span class='kw'>false</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+
+    <div id="footer">
+  Generated on Wed May 16 09:20:07 2018 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.8.7.6 (ruby-2.5.0).
+</div>
+
+  </body>
+</html>

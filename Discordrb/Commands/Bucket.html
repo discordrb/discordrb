@@ -1,0 +1,617 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Class: Discordrb::Commands::Bucket
+  
+    &mdash; Documentation by YARD 0.8.7.6
+  
+</title>
+
+  <link rel="stylesheet" href="../../css/style.css" type="text/css" charset="utf-8" />
+
+  <link rel="stylesheet" href="../../css/common.css" type="text/css" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  hasFrames = window.top.frames.main ? true : false;
+  relpath = '../../';
+  framesUrl = "../../frames.html#!Discordrb/Commands/Bucket.html";
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="../../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../../js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../../_index.html">Index (B)</a> &raquo;
+    <span class='title'><span class='object_link'><a href="../../Discordrb.html" title="Discordrb (module)">Discordrb</a></span></span> &raquo; <span class='title'><span class='object_link'><a href="../Commands.html" title="Discordrb::Commands (module)">Commands</a></span></span>
+     &raquo; 
+    <span class="title">Bucket</span>
+  
+
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="../../class_list.html">
+      Class List
+    </a>
+  
+    <a class="full_list_link" id="method_list_link"
+        href="../../method_list.html">
+      Method List
+    </a>
+  
+    <a class="full_list_link" id="file_list_link"
+        href="../../file_list.html">
+      File List
+    </a>
+  
+</div>
+      <div class="clear"></div>
+    </div>
+
+    <iframe id="search_frame"></iframe>
+
+    <div id="content"><h1>Class: Discordrb::Commands::Bucket
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+    <dt class="r1">Inherits:</dt>
+    <dd class="r1">
+      <span class="inheritName">Object</span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next">Discordrb::Commands::Bucket</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+      </dd>
+    
+  
+  
+    
+  
+    
+  
+  
+  
+    <dt class="r2 last">Defined in:</dt>
+    <dd class="r2 last">lib/discordrb/commands/rate_limiter.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    
+<p>This class represents a bucket for rate limiting - it keeps track of how
+many requests have been made and when exactly the user should be rate
+limited.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+
+
+
+
+
+
+  
+    <h2>
+      Instance Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#clean-instance_method" title="#clean (instance method)">- (Object) <strong>clean</strong>(rate_limit_time = nil) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Cleans the bucket, removing all elements that aren&#39;t necessary anymore.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#initialize-instance_method" title="#initialize (instance method)">- (Bucket) <strong>initialize</strong>(limit, time_span, delay) </a>
+    
+
+    
+  </span>
+  
+  
+    <span class="note title constructor">constructor</span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Makes a new bucket.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#rate_limited%3F-instance_method" title="#rate_limited? (instance method)">- (Integer, false) <strong>rate_limited?</strong>(thing, rate_limit_time = nil, increment: 1) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Performs a rate limiting request.</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+<div id="constructor_details" class="method_details_list">
+  <h2>Constructor Details</h2>
+  
+    <div class="method_details first">
+  <h3 class="signature first" id="initialize-instance_method">
+  
+    - (<tt><span class='object_link'><a href="" title="Discordrb::Commands::Bucket (class)">Bucket</a></span></tt>) <strong>initialize</strong>(limit, time_span, delay) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Makes a new bucket</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>limit</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../../Integer.html" title="Integer (class)">Integer</a></span></tt>, <tt>nil</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>How many requests the user may perform in the given time_span, or nil if
+there should be no limit.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>time_span</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../../Integer.html" title="Integer (class)">Integer</a></span></tt>, <tt>nil</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The time span after which the request count is reset, in seconds, or nil if
+the bucket should never be reset. (If this is nil, limit should be nil too)</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>delay</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../../Integer.html" title="Integer (class)">Integer</a></span></tt>, <tt>nil</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The delay for which the user has to wait after performing a request, in
+seconds, or nil if the user shouldn&#39;t have to wait.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Raises:</p>
+<ul class="raise">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>ArgumentError</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+11
+12
+13
+14
+15
+16
+17
+18
+19</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/commands/rate_limiter.rb', line 11</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_limit'>limit</span><span class='comma'>,</span> <span class='id identifier rubyid_time_span'>time_span</span><span class='comma'>,</span> <span class='id identifier rubyid_delay'>delay</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_raise'>raise</span> <span class='const'>ArgumentError</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>`limit` and `time_span` have to either both be set or both be nil!</span><span class='tstring_end'>&#39;</span></span> <span class='kw'>if</span> <span class='op'>!</span><span class='id identifier rubyid_limit'>limit</span> <span class='op'>!=</span> <span class='op'>!</span><span class='id identifier rubyid_time_span'>time_span</span>
+
+  <span class='ivar'>@limit</span> <span class='op'>=</span> <span class='id identifier rubyid_limit'>limit</span>
+  <span class='ivar'>@time_span</span> <span class='op'>=</span> <span class='id identifier rubyid_time_span'>time_span</span>
+  <span class='ivar'>@delay</span> <span class='op'>=</span> <span class='id identifier rubyid_delay'>delay</span>
+
+  <span class='ivar'>@bucket</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+  
+</div>
+
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+
+    
+      <div class="method_details first">
+  <h3 class="signature first" id="clean-instance_method">
+  
+    - (<tt>Object</tt>) <strong>clean</strong>(rate_limit_time = nil) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Cleans the bucket, removing all elements that aren&#39;t necessary anymore</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>rate_limit_time</span>
+      
+      
+        <span class='type'>(<tt>Time</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>nil</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The time to base the cleaning on, only useful for testing.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/commands/rate_limiter.rb', line 23</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_clean'>clean</span><span class='lparen'>(</span><span class='id identifier rubyid_rate_limit_time'>rate_limit_time</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_rate_limit_time'>rate_limit_time</span> <span class='op'>||=</span> <span class='const'>Time</span><span class='period'>.</span><span class='id identifier rubyid_now'>now</span>
+
+  <span class='ivar'>@bucket</span><span class='period'>.</span><span class='id identifier rubyid_delete_if'>delete_if</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid__'>_</span><span class='comma'>,</span> <span class='id identifier rubyid_limit_hash'>limit_hash</span><span class='op'>|</span>
+    <span class='comment'># Time limit has not run out
+</span>    <span class='kw'>return</span> <span class='kw'>false</span> <span class='kw'>if</span> <span class='ivar'>@time_span</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_rate_limit_time'>rate_limit_time</span> <span class='op'>&lt;</span> <span class='lparen'>(</span><span class='id identifier rubyid_limit_hash'>limit_hash</span><span class='lbracket'>[</span><span class='symbol'>:set_time</span><span class='rbracket'>]</span> <span class='op'>+</span> <span class='ivar'>@time_span</span><span class='rparen'>)</span>
+
+    <span class='comment'># Delay has not run out
+</span>    <span class='kw'>return</span> <span class='kw'>false</span> <span class='kw'>if</span> <span class='ivar'>@delay</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_rate_limit_time'>rate_limit_time</span> <span class='op'>&lt;</span> <span class='lparen'>(</span><span class='id identifier rubyid_limit_hash'>limit_hash</span><span class='lbracket'>[</span><span class='symbol'>:last_time</span><span class='rbracket'>]</span> <span class='op'>+</span> <span class='ivar'>@delay</span><span class='rparen'>)</span>
+
+    <span class='kw'>true</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="rate_limited?-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../../Integer.html" title="Integer (class)">Integer</a></span></tt>, <tt>false</tt>) <strong>rate_limited?</strong>(thing, rate_limit_time = nil, increment: 1) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Performs a rate limiting request</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>thing</span>
+      
+      
+        <span class='type'>(<tt>#resolve_id</tt>, <tt><span class='object_link'><a href="../../Integer.html" title="Integer (class)">Integer</a></span></tt>, <tt>Symbol</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The particular thing that should be rate-limited (usually a user/channel,
+but you can also choose arbitrary integers or symbols)</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>rate_limit_time</span>
+      
+      
+        <span class='type'>(<tt>Time</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>nil</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The time to base the rate limiting on, only useful for testing.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>increment</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../../Integer.html" title="Integer (class)">Integer</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>How much to increment the rate-limit counter. Default is 1.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../../Integer.html" title="Integer (class)">Integer</a></span></tt>, <tt>false</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the waiting time until the next request, in seconds, or false if the
+request succeeded</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/commands/rate_limiter.rb', line 42</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_rate_limited?'>rate_limited?</span><span class='lparen'>(</span><span class='id identifier rubyid_thing'>thing</span><span class='comma'>,</span> <span class='id identifier rubyid_rate_limit_time'>rate_limit_time</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='label'>increment:</span> <span class='int'>1</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_key'>key</span> <span class='op'>=</span> <span class='id identifier rubyid_resolve_key'>resolve_key</span> <span class='id identifier rubyid_thing'>thing</span>
+  <span class='id identifier rubyid_limit_hash'>limit_hash</span> <span class='op'>=</span> <span class='ivar'>@bucket</span><span class='lbracket'>[</span><span class='id identifier rubyid_key'>key</span><span class='rbracket'>]</span>
+
+  <span class='comment'># First case: limit_hash doesn&#39;t exist yet
+</span>  <span class='kw'>unless</span> <span class='id identifier rubyid_limit_hash'>limit_hash</span>
+    <span class='ivar'>@bucket</span><span class='lbracket'>[</span><span class='id identifier rubyid_key'>key</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='lbrace'>{</span>
+      <span class='label'>last_time:</span> <span class='const'>Time</span><span class='period'>.</span><span class='id identifier rubyid_now'>now</span><span class='comma'>,</span>
+      <span class='label'>set_time:</span> <span class='const'>Time</span><span class='period'>.</span><span class='id identifier rubyid_now'>now</span><span class='comma'>,</span>
+      <span class='label'>count:</span> <span class='id identifier rubyid_increment'>increment</span>
+    <span class='rbrace'>}</span>
+
+    <span class='kw'>return</span> <span class='kw'>false</span>
+  <span class='kw'>end</span>
+
+  <span class='comment'># Define the time at which we&#39;re being rate limited once so it doesn&#39;t get inaccurate
+</span>  <span class='id identifier rubyid_rate_limit_time'>rate_limit_time</span> <span class='op'>||=</span> <span class='const'>Time</span><span class='period'>.</span><span class='id identifier rubyid_now'>now</span>
+
+  <span class='kw'>if</span> <span class='ivar'>@limit</span> <span class='op'>&amp;&amp;</span> <span class='lparen'>(</span><span class='id identifier rubyid_limit_hash'>limit_hash</span><span class='lbracket'>[</span><span class='symbol'>:count</span><span class='rbracket'>]</span> <span class='op'>+</span> <span class='id identifier rubyid_increment'>increment</span><span class='rparen'>)</span> <span class='op'>&gt;</span> <span class='ivar'>@limit</span>
+    <span class='comment'># Second case: Count is over the limit and the time has not run out yet
+</span>    <span class='kw'>return</span> <span class='lparen'>(</span><span class='id identifier rubyid_limit_hash'>limit_hash</span><span class='lbracket'>[</span><span class='symbol'>:set_time</span><span class='rbracket'>]</span> <span class='op'>+</span> <span class='ivar'>@time_span</span><span class='rparen'>)</span> <span class='op'>-</span> <span class='id identifier rubyid_rate_limit_time'>rate_limit_time</span> <span class='kw'>if</span> <span class='ivar'>@time_span</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_rate_limit_time'>rate_limit_time</span> <span class='op'>&lt;</span> <span class='lparen'>(</span><span class='id identifier rubyid_limit_hash'>limit_hash</span><span class='lbracket'>[</span><span class='symbol'>:set_time</span><span class='rbracket'>]</span> <span class='op'>+</span> <span class='ivar'>@time_span</span><span class='rparen'>)</span>
+
+    <span class='comment'># Third case: Count is over the limit but the time has run out
+</span>    <span class='comment'># Don&#39;t return anything here because there may still be delay-based limiting
+</span>    <span class='id identifier rubyid_limit_hash'>limit_hash</span><span class='lbracket'>[</span><span class='symbol'>:set_time</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_rate_limit_time'>rate_limit_time</span>
+    <span class='id identifier rubyid_limit_hash'>limit_hash</span><span class='lbracket'>[</span><span class='symbol'>:count</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='int'>0</span>
+  <span class='kw'>end</span>
+
+  <span class='kw'>if</span> <span class='ivar'>@delay</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_rate_limit_time'>rate_limit_time</span> <span class='op'>&lt;</span> <span class='lparen'>(</span><span class='id identifier rubyid_limit_hash'>limit_hash</span><span class='lbracket'>[</span><span class='symbol'>:last_time</span><span class='rbracket'>]</span> <span class='op'>+</span> <span class='ivar'>@delay</span><span class='rparen'>)</span>
+    <span class='comment'># Fourth case: we&#39;re being delayed
+</span>    <span class='lparen'>(</span><span class='id identifier rubyid_limit_hash'>limit_hash</span><span class='lbracket'>[</span><span class='symbol'>:last_time</span><span class='rbracket'>]</span> <span class='op'>+</span> <span class='ivar'>@delay</span><span class='rparen'>)</span> <span class='op'>-</span> <span class='id identifier rubyid_rate_limit_time'>rate_limit_time</span>
+  <span class='kw'>else</span>
+    <span class='comment'># Fifth case: no rate limiting at all! Increment the count, set the last_time, and return false
+</span>    <span class='id identifier rubyid_limit_hash'>limit_hash</span><span class='lbracket'>[</span><span class='symbol'>:last_time</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_rate_limit_time'>rate_limit_time</span>
+    <span class='id identifier rubyid_limit_hash'>limit_hash</span><span class='lbracket'>[</span><span class='symbol'>:count</span><span class='rbracket'>]</span> <span class='op'>+=</span> <span class='id identifier rubyid_increment'>increment</span>
+    <span class='kw'>false</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+
+    <div id="footer">
+  Generated on Wed May 16 09:20:09 2018 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.8.7.6 (ruby-2.5.0).
+</div>
+
+  </body>
+</html>

@@ -1,0 +1,3206 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Class: Discordrb::Message
+  
+    &mdash; Documentation by YARD 0.8.7.6
+  
+</title>
+
+  <link rel="stylesheet" href="../css/style.css" type="text/css" charset="utf-8" />
+
+  <link rel="stylesheet" href="../css/common.css" type="text/css" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  hasFrames = window.top.frames.main ? true : false;
+  relpath = '../';
+  framesUrl = "../frames.html#!Discordrb/Message.html";
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../_index.html">Index (M)</a> &raquo;
+    <span class='title'><span class='object_link'><a href="../Discordrb.html" title="Discordrb (module)">Discordrb</a></span></span>
+     &raquo; 
+    <span class="title">Message</span>
+  
+
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="../class_list.html">
+      Class List
+    </a>
+  
+    <a class="full_list_link" id="method_list_link"
+        href="../method_list.html">
+      Method List
+    </a>
+  
+    <a class="full_list_link" id="file_list_link"
+        href="../file_list.html">
+      File List
+    </a>
+  
+</div>
+      <div class="clear"></div>
+    </div>
+
+    <iframe id="search_frame"></iframe>
+
+    <div id="content"><h1>Class: Discordrb::Message
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+    <dt class="r1">Inherits:</dt>
+    <dd class="r1">
+      <span class="inheritName">Object</span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next">Discordrb::Message</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+      </dd>
+    
+  
+  
+    
+  
+    
+      <dt class="r2">Includes:</dt>
+      <dd class="r2"><span class='object_link'><a href="IDObject.html" title="Discordrb::IDObject (module)">IDObject</a></span></dd>
+      
+    
+  
+  
+  
+    <dt class="r1 last">Defined in:</dt>
+    <dd class="r1 last">lib/discordrb/data.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    
+<p>A message on Discord that was sent to a text channel</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+  <h2>Constant Summary</h2>
+  
+    <dl class="constants">
+      
+        <dt id="ZERO_DISCRIM-constant" class="">ZERO_DISCRIM =
+          <div class="docstring">
+  <div class="discussion">
+    
+<p>The discriminator that webhook user accounts have.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>0000</span><span class='tstring_end'>&#39;</span></span><span class='period'>.</span><span class='id identifier rubyid_freeze'>freeze</span></pre></dd>
+      
+    </dl>
+  
+
+
+
+
+  <h2>Instance Attribute Summary <small>(<a href="#" class="summary_toggle">collapse</a>)</small></h2>
+  <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#attachments-instance_method" title="#attachments (instance method)">- (Array&lt;Attachment&gt;) <strong>attachments</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>The files attached to this message.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#author-instance_method" title="#author (instance method)">- (Member, User) <strong>author</strong> </a>
+    
+
+    
+      (also: #user, #writer)
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>The user that sent this message.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#channel-instance_method" title="#channel (instance method)">- (Channel) <strong>channel</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>The channel in which this message was sent.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#content-instance_method" title="#content (instance method)">- (String) <strong>content</strong> </a>
+    
+
+    
+      (also: #text, #to_s)
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>The content of this message.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#edited-instance_method" title="#edited (instance method)">- (true, false) <strong>edited</strong> </a>
+    
+
+    
+      (also: #edited?)
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Whether the message was edited or not.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#edited_timestamp-instance_method" title="#edited_timestamp (instance method)">- (Time) <strong>edited_timestamp</strong> </a>
+    
+
+    
+      (also: #edit_timestamp)
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>The timestamp at which this message was edited.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#embeds-instance_method" title="#embeds (instance method)">- (Array&lt;Embed&gt;) <strong>embeds</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>The embed objects contained in this message.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#mention_everyone-instance_method" title="#mention_everyone (instance method)">- (true, false) <strong>mention_everyone</strong> </a>
+    
+
+    
+      (also: #mention_everyone?, #mentions_everyone?)
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Whether the message mentioned everyone or not.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#mentions-instance_method" title="#mentions (instance method)">- (Array&lt;User&gt;) <strong>mentions</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>The users that were mentioned in this message.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#nonce-instance_method" title="#nonce (instance method)">- (String) <strong>nonce</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Used for validating a message was sent.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#pinned-instance_method" title="#pinned (instance method)">- (true, false) <strong>pinned</strong> </a>
+    
+
+    
+      (also: #pinned?)
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Whether the message is pinned or not.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#reactions-instance_method" title="#reactions (instance method)">- (Hash&lt;String =&gt; Reaction&gt;) <strong>reactions</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>The reaction objects attached to this message keyed by the name of the
+reaction.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#role_mentions-instance_method" title="#role_mentions (instance method)">- (Array&lt;Role&gt;) <strong>role_mentions</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>The roles that were mentioned in this message.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#timestamp-instance_method" title="#timestamp (instance method)">- (Time) <strong>timestamp</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>The timestamp at which this message was sent.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#tts-instance_method" title="#tts (instance method)">- (true, false) <strong>tts</strong> </a>
+    
+
+    
+      (also: #tts?)
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Whether the message used Text-To-Speech (TTS) or not.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#webhook_id-instance_method" title="#webhook_id (instance method)">- (Integer<sup>?</sup>) <strong>webhook_id</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>The webhook ID that sent this message, or nil if it wasn&#39;t sent through
+a webhook.</p>
+</div></span>
+  
+</li>
+
+    
+  </ul>
+
+
+
+  
+  
+  <h3 class="inherited">Attributes included from <span class='object_link'><a href="IDObject.html" title="Discordrb::IDObject (module)">IDObject</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="IDObject.html#id-instance_method" title="Discordrb::IDObject#id (method)">#id</a></span></p>
+
+
+  
+    <h2>
+      Instance Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#await-instance_method" title="#await (instance method)">- (Object) <strong>await</strong>(key, attributes = {}, &amp;block) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Add an <span class='object_link'><a href="Await.html" title="Discordrb::Await (class)">Await</a></span> for a message with the same user and channel.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#create_reaction-instance_method" title="#create_reaction (instance method)">- (Object) <strong>create_reaction</strong>(reaction) </a>
+    
+
+    
+      (also: #react)
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Reacts to a message.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#delete-instance_method" title="#delete (instance method)">- (Object) <strong>delete</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Deletes this message.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#delete_all_reactions-instance_method" title="#delete_all_reactions (instance method)">- (Object) <strong>delete_all_reactions</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Removes all reactions from this message.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#delete_own_reaction-instance_method" title="#delete_own_reaction (instance method)">- (Object) <strong>delete_own_reaction</strong>(reaction) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Delete&#39;s this clients reaction on this message.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#delete_reaction-instance_method" title="#delete_reaction (instance method)">- (Object) <strong>delete_reaction</strong>(user, reaction) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Deletes a reaction made by a user on this message.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#edit-instance_method" title="#edit (instance method)">- (Message) <strong>edit</strong>(new_content, new_embed = nil) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Edits this message to have the specified content instead.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#emoji-instance_method" title="#emoji (instance method)">- (Array&lt;Emoji&gt;) <strong>emoji</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>The emotes that were used/mentioned in this message (Only returns Emoji the
+bot has access to, else nil).</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#emoji%3F-instance_method" title="#emoji? (instance method)">- (true, false) <strong>emoji?</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Check if any emoji got used in this message.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#from_bot%3F-instance_method" title="#from_bot? (instance method)">- (true, false) <strong>from_bot?</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Whether this message was sent by the current <span class='object_link'><a href="Bot.html" title="Discordrb::Bot (class)">Bot</a></span>.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#inspect-instance_method" title="#inspect (instance method)">- (Object) <strong>inspect</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>The inspect method is overwritten to give more useful output.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#my_reactions-instance_method" title="#my_reactions (instance method)">- (Array&lt;Reaction&gt;) <strong>my_reactions</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns the reactions made by the current bot or user.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#pin-instance_method" title="#pin (instance method)">- (Object) <strong>pin</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Pins this message.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#reacted_with-instance_method" title="#reacted_with (instance method)">- (Array&lt;User&gt;) <strong>reacted_with</strong>(reaction) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns the list of users who reacted with a certain reaction.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#reactions%3F-instance_method" title="#reactions? (instance method)">- (true, false) <strong>reactions?</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Check if any reactions got used in this message.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#reply-instance_method" title="#reply (instance method)">- (Object) <strong>reply</strong>(content) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Replies to this message with the specified content.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#unpin-instance_method" title="#unpin (instance method)">- (Object) <strong>unpin</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Unpins this message.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#webhook%3F-instance_method" title="#webhook? (instance method)">- (true, false) <strong>webhook?</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Whether this message has been sent over a webhook.</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <span class='object_link'><a href="IDObject.html" title="Discordrb::IDObject (module)">IDObject</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="IDObject.html#%3D%3D-instance_method" title="Discordrb::IDObject#== (method)">#==</a></span>, <span class='object_link'><a href="IDObject.html#creation_time-instance_method" title="Discordrb::IDObject#creation_time (method)">#creation_time</a></span>, <span class='object_link'><a href="IDObject.html#synthesise-class_method" title="Discordrb::IDObject.synthesise (method)">synthesise</a></span></p>
+
+  <div id="instance_attr_details" class="attr_details">
+    <h2>Instance Attribute Details</h2>
+    
+      
+      <span id=""></span>
+      <div class="method_details first">
+  <h3 class="signature first" id="attachments-instance_method">
+  
+    - (<tt>Array&lt;<span class='object_link'><a href="Attachment.html" title="Discordrb::Attachment (class)">Attachment</a></span>&gt;</tt>) <strong>attachments</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the files attached to this message.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array&lt;<span class='object_link'><a href="Attachment.html" title="Discordrb::Attachment (class)">Attachment</a></span>&gt;</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the files attached to this message.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+2289
+2290
+2291</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/data.rb', line 2289</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_attachments'>attachments</span>
+  <span class='ivar'>@attachments</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <div class="method_details ">
+  <h3 class="signature " id="author-instance_method">
+  
+    - (<tt><span class='object_link'><a href="Member.html" title="Discordrb::Member (class)">Member</a></span></tt>, <tt><span class='object_link'><a href="User.html" title="Discordrb::User (class)">User</a></span></tt>) <strong>author</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='user-instance_method'>user</span>, <span id='writer-instance_method'>writer</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the user that sent this message. (Will be a <span class='object_link'><a href="Member.html" title="Discordrb::Member (class)">Discordrb::Member</a></span> most of the
+time, it should only be a <span class='object_link'><a href="User.html" title="Discordrb::User (class)">User</a></span> for old messages when the author has left
+the server since then)</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Member.html" title="Discordrb::Member (class)">Member</a></span></tt>, <tt><span class='object_link'><a href="User.html" title="Discordrb::User (class)">User</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the user that sent this message. (Will be a <span class='object_link'><a href="Member.html" title="Discordrb::Member (class)">Discordrb::Member</a></span> most of the time, it
+should only be a <span class='object_link'><a href="User.html" title="Discordrb::User (class)">User</a></span> for old messages when the author has left the
+server since then)</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+2268
+2269
+2270</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/data.rb', line 2268</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_author'>author</span>
+  <span class='ivar'>@author</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <div class="method_details ">
+  <h3 class="signature " id="channel-instance_method">
+  
+    - (<tt><span class='object_link'><a href="Channel.html" title="Discordrb::Channel (class)">Channel</a></span></tt>) <strong>channel</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the channel in which this message was sent.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Channel.html" title="Discordrb::Channel (class)">Channel</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the channel in which this message was sent.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+2273
+2274
+2275</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/data.rb', line 2273</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_channel'>channel</span>
+  <span class='ivar'>@channel</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <div class="method_details ">
+  <h3 class="signature " id="content-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>) <strong>content</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='text-instance_method'>text</span>, <span id='to_s-instance_method'>to_s</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the content of this message.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the content of this message.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+2262
+2263
+2264</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/data.rb', line 2262</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_content'>content</span>
+  <span class='ivar'>@content</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <div class="method_details ">
+  <h3 class="signature " id="edited-instance_method">
+  
+    - (<tt>true</tt>, <tt>false</tt>) <strong>edited</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='edited?-instance_method'>edited?</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns whether the message was edited or not.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>true</tt>, <tt>false</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>whether the message was edited or not.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+2305
+2306
+2307</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/data.rb', line 2305</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_edited'>edited</span>
+  <span class='ivar'>@edited</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <div class="method_details ">
+  <h3 class="signature " id="edited_timestamp-instance_method">
+  
+    - (<tt>Time</tt>) <strong>edited_timestamp</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='edit_timestamp-instance_method'>edit_timestamp</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the timestamp at which this message was edited. <code>nil</code> if
+the message was never edited.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Time</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the timestamp at which this message was edited. <code>nil</code> if the
+message was never edited.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+2279
+2280
+2281</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/data.rb', line 2279</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_edited_timestamp'>edited_timestamp</span>
+  <span class='ivar'>@edited_timestamp</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <div class="method_details ">
+  <h3 class="signature " id="embeds-instance_method">
+  
+    - (<tt>Array&lt;<span class='object_link'><a href="Embed.html" title="Discordrb::Embed (class)">Embed</a></span>&gt;</tt>) <strong>embeds</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the embed objects contained in this message.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array&lt;<span class='object_link'><a href="Embed.html" title="Discordrb::Embed (class)">Embed</a></span>&gt;</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the embed objects contained in this message.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+2292
+2293
+2294</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/data.rb', line 2292</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_embeds'>embeds</span>
+  <span class='ivar'>@embeds</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <div class="method_details ">
+  <h3 class="signature " id="mention_everyone-instance_method">
+  
+    - (<tt>true</tt>, <tt>false</tt>) <strong>mention_everyone</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='mention_everyone?-instance_method'>mention_everyone?</span>, <span id='mentions_everyone?-instance_method'>mentions_everyone?</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns whether the message mentioned everyone or not.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>true</tt>, <tt>false</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>whether the message mentioned everyone or not.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+2309
+2310
+2311</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/data.rb', line 2309</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_mention_everyone'>mention_everyone</span>
+  <span class='ivar'>@mention_everyone</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <div class="method_details ">
+  <h3 class="signature " id="mentions-instance_method">
+  
+    - (<tt>Array&lt;<span class='object_link'><a href="User.html" title="Discordrb::User (class)">User</a></span>&gt;</tt>) <strong>mentions</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the users that were mentioned in this message.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array&lt;<span class='object_link'><a href="User.html" title="Discordrb::User (class)">User</a></span>&gt;</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the users that were mentioned in this message.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+2283
+2284
+2285</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/data.rb', line 2283</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_mentions'>mentions</span>
+  <span class='ivar'>@mentions</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <div class="method_details ">
+  <h3 class="signature " id="nonce-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>) <strong>nonce</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns used for validating a message was sent</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>used for validating a message was sent</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+2302
+2303
+2304</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/data.rb', line 2302</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_nonce'>nonce</span>
+  <span class='ivar'>@nonce</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <div class="method_details ">
+  <h3 class="signature " id="pinned-instance_method">
+  
+    - (<tt>true</tt>, <tt>false</tt>) <strong>pinned</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='pinned?-instance_method'>pinned?</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns whether the message is pinned or not.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>true</tt>, <tt>false</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>whether the message is pinned or not.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+2314
+2315
+2316</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/data.rb', line 2314</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_pinned'>pinned</span>
+  <span class='ivar'>@pinned</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <div class="method_details ">
+  <h3 class="signature " id="reactions-instance_method">
+  
+    - (<tt>Hash&lt;<span class='object_link'><a href="../String.html" title="String (class)">String</a></span> =&gt; <span class='object_link'><a href="Reaction.html" title="Discordrb::Reaction (class)">Reaction</a></span>&gt;</tt>) <strong>reactions</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the reaction objects attached to this message keyed by the name of
+the reaction</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Hash&lt;<span class='object_link'><a href="../String.html" title="String (class)">String</a></span> =&gt; <span class='object_link'><a href="Reaction.html" title="Discordrb::Reaction (class)">Reaction</a></span>&gt;</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the reaction objects attached to this message keyed by the name of the
+reaction</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+2295
+2296
+2297</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/data.rb', line 2295</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_reactions'>reactions</span>
+  <span class='ivar'>@reactions</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <div class="method_details ">
+  <h3 class="signature " id="role_mentions-instance_method">
+  
+    - (<tt>Array&lt;<span class='object_link'><a href="Role.html" title="Discordrb::Role (class)">Role</a></span>&gt;</tt>) <strong>role_mentions</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the roles that were mentioned in this message.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array&lt;<span class='object_link'><a href="Role.html" title="Discordrb::Role (class)">Role</a></span>&gt;</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the roles that were mentioned in this message.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+2286
+2287
+2288</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/data.rb', line 2286</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_role_mentions'>role_mentions</span>
+  <span class='ivar'>@role_mentions</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <div class="method_details ">
+  <h3 class="signature " id="timestamp-instance_method">
+  
+    - (<tt>Time</tt>) <strong>timestamp</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the timestamp at which this message was sent.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Time</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the timestamp at which this message was sent.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+2276
+2277
+2278</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/data.rb', line 2276</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_timestamp'>timestamp</span>
+  <span class='ivar'>@timestamp</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <div class="method_details ">
+  <h3 class="signature " id="tts-instance_method">
+  
+    - (<tt>true</tt>, <tt>false</tt>) <strong>tts</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='tts?-instance_method'>tts?</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns whether the message used Text-To-Speech (TTS) or not.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>true</tt>, <tt>false</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>whether the message used Text-To-Speech (TTS) or not.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+2298
+2299
+2300</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/data.rb', line 2298</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_tts'>tts</span>
+  <span class='ivar'>@tts</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <div class="method_details ">
+  <h3 class="signature " id="webhook_id-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../Integer.html" title="Integer (class)">Integer</a></span></tt><sup>?</sup>) <strong>webhook_id</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the webhook ID that sent this message, or nil if it wasn&#39;t sent
+through a webhook.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../Integer.html" title="Integer (class)">Integer</a></span></tt>, <tt>nil</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the webhook ID that sent this message, or nil if it wasn&#39;t sent through
+a webhook.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+2318
+2319
+2320</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/data.rb', line 2318</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_webhook_id'>webhook_id</span>
+  <span class='ivar'>@webhook_id</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+
+    
+      <div class="method_details first">
+  <h3 class="signature first" id="await-instance_method">
+  
+    - (<tt>Object</tt>) <strong>await</strong>(key, attributes = {}, &amp;block) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Add an <span class='object_link'><a href="Await.html" title="Discordrb::Await (class)">Await</a></span> for a message with the same user and channel.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+  <p class="tag_title">See Also:</p>
+  <ul class="see">
+    
+      <li><span class='object_link'><a href="Bot.html#add_await-instance_method" title="Discordrb::Bot#add_await (method)">Bot#add_await</a></span></li>
+    
+  </ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+2436
+2437
+2438</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/data.rb', line 2436</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_await'>await</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='comma'>,</span> <span class='id identifier rubyid_attributes'>attributes</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+  <span class='ivar'>@bot</span><span class='period'>.</span><span class='id identifier rubyid_add_await'>add_await</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='comma'>,</span> <span class='const'>Discordrb</span><span class='op'>::</span><span class='const'>Events</span><span class='op'>::</span><span class='const'>MessageEvent</span><span class='comma'>,</span> <span class='lbrace'>{</span> <span class='label'>from:</span> <span class='ivar'>@author</span><span class='period'>.</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='label'>in:</span> <span class='ivar'>@channel</span><span class='period'>.</span><span class='id identifier rubyid_id'>id</span> <span class='rbrace'>}</span><span class='period'>.</span><span class='id identifier rubyid_merge'>merge</span><span class='lparen'>(</span><span class='id identifier rubyid_attributes'>attributes</span><span class='rparen'>)</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="create_reaction-instance_method">
+  
+    - (<tt>Object</tt>) <strong>create_reaction</strong>(reaction) 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='react-instance_method'>react</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Reacts to a message</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>reaction</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>, <tt>#to_reaction</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the unicode emoji or <span class='object_link'><a href="Emoji.html" title="Discordrb::Emoji (class)">Emoji</a></span></p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+2490
+2491
+2492
+2493
+2494</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/data.rb', line 2490</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_create_reaction'>create_reaction</span><span class='lparen'>(</span><span class='id identifier rubyid_reaction'>reaction</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_reaction'>reaction</span> <span class='op'>=</span> <span class='id identifier rubyid_reaction'>reaction</span><span class='period'>.</span><span class='id identifier rubyid_to_reaction'>to_reaction</span> <span class='kw'>if</span> <span class='id identifier rubyid_reaction'>reaction</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='symbol'>:to_reaction</span><span class='rparen'>)</span>
+  <span class='const'>API</span><span class='op'>::</span><span class='const'>Channel</span><span class='period'>.</span><span class='id identifier rubyid_create_reaction'>create_reaction</span><span class='lparen'>(</span><span class='ivar'>@bot</span><span class='period'>.</span><span class='id identifier rubyid_token'>token</span><span class='comma'>,</span> <span class='ivar'>@channel</span><span class='period'>.</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='ivar'>@id</span><span class='comma'>,</span> <span class='id identifier rubyid_reaction'>reaction</span><span class='rparen'>)</span>
+  <span class='kw'>nil</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="delete-instance_method">
+  
+    - (<tt>Object</tt>) <strong>delete</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Deletes this message.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+2415
+2416
+2417
+2418</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/data.rb', line 2415</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_delete'>delete</span>
+  <span class='const'>API</span><span class='op'>::</span><span class='const'>Channel</span><span class='period'>.</span><span class='id identifier rubyid_delete_message'>delete_message</span><span class='lparen'>(</span><span class='ivar'>@bot</span><span class='period'>.</span><span class='id identifier rubyid_token'>token</span><span class='comma'>,</span> <span class='ivar'>@channel</span><span class='period'>.</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='ivar'>@id</span><span class='rparen'>)</span>
+  <span class='kw'>nil</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="delete_all_reactions-instance_method">
+  
+    - (<tt>Object</tt>) <strong>delete_all_reactions</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Removes all reactions from this message</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+2523
+2524
+2525</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/data.rb', line 2523</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_delete_all_reactions'>delete_all_reactions</span>
+  <span class='const'>API</span><span class='op'>::</span><span class='const'>Channel</span><span class='period'>.</span><span class='id identifier rubyid_delete_all_reactions'>delete_all_reactions</span><span class='lparen'>(</span><span class='ivar'>@bot</span><span class='period'>.</span><span class='id identifier rubyid_token'>token</span><span class='comma'>,</span> <span class='ivar'>@channel</span><span class='period'>.</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='ivar'>@id</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="delete_own_reaction-instance_method">
+  
+    - (<tt>Object</tt>) <strong>delete_own_reaction</strong>(reaction) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Delete&#39;s this clients reaction on this message</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>reaction</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>, <tt>#to_reaction</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the reaction to remove</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+2517
+2518
+2519
+2520</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/data.rb', line 2517</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_delete_own_reaction'>delete_own_reaction</span><span class='lparen'>(</span><span class='id identifier rubyid_reaction'>reaction</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_reaction'>reaction</span> <span class='op'>=</span> <span class='id identifier rubyid_reaction'>reaction</span><span class='period'>.</span><span class='id identifier rubyid_to_reaction'>to_reaction</span> <span class='kw'>if</span> <span class='id identifier rubyid_reaction'>reaction</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='symbol'>:to_reaction</span><span class='rparen'>)</span>
+  <span class='const'>API</span><span class='op'>::</span><span class='const'>Channel</span><span class='period'>.</span><span class='id identifier rubyid_delete_own_reaction'>delete_own_reaction</span><span class='lparen'>(</span><span class='ivar'>@bot</span><span class='period'>.</span><span class='id identifier rubyid_token'>token</span><span class='comma'>,</span> <span class='ivar'>@channel</span><span class='period'>.</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='ivar'>@id</span><span class='comma'>,</span> <span class='id identifier rubyid_reaction'>reaction</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="delete_reaction-instance_method">
+  
+    - (<tt>Object</tt>) <strong>delete_reaction</strong>(user, reaction) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Deletes a reaction made by a user on this message</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>user</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="User.html" title="Discordrb::User (class)">User</a></span></tt>, <tt>#resolve_id</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the user who used this reaction</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>reaction</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>, <tt>#to_reaction</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the reaction to remove</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+2510
+2511
+2512
+2513</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/data.rb', line 2510</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_delete_reaction'>delete_reaction</span><span class='lparen'>(</span><span class='id identifier rubyid_user'>user</span><span class='comma'>,</span> <span class='id identifier rubyid_reaction'>reaction</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_reaction'>reaction</span> <span class='op'>=</span> <span class='id identifier rubyid_reaction'>reaction</span><span class='period'>.</span><span class='id identifier rubyid_to_reaction'>to_reaction</span> <span class='kw'>if</span> <span class='id identifier rubyid_reaction'>reaction</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='symbol'>:to_reaction</span><span class='rparen'>)</span>
+  <span class='const'>API</span><span class='op'>::</span><span class='const'>Channel</span><span class='period'>.</span><span class='id identifier rubyid_delete_user_reaction'>delete_user_reaction</span><span class='lparen'>(</span><span class='ivar'>@bot</span><span class='period'>.</span><span class='id identifier rubyid_token'>token</span><span class='comma'>,</span> <span class='ivar'>@channel</span><span class='period'>.</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='ivar'>@id</span><span class='comma'>,</span> <span class='id identifier rubyid_reaction'>reaction</span><span class='comma'>,</span> <span class='id identifier rubyid_user'>user</span><span class='period'>.</span><span class='id identifier rubyid_resolve_id'>resolve_id</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="edit-instance_method">
+  
+    - (<tt><span class='object_link'><a href="" title="Discordrb::Message (class)">Message</a></span></tt>) <strong>edit</strong>(new_content, new_embed = nil) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Edits this message to have the specified content instead. You can only edit
+your own messages.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>new_content</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the new content the message should have.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>new_embed</span>
+      
+      
+        <span class='type'>(<tt>Hash</tt>, <tt><span class='object_link'><a href="Webhooks/Embed.html" title="Discordrb::Webhooks::Embed (class)">Discordrb::Webhooks::Embed</a></span></tt>, <tt>nil</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>nil</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The new embed the message should have. If nil the message will be changed
+to have no embed.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="" title="Discordrb::Message (class)">Message</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the resulting message.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+2409
+2410
+2411
+2412</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/data.rb', line 2409</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_edit'>edit</span><span class='lparen'>(</span><span class='id identifier rubyid_new_content'>new_content</span><span class='comma'>,</span> <span class='id identifier rubyid_new_embed'>new_embed</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_response'>response</span> <span class='op'>=</span> <span class='const'>API</span><span class='op'>::</span><span class='const'>Channel</span><span class='period'>.</span><span class='id identifier rubyid_edit_message'>edit_message</span><span class='lparen'>(</span><span class='ivar'>@bot</span><span class='period'>.</span><span class='id identifier rubyid_token'>token</span><span class='comma'>,</span> <span class='ivar'>@channel</span><span class='period'>.</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='ivar'>@id</span><span class='comma'>,</span> <span class='id identifier rubyid_new_content'>new_content</span><span class='comma'>,</span> <span class='lbracket'>[</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_new_embed'>new_embed</span> <span class='op'>?</span> <span class='id identifier rubyid_new_embed'>new_embed</span><span class='period'>.</span><span class='id identifier rubyid_to_hash'>to_hash</span> <span class='op'>:</span> <span class='kw'>nil</span><span class='rparen'>)</span>
+  <span class='const'>Message</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='const'>JSON</span><span class='period'>.</span><span class='id identifier rubyid_parse'>parse</span><span class='lparen'>(</span><span class='id identifier rubyid_response'>response</span><span class='rparen'>)</span><span class='comma'>,</span> <span class='ivar'>@bot</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="emoji-instance_method">
+  
+    - (<tt>Array&lt;<span class='object_link'><a href="Emoji.html" title="Discordrb::Emoji (class)">Emoji</a></span>&gt;</tt>) <strong>emoji</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the emotes that were used/mentioned in this message (Only returns
+Emoji the bot has access to, else nil).</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array&lt;<span class='object_link'><a href="Emoji.html" title="Discordrb::Emoji (class)">Emoji</a></span>&gt;</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the emotes that were used/mentioned in this message (Only returns Emoji the
+bot has access to, else nil).</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+2459
+2460
+2461
+2462
+2463
+2464
+2465
+2466
+2467</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/data.rb', line 2459</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_emoji'>emoji</span>
+  <span class='kw'>return</span> <span class='kw'>if</span> <span class='ivar'>@content</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+
+  <span class='id identifier rubyid_emoji'>emoji</span> <span class='op'>=</span> <span class='id identifier rubyid_scan_for_emoji'>scan_for_emoji</span>
+  <span class='id identifier rubyid_emoji'>emoji</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_element'>element</span><span class='op'>|</span>
+    <span class='ivar'>@emoji</span> <span class='op'>&lt;&lt;</span> <span class='ivar'>@bot</span><span class='period'>.</span><span class='id identifier rubyid_parse_mention'>parse_mention</span><span class='lparen'>(</span><span class='id identifier rubyid_element'>element</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
+  <span class='ivar'>@emoji</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="emoji?-instance_method">
+  
+    - (<tt>true</tt>, <tt>false</tt>) <strong>emoji?</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Check if any emoji got used in this message</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>true</tt>, <tt>false</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>whether or not any emoji got used</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+2471
+2472
+2473
+2474</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/data.rb', line 2471</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_emoji?'>emoji?</span>
+  <span class='id identifier rubyid_emoji'>emoji</span> <span class='op'>=</span> <span class='id identifier rubyid_scan_for_emoji'>scan_for_emoji</span>
+  <span class='kw'>return</span> <span class='kw'>true</span> <span class='kw'>unless</span> <span class='id identifier rubyid_emoji'>emoji</span><span class='period'>.</span><span class='id identifier rubyid_empty?'>empty?</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="from_bot?-instance_method">
+  
+    - (<tt>true</tt>, <tt>false</tt>) <strong>from_bot?</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns whether this message was sent by the current <span class='object_link'><a href="Bot.html" title="Discordrb::Bot (class)">Bot</a></span>.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>true</tt>, <tt>false</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>whether this message was sent by the current <span class='object_link'><a href="Bot.html" title="Discordrb::Bot (class)">Bot</a></span>.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+2441
+2442
+2443</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/data.rb', line 2441</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_from_bot?'>from_bot?</span>
+  <span class='ivar'>@author</span> <span class='op'>&amp;&amp;</span> <span class='ivar'>@author</span><span class='period'>.</span><span class='id identifier rubyid_current_bot?'>current_bot?</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="inspect-instance_method">
+  
+    - (<tt>Object</tt>) <strong>inspect</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>The inspect method is overwritten to give more useful output</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+2528
+2529
+2530</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/data.rb', line 2528</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_inspect'>inspect</span>
+  <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>&lt;Message content=\&quot;</span><span class='embexpr_beg'>#{</span><span class='ivar'>@content</span><span class='embexpr_end'>}</span><span class='tstring_content'>\&quot; id=</span><span class='embexpr_beg'>#{</span><span class='ivar'>@id</span><span class='embexpr_end'>}</span><span class='tstring_content'> timestamp=</span><span class='embexpr_beg'>#{</span><span class='ivar'>@timestamp</span><span class='embexpr_end'>}</span><span class='tstring_content'> author=</span><span class='embexpr_beg'>#{</span><span class='ivar'>@author</span><span class='embexpr_end'>}</span><span class='tstring_content'> channel=</span><span class='embexpr_beg'>#{</span><span class='ivar'>@channel</span><span class='embexpr_end'>}</span><span class='tstring_content'>&gt;</span><span class='tstring_end'>&quot;</span></span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="my_reactions-instance_method">
+  
+    - (<tt>Array&lt;<span class='object_link'><a href="Reaction.html" title="Discordrb::Reaction (class)">Reaction</a></span>&gt;</tt>) <strong>my_reactions</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the reactions made by the current bot or user</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array&lt;<span class='object_link'><a href="Reaction.html" title="Discordrb::Reaction (class)">Reaction</a></span>&gt;</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the reactions</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+2484
+2485
+2486</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/data.rb', line 2484</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_my_reactions'>my_reactions</span>
+  <span class='ivar'>@reactions</span><span class='period'>.</span><span class='id identifier rubyid_values'>values</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span><span class='lparen'>(</span><span class='op'>&amp;</span><span class='symbol'>:me</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="pin-instance_method">
+  
+    - (<tt>Object</tt>) <strong>pin</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Pins this message</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+2421
+2422
+2423
+2424
+2425</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/data.rb', line 2421</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_pin'>pin</span>
+  <span class='const'>API</span><span class='op'>::</span><span class='const'>Channel</span><span class='period'>.</span><span class='id identifier rubyid_pin_message'>pin_message</span><span class='lparen'>(</span><span class='ivar'>@bot</span><span class='period'>.</span><span class='id identifier rubyid_token'>token</span><span class='comma'>,</span> <span class='ivar'>@channel</span><span class='period'>.</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='ivar'>@id</span><span class='rparen'>)</span>
+  <span class='ivar'>@pinned</span> <span class='op'>=</span> <span class='kw'>true</span>
+  <span class='kw'>nil</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="reacted_with-instance_method">
+  
+    - (<tt>Array&lt;<span class='object_link'><a href="User.html" title="Discordrb::User (class)">User</a></span>&gt;</tt>) <strong>reacted_with</strong>(reaction) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the list of users who reacted with a certain reaction</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>reaction</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>, <tt>#to_reaction</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the unicode emoji or <span class='object_link'><a href="Emoji.html" title="Discordrb::Emoji (class)">Emoji</a></span></p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array&lt;<span class='object_link'><a href="User.html" title="Discordrb::User (class)">User</a></span>&gt;</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the users who used this reaction</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+2501
+2502
+2503
+2504
+2505</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/data.rb', line 2501</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_reacted_with'>reacted_with</span><span class='lparen'>(</span><span class='id identifier rubyid_reaction'>reaction</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_reaction'>reaction</span> <span class='op'>=</span> <span class='id identifier rubyid_reaction'>reaction</span><span class='period'>.</span><span class='id identifier rubyid_to_reaction'>to_reaction</span> <span class='kw'>if</span> <span class='id identifier rubyid_reaction'>reaction</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='symbol'>:to_reaction</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_response'>response</span> <span class='op'>=</span> <span class='const'>JSON</span><span class='period'>.</span><span class='id identifier rubyid_parse'>parse</span><span class='lparen'>(</span><span class='const'>API</span><span class='op'>::</span><span class='const'>Channel</span><span class='period'>.</span><span class='id identifier rubyid_get_reactions'>get_reactions</span><span class='lparen'>(</span><span class='ivar'>@bot</span><span class='period'>.</span><span class='id identifier rubyid_token'>token</span><span class='comma'>,</span> <span class='ivar'>@channel</span><span class='period'>.</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='ivar'>@id</span><span class='comma'>,</span> <span class='id identifier rubyid_reaction'>reaction</span><span class='rparen'>)</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_response'>response</span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_d'>d</span><span class='op'>|</span> <span class='const'>User</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_d'>d</span><span class='comma'>,</span> <span class='ivar'>@bot</span><span class='rparen'>)</span> <span class='rbrace'>}</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="reactions?-instance_method">
+  
+    - (<tt>true</tt>, <tt>false</tt>) <strong>reactions?</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Check if any reactions got used in this message</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>true</tt>, <tt>false</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>whether or not this message has reactions</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+2478
+2479
+2480</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/data.rb', line 2478</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_reactions?'>reactions?</span>
+  <span class='ivar'>@reactions</span><span class='period'>.</span><span class='id identifier rubyid_any?'>any?</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="reply-instance_method">
+  
+    - (<tt>Object</tt>) <strong>reply</strong>(content) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Replies to this message with the specified content.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+  <p class="tag_title">See Also:</p>
+  <ul class="see">
+    
+      <li><span class='object_link'><a href="Channel.html#send_message-instance_method" title="Discordrb::Channel#send_message (method)">Channel#send_message</a></span></li>
+    
+  </ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+2400
+2401
+2402</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/data.rb', line 2400</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_reply'>reply</span><span class='lparen'>(</span><span class='id identifier rubyid_content'>content</span><span class='rparen'>)</span>
+  <span class='ivar'>@channel</span><span class='period'>.</span><span class='id identifier rubyid_send_message'>send_message</span><span class='lparen'>(</span><span class='id identifier rubyid_content'>content</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="unpin-instance_method">
+  
+    - (<tt>Object</tt>) <strong>unpin</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Unpins this message</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+2428
+2429
+2430
+2431
+2432</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/data.rb', line 2428</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_unpin'>unpin</span>
+  <span class='const'>API</span><span class='op'>::</span><span class='const'>Channel</span><span class='period'>.</span><span class='id identifier rubyid_unpin_message'>unpin_message</span><span class='lparen'>(</span><span class='ivar'>@bot</span><span class='period'>.</span><span class='id identifier rubyid_token'>token</span><span class='comma'>,</span> <span class='ivar'>@channel</span><span class='period'>.</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='ivar'>@id</span><span class='rparen'>)</span>
+  <span class='ivar'>@pinned</span> <span class='op'>=</span> <span class='kw'>false</span>
+  <span class='kw'>nil</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="webhook?-instance_method">
+  
+    - (<tt>true</tt>, <tt>false</tt>) <strong>webhook?</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns whether this message has been sent over a webhook.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>true</tt>, <tt>false</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>whether this message has been sent over a webhook.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+2446
+2447
+2448</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/data.rb', line 2446</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_webhook?'>webhook?</span>
+  <span class='op'>!</span><span class='ivar'>@webhook_id</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+
+    <div id="footer">
+  Generated on Wed May 16 09:20:02 2018 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.8.7.6 (ruby-2.5.0).
+</div>
+
+  </body>
+</html>
