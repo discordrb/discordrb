@@ -1,0 +1,1493 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Class: Discordrb::Events::MessageEvent
+  
+    &mdash; Documentation by YARD 0.8.7.6
+  
+</title>
+
+  <link rel="stylesheet" href="../../css/style.css" type="text/css" charset="utf-8" />
+
+  <link rel="stylesheet" href="../../css/common.css" type="text/css" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  hasFrames = window.top.frames.main ? true : false;
+  relpath = '../../';
+  framesUrl = "../../frames.html#!Discordrb/Events/MessageEvent.html";
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="../../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../../js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../../_index.html">Index (M)</a> &raquo;
+    <span class='title'><span class='object_link'><a href="../../Discordrb.html" title="Discordrb (module)">Discordrb</a></span></span> &raquo; <span class='title'><span class='object_link'><a href="../Events.html" title="Discordrb::Events (module)">Events</a></span></span>
+     &raquo; 
+    <span class="title">MessageEvent</span>
+  
+
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="../../class_list.html">
+      Class List
+    </a>
+  
+    <a class="full_list_link" id="method_list_link"
+        href="../../method_list.html">
+      Method List
+    </a>
+  
+    <a class="full_list_link" id="file_list_link"
+        href="../../file_list.html">
+      File List
+    </a>
+  
+</div>
+      <div class="clear"></div>
+    </div>
+
+    <iframe id="search_frame"></iframe>
+
+    <div id="content"><h1>Class: Discordrb::Events::MessageEvent
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+    <dt class="r1">Inherits:</dt>
+    <dd class="r1">
+      <span class="inheritName"><span class='object_link'><a href="Event.html" title="Discordrb::Events::Event (class)">Event</a></span></span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next"><span class='object_link'><a href="Event.html" title="Discordrb::Events::Event (class)">Event</a></span></li>
+          
+            <li class="next">Discordrb::Events::MessageEvent</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+      </dd>
+    
+  
+  
+    
+  
+    
+      <dt class="r2">Includes:</dt>
+      <dd class="r2"><span class='object_link'><a href="Respondable.html" title="Discordrb::Events::Respondable (module)">Respondable</a></span></dd>
+      
+    
+  
+  
+  
+    <dt class="r1 last">Defined in:</dt>
+    <dd class="r1 last">lib/discordrb/events/message.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    
+<p>Event raised when a text message is sent to a channel</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><div id="subclasses">
+  <h2>Direct Known Subclasses</h2>
+  <p class="children"><span class='object_link'><a href="../Commands/CommandEvent.html" title="Discordrb::Commands::CommandEvent (class)">Commands::CommandEvent</a></span>, <span class='object_link'><a href="MentionEvent.html" title="Discordrb::Events::MentionEvent (class)">MentionEvent</a></span>, <span class='object_link'><a href="MessageEditEvent.html" title="Discordrb::Events::MessageEditEvent (class)">MessageEditEvent</a></span>, <span class='object_link'><a href="PrivateMessageEvent.html" title="Discordrb::Events::PrivateMessageEvent (class)">PrivateMessageEvent</a></span></p>
+</div>
+
+
+
+
+  <h2>Instance Attribute Summary <small>(<a href="#" class="summary_toggle">collapse</a>)</small></h2>
+  <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#author-instance_method" title="#author (instance method)">- (Member, User) <strong>author</strong> </a>
+    
+
+    
+      (also: #user)
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Who sent this message.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#channel-instance_method" title="#channel (instance method)">- (Channel) <strong>channel</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>The channel in which this message was sent.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#content-instance_method" title="#content (instance method)">- (String) <strong>content</strong> </a>
+    
+
+    
+      (also: #text)
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>The message&#39;s content.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#file-instance_method" title="#file (instance method)">- (File) <strong>file</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>The file that have been saved by calls to <span class='object_link'><a href="#attach_file-instance_method" title="Discordrb::Events::MessageEvent#attach_file (method)">#attach_file</a></span> and will be sent
+to Discord upon completion.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#message-instance_method" title="#message (instance method)">- (Message) <strong>message</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>The message which triggered this event.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#saved_message-instance_method" title="#saved_message (instance method)">- (String) <strong>saved_message</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>The message that has been saved by calls to <span class='object_link'><a href="Respondable.html#%3C%3C-instance_method" title="Discordrb::Events::Respondable#&lt;&lt; (method)">Respondable#&lt;&lt;</a></span> and will be sent to
+Discord upon completion.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#server-instance_method" title="#server (instance method)">- (Server<sup>?</sup>) <strong>server</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>The server where this message was sent, or nil if it was sent in PM.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#timestamp-instance_method" title="#timestamp (instance method)">- (Time) <strong>timestamp</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>The time at which the message was sent.</p>
+</div></span>
+  
+</li>
+
+    
+  </ul>
+
+
+
+  
+  
+  <h3 class="inherited">Attributes inherited from <span class='object_link'><a href="Event.html" title="Discordrb::Events::Event (class)">Event</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="Event.html#bot-instance_method" title="Discordrb::Events::Event#bot (method)">#bot</a></span></p>
+
+
+  
+    <h2>
+      Instance Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#attach_file-instance_method" title="#attach_file (instance method)">- (Object) <strong>attach_file</strong>(file) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Attaches a file to the message event and converts the message into a
+caption.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#detach_file-instance_method" title="#detach_file (instance method)">- (Object) <strong>detach_file</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Detaches a file from the message event.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#from_bot%3F-instance_method" title="#from_bot? (instance method)">- (true, false) <strong>from_bot?</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Whether or not this message was sent by the bot itself.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#initialize-instance_method" title="#initialize (instance method)">- (MessageEvent) <strong>initialize</strong>(message, bot) </a>
+    
+
+    
+  </span>
+  
+  
+    <span class="note title constructor">constructor</span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>A new instance of MessageEvent.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#send_file-instance_method" title="#send_file (instance method)">- (Discordrb::Message) <strong>send_file</strong>(file, caption: nil) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Sends file with a caption to the channel this message was sent in, right
+now.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#voice-instance_method" title="#voice (instance method)">- (VoiceBot<sup>?</sup>) <strong>voice</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Utility method to get the voice bot for the current server.</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <span class='object_link'><a href="Respondable.html" title="Discordrb::Events::Respondable (module)">Respondable</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="Respondable.html#%3C%3C-instance_method" title="Discordrb::Events::Respondable#&lt;&lt; (method)">#<<</a></span>, <span class='object_link'><a href="Respondable.html#drain-instance_method" title="Discordrb::Events::Respondable#drain (method)">#drain</a></span>, <span class='object_link'><a href="Respondable.html#drain_into-instance_method" title="Discordrb::Events::Respondable#drain_into (method)">#drain_into</a></span>, <span class='object_link'><a href="Respondable.html#send_embed-instance_method" title="Discordrb::Events::Respondable#send_embed (method)">#send_embed</a></span>, <span class='object_link'><a href="Respondable.html#send_message-instance_method" title="Discordrb::Events::Respondable#send_message (method)">#send_message</a></span>, <span class='object_link'><a href="Respondable.html#send_temporary_message-instance_method" title="Discordrb::Events::Respondable#send_temporary_message (method)">#send_temporary_message</a></span></p>
+
+  
+  
+  
+  
+  
+  <div id="constructor_details" class="method_details_list">
+  <h2>Constructor Details</h2>
+  
+    <div class="method_details first">
+  <h3 class="signature first" id="initialize-instance_method">
+  
+    - (<tt><span class='object_link'><a href="" title="Discordrb::Events::MessageEvent (class)">MessageEvent</a></span></tt>) <strong>initialize</strong>(message, bot) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns a new instance of MessageEvent</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+107
+108
+109
+110
+111
+112
+113</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/events/message.rb', line 107</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_message'>message</span><span class='comma'>,</span> <span class='id identifier rubyid_bot'>bot</span><span class='rparen'>)</span>
+  <span class='ivar'>@bot</span> <span class='op'>=</span> <span class='id identifier rubyid_bot'>bot</span>
+  <span class='ivar'>@message</span> <span class='op'>=</span> <span class='id identifier rubyid_message'>message</span>
+  <span class='ivar'>@channel</span> <span class='op'>=</span> <span class='id identifier rubyid_message'>message</span><span class='period'>.</span><span class='id identifier rubyid_channel'>channel</span>
+  <span class='ivar'>@saved_message</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span>
+  <span class='ivar'>@file</span> <span class='op'>=</span> <span class='kw'>nil</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+  
+</div>
+
+  <div id="instance_attr_details" class="attr_details">
+    <h2>Instance Attribute Details</h2>
+    
+      
+      <span id=""></span>
+      <div class="method_details first">
+  <h3 class="signature first" id="author-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../Member.html" title="Discordrb::Member (class)">Member</a></span></tt>, <tt><span class='object_link'><a href="../User.html" title="Discordrb::User (class)">User</a></span></tt>) <strong>author</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='user-instance_method'>user</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns who sent this message.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../Member.html" title="Discordrb::Member (class)">Member</a></span></tt>, <tt><span class='object_link'><a href="../User.html" title="Discordrb::User (class)">User</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>who sent this message.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+  <p class="tag_title">See Also:</p>
+  <ul class="see">
+    
+      <li><span class='object_link'><a href="../Message.html#author-instance_method" title="Discordrb::Message#author (method)">Message#author</a></span></li>
+    
+  </ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+100</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/events/message.rb', line 100</span>
+
+<span class='id identifier rubyid_delegate'>delegate</span> <span class='symbol'>:author</span><span class='comma'>,</span> <span class='symbol'>:channel</span><span class='comma'>,</span> <span class='symbol'>:content</span><span class='comma'>,</span> <span class='symbol'>:timestamp</span><span class='comma'>,</span> <span class='label'>to:</span> <span class='symbol'>:message</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <div class="method_details ">
+  <h3 class="signature " id="channel-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../Channel.html" title="Discordrb::Channel (class)">Channel</a></span></tt>) <strong>channel</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the channel in which this message was sent.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../Channel.html" title="Discordrb::Channel (class)">Channel</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the channel in which this message was sent.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+  <p class="tag_title">See Also:</p>
+  <ul class="see">
+    
+      <li><span class='object_link'><a href="../Message.html#channel-instance_method" title="Discordrb::Message#channel (method)">Message#channel</a></span></li>
+    
+  </ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+100</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/events/message.rb', line 100</span>
+
+<span class='id identifier rubyid_delegate'>delegate</span> <span class='symbol'>:author</span><span class='comma'>,</span> <span class='symbol'>:channel</span><span class='comma'>,</span> <span class='symbol'>:content</span><span class='comma'>,</span> <span class='symbol'>:timestamp</span><span class='comma'>,</span> <span class='label'>to:</span> <span class='symbol'>:message</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <div class="method_details ">
+  <h3 class="signature " id="content-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../../String.html" title="String (class)">String</a></span></tt>) <strong>content</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='text-instance_method'>text</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the message&#39;s content.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../../String.html" title="String (class)">String</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the message&#39;s content.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+  <p class="tag_title">See Also:</p>
+  <ul class="see">
+    
+      <li><span class='object_link'><a href="../Message.html#content-instance_method" title="Discordrb::Message#content (method)">Message#content</a></span></li>
+    
+  </ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+100</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/events/message.rb', line 100</span>
+
+<span class='id identifier rubyid_delegate'>delegate</span> <span class='symbol'>:author</span><span class='comma'>,</span> <span class='symbol'>:channel</span><span class='comma'>,</span> <span class='symbol'>:content</span><span class='comma'>,</span> <span class='symbol'>:timestamp</span><span class='comma'>,</span> <span class='label'>to:</span> <span class='symbol'>:message</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <div class="method_details ">
+  <h3 class="signature " id="file-instance_method">
+  
+    - (<tt>File</tt>) <strong>file</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the file that have been saved by calls to <span class='object_link'><a href="#attach_file-instance_method" title="Discordrb::Events::MessageEvent#attach_file (method)">#attach_file</a></span> and will
+be sent to Discord upon completion.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>File</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the file that have been saved by calls to <span class='object_link'><a href="#attach_file-instance_method" title="Discordrb::Events::MessageEvent#attach_file (method)">#attach_file</a></span> and will be sent
+to Discord upon completion.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+86
+87
+88</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/events/message.rb', line 86</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_file'>file</span>
+  <span class='ivar'>@file</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <div class="method_details ">
+  <h3 class="signature " id="message-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../Message.html" title="Discordrb::Message (class)">Message</a></span></tt>) <strong>message</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the message which triggered this event.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../Message.html" title="Discordrb::Message (class)">Message</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the message which triggered this event.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+80
+81
+82</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/events/message.rb', line 80</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_message'>message</span>
+  <span class='ivar'>@message</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <div class="method_details ">
+  <h3 class="signature " id="saved_message-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../../String.html" title="String (class)">String</a></span></tt>) <strong>saved_message</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the message that has been saved by calls to <span class='object_link'><a href="Respondable.html#%3C%3C-instance_method" title="Discordrb::Events::Respondable#&lt;&lt; (method)">Respondable#&lt;&lt;</a></span> and will be
+sent to Discord upon completion.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../../String.html" title="String (class)">String</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the message that has been saved by calls to <span class='object_link'><a href="Respondable.html#%3C%3C-instance_method" title="Discordrb::Events::Respondable#&lt;&lt; (method)">Respondable#&lt;&lt;</a></span> and will be sent to
+Discord upon completion.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+83
+84
+85</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/events/message.rb', line 83</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_saved_message'>saved_message</span>
+  <span class='ivar'>@saved_message</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <div class="method_details ">
+  <h3 class="signature " id="server-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../Server.html" title="Discordrb::Server (class)">Server</a></span></tt><sup>?</sup>) <strong>server</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the server where this message was sent, or nil if it was sent in
+PM.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../Server.html" title="Discordrb::Server (class)">Server</a></span></tt>, <tt>nil</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the server where this message was sent, or nil if it was sent in PM.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+  <p class="tag_title">See Also:</p>
+  <ul class="see">
+    
+      <li><span class='object_link'><a href="../Channel.html#server-instance_method" title="Discordrb::Channel#server (method)">Channel#server</a></span></li>
+    
+  </ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+105</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/events/message.rb', line 105</span>
+
+<span class='id identifier rubyid_delegate'>delegate</span> <span class='symbol'>:server</span><span class='comma'>,</span> <span class='label'>to:</span> <span class='symbol'>:channel</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <div class="method_details ">
+  <h3 class="signature " id="timestamp-instance_method">
+  
+    - (<tt>Time</tt>) <strong>timestamp</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the time at which the message was sent.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Time</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the time at which the message was sent.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+  <p class="tag_title">See Also:</p>
+  <ul class="see">
+    
+      <li><span class='object_link'><a href="../Message.html#timestamp-instance_method" title="Discordrb::Message#timestamp (method)">Message#timestamp</a></span></li>
+    
+  </ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+100</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/events/message.rb', line 100</span>
+
+<span class='id identifier rubyid_delegate'>delegate</span> <span class='symbol'>:author</span><span class='comma'>,</span> <span class='symbol'>:channel</span><span class='comma'>,</span> <span class='symbol'>:content</span><span class='comma'>,</span> <span class='symbol'>:timestamp</span><span class='comma'>,</span> <span class='label'>to:</span> <span class='symbol'>:message</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+
+    
+      <div class="method_details first">
+  <h3 class="signature first" id="attach_file-instance_method">
+  
+    - (<tt>Object</tt>) <strong>attach_file</strong>(file) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Attaches a file to the message event and converts the message into a
+caption.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>file</span>
+      
+      
+        <span class='type'>(<tt>File</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The file to be attached</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Raises:</p>
+<ul class="raise">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>ArgumentError</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+130
+131
+132
+133
+134</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/events/message.rb', line 130</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_attach_file'>attach_file</span><span class='lparen'>(</span><span class='id identifier rubyid_file'>file</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_raise'>raise</span> <span class='const'>ArgumentError</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Argument is not a file!</span><span class='tstring_end'>&#39;</span></span> <span class='kw'>unless</span> <span class='id identifier rubyid_file'>file</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'>File</span><span class='rparen'>)</span>
+  <span class='ivar'>@file</span> <span class='op'>=</span> <span class='id identifier rubyid_file'>file</span>
+  <span class='kw'>nil</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="detach_file-instance_method">
+  
+    - (<tt>Object</tt>) <strong>detach_file</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Detaches a file from the message event.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+137
+138
+139</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/events/message.rb', line 137</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_detach_file'>detach_file</span>
+  <span class='ivar'>@file</span> <span class='op'>=</span> <span class='kw'>nil</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="from_bot?-instance_method">
+  
+    - (<tt>true</tt>, <tt>false</tt>) <strong>from_bot?</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns whether or not this message was sent by the bot itself</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>true</tt>, <tt>false</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>whether or not this message was sent by the bot itself</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+142
+143
+144</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/events/message.rb', line 142</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_from_bot?'>from_bot?</span>
+  <span class='ivar'>@message</span><span class='period'>.</span><span class='id identifier rubyid_user'>user</span><span class='period'>.</span><span class='id identifier rubyid_id'>id</span> <span class='op'>==</span> <span class='ivar'>@bot</span><span class='period'>.</span><span class='id identifier rubyid_profile'>profile</span><span class='period'>.</span><span class='id identifier rubyid_id'>id</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="send_file-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../Message.html" title="Discordrb::Message (class)">Discordrb::Message</a></span></tt>) <strong>send_file</strong>(file, caption: nil) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Sends file with a caption to the channel this message was sent in, right
+now. It is usually preferable to use <span class='object_link'><a href="Respondable.html#%3C%3C-instance_method" title="Discordrb::Events::Respondable#&lt;&lt; (method)">Respondable#&lt;&lt;</a></span> and <span class='object_link'><a href="#attach_file-instance_method" title="Discordrb::Events::MessageEvent#attach_file (method)">#attach_file</a></span> instead
+because it avoids rate limiting problems</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+  <div class="examples">
+    <p class="tag_title">Examples:</p>
+    
+      
+        <p class="example_title"><div class='inline'>
+<p>Send a file from disk</p>
+</div></p>
+      
+      <pre class="example code"><code><span class='id identifier rubyid_event'>event</span><span class='period'>.</span><span class='id identifier rubyid_send_file'>send_file</span><span class='lparen'>(</span><span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_open'>open</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>rubytaco.png</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>r</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='rparen'>)</span></code></pre>
+    
+  </div>
+<p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>file</span>
+      
+      
+        <span class='type'>(<tt>File</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The file to send to the channel</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>caption</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../../String.html" title="String (class)">String</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The caption attached to the file</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../Message.html" title="Discordrb::Message (class)">Discordrb::Message</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the message that was sent</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+123
+124
+125</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/events/message.rb', line 123</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_send_file'>send_file</span><span class='lparen'>(</span><span class='id identifier rubyid_file'>file</span><span class='comma'>,</span> <span class='label'>caption:</span> <span class='kw'>nil</span><span class='rparen'>)</span>
+  <span class='ivar'>@message</span><span class='period'>.</span><span class='id identifier rubyid_channel'>channel</span><span class='period'>.</span><span class='id identifier rubyid_send_file'>send_file</span><span class='lparen'>(</span><span class='id identifier rubyid_file'>file</span><span class='comma'>,</span> <span class='label'>caption:</span> <span class='id identifier rubyid_caption'>caption</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="voice-instance_method">
+  
+    - (<tt>VoiceBot</tt><sup>?</sup>) <strong>voice</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Utility method to get the voice bot for the current server</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>VoiceBot</tt>, <tt>nil</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the voice bot connected to this message&#39;s server, or nil if there is
+none connected</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+148
+149
+150</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/events/message.rb', line 148</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_voice'>voice</span>
+  <span class='ivar'>@bot</span><span class='period'>.</span><span class='id identifier rubyid_voice'>voice</span><span class='lparen'>(</span><span class='ivar'>@message</span><span class='period'>.</span><span class='id identifier rubyid_channel'>channel</span><span class='period'>.</span><span class='id identifier rubyid_server'>server</span><span class='period'>.</span><span class='id identifier rubyid_id'>id</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+
+    <div id="footer">
+  Generated on Wed May 16 09:20:06 2018 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.8.7.6 (ruby-2.5.0).
+</div>
+
+  </body>
+</html>

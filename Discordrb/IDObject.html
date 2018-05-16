@@ -1,0 +1,531 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Module: Discordrb::IDObject
+  
+    &mdash; Documentation by YARD 0.8.7.6
+  
+</title>
+
+  <link rel="stylesheet" href="../css/style.css" type="text/css" charset="utf-8" />
+
+  <link rel="stylesheet" href="../css/common.css" type="text/css" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  hasFrames = window.top.frames.main ? true : false;
+  relpath = '../';
+  framesUrl = "../frames.html#!Discordrb/IDObject.html";
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../_index.html">Index (I)</a> &raquo;
+    <span class='title'><span class='object_link'><a href="../Discordrb.html" title="Discordrb (module)">Discordrb</a></span></span>
+     &raquo; 
+    <span class="title">IDObject</span>
+  
+
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="../class_list.html">
+      Class List
+    </a>
+  
+    <a class="full_list_link" id="method_list_link"
+        href="../method_list.html">
+      Method List
+    </a>
+  
+    <a class="full_list_link" id="file_list_link"
+        href="../file_list.html">
+      File List
+    </a>
+  
+</div>
+      <div class="clear"></div>
+    </div>
+
+    <iframe id="search_frame"></iframe>
+
+    <div id="content"><h1>Module: Discordrb::IDObject
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+  
+    
+  
+    
+  
+  
+    <dt class="r1">Included in:</dt>
+    <dd class="r1"><span class='object_link'><a href="Application.html" title="Discordrb::Application (class)">Application</a></span>, <span class='object_link'><a href="Attachment.html" title="Discordrb::Attachment (class)">Attachment</a></span>, <span class='object_link'><a href="AuditLogs/Entry.html" title="Discordrb::AuditLogs::Entry (class)">AuditLogs::Entry</a></span>, <span class='object_link'><a href="Channel.html" title="Discordrb::Channel (class)">Channel</a></span>, <span class='object_link'><a href="Emoji.html" title="Discordrb::Emoji (class)">Emoji</a></span>, <span class='object_link'><a href="Integration.html" title="Discordrb::Integration (class)">Integration</a></span>, <span class='object_link'><a href="InviteChannel.html" title="Discordrb::InviteChannel (class)">InviteChannel</a></span>, <span class='object_link'><a href="InviteServer.html" title="Discordrb::InviteServer (class)">InviteServer</a></span>, <span class='object_link'><a href="Light/Integration.html" title="Discordrb::Light::Integration (class)">Light::Integration</a></span>, <span class='object_link'><a href="Light/LightProfile.html" title="Discordrb::Light::LightProfile (class)">Light::LightProfile</a></span>, <span class='object_link'><a href="Light/UltraLightServer.html" title="Discordrb::Light::UltraLightServer (class)">Light::UltraLightServer</a></span>, <span class='object_link'><a href="Message.html" title="Discordrb::Message (class)">Message</a></span>, <span class='object_link'><a href="Role.html" title="Discordrb::Role (class)">Role</a></span>, <span class='object_link'><a href="Server.html" title="Discordrb::Server (class)">Server</a></span>, <span class='object_link'><a href="User.html" title="Discordrb::User (class)">User</a></span>, <span class='object_link'><a href="Webhook.html" title="Discordrb::Webhook (class)">Webhook</a></span></dd>
+    
+  
+  
+    <dt class="r2 last">Defined in:</dt>
+    <dd class="r2 last">lib/discordrb/data.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    
+<p>Mixin for objects that have IDs</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+
+
+
+  <h2>Instance Attribute Summary <small>(<a href="#" class="summary_toggle">collapse</a>)</small></h2>
+  <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#id-instance_method" title="#id (instance method)">- (Integer) <strong>id</strong> </a>
+    
+
+    
+      (also: #resolve_id, #hash)
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>The ID which uniquely identifies this object across Discord.</p>
+</div></span>
+  
+</li>
+
+    
+  </ul>
+
+
+
+
+  
+    <h2>
+      Class Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#synthesise-class_method" title="synthesise (class method)">+ (Integer) <strong>synthesise</strong>(time) </a>
+    
+
+    
+      (also: synthesize)
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Creates an artificial snowflake at the given point in time.</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+    <h2>
+      Instance Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#%3D%3D-instance_method" title="#== (instance method)">- (Object) <strong>==</strong>(other) </a>
+    
+
+    
+      (also: #eql?)
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>ID based comparison.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#creation_time-instance_method" title="#creation_time (instance method)">- (Time) <strong>creation_time</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Estimates the time this object was generated on based on the beginning of
+the ID.</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+  <div id="instance_attr_details" class="attr_details">
+    <h2>Instance Attribute Details</h2>
+    
+      
+      <span id=""></span>
+      <div class="method_details first">
+  <h3 class="signature first" id="id-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../Integer.html" title="Integer (class)">Integer</a></span></tt>) <strong>id</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='resolve_id-instance_method'>resolve_id</span>, <span id='hash-instance_method'>hash</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the ID which uniquely identifies this object across Discord.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../Integer.html" title="Integer (class)">Integer</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the ID which uniquely identifies this object across Discord.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+72
+73
+74</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/data.rb', line 72</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_id'>id</span>
+  <span class='ivar'>@id</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+
+  <div id="class_method_details" class="method_details_list">
+    <h2>Class Method Details</h2>
+
+    
+      <div class="method_details first">
+  <h3 class="signature first" id="synthesise-class_method">
+  
+    + (<tt><span class='object_link'><a href="../Integer.html" title="Integer (class)">Integer</a></span></tt>) <strong>synthesise</strong>(time) 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='synthesize-class_method'>synthesize</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Creates an artificial snowflake at the given point in time. Useful for
+comparing against.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>time</span>
+      
+      
+        <span class='type'>(<tt>Time</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The time the snowflake should represent.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../Integer.html" title="Integer (class)">Integer</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>a snowflake with the timestamp data as the given time</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+95
+96
+97
+98</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/data.rb', line 95</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_synthesise'>synthesise</span><span class='lparen'>(</span><span class='id identifier rubyid_time'>time</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_ms'>ms</span> <span class='op'>=</span> <span class='lparen'>(</span><span class='id identifier rubyid_time'>time</span><span class='period'>.</span><span class='id identifier rubyid_to_f'>to_f</span> <span class='op'>*</span> <span class='int'>1000</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span>
+  <span class='lparen'>(</span><span class='id identifier rubyid_ms'>ms</span> <span class='op'>-</span> <span class='const'>DISCORD_EPOCH</span><span class='rparen'>)</span> <span class='op'>&lt;&lt;</span> <span class='int'>22</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+
+    
+      <div class="method_details first">
+  <h3 class="signature first" id="==-instance_method">
+  
+    - (<tt>Object</tt>) <strong>==</strong>(other) 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='eql?-instance_method'>eql?</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>ID based comparison</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+77
+78
+79</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/data.rb', line 77</span>
+
+<span class='kw'>def</span> <span class='op'>==</span><span class='lparen'>(</span><span class='id identifier rubyid_other'>other</span><span class='rparen'>)</span>
+  <span class='const'>Discordrb</span><span class='period'>.</span><span class='id identifier rubyid_id_compare'>id_compare</span><span class='lparen'>(</span><span class='ivar'>@id</span><span class='comma'>,</span> <span class='id identifier rubyid_other'>other</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="creation_time-instance_method">
+  
+    - (<tt>Time</tt>) <strong>creation_time</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Estimates the time this object was generated on based on the beginning of
+the ID. This is fairly accurate but shouldn&#39;t be relied on as Discord
+might change its algorithm at any time</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Time</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>when this object was created at</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+86
+87
+88
+89
+90</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/data.rb', line 86</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_creation_time'>creation_time</span>
+  <span class='comment'># Milliseconds
+</span>  <span class='id identifier rubyid_ms'>ms</span> <span class='op'>=</span> <span class='lparen'>(</span><span class='ivar'>@id</span> <span class='op'>&gt;&gt;</span> <span class='int'>22</span><span class='rparen'>)</span> <span class='op'>+</span> <span class='const'>DISCORD_EPOCH</span>
+  <span class='const'>Time</span><span class='period'>.</span><span class='id identifier rubyid_at'>at</span><span class='lparen'>(</span><span class='id identifier rubyid_ms'>ms</span> <span class='op'>/</span> <span class='float'>1000.0</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+
+    <div id="footer">
+  Generated on Wed May 16 09:19:54 2018 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.8.7.6 (ruby-2.5.0).
+</div>
+
+  </body>
+</html>

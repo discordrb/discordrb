@@ -1,0 +1,6073 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Class: Discordrb::Bot
+  
+    &mdash; Documentation by YARD 0.8.7.6
+  
+</title>
+
+  <link rel="stylesheet" href="../css/style.css" type="text/css" charset="utf-8" />
+
+  <link rel="stylesheet" href="../css/common.css" type="text/css" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  hasFrames = window.top.frames.main ? true : false;
+  relpath = '../';
+  framesUrl = "../frames.html#!Discordrb/Bot.html";
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../_index.html">Index (B)</a> &raquo;
+    <span class='title'><span class='object_link'><a href="../Discordrb.html" title="Discordrb (module)">Discordrb</a></span></span>
+     &raquo; 
+    <span class="title">Bot</span>
+  
+
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="../class_list.html">
+      Class List
+    </a>
+  
+    <a class="full_list_link" id="method_list_link"
+        href="../method_list.html">
+      Method List
+    </a>
+  
+    <a class="full_list_link" id="file_list_link"
+        href="../file_list.html">
+      File List
+    </a>
+  
+</div>
+      <div class="clear"></div>
+    </div>
+
+    <iframe id="search_frame"></iframe>
+
+    <div id="content"><h1>Class: Discordrb::Bot
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+    <dt class="r1">Inherits:</dt>
+    <dd class="r1">
+      <span class="inheritName">Object</span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next">Discordrb::Bot</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+      </dd>
+    
+  
+  
+    
+  
+    
+      <dt class="r2">Includes:</dt>
+      <dd class="r2"><span class='object_link'><a href="Cache.html" title="Discordrb::Cache (module)">Cache</a></span>, <span class='object_link'><a href="EventContainer.html" title="Discordrb::EventContainer (module)">EventContainer</a></span></dd>
+      
+    
+  
+  
+  
+    <dt class="r1 last">Defined in:</dt>
+    <dd class="r1 last">lib/discordrb/bot.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    
+<p>Represents a Discord bot, including servers, users, etc.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><div id="subclasses">
+  <h2>Direct Known Subclasses</h2>
+  <p class="children"><span class='object_link'><a href="Commands/CommandBot.html" title="Discordrb::Commands::CommandBot (class)">Commands::CommandBot</a></span></p>
+</div>
+
+
+
+
+  <h2>Instance Attribute Summary <small>(<a href="#" class="summary_toggle">collapse</a>)</small></h2>
+  <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#awaits-instance_method" title="#awaits (instance method)">- (Hash&lt;Symbol =&gt; Await&gt;) <strong>awaits</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>The list of registered <span class='object_link'><a href="Await.html" title="Discordrb::Await (class)">Await</a></span>s.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#event_threads-instance_method" title="#event_threads (instance method)">- (Array&lt;Thread&gt;) <strong>event_threads</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>The list of currently running threads used to parse and call events.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#gateway-instance_method" title="#gateway (instance method)">- (Gateway) <strong>gateway</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>The gateway connection is an internal detail that is useless to most
+people.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#name-instance_method" title="#name (instance method)">- (String) <strong>name</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>The bot&#39;s name which discordrb sends to Discord when making any
+request, so Discord can identify bots with the same codebase.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#shard_key-instance_method" title="#shard_key (instance method)">- (Array(Integer, Integer)) <strong>shard_key</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>The current shard key.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#should_parse_self-instance_method" title="#should_parse_self (instance method)">- (true, false) <strong>should_parse_self</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Whether or not the bot should parse its own messages.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#voices-instance_method" title="#voices (instance method)">- (Hash&lt;Integer =&gt; VoiceBot&gt;) <strong>voices</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>The voice connections this bot currently has, by the server ID to which
+they are connected.</p>
+</div></span>
+  
+</li>
+
+    
+  </ul>
+
+
+
+
+  
+    <h2>
+      Instance Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#add_await-instance_method" title="#add_await (instance method)">- (Await) <strong>add_await</strong>(key, type, attributes = {}) {|event| ... }</a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Add an await the bot should listen to.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#bot_application-instance_method" title="#bot_application (instance method)">- (Application<sup>?</sup>) <strong>bot_application</strong> </a>
+    
+
+    
+      (also: #bot_app)
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>The bot&#39;s OAuth application.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#connected%3F-instance_method" title="#connected? (instance method)">- (true, false) <strong>connected?</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Whether or not the bot is currently connected to Discord.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#create_oauth_application-instance_method" title="#create_oauth_application (instance method)">- (Array(String, String)) <strong>create_oauth_application</strong>(name, redirect_uris) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Creates a new application to do OAuth authorization with.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#create_server-instance_method" title="#create_server (instance method)">- (Server) <strong>create_server</strong>(name, region = eu-central) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Creates a server on Discord with a specified name and a region.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#debug-instance_method" title="#debug (instance method)">- (Object) <strong>debug</strong>(message) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#debug%3D-instance_method" title="#debug= (instance method)">- (Object) <strong>debug=</strong>(new_debug) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Sets debug mode.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#delete_invite-instance_method" title="#delete_invite (instance method)">- (Object) <strong>delete_invite</strong>(code) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Revokes an invite to a server.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#dispatch-instance_method" title="#dispatch (instance method)">- (Object) <strong>dispatch</strong>(type, data) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Dispatches an event to this bot.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#dnd-instance_method" title="#dnd (instance method)">- (Object) <strong>dnd</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Sets the bot&#39;s status to DnD (red icon).</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#emoji-instance_method" title="#emoji (instance method)">- (Object) <strong>emoji</strong>(id = nil) </a>
+    
+
+    
+      (also: #emojis, #all_emoji)
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#find_emoji-instance_method" title="#find_emoji (instance method)">- (GlobalEmoji<sup>?</sup>) <strong>find_emoji</strong>(name) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Finds an emoji by its name.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#game%3D-instance_method" title="#game= (instance method)">- (String) <strong>game=</strong>(name) </a>
+    
+
+    
+      (also: #playing=)
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Sets the currently playing game to the specified game.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#idle-instance_method" title="#idle (instance method)">- (Object) <strong>idle</strong> </a>
+    
+
+    
+      (also: #away)
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Sets status to idle.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#ignore_user-instance_method" title="#ignore_user (instance method)">- (Object) <strong>ignore_user</strong>(user) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Add a user to the list of ignored users.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#ignored%3F-instance_method" title="#ignored? (instance method)">- (true, false) <strong>ignored?</strong>(user) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Checks whether a user is being ignored.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#initialize-instance_method" title="#initialize (instance method)">- (Bot) <strong>initialize</strong>(log_mode: :normal, token: nil, client_id: nil, type: nil, name: &#39;&#39;, fancy_log: false, suppress_ready: false, parse_self: false, shard_id: nil, num_shards: nil, redact_token: true, ignore_bots: false) </a>
+    
+
+    
+  </span>
+  
+  
+    <span class="note title constructor">constructor</span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Makes a new bot with the given authentication data.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#invisible-instance_method" title="#invisible (instance method)">- (Object) <strong>invisible</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Sets the bot&#39;s status to invisible (appears offline).</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#invite_url-instance_method" title="#invite_url (instance method)">- (String) <strong>invite_url</strong>(server: nil, permission_bits: nil) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Creates an OAuth invite URL that can be used to invite this bot to a
+particular server.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#join-instance_method" title="#join (instance method)">- (Object) <strong>join</strong>(invite) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Makes the bot join an invite to a server.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#listening%3D-instance_method" title="#listening= (instance method)">- (String) <strong>listening=</strong>(name) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Sets the current listening status to the specified name.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#log_exception-instance_method" title="#log_exception (instance method)">- (Object) <strong>log_exception</strong>(e) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#mode%3D-instance_method" title="#mode= (instance method)">- (Object) <strong>mode=</strong>(new_mode) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Sets the logging mode.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#online-instance_method" title="#online (instance method)">- (Object) <strong>online</strong> </a>
+    
+
+    
+      (also: #on)
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Sets status to online.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#parse_mention-instance_method" title="#parse_mention (instance method)">- (User, ...) <strong>parse_mention</strong>(mention, server = nil) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Gets the user, role or emoji from a mention of the user, role or emoji.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#profile-instance_method" title="#profile (instance method)">- (Profile) <strong>profile</strong> </a>
+    
+
+    
+      (also: #bot_user)
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>The bot&#39;s user profile.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#prune_empty_groups-instance_method" title="#prune_empty_groups (instance method)">- (Object) <strong>prune_empty_groups</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Makes the bot leave any groups with no recipients remaining.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#raise_heartbeat_event-instance_method" title="#raise_heartbeat_event (instance method)">- (Object) <strong>raise_heartbeat_event</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Raises a heartbeat event.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#raw_token-instance_method" title="#raw_token (instance method)">- (String) <strong>raw_token</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>The raw token, without any prefix.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#run-instance_method" title="#run (instance method)">- (Object) <strong>run</strong>(async = false) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Runs the bot, which logs into Discord and connects the WebSocket.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#send_file-instance_method" title="#send_file (instance method)">- (Object) <strong>send_file</strong>(channel, file, caption: nil, tts: false) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Sends a file to a channel.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#send_message-instance_method" title="#send_message (instance method)">- (Message) <strong>send_message</strong>(channel, content, tts = false, embed = nil) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Sends a text message to a channel given its ID and the message&#39;s
+content.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#send_temporary_message-instance_method" title="#send_temporary_message (instance method)">- (Object) <strong>send_temporary_message</strong>(channel, content, timeout, tts = false, embed = nil) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Sends a text message to a channel given its ID and the message&#39;s
+content, then deletes it after the specified timeout in seconds.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#servers-instance_method" title="#servers (instance method)">- (Hash&lt;Integer =&gt; Server&gt;) <strong>servers</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>The list of servers the bot is currently in.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#stop-instance_method" title="#stop (instance method)">- (Object) <strong>stop</strong>(no_sync = false) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Stops the bot gracefully, disconnecting the websocket without immediately
+killing the thread.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#stream-instance_method" title="#stream (instance method)">- (String) <strong>stream</strong>(name, url) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Sets the currently online stream to the specified name and Twitch URL.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#suppress_ready_debug-instance_method" title="#suppress_ready_debug (instance method)">- (Object) <strong>suppress_ready_debug</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Prevents the READY packet from being printed regardless of debug mode.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#sync-instance_method" title="#sync (instance method)">- (Object) <strong>sync</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Blocks execution until the websocket stops, which should only happen
+manually triggered or due to an error.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#token-instance_method" title="#token (instance method)">- (String) <strong>token</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>The Discord API token received when logging in.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#unignore_user-instance_method" title="#unignore_user (instance method)">- (Object) <strong>unignore_user</strong>(user) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Remove a user from the ignore list.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#update_oauth_application-instance_method" title="#update_oauth_application (instance method)">- (Object) <strong>update_oauth_application</strong>(name, redirect_uris, description = &#39;&#39;, icon = nil) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Changes information about your OAuth application.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#update_status-instance_method" title="#update_status (instance method)">- (Object) <strong>update_status</strong>(status, activity, url, since = 0, afk = false, activity_type = 0) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Updates presence status.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#users-instance_method" title="#users (instance method)">- (Hash&lt;Integer =&gt; User&gt;) <strong>users</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>The list of users the bot shares a server with.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#voice-instance_method" title="#voice (instance method)">- (Voice::VoiceBot<sup>?</sup>) <strong>voice</strong>(thing) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Gets the voice bot for a particular server or channel.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#voice_connect-instance_method" title="#voice_connect (instance method)">- (Voice::VoiceBot) <strong>voice_connect</strong>(chan, encrypted = true) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Connects to a voice channel, initializes network connections and returns
+the <span class='object_link'><a href="Voice/VoiceBot.html" title="Discordrb::Voice::VoiceBot (class)">Voice::VoiceBot</a></span> over which audio data can then be sent.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#voice_destroy-instance_method" title="#voice_destroy (instance method)">- (Object) <strong>voice_destroy</strong>(server, destroy_vws = true) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Disconnects the client from a specific voice connection given the server
+ID.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#watching%3D-instance_method" title="#watching= (instance method)">- (String) <strong>watching=</strong>(name) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Sets the current watching status to the specified name.</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <span class='object_link'><a href="Cache.html" title="Discordrb::Cache (module)">Cache</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="Cache.html#channel-instance_method" title="Discordrb::Cache#channel (method)">#channel</a></span>, <span class='object_link'><a href="Cache.html#ensure_channel-instance_method" title="Discordrb::Cache#ensure_channel (method)">#ensure_channel</a></span>, <span class='object_link'><a href="Cache.html#ensure_server-instance_method" title="Discordrb::Cache#ensure_server (method)">#ensure_server</a></span>, <span class='object_link'><a href="Cache.html#ensure_user-instance_method" title="Discordrb::Cache#ensure_user (method)">#ensure_user</a></span>, <span class='object_link'><a href="Cache.html#find_channel-instance_method" title="Discordrb::Cache#find_channel (method)">#find_channel</a></span>, <span class='object_link'><a href="Cache.html#find_user-instance_method" title="Discordrb::Cache#find_user (method)">#find_user</a></span>, <span class='object_link'><a href="Cache.html#init_cache-instance_method" title="Discordrb::Cache#init_cache (method)">#init_cache</a></span>, <span class='object_link'><a href="Cache.html#invite-instance_method" title="Discordrb::Cache#invite (method)">#invite</a></span>, <span class='object_link'><a href="Cache.html#member-instance_method" title="Discordrb::Cache#member (method)">#member</a></span>, <span class='object_link'><a href="Cache.html#pm_channel-instance_method" title="Discordrb::Cache#pm_channel (method)">#pm_channel</a></span>, <span class='object_link'><a href="Cache.html#request_chunks-instance_method" title="Discordrb::Cache#request_chunks (method)">#request_chunks</a></span>, <span class='object_link'><a href="Cache.html#resolve_invite_code-instance_method" title="Discordrb::Cache#resolve_invite_code (method)">#resolve_invite_code</a></span>, <span class='object_link'><a href="Cache.html#server-instance_method" title="Discordrb::Cache#server (method)">#server</a></span>, <span class='object_link'><a href="Cache.html#user-instance_method" title="Discordrb::Cache#user (method)">#user</a></span>, <span class='object_link'><a href="Cache.html#voice_regions-instance_method" title="Discordrb::Cache#voice_regions (method)">#voice_regions</a></span></p>
+
+  
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <span class='object_link'><a href="EventContainer.html" title="Discordrb::EventContainer (module)">EventContainer</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="EventContainer.html#add_handler-instance_method" title="Discordrb::EventContainer#add_handler (method)">#add_handler</a></span>, <span class='object_link'><a href="EventContainer.html#await-instance_method" title="Discordrb::EventContainer#await (method)">#await</a></span>, <span class='object_link'><a href="EventContainer.html#channel_create-instance_method" title="Discordrb::EventContainer#channel_create (method)">#channel_create</a></span>, <span class='object_link'><a href="EventContainer.html#channel_delete-instance_method" title="Discordrb::EventContainer#channel_delete (method)">#channel_delete</a></span>, <span class='object_link'><a href="EventContainer.html#channel_recipient_add-instance_method" title="Discordrb::EventContainer#channel_recipient_add (method)">#channel_recipient_add</a></span>, <span class='object_link'><a href="EventContainer.html#channel_recipient_remove-instance_method" title="Discordrb::EventContainer#channel_recipient_remove (method)">#channel_recipient_remove</a></span>, <span class='object_link'><a href="EventContainer.html#channel_update-instance_method" title="Discordrb::EventContainer#channel_update (method)">#channel_update</a></span>, <span class='object_link'><a href="EventContainer.html#class_from_string-class_method" title="Discordrb::EventContainer.class_from_string (method)">class_from_string</a></span>, <span class='object_link'><a href="EventContainer.html#clear%21-instance_method" title="Discordrb::EventContainer#clear! (method)">#clear!</a></span>, <span class='object_link'><a href="EventContainer.html#disconnected-instance_method" title="Discordrb::EventContainer#disconnected (method)">#disconnected</a></span>, <span class='object_link'><a href="EventContainer.html#event_class-class_method" title="Discordrb::EventContainer.event_class (method)">event_class</a></span>, <span class='object_link'><a href="EventContainer.html#handler_class-class_method" title="Discordrb::EventContainer.handler_class (method)">handler_class</a></span>, <span class='object_link'><a href="EventContainer.html#heartbeat-instance_method" title="Discordrb::EventContainer#heartbeat (method)">#heartbeat</a></span>, <span class='object_link'><a href="EventContainer.html#include_events-instance_method" title="Discordrb::EventContainer#include_events (method)">#include_events</a></span>, <span class='object_link'><a href="EventContainer.html#member_join-instance_method" title="Discordrb::EventContainer#member_join (method)">#member_join</a></span>, <span class='object_link'><a href="EventContainer.html#member_leave-instance_method" title="Discordrb::EventContainer#member_leave (method)">#member_leave</a></span>, <span class='object_link'><a href="EventContainer.html#member_update-instance_method" title="Discordrb::EventContainer#member_update (method)">#member_update</a></span>, <span class='object_link'><a href="EventContainer.html#mention-instance_method" title="Discordrb::EventContainer#mention (method)">#mention</a></span>, <span class='object_link'><a href="EventContainer.html#message-instance_method" title="Discordrb::EventContainer#message (method)">#message</a></span>, <span class='object_link'><a href="EventContainer.html#message_delete-instance_method" title="Discordrb::EventContainer#message_delete (method)">#message_delete</a></span>, <span class='object_link'><a href="EventContainer.html#message_edit-instance_method" title="Discordrb::EventContainer#message_edit (method)">#message_edit</a></span>, <span class='object_link'><a href="EventContainer.html#playing-instance_method" title="Discordrb::EventContainer#playing (method)">#playing</a></span>, <span class='object_link'><a href="EventContainer.html#pm-instance_method" title="Discordrb::EventContainer#pm (method)">#pm</a></span>, <span class='object_link'><a href="EventContainer.html#presence-instance_method" title="Discordrb::EventContainer#presence (method)">#presence</a></span>, <span class='object_link'><a href="EventContainer.html#raw-instance_method" title="Discordrb::EventContainer#raw (method)">#raw</a></span>, <span class='object_link'><a href="EventContainer.html#reaction_add-instance_method" title="Discordrb::EventContainer#reaction_add (method)">#reaction_add</a></span>, <span class='object_link'><a href="EventContainer.html#reaction_remove-instance_method" title="Discordrb::EventContainer#reaction_remove (method)">#reaction_remove</a></span>, <span class='object_link'><a href="EventContainer.html#reaction_remove_all-instance_method" title="Discordrb::EventContainer#reaction_remove_all (method)">#reaction_remove_all</a></span>, <span class='object_link'><a href="EventContainer.html#ready-instance_method" title="Discordrb::EventContainer#ready (method)">#ready</a></span>, <span class='object_link'><a href="EventContainer.html#remove_handler-instance_method" title="Discordrb::EventContainer#remove_handler (method)">#remove_handler</a></span>, <span class='object_link'><a href="EventContainer.html#server_create-instance_method" title="Discordrb::EventContainer#server_create (method)">#server_create</a></span>, <span class='object_link'><a href="EventContainer.html#server_delete-instance_method" title="Discordrb::EventContainer#server_delete (method)">#server_delete</a></span>, <span class='object_link'><a href="EventContainer.html#server_emoji-instance_method" title="Discordrb::EventContainer#server_emoji (method)">#server_emoji</a></span>, <span class='object_link'><a href="EventContainer.html#server_emoji_create-instance_method" title="Discordrb::EventContainer#server_emoji_create (method)">#server_emoji_create</a></span>, <span class='object_link'><a href="EventContainer.html#server_emoji_delete-instance_method" title="Discordrb::EventContainer#server_emoji_delete (method)">#server_emoji_delete</a></span>, <span class='object_link'><a href="EventContainer.html#server_emoji_update-instance_method" title="Discordrb::EventContainer#server_emoji_update (method)">#server_emoji_update</a></span>, <span class='object_link'><a href="EventContainer.html#server_update-instance_method" title="Discordrb::EventContainer#server_update (method)">#server_update</a></span>, <span class='object_link'><a href="EventContainer.html#typing-instance_method" title="Discordrb::EventContainer#typing (method)">#typing</a></span>, <span class='object_link'><a href="EventContainer.html#unknown-instance_method" title="Discordrb::EventContainer#unknown (method)">#unknown</a></span>, <span class='object_link'><a href="EventContainer.html#user_ban-instance_method" title="Discordrb::EventContainer#user_ban (method)">#user_ban</a></span>, <span class='object_link'><a href="EventContainer.html#user_unban-instance_method" title="Discordrb::EventContainer#user_unban (method)">#user_unban</a></span>, <span class='object_link'><a href="EventContainer.html#voice_state_update-instance_method" title="Discordrb::EventContainer#voice_state_update (method)">#voice_state_update</a></span>, <span class='object_link'><a href="EventContainer.html#webhook_update-instance_method" title="Discordrb::EventContainer#webhook_update (method)">#webhook_update</a></span></p>
+
+  
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <span class='object_link'><a href="Events.html" title="Discordrb::Events (module)">Events</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="Events.html#matches_all-class_method" title="Discordrb::Events.matches_all (method)">matches_all</a></span></p>
+<div id="constructor_details" class="method_details_list">
+  <h2>Constructor Details</h2>
+  
+    <div class="method_details first">
+  <h3 class="signature first" id="initialize-instance_method">
+  
+    - (<tt><span class='object_link'><a href="" title="Discordrb::Bot (class)">Bot</a></span></tt>) <strong>initialize</strong>(log_mode: :normal, token: nil, client_id: nil, type: nil, name: &#39;&#39;, fancy_log: false, suppress_ready: false, parse_self: false, shard_id: nil, num_shards: nil, redact_token: true, ignore_bots: false) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Makes a new bot with the given authentication data. It will be ready to be
+added event handlers to and can eventually be run with <span class='object_link'><a href="#run-instance_method" title="Discordrb::Bot#run (method)">#run</a></span>.</p>
+
+<p>As support for logging in using username and password has been removed in
+version 3.0.0, only a token login is possible. Be sure to specify the
+<code>type</code> parameter as <code>:user</code> if you&#39;re logging in
+as a user.</p>
+
+<p>Simply creating a bot won&#39;t be enough to start sending messages etc.
+with, only a limited set of methods can be used after logging in. If you
+want to do something when the bot has connected successfully, either do it
+in the <span class='object_link'><a href="EventContainer.html#ready-instance_method" title="Discordrb::EventContainer#ready (method)">EventContainer#ready</a></span> event, or use the <span class='object_link'><a href="#run-instance_method" title="Discordrb::Bot#run (method)">#run</a></span> method with the :async parameter
+and do the processing after that.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>log_mode</span>
+      
+      
+        <span class='type'>(<tt>Symbol</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The mode this bot should use for logging. See <span class='object_link'><a href="Logger.html#mode%3D-instance_method" title="Discordrb::Logger#mode= (method)">Logger#mode=</a></span> for a list of
+modes.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>token</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The token that should be used to log in. If your bot is a bot account, you
+have to specify this. If you&#39;re logging in as a user, make sure to also
+set the account type to :user so discordrb doesn&#39;t think you&#39;re
+trying to log in as a bot.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>client_id</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../Integer.html" title="Integer (class)">Integer</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>If you&#39;re logging in as a bot, the bot&#39;s client ID. This is
+optional, and may be fetched from the API by calling <span class='object_link'><a href="#bot_application-instance_method" title="Discordrb::Bot#bot_application (method)">#bot_application</a></span>
+(see <span class='object_link'><a href="Application.html" title="Discordrb::Application (class)">Application</a></span>).</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>type</span>
+      
+      
+        <span class='type'>(<tt>Symbol</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>This parameter lets you manually overwrite the account type. This needs to
+be set when logging in as a user, otherwise discordrb will treat you as a
+bot account. Valid values are <code>:user</code> and <code>:bot</code>.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>name</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Your bot&#39;s name. This will be sent to Discord with any API requests,
+who will use this to trace the source of excessive API requests; it&#39;s
+recommended to set this to something if you make bots that many people will
+host on their servers separately.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>fancy_log</span>
+      
+      
+        <span class='type'>(<tt>true</tt>, <tt>false</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Whether the output log should be made extra fancy using ANSI escape codes.
+(Your terminal may not support this.)</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>suppress_ready</span>
+      
+      
+        <span class='type'>(<tt>true</tt>, <tt>false</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Whether the READY packet should be exempt from being printed to console.
+Useful for very large bots running in debug or verbose log_mode.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>parse_self</span>
+      
+      
+        <span class='type'>(<tt>true</tt>, <tt>false</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Whether the bot should react on its own messages. It&#39;s best to turn
+this off unless you really need this so you don&#39;t inadvertently create
+infinite loops.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>shard_id</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../Integer.html" title="Integer (class)">Integer</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The number of the shard this bot should handle. See <a
+href="https://github.com/hammerandchisel/discord-api-docs/issues/17">github.com/hammerandchisel/discord-api-docs/issues/17</a>
+for how to do sharding.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>num_shards</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../Integer.html" title="Integer (class)">Integer</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The total number of shards that should be running. See <a
+href="https://github.com/hammerandchisel/discord-api-docs/issues/17">github.com/hammerandchisel/discord-api-docs/issues/17</a>
+for how to do sharding.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>redact_token</span>
+      
+      
+        <span class='type'>(<tt>true</tt>, <tt>false</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Whether the bot should redact the token in logs. Default is true.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>ignore_bots</span>
+      
+      
+        <span class='type'>(<tt>true</tt>, <tt>false</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Whether the bot should ignore bot accounts or not. Default is false.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/bot.rb', line 100</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span>
+    <span class='label'>log_mode:</span> <span class='symbol'>:normal</span><span class='comma'>,</span>
+    <span class='label'>token:</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='label'>client_id:</span> <span class='kw'>nil</span><span class='comma'>,</span>
+    <span class='label'>type:</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='label'>name:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='label'>fancy_log:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>suppress_ready:</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='label'>parse_self:</span> <span class='kw'>false</span><span class='comma'>,</span>
+    <span class='label'>shard_id:</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='label'>num_shards:</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='label'>redact_token:</span> <span class='kw'>true</span><span class='comma'>,</span> <span class='label'>ignore_bots:</span> <span class='kw'>false</span>
+<span class='rparen'>)</span>
+  <span class='const'>LOGGER</span><span class='period'>.</span><span class='id identifier rubyid_mode'>mode</span> <span class='op'>=</span> <span class='id identifier rubyid_log_mode'>log_mode</span>
+  <span class='const'>LOGGER</span><span class='period'>.</span><span class='id identifier rubyid_token'>token</span> <span class='op'>=</span> <span class='id identifier rubyid_token'>token</span> <span class='kw'>if</span> <span class='id identifier rubyid_redact_token'>redact_token</span>
+
+  <span class='ivar'>@should_parse_self</span> <span class='op'>=</span> <span class='id identifier rubyid_parse_self'>parse_self</span>
+
+  <span class='ivar'>@client_id</span> <span class='op'>=</span> <span class='id identifier rubyid_client_id'>client_id</span>
+
+  <span class='ivar'>@type</span> <span class='op'>=</span> <span class='id identifier rubyid_type'>type</span> <span class='op'>||</span> <span class='symbol'>:bot</span>
+  <span class='ivar'>@name</span> <span class='op'>=</span> <span class='id identifier rubyid_name'>name</span>
+
+  <span class='ivar'>@shard_key</span> <span class='op'>=</span> <span class='id identifier rubyid_num_shards'>num_shards</span> <span class='op'>?</span> <span class='lbracket'>[</span><span class='id identifier rubyid_shard_id'>shard_id</span><span class='comma'>,</span> <span class='id identifier rubyid_num_shards'>num_shards</span><span class='rbracket'>]</span> <span class='op'>:</span> <span class='kw'>nil</span>
+
+  <span class='const'>LOGGER</span><span class='period'>.</span><span class='id identifier rubyid_fancy'>fancy</span> <span class='op'>=</span> <span class='id identifier rubyid_fancy_log'>fancy_log</span>
+  <span class='ivar'>@prevent_ready</span> <span class='op'>=</span> <span class='id identifier rubyid_suppress_ready'>suppress_ready</span>
+
+  <span class='ivar'>@token</span> <span class='op'>=</span> <span class='id identifier rubyid_process_token'>process_token</span><span class='lparen'>(</span><span class='ivar'>@type</span><span class='comma'>,</span> <span class='id identifier rubyid_token'>token</span><span class='rparen'>)</span>
+  <span class='ivar'>@gateway</span> <span class='op'>=</span> <span class='const'>Gateway</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='kw'>self</span><span class='comma'>,</span> <span class='ivar'>@token</span><span class='comma'>,</span> <span class='ivar'>@shard_key</span><span class='rparen'>)</span>
+
+  <span class='id identifier rubyid_init_cache'>init_cache</span>
+
+  <span class='ivar'>@voices</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
+  <span class='ivar'>@should_connect_to_voice</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
+
+  <span class='ivar'>@ignored_ids</span> <span class='op'>=</span> <span class='const'>Set</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
+  <span class='ivar'>@ignore_bots</span> <span class='op'>=</span> <span class='id identifier rubyid_ignore_bots'>ignore_bots</span>
+
+  <span class='ivar'>@event_threads</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
+  <span class='ivar'>@current_thread</span> <span class='op'>=</span> <span class='int'>0</span>
+
+  <span class='ivar'>@status</span> <span class='op'>=</span> <span class='symbol'>:online</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+  
+</div>
+
+  <div id="instance_attr_details" class="attr_details">
+    <h2>Instance Attribute Details</h2>
+    
+      
+      <span id=""></span>
+      <div class="method_details first">
+  <h3 class="signature first" id="awaits-instance_method">
+  
+    - (<tt>Hash&lt;Symbol =&gt; <span class='object_link'><a href="Await.html" title="Discordrb::Await (class)">Await</a></span>&gt;</tt>) <strong>awaits</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the list of registered <span class='object_link'><a href="Await.html" title="Discordrb::Await (class)">Await</a></span>s.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Hash&lt;Symbol =&gt; <span class='object_link'><a href="Await.html" title="Discordrb::Await (class)">Await</a></span>&gt;</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the list of registered <span class='object_link'><a href="Await.html" title="Discordrb::Await (class)">Await</a></span>s.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+58
+59
+60</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/bot.rb', line 58</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_awaits'>awaits</span>
+  <span class='ivar'>@awaits</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <div class="method_details ">
+  <h3 class="signature " id="event_threads-instance_method">
+  
+    - (<tt>Array&lt;Thread&gt;</tt>) <strong>event_threads</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>The list of currently running threads used to parse and call events. The
+threads will have a local variable <code>:discordrb_name</code> in the
+format of <code>et-1234</code>, where “et” stands for “event thread” and
+the number is a continually incrementing number representing how many
+events were executed before.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array&lt;Thread&gt;</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The threads.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+44
+45
+46</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/bot.rb', line 44</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_event_threads'>event_threads</span>
+  <span class='ivar'>@event_threads</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <div class="method_details ">
+  <h3 class="signature " id="gateway-instance_method">
+  
+    - (<tt><span class='object_link'><a href="Gateway.html" title="Discordrb::Gateway (class)">Gateway</a></span></tt>) <strong>gateway</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>The gateway connection is an internal detail that is useless to most
+people. It is however essential while debugging or developing discordrb
+itself, or while writing very custom bots.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Gateway.html" title="Discordrb::Gateway (class)">Gateway</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the underlying <span class='object_link'><a href="Gateway.html" title="Discordrb::Gateway (class)">Gateway</a></span> object.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+63
+64
+65</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/bot.rb', line 63</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_gateway'>gateway</span>
+  <span class='ivar'>@gateway</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id="name=-instance_method"></span>
+      <div class="method_details ">
+  <h3 class="signature " id="name-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>) <strong>name</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>The bot&#39;s name which discordrb sends to Discord when making any
+request, so Discord can identify bots with the same codebase. Not required
+but I recommend setting it anyway.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The bot&#39;s name.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+52
+53
+54</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/bot.rb', line 52</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_name'>name</span>
+  <span class='ivar'>@name</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <div class="method_details ">
+  <h3 class="signature " id="shard_key-instance_method">
+  
+    - (<tt>Array(<span class='object_link'><a href="../Integer.html" title="Integer (class)">Integer</a></span>, <span class='object_link'><a href="../Integer.html" title="Integer (class)">Integer</a></span>)</tt>) <strong>shard_key</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the current shard key</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array(<span class='object_link'><a href="../Integer.html" title="Integer (class)">Integer</a></span>, <span class='object_link'><a href="../Integer.html" title="Integer (class)">Integer</a></span>)</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the current shard key</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+55
+56
+57</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/bot.rb', line 55</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_shard_key'>shard_key</span>
+  <span class='ivar'>@shard_key</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id="should_parse_self=-instance_method"></span>
+      <div class="method_details ">
+  <h3 class="signature " id="should_parse_self-instance_method">
+  
+    - (<tt>true</tt>, <tt>false</tt>) <strong>should_parse_self</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns whether or not the bot should parse its own messages. Off by
+default.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>true</tt>, <tt>false</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>whether or not the bot should parse its own messages. Off by default.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+47
+48
+49</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/bot.rb', line 47</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_should_parse_self'>should_parse_self</span>
+  <span class='ivar'>@should_parse_self</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <div class="method_details ">
+  <h3 class="signature " id="voices-instance_method">
+  
+    - (<tt>Hash&lt;<span class='object_link'><a href="../Integer.html" title="Integer (class)">Integer</a></span> =&gt; VoiceBot&gt;</tt>) <strong>voices</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the voice connections this bot currently has, by the server ID to
+which they are connected.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Hash&lt;<span class='object_link'><a href="../Integer.html" title="Integer (class)">Integer</a></span> =&gt; VoiceBot&gt;</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the voice connections this bot currently has, by the server ID to which
+they are connected.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+268
+269
+270</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/bot.rb', line 268</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_voices'>voices</span>
+  <span class='ivar'>@voices</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+
+    
+      <div class="method_details first">
+  <h3 class="signature first" id="add_await-instance_method">
+  
+    - (<tt><span class='object_link'><a href="Await.html" title="Discordrb::Await (class)">Await</a></span></tt>) <strong>add_await</strong>(key, type, attributes = {}) {|event| ... }
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Add an await the bot should listen to. For information on awaits, see
+<span class='object_link'><a href="Await.html" title="Discordrb::Await (class)">Await</a></span>.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>key</span>
+      
+      
+        <span class='type'>(<tt>Symbol</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The key that uniquely identifies the await for <span class='object_link'><a href="Events/AwaitEvent.html" title="Discordrb::Events::AwaitEvent (class)">Events::AwaitEvent</a></span>s to listen to
+(see <span class='object_link'><a href="EventContainer.html#await-instance_method" title="Discordrb::EventContainer#await (method)">EventContainer#await</a></span>).</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>type</span>
+      
+      
+        <span class='type'>(<tt>Class</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The event class that should be listened for.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>attributes</span>
+      
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>{}</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The attributes the event should check for. The block will only be executed
+if all attributes match.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Yields:</p>
+<ul class="yield">
+  
+    <li>
+      
+      
+        <span class='type'></span>
+      
+      
+      
+        
+        <div class='inline'>
+<p>Is executed when the await is triggered.</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Yield Parameters:</p>
+<ul class="yieldparam">
+  
+    <li>
+      
+        <span class='name'>event</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Events/Event.html" title="Discordrb::Events::Event (class)">Event</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The event object that was triggered.</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Await.html" title="Discordrb::Await (class)">Await</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The await that was created.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+555
+556
+557
+558
+559
+560</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/bot.rb', line 555</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_add_await'>add_await</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='comma'>,</span> <span class='id identifier rubyid_type'>type</span><span class='comma'>,</span> <span class='id identifier rubyid_attributes'>attributes</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_raise'>raise</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>You can&#39;t await an AwaitEvent!</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_type'>type</span> <span class='op'>==</span> <span class='const'>Discordrb</span><span class='op'>::</span><span class='const'>Events</span><span class='op'>::</span><span class='const'>AwaitEvent</span>
+  <span class='id identifier rubyid_await'>await</span> <span class='op'>=</span> <span class='const'>Await</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='kw'>self</span><span class='comma'>,</span> <span class='id identifier rubyid_key'>key</span><span class='comma'>,</span> <span class='id identifier rubyid_type'>type</span><span class='comma'>,</span> <span class='id identifier rubyid_attributes'>attributes</span><span class='comma'>,</span> <span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+  <span class='ivar'>@awaits</span> <span class='op'>||=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
+  <span class='ivar'>@awaits</span><span class='lbracket'>[</span><span class='id identifier rubyid_key'>key</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_await'>await</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="bot_application-instance_method">
+  
+    - (<tt><span class='object_link'><a href="Application.html" title="Discordrb::Application (class)">Application</a></span></tt><sup>?</sup>) <strong>bot_application</strong> 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='bot_app-instance_method'>bot_app</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>The bot&#39;s OAuth application.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Application.html" title="Discordrb::Application (class)">Application</a></span></tt>, <tt>nil</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The bot&#39;s application info. Returns <code>nil</code> if bot is not a
+bot account.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+194
+195
+196
+197
+198</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/bot.rb', line 194</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_bot_application'>bot_application</span>
+  <span class='kw'>return</span> <span class='kw'>unless</span> <span class='ivar'>@type</span> <span class='op'>==</span> <span class='symbol'>:bot</span>
+  <span class='id identifier rubyid_response'>response</span> <span class='op'>=</span> <span class='const'>API</span><span class='period'>.</span><span class='id identifier rubyid_oauth_application'>oauth_application</span><span class='lparen'>(</span><span class='id identifier rubyid_token'>token</span><span class='rparen'>)</span>
+  <span class='const'>Application</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='const'>JSON</span><span class='period'>.</span><span class='id identifier rubyid_parse'>parse</span><span class='lparen'>(</span><span class='id identifier rubyid_response'>response</span><span class='rparen'>)</span><span class='comma'>,</span> <span class='kw'>self</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="connected?-instance_method">
+  
+    - (<tt>true</tt>, <tt>false</tt>) <strong>connected?</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns whether or not the bot is currently connected to Discord.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>true</tt>, <tt>false</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>whether or not the bot is currently connected to Discord.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+244
+245
+246</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/bot.rb', line 244</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_connected?'>connected?</span>
+  <span class='ivar'>@gateway</span><span class='period'>.</span><span class='id identifier rubyid_open?'>open?</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="create_oauth_application-instance_method">
+  
+    - (<tt>Array(<span class='object_link'><a href="../String.html" title="String (class)">String</a></span>, <span class='object_link'><a href="../String.html" title="String (class)">String</a></span>)</tt>) <strong>create_oauth_application</strong>(name, redirect_uris) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Creates a new application to do OAuth authorization with. This allows you
+to use OAuth to authorize users using Discord. For information how to use
+this, see the docs: <a
+href="https://discordapp.com/developers/docs/topics/oauth2">discordapp.com/developers/docs/topics/oauth2</a></p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>name</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>What your application should be called.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>redirect_uris</span>
+      
+      
+        <span class='type'>(<tt>Array&lt;<span class='object_link'><a href="../String.html" title="String (class)">String</a></span>&gt;</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>URIs that Discord should redirect your users to after authorizing.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array(<span class='object_link'><a href="../String.html" title="String (class)">String</a></span>, <span class='object_link'><a href="../String.html" title="String (class)">String</a></span>)</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>your applications&#39; client ID and client secret to be used in OAuth
+authorization.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+405
+406
+407
+408</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/bot.rb', line 405</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_create_oauth_application'>create_oauth_application</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_redirect_uris'>redirect_uris</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_response'>response</span> <span class='op'>=</span> <span class='const'>JSON</span><span class='period'>.</span><span class='id identifier rubyid_parse'>parse</span><span class='lparen'>(</span><span class='const'>API</span><span class='period'>.</span><span class='id identifier rubyid_create_oauth_application'>create_oauth_application</span><span class='lparen'>(</span><span class='ivar'>@token</span><span class='comma'>,</span> <span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_redirect_uris'>redirect_uris</span><span class='rparen'>)</span><span class='rparen'>)</span>
+  <span class='lbracket'>[</span><span class='id identifier rubyid_response'>response</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>id</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_response'>response</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>secret</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='rbracket'>]</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="create_server-instance_method">
+  
+    - (<tt><span class='object_link'><a href="Server.html" title="Discordrb::Server (class)">Server</a></span></tt>) <strong>create_server</strong>(name, region = eu-central) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+  <div class="note notetag">
+    <strong>Note:</strong>
+    <div class='inline'>
+<p>Discord&#39;s API doesn&#39;t directly return the server when creating it,
+so this method waits until the data has been received via the websocket.
+This may make the execution take a while.</p>
+</div>
+  </div>
+
+
+<p>Creates a server on Discord with a specified name and a region.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>name</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The name the new server should have. Doesn&#39;t have to be alphanumeric.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>region</span>
+      
+      
+        <span class='type'>(<tt>Symbol</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>eu-central</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The region where the server should be created, for example
+&#39;eu-central&#39; or &#39;hongkong&#39;.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Server.html" title="Discordrb::Server (class)">Server</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The server that was created.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+391
+392
+393
+394
+395
+396
+397
+398</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/bot.rb', line 391</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_create_server'>create_server</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_region'>region</span> <span class='op'>=</span> <span class='symbol'>:eu-central</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_response'>response</span> <span class='op'>=</span> <span class='const'>API</span><span class='op'>::</span><span class='const'>Server</span><span class='period'>.</span><span class='id identifier rubyid_create'>create</span><span class='lparen'>(</span><span class='id identifier rubyid_token'>token</span><span class='comma'>,</span> <span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_region'>region</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_id'>id</span> <span class='op'>=</span> <span class='const'>JSON</span><span class='period'>.</span><span class='id identifier rubyid_parse'>parse</span><span class='lparen'>(</span><span class='id identifier rubyid_response'>response</span><span class='rparen'>)</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>id</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span>
+  <span class='id identifier rubyid_sleep'>sleep</span> <span class='float'>0.1</span> <span class='kw'>until</span> <span class='ivar'>@servers</span><span class='lbracket'>[</span><span class='id identifier rubyid_id'>id</span><span class='rbracket'>]</span>
+  <span class='id identifier rubyid_server'>server</span> <span class='op'>=</span> <span class='ivar'>@servers</span><span class='lbracket'>[</span><span class='id identifier rubyid_id'>id</span><span class='rbracket'>]</span>
+  <span class='id identifier rubyid_debug'>debug</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Successfully created server </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_server'>server</span><span class='period'>.</span><span class='id identifier rubyid_id'>id</span><span class='embexpr_end'>}</span><span class='tstring_content'> with name </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_server'>server</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+  <span class='id identifier rubyid_server'>server</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="debug-instance_method">
+  
+    - (<tt>Object</tt>) <strong>debug</strong>(message) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  
+
+  <p class="tag_title">See Also:</p>
+  <ul class="see">
+    
+      <li>Logger#debug</li>
+    
+  </ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+584
+585
+586</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/bot.rb', line 584</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_debug'>debug</span><span class='lparen'>(</span><span class='id identifier rubyid_message'>message</span><span class='rparen'>)</span>
+  <span class='const'>LOGGER</span><span class='period'>.</span><span class='id identifier rubyid_debug'>debug</span><span class='lparen'>(</span><span class='id identifier rubyid_message'>message</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="debug=-instance_method">
+  
+    - (<tt>Object</tt>) <strong>debug=</strong>(new_debug) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Sets debug mode. If debug mode is on, many things will be outputted to
+STDOUT.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+533
+534
+535</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/bot.rb', line 533</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_debug='>debug=</span><span class='lparen'>(</span><span class='id identifier rubyid_new_debug'>new_debug</span><span class='rparen'>)</span>
+  <span class='const'>LOGGER</span><span class='period'>.</span><span class='id identifier rubyid_debug'>debug</span> <span class='op'>=</span> <span class='id identifier rubyid_new_debug'>new_debug</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="delete_invite-instance_method">
+  
+    - (<tt>Object</tt>) <strong>delete_invite</strong>(code) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Revokes an invite to a server. Will fail unless you have the <em>Manage
+Server</em> permission. It is recommended that you use <span class='object_link'><a href="Invite.html#delete-instance_method" title="Discordrb::Invite#delete (method)">Invite#delete</a></span>
+instead.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>code</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>, <tt><span class='object_link'><a href="Invite.html" title="Discordrb::Invite (class)">Invite</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The invite to revoke. For possible formats see <span class='object_link'><a href="Cache.html#resolve_invite_code-instance_method" title="Discordrb::Cache#resolve_invite_code (method)">Cache#resolve_invite_code</a></span>.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+333
+334
+335
+336</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/bot.rb', line 333</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_delete_invite'>delete_invite</span><span class='lparen'>(</span><span class='id identifier rubyid_code'>code</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_invite'>invite</span> <span class='op'>=</span> <span class='id identifier rubyid_resolve_invite_code'>resolve_invite_code</span><span class='lparen'>(</span><span class='id identifier rubyid_code'>code</span><span class='rparen'>)</span>
+  <span class='const'>API</span><span class='op'>::</span><span class='const'>Invite</span><span class='period'>.</span><span class='id identifier rubyid_delete'>delete</span><span class='lparen'>(</span><span class='id identifier rubyid_token'>token</span><span class='comma'>,</span> <span class='id identifier rubyid_invite'>invite</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="dispatch-instance_method">
+  
+    - (<tt>Object</tt>) <strong>dispatch</strong>(type, data) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Dispatches an event to this bot. Called by the gateway connection handler
+used internally.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+594
+595
+596</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/bot.rb', line 594</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_dispatch'>dispatch</span><span class='lparen'>(</span><span class='id identifier rubyid_type'>type</span><span class='comma'>,</span> <span class='id identifier rubyid_data'>data</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_handle_dispatch'>handle_dispatch</span><span class='lparen'>(</span><span class='id identifier rubyid_type'>type</span><span class='comma'>,</span> <span class='id identifier rubyid_data'>data</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="dnd-instance_method">
+  
+    - (<tt>Object</tt>) <strong>dnd</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Sets the bot&#39;s status to DnD (red icon).</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+521
+522
+523
+524</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/bot.rb', line 521</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_dnd'>dnd</span>
+  <span class='id identifier rubyid_gateway_check'>gateway_check</span>
+  <span class='id identifier rubyid_update_status'>update_status</span><span class='lparen'>(</span><span class='symbol'>:dnd</span><span class='comma'>,</span> <span class='ivar'>@activity</span><span class='comma'>,</span> <span class='kw'>nil</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="emoji-instance_method">
+  
+    
+      <span class="overload">- (<tt><span class='object_link'><a href="Emoji.html" title="Discordrb::Emoji (class)">Emoji</a></span></tt><sup>?</sup>) <strong>emoji</strong>(id) </span>
+    
+      <span class="overload">- (<tt>Array&lt;<span class='object_link'><a href="Emoji.html" title="Discordrb::Emoji (class)">Emoji</a></span>&gt;</tt>) <strong>emoji</strong> </span>
+    
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='emojis-instance_method'>emojis</span>, <span id='all_emoji-instance_method'>all_emoji</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  
+  <p class="tag_title">Overloads:</p>
+  <ul class="overload">
+    
+      
+      <li class="overload_item">
+        <span class="signature">- (<tt><span class='object_link'><a href="Emoji.html" title="Discordrb::Emoji (class)">Emoji</a></span></tt><sup>?</sup>) <strong>emoji</strong>(id) </span>
+        <div class="docstring">
+  <div class="discussion">
+    
+<p>Return an emoji by its ID</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>id</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../Integer.html" title="Integer (class)">Integer</a></span></tt>, <tt>#resolve_id</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The emoji&#39;s ID.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Emoji.html" title="Discordrb::Emoji (class)">Emoji</a></span></tt>, <tt>nil</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the emoji object. <code>nil</code> if the emoji was not found.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div>
+      </li>
+    
+      
+      <li class="overload_item">
+        <span class="signature">- (<tt>Array&lt;<span class='object_link'><a href="Emoji.html" title="Discordrb::Emoji (class)">Emoji</a></span>&gt;</tt>) <strong>emoji</strong> </span>
+        <div class="docstring">
+  <div class="discussion">
+    
+<p>The list of emoji the bot can use.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array&lt;<span class='object_link'><a href="Emoji.html" title="Discordrb::Emoji (class)">Emoji</a></span>&gt;</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the emoji available.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div>
+      </li>
+    
+  </ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/bot.rb', line 159</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_emoji'>emoji</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_gateway_check'>gateway_check</span>
+
+  <span class='id identifier rubyid_emoji_hash'>emoji_hash</span> <span class='op'>=</span> <span class='ivar'>@servers</span><span class='period'>.</span><span class='id identifier rubyid_values'>values</span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span><span class='lparen'>(</span><span class='op'>&amp;</span><span class='symbol'>:emoji</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_reduce'>reduce</span><span class='lparen'>(</span><span class='op'>&amp;</span><span class='symbol'>:merge</span><span class='rparen'>)</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_id'>id</span>
+    <span class='id identifier rubyid_id'>id</span> <span class='op'>=</span> <span class='id identifier rubyid_id'>id</span><span class='period'>.</span><span class='id identifier rubyid_resolve_id'>resolve_id</span>
+    <span class='id identifier rubyid_emoji_hash'>emoji_hash</span><span class='lbracket'>[</span><span class='id identifier rubyid_id'>id</span><span class='rbracket'>]</span>
+  <span class='kw'>else</span>
+    <span class='id identifier rubyid_emoji_hash'>emoji_hash</span><span class='period'>.</span><span class='id identifier rubyid_values'>values</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="find_emoji-instance_method">
+  
+    - (<tt>GlobalEmoji</tt><sup>?</sup>) <strong>find_emoji</strong>(name) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Finds an emoji by its name.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>name</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The emoji name that should be resolved.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>GlobalEmoji</tt>, <tt>nil</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the emoji identified by the name, or <code>nil</code> if it couldn&#39;t be
+found.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+177
+178
+179
+180</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/bot.rb', line 177</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_find_emoji'>find_emoji</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='rparen'>)</span>
+  <span class='const'>LOGGER</span><span class='period'>.</span><span class='id identifier rubyid_out'>out</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Resolving emoji </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_emoji'>emoji</span><span class='period'>.</span><span class='id identifier rubyid_find'>find</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_element'>element</span><span class='op'>|</span> <span class='id identifier rubyid_element'>element</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span> <span class='op'>==</span> <span class='id identifier rubyid_name'>name</span> <span class='rbrace'>}</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="game=-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>) <strong>game=</strong>(name) 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='playing=-instance_method'>playing=</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Sets the currently playing game to the specified game.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>name</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The name of the game to be played.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The game that is being played now.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+468
+469
+470
+471
+472</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/bot.rb', line 468</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_game='>game=</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_gateway_check'>gateway_check</span>
+  <span class='id identifier rubyid_update_status'>update_status</span><span class='lparen'>(</span><span class='ivar'>@status</span><span class='comma'>,</span> <span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='kw'>nil</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_name'>name</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="idle-instance_method">
+  
+    - (<tt>Object</tt>) <strong>idle</strong> 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='away-instance_method'>away</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Sets status to idle.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+513
+514
+515
+516</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/bot.rb', line 513</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_idle'>idle</span>
+  <span class='id identifier rubyid_gateway_check'>gateway_check</span>
+  <span class='id identifier rubyid_update_status'>update_status</span><span class='lparen'>(</span><span class='symbol'>:idle</span><span class='comma'>,</span> <span class='ivar'>@activity</span><span class='comma'>,</span> <span class='kw'>nil</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="ignore_user-instance_method">
+  
+    - (<tt>Object</tt>) <strong>ignore_user</strong>(user) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+  <div class="note notetag">
+    <strong>Note:</strong>
+    <div class='inline'>
+<p>Ignoring a user only prevents any message events (including mentions,
+commands etc.) from them! Typing and presence and any other events will
+still be received.</p>
+</div>
+  </div>
+
+
+<p>Add a user to the list of ignored users. Those users will be ignored in
+message events at event processing level.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>user</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="User.html" title="Discordrb::User (class)">User</a></span></tt>, <tt><span class='object_link'><a href="../Integer.html" title="Integer (class)">Integer</a></span></tt>, <tt>#resolve_id</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The user, or its ID, to be ignored.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+566
+567
+568</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/bot.rb', line 566</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_ignore_user'>ignore_user</span><span class='lparen'>(</span><span class='id identifier rubyid_user'>user</span><span class='rparen'>)</span>
+  <span class='ivar'>@ignored_ids</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_user'>user</span><span class='period'>.</span><span class='id identifier rubyid_resolve_id'>resolve_id</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="ignored?-instance_method">
+  
+    - (<tt>true</tt>, <tt>false</tt>) <strong>ignored?</strong>(user) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Checks whether a user is being ignored.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>user</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="User.html" title="Discordrb::User (class)">User</a></span></tt>, <tt><span class='object_link'><a href="../Integer.html" title="Integer (class)">Integer</a></span></tt>, <tt>#resolve_id</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The user, or its ID, to check.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>true</tt>, <tt>false</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>whether or not the user is ignored.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+579
+580
+581</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/bot.rb', line 579</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_ignored?'>ignored?</span><span class='lparen'>(</span><span class='id identifier rubyid_user'>user</span><span class='rparen'>)</span>
+  <span class='ivar'>@ignored_ids</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span><span class='lparen'>(</span><span class='id identifier rubyid_user'>user</span><span class='period'>.</span><span class='id identifier rubyid_resolve_id'>resolve_id</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="invisible-instance_method">
+  
+    - (<tt>Object</tt>) <strong>invisible</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Sets the bot&#39;s status to invisible (appears offline).</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+527
+528
+529
+530</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/bot.rb', line 527</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_invisible'>invisible</span>
+  <span class='id identifier rubyid_gateway_check'>gateway_check</span>
+  <span class='id identifier rubyid_update_status'>update_status</span><span class='lparen'>(</span><span class='symbol'>:invisible</span><span class='comma'>,</span> <span class='ivar'>@activity</span><span class='comma'>,</span> <span class='kw'>nil</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="invite_url-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>) <strong>invite_url</strong>(server: nil, permission_bits: nil) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Creates an OAuth invite URL that can be used to invite this bot to a
+particular server.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>server</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Server.html" title="Discordrb::Server (class)">Server</a></span></tt>, <tt>nil</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The server the bot should be invited to, or nil if a general invite should
+be created.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>permission_bits</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../Integer.html" title="Integer (class)">Integer</a></span></tt>, <tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Permission bits that should be appended to invite url.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the OAuth invite URL.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+259
+260
+261
+262
+263
+264
+265</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/bot.rb', line 259</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_invite_url'>invite_url</span><span class='lparen'>(</span><span class='label'>server:</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='label'>permission_bits:</span> <span class='kw'>nil</span><span class='rparen'>)</span>
+  <span class='ivar'>@client_id</span> <span class='op'>||=</span> <span class='id identifier rubyid_bot_application'>bot_application</span><span class='period'>.</span><span class='id identifier rubyid_id'>id</span>
+
+  <span class='id identifier rubyid_server_id_str'>server_id_str</span> <span class='op'>=</span> <span class='id identifier rubyid_server'>server</span> <span class='op'>?</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>&amp;guild_id=</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_server'>server</span><span class='period'>.</span><span class='id identifier rubyid_id'>id</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span> <span class='op'>:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span>
+  <span class='id identifier rubyid_permission_bits_str'>permission_bits_str</span> <span class='op'>=</span> <span class='id identifier rubyid_permission_bits'>permission_bits</span> <span class='op'>?</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>&amp;permissions=</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_permission_bits'>permission_bits</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span> <span class='op'>:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span>
+  <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>https://discordapp.com/oauth2/authorize?&amp;client_id=</span><span class='embexpr_beg'>#{</span><span class='ivar'>@client_id</span><span class='embexpr_end'>}</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_server_id_str'>server_id_str</span><span class='embexpr_end'>}</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_permission_bits_str'>permission_bits_str</span><span class='embexpr_end'>}</span><span class='tstring_content'>&amp;scope=bot</span><span class='tstring_end'>&quot;</span></span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="join-instance_method">
+  
+    - (<tt>Object</tt>) <strong>join</strong>(invite) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Makes the bot join an invite to a server.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>invite</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>, <tt><span class='object_link'><a href="Invite.html" title="Discordrb::Invite (class)">Invite</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The invite to join. For possible formats see <span class='object_link'><a href="Cache.html#resolve_invite_code-instance_method" title="Discordrb::Cache#resolve_invite_code (method)">Cache#resolve_invite_code</a></span>.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+250
+251
+252
+253</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/bot.rb', line 250</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='id identifier rubyid_invite'>invite</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_resolved'>resolved</span> <span class='op'>=</span> <span class='id identifier rubyid_invite'>invite</span><span class='lparen'>(</span><span class='id identifier rubyid_invite'>invite</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_code'>code</span>
+  <span class='const'>API</span><span class='op'>::</span><span class='const'>Invite</span><span class='period'>.</span><span class='id identifier rubyid_accept'>accept</span><span class='lparen'>(</span><span class='id identifier rubyid_token'>token</span><span class='comma'>,</span> <span class='id identifier rubyid_resolved'>resolved</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="listening=-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>) <strong>listening=</strong>(name) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Sets the current listening status to the specified name.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>name</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The thing to be listened to.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The thing that is now being listened to.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+479
+480
+481
+482
+483</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/bot.rb', line 479</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_listening='>listening=</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_gateway_check'>gateway_check</span>
+  <span class='id identifier rubyid_update_status'>update_status</span><span class='lparen'>(</span><span class='ivar'>@status</span><span class='comma'>,</span> <span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='int'>2</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_name'>name</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="log_exception-instance_method">
+  
+    - (<tt>Object</tt>) <strong>log_exception</strong>(e) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  
+
+  <p class="tag_title">See Also:</p>
+  <ul class="see">
+    
+      <li><span class='object_link'><a href="Logger.html#log_exception-instance_method" title="Discordrb::Logger#log_exception (method)">Logger#log_exception</a></span></li>
+    
+  </ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+589
+590
+591</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/bot.rb', line 589</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_log_exception'>log_exception</span><span class='lparen'>(</span><span class='id identifier rubyid_e'>e</span><span class='rparen'>)</span>
+  <span class='const'>LOGGER</span><span class='period'>.</span><span class='id identifier rubyid_log_exception'>log_exception</span><span class='lparen'>(</span><span class='id identifier rubyid_e'>e</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="mode=-instance_method">
+  
+    - (<tt>Object</tt>) <strong>mode=</strong>(new_mode) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Sets the logging mode</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+  <p class="tag_title">See Also:</p>
+  <ul class="see">
+    
+      <li><span class='object_link'><a href="Logger.html#mode%3D-instance_method" title="Discordrb::Logger#mode= (method)">Logger#mode=</a></span></li>
+    
+  </ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+539
+540
+541</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/bot.rb', line 539</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_mode='>mode=</span><span class='lparen'>(</span><span class='id identifier rubyid_new_mode'>new_mode</span><span class='rparen'>)</span>
+  <span class='const'>LOGGER</span><span class='period'>.</span><span class='id identifier rubyid_mode'>mode</span> <span class='op'>=</span> <span class='id identifier rubyid_new_mode'>new_mode</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="online-instance_method">
+  
+    - (<tt>Object</tt>) <strong>online</strong> 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='on-instance_method'>on</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Sets status to online.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+505
+506
+507
+508</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/bot.rb', line 505</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_online'>online</span>
+  <span class='id identifier rubyid_gateway_check'>gateway_check</span>
+  <span class='id identifier rubyid_update_status'>update_status</span><span class='lparen'>(</span><span class='symbol'>:online</span><span class='comma'>,</span> <span class='ivar'>@activity</span><span class='comma'>,</span> <span class='ivar'>@streamurl</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="parse_mention-instance_method">
+  
+    - (<tt><span class='object_link'><a href="User.html" title="Discordrb::User (class)">User</a></span></tt>, ...) <strong>parse_mention</strong>(mention, server = nil) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Gets the user, role or emoji from a mention of the user, role or emoji.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>mention</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The mention, which should look like <code>&lt;@12314873129&gt;</code>,
+<code>&lt;@&amp;123456789&gt;</code> or <code>&lt;:Name:126328:&gt;</code>.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>server</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Server.html" title="Discordrb::Server (class)">Server</a></span></tt>, <tt>nil</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>nil</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The server of the associated mention. (recommended for role parsing, to
+speed things up)</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="User.html" title="Discordrb::User (class)">User</a></span></tt>, <tt><span class='object_link'><a href="Role.html" title="Discordrb::Role (class)">Role</a></span></tt>, <tt><span class='object_link'><a href="Emoji.html" title="Discordrb::Emoji (class)">Emoji</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The user, role or emoji identified by the mention, or <code>nil</code> if
+none exists.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+424
+425
+426
+427
+428
+429
+430
+431
+432
+433
+434
+435
+436
+437
+438
+439
+440</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/bot.rb', line 424</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_parse_mention'>parse_mention</span><span class='lparen'>(</span><span class='id identifier rubyid_mention'>mention</span><span class='comma'>,</span> <span class='id identifier rubyid_server'>server</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='rparen'>)</span>
+  <span class='comment'># Mention format: &lt;@id&gt;
+</span>  <span class='kw'>if</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>&lt;@!?(?&lt;id&gt;\d+)&gt;</span><span class='regexp_end'>/</span></span> <span class='op'>=~</span> <span class='id identifier rubyid_mention'>mention</span>
+    <span class='id identifier rubyid_user'>user</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='rparen'>)</span>
+  <span class='kw'>elsif</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>&lt;@&amp;(?&lt;id&gt;\d+)&gt;</span><span class='regexp_end'>/</span></span> <span class='op'>=~</span> <span class='id identifier rubyid_mention'>mention</span>
+    <span class='kw'>return</span> <span class='id identifier rubyid_server'>server</span><span class='period'>.</span><span class='id identifier rubyid_role'>role</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='id identifier rubyid_server'>server</span>
+    <span class='ivar'>@servers</span><span class='period'>.</span><span class='id identifier rubyid_values'>values</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_element'>element</span><span class='op'>|</span>
+      <span class='id identifier rubyid_role'>role</span> <span class='op'>=</span> <span class='id identifier rubyid_element'>element</span><span class='period'>.</span><span class='id identifier rubyid_role'>role</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='rparen'>)</span>
+      <span class='kw'>return</span> <span class='id identifier rubyid_role'>role</span> <span class='kw'>unless</span> <span class='id identifier rubyid_role'>role</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+    <span class='kw'>end</span>
+
+    <span class='comment'># Return nil if no role is found
+</span>    <span class='kw'>nil</span>
+  <span class='kw'>elsif</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>&lt;a?:(\w+):(?&lt;id&gt;\d+)&gt;</span><span class='regexp_end'>/</span></span> <span class='op'>=~</span> <span class='id identifier rubyid_mention'>mention</span>
+    <span class='id identifier rubyid_emoji'>emoji</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="profile-instance_method">
+  
+    - (<tt><span class='object_link'><a href="Profile.html" title="Discordrb::Profile (class)">Profile</a></span></tt>) <strong>profile</strong> 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='bot_user-instance_method'>bot_user</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>The bot&#39;s user profile. This special user object can be used to edit
+user data like the current username (see <span class='object_link'><a href="Profile.html#username%3D-instance_method" title="Discordrb::Profile#username= (method)">Profile#username=</a></span>).</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Profile.html" title="Discordrb::Profile (class)">Profile</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The bot&#39;s profile that can be used to edit data.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+185
+186
+187
+188</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/bot.rb', line 185</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_profile'>profile</span>
+  <span class='id identifier rubyid_gateway_check'>gateway_check</span>
+  <span class='ivar'>@profile</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="prune_empty_groups-instance_method">
+  
+    - (<tt>Object</tt>) <strong>prune_empty_groups</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Makes the bot leave any groups with no recipients remaining</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+604
+605
+606
+607
+608</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/bot.rb', line 604</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_prune_empty_groups'>prune_empty_groups</span>
+  <span class='ivar'>@channels</span><span class='period'>.</span><span class='id identifier rubyid_each_value'>each_value</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_channel'>channel</span><span class='op'>|</span>
+    <span class='id identifier rubyid_channel'>channel</span><span class='period'>.</span><span class='id identifier rubyid_leave_group'>leave_group</span> <span class='kw'>if</span> <span class='id identifier rubyid_channel'>channel</span><span class='period'>.</span><span class='id identifier rubyid_group?'>group?</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_channel'>channel</span><span class='period'>.</span><span class='id identifier rubyid_recipients'>recipients</span><span class='period'>.</span><span class='id identifier rubyid_empty?'>empty?</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="raise_heartbeat_event-instance_method">
+  
+    - (<tt>Object</tt>) <strong>raise_heartbeat_event</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Raises a heartbeat event. Called by the gateway connection handler used
+internally.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+599
+600
+601</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/bot.rb', line 599</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_raise_heartbeat_event'>raise_heartbeat_event</span>
+  <span class='id identifier rubyid_raise_event'>raise_event</span><span class='lparen'>(</span><span class='const'>HeartbeatEvent</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='kw'>self</span><span class='rparen'>)</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="raw_token-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>) <strong>raw_token</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the raw token, without any prefix</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the raw token, without any prefix</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+  <p class="tag_title">See Also:</p>
+  <ul class="see">
+    
+      <li><span class='object_link'><a href="#token-instance_method" title="Discordrb::Bot#token (method)">#token</a></span></li>
+    
+  </ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+212
+213
+214</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/bot.rb', line 212</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_raw_token'>raw_token</span>
+  <span class='ivar'>@token</span><span class='period'>.</span><span class='id identifier rubyid_split'>split</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'> </span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_last'>last</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="run-instance_method">
+  
+    - (<tt>Object</tt>) <strong>run</strong>(async = false) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Runs the bot, which logs into Discord and connects the WebSocket. This
+prevents all further execution unless it is executed with
+<code>async</code> = <code>:async</code>.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>async</span>
+      
+      
+        <span class='type'>(<tt>Symbol</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>false</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>If it is <code>:async</code>, then the bot will allow further execution. It
+doesn&#39;t necessarily have to be that, anything truthy will work, however
+it is recommended to use <code>:async</code> for code readability reasons.
+If the bot is run in async mode, make sure to eventually run <span class='object_link'><a href="#sync-instance_method" title="Discordrb::Bot#sync (method)">#sync</a></span> so the
+script doesn&#39;t stop prematurely.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+222
+223
+224
+225
+226
+227
+228</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/bot.rb', line 222</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_run'>run</span><span class='lparen'>(</span><span class='id identifier rubyid_async'>async</span> <span class='op'>=</span> <span class='kw'>false</span><span class='rparen'>)</span>
+  <span class='ivar'>@gateway</span><span class='period'>.</span><span class='id identifier rubyid_run_async'>run_async</span>
+  <span class='kw'>return</span> <span class='kw'>if</span> <span class='id identifier rubyid_async'>async</span>
+
+  <span class='id identifier rubyid_debug'>debug</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Oh wait! Not exiting yet as run was run synchronously.</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+  <span class='ivar'>@gateway</span><span class='period'>.</span><span class='id identifier rubyid_sync'>sync</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="send_file-instance_method">
+  
+    - (<tt>Object</tt>) <strong>send_file</strong>(channel, file, caption: nil, tts: false) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+  <div class="note notetag">
+    <strong>Note:</strong>
+    <div class='inline'>
+<p>This executes in a blocking way, so if you&#39;re sending long files, be
+wary of delays.</p>
+</div>
+  </div>
+
+
+<p>Sends a file to a channel. If it is an image, it will automatically be
+embedded.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+  <div class="examples">
+    <p class="tag_title">Examples:</p>
+    
+      
+        <p class="example_title"><div class='inline'>
+<p>Send a file from disk</p>
+</div></p>
+      
+      <pre class="example code"><code><span class='id identifier rubyid_bot'>bot</span><span class='period'>.</span><span class='id identifier rubyid_send_file'>send_file</span><span class='lparen'>(</span><span class='int'>83281822225530880</span><span class='comma'>,</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_open'>open</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>rubytaco.png</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>r</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='rparen'>)</span></code></pre>
+    
+  </div>
+<p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>channel</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Channel.html" title="Discordrb::Channel (class)">Channel</a></span></tt>, <tt><span class='object_link'><a href="../Integer.html" title="Integer (class)">Integer</a></span></tt>, <tt>#resolve_id</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The channel to send something to.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>file</span>
+      
+      
+        <span class='type'>(<tt>File</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The file that should be sent.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>caption</span>
+      
+      
+        <span class='type'>(<tt>string</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The caption for the file.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>tts</span>
+      
+      
+        <span class='type'>(<tt>true</tt>, <tt>false</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Whether or not this file&#39;s caption should be sent using Discord
+text-to-speech.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+379
+380
+381
+382
+383</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/bot.rb', line 379</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_send_file'>send_file</span><span class='lparen'>(</span><span class='id identifier rubyid_channel'>channel</span><span class='comma'>,</span> <span class='id identifier rubyid_file'>file</span><span class='comma'>,</span> <span class='label'>caption:</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='label'>tts:</span> <span class='kw'>false</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_channel'>channel</span> <span class='op'>=</span> <span class='id identifier rubyid_channel'>channel</span><span class='period'>.</span><span class='id identifier rubyid_resolve_id'>resolve_id</span>
+  <span class='id identifier rubyid_response'>response</span> <span class='op'>=</span> <span class='const'>API</span><span class='op'>::</span><span class='const'>Channel</span><span class='period'>.</span><span class='id identifier rubyid_upload_file'>upload_file</span><span class='lparen'>(</span><span class='id identifier rubyid_token'>token</span><span class='comma'>,</span> <span class='id identifier rubyid_channel'>channel</span><span class='comma'>,</span> <span class='id identifier rubyid_file'>file</span><span class='comma'>,</span> <span class='label'>caption:</span> <span class='id identifier rubyid_caption'>caption</span><span class='comma'>,</span> <span class='label'>tts:</span> <span class='id identifier rubyid_tts'>tts</span><span class='rparen'>)</span>
+  <span class='const'>Message</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='const'>JSON</span><span class='period'>.</span><span class='id identifier rubyid_parse'>parse</span><span class='lparen'>(</span><span class='id identifier rubyid_response'>response</span><span class='rparen'>)</span><span class='comma'>,</span> <span class='kw'>self</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="send_message-instance_method">
+  
+    - (<tt><span class='object_link'><a href="Message.html" title="Discordrb::Message (class)">Message</a></span></tt>) <strong>send_message</strong>(channel, content, tts = false, embed = nil) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Sends a text message to a channel given its ID and the message&#39;s
+content.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>channel</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Channel.html" title="Discordrb::Channel (class)">Channel</a></span></tt>, <tt><span class='object_link'><a href="../Integer.html" title="Integer (class)">Integer</a></span></tt>, <tt>#resolve_id</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The channel to send something to.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>content</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The text that should be sent as a message. It is limited to 2000 characters
+(Discord imposed).</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>tts</span>
+      
+      
+        <span class='type'>(<tt>true</tt>, <tt>false</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>false</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Whether or not this message should be sent using Discord text-to-speech.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>embed</span>
+      
+      
+        <span class='type'>(<tt>Hash</tt>, <tt><span class='object_link'><a href="Webhooks/Embed.html" title="Discordrb::Webhooks::Embed (class)">Discordrb::Webhooks::Embed</a></span></tt>, <tt>nil</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>nil</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The rich embed to append to this message.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Message.html" title="Discordrb::Message (class)">Message</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The message that was sent.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+344
+345
+346
+347
+348
+349
+350</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/bot.rb', line 344</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_send_message'>send_message</span><span class='lparen'>(</span><span class='id identifier rubyid_channel'>channel</span><span class='comma'>,</span> <span class='id identifier rubyid_content'>content</span><span class='comma'>,</span> <span class='id identifier rubyid_tts'>tts</span> <span class='op'>=</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='id identifier rubyid_embed'>embed</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_channel'>channel</span> <span class='op'>=</span> <span class='id identifier rubyid_channel'>channel</span><span class='period'>.</span><span class='id identifier rubyid_resolve_id'>resolve_id</span>
+  <span class='id identifier rubyid_debug'>debug</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Sending message to </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_channel'>channel</span><span class='embexpr_end'>}</span><span class='tstring_content'> with content &#39;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_content'>content</span><span class='embexpr_end'>}</span><span class='tstring_content'>&#39;</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+
+  <span class='id identifier rubyid_response'>response</span> <span class='op'>=</span> <span class='const'>API</span><span class='op'>::</span><span class='const'>Channel</span><span class='period'>.</span><span class='id identifier rubyid_create_message'>create_message</span><span class='lparen'>(</span><span class='id identifier rubyid_token'>token</span><span class='comma'>,</span> <span class='id identifier rubyid_channel'>channel</span><span class='comma'>,</span> <span class='id identifier rubyid_content'>content</span><span class='comma'>,</span> <span class='id identifier rubyid_tts'>tts</span><span class='comma'>,</span> <span class='id identifier rubyid_embed'>embed</span> <span class='op'>?</span> <span class='id identifier rubyid_embed'>embed</span><span class='period'>.</span><span class='id identifier rubyid_to_hash'>to_hash</span> <span class='op'>:</span> <span class='kw'>nil</span><span class='rparen'>)</span>
+  <span class='const'>Message</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='const'>JSON</span><span class='period'>.</span><span class='id identifier rubyid_parse'>parse</span><span class='lparen'>(</span><span class='id identifier rubyid_response'>response</span><span class='rparen'>)</span><span class='comma'>,</span> <span class='kw'>self</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="send_temporary_message-instance_method">
+  
+    - (<tt>Object</tt>) <strong>send_temporary_message</strong>(channel, content, timeout, tts = false, embed = nil) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Sends a text message to a channel given its ID and the message&#39;s
+content, then deletes it after the specified timeout in seconds.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>channel</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Channel.html" title="Discordrb::Channel (class)">Channel</a></span></tt>, <tt><span class='object_link'><a href="../Integer.html" title="Integer (class)">Integer</a></span></tt>, <tt>#resolve_id</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The channel to send something to.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>content</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The text that should be sent as a message. It is limited to 2000 characters
+(Discord imposed).</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>timeout</span>
+      
+      
+        <span class='type'>(<tt>Float</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The amount of time in seconds after which the message sent will be deleted.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>tts</span>
+      
+      
+        <span class='type'>(<tt>true</tt>, <tt>false</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>false</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Whether or not this message should be sent using Discord text-to-speech.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>embed</span>
+      
+      
+        <span class='type'>(<tt>Hash</tt>, <tt><span class='object_link'><a href="Webhooks/Embed.html" title="Discordrb::Webhooks::Embed (class)">Discordrb::Webhooks::Embed</a></span></tt>, <tt>nil</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>nil</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The rich embed to append to this message.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/bot.rb', line 359</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_send_temporary_message'>send_temporary_message</span><span class='lparen'>(</span><span class='id identifier rubyid_channel'>channel</span><span class='comma'>,</span> <span class='id identifier rubyid_content'>content</span><span class='comma'>,</span> <span class='id identifier rubyid_timeout'>timeout</span><span class='comma'>,</span> <span class='id identifier rubyid_tts'>tts</span> <span class='op'>=</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='id identifier rubyid_embed'>embed</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='rparen'>)</span>
+  <span class='const'>Thread</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span> <span class='kw'>do</span>
+    <span class='const'>Thread</span><span class='period'>.</span><span class='id identifier rubyid_current'>current</span><span class='lbracket'>[</span><span class='symbol'>:discordrb_name</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='ivar'>@current_thread</span><span class='embexpr_end'>}</span><span class='tstring_content'>-temp-msg</span><span class='tstring_end'>&quot;</span></span>
+
+    <span class='id identifier rubyid_message'>message</span> <span class='op'>=</span> <span class='id identifier rubyid_send_message'>send_message</span><span class='lparen'>(</span><span class='id identifier rubyid_channel'>channel</span><span class='comma'>,</span> <span class='id identifier rubyid_content'>content</span><span class='comma'>,</span> <span class='id identifier rubyid_tts'>tts</span><span class='comma'>,</span> <span class='id identifier rubyid_embed'>embed</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_sleep'>sleep</span><span class='lparen'>(</span><span class='id identifier rubyid_timeout'>timeout</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_message'>message</span><span class='period'>.</span><span class='id identifier rubyid_delete'>delete</span>
+  <span class='kw'>end</span>
+
+  <span class='kw'>nil</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="servers-instance_method">
+  
+    - (<tt>Hash&lt;<span class='object_link'><a href="../Integer.html" title="Integer (class)">Integer</a></span> =&gt; <span class='object_link'><a href="Server.html" title="Discordrb::Server (class)">Server</a></span>&gt;</tt>) <strong>servers</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>The list of servers the bot is currently in.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Hash&lt;<span class='object_link'><a href="../Integer.html" title="Integer (class)">Integer</a></span> =&gt; <span class='object_link'><a href="Server.html" title="Discordrb::Server (class)">Server</a></span>&gt;</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The servers by ID.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+147
+148
+149
+150</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/bot.rb', line 147</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_servers'>servers</span>
+  <span class='id identifier rubyid_gateway_check'>gateway_check</span>
+  <span class='ivar'>@servers</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="stop-instance_method">
+  
+    - (<tt>Object</tt>) <strong>stop</strong>(no_sync = false) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Stops the bot gracefully, disconnecting the websocket without immediately
+killing the thread. This means that Discord is immediately aware of the
+closed connection and makes the bot appear offline instantly.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>no_sync</span>
+      
+      
+        <span class='type'>(<tt>true</tt>, <tt>false</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>false</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Whether or not to disable use of synchronize in the close method. This
+should be true if called from a trap context.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+239
+240
+241</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/bot.rb', line 239</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_stop'>stop</span><span class='lparen'>(</span><span class='id identifier rubyid_no_sync'>no_sync</span> <span class='op'>=</span> <span class='kw'>false</span><span class='rparen'>)</span>
+  <span class='ivar'>@gateway</span><span class='period'>.</span><span class='id identifier rubyid_stop'>stop</span><span class='lparen'>(</span><span class='id identifier rubyid_no_sync'>no_sync</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="stream-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>) <strong>stream</strong>(name, url) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Sets the currently online stream to the specified name and Twitch URL.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>name</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The name of the stream to display.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>url</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The url of the current Twitch stream.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The stream name that is being displayed now.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+498
+499
+500
+501
+502</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/bot.rb', line 498</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_stream'>stream</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_url'>url</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_gateway_check'>gateway_check</span>
+  <span class='id identifier rubyid_update_status'>update_status</span><span class='lparen'>(</span><span class='ivar'>@status</span><span class='comma'>,</span> <span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_url'>url</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_name'>name</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="suppress_ready_debug-instance_method">
+  
+    - (<tt>Object</tt>) <strong>suppress_ready_debug</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Prevents the READY packet from being printed regardless of debug mode.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+544
+545
+546</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/bot.rb', line 544</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_suppress_ready_debug'>suppress_ready_debug</span>
+  <span class='ivar'>@prevent_ready</span> <span class='op'>=</span> <span class='kw'>true</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="sync-instance_method">
+  
+    - (<tt>Object</tt>) <strong>sync</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Blocks execution until the websocket stops, which should only happen
+manually triggered or due to an error. This is necessary to have a
+continuously running bot.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+232
+233
+234</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/bot.rb', line 232</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_sync'>sync</span>
+  <span class='ivar'>@gateway</span><span class='period'>.</span><span class='id identifier rubyid_sync'>sync</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="token-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>) <strong>token</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>The Discord API token received when logging in. Useful to explicitly call
+<span class='object_link'><a href="API.html" title="Discordrb::API (module)">API</a></span> methods.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The API token.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+205
+206
+207
+208</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/bot.rb', line 205</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_token'>token</span>
+  <span class='const'>API</span><span class='period'>.</span><span class='id identifier rubyid_bot_name'>bot_name</span> <span class='op'>=</span> <span class='ivar'>@name</span>
+  <span class='ivar'>@token</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="unignore_user-instance_method">
+  
+    - (<tt>Object</tt>) <strong>unignore_user</strong>(user) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Remove a user from the ignore list.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>user</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="User.html" title="Discordrb::User (class)">User</a></span></tt>, <tt><span class='object_link'><a href="../Integer.html" title="Integer (class)">Integer</a></span></tt>, <tt>#resolve_id</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The user, or its ID, to be unignored.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+572
+573
+574</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/bot.rb', line 572</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_unignore_user'>unignore_user</span><span class='lparen'>(</span><span class='id identifier rubyid_user'>user</span><span class='rparen'>)</span>
+  <span class='ivar'>@ignored_ids</span><span class='period'>.</span><span class='id identifier rubyid_delete'>delete</span><span class='lparen'>(</span><span class='id identifier rubyid_user'>user</span><span class='period'>.</span><span class='id identifier rubyid_resolve_id'>resolve_id</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="update_oauth_application-instance_method">
+  
+    - (<tt>Object</tt>) <strong>update_oauth_application</strong>(name, redirect_uris, description = &#39;&#39;, icon = nil) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Changes information about your OAuth application</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>name</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>What your application should be called.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>redirect_uris</span>
+      
+      
+        <span class='type'>(<tt>Array&lt;<span class='object_link'><a href="../String.html" title="String (class)">String</a></span>&gt;</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>URIs that Discord should redirect your users to after authorizing.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>description</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>&#39;&#39;</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>A string that describes what your application does.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>icon</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>, <tt>nil</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>nil</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>A data URI for your icon image (for example a base 64 encoded image), or
+nil if no icon should be set or changed.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+416
+417
+418</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/bot.rb', line 416</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_update_oauth_application'>update_oauth_application</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_redirect_uris'>redirect_uris</span><span class='comma'>,</span> <span class='id identifier rubyid_description'>description</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_icon'>icon</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='rparen'>)</span>
+  <span class='const'>API</span><span class='period'>.</span><span class='id identifier rubyid_update_oauth_application'>update_oauth_application</span><span class='lparen'>(</span><span class='ivar'>@token</span><span class='comma'>,</span> <span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_redirect_uris'>redirect_uris</span><span class='comma'>,</span> <span class='id identifier rubyid_description'>description</span><span class='comma'>,</span> <span class='id identifier rubyid_icon'>icon</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="update_status-instance_method">
+  
+    - (<tt>Object</tt>) <strong>update_status</strong>(status, activity, url, since = 0, afk = false, activity_type = 0) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Updates presence status.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>status</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The status the bot should show up as. Can be <code>online</code>,
+<code>dnd</code>, <code>idle</code>, or <code>invisible</code></p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>activity</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>, <tt>nil</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The name of the activity to be played/watched/listened to/stream name on
+the stream.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>url</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>, <tt>nil</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The Twitch URL to display as a stream. nil for no stream.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>since</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../Integer.html" title="Integer (class)">Integer</a></span></tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>0</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>When this status was set.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>afk</span>
+      
+      
+        <span class='type'>(<tt>true</tt>, <tt>false</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>false</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Whether the bot is AFK.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>activity_type</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../Integer.html" title="Integer (class)">Integer</a></span></tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>0</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The type of activity status to display. Can be 0 (Playing), 1 (Streaming),
+2 (Listening), 3 (Watching)</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+  <p class="tag_title">See Also:</p>
+  <ul class="see">
+    
+      <li><span class='object_link'><a href="Gateway.html#send_status_update-instance_method" title="Discordrb::Gateway#send_status_update (method)">Gateway#send_status_update</a></span></li>
+    
+  </ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+450
+451
+452
+453
+454
+455
+456
+457
+458
+459
+460
+461
+462
+463</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/bot.rb', line 450</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_update_status'>update_status</span><span class='lparen'>(</span><span class='id identifier rubyid_status'>status</span><span class='comma'>,</span> <span class='id identifier rubyid_activity'>activity</span><span class='comma'>,</span> <span class='id identifier rubyid_url'>url</span><span class='comma'>,</span> <span class='id identifier rubyid_since'>since</span> <span class='op'>=</span> <span class='int'>0</span><span class='comma'>,</span> <span class='id identifier rubyid_afk'>afk</span> <span class='op'>=</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='id identifier rubyid_activity_type'>activity_type</span> <span class='op'>=</span> <span class='int'>0</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_gateway_check'>gateway_check</span>
+
+  <span class='ivar'>@activity</span> <span class='op'>=</span> <span class='id identifier rubyid_activity'>activity</span>
+  <span class='ivar'>@status</span> <span class='op'>=</span> <span class='id identifier rubyid_status'>status</span>
+  <span class='ivar'>@streamurl</span> <span class='op'>=</span> <span class='id identifier rubyid_url'>url</span>
+  <span class='id identifier rubyid_type'>type</span> <span class='op'>=</span> <span class='id identifier rubyid_url'>url</span> <span class='op'>?</span> <span class='int'>1</span> <span class='op'>:</span> <span class='id identifier rubyid_activity_type'>activity_type</span>
+
+  <span class='id identifier rubyid_activity_obj'>activity_obj</span> <span class='op'>=</span> <span class='id identifier rubyid_activity'>activity</span> <span class='op'>||</span> <span class='id identifier rubyid_url'>url</span> <span class='op'>?</span> <span class='lbrace'>{</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>name</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_activity'>activity</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>url</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_url'>url</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>type</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_type'>type</span> <span class='rbrace'>}</span> <span class='op'>:</span> <span class='kw'>nil</span>
+  <span class='ivar'>@gateway</span><span class='period'>.</span><span class='id identifier rubyid_send_status_update'>send_status_update</span><span class='lparen'>(</span><span class='id identifier rubyid_status'>status</span><span class='comma'>,</span> <span class='id identifier rubyid_since'>since</span><span class='comma'>,</span> <span class='id identifier rubyid_activity_obj'>activity_obj</span><span class='comma'>,</span> <span class='id identifier rubyid_afk'>afk</span><span class='rparen'>)</span>
+
+  <span class='comment'># Update the status in the cache
+</span>  <span class='id identifier rubyid_profile'>profile</span><span class='period'>.</span><span class='id identifier rubyid_update_presence'>update_presence</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>status</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_status'>status</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>game</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_activity_obj'>activity_obj</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="users-instance_method">
+  
+    - (<tt>Hash&lt;<span class='object_link'><a href="../Integer.html" title="Integer (class)">Integer</a></span> =&gt; <span class='object_link'><a href="User.html" title="Discordrb::User (class)">User</a></span>&gt;</tt>) <strong>users</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>The list of users the bot shares a server with.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Hash&lt;<span class='object_link'><a href="../Integer.html" title="Integer (class)">Integer</a></span> =&gt; <span class='object_link'><a href="User.html" title="Discordrb::User (class)">User</a></span>&gt;</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The users by ID.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+140
+141
+142
+143</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/bot.rb', line 140</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_users'>users</span>
+  <span class='id identifier rubyid_gateway_check'>gateway_check</span>
+  <span class='ivar'>@users</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="voice-instance_method">
+  
+    - (<tt><span class='object_link'><a href="Voice/VoiceBot.html" title="Discordrb::Voice::VoiceBot (class)">Voice::VoiceBot</a></span></tt><sup>?</sup>) <strong>voice</strong>(thing) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Gets the voice bot for a particular server or channel. You can connect to a
+new channel using the <span class='object_link'><a href="#voice_connect-instance_method" title="Discordrb::Bot#voice_connect (method)">#voice_connect</a></span> method.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>thing</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Channel.html" title="Discordrb::Channel (class)">Channel</a></span></tt>, <tt><span class='object_link'><a href="Server.html" title="Discordrb::Server (class)">Server</a></span></tt>, <tt><span class='object_link'><a href="../Integer.html" title="Integer (class)">Integer</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the server or channel you want to get the voice bot for, or its ID.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Voice/VoiceBot.html" title="Discordrb::Voice::VoiceBot (class)">Voice::VoiceBot</a></span></tt>, <tt>nil</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the VoiceBot for the thing you specified, or nil if there is no connection
+yet</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/bot.rb', line 274</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_voice'>voice</span><span class='lparen'>(</span><span class='id identifier rubyid_thing'>thing</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_id'>id</span> <span class='op'>=</span> <span class='id identifier rubyid_thing'>thing</span><span class='period'>.</span><span class='id identifier rubyid_resolve_id'>resolve_id</span>
+  <span class='kw'>return</span> <span class='ivar'>@voices</span><span class='lbracket'>[</span><span class='id identifier rubyid_id'>id</span><span class='rbracket'>]</span> <span class='kw'>if</span> <span class='ivar'>@voices</span><span class='lbracket'>[</span><span class='id identifier rubyid_id'>id</span><span class='rbracket'>]</span>
+
+  <span class='id identifier rubyid_channel'>channel</span> <span class='op'>=</span> <span class='id identifier rubyid_channel'>channel</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='rparen'>)</span>
+  <span class='kw'>return</span> <span class='kw'>nil</span> <span class='kw'>unless</span> <span class='id identifier rubyid_channel'>channel</span>
+
+  <span class='id identifier rubyid_server_id'>server_id</span> <span class='op'>=</span> <span class='id identifier rubyid_channel'>channel</span><span class='period'>.</span><span class='id identifier rubyid_server'>server</span><span class='period'>.</span><span class='id identifier rubyid_id'>id</span>
+  <span class='kw'>return</span> <span class='ivar'>@voices</span><span class='lbracket'>[</span><span class='id identifier rubyid_server_id'>server_id</span><span class='rbracket'>]</span> <span class='kw'>if</span> <span class='ivar'>@voices</span><span class='lbracket'>[</span><span class='id identifier rubyid_server_id'>server_id</span><span class='rbracket'>]</span>
+
+  <span class='kw'>nil</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="voice_connect-instance_method">
+  
+    - (<tt><span class='object_link'><a href="Voice/VoiceBot.html" title="Discordrb::Voice::VoiceBot (class)">Voice::VoiceBot</a></span></tt>) <strong>voice_connect</strong>(chan, encrypted = true) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Connects to a voice channel, initializes network connections and returns
+the <span class='object_link'><a href="Voice/VoiceBot.html" title="Discordrb::Voice::VoiceBot (class)">Voice::VoiceBot</a></span> over which audio data can then be sent. After
+connecting, the bot can also be accessed using <span class='object_link'><a href="#voice-instance_method" title="Discordrb::Bot#voice (method)">#voice</a></span>. If the bot is
+already connected to voice, the existing connection will be terminated -
+you don&#39;t have to call <span class='object_link'><a href="Voice/VoiceBot.html#destroy-instance_method" title="Discordrb::Voice::VoiceBot#destroy (method)">Voice::VoiceBot#destroy</a></span> before
+calling this method.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>chan</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Channel.html" title="Discordrb::Channel (class)">Channel</a></span></tt>, <tt><span class='object_link'><a href="../Integer.html" title="Integer (class)">Integer</a></span></tt>, <tt>#resolve_id</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The voice channel to connect to.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>encrypted</span>
+      
+      
+        <span class='type'>(<tt>true</tt>, <tt>false</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>true</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Whether voice communication should be encrypted using RbNaCl&#39;s
+SecretBox (uses an XSalsa20 stream cipher for encryption and Poly1305 for
+authentication)</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Voice/VoiceBot.html" title="Discordrb::Voice::VoiceBot (class)">Voice::VoiceBot</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the initialized bot over which audio data can then be sent.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/bot.rb', line 295</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_voice_connect'>voice_connect</span><span class='lparen'>(</span><span class='id identifier rubyid_chan'>chan</span><span class='comma'>,</span> <span class='id identifier rubyid_encrypted'>encrypted</span> <span class='op'>=</span> <span class='kw'>true</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_chan'>chan</span> <span class='op'>=</span> <span class='id identifier rubyid_channel'>channel</span><span class='lparen'>(</span><span class='id identifier rubyid_chan'>chan</span><span class='period'>.</span><span class='id identifier rubyid_resolve_id'>resolve_id</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_server_id'>server_id</span> <span class='op'>=</span> <span class='id identifier rubyid_chan'>chan</span><span class='period'>.</span><span class='id identifier rubyid_server'>server</span><span class='period'>.</span><span class='id identifier rubyid_id'>id</span>
+  <span class='ivar'>@should_encrypt_voice</span> <span class='op'>=</span> <span class='id identifier rubyid_encrypted'>encrypted</span>
+
+  <span class='kw'>if</span> <span class='ivar'>@voices</span><span class='lbracket'>[</span><span class='id identifier rubyid_chan'>chan</span><span class='period'>.</span><span class='id identifier rubyid_id'>id</span><span class='rbracket'>]</span>
+    <span class='id identifier rubyid_debug'>debug</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Voice bot exists already! Destroying it</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+    <span class='ivar'>@voices</span><span class='lbracket'>[</span><span class='id identifier rubyid_chan'>chan</span><span class='period'>.</span><span class='id identifier rubyid_id'>id</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_destroy'>destroy</span>
+    <span class='ivar'>@voices</span><span class='period'>.</span><span class='id identifier rubyid_delete'>delete</span><span class='lparen'>(</span><span class='id identifier rubyid_chan'>chan</span><span class='period'>.</span><span class='id identifier rubyid_id'>id</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
+
+  <span class='id identifier rubyid_debug'>debug</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Got voice channel: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_chan'>chan</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+
+  <span class='ivar'>@should_connect_to_voice</span><span class='lbracket'>[</span><span class='id identifier rubyid_server_id'>server_id</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_chan'>chan</span>
+  <span class='ivar'>@gateway</span><span class='period'>.</span><span class='id identifier rubyid_send_voice_state_update'>send_voice_state_update</span><span class='lparen'>(</span><span class='id identifier rubyid_server_id'>server_id</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='comma'>,</span> <span class='id identifier rubyid_chan'>chan</span><span class='period'>.</span><span class='id identifier rubyid_id'>id</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='comma'>,</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='kw'>false</span><span class='rparen'>)</span>
+
+  <span class='id identifier rubyid_debug'>debug</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Voice channel init packet sent! Now waiting.</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+
+  <span class='id identifier rubyid_sleep'>sleep</span><span class='lparen'>(</span><span class='float'>0.05</span><span class='rparen'>)</span> <span class='kw'>until</span> <span class='ivar'>@voices</span><span class='lbracket'>[</span><span class='id identifier rubyid_server_id'>server_id</span><span class='rbracket'>]</span>
+  <span class='id identifier rubyid_debug'>debug</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Voice connect succeeded!</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+  <span class='ivar'>@voices</span><span class='lbracket'>[</span><span class='id identifier rubyid_server_id'>server_id</span><span class='rbracket'>]</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="voice_destroy-instance_method">
+  
+    - (<tt>Object</tt>) <strong>voice_destroy</strong>(server, destroy_vws = true) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Disconnects the client from a specific voice connection given the server
+ID. Usually it&#39;s more convenient to use
+<span class='object_link'><a href="Voice/VoiceBot.html#destroy-instance_method" title="Discordrb::Voice::VoiceBot#destroy (method)">Voice::VoiceBot#destroy</a></span> rather than this.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>server</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Server.html" title="Discordrb::Server (class)">Server</a></span></tt>, <tt><span class='object_link'><a href="../Integer.html" title="Integer (class)">Integer</a></span></tt>, <tt>#resolve_id</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The server the voice connection is on.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>destroy_vws</span>
+      
+      
+        <span class='type'>(<tt>true</tt>, <tt>false</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>true</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Whether or not the VWS should also be destroyed. If you&#39;re calling this
+method directly, you should leave it as true.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+323
+324
+325
+326
+327
+328</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/bot.rb', line 323</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_voice_destroy'>voice_destroy</span><span class='lparen'>(</span><span class='id identifier rubyid_server'>server</span><span class='comma'>,</span> <span class='id identifier rubyid_destroy_vws'>destroy_vws</span> <span class='op'>=</span> <span class='kw'>true</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_server'>server</span> <span class='op'>=</span> <span class='id identifier rubyid_server'>server</span><span class='period'>.</span><span class='id identifier rubyid_resolve_id'>resolve_id</span>
+  <span class='ivar'>@gateway</span><span class='period'>.</span><span class='id identifier rubyid_send_voice_state_update'>send_voice_state_update</span><span class='lparen'>(</span><span class='id identifier rubyid_server'>server</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='comma'>,</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='kw'>false</span><span class='rparen'>)</span>
+  <span class='ivar'>@voices</span><span class='lbracket'>[</span><span class='id identifier rubyid_server'>server</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_destroy'>destroy</span> <span class='kw'>if</span> <span class='ivar'>@voices</span><span class='lbracket'>[</span><span class='id identifier rubyid_server'>server</span><span class='rbracket'>]</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_destroy_vws'>destroy_vws</span>
+  <span class='ivar'>@voices</span><span class='period'>.</span><span class='id identifier rubyid_delete'>delete</span><span class='lparen'>(</span><span class='id identifier rubyid_server'>server</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="watching=-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>) <strong>watching=</strong>(name) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Sets the current watching status to the specified name.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>name</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The thing to be watched.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The thing that is now being watched.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+488
+489
+490
+491
+492</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/bot.rb', line 488</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_watching='>watching=</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_gateway_check'>gateway_check</span>
+  <span class='id identifier rubyid_update_status'>update_status</span><span class='lparen'>(</span><span class='ivar'>@status</span><span class='comma'>,</span> <span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='int'>3</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_name'>name</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+
+    <div id="footer">
+  Generated on Wed May 16 09:19:58 2018 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.8.7.6 (ruby-2.5.0).
+</div>
+
+  </body>
+</html>

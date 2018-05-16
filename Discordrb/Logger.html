@@ -1,0 +1,895 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Class: Discordrb::Logger
+  
+    &mdash; Documentation by YARD 0.8.7.6
+  
+</title>
+
+  <link rel="stylesheet" href="../css/style.css" type="text/css" charset="utf-8" />
+
+  <link rel="stylesheet" href="../css/common.css" type="text/css" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  hasFrames = window.top.frames.main ? true : false;
+  relpath = '../';
+  framesUrl = "../frames.html#!Discordrb/Logger.html";
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../_index.html">Index (L)</a> &raquo;
+    <span class='title'><span class='object_link'><a href="../Discordrb.html" title="Discordrb (module)">Discordrb</a></span></span>
+     &raquo; 
+    <span class="title">Logger</span>
+  
+
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="../class_list.html">
+      Class List
+    </a>
+  
+    <a class="full_list_link" id="method_list_link"
+        href="../method_list.html">
+      Method List
+    </a>
+  
+    <a class="full_list_link" id="file_list_link"
+        href="../file_list.html">
+      File List
+    </a>
+  
+</div>
+      <div class="clear"></div>
+    </div>
+
+    <iframe id="search_frame"></iframe>
+
+    <div id="content"><h1>Class: Discordrb::Logger
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+    <dt class="r1">Inherits:</dt>
+    <dd class="r1">
+      <span class="inheritName">Object</span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next">Discordrb::Logger</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+      </dd>
+    
+  
+  
+    
+  
+    
+  
+  
+  
+    <dt class="r2 last">Defined in:</dt>
+    <dd class="r2 last">lib/discordrb/logger.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    
+<p>Logs debug messages</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+  <h2>Constant Summary</h2>
+  
+    <dl class="constants">
+      
+        <dt id="MODES-constant" class="">MODES =
+          <div class="docstring">
+  <div class="discussion">
+    
+<p>The modes this logger can have. This is probably useless unless you want to
+write your own Logger</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+        </dt>
+        <dd><pre class="code"><span class='lbrace'>{</span>
+  <span class='label'>debug:</span> <span class='lbrace'>{</span> <span class='label'>long:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>DEBUG</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='label'>short:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>D</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='label'>format_code:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span>
+  <span class='label'>good:</span> <span class='lbrace'>{</span> <span class='label'>long:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>GOOD</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='label'>short:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>✓</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='label'>format_code:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\u001B[32m</span><span class='tstring_end'>&quot;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span> <span class='comment'># green
+</span>  <span class='label'>info:</span> <span class='lbrace'>{</span> <span class='label'>long:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>INFO</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='label'>short:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>i</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='label'>format_code:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span>
+  <span class='label'>warn:</span> <span class='lbrace'>{</span> <span class='label'>long:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>WARN</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='label'>short:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>!</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='label'>format_code:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\u001B[33m</span><span class='tstring_end'>&quot;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span> <span class='comment'># yellow
+</span>  <span class='label'>error:</span> <span class='lbrace'>{</span> <span class='label'>long:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>ERROR</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='label'>short:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>✗</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='label'>format_code:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\u001B[31m</span><span class='tstring_end'>&quot;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span> <span class='comment'># red
+</span>  <span class='label'>out:</span> <span class='lbrace'>{</span> <span class='label'>long:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>OUT</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='label'>short:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>→</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='label'>format_code:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\u001B[36m</span><span class='tstring_end'>&quot;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span> <span class='comment'># cyan
+</span>  <span class='label'>in:</span> <span class='lbrace'>{</span> <span class='label'>long:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>IN</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='label'>short:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>←</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='label'>format_code:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\u001B[35m</span><span class='tstring_end'>&quot;</span></span> <span class='rbrace'>}</span><span class='comma'>,</span> <span class='comment'># purple
+</span>  <span class='label'>ratelimit:</span> <span class='lbrace'>{</span> <span class='label'>long:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>RATELIMIT</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='label'>short:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>R</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='label'>format_code:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\u001B[41m</span><span class='tstring_end'>&quot;</span></span> <span class='rbrace'>}</span> <span class='comment'># red background
+</span><span class='rbrace'>}</span><span class='period'>.</span><span class='id identifier rubyid_freeze'>freeze</span></pre></dd>
+      
+        <dt id="FORMAT_RESET-constant" class="">FORMAT_RESET =
+          <div class="docstring">
+  <div class="discussion">
+    
+<p>The ANSI format code that resets formatting</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\u001B[0m</span><span class='tstring_end'>&quot;</span></span><span class='period'>.</span><span class='id identifier rubyid_freeze'>freeze</span></pre></dd>
+      
+        <dt id="FORMAT_BOLD-constant" class="">FORMAT_BOLD =
+          <div class="docstring">
+  <div class="discussion">
+    
+<p>The ANSI format code that makes something bold</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\u001B[1m</span><span class='tstring_end'>&quot;</span></span><span class='period'>.</span><span class='id identifier rubyid_freeze'>freeze</span></pre></dd>
+      
+    </dl>
+  
+
+
+
+
+  <h2>Instance Attribute Summary <small>(<a href="#" class="summary_toggle">collapse</a>)</small></h2>
+  <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#fancy%3D-instance_method" title="#fancy= (instance method)">- (true, false) <strong>fancy</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+    
+      <span class="note title writeonly">writeonly</span>
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Whether this logger is in extra-fancy mode!.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#streams-instance_method" title="#streams (instance method)">- (Array&lt;IO&gt;, Array&lt;#puts &amp; #flush&gt;) <strong>streams</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>The streams the logger should write to.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#token%3D-instance_method" title="#token= (instance method)">- (String<sup>?</sup>) <strong>token</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+    
+      <span class="note title writeonly">writeonly</span>
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>The bot token to be redacted or nil if it shouldn&#39;t.</p>
+</div></span>
+  
+</li>
+
+    
+  </ul>
+
+
+
+
+  
+    <h2>
+      Instance Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#debug%3D-instance_method" title="#debug= (instance method)">- (Object) <strong>debug=</strong>(value) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Sets the logging mode to :debug.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#initialize-instance_method" title="#initialize (instance method)">- (Logger) <strong>initialize</strong>(fancy = false, streams = [STDOUT]) </a>
+    
+
+    
+  </span>
+  
+  
+    <span class="note title constructor">constructor</span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Creates a new logger.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#log_exception-instance_method" title="#log_exception (instance method)">- (Object) <strong>log_exception</strong>(e) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Logs an exception to the console.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#mode%3D-instance_method" title="#mode= (instance method)">- (Object) <strong>mode=</strong>(value) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Sets the logging mode Possible modes are: * :debug logs everything *
+:verbose logs everything except for debug messages * :normal logs useful
+information, warnings and errors * :quiet only logs warnings and errors *
+:silent logs nothing.</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+<div id="constructor_details" class="method_details_list">
+  <h2>Constructor Details</h2>
+  
+    <div class="method_details first">
+  <h3 class="signature first" id="initialize-instance_method">
+  
+    - (<tt><span class='object_link'><a href="" title="Discordrb::Logger (class)">Logger</a></span></tt>) <strong>initialize</strong>(fancy = false, streams = [STDOUT]) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Creates a new logger.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>fancy</span>
+      
+      
+        <span class='type'>(<tt>true</tt>, <tt>false</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>false</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Whether this logger uses fancy mode (ANSI escape codes to make the output
+colourful)</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>streams</span>
+      
+      
+        <span class='type'>(<tt>Array&lt;IO&gt;</tt>, <tt>Array&lt;#puts & #flush&gt;</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>[STDOUT]</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the streams the logger should write to.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+21
+22
+23
+24
+25
+26</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/logger.rb', line 21</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_fancy'>fancy</span> <span class='op'>=</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='id identifier rubyid_streams'>streams</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='const'>STDOUT</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+  <span class='ivar'>@fancy</span> <span class='op'>=</span> <span class='id identifier rubyid_fancy'>fancy</span>
+  <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_mode'>mode</span> <span class='op'>=</span> <span class='symbol'>:normal</span>
+
+  <span class='ivar'>@streams</span> <span class='op'>=</span> <span class='id identifier rubyid_streams'>streams</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+  
+</div>
+
+  <div id="instance_attr_details" class="attr_details">
+    <h2>Instance Attribute Details</h2>
+    
+      
+      <span id=""></span>
+      <div class="method_details first">
+  <h3 class="signature first" id="fancy=-instance_method">
+  
+    - (<tt>true</tt>, <tt>false</tt>) <strong>fancy=</strong>(value)  <span class="extras">(writeonly)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns whether this logger is in extra-fancy mode!</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>true</tt>, <tt>false</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>whether this logger is in extra-fancy mode!</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+10
+11
+12</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/logger.rb', line 10</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_fancy='>fancy=</span><span class='lparen'>(</span><span class='id identifier rubyid_value'>value</span><span class='rparen'>)</span>
+  <span class='ivar'>@fancy</span> <span class='op'>=</span> <span class='id identifier rubyid_value'>value</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id="streams=-instance_method"></span>
+      <div class="method_details ">
+  <h3 class="signature " id="streams-instance_method">
+  
+    - (<tt>Array&lt;IO&gt;</tt>, <tt>Array&lt;#puts & #flush&gt;</tt>) <strong>streams</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the streams the logger should write to.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array&lt;IO&gt;</tt>, <tt>Array&lt;#puts & #flush&gt;</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the streams the logger should write to.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+16
+17
+18</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/logger.rb', line 16</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_streams'>streams</span>
+  <span class='ivar'>@streams</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <div class="method_details ">
+  <h3 class="signature " id="token=-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt><sup>?</sup>) <strong>token=</strong>(value)  <span class="extras">(writeonly)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns The bot token to be redacted or nil if it shouldn&#39;t.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>, <tt>nil</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The bot token to be redacted or nil if it shouldn&#39;t.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+13
+14
+15</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/logger.rb', line 13</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_token='>token=</span><span class='lparen'>(</span><span class='id identifier rubyid_value'>value</span><span class='rparen'>)</span>
+  <span class='ivar'>@token</span> <span class='op'>=</span> <span class='id identifier rubyid_value'>value</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+
+    
+      <div class="method_details first">
+  <h3 class="signature first" id="debug=-instance_method">
+  
+    - (<tt>Object</tt>) <strong>debug=</strong>(value) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Sets the logging mode to :debug</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>value</span>
+      
+      
+        <span class='type'>(<tt>true</tt>, <tt>false</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Whether debug mode should be on. If it is off the mode will be set to
+:normal.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+54
+55
+56</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/logger.rb', line 54</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_debug='>debug=</span><span class='lparen'>(</span><span class='id identifier rubyid_value'>value</span><span class='rparen'>)</span>
+  <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_mode'>mode</span> <span class='op'>=</span> <span class='id identifier rubyid_value'>value</span> <span class='op'>?</span> <span class='symbol'>:debug</span> <span class='op'>:</span> <span class='symbol'>:normal</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="log_exception-instance_method">
+  
+    - (<tt>Object</tt>) <strong>log_exception</strong>(e) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Logs an exception to the console.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>e</span>
+      
+      
+        <span class='type'>(<tt>Exception</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The exception to log.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+83
+84
+85
+86</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/logger.rb', line 83</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_log_exception'>log_exception</span><span class='lparen'>(</span><span class='id identifier rubyid_e'>e</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_error'>error</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Exception: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_e'>e</span><span class='period'>.</span><span class='id identifier rubyid_inspect'>inspect</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_e'>e</span><span class='period'>.</span><span class='id identifier rubyid_backtrace'>backtrace</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_line'>line</span><span class='op'>|</span> <span class='id identifier rubyid_error'>error</span><span class='lparen'>(</span><span class='id identifier rubyid_line'>line</span><span class='rparen'>)</span> <span class='rbrace'>}</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="mode=-instance_method">
+  
+    - (<tt>Object</tt>) <strong>mode=</strong>(value) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Sets the logging mode Possible modes are:  * :debug logs everything  *
+:verbose logs everything except for debug messages  * :normal logs useful
+information, warnings and errors  * :quiet only logs warnings and errors  *
+:silent logs nothing</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>value</span>
+      
+      
+        <span class='type'>(<tt>Symbol</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>What logging mode to use</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/logger.rb', line 66</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_mode='>mode=</span><span class='lparen'>(</span><span class='id identifier rubyid_value'>value</span><span class='rparen'>)</span>
+  <span class='kw'>case</span> <span class='id identifier rubyid_value'>value</span>
+  <span class='kw'>when</span> <span class='symbol'>:debug</span>
+    <span class='ivar'>@enabled_modes</span> <span class='op'>=</span> <span class='qsymbols_beg'>%i[</span><span class='tstring_content'>debug</span><span class='words_sep'> </span><span class='tstring_content'>good</span><span class='words_sep'> </span><span class='tstring_content'>info</span><span class='words_sep'> </span><span class='tstring_content'>warn</span><span class='words_sep'> </span><span class='tstring_content'>error</span><span class='words_sep'> </span><span class='tstring_content'>out</span><span class='words_sep'> </span><span class='tstring_content'>in</span><span class='words_sep'> </span><span class='tstring_content'>ratelimit</span><span class='tstring_end'>]</span></span>
+  <span class='kw'>when</span> <span class='symbol'>:verbose</span>
+    <span class='ivar'>@enabled_modes</span> <span class='op'>=</span> <span class='qsymbols_beg'>%i[</span><span class='tstring_content'>good</span><span class='words_sep'> </span><span class='tstring_content'>info</span><span class='words_sep'> </span><span class='tstring_content'>warn</span><span class='words_sep'> </span><span class='tstring_content'>error</span><span class='words_sep'> </span><span class='tstring_content'>out</span><span class='words_sep'> </span><span class='tstring_content'>in</span><span class='words_sep'> </span><span class='tstring_content'>ratelimit</span><span class='tstring_end'>]</span></span>
+  <span class='kw'>when</span> <span class='symbol'>:normal</span>
+    <span class='ivar'>@enabled_modes</span> <span class='op'>=</span> <span class='qsymbols_beg'>%i[</span><span class='tstring_content'>info</span><span class='words_sep'> </span><span class='tstring_content'>warn</span><span class='words_sep'> </span><span class='tstring_content'>error</span><span class='words_sep'> </span><span class='tstring_content'>ratelimit</span><span class='tstring_end'>]</span></span>
+  <span class='kw'>when</span> <span class='symbol'>:quiet</span>
+    <span class='ivar'>@enabled_modes</span> <span class='op'>=</span> <span class='qsymbols_beg'>%i[</span><span class='tstring_content'>warn</span><span class='words_sep'> </span><span class='tstring_content'>error</span><span class='tstring_end'>]</span></span>
+  <span class='kw'>when</span> <span class='symbol'>:silent</span>
+    <span class='ivar'>@enabled_modes</span> <span class='op'>=</span> <span class='qsymbols_beg'>%i[</span><span class='tstring_end'>]</span></span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+
+    <div id="footer">
+  Generated on Wed May 16 09:20:04 2018 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.8.7.6 (ruby-2.5.0).
+</div>
+
+  </body>
+</html>
