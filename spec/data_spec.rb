@@ -269,7 +269,7 @@ module Discordrb
         non_text_channels = channels.reject { |e| e.type == 0 }
 
         expect(API::Server).to receive(:update_channel_positions)
-          .with(any_args, an_array_excluding(*non_text_channels.map{ |e| {id: e.id, position: instance_of(Integer)} }))
+          .with(any_args, an_array_excluding(*non_text_channels.map { |e| { id: e.id, position: instance_of(Integer) } }))
         channel.sort_after
       end
 
@@ -283,7 +283,7 @@ module Discordrb
         allow(server).to receive(:channels).and_return(all_channels)
 
         expect(API::Server).to receive(:update_channel_positions)
-          .with(any_args, an_array_excluding(*[excluded].map{ |e| {id: e.id, position: instance_of(Integer)} }))
+          .with(any_args, an_array_excluding(*[excluded].map { |e| { id: e.id, position: instance_of(Integer) } }))
         channel.sort_after(expected_channels.last)
       end
 
