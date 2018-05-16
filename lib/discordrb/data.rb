@@ -1438,6 +1438,8 @@ module Discordrb
       if other
         raise ArgumentError, 'Can only sort a channel after a channel of the same type!' unless other.category? || (@type == other.type)
 
+        raise ArgumentError, 'Can only sort a channel after a channel in the same server!' unless other.server == server
+
         # Store `others` parent (or if `other` is a category itself)
         parent = if category? && other.category?
                    # If we're sorting two categories, there is no new parent

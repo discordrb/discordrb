@@ -288,7 +288,11 @@ module Discordrb
       end
 
       context 'when other is not on this server' do
-        it 'should raise ArgumentError'
+        it 'should raise ArgumentError' do
+          other = double('other', server: double('other server'), resolve_id: double, category?: nil, type: channel.type)
+          allow(bot).to receive(:channel).and_return(other)
+          expect { channel.sort_after(other) }.to raise_error(ArgumentError)
+        end
       end
 
       context 'when other is not of Channel, #resolve_id, nil' do
