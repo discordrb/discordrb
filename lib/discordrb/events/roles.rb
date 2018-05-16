@@ -12,6 +12,11 @@ module Discordrb::Events
     # @return [Server] the server on which a role got created
     attr_reader :server
 
+    # @!attribute [r] name
+    #   @return [String] this role's name
+    #   @see Role#name
+    delegate :name, to: :role
+
     def initialize(data, bot)
       @bot = bot
 
@@ -48,6 +53,11 @@ module Discordrb::Events
 
     # @return [Server] the server on which a role got deleted.
     attr_reader :server
+
+    # @!attribute [r] name
+    #   @return [String] this role's name
+    #   @see Role#name
+    delegate :name, to: :role
 
     def initialize(data, bot)
       @bot = bot
