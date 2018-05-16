@@ -287,8 +287,6 @@ module Discordrb
         channel.sort_after(expected_channels.last)
       end
 
-      it 'should return the new position'
-
       context 'when other is not on this server' do
         it 'should raise ArgumentError'
       end
