@@ -238,6 +238,13 @@ module Discordrb
       @bot.add_await(key, Discordrb::Events::MessageEvent, { from: @id }.merge(attributes), &block)
     end
 
+    # Add a blocking await for a message from this user. Specifically, this adds a global await for a MessageEvent with this
+    # user's ID as a :from attribute.
+    # @see Bot#add_await!
+    def await!(attributes = {})
+      @bot.add_await!(Discordrb::Events::MessageEvent, { from: @id }.merge(attributes))
+    end
+
     # Gets the member this user is on a server
     # @param server [Server] The server to get the member for
     # @return [Member] this user as a member on a particular server
@@ -1786,6 +1793,13 @@ module Discordrb
       @bot.add_await(key, Discordrb::Events::MessageEvent, { in: @id }.merge(attributes), &block)
     end
 
+    # Add a blocking {Await} for a message in this channel. This is identical in functionality to adding a
+    # {Discordrb::Events::MessageEvent} await with the `in` attribute as this channel.
+    # @see Bot#add_await!
+    def await!(attributes = {})
+      @bot.add_await!(Discordrb::Events::MessageEvent, { in: @id }.merge(attributes))
+    end
+
     # Creates a new invite to this channel.
     # @param max_age [Integer] How many seconds this invite should last.
     # @param max_uses [Integer] How many times this invite should be able to be used.
@@ -2438,6 +2452,12 @@ module Discordrb
     # @see Bot#add_await
     def await(key, attributes = {}, &block)
       @bot.add_await(key, Discordrb::Events::MessageEvent, { from: @author.id, in: @channel.id }.merge(attributes), &block)
+    end
+
+    # Add a blocking {Await} for a message with the same user and channel.
+    # @see Bot#add_await!
+    def await!(attributes = {})
+      @bot.add_await!(Discordrb::Events::MessageEvent, { from: @author.id, in: @channel.id }.merge(attributes))
     end
 
     # @return [true, false] whether this message was sent by the current {Bot}.

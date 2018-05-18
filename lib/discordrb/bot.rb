@@ -559,6 +559,43 @@ module Discordrb
       @awaits[key] = await
     end
 
+    # Awaits an event, blocking the current thread until a response is received.
+    # @param type [Class] The event class that should be listened for.
+    # @option attributes [Numeric] :timeout the amount of time to wait for a response before returning `nil`. Waits forever if omitted.
+    # @return [Event, nil] The event object that was triggered, or `nil` if a `timeout` was set and no event was raised in time.
+    # @raise [ArgumentError] if `timeout` is given and is not a positive numeric value
+    def add_await!(key, type, attributes = {})
+      raise "You can't await an AwaitEvent!" if type == Discordrb::Events::AwaitEvent
+
+      timeout = attributes[:timeout]
+      raise ArgumentError, 'Timeout must be a number > 0' if timeout && timeout.is_a?(Numeric) && timeout <= 0
+
+      mutex = Mutex.new
+      cv = ConditionVariable.new
+      response = nil
+      block = lambda do |event|
+        mutex.synchronize do
+          response = event
+          cv.signal
+        end
+      end
+
+      handler = register_event(type, attributes, block)
+
+      if timeout
+        Thread.new do
+          sleep timeout
+          mutex.synchronize { cv.signal }
+        end
+      end
+
+      mutex.synchronize { cv.wait(mutex) }
+
+      remove_handler(handler)
+      raise 'ConditionVariable was signaled without returning an event!' if response.nil? && timeout.nil?
+      response
+    end
+
     # Add a user to the list of ignored users. Those users will be ignored in message events at event processing level.
     # @note Ignoring a user only prevents any message events (including mentions, commands etc.) from them! Typing and
     #   presence and any other events will still be received.
