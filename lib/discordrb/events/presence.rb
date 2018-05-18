@@ -65,17 +65,22 @@ module Discordrb::Events
     # @return [String] the URL to the stream
     attr_reader :url
 
+    # @return [String] what the player is currently doing (ex. game being streamed)
+    attr_reader :details
+
     # @return [Integer] the type of play. 0 = game, 1 = Twitch
     attr_reader :type
 
     def initialize(data, bot)
       @bot = bot
 
+      @server = bot.server(data['guild_id'].to_i)
       @user = bot.user(data['user']['id'].to_i)
       @game = data['game'] ? data['game']['name'] : nil
-      @server = bot.server(data['guild_id'].to_i)
-      @url = data['game'] ? data['game']['url'] : nil
       @type = data['game'] ? data['game']['type'].to_i : nil
+      # Handle optional 'game' fields safely
+      @url = data['game'] && data['game']['url'] ? data['game']['url'] : nil
+      @details = data['game'] && data['game']['details'] ? data['game']['details'] : nil
     end
   end
 
