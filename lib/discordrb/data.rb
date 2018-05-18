@@ -2451,7 +2451,7 @@ module Discordrb
     # @return [Array<String>] the emoji mentions found in the message
     def scan_for_emoji
       emoji = @content.split
-      emoji = emoji.grep(/<:(?<name>\w+):(?<id>\d+)>?/)
+      emoji = emoji.grep(/<(?<animated>a)?:(?<name>\w+):(?<id>\d+)>?/)
       emoji
     end
 
