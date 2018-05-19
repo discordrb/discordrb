@@ -11,5 +11,23 @@ before_script:
 script:
   - bundle exec rspec spec
   - bundle exec rubocop -c .rubocop.yml
+  - bin/travis_build_docs.sh
 after_script:
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+deploy:
+  - provider: pages
+    skip-cleanup: true
+    github-token: $GITHUB_TOKEN
+    keep-history: true
+    local-dir: docs
+    on:
+      branch: travis-docs
+      rvm: 2.5.1
+  - provider: pages
+    skip-cleanup: true
+    github-token: $GITHUB_TOKEN
+    keep-history: true
+    local-dir: docs
+    on:
+      tags: true
+      rvm: 2.5.1
