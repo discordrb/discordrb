@@ -21,7 +21,7 @@ deploy:
     keep-history: true
     local-dir: docs
     on:
-      branch: travis-docs
+      branch: master
       rvm: 2.5.1
   - provider: pages
     skip-cleanup: true
