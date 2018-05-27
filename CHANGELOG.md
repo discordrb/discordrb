@@ -11,7 +11,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - 
 
 ## [3.2.1] - 2017-02-18
-[3.2.1]: https://github.com/meew0/discordrb/compare/v3.2.0.1...v3.2.1
+[3.2.1]: https://github.com/meew0/discordrb/releases/tag/v3.2.1
+
+[View diff for this release.](https://github.com/meew0/discordrb/compare/v3.2.0.1...v3.2.1)
 
 ### Changed
 - `Bot#stop` and `Gateway#stop` now explicitly return `nil`, for more convenient use in commands
@@ -24,13 +26,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed a bug that caused issues when playing short files ([#326](https://github.com/meew0/discordrb/issues/316))
 
 ## [3.2.0.1] - 2017-01-29
-[3.2.0.1]: https://github.com/meew0/discordrb/compare/v3.2.0...v3.2.0.1
+[3.2.0.1]: https://github.com/meew0/discordrb/releases/tag/v3.2.0.1
+
+[View diff for this release.](https://github.com/meew0/discordrb/compare/v3.2.0...v3.2.0.1)
 
 ### Fixed
 - Attempt to fix an issue that causes a strange problem with dependencies when installing discordrb
 
 ## [3.2.0] - 2017-01-29
-[3.2.0]: https://github.com/meew0/discordrb/compare/v3.1.1...v3.2.0
+[3.2.0]: https://github.com/meew0/discordrb/releases/tag/v3.2.0
+
+[View diff for this release.](https://github.com/meew0/discordrb/compare/v3.1.1...v3.2.0)
 
 ### Added
 - Various parts of gateway error handling were improved, leading to significant stability improvements:
@@ -80,13 +86,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed a specific edge case in command chain handling where handling commands with the same name as the chain delimiter was broken 
 
 ## [3.1.1] - 2016-10-21
-[3.1.1]: https://github.com/meew0/discordrb/compare/v3.1.0...v3.1.1
+[3.1.1]: https://github.com/meew0/discordrb/releases/tag/v3.1.1
+
+[View diff for this release.](https://github.com/meew0/discordrb/compare/v3.1.0...v3.1.1)
 
 ### Fixed
 - An oversight where a `GUILD_DELETE` dispatch would cause an internal error was fixed. ([#256](https://github.com/meew0/discordrb/pull/256), thanks @greenbigfrog)
 
 ## [3.1.0] - 2016-10-20
-[3.1.0]: https://github.com/meew0/discordrb/compare/v3.0.2...v3.1.0
+[3.1.0]: https://github.com/meew0/discordrb/releases/tag/v3.1.0
+
+[View diff for this release.](https://github.com/meew0/discordrb/compare/v3.0.2...v3.1.0)
 
 ### Added
 - Emoji handling support ([#226](https://github.com/meew0/discordrb/pull/226), thanks @greenbigfrog)
@@ -105,7 +115,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Changing nicknames works again, it has apparently been broken in 3.0.0.
 
 ## [3.0.2] - 2016-10-07
-[3.0.2]: https://github.com/meew0/discordrb/compare/v3.0.1...v3.0.2
+[3.0.2]: https://github.com/meew0/discordrb/releases/tag/v3.0.2
+
+[View diff for this release.](https://github.com/meew0/discordrb/compare/v3.0.1...v3.0.2)
 
 ### Changed
 - A small change to how CommandBot parameter lists are formatted ([#240](https://github.com/meew0/discordrb/pull/240), thanks @FormalHellhound)
@@ -114,7 +126,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Setting properties on a channel (e.g. `Channel#topic=`) works again ([#238](https://github.com/meew0/discordrb/issues/238) / [#239](https://github.com/meew0/discordrb/pull/239), thanks @Daniel-Worrall)
 
 ## [3.0.1] - 2016-10-01
-[3.0.1]: https://github.com/meew0/discordrb/compare/v3.0.0...v3.0.1
+[3.0.1]: https://github.com/meew0/discordrb/releases/tag/v3.0.1
+
+[View diff for this release.](https://github.com/meew0/discordrb/compare/v3.0.0...v3.0.1)
 
 A tiny update to support webhook-sent messages properly!
 
@@ -128,7 +142,9 @@ A tiny update to support webhook-sent messages properly!
 - Fixed a minor performance problem where a CommandBot would create unnecessarily create redundant objects for every received message.
 
 ## [3.0.0] - 2016-09-30
-[3.0.0]: https://github.com/meew0/discordrb/compare/v2.1.3...v3.0.0
+[3.0.0]: https://github.com/meew0/discordrb/releases/tag/v3.0.0
+
+[View diff for this release.](https://github.com/meew0/discordrb/compare/v2.1.3...v3.0.0)
 
 I didn't think there could possibly be a release larger than 2.0.0 was, but here it is! Including the respective release commit, there were 540 commits from 1.8.1 to 2.0.0, but a whopping 734 commits from 2.1.3 to 3.0.0.
 
@@ -205,7 +221,9 @@ As with 2.0.0, there are some breaking changes! They are, as always, highlighted
 - A possible regression in PM channel creation was fixed. ([#227](https://github.com/meew0/discordrb/issues/227) / [#228](https://github.com/meew0/discordrb/pull/228), thanks @heimidal)
 
 ## [2.1.3] - 2016-06-11
-[2.1.3]: https://github.com/meew0/discordrb/compare/v2.1.2...v2.1.3
+[2.1.3]: https://github.com/meew0/discordrb/releases/tag/v2.1.3
+
+[View diff for this release.](https://github.com/meew0/discordrb/compare/v2.1.2...v2.1.3)
 
 ### Fixed
 - Various messages that were just printed to stdout that should have been using the `Logger` system now do ([#132](https://github.com/meew0/discordrb/issues/132) and [#133](https://github.com/meew0/discordrb/pull/133), thanks @PoVa)
@@ -214,7 +232,9 @@ As with 2.0.0, there are some breaking changes! They are, as always, highlighted
 - If the processing of a particular voice packet takes too long, the user will now be warned instead of an error being raised ([#134](https://github.com/meew0/discordrb/issues/134))
 
 ## [2.1.2] - 2016-05-29
-[2.1.2]: https://github.com/meew0/discordrb/compare/v2.1.1...v2.1.2
+[2.1.2]: https://github.com/meew0/discordrb/releases/tag/v2.1.2
+
+[View diff for this release.](https://github.com/meew0/discordrb/compare/v2.1.1...v2.1.2)
 
 ### Added
 - A reader was added (`Bot#awaits`) to read the hash of awaits, so ones that aren't necessary anymore can be deleted.
@@ -229,14 +249,18 @@ As with 2.0.0, there are some breaking changes! They are, as always, highlighted
 - Uncached members in messages are now logged.
 
 ## [2.1.1] - 2016-05-08
-[2.1.1]: https://github.com/meew0/discordrb/compare/v2.1.0...v2.1.1
+[2.1.1]: https://github.com/meew0/discordrb/releases/tag/v2.1.1
+
+[View diff for this release.](https://github.com/meew0/discordrb/compare/v2.1.0...v2.1.1)
 
 ### Fixed
 - Fixed a caching error that occurred when deleting roles ([#113](https://github.com/meew0/discordrb/issues/113))
 - Commands should no longer be triggered with nil authors ([#114](https://github.com/meew0/discordrb/issues/114))
 
 ## [2.1.0] - 2016-04-30
-[2.1.0]: https://github.com/meew0/discordrb/compare/v2.0.4...v2.1.0
+[2.1.0]: https://github.com/meew0/discordrb/releases/tag/v2.1.0
+
+[View diff for this release.](https://github.com/meew0/discordrb/compare/v2.0.4...v2.1.0)
 
 ### Added
 - API support for the April 29 Discord update, which was the first feature update in a while with more than a few additions to the API, was added. This includes: ([#111](https://github.com/meew0/discordrb/pull/111))
@@ -252,7 +276,9 @@ As with 2.0.0, there are some breaking changes! They are, as always, highlighted
 - Prefixes are now more flexible in the format they can have - arrays and callables are now allowed as well. Read the documentation for more info.([#107](https://github.com/meew0/discordrb/issues/107) / [#109](https://github.com/meew0/discordrb/pull/109))
 
 ## [2.0.4] - 2016-04-19
-[2.0.4]: https://github.com/meew0/discordrb/compare/v2.0.3...v2.0.4
+[2.0.4]: https://github.com/meew0/discordrb/releases/tag/v2.0.4
+
+[View diff for this release.](https://github.com/meew0/discordrb/compare/v2.0.3...v2.0.4)
 
 ### Added
 - Added a utility method `Invite#url` ([#86](https://github.com/meew0/discordrb/issues/86)/[#101](https://github.com/meew0/discordrb/pull/101), thanks @PoVa)
@@ -266,7 +292,9 @@ As with 2.0.0, there are some breaking changes! They are, as always, highlighted
 - Fixed some possible problems with heartbeats not being sent with unstable connections
 
 ## [2.0.3] - 2016-04-15
-[2.0.3]: https://github.com/meew0/discordrb/compare/v2.0.2...v2.0.3
+[2.0.3]: https://github.com/meew0/discordrb/releases/tag/v2.0.3
+
+[View diff for this release.](https://github.com/meew0/discordrb/compare/v2.0.2...v2.0.3)
 
 ### Added
 - All examples now fully use v2 ([#92](https://github.com/meew0/discordrb/pull/92), thanks @snapcase)
@@ -280,7 +308,9 @@ As with 2.0.0, there are some breaking changes! They are, as always, highlighted
 - DCA playback should no longer cause an error when playback ends due to a specific reason
 
 ## [2.0.2] - 2016-04-10
-[2.0.2]: https://github.com/meew0/discordrb/compare/v2.0.1...v2.0.2
+[2.0.2]: https://github.com/meew0/discordrb/releases/tag/v2.0.2
+
+[View diff for this release.](https://github.com/meew0/discordrb/compare/v2.0.1...v2.0.2)
 
 ### Added
 - Added `Server#text_channels` and `#voice_channels` ([#79](https://github.com/meew0/discordrb/issues/79))
@@ -297,7 +327,9 @@ As with 2.0.0, there are some breaking changes! They are, as always, highlighted
 - Fixed an error where rarely a server's owner wouldn't be initialized correctly
 
 ## [2.0.1] - 2016-04-10
-[2.0.1]: https://github.com/meew0/discordrb/compare/v2.0.0...v2.0.1
+[2.0.1]: https://github.com/meew0/discordrb/releases/tag/v2.0.1
+
+[View diff for this release.](https://github.com/meew0/discordrb/compare/v2.0.0...v2.0.1)
 
 ### Added
 - Added some more examples ([#75](https://github.com/meew0/discordrb/pull/75), thanks @greenbigfrog)
@@ -311,7 +343,9 @@ As with 2.0.0, there are some breaking changes! They are, as always, highlighted
 - Fixed a bug where playing something right after connecting to voice would sometimes cause the encryption key to not be set
 
 ## [2.0.0] - 2016-04-08
-[2.0.0]: https://github.com/meew0/discordrb/compare/v1.8.1...v2.0.0
+[2.0.0]: https://github.com/meew0/discordrb/releases/tag/v2.0.0
+
+[View diff for this release.](https://github.com/meew0/discordrb/compare/v1.8.1...v2.0.0)
 
 ### Added
 This is the first major update with some breaking changes! Those are highlighted in bold with migration advice after them. Ask in the Discord channel (see the README) if you have questions.
@@ -390,13 +424,17 @@ puts bot.profile.username
 - Command bots now obey `should_parse_self`
 
 ## [1.8.1] - 2016-03-11
-[1.8.1]: https://github.com/meew0/discordrb/compare/v1.8.0...v1.8.1
+[1.8.1]: https://github.com/meew0/discordrb/releases/tag/v1.8.1
+
+[View diff for this release.](https://github.com/meew0/discordrb/compare/v1.8.0...v1.8.1)
 
 ### Fixed
 * Fixed an error (caused by an undocumented API change) that would write a traceback to the console every time someone started typing in a channel invisible to the bot.
 
 ## [1.8.0] - 2016-03-11
-[1.8.0]: https://github.com/meew0/discordrb/compare/v1.7.5...v1.8.0
+[1.8.0]: https://github.com/meew0/discordrb/releases/tag/v1.8.0
+
+[View diff for this release.](https://github.com/meew0/discordrb/compare/v1.7.5...v1.8.0)
 
 ### Added
 * The built-in logger has been somewhat redone.
@@ -415,7 +453,9 @@ puts bot.profile.username
 * Users' voice channels should now always be set if they are in one
 
 ## [1.7.5] - 2016-03-03
-[1.7.5]: https://github.com/meew0/discordrb/compare/v1.7.4...v1.7.5
+[1.7.5]: https://github.com/meew0/discordrb/releases/tag/v1.7.5
+
+[View diff for this release.](https://github.com/meew0/discordrb/compare/v1.7.4...v1.7.5)
 
 ### Changed
 * `Channel#send_message` and `Bot#send_message` now have an extra `tts` parameter (false by default) to specify whether the message should use TTS.
@@ -425,7 +465,9 @@ puts bot.profile.username
 * Manual TTS using `API.send_message` will now work correctly.
 
 ## [1.7.4] - 2016-02-28
-[1.7.4]: https://github.com/meew0/discordrb/compare/v1.7.3...v1.7.4
+[1.7.4]: https://github.com/meew0/discordrb/releases/tag/v1.7.4
+
+[View diff for this release.](https://github.com/meew0/discordrb/compare/v1.7.3...v1.7.4)
 
 ### Added
 * Added methods `Channel#text?` and `Channel#voice?` to check a channel's type.
@@ -437,21 +479,27 @@ puts bot.profile.username
 * Fixed `Profile#avatar=` doing absolutely nothing.
 
 ## [1.7.3] - 2016-02-27
-[1.7.3]: https://github.com/meew0/discordrb/compare/v1.7.2...v1.7.3
+[1.7.3]: https://github.com/meew0/discordrb/releases/tag/v1.7.3
+
+[View diff for this release.](https://github.com/meew0/discordrb/compare/v1.7.2...v1.7.3)
 
 ### Added
 * The server banlist can now be accessed more nicely using `Server#bans`.
 * Some abstractions for OAuth application creation were added - `bot.create_oauth_application` and `bot.update_oauth_application`. See the docs about how to use them.
 
 ## [1.7.2] - 2016-02-25
-[1.7.2]: https://github.com/meew0/discordrb/compare/v1.7.1...v1.7.2
+[1.7.2]: https://github.com/meew0/discordrb/releases/tag/v1.7.2
+
+[View diff for this release.](https://github.com/meew0/discordrb/compare/v1.7.1...v1.7.2)
 
 ### Changed
 * The `bot` object can now be read from all events, not just from command ones.
 * You can now set the `filter_volume` on VoiceBot, which corresponds to the old way of doing volume handling, in case the new way is too slow for you.
 
 ## [1.7.1] - 2016-02-23
-[1.7.1]: https://github.com/meew0/discordrb/compare/v1.7.0...v1.7.1
+[1.7.1]: https://github.com/meew0/discordrb/releases/tag/v1.7.1
+
+[View diff for this release.](https://github.com/meew0/discordrb/compare/v1.7.0...v1.7.1)
 
 ### Added
 * A `clear!` method was added to EventContainer that removes all events from it, so you can overwrite modules by defining them again. (It's unnecessary for CommandContainers because commands can never be duplicate.)
@@ -462,7 +510,9 @@ puts bot.profile.username
 * Got rid of the annoying `undefined method 'game' for nil:NilClass` error that sometimes occurred on startup. (It was harmless but now it's gone entirely)
 
 ## [1.7.0] - 2016-02-23
-[1.7.0]: https://github.com/meew0/discordrb/compare/v1.6.6...v1.7.0
+[1.7.0]: https://github.com/meew0/discordrb/releases/tag/v1.7.0
+
+[View diff for this release.](https://github.com/meew0/discordrb/compare/v1.6.6...v1.7.0)
 
 ### Added
 * **`bot.find` and `bot.find_user` have had their fuzzy search feature removed because it only caused problems. If you still need it, you can copy the code from the repo's history.** In addition, `find` was renamed to `find_channel` but still exists as a (deprecated) alias.
@@ -490,38 +540,44 @@ puts bot.profile.username
 * `break`ing from an event or command will no longer spew `LocalJumpError`s to the console.
 
 ## [1.6.6] - 2016-02-13
-[1.6.6]: https://github.com/meew0/discordrb/compare/v1.6.5...v1.6.6
+[1.6.6]: https://github.com/meew0/discordrb/releases/tag/v1.6.6
+[View diff for this release.](https://github.com/meew0/discordrb/compare/v1.6.5...v1.6.6)
 
 ### Fixed
 * Fixed a problem that would cause an incompatibility with Ruby 2.1
 * Fixed servers sometimes containing duplicate members
 
 ## [1.6.5] - 2016-02-12
-[1.6.5]: https://github.com/meew0/discordrb/compare/v1.6.4...v1.6.5
+[1.6.5]: https://github.com/meew0/discordrb/releases/tag/v1.6.5
+[View diff for this release.](https://github.com/meew0/discordrb/compare/v1.6.4...v1.6.5)
 
 ### Changed
 * The bot will now request the users that would previously be sent all in one READY packet in multiple chunks. This improves startup time slightly and ensures compatibility with the latest Discord change, but it also means that some users won't be in server members lists until a while after creation (usually a couple seconds at most).
 
 ## [1.6.4] - 2016-02-10
-[1.6.4]: https://github.com/meew0/discordrb/compare/v1.6.3...v1.6.4
+[1.6.4]: https://github.com/meew0/discordrb/releases/tag/v1.6.4
+[View diff for this release.](https://github.com/meew0/discordrb/compare/v1.6.3...v1.6.4)
 
 ### Fixed
 * Fixed a bug that made the joining of servers using an invite impossible.
 
 ## [1.6.3] - 2016-02-08
-[1.6.3]: https://github.com/meew0/discordrb/compare/v1.6.2...v1.6.3
+[1.6.3]: https://github.com/meew0/discordrb/releases/tag/v1.6.3
+[View diff for this release.](https://github.com/meew0/discordrb/compare/v1.6.2...v1.6.3)
 
 ### Fixed
 * Fixed a bug that prevented the banning of users over the API
 
 ## [1.6.2] - 2016-02-06
-[1.6.2]: https://github.com/meew0/discordrb/compare/v1.6.1...v1.6.2
+[1.6.2]: https://github.com/meew0/discordrb/releases/tag/v1.6.2
+[View diff for this release.](https://github.com/meew0/discordrb/compare/v1.6.1...v1.6.2)
 
 ### Fixed
 * RbNaCl is now installed directly instead of the wrapper that also contains libsodium. This has the disadvantage that you will have to install libsodium manually but at least it's not broken on Windows anymore.
 
 ## [1.6.1] - 2016-02-04
-[1.6.1]: https://github.com/meew0/discordrb/compare/v1.6.0...v1.6.1
+[1.6.1]: https://github.com/meew0/discordrb/releases/tag/v1.6.1
+[View diff for this release.](https://github.com/meew0/discordrb/compare/v1.6.0...v1.6.1)
 
 ### Changed
 * It's now possible to prevent the `READY` packet from being printed in debug mode, run `bot.suppress_ready_debug` once before the `bot.run` to do it.
@@ -530,7 +586,8 @@ puts bot.profile.username
 * Token cache files with invalid JSON syntax will no longer crash the bot at login.
 
 ## [1.6.0] - 2016-02-01
-[1.6.0]: https://github.com/meew0/discordrb/compare/v1.5.4...v1.6.0
+[1.6.0]: https://github.com/meew0/discordrb/releases/tag/v1.6.0
+[View diff for this release.](https://github.com/meew0/discordrb/compare/v1.5.4...v1.6.0)
 
 ### Added
 * The inline documentation using YARD was greatly improved and is now mostly usable, at least for the data classes and voice classes. It's still not complete enough to be released on GitHub, but you can build it yourself using [YARD](http://yardoc.org/).
@@ -559,7 +616,8 @@ puts bot.profile.username
 * The `inviter` of an `Invite` will now be `nil` instead of causing an exception when it doesn't exist in the invite data.
 
 ## [1.5.4] - 2016-01-16
-[1.5.4]: https://github.com/meew0/discordrb/compare/v1.5.3...v1.5.4
+[1.5.4]: https://github.com/meew0/discordrb/releases/tag/v1.5.4
+[View diff for this release.](https://github.com/meew0/discordrb/compare/v1.5.3...v1.5.4)
 
 ### Changed
 * The `opus-ruby` and `levenshtein` dependencies are now optional - if you don't need them, it won't crash immediately (only when you try to use voice / `find` with a threshold > 0, respectively)
@@ -569,14 +627,16 @@ puts bot.profile.username
 * `websocket-client-simple`, which is required for voice, is now specified in the dependencies.
 
 ## [1.5.3] - 2016-01-11
-[1.5.3]: https://github.com/meew0/discordrb/compare/v1.5.2...v1.5.3
+[1.5.3]: https://github.com/meew0/discordrb/releases/tag/v1.5.3
+[View diff for this release.](https://github.com/meew0/discordrb/compare/v1.5.2...v1.5.3)
 
 ### Added
 * Voice bot length adjustments are now configurable using `bot.voice.adjust_interval` and `bot.voice.adjust_offset` (make sure the latter is less than the first, or no adjustment will be performed at all)
 * Length adjustments can now be made more smooth using `bot.voice.adjust_average` (true allows for more smooth adjustments, *may* improve stutteriness but might make it worse as well)
 
 ## [1.5.2] - 2016-01-11
-[1.5.2]: https://github.com/meew0/discordrb/compare/v1.5.1...v1.5.2
+[1.5.2]: https://github.com/meew0/discordrb/releases/tag/v1.5.2
+[View diff for this release.](https://github.com/meew0/discordrb/compare/v1.5.1...v1.5.2)
 
 ### Added
 * `bot.voice_connect` can now use a channel ID directly.
@@ -589,13 +649,15 @@ puts bot.profile.username
 * Fix a concurrency issue where `VoiceBot` would try to read from nil
 
 ## [1.5.1] - 2016-01-10
-[1.5.1]: https://github.com/meew0/discordrb/compare/v1.5.0...v1.5.1
+[1.5.1]: https://github.com/meew0/discordrb/releases/tag/v1.5.1
+[View diff for this release.](https://github.com/meew0/discordrb/compare/v1.5.0...v1.5.1)
 
 ### Added
 * The connection to voice was made more reliable. I haven't experienced any issues with it myself but I got reports where `recv` worked better than `recvmsg`.
 
 ## [1.5.0] - 2016-01-10
-[1.5.0]: https://github.com/meew0/discordrb/compare/v1.4.8...v1.5.0
+[1.5.0]: https://github.com/meew0/discordrb/releases/tag/v1.5.0
+[View diff for this release.](https://github.com/meew0/discordrb/compare/v1.4.8...v1.5.0)
 
 ### Added
 * Voice support: discordrb can now connect to voice using `bot.voice_connect` and do the following things:
@@ -610,7 +672,8 @@ puts bot.profile.username
 * `Bot.parse_mention` now works, it didn't work at all previously
 
 ## [1.4.8] - 2016-01-06
-[1.4.8]: https://github.com/meew0/discordrb/compare/v1.4.7...v1.4.8
+[1.4.8]: https://github.com/meew0/discordrb/releases/tag/v1.4.8
+[View diff for this release.](https://github.com/meew0/discordrb/compare/v1.4.7...v1.4.8)
 
 ### Added
 * The `User` class now has the methods `add_role` and `remove_role` which add a role to a user and remove it, respectively.
@@ -621,7 +684,8 @@ puts bot.profile.username
 * When a role is deleted, the ID is now obtained correctly. (#30)
 
 ## [1.4.7] - 2016-01-03
-[1.4.7]: https://github.com/meew0/discordrb/compare/v1.4.6...v1.4.7
+[1.4.7]: https://github.com/meew0/discordrb/releases/tag/v1.4.7
+[View diff for this release.](https://github.com/meew0/discordrb/compare/v1.4.6...v1.4.7)
 
 ### Added
 * Presence event handling is now divided into two separate events; `PresenceEvent` to handle online/offline/idle statuses and `PlayingEvent` to handle users playing games.
@@ -632,7 +696,8 @@ puts bot.profile.username
 * The `TypingEvent` `user` property is now initialized correctly (#29, thanks @purintai)
 
 ## [1.4.6] - 2015-12-25
-[1.4.6]: https://github.com/meew0/discordrb/compare/v1.4.4...v1.4.6
+[1.4.6]: https://github.com/meew0/discordrb/releases/tag/v1.4.6
+[View diff for this release.](https://github.com/meew0/discordrb/compare/v1.4.4...v1.4.6)
 
 ### Fixed
 * The `user` and `server` properties of `PresenceEvent` are now initialized correctly.
@@ -644,7 +709,8 @@ puts bot.profile.username
 * Discord mentions are handled in the old way again, after Discord reverted an API change.
 
 ## [1.4.4] - 2015-12-18
-[1.4.4]: https://github.com/meew0/discordrb/compare/v1.4.3...v1.4.4
+[1.4.4]: https://github.com/meew0/discordrb/releases/tag/v1.4.4
+[View diff for this release.](https://github.com/meew0/discordrb/compare/v1.4.3...v1.4.4)
 
 ### Added
 * Add `Server.leave_server` as an alias for `delete_server`
@@ -657,7 +723,8 @@ puts bot.profile.username
 * The quickadders for awaits (`User.await`, `Channel.await` etc.) now add the correct awaits.
 
 ## [1.4.3] - 2015-12-11
-[1.4.3]: https://github.com/meew0/discordrb/compare/v1.4.2...v1.4.3
+[1.4.3]: https://github.com/meew0/discordrb/releases/tag/v1.4.3
+[View diff for this release.](https://github.com/meew0/discordrb/compare/v1.4.2...v1.4.3)
 
 ### Added
 * Added a method `Bot.find_user` analogous to `Bot.find`.
@@ -666,7 +733,8 @@ puts bot.profile.username
 * Remove a leftover debug line (#23, thanks @VxJasonxV)
 
 ## [1.4.2] - 2015-12-10
-[1.4.2]: https://github.com/meew0/discordrb/compare/v1.4.1...v1.4.2
+[1.4.2]: https://github.com/meew0/discordrb/releases/tag/v1.4.2
+[View diff for this release.](https://github.com/meew0/discordrb/compare/v1.4.1...v1.4.2)
 
 ### Changed
 * discordrb will now send a user agent in the format requested by the Discord devs.
@@ -679,7 +747,8 @@ puts bot.profile.username
 * The command-not-found message in `CommandBot` can now be disabled properly
 
 ## [1.4.0] - 2015-12-04
-[1.4.0]: https://github.com/meew0/discordrb/compare/v1.3.12...v1.4.0
+[1.4.0]: https://github.com/meew0/discordrb/releases/tag/v1.4.0
+[View diff for this release.](https://github.com/meew0/discordrb/compare/v1.3.12...v1.4.0)
 
 ### Added
 * All methods and classes where the words "colour" or "color" are used now have had aliases added with the respective other spelling. (Internally, everything uses "colour" now).
@@ -699,7 +768,8 @@ puts bot.profile.username
 * Fixed a bug where command handling would crash if the command didn't exist.
 
 ## [1.3.12] - 2015-11-30
-[1.3.12]: https://github.com/meew0/discordrb/compare/v1.3.11...v1.3.12
+[1.3.12]: https://github.com/meew0/discordrb/releases/tag/v1.3.12
+[](View diff for this release.https://github.com/meew0/discordrb/compare/v1.3.11...v1.3.12)
 
 ### Added
 * Add an attribute `Bot.should_parse_self` (false by default) that prevents the bot from raising an event if it receives a message from itself.
@@ -710,7 +780,8 @@ puts bot.profile.username
 * Fix the `MessageEvent` attribute that checks whether the message is from the bot not working at all.
 
 ## [1.3.11] - 2015-11-29
-[1.3.11]: https://github.com/meew0/discordrb/compare/v1.3.10...v1.3.11
+[1.3.11]: https://github.com/meew0/discordrb/releases/tag/v1.3.11
+[](View diff for this release.https://github.com/meew0/discordrb/compare/v1.3.10...v1.3.11)
 
 ### Added
 * Add a user selector (`:bot`) that is usable in the `from:` `MessageEvent` attribute to check whether the message was sent by a bot.
@@ -719,7 +790,8 @@ puts bot.profile.username
 * `Channel.private?` now checks for the server being nil instead of the `is_private` attribute provided by Discord as the latter is unreliable. (wtf)
 
 ## [1.3.10] - 2015-11-28
-[1.3.10]: https://github.com/meew0/discordrb/compare/v1.3.9...v1.3.10
+[1.3.10]: https://github.com/meew0/discordrb/releases/tag/v1.3.10
+[View diff for this release.](https://github.com/meew0/discordrb/compare/v1.3.9...v1.3.10)
 
 ### Added
 * Add a method `Channel.private?` to check for a PM channel
@@ -731,7 +803,8 @@ puts bot.profile.username
 * The `matches_all` method would break in certain edge cases. This didn't really affect discordrb and I don't think anyone else uses that method (it's pretty useless otherwise). This has been fixed
 
 ## [1.3.9] - 2015-11-27
-[1.3.9]: https://github.com/meew0/discordrb/compare/v1.3.8...v1.3.9
+[1.3.9]: https://github.com/meew0/discordrb/releases/tag/v1.3.9
+[View diff for this release.](https://github.com/meew0/discordrb/compare/v1.3.8...v1.3.9)
 
 ### Added
 * Add awaits, a powerful way to add temporary event handlers.
@@ -743,7 +816,8 @@ puts bot.profile.username
 * Users joining and leaving servers are now handled correctly.
 
 ## [1.3.8] - 2015-11-12
-[1.3.8]: https://github.com/meew0/discordrb/compare/v1.3.7...v1.3.8
+[1.3.8]: https://github.com/meew0/discordrb/releases/tag/v1.3.8
+[View diff for this release.](https://github.com/meew0/discordrb/compare/v1.3.7...v1.3.8)
 
 ### Added
 * Added `Bot.users` and `Bot.servers` readers to get the list of users and servers.
@@ -752,13 +826,15 @@ puts bot.profile.username
 * POST requests to API calls that don't need a payload will now send a `nil` payload instead. This fixes the bot being unable to join any servers and various other latent problems. (#21, thanks @davidkus)
 
 ## [1.3.7] - 2015-11-07
-[1.3.7]: https://github.com/meew0/discordrb/compare/v1.3.6...v1.3.7
+[1.3.7]: https://github.com/meew0/discordrb/releases/tag/v1.3.7
+[View diff for this release.](https://github.com/meew0/discordrb/compare/v1.3.6...v1.3.7)
 
 ### Fixed
 * Fix the command bot being included wrong, which caused crashes upon startup.
 
 ## [1.3.6] - 2015-11-07
-[1.3.6]: https://github.com/meew0/discordrb/compare/v1.3.5...v1.3.6
+[1.3.6]: https://github.com/meew0/discordrb/releases/tag/v1.3.6
+[View diff for this release.](https://github.com/meew0/discordrb/compare/v1.3.5...v1.3.6)
 
 ### Added
 * The bot can now be stopped from the script using the new method `Bot.stop`.
@@ -767,7 +843,8 @@ puts bot.profile.username
 * Fix some wrong file requires which caused crashes sometimes.
 
 ## [1.3.5] - 2015-11-07
-[1.3.5]: https://github.com/meew0/discordrb/compare/v1.3.4...v1.3.5
+[1.3.5]: https://github.com/meew0/discordrb/releases/tag/v1.3.5
+[View diff for this release.](https://github.com/meew0/discordrb/compare/v1.3.4...v1.3.5)
 
 ### Added
 * The bot can now be run asynchronously using `Bot.run(:async)` to do further initialization after the bot was started.
