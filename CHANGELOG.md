@@ -538,6 +538,7 @@ puts bot.profile.username
 
 ## [1.6.6] - 2016-02-13
 [1.6.6]: https://github.com/meew0/discordrb/releases/tag/v1.6.6
+
 [View diff for this release.](https://github.com/meew0/discordrb/compare/v1.6.5...v1.6.6)
 
 ### Fixed
@@ -546,6 +547,7 @@ puts bot.profile.username
 
 ## [1.6.5] - 2016-02-12
 [1.6.5]: https://github.com/meew0/discordrb/releases/tag/v1.6.5
+
 [View diff for this release.](https://github.com/meew0/discordrb/compare/v1.6.4...v1.6.5)
 
 ### Changed
@@ -553,6 +555,7 @@ puts bot.profile.username
 
 ## [1.6.4] - 2016-02-10
 [1.6.4]: https://github.com/meew0/discordrb/releases/tag/v1.6.4
+
 [View diff for this release.](https://github.com/meew0/discordrb/compare/v1.6.3...v1.6.4)
 
 ### Fixed
@@ -560,6 +563,7 @@ puts bot.profile.username
 
 ## [1.6.3] - 2016-02-08
 [1.6.3]: https://github.com/meew0/discordrb/releases/tag/v1.6.3
+
 [View diff for this release.](https://github.com/meew0/discordrb/compare/v1.6.2...v1.6.3)
 
 ### Fixed
@@ -567,6 +571,7 @@ puts bot.profile.username
 
 ## [1.6.2] - 2016-02-06
 [1.6.2]: https://github.com/meew0/discordrb/releases/tag/v1.6.2
+
 [View diff for this release.](https://github.com/meew0/discordrb/compare/v1.6.1...v1.6.2)
 
 ### Fixed
@@ -574,6 +579,7 @@ puts bot.profile.username
 
 ## [1.6.1] - 2016-02-04
 [1.6.1]: https://github.com/meew0/discordrb/releases/tag/v1.6.1
+
 [View diff for this release.](https://github.com/meew0/discordrb/compare/v1.6.0...v1.6.1)
 
 ### Changed
@@ -584,6 +590,7 @@ puts bot.profile.username
 
 ## [1.6.0] - 2016-02-01
 [1.6.0]: https://github.com/meew0/discordrb/releases/tag/v1.6.0
+
 [View diff for this release.](https://github.com/meew0/discordrb/compare/v1.5.4...v1.6.0)
 
 ### Added
@@ -614,6 +621,7 @@ puts bot.profile.username
 
 ## [1.5.4] - 2016-01-16
 [1.5.4]: https://github.com/meew0/discordrb/releases/tag/v1.5.4
+
 [View diff for this release.](https://github.com/meew0/discordrb/compare/v1.5.3...v1.5.4)
 
 ### Changed
@@ -625,6 +633,7 @@ puts bot.profile.username
 
 ## [1.5.3] - 2016-01-11
 [1.5.3]: https://github.com/meew0/discordrb/releases/tag/v1.5.3
+
 [View diff for this release.](https://github.com/meew0/discordrb/compare/v1.5.2...v1.5.3)
 
 ### Added
@@ -633,6 +642,7 @@ puts bot.profile.username
 
 ## [1.5.2] - 2016-01-11
 [1.5.2]: https://github.com/meew0/discordrb/releases/tag/v1.5.2
+
 [View diff for this release.](https://github.com/meew0/discordrb/compare/v1.5.1...v1.5.2)
 
 ### Added
@@ -647,6 +657,7 @@ puts bot.profile.username
 
 ## [1.5.1] - 2016-01-10
 [1.5.1]: https://github.com/meew0/discordrb/releases/tag/v1.5.1
+
 [View diff for this release.](https://github.com/meew0/discordrb/compare/v1.5.0...v1.5.1)
 
 ### Added
@@ -654,6 +665,7 @@ puts bot.profile.username
 
 ## [1.5.0] - 2016-01-10
 [1.5.0]: https://github.com/meew0/discordrb/releases/tag/v1.5.0
+
 [View diff for this release.](https://github.com/meew0/discordrb/compare/v1.4.8...v1.5.0)
 
 ### Added
@@ -670,6 +682,7 @@ puts bot.profile.username
 
 ## [1.4.8] - 2016-01-06
 [1.4.8]: https://github.com/meew0/discordrb/releases/tag/v1.4.8
+
 [View diff for this release.](https://github.com/meew0/discordrb/compare/v1.4.7...v1.4.8)
 
 ### Added
@@ -682,6 +695,7 @@ puts bot.profile.username
 
 ## [1.4.7] - 2016-01-03
 [1.4.7]: https://github.com/meew0/discordrb/releases/tag/v1.4.7
+
 [View diff for this release.](https://github.com/meew0/discordrb/compare/v1.4.6...v1.4.7)
 
 ### Added
@@ -694,6 +708,7 @@ puts bot.profile.username
 
 ## [1.4.6] - 2015-12-25
 [1.4.6]: https://github.com/meew0/discordrb/releases/tag/v1.4.6
+
 [View diff for this release.](https://github.com/meew0/discordrb/compare/v1.4.4...v1.4.6)
 
 ### Fixed
@@ -707,6 +722,7 @@ puts bot.profile.username
 
 ## [1.4.4] - 2015-12-18
 [1.4.4]: https://github.com/meew0/discordrb/releases/tag/v1.4.4
+
 [View diff for this release.](https://github.com/meew0/discordrb/compare/v1.4.3...v1.4.4)
 
 ### Added
@@ -721,6 +737,7 @@ puts bot.profile.username
 
 ## [1.4.3] - 2015-12-11
 [1.4.3]: https://github.com/meew0/discordrb/releases/tag/v1.4.3
+
 [View diff for this release.](https://github.com/meew0/discordrb/compare/v1.4.2...v1.4.3)
 
 ### Added
@@ -731,13 +748,16 @@ puts bot.profile.username
 
 ## [1.4.2] - 2015-12-10
 [1.4.2]: https://github.com/meew0/discordrb/releases/tag/v1.4.2
+
 [View diff for this release.](https://github.com/meew0/discordrb/compare/v1.4.1...v1.4.2)
 
 ### Changed
 * discordrb will now send a user agent in the format requested by the Discord devs.
 
 ## [1.4.1] - 2015-12-07
-[1.4.1]: https://github.com/meew0/discordrb/compare/v1.4.0...v1.4.1
+[1.4.1]: https://github.com/meew0/discordrb/releases/tag/v1.4.1
+
+[View diff for this release.](https://github.com/meew0/discordrb/compare/v1.4.0...v1.4.1)
 
 ### Fixed
 * Empty messages will now never be sent
@@ -745,6 +765,7 @@ puts bot.profile.username
 
 ## [1.4.0] - 2015-12-04
 [1.4.0]: https://github.com/meew0/discordrb/releases/tag/v1.4.0
+
 [View diff for this release.](https://github.com/meew0/discordrb/compare/v1.3.12...v1.4.0)
 
 ### Added
@@ -766,7 +787,8 @@ puts bot.profile.username
 
 ## [1.3.12] - 2015-11-30
 [1.3.12]: https://github.com/meew0/discordrb/releases/tag/v1.3.12
-[](View diff for this release.https://github.com/meew0/discordrb/compare/v1.3.11...v1.3.12)
+
+[View diff for this release.](https://github.com/meew0/discordrb/compare/v1.3.11...v1.3.12)
 
 ### Added
 * Add an attribute `Bot.should_parse_self` (false by default) that prevents the bot from raising an event if it receives a message from itself.
@@ -778,7 +800,8 @@ puts bot.profile.username
 
 ## [1.3.11] - 2015-11-29
 [1.3.11]: https://github.com/meew0/discordrb/releases/tag/v1.3.11
-[](View diff for this release.https://github.com/meew0/discordrb/compare/v1.3.10...v1.3.11)
+
+[View diff for this release.](https://github.com/meew0/discordrb/compare/v1.3.10...v1.3.11)
 
 ### Added
 * Add a user selector (`:bot`) that is usable in the `from:` `MessageEvent` attribute to check whether the message was sent by a bot.
@@ -788,6 +811,7 @@ puts bot.profile.username
 
 ## [1.3.10] - 2015-11-28
 [1.3.10]: https://github.com/meew0/discordrb/releases/tag/v1.3.10
+
 [View diff for this release.](https://github.com/meew0/discordrb/compare/v1.3.9...v1.3.10)
 
 ### Added
@@ -801,6 +825,7 @@ puts bot.profile.username
 
 ## [1.3.9] - 2015-11-27
 [1.3.9]: https://github.com/meew0/discordrb/releases/tag/v1.3.9
+
 [View diff for this release.](https://github.com/meew0/discordrb/compare/v1.3.8...v1.3.9)
 
 ### Added
@@ -814,6 +839,7 @@ puts bot.profile.username
 
 ## [1.3.8] - 2015-11-12
 [1.3.8]: https://github.com/meew0/discordrb/releases/tag/v1.3.8
+
 [View diff for this release.](https://github.com/meew0/discordrb/compare/v1.3.7...v1.3.8)
 
 ### Added
@@ -824,6 +850,7 @@ puts bot.profile.username
 
 ## [1.3.7] - 2015-11-07
 [1.3.7]: https://github.com/meew0/discordrb/releases/tag/v1.3.7
+
 [View diff for this release.](https://github.com/meew0/discordrb/compare/v1.3.6...v1.3.7)
 
 ### Fixed
@@ -831,6 +858,7 @@ puts bot.profile.username
 
 ## [1.3.6] - 2015-11-07
 [1.3.6]: https://github.com/meew0/discordrb/releases/tag/v1.3.6
+
 [View diff for this release.](https://github.com/meew0/discordrb/compare/v1.3.5...v1.3.6)
 
 ### Added
@@ -841,6 +869,7 @@ puts bot.profile.username
 
 ## [1.3.5] - 2015-11-07
 [1.3.5]: https://github.com/meew0/discordrb/releases/tag/v1.3.5
+
 [View diff for this release.](https://github.com/meew0/discordrb/compare/v1.3.4...v1.3.5)
 
 ### Added
