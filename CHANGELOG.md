@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 [Unreleased]: https://github.com/meew0/discordrb/compare/v3.2.1...HEAD
 
+### Added
+- 
+
 ## [3.2.1] - 2017-02-18
 [3.2.1]: https://github.com/meew0/discordrb/compare/v3.2.0.1...v3.2.1
 
