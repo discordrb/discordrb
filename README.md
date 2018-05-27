@@ -22,7 +22,7 @@ See also: [Documentation](http://www.rubydoc.info/gems/discordrb), [Tutorials](h
 
 ## Dependencies
 
-* Ruby 2.1+
+* Ruby 2.2.4+
 * An installed build system for native extensions (on Windows for Ruby < 2.4, try the [DevKit](http://rubyinstaller.org/downloads/); installation instructions [here](https://github.com/oneclick/rubyinstaller/wiki/Development-Kit#quick-start) - you only need to do the quick start)
 
 > **Note:** RubyInstaller for Ruby versions 2.4+ will install the DevKit as the last step of the installation. 
@@ -157,7 +157,6 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/meew0/discordrb.
-
 
 ## License
 
