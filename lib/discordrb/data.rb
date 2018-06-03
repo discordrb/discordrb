@@ -878,7 +878,7 @@ module Discordrb
 
     # @return [String] this role's name ("new role" if it hasn't been changed)
     attr_reader :name
-    
+
     # @return [Server] the server this role belongs to
     attr_reader :server
 
