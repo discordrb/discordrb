@@ -397,7 +397,7 @@ module Discordrb
 
     # This **event** is raised when a role is deleted.
     # @param attributes [Hash] The event's attributes.
-    # @option attributes [String] :name Matches the role name.
+    # @option attributes [#resolve_id] :id Matches the role id.
     # @yield The block is executed when the event is raised.
     # @yieldparam event [ServerRoleDeleteEvent] The event that was raised.
     # @return [ServerRoleDeleteEventHandler] the event handler that was registered.
