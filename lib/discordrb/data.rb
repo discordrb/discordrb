@@ -879,6 +879,9 @@ module Discordrb
     # @return [String] this role's name ("new role" if it hasn't been changed)
     attr_reader :name
 
+    # @return [Server] the server this role belongs to
+    attr_reader :server
+
     # @return [true, false] whether or not this role should be displayed separately from other users
     attr_reader :hoist
 
