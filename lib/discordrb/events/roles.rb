@@ -73,12 +73,8 @@ module Discordrb::Events
       return false unless event.is_a? ServerRoleDeleteEvent
 
       [
-        matches_all(@attributes[:name], event.name) do |a, e|
-          a == if a.is_a? String
-                 e.to_s
-               else
-                 e
-               end
+        matches_all(@attributes[:id], event.id) do |a, e|
+          a.resolve_id == e.resolve_id
         end
       ].reduce(true, &:&)
     end
