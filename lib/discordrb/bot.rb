@@ -564,7 +564,7 @@ module Discordrb
     # @option attributes [Numeric] :timeout the amount of time to wait for a response before returning `nil`. Waits forever if omitted.
     # @return [Event, nil] The event object that was triggered, or `nil` if a `timeout` was set and no event was raised in time.
     # @raise [ArgumentError] if `timeout` is given and is not a positive numeric value
-    def add_await!(key, type, attributes = {})
+    def add_await!(type, attributes = {})
       raise "You can't await an AwaitEvent!" if type == Discordrb::Events::AwaitEvent
 
       timeout = attributes[:timeout]
