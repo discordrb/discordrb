@@ -8,7 +8,7 @@ module Discordrb
     let(:data) { load_data_file(:text_channel) }
     # Instantiate the doubles here so we can apply mocks in the specs
     let(:bot) { double('bot') }
-    let(:server) { double('server') }
+    let(:server) { double('server', id: double) }
 
     subject(:channel) do
       allow(bot).to receive(:token) { 'fake token' }
@@ -273,20 +273,6 @@ module Discordrb
         channel.sort_after
       end
 
-      it 'should send only the rearranged channels' do
-        allow(bot).to receive(:channel).and_return(double('other channel', category?: nil, parent: nil, type: channel.type, id: 3))
-        allow(server).to receive(:id).and_return(double)
-        expected_channels = Array.new(2) { |i| double("channel #{i + 2}", type: channel.type, parent_id: nil, position: i + 2, id: i + 2, resolve_id: nil) }
-        all_channels = expected_channels.clone
-        excluded = double('channel 4', type: 0, parent_id: nil, position: 4, id: 4)
-        all_channels << excluded
-        allow(server).to receive(:channels).and_return(all_channels)
-
-        expect(API::Server).to receive(:update_channel_positions)
-          .with(any_args, an_array_excluding(*[excluded].map { |e| { id: e.id, position: instance_of(Integer) } }))
-        channel.sort_after(expected_channels.last)
-      end
-
       context 'when other is not on this server' do
         it 'should raise ArgumentError' do
           other = double('other', server: double('other server'), resolve_id: double, category?: nil, type: channel.type)
@@ -295,34 +281,41 @@ module Discordrb
         end
       end
 
-      context 'when other is not of Channel, #resolve_id, nil' do
-        it 'should raise TypeError'
-      end
-
-      context 'when position doesn\'t change' do
-        it 'should not call the API'
-
-        it 'should log a warning'
-      end
-
-      context 'when other channel is not the same type' do
-        it 'should raise ArgumentError'
-      end
-
-      context 'when channel is not a category' do
-        context 'and when changing category' do
-          it 'should send new parent_id'
-
-          context 'with lock_permissions as false and permissions different' do
-            it 'should log that the permissions were not synced'
-          end
+      context 'when other is not of Channel, NilClass, #resolve_id' do
+        it 'should raise TypeError' do
+          expect { channel.sort_after(double) }.to raise_error(TypeError)
         end
       end
 
-      context 'when channel is a category' do
-        it 'should raise ArgumentError on non-categories'
+      context 'when other channel is not the same type' do
+        it 'should raise ArgumentError' do
+          other_channel = double('other', resolve_id: double, type: double, category?: nil)
+          allow(bot).to receive(:channel).and_return(other_channel)
+          expect { channel.sort_after(other_channel) }.to raise_error(ArgumentError)
+        end
+      end
 
-        it 'only send rearranged categories'
+      context 'when channel is in a category' do
+        it 'should send parent_id' do
+          category = double('category', id: 1)
+          other_channel = double('other', id: 2, resolve_id: double, type: channel.type, category?: nil, server: channel.server, parent: category, position: 5)
+          allow(category).to receive(:children).and_return [other_channel, channel]
+          allow(bot).to receive(:channel).and_return(other_channel)
+          expect(API::Server).to receive(:update_channel_positions)
+            .with(any_args, [{ id: 2, position: 0 }, { id: channel.id, position: 1, parent_id: category.id }])
+          channel.sort_after(other_channel)
+        end
+      end
+
+      context 'when channel is not in a category' do
+        it 'should send null' do
+          other_channel = double('other', id: 2, resolve_id: double, type: channel.type, category?: nil, server: channel.server, parent: nil, parent_id: nil, position: 5)
+          allow(server).to receive(:channels).and_return [other_channel, channel]
+          allow(bot).to receive(:channel).and_return(other_channel)
+          expect(API::Server).to receive(:update_channel_positions)
+            .with(any_args, [{ id: 2, position: 0 }, { id: channel.id, position: 1, parent_id: nil }])
+          channel.sort_after(other_channel)
+        end
       end
     end
   end

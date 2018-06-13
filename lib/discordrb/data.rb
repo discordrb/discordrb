@@ -1430,6 +1430,7 @@ module Discordrb
     #   be sorted at the top of the channel list.
     # @param lock_permissions [true, false] Whether the channel's permissions should be synced to the category's
     def sort_after(other = nil, lock_permissions = false)
+      raise TypeError, 'other must be one of Channel, NilClass, or #resolve_id' unless other.is_a?(Channel) || other.nil? || other.respond_to?(:resolve_id)
       other = @bot.channel(other.resolve_id) if other
 
       # Container for the API request payload
