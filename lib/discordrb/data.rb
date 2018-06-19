@@ -3363,9 +3363,9 @@ module Discordrb
       if icon.respond_to? :read
         icon_string = 'data:image/jpg;base64,'
         icon_string += Base64.strict_encode64(icon.read)
-        update_server_data(icon: icon_string)
+        update_server_data(icon_id: icon_string)
       else
-        update_server_data(icon: icon)
+        update_server_data(icon_id: icon)
       end
     end
 
