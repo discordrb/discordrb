@@ -100,9 +100,7 @@ module Discordrb::Commands
       container_modules = container.singleton_class.included_modules
 
       # If the container is an EventContainer and we can include it, then do that
-      if container_modules.include?(Discordrb::EventContainer) && respond_to?(:include_events)
-        include_events(container)
-      end
+      include_events(container) if container_modules.include?(Discordrb::EventContainer) && respond_to?(:include_events)
 
       if container_modules.include? Discordrb::Commands::CommandContainer
         include_commands(container)

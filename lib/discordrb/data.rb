@@ -1387,11 +1387,7 @@ module Discordrb
         end
       else
         @name = data['name']
-        @server = if server
-                    server
-                  else
-                    bot.server(data['guild_id'].to_i)
-                  end
+        @server = server || bot.server(data['guild_id'].to_i)
       end
 
       @nsfw = data['nsfw'] || false || @name.start_with?('nsfw')
