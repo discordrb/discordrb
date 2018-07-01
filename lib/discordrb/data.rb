@@ -2592,7 +2592,7 @@ module Discordrb
     # Returns the list of users who reacted with a certain reaction.
     # @param reaction [String, #to_reaction] the unicode emoji or {Emoji}
     # @example Get all the users that reacted with a thumbsup.
-    #   thumbs_up_reactions = message.reacted_with("👍")
+    #   thumbs_up_reactions = message.reacted_with(":thumbsup:")
     # @return [Array<User>] the users who used this reaction
     def reacted_with(reaction)
       reaction = reaction.to_reaction if reaction.respond_to?(:to_reaction)
