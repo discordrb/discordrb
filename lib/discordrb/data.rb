@@ -1854,6 +1854,7 @@ module Discordrb
     # Add an {Await} for a message in this channel. This is identical in functionality to adding a
     # {Discordrb::Events::MessageEvent} await with the `in` attribute as this channel.
     # @see Bot#add_await
+    # @deprecated Will be changed to blocking behavior in v4.0. Use {#await!} instead.
     def await(key, attributes = {}, &block)
       @bot.add_await(key, Discordrb::Events::MessageEvent, { in: @id }.merge(attributes), &block)
     end
@@ -2515,6 +2516,7 @@ module Discordrb
 
     # Add an {Await} for a message with the same user and channel.
     # @see Bot#add_await
+    # @deprecated Will be changed to blocking behavior in v4.0. Use {#await!} instead.
     def await(key, attributes = {}, &block)
       @bot.add_await(key, Discordrb::Events::MessageEvent, { from: @author.id, in: @channel.id }.merge(attributes), &block)
     end

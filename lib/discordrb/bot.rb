@@ -552,6 +552,7 @@ module Discordrb
     # @yield Is executed when the await is triggered.
     # @yieldparam event [Event] The event object that was triggered.
     # @return [Await] The await that was created.
+    # @deprecated Will be changed to blocking behavior in v4.0. Use {#add_await!} instead.
     def add_await(key, type, attributes = {}, &block)
       raise "You can't await an AwaitEvent!" if type == Discordrb::Events::AwaitEvent
       await = Await.new(self, key, type, attributes, block)
