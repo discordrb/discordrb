@@ -286,14 +286,14 @@ module Discordrb
     # @return [String] the application description
     attr_reader :description
 
-    # @return [Array<String>] the applications origins permitted to use RPC
+    # @return [Array<String>] the application's origins permitted to use RPC
     attr_reader :rpc_origins
 
     # @return [Integer]
     attr_reader :flags
 
     # Gets the user object of the owner. May be limited to username, discriminator,
-    # ID and avatar if the bot cannot reach the owner.
+    # ID, and avatar if the bot cannot reach the owner.
     # @return [User] the user object of the owner
     attr_reader :owner
 
@@ -310,7 +310,7 @@ module Discordrb
     end
 
     # Utility function to get a application's icon URL.
-    # @return [String, nil] the URL to the icon image (nil if no image is set).
+    # @return [String, nil] the URL of the icon image (nil if no image is set).
     def icon_url
       return nil if @icon_id.nil?
       API.app_icon_url(@id, @icon_id)
@@ -327,7 +327,7 @@ module Discordrb
     # @return [Time] when this member joined the server.
     attr_reader :joined_at
 
-    # @return [String, nil] the nickname this member has, or nil if it has none.
+    # @return [String, nil] the nickname this member has, or `nil` if it has none.
     attr_reader :nick
     alias_method :nickname, :nick
 
@@ -1768,13 +1768,15 @@ module Discordrb
     # @param around_id [Integer] The ID of the message retrieval should start from, reading in both directions
     # @example Count the number of messages in the last 50 messages that contain the letter 'e'.
     #   message_count = channel.history(50).count {|message| message.content.include? "e"}
+    # @example Get the last 10 messages before the provided message.
+    #   last_ten_messages = channel.history(10, message.id)
     # @return [Array<Message>] the retrieved messages.
     def history(amount, before_id = nil, after_id = nil, around_id = nil)
       logs = API::Channel.messages(@bot.token, @id, amount, before_id, after_id, around_id)
       JSON.parse(logs).map { |message| Message.new(message, @bot) }
     end
 
-    # Retrieves message history, but only message IDs for use with prune
+    # Retrieves message history, but only message IDs for use with prune.
     # @note For internal use only
     # @!visibility private
     def history_ids(amount, before_id = nil, after_id = nil, around_id = nil)
@@ -1794,7 +1796,7 @@ module Discordrb
 
     alias_method :message, :load_message
 
-    # Requests all pinned messages of a channel.
+    # Requests all pinned messages in a channel.
     # @return [Array<Message>] the received messages.
     def pins
       msgs = API::Channel.pinned_messages(@bot.token, @id)
@@ -1883,6 +1885,8 @@ module Discordrb
     # Starts typing, which displays the typing indicator on the client for five seconds.
     # If you want to keep typing you'll have to resend this every five seconds. (An abstraction
     # for this will eventually be coming)
+    # @example Send a typing indicator for the bot in a given channel.
+    #   channel.start_typing()
     def start_typing
       API::Channel.start_typing(@bot.token, @id)
     end
@@ -1898,7 +1902,7 @@ module Discordrb
       channel.add_group_users(user_ids)
     end
 
-    # Adds a user to a Group channel
+    # Adds a user to a group channel.
     # @param user_ids [Array<#resolve_id>, #resolve_id] User ID or array of user IDs to add to the group channel.
     # @return [Channel] the group channel.
     def add_group_users(user_ids)
@@ -1926,7 +1930,7 @@ module Discordrb
 
     alias_method :remove_group_user, :remove_group_users
 
-    # Leaves the group
+    # Leaves the group.
     def leave_group
       raise 'Attempted to leave a non-group channel!' unless group?
       API::Channel.leave_group(@bot.token, @id)
@@ -1934,7 +1938,7 @@ module Discordrb
 
     alias_method :leave, :leave_group
 
-    # Requests a list of Webhooks on the channel
+    # Requests a list of Webhooks on the channel.
     # @return [Array<Webhook>] webhooks on the channel.
     def webhooks
       raise 'Tried to request webhooks from a non-server channel' unless server
@@ -1942,7 +1946,7 @@ module Discordrb
       webhooks.map { |webhook_data| Webhook.new(webhook_data, @bot) }
     end
 
-    # Requests a list of Invites to the channel
+    # Requests a list of Invites to the channel.
     # @return [Array<Invite>] invites to the channel.
     def invites
       raise 'Tried to request invites from a non-server channel' unless server
@@ -1950,7 +1954,7 @@ module Discordrb
       invites.map { |invite_data| Invite.new(invite_data, @bot) }
     end
 
-    # The inspect method is overwritten to give more useful output
+    # The default `inspect` method is overwritten to give more useful output.
     def inspect
       "<Channel name=#{@name} id=#{@id} topic=\"#{@topic}\" type=#{@type} position=#{@position} server=#{@server}>"
     end
@@ -1998,7 +2002,7 @@ module Discordrb
     # For bulk_delete checking
     TWO_WEEKS = 86_400 * 14
 
-    # Deletes a list of messages on this channel using bulk delete
+    # Deletes a list of messages on this channel using bulk delete.
     def bulk_delete(ids, strict = false)
       min_snowflake = IDObject.synthesise(Time.now - TWO_WEEKS)
 
@@ -2113,7 +2117,7 @@ module Discordrb
     end
   end
 
-  # An Embed footer for the embed object
+  # An Embed footer for the embed object.
   class EmbedFooter
     # @return [Embed] the embed object this is based on.
     attr_reader :embed
@@ -2137,7 +2141,7 @@ module Discordrb
     end
   end
 
-  # An Embed image for the embed object
+  # An Embed image for the embed object.
   class EmbedImage
     # @return [Embed] the embed object this is based on.
     attr_reader :embed
@@ -2198,7 +2202,7 @@ module Discordrb
     attr_reader :url
 
     # @return [String] the thumbnail's proxy URL - I'm not sure what exactly this does, but I think it has something to
-    #   do with CDNs
+    #   do with CDNs.
     attr_reader :proxy_url
 
     # @return [Integer] the width of this thumbnail file, in pixels.
@@ -2226,7 +2230,7 @@ module Discordrb
     # @return [String] the provider's name.
     attr_reader :name
 
-    # @return [String, nil] the URL of the provider. `nil` is there is no URL
+    # @return [String, nil] the URL of the provider, or `nil` if there is no URL.
     attr_reader :url
 
     # @!visibility private
@@ -2246,13 +2250,13 @@ module Discordrb
     # @return [String] the author's name.
     attr_reader :name
 
-    # @return [String, nil] the URL of the author's website. `nil` is there is no URL
+    # @return [String, nil] the URL of the author's website, or `nil` if there is no URL.
     attr_reader :url
 
-    # @return [String, nil] the icon of the author, if present
+    # @return [String, nil] the icon of the author, or `nil` if there is no icon.
     attr_reader :icon_url
 
-    # @return [String, nil] the discord proxy URL, if an icon_url was present
+    # @return [String, nil] the Discord proxy URL, or `nil` if there is no `icon_url`.
     attr_reader :proxy_icon_url
 
     # @!visibility private
@@ -2301,7 +2305,7 @@ module Discordrb
     attr_reader :url
 
     # @return [String] the attachment's proxy URL - I'm not sure what exactly this does, but I think it has something to
-    #   do with CDNs
+    #   do with CDNs.
     attr_reader :proxy_url
 
     # @return [String] the attachment's filename.
@@ -2310,10 +2314,10 @@ module Discordrb
     # @return [Integer] the attachment's file size in bytes.
     attr_reader :size
 
-    # @return [Integer, nil] the width of an image file, in pixels, or nil if the file is not an image.
+    # @return [Integer, nil] the width of an image file, in pixels, or `nil` if the file is not an image.
     attr_reader :width
 
-    # @return [Integer, nil] the height of an image file, in pixels, or nil if the file is not an image.
+    # @return [Integer, nil] the height of an image file, in pixels, or `nil` if the file is not an image.
     attr_reader :height
 
     # @!visibility private
@@ -2381,7 +2385,7 @@ module Discordrb
     attr_reader :tts
     alias_method :tts?, :tts
 
-    # @return [String] used for validating a message was sent
+    # @return [String] used for validating a message was sent.
     attr_reader :nonce
 
     # @return [true, false] whether the message was edited or not.
@@ -2397,7 +2401,7 @@ module Discordrb
     attr_reader :pinned
     alias_method :pinned?, :pinned
 
-    # @return [Integer, nil] the webhook ID that sent this message, or nil if it wasn't sent through a webhook.
+    # @return [Integer, nil] the webhook ID that sent this message, or `nil` if it wasn't sent through a webhook.
     attr_reader :webhook_id
 
     # The discriminator that webhook user accounts have.
@@ -2487,7 +2491,7 @@ module Discordrb
     # Edits this message to have the specified content instead.
     # You can only edit your own messages.
     # @param new_content [String] the new content the message should have.
-    # @param new_embed [Hash, Discordrb::Webhooks::Embed, nil] The new embed the message should have. If nil the message will be changed to have no embed.
+    # @param new_embed [Hash, Discordrb::Webhooks::Embed, nil] The new embed the message should have. If `nil` the message will be changed to have no embed.
     # @return [Message] the resulting message.
     def edit(new_content, new_embed = nil)
       response = API::Channel.edit_message(@bot.token, @channel.id, @id, new_content, [], new_embed ? new_embed.to_hash : nil)
@@ -2545,7 +2549,7 @@ module Discordrb
       emoji
     end
 
-    # @return [Array<Emoji>] the emotes that were used/mentioned in this message (Only returns Emoji the bot has access to, else nil).
+    # @return [Array<Emoji>] the emotes that were used/mentioned in this message (Only returns Emoji the bot has access to, else `nil`).
     def emoji
       return if @content.nil?
 
@@ -2556,26 +2560,26 @@ module Discordrb
       @emoji
     end
 
-    # Check if any emoji got used in this message
-    # @return [true, false] whether or not any emoji got used
+    # Check if any emoji were used in this message.
+    # @return [true, false] whether or not any emoji were used
     def emoji?
       emoji = scan_for_emoji
       return true unless emoji.empty?
     end
 
-    # Check if any reactions got used in this message
+    # Check if any reactions were used in this message.
     # @return [true, false] whether or not this message has reactions
     def reactions?
       @reactions.any?
     end
 
-    # Returns the reactions made by the current bot or user
+    # Returns the reactions made by the current bot or user.
     # @return [Array<Reaction>] the reactions
     def my_reactions
       @reactions.values.select(&:me)
     end
 
-    # Reacts to a message
+    # Reacts to a message.
     # @param reaction [String, #to_reaction] the unicode emoji or {Emoji}
     def create_reaction(reaction)
       reaction = reaction.to_reaction if reaction.respond_to?(:to_reaction)
@@ -2585,8 +2589,10 @@ module Discordrb
 
     alias_method :react, :create_reaction
 
-    # Returns the list of users who reacted with a certain reaction
+    # Returns the list of users who reacted with a certain reaction.
     # @param reaction [String, #to_reaction] the unicode emoji or {Emoji}
+    # @example Get all the users that reacted with a thumbsup.
+    #   thumbs_up_reactions = message.reacted_with("👍")
     # @return [Array<User>] the users who used this reaction
     def reacted_with(reaction)
       reaction = reaction.to_reaction if reaction.respond_to?(:to_reaction)
@@ -2594,7 +2600,7 @@ module Discordrb
       response.map { |d| User.new(d, @bot) }
     end
 
-    # Deletes a reaction made by a user on this message
+    # Deletes a reaction made by a user on this message.
     # @param user [User, #resolve_id] the user who used this reaction
     # @param reaction [String, #to_reaction] the reaction to remove
     def delete_reaction(user, reaction)
@@ -2602,14 +2608,14 @@ module Discordrb
       API::Channel.delete_user_reaction(@bot.token, @channel.id, @id, reaction, user.resolve_id)
     end
 
-    # Delete's this clients reaction on this message
+    # Deletes this client's reaction on this message.
     # @param reaction [String, #to_reaction] the reaction to remove
     def delete_own_reaction(reaction)
       reaction = reaction.to_reaction if reaction.respond_to?(:to_reaction)
       API::Channel.delete_own_reaction(@bot.token, @channel.id, @id, reaction)
     end
 
-    # Removes all reactions from this message
+    # Removes all reactions from this message.
     def delete_all_reactions
       API::Channel.delete_all_reactions(@bot.token, @channel.id, @id)
     end
@@ -2620,7 +2626,7 @@ module Discordrb
     end
   end
 
-  # A reaction to a message
+  # A reaction to a message.
   class Reaction
     # @return [Integer] the amount of users who have reacted with this reaction
     attr_reader :count
@@ -2763,7 +2769,7 @@ module Discordrb
     attr_reader :emoticon
     alias_method :emoticon?, :emoticon
 
-    # @return [String] the integration type (Youtube, Twitch, etc.)
+    # @return [String] the integration type (YouTube, Twitch, etc.)
     attr_reader :type
 
     # @return [true, false] whether the integration is enabled
@@ -2878,9 +2884,9 @@ module Discordrb
       @owner = member(@owner_id) if exists
     end
 
-    # The default channel is the text channel on this server with the highest position
+    # The default channel is the text channel on this server with the highest position.
     # that the client has Read Messages permission on.
-    # @return [Channel, nil] The default channel on this server, or nil if there are no channels that the bot can read
+    # @return [Channel, nil] The default channel on this server, or `nil` if there are no channels that the bot can read.
     def default_channel
       text_channels.sort_by { |e| [e.position, e.id] }.find do |e|
         overwrite = e.permission_overwrites[id]
@@ -2942,7 +2948,7 @@ module Discordrb
     # @param user [User, #resolve_id] The user to filter entries to.
     # @param limit [Integer] The amount of entries to limit it to.
     # @param before [Entry, #resolve_id] The entry to use to not include all entries after it.
-    # @return [AuditLogs] the server's audit logs.
+    # @return [AuditLogs] The server's audit logs.
     def audit_logs(action: nil, user: nil, limit: 50, before: nil)
       raise 'Invalid audit log action!' if action && AuditLogs::Actions.key(action).nil?
       action = AuditLogs::Actions.key(action)
@@ -3320,7 +3326,7 @@ module Discordrb
       API::Server.delete(@bot.token, @id)
     end
 
-    # Leave the server
+    # Leave the server.
     def leave
       API::User.leave_server(@bot.token, @id)
     end
@@ -3452,7 +3458,7 @@ module Discordrb
 
     alias_method :content_filter_level, :explicit_content_filter
 
-    # Sets the server content filter
+    # Sets the server content filter.
     # @param filter_level [Integer, Symbol] The content filter from 0-2 or Symbol (see {FILTER_LEVELS})
     def explicit_content_filter=(filter_level)
       filter_level = FILTER_LEVELS[filter_level] if filter_level.is_a?(Symbol)
@@ -3468,14 +3474,14 @@ module Discordrb
     alias_method :has_emoji?, :any_emoji?
     alias_method :emoji?, :any_emoji?
 
-    # Requests a list of Webhooks on the server
+    # Requests a list of Webhooks on the server.
     # @return [Array<Webhook>] webhooks on the server.
     def webhooks
       webhooks = JSON.parse(API::Server.webhooks(@bot.token, @id))
       webhooks.map { |webhook| Webhook.new(webhook, @bot) }
     end
 
-    # Requests a list of Invites to the server
+    # Requests a list of Invites to the server.
     # @return [Array<Invite>] invites to the server.
     def invites
       invites = JSON.parse(API::Server.invites(@bot.token, @id))
@@ -3500,12 +3506,12 @@ module Discordrb
       @processed_chunk_members = 0
     end
 
-    # @return [Channel, nil] the AFK voice channel of this server, or nil if none is set
+    # @return [Channel, nil] the AFK voice channel of this server, or `nil` if none is set.
     def afk_channel
       @bot.channel(@afk_channel_id) if @afk_channel_id
     end
 
-    # @return [Channel, nil] the system channel (used for automatic welcome messages) of a server, or nil if none is set
+    # @return [Channel, nil] the system channel (used for automatic welcome messages) of a server, or `nil` if none is set.
     def system_channel
       @bot.channel(@system_channel_id) if @system_channel_id
     end
@@ -3715,13 +3721,13 @@ module Discordrb
       @owner = @bot.ensure_user(data['user'])
     end
 
-    # Sets the webhook's avatar
+    # Sets the webhook's avatar.
     # @param avatar [String, #read] The new avatar, in base64-encoded JPG format.
     def avatar=(avatar)
       update_webhook(avatar: avatarise(avatar))
     end
 
-    # Deletes the webhook's avatar
+    # Deletes the webhook's avatar.
     def delete_avatar
       update_webhook(avatar: nil)
     end
@@ -3732,13 +3738,13 @@ module Discordrb
       update_webhook(channel_id: channel.resolve_id)
     end
 
-    # Sets the webhook's name
+    # Sets the webhook's name.
     # @param name [String] The webhook's new name.
     def name=(name)
       update_webhook(name: name)
     end
 
-    # Updates the webhook if you need to edit more than 1 attribute
+    # Updates the webhook if you need to edit more than 1 attribute.
     # @param data [Hash] the data to update.
     # @option data [String, #read, nil] :avatar The new avatar, in base64-encoded JPG format, or nil to delete the avatar.
     # @option data [Channel, String, Integer, #resolve_id] :channel The channel the webhook should use.
@@ -3752,7 +3758,7 @@ module Discordrb
       update_webhook(data)
     end
 
-    # Deletes the webhook
+    # Deletes the webhook.
     # @param reason [String] The reason the invite is being deleted.
     def delete(reason = nil)
       if token?
@@ -3762,14 +3768,14 @@ module Discordrb
       end
     end
 
-    # Utility function to get a webhook's avatar URL
+    # Utility function to get a webhook's avatar URL.
     # @return [String] the URL to the avatar image
     def avatar_url
       return API::User.default_avatar unless @avatar
       API::User.avatar_url(@id, @avatar)
     end
 
-    # The inspect method is overwritten to give more useful output
+    # The `inspect` method is overwritten to give more useful output.
     def inspect
       "<Webhook name=#{@name} id=#{@id}>"
     end
@@ -4104,7 +4110,7 @@ module Discordrb
       end
     end
 
-    # Find the type of action by it's action number
+    # Find the type of action by its action number
     # @note For internal use only
     # @!visibility private
     def self.action_type_for(action)
