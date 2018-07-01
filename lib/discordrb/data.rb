@@ -2549,7 +2549,7 @@ module Discordrb
       emoji
     end
 
-    # @return [Array<Emoji>] the emotes that were used/mentioned in this message (Only returns Emoji the bot has access to, else `nil`).
+    # @return [Array<Emoji>] the emotes that were used/mentioned in this message.
     def emoji
       return if @content.nil?
 
