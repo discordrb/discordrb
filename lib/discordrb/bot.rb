@@ -107,7 +107,7 @@ module Discordrb
         type: nil, name: '', fancy_log: false, suppress_ready: false, parse_self: false,
         shard_id: nil, num_shards: nil, redact_token: true, ignore_bots: false,
         compress_mode: :stream
-    )
+      )
       LOGGER.mode = log_mode
       LOGGER.token = token if redact_token
 
