@@ -243,6 +243,9 @@ module Discordrb::Commands
 
         # Finally execute the command
         prev = @bot.execute_command(command_name.to_sym, event, arguments, split_chain.length > 1 || @subchain)
+        
+        # Stop chain if execute_command failed (maybe the command doesn't exist, or permissions failed, etc.)
+        break unless prev
       end
 
       prev
