@@ -1271,7 +1271,8 @@ module Discordrb
 
       @event_handlers ||= {}
       handlers = @event_handlers[event.class]
-      (handlers || []).each do |handler|
+      return unless handlers
+      handlers.dup.each do |handler|
         call_event(handler, event) if handler.matches?(event)
       end
     end
