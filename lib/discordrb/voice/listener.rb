@@ -64,7 +64,7 @@ module Discordrb::Voice
 
     def decode_packet(message, user)
       nonce = ([0] * 24)
-      for i in 0..11
+      (0..11).each do |i|
         nonce[i] = message[i]
       end
       message.slice!(0..11)
