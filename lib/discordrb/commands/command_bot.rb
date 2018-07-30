@@ -156,7 +156,7 @@ module Discordrb::Commands
           result
         else
           available_commands = @commands.values.reject do |c|
-            !c.attributes[:help_available] || !required_roles?(event.user, c.attributes[:required_roles]) || !required_permissions?(event.user, c.attributes[:required_permissions], event.channel)
+            !c.attributes[:help_available] || !required_roles?(event.user, c.attributes[:required_roles]) || !allowed_roles?(event.user, c.attributes[:allowed_roles]) || !required_permissions?(event.user, c.attributes[:required_permissions], event.channel)
           end
           case available_commands.length
           when 0..5
@@ -199,7 +199,8 @@ module Discordrb::Commands
       if (check_permissions &&
          permission?(event.author, command.attributes[:permission_level], event.server) &&
          required_permissions?(event.author, command.attributes[:required_permissions], event.channel) &&
-         required_roles?(event.author, command.attributes[:required_roles])) ||
+         required_roles?(event.author, command.attributes[:required_roles]) &&
+         allowed_roles?(event.author, command.attributes[:allowed_roles])) ||
          !check_permissions
         event.command = command
         result = command.call(event, arguments, chained, check_permissions)
@@ -415,13 +416,24 @@ module Discordrb::Commands
     end
 
     def required_roles?(member, required)
-      return (required.nil? || required.empty?) if member.webhook? || member.is_a?(Discordrb::Recipient)
-      if required.is_a? Array
+      return true if member.webhook? || member.is_a?(Discordrb::Recipient) || required.nil? || required.empty?
+      required.is_a?(Array) ? check_multiple_roles(member, required) : member.role?(role)
+    end
+
+    def allowed_roles?(member, required)
+      return true if member.webhook? || member.is_a?(Discordrb::Recipient) || required.nil? || required.empty?
+      required.is_a?(Array) ? check_multiple_roles(member, required, false) : member.role?(role)
+    end
+
+    def check_multiple_roles(member, required, all_roles = true)
+      if all_roles
         required.all? do |role|
           member.role?(role)
         end
       else
-        member.role?(role)
+        required.any? do |role|
+          member.role?(role)
+        end
       end
     end
 
