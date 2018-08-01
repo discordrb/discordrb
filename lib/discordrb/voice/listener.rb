@@ -11,12 +11,13 @@ module Discordrb::Voice
     def initialize(ws)
       @decoder = Decoder.new
       @ws = ws
+      @encoder = @ws.encoder
       @udp = @ws.udp
 
       # We don't get SSRCs of users until after the first few packets, so we queue unmatched packets.
       @queue = {}
-      @opus_blocks = []
-      @pcm_blocks = []
+      @opus_handlers = []
+      @pcm_handlers = []
 
       @udp.start_thread self
     end
@@ -26,7 +27,7 @@ module Discordrb::Voice
     # @yieldparam data [String] The opus buffer.
     # @yieldparam user [User] The user that is sending the buffer (is speaking).
     def opus(&block)
-      @opus_blocks.push(block)
+      @opus_handlers.push(block)
     end
 
     # Adds a handler for received PCM data.
@@ -34,7 +35,7 @@ module Discordrb::Voice
     # @yieldparam data [String] The decoded buffer.
     # @yieldparam user [User] The user that is sending the buffer (is speaking).
     def pcm(&block)
-      @pcm_blocks.push(block)
+      @pcm_handlers.push(block)
     end
 
     # Handles packets received by the UDP connection.
@@ -70,8 +71,8 @@ module Discordrb::Voice
       message.slice!(0..11)
       Discordrb::LOGGER.debug "Decoding packet by #{user.username}##{user.discriminator} (#{user.id})"
       raise 'No secret key found!' unless @udp.secret_key
-      box = RbNaCl::SecretBox.new(@udp.secret_key)
-      data = box.decrypt(nonce.pack('C*'), message.pack('C*'))
+      @box ||= RbNaCl::SecretBox.new(@udp.secret_key)
+      data = @box.decrypt(nonce.pack('C*'), message.pack('C*'))
       @opus_blocks.each do |block|
         block.call(data, user)
       end
@@ -80,8 +81,8 @@ module Discordrb::Voice
         block.call(pcm, user)
       end
     rescue RbNaCl::CryptoError => e
-      Discordrb::LOGGER.warn 'Failed to decrypt voice packet'
-      Discordrb::LOGGER.warn "Reason: #{e}"
+      Discordrb::LOGGER.error 'Failed to decrypt voice packet'
+      Discordrb::LOGGER.log_exception e
     end
   end
 end

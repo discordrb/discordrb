@@ -104,7 +104,7 @@ module Discordrb::Voice
     end
   end
 
-  # This  class decodes audio sent by Discord via UDP.
+  # This class decodes audio sent by Discord via UDP.
   class Decoder
     # Create a new decoder
     def initialize
