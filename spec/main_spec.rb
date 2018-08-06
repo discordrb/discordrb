@@ -24,7 +24,7 @@ describe Discordrb do
                         ])
   end
 
-  describe 'IDObject' do
+  describe Discordrb::IDObject do
     describe '#==' do
       it 'should match identical values' do
         ido = SimpleIDObject.new(123)
