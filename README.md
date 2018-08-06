@@ -126,7 +126,7 @@ You can send message "Hello, world!" in a channel like this:
 ```ruby
 require 'discordrb'
 
-bot = Discordrb::Bot.new token: '<token here>', client_id: '<client_id here>'
+bot = Discordrb::Bot.new token: '<token here>'
 
 bot.send_message(CHANNEL_ID, "Hello, world!")
 ```
@@ -136,7 +136,7 @@ You can respond to events like this:
 ```ruby
 require 'discordrb'
 
-bot = Discordrb::Bot.new token: '<token here>', client_id: '<client_id here>'
+bot = Discordrb::Bot.new token: '<token here>'
 
 bot.message(with_text: 'Ping!') do |event|
   event.respond 'Pong!'
