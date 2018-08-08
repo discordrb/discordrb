@@ -233,11 +233,14 @@ module Discordrb
       @gateway.sync
     end
 
-    # Blocks execution until the websocket stops, which should only happen manually triggered
-    # or due to an error. This is necessary to have a continuously running bot.
-    def sync
+    # Joins the bot's connection thread with the current thread.
+    # This blocks execution until the websocket stops, which should only happen
+    # manually triggered. or due to an error. This is necessary to have a
+    # continuously running bot.
+    def join
       @gateway.sync
     end
+    alias_method :sync, :join
 
     # Stops the bot gracefully, disconnecting the websocket without immediately killing the thread. This means that
     # Discord is immediately aware of the closed connection and makes the bot appear offline instantly.
