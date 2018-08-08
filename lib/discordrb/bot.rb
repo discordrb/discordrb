@@ -213,15 +213,21 @@ module Discordrb
       @token.split(' ').last
     end
 
-    # Runs the bot, which logs into Discord and connects the WebSocket. This prevents all further execution unless it is executed with `async` = `:async`.
-    # @param async [Symbol] If it is `:async`, then the bot will allow further execution.
-    #   It doesn't necessarily have to be that, anything truthy will work,
-    #   however it is recommended to use `:async` for code readability reasons.
-    #   If the bot is run in async mode, make sure to eventually run {#sync} so
-    #   the script doesn't stop prematurely.
-    def run(async = false)
+    # Runs the bot, which logs into Discord and connects the WebSocket. This
+    # prevents all further execution unless it is executed with
+    # `backround` = `true`.
+    # @param background [true, false] If it is `true`, then the bot will run in
+    #   another thread to allow further execution. If it is `false`, this method
+    #   will block until {#stop} is called. If the bot is run with `true`, make
+    #   sure to eventually call {#join} so the script doesn't stop prematurely.
+    # @note Running the bot in the background means that you can call some
+    #   methods that require a gateway connection *before* that connection is
+    #   established. In most cases an exception will be raised if you try to do
+    #   this. If you need a way to safely run code after the bot is fully
+    #   connected, use a {#ready} event handler instead.
+    def run(background = false)
       @gateway.run_async
-      return if async
+      return if background
 
       debug('Oh wait! Not exiting yet as run was run synchronously.')
       @gateway.sync
