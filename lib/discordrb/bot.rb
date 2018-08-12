@@ -213,25 +213,34 @@ module Discordrb
       @token.split(' ').last
     end
 
-    # Runs the bot, which logs into Discord and connects the WebSocket. This prevents all further execution unless it is executed with `async` = `:async`.
-    # @param async [Symbol] If it is `:async`, then the bot will allow further execution.
-    #   It doesn't necessarily have to be that, anything truthy will work,
-    #   however it is recommended to use `:async` for code readability reasons.
-    #   If the bot is run in async mode, make sure to eventually run {#sync} so
-    #   the script doesn't stop prematurely.
-    def run(async = false)
+    # Runs the bot, which logs into Discord and connects the WebSocket. This
+    # prevents all further execution unless it is executed with
+    # `backround` = `true`.
+    # @param background [true, false] If it is `true`, then the bot will run in
+    #   another thread to allow further execution. If it is `false`, this method
+    #   will block until {#stop} is called. If the bot is run with `true`, make
+    #   sure to eventually call {#join} so the script doesn't stop prematurely.
+    # @note Running the bot in the background means that you can call some
+    #   methods that require a gateway connection *before* that connection is
+    #   established. In most cases an exception will be raised if you try to do
+    #   this. If you need a way to safely run code after the bot is fully
+    #   connected, use a {#ready} event handler instead.
+    def run(background = false)
       @gateway.run_async
-      return if async
+      return if background
 
       debug('Oh wait! Not exiting yet as run was run synchronously.')
       @gateway.sync
     end
 
-    # Blocks execution until the websocket stops, which should only happen manually triggered
-    # or due to an error. This is necessary to have a continuously running bot.
-    def sync
+    # Joins the bot's connection thread with the current thread.
+    # This blocks execution until the websocket stops, which should only happen
+    # manually triggered. or due to an error. This is necessary to have a
+    # continuously running bot.
+    def join
       @gateway.sync
     end
+    alias_method :sync, :join
 
     # Stops the bot gracefully, disconnecting the websocket without immediately killing the thread. This means that
     # Discord is immediately aware of the closed connection and makes the bot appear offline instantly.
@@ -247,7 +256,7 @@ module Discordrb
 
     # Makes the bot join an invite to a server.
     # @param invite [String, Invite] The invite to join. For possible formats see {#resolve_invite_code}.
-    def join(invite)
+    def accept_invite(invite)
       resolved = invite(invite).code
       API::Invite.accept(token, resolved)
     end
