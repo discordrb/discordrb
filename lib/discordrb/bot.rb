@@ -256,7 +256,7 @@ module Discordrb
 
     # Makes the bot join an invite to a server.
     # @param invite [String, Invite] The invite to join. For possible formats see {#resolve_invite_code}.
-    def join(invite)
+    def accept_invite(invite)
       resolved = invite(invite).code
       API::Invite.accept(token, resolved)
     end
