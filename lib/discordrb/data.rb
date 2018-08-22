@@ -4136,6 +4136,7 @@ module Discordrb
 
     # @return [Integer] the colour's RGB values combined into one integer.
     attr_reader :combined
+    alias_method :to_i, :combined
 
     # Make a new colour from the combined value.
     # @param combined [Integer, String] The colour's RGB values combined into one integer or a hexadecimal string
