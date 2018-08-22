@@ -35,10 +35,12 @@ module Discordrb::Webhooks
     alias_method :color, :colour
 
     # Sets the colour of the bar to the side of the embed to something new.
-    # @param value [Integer, String, {Integer, Integer, Integer}] The colour in decimal, hexadecimal, or R/G/B decimal
+    # @param value [Integer, String, {Integer, Integer, Integer}, #to_i, nil] The colour in decimal, hexadecimal, R/G/B decimal, or nil to clear the embeds colour
     #   form.
     def colour=(value)
-      if value.is_a? Integer
+      if value.nil?
+        @colour = nil
+      elsif value.is_a? Integer
         raise ArgumentError, 'Embed colour must be 24-bit!' if value >= 16_777_216
         @colour = value
       elsif value.is_a? String
@@ -46,6 +48,8 @@ module Discordrb::Webhooks
       elsif value.is_a? Array
         raise ArgumentError, 'Colour tuple must have three values!' if value.length != 3
         self.colour = value[0] << 16 | value[1] << 8 | value[2]
+      else
+        self.colour = value.to_i
       end
     end
 
