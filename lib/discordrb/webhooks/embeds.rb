@@ -8,7 +8,7 @@ module Discordrb::Webhooks
       @description = description
       @url = url
       @timestamp = timestamp
-      self.colour = colour || color if colour || color
+      self.colour = colour || color
       @footer = footer
       @image = image
       @thumbnail = thumbnail
