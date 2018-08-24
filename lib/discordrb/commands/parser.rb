@@ -63,7 +63,10 @@ module Discordrb::Commands
         bucket: attributes[:bucket],
 
         # Block for handling internal exceptions, or a string to respond with
-        rescue: attributes[:rescue]
+        rescue: attributes[:rescue],
+
+        # A list of aliases that reference this command
+        aliases: attributes[:aliases] || []
       }
 
       @block = block
@@ -117,6 +120,22 @@ module Discordrb::Commands
       end
 
       raise exception
+    end
+  end
+
+  # A command that references another command
+  class CommandAlias
+    # @return [Symbol] the name of this alias
+    attr_reader :aliased_name
+
+    def initialize(aliased_name, command)
+      @aliased_name = aliased_name
+      @command = command
+    end
+
+    def method_missing(method, *args, &block)
+      # Calls are forwarded to the command
+      @command.send(method, *args, &block)
     end
   end
 
