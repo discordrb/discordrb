@@ -143,7 +143,7 @@ module Discordrb::Commands
         if command_name
           command = @commands[command_name.to_sym]
           if command.is_a?(CommandAlias)
-            command = @commands[command.name] if command.is_a?(CommandAlias)
+            command = @commands[command.name]
             command_name = command.name
           end
           return "The command `#{command_name}` does not exist!" unless command
