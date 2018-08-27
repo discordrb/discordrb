@@ -426,7 +426,7 @@ module Discordrb
       API.update_oauth_application(@token, name, redirect_uris, description, icon)
     end
 
-    # Gets the user, channel, role or emoji from a mention of the user, role or emoji.
+    # Gets the user, channel, role or emoji from a mention of the user, channel, role or emoji.
     # @param mention [String] The mention, which should look like `<@12314873129>`, `<#123456789>`, `<@&123456789>` or `<:name:126328:>`.
     # @param server [Server, nil] The server of the associated mention. (recommended for role parsing, to speed things up)
     # @return [User, Channel, Role, Emoji] The user, channel, role or emoji identified by the mention, or `nil` if none exists.
@@ -434,7 +434,7 @@ module Discordrb
       # Mention format: <@id>
       if /<@!?(?<id>\d+)>/ =~ mention
         user(id)
-      elsif /<#(?<id>\d+)>?/ =~ mention
+      elsif /<#(?<id>\d+)>/ =~ mention
         channel(id, server)
       elsif /<@&(?<id>\d+)>/ =~ mention
         return server.role(id) if server
