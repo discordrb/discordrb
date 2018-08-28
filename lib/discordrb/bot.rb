@@ -447,21 +447,18 @@ module Discordrb
       mentions.split(/[<>]/).each do |mention|
         if /@!?(?<id>\d+)/ =~ mention
           mention_objects << user(id) unless user(id).nil?
-          next
         elsif /#(?<id>\d+)/ =~ mention
           mention_objects << channel(id, server) unless channel(id, server).nil?
-          next
         elsif /@&(?<id>\d+)/ =~ mention
           if server
             mention_objects << server.role(id) unless server.role(id).nil?
-            next
+          else
+            @servers.values.each do |element|
+              mention_objects << element.role(id) unless element.role(id).nil?
+            end
           end
-          @servers.values.each do |element|
-            mention_objects << element.role(id) unless element.role(id).nil?
-          end
-          next
         elsif /(?<animated>a)?:(?<name>\w+):(?<id>\d+)/ =~ mention
-          mention_objects << emoji(id) || mention_objects << Emoji.new({ 'animated' => !animated.nil?, 'name' => name, 'id' => id }, self, nil)
+          mention_objects << (emoji(id) || Emoji.new({ 'animated' => !animated.nil?, 'name' => name, 'id' => id }, self, nil))
         end
       end
       mention_objects

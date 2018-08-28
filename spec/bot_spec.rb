@@ -37,6 +37,44 @@ describe Discordrb::Bot do
     expect(bot.server(server_id).emoji.size).to eq(2)
   end
 
+  describe "#parse_mentions" do
+    it "parses user mentions" do
+      user_a = double(:user_a)
+      user_b = double(:user_b)
+      allow(bot).to receive(:user).with("123").and_return(user_a)
+      allow(bot).to receive(:user).with("456").and_return(user_b)
+      mentions = bot.parse_mentions("<@!123><@!456>", server)
+      expect(mentions).to eq([user_a, user_b])
+    end
+
+    it "parses channel mentions" do
+      channel_a = double(:channel_a)
+      channel_b = double(:channel_b)
+      allow(bot).to receive(:channel).with("123", server).and_return(channel_a)
+      allow(bot).to receive(:channel).with("456", server).and_return(channel_b)
+      mentions = bot.parse_mentions("<#123><#456>", server)
+      expect(mentions).to eq([channel_a, channel_b])
+    end
+
+    it "parses role mentions" do
+      role_a = double(:role_a)
+      role_b = double(:role_b)
+      allow(server).to receive(:role).with("123").and_return(role_a)
+      allow(server).to receive(:role).with("456").and_return(role_b)
+      mentions = bot.parse_mentions("<@&123><@&456>")
+      expect(mentions).to eq([role_a, role_b])
+    end
+
+    it "parses emoji mentions" do
+      emoji_a = double(:emoji_a)
+      emoji_b = double(:emoji_b)
+      allow(bot).to receive(:emoji).with("123").and_return(emoji_a)
+      allow(bot).to receive(:emoji).with("456").and_return(emoji_b)
+      mentions = bot.parse_mentions("<a:foo:123><a:bar:456>")
+      expect(mentions).to eq([emoji_a, emoji_b])
+    end
+  end
+
   describe '#parse_mention' do
     context 'with an uncached emoji' do
       it 'returns an emoji with the available data' do
