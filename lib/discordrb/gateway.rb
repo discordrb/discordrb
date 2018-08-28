@@ -647,11 +647,18 @@ module Discordrb
           msg = Zlib::Inflate.inflate(msg)
         end
       elsif @compress_mode == :stream
+        # Write deflated string to buffer
         @zlib_buffer << msg
+
+        # Check if message ends in `ZLIB_SUFFIX`
         return if msg.bytesize < 4 || msg.byteslice(-4, 4) != ZLIB_SUFFIX
-        @zlib_buffer.rewind
-        msg = @zlib_reader.inflate(@zlib_buffer.string)
-        @zlib_buffer.truncate(0)
+
+        # Inflate the deflated buffer
+        deflated = @zlib_buffer.string
+        msg = @zlib_reader.inflate(deflated)
+
+        # Clear the buffer for the next message
+        @zlib_buffer.reopen('')
       end
 
       # Parse packet
