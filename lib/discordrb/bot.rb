@@ -437,29 +437,42 @@ module Discordrb
       API.update_oauth_application(@token, name, redirect_uris, description, icon)
     end
 
-    # Gets the user, channel, role or emoji from a mention of the user, channel, role or emoji.
+    # Gets the users, channels, roles and emoji from a string.
+    # @param mentions [String] The mentions, which should look like `<@12314873129>`, `<#123456789>`, `<@&123456789>` or `<:name:126328:>`.
+    # @param server [Server, nil] The server of the associated mentions. (recommended for role parsing, to speed things up)
+    # @return [Array<User, Channel, Role, Emoji>] The array of users, channels, roles and emoji identified by the mentions, or `nil` if none exists.
+    def parse_mentions(mentions, server = nil)
+      # Mention format: <@id>
+      mention_objects = []
+      mentions.split(/[<>]/).each do |mention|
+        if /@!?(?<id>\d+)/ =~ mention
+          mention_objects << user(id) unless user(id).nil?
+          next
+        elsif /#(?<id>\d+)/ =~ mention
+          mention_objects << channel(id, server) unless channel(id, server).nil?
+          next
+        elsif /@&(?<id>\d+)/ =~ mention
+          if server
+            mention_objects << server.role(id) unless server.role(id).nil?
+            next
+          end
+          @servers.values.each do |element|
+            mention_objects << element.role(id) unless element.role(id).nil?
+          end
+          next
+        elsif /(?<animated>a)?:(?<name>\w+):(?<id>\d+)/ =~ mention
+          mention_objects << emoji(id) || mention_objects << Emoji.new({ 'animated' => !animated.nil?, 'name' => name, 'id' => id }, self, nil)
+        end
+      end
+      mention_objects
+    end
+
+    # Gets the user, channel, role or emoji from a string.
     # @param mention [String] The mention, which should look like `<@12314873129>`, `<#123456789>`, `<@&123456789>` or `<:name:126328:>`.
     # @param server [Server, nil] The server of the associated mention. (recommended for role parsing, to speed things up)
     # @return [User, Channel, Role, Emoji] The user, channel, role or emoji identified by the mention, or `nil` if none exists.
     def parse_mention(mention, server = nil)
-      # Mention format: <@id>
-      if /<@!?(?<id>\d+)>/ =~ mention
-        user(id)
-      elsif /<#(?<id>\d+)>/ =~ mention
-        channel(id, server)
-      elsif /<@&(?<id>\d+)>/ =~ mention
-        return server.role(id) if server
-
-        @servers.values.each do |element|
-          role = element.role(id)
-          return role unless role.nil?
-        end
-
-        # Return nil if no role is found
-        nil
-      elsif /<(?<animated>a)?:(?<name>\w+):(?<id>\d+)>/ =~ mention
-        emoji(id) || Emoji.new({ 'animated' => !animated.nil?, 'name' => name, 'id' => id }, self, nil)
-      end
+      parse_mentions(mention, server).first
     end
 
     # Updates presence status.
