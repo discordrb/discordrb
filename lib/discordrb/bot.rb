@@ -98,9 +98,9 @@ module Discordrb
     # @param redact_token [true, false] Whether the bot should redact the token in logs. Default is true.
     # @param ignore_bots [true, false] Whether the bot should ignore bot accounts or not. Default is false.
     # @param compress_mode [:none, :large, :stream] Sets which compression mode should be used when connecting
-    #   to Discord's gateway. `:none` will request that no payloads are sent compressed (not recommended for
-    #   production bots). `:large` will request that large payloads are sent compressed. `:stream` will request
-    #   that all data be sent in a continuous compressed stream.
+    #   to Discord's gateway. `:none` will request that no payloads are received compressed (not recommended for
+    #   production bots). `:large` will request that large payloads are received compressed. `:stream` will request
+    #   that all data be received in a continuous compressed stream.
     def initialize(
         log_mode: :normal,
         token: nil, client_id: nil,
