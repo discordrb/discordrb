@@ -97,11 +97,16 @@ module Discordrb
     #   https://github.com/hammerandchisel/discord-api-docs/issues/17 for how to do sharding.
     # @param redact_token [true, false] Whether the bot should redact the token in logs. Default is true.
     # @param ignore_bots [true, false] Whether the bot should ignore bot accounts or not. Default is false.
+    # @param compress_mode [:none, :large, :stream] Sets which compression mode should be used when connecting
+    #   to Discord's gateway. `:none` will request that no payloads are sent compressed (not recommended for
+    #   production bots). `:large` will request that large payloads are sent compressed. `:stream` will request
+    #   that all data be sent in a continuous compressed stream.
     def initialize(
         log_mode: :normal,
         token: nil, client_id: nil,
         type: nil, name: '', fancy_log: false, suppress_ready: false, parse_self: false,
-        shard_id: nil, num_shards: nil, redact_token: true, ignore_bots: false
+        shard_id: nil, num_shards: nil, redact_token: true, ignore_bots: false,
+        compress_mode: :stream
     )
       LOGGER.mode = log_mode
       LOGGER.token = token if redact_token
@@ -118,8 +123,10 @@ module Discordrb
       LOGGER.fancy = fancy_log
       @prevent_ready = suppress_ready
 
+      @compress_mode = compress_mode
+
       @token = process_token(@type, token)
-      @gateway = Gateway.new(self, @token, @shard_key)
+      @gateway = Gateway.new(self, @token, @shard_key, @compress_mode)
 
       init_cache
 
