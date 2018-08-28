@@ -548,9 +548,6 @@ module Discordrb
       # Zlib context for this gateway connection
       @zlib_reader = Zlib::Inflate.new
 
-      # Buffer for partial Zlib payloads
-      @zlib_buffer = StringIO.new
-
       # Connect to the obtained URI with a socket
       @socket = obtain_socket(gateway_uri)
       LOGGER.debug('Obtained socket')
@@ -648,17 +645,13 @@ module Discordrb
         end
       elsif @compress_mode == :stream
         # Write deflated string to buffer
-        @zlib_buffer << msg
+        @zlib_reader << msg
 
         # Check if message ends in `ZLIB_SUFFIX`
         return if msg.bytesize < 4 || msg.byteslice(-4, 4) != ZLIB_SUFFIX
 
         # Inflate the deflated buffer
-        deflated = @zlib_buffer.string
-        msg = @zlib_reader.inflate(deflated)
-
-        # Clear the buffer for the next message
-        @zlib_buffer.reopen('')
+        msg = @zlib_reader.inflate('')
       end
 
       # Parse packet
