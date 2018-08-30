@@ -143,7 +143,7 @@ module Discordrb
     # @return [true, false] whether or not this gateway should check for heartbeat ACKs.
     attr_accessor :check_heartbeat_acks
 
-    def initialize(bot, token, shard_key = nil)
+    def initialize(bot, token, shard_key = nil, compress_mode = :stream)
       @token = token
       @bot = bot
 
@@ -155,6 +155,8 @@ module Discordrb
       @ws_success = false
 
       @check_heartbeat_acks = true
+
+      @compress_mode = compress_mode
     end
 
     # Connect to the gateway server in a separate thread
@@ -263,13 +265,14 @@ module Discordrb
     # Identifies to Discord with the default parameters.
     # @see #send_identify
     def identify
+      compress = @compress_mode == :large
       send_identify(@token, {
                       '$os': RUBY_PLATFORM,
                       '$browser': 'discordrb',
                       '$device': 'discordrb',
                       '$referrer': '',
                       '$referring_domain': ''
-                    }, true, 100, @shard_key)
+                    }, compress, 100, @shard_key)
     end
 
     # Sends an identify packet (op 2). This starts a new session on the current connection and tells Discord who we are.
@@ -523,8 +526,13 @@ module Discordrb
       # Append a slash in case it's not there (I'm not sure how well WSCS handles it otherwise)
       raw_url += '/' unless raw_url.end_with? '/'
 
-      # Add the parameters we want
-      raw_url + "?encoding=json&v=#{GATEWAY_VERSION}"
+      query = if @compress_mode == :stream
+                "?encoding=json&v=#{GATEWAY_VERSION}&compress=zlib-stream"
+              else
+                "?encoding=json&v=#{GATEWAY_VERSION}"
+              end
+
+      raw_url + query
     end
 
     def connect
@@ -536,6 +544,9 @@ module Discordrb
 
       # Parse it
       gateway_uri = URI.parse(url)
+
+      # Zlib context for this gateway connection
+      @zlib_reader = Zlib::Inflate.new
 
       # Connect to the obtained URI with a socket
       @socket = obtain_socket(gateway_uri)
@@ -624,10 +635,23 @@ module Discordrb
       LOGGER.log_exception(e)
     end
 
+    ZLIB_SUFFIX = "\x00\x00\xFF\xFF".b.freeze
+
     def handle_message(msg)
-      if msg.byteslice(0) == 'x'
-        # The message is compressed, inflate it
-        msg = Zlib::Inflate.inflate(msg)
+      if @compress_mode == :large
+        if msg.byteslice(0) == 'x'
+          # The message is compressed, inflate it
+          msg = Zlib::Inflate.inflate(msg)
+        end
+      elsif @compress_mode == :stream
+        # Write deflated string to buffer
+        @zlib_reader << msg
+
+        # Check if message ends in `ZLIB_SUFFIX`
+        return if msg.bytesize < 4 || msg.byteslice(-4, 4) != ZLIB_SUFFIX
+
+        # Inflate the deflated buffer
+        msg = @zlib_reader.inflate('')
       end
 
       # Parse packet
