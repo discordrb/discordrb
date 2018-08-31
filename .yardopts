@@ -1,1 +1,1 @@
---markup markdown --hide-tag todo
+--markup markdown --hide-tag todo --fail-on-warning

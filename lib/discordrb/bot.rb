@@ -97,11 +97,16 @@ module Discordrb
     #   https://github.com/hammerandchisel/discord-api-docs/issues/17 for how to do sharding.
     # @param redact_token [true, false] Whether the bot should redact the token in logs. Default is true.
     # @param ignore_bots [true, false] Whether the bot should ignore bot accounts or not. Default is false.
+    # @param compress_mode [:none, :large, :stream] Sets which compression mode should be used when connecting
+    #   to Discord's gateway. `:none` will request that no payloads are received compressed (not recommended for
+    #   production bots). `:large` will request that large payloads are received compressed. `:stream` will request
+    #   that all data be received in a continuous compressed stream.
     def initialize(
         log_mode: :normal,
         token: nil, client_id: nil,
         type: nil, name: '', fancy_log: false, suppress_ready: false, parse_self: false,
-        shard_id: nil, num_shards: nil, redact_token: true, ignore_bots: false
+        shard_id: nil, num_shards: nil, redact_token: true, ignore_bots: false,
+        compress_mode: :stream
     )
       LOGGER.mode = log_mode
       LOGGER.token = token if redact_token
@@ -118,8 +123,10 @@ module Discordrb
       LOGGER.fancy = fancy_log
       @prevent_ready = suppress_ready
 
+      @compress_mode = compress_mode
+
       @token = process_token(@type, token)
-      @gateway = Gateway.new(self, @token, @shard_key)
+      @gateway = Gateway.new(self, @token, @shard_key, @compress_mode)
 
       init_cache
 
@@ -213,25 +220,34 @@ module Discordrb
       @token.split(' ').last
     end
 
-    # Runs the bot, which logs into Discord and connects the WebSocket. This prevents all further execution unless it is executed with `async` = `:async`.
-    # @param async [Symbol] If it is `:async`, then the bot will allow further execution.
-    #   It doesn't necessarily have to be that, anything truthy will work,
-    #   however it is recommended to use `:async` for code readability reasons.
-    #   If the bot is run in async mode, make sure to eventually run {#sync} so
-    #   the script doesn't stop prematurely.
-    def run(async = false)
+    # Runs the bot, which logs into Discord and connects the WebSocket. This
+    # prevents all further execution unless it is executed with
+    # `backround` = `true`.
+    # @param background [true, false] If it is `true`, then the bot will run in
+    #   another thread to allow further execution. If it is `false`, this method
+    #   will block until {#stop} is called. If the bot is run with `true`, make
+    #   sure to eventually call {#join} so the script doesn't stop prematurely.
+    # @note Running the bot in the background means that you can call some
+    #   methods that require a gateway connection *before* that connection is
+    #   established. In most cases an exception will be raised if you try to do
+    #   this. If you need a way to safely run code after the bot is fully
+    #   connected, use a {#ready} event handler instead.
+    def run(background = false)
       @gateway.run_async
-      return if async
+      return if background
 
       debug('Oh wait! Not exiting yet as run was run synchronously.')
       @gateway.sync
     end
 
-    # Blocks execution until the websocket stops, which should only happen manually triggered
-    # or due to an error. This is necessary to have a continuously running bot.
-    def sync
+    # Joins the bot's connection thread with the current thread.
+    # This blocks execution until the websocket stops, which should only happen
+    # manually triggered. or due to an error. This is necessary to have a
+    # continuously running bot.
+    def join
       @gateway.sync
     end
+    alias_method :sync, :join
 
     # Stops the bot gracefully, disconnecting the websocket without immediately killing the thread. This means that
     # Discord is immediately aware of the closed connection and makes the bot appear offline instantly.
@@ -247,7 +263,7 @@ module Discordrb
 
     # Makes the bot join an invite to a server.
     # @param invite [String, Invite] The invite to join. For possible formats see {#resolve_invite_code}.
-    def join(invite)
+    def accept_invite(invite)
       resolved = invite(invite).code
       API::Invite.accept(token, resolved)
     end
@@ -417,14 +433,16 @@ module Discordrb
       API.update_oauth_application(@token, name, redirect_uris, description, icon)
     end
 
-    # Gets the user, role or emoji from a mention of the user, role or emoji.
-    # @param mention [String] The mention, which should look like `<@12314873129>`, `<@&123456789>` or `<:Name:126328:>`.
+    # Gets the user, channel, role or emoji from a mention of the user, channel, role or emoji.
+    # @param mention [String] The mention, which should look like `<@12314873129>`, `<#123456789>`, `<@&123456789>` or `<:name:126328:>`.
     # @param server [Server, nil] The server of the associated mention. (recommended for role parsing, to speed things up)
-    # @return [User, Role, Emoji] The user, role or emoji identified by the mention, or `nil` if none exists.
+    # @return [User, Channel, Role, Emoji] The user, channel, role or emoji identified by the mention, or `nil` if none exists.
     def parse_mention(mention, server = nil)
       # Mention format: <@id>
       if /<@!?(?<id>\d+)>/ =~ mention
         user(id)
+      elsif /<#(?<id>\d+)>/ =~ mention
+        channel(id, server)
       elsif /<@&(?<id>\d+)>/ =~ mention
         return server.role(id) if server
         @servers.values.each do |element|
@@ -434,8 +452,8 @@ module Discordrb
 
         # Return nil if no role is found
         nil
-      elsif /<a?:(\w+):(?<id>\d+)>/ =~ mention
-        emoji(id)
+      elsif /<(?<animated>a)?:(?<name>\w+):(?<id>\d+)>/ =~ mention
+        emoji(id) || Emoji.new({ 'animated' => !animated.nil?, 'name' => name, 'id' => id }, self, nil)
       end
     end
 
@@ -552,11 +570,49 @@ module Discordrb
     # @yield Is executed when the await is triggered.
     # @yieldparam event [Event] The event object that was triggered.
     # @return [Await] The await that was created.
+    # @deprecated Will be changed to blocking behavior in v4.0. Use {#add_await!} instead.
     def add_await(key, type, attributes = {}, &block)
       raise "You can't await an AwaitEvent!" if type == Discordrb::Events::AwaitEvent
       await = Await.new(self, key, type, attributes, block)
       @awaits ||= {}
       @awaits[key] = await
+    end
+
+    # Awaits an event, blocking the current thread until a response is received.
+    # @param type [Class] The event class that should be listened for.
+    # @option attributes [Numeric] :timeout the amount of time to wait for a response before returning `nil`. Waits forever if omitted.
+    # @return [Event, nil] The event object that was triggered, or `nil` if a `timeout` was set and no event was raised in time.
+    # @raise [ArgumentError] if `timeout` is given and is not a positive numeric value
+    def add_await!(type, attributes = {})
+      raise "You can't await an AwaitEvent!" if type == Discordrb::Events::AwaitEvent
+
+      timeout = attributes[:timeout]
+      raise ArgumentError, 'Timeout must be a number > 0' if timeout && timeout.is_a?(Numeric) && timeout <= 0
+
+      mutex = Mutex.new
+      cv = ConditionVariable.new
+      response = nil
+      block = lambda do |event|
+        mutex.synchronize do
+          response = event
+          cv.signal
+        end
+      end
+
+      handler = register_event(type, attributes, block)
+
+      if timeout
+        Thread.new do
+          sleep timeout
+          mutex.synchronize { cv.signal }
+        end
+      end
+
+      mutex.synchronize { cv.wait(mutex) }
+
+      remove_handler(handler)
+      raise 'ConditionVariable was signaled without returning an event!' if response.nil? && timeout.nil?
+      response
     end
 
     # Add a user to the list of ignored users. Those users will be ignored in message events at event processing level.
@@ -823,7 +879,12 @@ module Discordrb
       server_id = data['guild_id'].to_i
       server = @servers[server_id]
       new_role = Role.new(role_data, self, server)
-      server.add_role(new_role)
+      existing_role = server.role(new_role.id)
+      if existing_role
+        existing_role.update_from(new_role)
+      else
+        server.add_role(new_role)
+      end
     end
 
     # Internal handler for GUILD_ROLE_DELETE
@@ -1228,7 +1289,8 @@ module Discordrb
 
       @event_handlers ||= {}
       handlers = @event_handlers[event.class]
-      (handlers || []).each do |handler|
+      return unless handlers
+      handlers.dup.each do |handler|
         call_event(handler, event) if handler.matches?(event)
       end
     end

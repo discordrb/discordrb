@@ -12,3 +12,5 @@
 .DS_Store
 *.gem
 **.sw*
+
+/vendor/bundle

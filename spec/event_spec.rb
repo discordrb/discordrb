@@ -136,9 +136,7 @@ describe Discordrb::Events do
       end
     end
   end
-end
 
-module Discordrb::Events
   # This data is shared across examples, so it needs to be defined here
   SERVER_ID = 1
   SERVER_NAME = 'server_name'.freeze
@@ -191,7 +189,7 @@ module Discordrb::Events
     end
   end
 
-  describe ServerEvent do
+  describe Discordrb::Events::ServerEvent do
     let(:bot) { double('bot', server: server) }
     let(:server) { double }
 
@@ -202,7 +200,7 @@ module Discordrb::Events
     it_behaves_like 'ServerEvent'
   end
 
-  describe ServerEmojiCDEvent do
+  describe Discordrb::Events::ServerEmojiCDEvent do
     let(:bot) { double }
     let(:server) { double }
     let(:emoji) { double }
@@ -220,7 +218,7 @@ module Discordrb::Events
     end
   end
 
-  describe ServerEmojiChangeEvent do
+  describe Discordrb::Events::ServerEmojiChangeEvent do
     fixture :dispatch, %i[emoji dispatch]
 
     fixture_property :emoji_1_id, :dispatch, ['emojis', 0, 'id'], :to_i
@@ -242,7 +240,7 @@ module Discordrb::Events
     end
   end
 
-  describe ServerEmojiUpdateEvent do
+  describe Discordrb::Events::ServerEmojiUpdateEvent do
     let(:bot) { double }
     let(:server) { double }
     let(:old_emoji) { double }
@@ -264,7 +262,7 @@ module Discordrb::Events
     end
   end
 
-  describe ServerEventHandler do
+  describe Discordrb::Events::ServerEventHandler do
     let(:event) { double('event', is_a?: true, emoji: emoji, server: server) }
     let(:server) { double('server', name: SERVER_NAME, id: SERVER_ID) }
     let(:emoji) { double('emoji', id: EMOJI1_ID, name: EMOJI1_NAME) }
@@ -272,7 +270,7 @@ module Discordrb::Events
     it_behaves_like 'ServerEventHandler'
   end
 
-  describe ServerEmojiCDEventHandler do
+  describe Discordrb::Events::ServerEmojiCDEventHandler do
     let(:event) { double('event', is_a?: true, emoji: emoji, server: server) }
     let(:server) { double('server', name: SERVER_NAME, id: SERVER_ID) }
     let(:emoji) { double('emoji', id: EMOJI1_ID, name: EMOJI1_NAME) }
@@ -281,7 +279,7 @@ module Discordrb::Events
     it_behaves_like 'ServerEmojiEventHandler'
   end
 
-  describe ServerEmojiUpdateEventHandler do
+  describe Discordrb::Events::ServerEmojiUpdateEventHandler do
     let(:event) { double('event', is_a?: true, emoji: emoji_new, old_emoji: emoji_old, server: server) }
     let(:server) { double('server', name: SERVER_NAME, id: SERVER_ID) }
     let(:emoji_old) { double('emoji_old', id: EMOJI1_ID, name: EMOJI2_NAME) }

@@ -385,6 +385,36 @@ module Discordrb
       register_event(ServerEmojiUpdateEvent, attributes, block)
     end
 
+    # This **event** is raised when a role is created.
+    # @param attributes [Hash] The event's attributes.
+    # @option attributes [String] :name Matches the role name.
+    # @yield The block is executed when the event is raised.
+    # @yieldparam event [ServerRoleCreateEvent] The event that was raised.
+    # @return [ServerRoleCreateEventHandler] the event handler that was registered.
+    def server_role_create(attributes = {}, &block)
+      register_event(ServerRoleCreateEvent, attributes, block)
+    end
+
+    # This **event** is raised when a role is deleted.
+    # @param attributes [Hash] The event's attributes.
+    # @option attributes [#resolve_id] :id Matches the role id.
+    # @yield The block is executed when the event is raised.
+    # @yieldparam event [ServerRoleDeleteEvent] The event that was raised.
+    # @return [ServerRoleDeleteEventHandler] the event handler that was registered.
+    def server_role_delete(attributes = {}, &block)
+      register_event(ServerRoleDeleteEvent, attributes, block)
+    end
+
+    # This **event** is raised when a role is updated.
+    # @param attributes [Hash] The event's attributes.
+    # @option attributes [String] :name Matches the role name.
+    # @yield The block is executed when the event is raised.
+    # @yieldparam event [ServerRoleUpdateEvent] The event that was raised.
+    # @return [ServerRoleUpdateEventHandler] the event handler that was registered.
+    def server_role_update(attributes = {}, &block)
+      register_event(ServerRoleUpdateEvent, attributes, block)
+    end
+
     # This **event** is raised when a webhook is updated.
     # @param attributes [Hash] The event's attributes.
     # @option attributes [String, Integer, Server] :server Matches the server by name, id or instance.
