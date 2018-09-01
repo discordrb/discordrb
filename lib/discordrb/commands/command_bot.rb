@@ -143,7 +143,7 @@ module Discordrb::Commands
         if command_name
           command = @commands[command_name.to_sym]
           if command.is_a?(CommandAlias)
-            command = @commands[command.name]
+            command = command.aliased_command
             command_name = command.name
           end
           return "The command `#{command_name}` does not exist!" unless command
@@ -154,7 +154,7 @@ module Discordrb::Commands
           aliases = command_aliases(command_name.to_sym)
           unless aliases.empty?
             result += "\nAliases: "
-            result += aliases.map { |a| "`#{a.aliased_name}`" }.join(', ')
+            result += aliases.map { |a| "`#{a.name}`" }.join(', ')
           end
           result += "\nUsage: `#{usage}`" if usage
           if parameters
@@ -184,8 +184,13 @@ module Discordrb::Commands
       end
     end
 
-    private def command_aliases(name)
-      commands.values.select { |c| c.name == name && c.is_a?(CommandAlias) }
+    # Returns all aliases for the command with the given name
+    # @param name [Symbol] the name of the `Command`
+    # @return [Array<CommandAlias>]
+    def command_aliases(name)
+      commands.values.select do |command|
+        command.is_a?(CommandAlias) && command.aliased_command.name == name
+      end
     end
 
     # Executes a particular command on the bot. Mostly useful for internal stuff, but one can never know.
@@ -201,6 +206,7 @@ module Discordrb::Commands
       debug("Executing command #{name} with arguments #{arguments}")
       return unless @commands
       command = @commands[name]
+      command = command.aliased_command if command.is_a?(CommandAlias)
       return unless !check_permissions || channels?(event.channel, @attributes[:channels]) ||
                     (command && !command.attributes[:channels].nil?)
       unless command

@@ -68,10 +68,10 @@ module Discordrb::Commands
         new_command
       else
         new_command = Command.new(name, attributes, &block)
-        @commands[name] = new_command
         new_command.attributes[:aliases].each do |aliased_name|
           @commands[aliased_name] = CommandAlias.new(aliased_name, new_command)
         end
+        @commands[name] = new_command
       end
     end
 

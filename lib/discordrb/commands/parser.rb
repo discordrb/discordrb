@@ -126,16 +126,14 @@ module Discordrb::Commands
   # A command that references another command
   class CommandAlias
     # @return [Symbol] the name of this alias
-    attr_reader :aliased_name
+    attr_reader :name
 
-    def initialize(aliased_name, command)
-      @aliased_name = aliased_name
-      @command = command
-    end
+    # @return [Command] the command this alias points to
+    attr_reader :aliased_command
 
-    def method_missing(method, *args, &block)
-      # Calls are forwarded to the command
-      @command.send(method, *args, &block)
+    def initialize(name, aliased_command)
+      @name = name
+      @aliased_command = aliased_command
     end
   end
 
