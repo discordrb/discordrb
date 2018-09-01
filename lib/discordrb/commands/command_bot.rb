@@ -83,7 +83,8 @@ module Discordrb::Commands
         num_shards: attributes[:num_shards],
         redact_token: attributes.key?(:redact_token) ? attributes[:redact_token] : true,
         ignore_bots: attributes[:ignore_bots],
-        compress_mode: attributes[:compress_mode])
+        compress_mode: attributes[:compress_mode],
+        parse_edited: attributes[:parse_edited])
 
       @prefix = attributes[:prefix]
       @attributes = {
@@ -392,6 +393,10 @@ module Discordrb::Commands
 
       # Return the message so it doesn't get parsed again during the rest of the dispatch handling
       message
+    end
+
+    def update_message(data)
+      create_message(data) if @parse_edited
     end
 
     # Check whether a message should trigger command execution, and if it does, return the raw chain
