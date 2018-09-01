@@ -101,17 +101,20 @@ module Discordrb
     #   to Discord's gateway. `:none` will request that no payloads are received compressed (not recommended for
     #   production bots). `:large` will request that large payloads are received compressed. `:stream` will request
     #   that all data be received in a continuous compressed stream.
+    # @params parse_edited [true, false] Whether the bot should treat edited messages as a new message when 
+    #   processing commands.
     def initialize(
         log_mode: :normal,
         token: nil, client_id: nil,
         type: nil, name: '', fancy_log: false, suppress_ready: false, parse_self: false,
         shard_id: nil, num_shards: nil, redact_token: true, ignore_bots: false,
-        compress_mode: :stream
+        compress_mode: :stream, parse_edited: false
     )
       LOGGER.mode = log_mode
       LOGGER.token = token if redact_token
 
       @should_parse_self = parse_self
+      @parse_edited = parse_edited
 
       @client_id = client_id
 
@@ -1052,6 +1055,11 @@ module Discordrb
 
         event = MessageEditEvent.new(message, self)
         raise_event(event)
+
+        if @parse_edited
+          event = MessageEvent.new(message, self)
+          raise_event(event)
+        end
       when :MESSAGE_DELETE
         delete_message(data)
 
