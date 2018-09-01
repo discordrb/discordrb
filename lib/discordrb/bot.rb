@@ -101,7 +101,7 @@ module Discordrb
     #   to Discord's gateway. `:none` will request that no payloads are received compressed (not recommended for
     #   production bots). `:large` will request that large payloads are received compressed. `:stream` will request
     #   that all data be received in a continuous compressed stream.
-    # @param parse_edited [true, false] Whether the bot should treat edited messages as a new message when 
+    # @param parse_edited [true, false] Whether the bot should treat edited messages as a new message when
     #   processing commands.
     def initialize(
         log_mode: :normal,
