@@ -491,14 +491,19 @@ module Discordrb
 
       if secure_uri?(uri)
         ctx = OpenSSL::SSL::SSLContext.new
-        ctx.ssl_version = 'SSLv23'
-        ctx.verify_mode = OpenSSL::SSL::VERIFY_NONE # use VERIFY_PEER for verification
 
-        cert_store = OpenSSL::X509::Store.new
-        cert_store.set_default_paths
-        ctx.cert_store = cert_store
+        if ENV['DISCORDRB_SSL_VERIFY_NONE']
+          ctx.ssl_version = 'SSLv23'
+          ctx.verify_mode = OpenSSL::SSL::VERIFY_NONE # use VERIFY_PEER for verification
 
-        socket = ::OpenSSL::SSL::SSLSocket.new(socket, ctx)
+          cert_store = OpenSSL::X509::Store.new
+          cert_store.set_default_paths
+          ctx.cert_store = cert_store
+        else
+          ctx.set_params ssl_version: :TLSv1_2
+        end
+
+        socket = OpenSSL::SSL::SSLSocket.new(socket, ctx)
         socket.connect
       end
 
