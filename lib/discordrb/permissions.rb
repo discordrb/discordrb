@@ -15,7 +15,7 @@ module Discordrb
       5 => :manage_server,         # 32
       6 => :add_reactions,         # 64
       7 => :view_audit_log,        # 128
-      # 8                          # 256
+      8 => :priority_speaker,      # 256
       # 9                          # 512
       10 => :read_messages,        # 1024
       11 => :send_messages,        # 2048
