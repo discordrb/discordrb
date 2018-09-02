@@ -442,26 +442,28 @@ module Discordrb
     # @param server [Server, nil] The server of the associated mentions. (recommended for role parsing, to speed things up)
     # @return [Array<User, Channel, Role, Emoji>] The array of users, channels, roles and emoji identified by the mentions, or `nil` if none exists.
     def parse_mentions(mentions, server = nil)
-      # Mention format: <@id>
-      mention_objects = []
-      mentions.split(/[<>]/).each do |mention|
+      array_to_return = []
+      while mentions.include?('<') && mentions.include?('>')
+        mentions = mentions.split('<', 2)[1]
+        next unless mentions.split('>', 2).first.length < mentions.split('<', 2).first.length
+        mention = mentions.split('>', 2).first
         if /@!?(?<id>\d+)/ =~ mention
-          mention_objects << user(id) unless user(id).nil?
+          array_to_return << user(id) unless user(id).nil?
         elsif /#(?<id>\d+)/ =~ mention
-          mention_objects << channel(id, server) unless channel(id, server).nil?
+          array_to_return << channel(id, server) unless channel(id, server).nil?
         elsif /@&(?<id>\d+)/ =~ mention
           if server
-            mention_objects << server.role(id) unless server.role(id).nil?
+            array_to_return << server.role(id) unless server.role(id).nil?
           else
             @servers.values.each do |element|
-              mention_objects << element.role(id) unless element.role(id).nil?
+              array_to_return << element.role(id) unless element.role(id).nil?
             end
           end
-        elsif /(?<animated>a)?:(?<name>\w+):(?<id>\d+)/ =~ mention
-          mention_objects << (emoji(id) || Emoji.new({ 'animated' => !animated.nil?, 'name' => name, 'id' => id }, self, nil))
+        elsif /(?<animated>^[a]|^${0}):(?<name>\w+):(?<id>\d+)/ =~ mention
+          array_to_return << (emoji(id) || Emoji.new({ 'animated' => !animated.nil?, 'name' => name, 'id' => id }, self, nil))
         end
       end
-      mention_objects
+      array_to_return
     end
 
     # Gets the user, channel, role or emoji from a string.

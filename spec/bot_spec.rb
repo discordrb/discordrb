@@ -73,6 +73,11 @@ describe Discordrb::Bot do
       mentions = bot.parse_mentions('<a:foo:123><a:bar:456>')
       expect(mentions).to eq([emoji_a, emoji_b])
     end
+
+    it "doesn't parse invalid mentions" do
+      mentions = bot.parse_mentions('<<@123<@?123><#123<:foo:123<b:foo:456><@abc><@!abc>', server)
+      expect(mentions).to eq []
+    end
   end
 
   describe '#parse_mention' do
