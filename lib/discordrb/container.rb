@@ -237,7 +237,8 @@ module Discordrb
       register_event(ChannelRecipientRemoveEvent, attributes, block)
     end
 
-    # This **event** is raised when a user's voice state changes.
+    # This **event** is raised when a user's voice state changes. This includes when a user joins, leaves, or
+    # moves between voice channels, as well as their mute and deaf status for themselves and on the server.
     # @param attributes [Hash] The event's attributes.
     # @option attributes [String, Integer, User] :from Matches the user that sent the message.
     # @option attributes [String, Integer, Channel] :channel Matches the voice channel the user has joined.
@@ -263,7 +264,8 @@ module Discordrb
       register_event(ServerMemberAddEvent, attributes, block)
     end
 
-    # This **event** is raised when a member update happens.
+    # This **event** is raised when a member update happens. This includes when a members nickname
+    # or roles are updated.
     # @param attributes [Hash] The event's attributes.
     # @option attributes [String] :username Matches the username of the updated user.
     # @yield The block is executed when the event is raised.
@@ -306,8 +308,7 @@ module Discordrb
     end
 
     # This **event** is raised when a server is created respective to the bot, i.e. the bot joins a server or creates
-    # a new one itself. It should never be necessary to listen to this event as it will only ever be triggered by
-    # things the bot itself does, but one can never know.
+    # a new one itself.
     # @param attributes [Hash] The event's attributes.
     # @option attributes [String, Integer, Server] :server Matches the server that was created.
     # @yield The block is executed when the event is raised.
