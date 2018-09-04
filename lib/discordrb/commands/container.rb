@@ -55,6 +55,8 @@ module Discordrb::Commands
     # @note `LocalJumpError`s are rescued from internally, giving bots the opportunity to use `return` or `break` in
     #   their blocks without propagating an exception.
     # @return [Command] The command that was added.
+    # @deprecated The command name argument will no longer support arrays in the next release.
+    #   Use the `aliases` attribute instead.
     def command(name, attributes = {}, &block)
       @commands ||= {}
       if name.is_a? Array
@@ -67,7 +69,11 @@ module Discordrb::Commands
 
         new_command
       else
-        @commands[name] = Command.new(name, attributes, &block)
+        new_command = Command.new(name, attributes, &block)
+        new_command.attributes[:aliases].each do |aliased_name|
+          @commands[aliased_name] = CommandAlias.new(aliased_name, new_command)
+        end
+        @commands[name] = new_command
       end
     end
 
