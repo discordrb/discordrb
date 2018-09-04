@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 require 'discordrb'
 
 describe Discordrb::Commands::CommandBot, order: :defined do
-  SIMPLE_RESPONSE = 'hi'.freeze
+  SIMPLE_RESPONSE = 'hi'
   TEST_CHANNELS = [
     1,
     2,

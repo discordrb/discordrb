@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This bot has various commands that show off CommandBot.
 
 require 'discordrb'

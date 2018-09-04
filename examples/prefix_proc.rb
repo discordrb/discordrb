@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'discordrb'
 
 # Here, we'll demonstrate one way to achieve a dynamic command prefix

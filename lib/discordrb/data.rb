@@ -2429,7 +2429,7 @@ module Discordrb
     attr_reader :webhook_id
 
     # The discriminator that webhook user accounts have.
-    ZERO_DISCRIM = '0000'.freeze
+    ZERO_DISCRIM = '0000'
 
     # @!visibility private
     def initialize(data, bot)
