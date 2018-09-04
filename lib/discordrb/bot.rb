@@ -587,7 +587,7 @@ module Discordrb
       raise "You can't await an AwaitEvent!" if type == Discordrb::Events::AwaitEvent
 
       timeout = attributes[:timeout]
-      raise ArgumentError, 'Timeout must be a number > 0' if timeout && timeout.is_a?(Numeric) && timeout <= 0
+      raise ArgumentError, 'Timeout must be a number > 0' if timeout&.is_a?(Numeric) && !timeout&.positive?
 
       mutex = Mutex.new
       cv = ConditionVariable.new
@@ -954,7 +954,7 @@ module Discordrb
 
     def handle_dispatch(type, data)
       # Check whether there are still unavailable servers and there have been more than 10 seconds since READY
-      if @unavailable_servers && @unavailable_servers > 0 && (Time.now - @unavailable_timeout_time) > 10
+      if @unavailable_servers&.positive? && (Time.now - @unavailable_timeout_time) > 10
         # The server streaming timed out!
         LOGGER.debug("Server streaming timed out with #{@unavailable_servers} servers remaining")
         LOGGER.debug('Calling ready now because server loading is taking a long time. Servers may be unavailable due to an outage, or your bot is on very large servers.')

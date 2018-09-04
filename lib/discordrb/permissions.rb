@@ -49,7 +49,7 @@ module Discordrb
         else
           new_bits &= ~(1 << position)
         end
-        @writer.write(new_bits) if @writer
+        @writer&.write(new_bits)
         @bits = new_bits
         init_vars
       end

@@ -179,7 +179,7 @@ module Discordrb
 
     # Whether the WebSocket connection to the gateway is currently open
     def open?
-      @handshake && @handshake.finished? && !@closed
+      @handshake&.finished? && !@closed
     end
 
     # Stops the bot gracefully, disconnecting the websocket without immediately killing the thread. This means that
@@ -748,7 +748,7 @@ module Discordrb
       LOGGER.debug("Trace: #{packet['d']['_trace']}")
       LOGGER.debug("Session: #{@session.inspect}")
 
-      if @session && @session.should_resume?
+      if @session&.should_resume?
         # Make sure we're sending heartbeats again
         @session.resume
 
@@ -812,7 +812,7 @@ module Discordrb
       return if @closed
 
       # Suspend the session so we don't send heartbeats
-      @session.suspend if @session
+      @session&.suspend
 
       # Send a close frame (if we can)
       send nil, :close unless @pipe_broken
@@ -828,7 +828,7 @@ module Discordrb
       end
 
       # Close the socket if possible
-      @socket.close if @socket
+      @socket&.close
       @socket = nil
 
       # Make sure we do necessary things as soon as we're closed

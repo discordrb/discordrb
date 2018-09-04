@@ -277,7 +277,7 @@ module Discordrb::Voice
 
           header = header_str.unpack('s<')[0]
 
-          raise 'Negative header in DCA file! Your file is likely corrupted.' if header < 0
+          raise 'Negative header in DCA file! Your file is likely corrupted.' if header.negative?
         rescue EOFError
           @bot.debug 'Finished DCA parsing (EOFError)'
           next :stop
@@ -311,7 +311,7 @@ module Discordrb::Voice
         break unless @playing
 
         # If we should skip, get some data, discard it and go to the next iteration
-        if @skips > 0
+        if @skips.positive?
           @skips -= 1
           yield
           next
@@ -364,7 +364,7 @@ module Discordrb::Voice
         # If paused, wait
         sleep 0.1 while @paused
 
-        if @length > 0
+        if @length.positive?
           # Wait `length` ms, then send the next packet
           sleep @length / 1000.0
         else

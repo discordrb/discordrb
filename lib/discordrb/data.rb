@@ -753,7 +753,7 @@ module Discordrb
     # Utility method to get data out of this member's voice state
     def voice_state_attribute(name)
       voice_state = @server.voice_states[@user.id]
-      voice_state.send name if voice_state
+      voice_state&.send name
     end
   end
 
@@ -1373,11 +1373,9 @@ module Discordrb
 
       if private?
         @recipients = []
-        if data['recipients']
-          data['recipients'].each do |recipient|
-            recipient_user = bot.ensure_user(recipient)
-            @recipients << Recipient.new(recipient_user, self, bot)
-          end
+        data['recipients']&.each do |recipient|
+          recipient_user = bot.ensure_user(recipient)
+          @recipients << Recipient.new(recipient_user, self, bot)
         end
         if pm?
           @name = @recipients.first.username
@@ -2474,28 +2472,22 @@ module Discordrb
 
       @reactions = {}
 
-      if data['reactions']
-        data['reactions'].each do |element|
-          @reactions[element['emoji']['name']] = Reaction.new(element)
-        end
+      data['reactions']&.each do |element|
+        @reactions[element['emoji']['name']] = Reaction.new(element)
       end
 
       @mentions = []
 
-      if data['mentions']
-        data['mentions'].each do |element|
-          @mentions << bot.ensure_user(element)
-        end
+      data['mentions']&.each do |element|
+        @mentions << bot.ensure_user(element)
       end
 
       @role_mentions = []
 
       # Role mentions can only happen on public servers so make sure we only parse them there
       if @channel.text?
-        if data['mention_roles']
-          data['mention_roles'].each do |element|
-            @role_mentions << @channel.server.role(element.to_i)
-          end
+        data['mention_roles']&.each do |element|
+          @role_mentions << @channel.server.role(element.to_i)
         end
       end
 
@@ -2557,7 +2549,7 @@ module Discordrb
 
     # @return [true, false] whether this message was sent by the current {Bot}.
     def from_bot?
-      @author && @author.current_bot?
+      @author&.current_bot?
     end
 
     # @return [true, false] whether this message has been sent over a webhook.
