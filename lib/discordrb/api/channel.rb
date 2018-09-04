@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # API calls for Channel
 module Discordrb::API::Channel
   module_function

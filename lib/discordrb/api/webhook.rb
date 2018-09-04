@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # API calls for Webhook object
 module Discordrb::API::Webhook
   module_function

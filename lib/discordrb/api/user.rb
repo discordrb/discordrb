@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # API calls for User object
 module Discordrb::API::User
   module_function

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This file uses code from Websocket::Client::Simple, licensed under the following license:
 #
 # Copyright (c) 2013-2014 Sho Hashimoto
