@@ -715,9 +715,13 @@ module Discordrb
     # Update this member's roles
     # @note For internal use only.
     # @!visibility private
-    def update_roles(roles)
-      @roles = roles.map do |role|
-        @server.role(role)
+    def update_roles(role_ids)
+      @roles = []
+      role_ids.each do |id|
+        # It is posible for members to have roles that do not exist
+        # on the server any longer. See https://github.com/meew0/discordrb/issues/371
+        role = @server.role(id)
+        @roles << role if role
       end
     end
 
