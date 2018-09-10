@@ -2884,16 +2884,17 @@ module Discordrb
       @owner = member(@owner_id) if exists
     end
 
-    # The default channel is the text channel on this server with the highest position.
-    # that the client has Read Messages permission on.
+    # The default channel is the text channel on this server with the highest position
+    # that the bot has Read Messages permission on.
+    # @param send_messages [true, false] whether to additionally consider if the bot has Send Messages permission
     # @return [Channel, nil] The default channel on this server, or `nil` if there are no channels that the bot can read.
-    def default_channel
+    def default_channel(send_messages = false)
+      bot_member = member(@bot.profile)
       text_channels.sort_by { |e| [e.position, e.id] }.find do |e|
-        overwrite = e.permission_overwrites[id]
-        if overwrite
-          overwrite.allow.read_messages || overwrite.allow.read_messages == overwrite.deny.read_messages
+        if send_messages
+          bot_member.can_read_messages?(e) && bot_member.can_send_messages?(e)
         else
-          everyone_role.permissions.read_messages
+          bot_member.can_read_messages?(e)
         end
       end
     end
