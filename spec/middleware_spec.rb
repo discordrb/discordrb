@@ -131,7 +131,22 @@ describe Discordrb::Middleware::Stock do
         value
       end
 
-      expect(Discordrb::Middleware::Stock.foo(bar: 1, baz: 2)).to eq [1, 2]
+      expect(Discordrb::Middleware::Stock.get(:foo, bar: 1, baz: 2)).to eq [1, 2]
+    end
+
+    it 'raises when an unknown attribute is specified' do
+      Discordrb::Middleware::Stock.register(:foo, :bar) do |value|
+        value
+      end
+
+      Discordrb::Middleware::Stock.register(:foo, :baz) do |value|
+        value
+      end
+
+      expect { Discordrb::Middleware::Stock.get(:foo, does_not_exist: 1) }.to raise_error(ArgumentError, <<~HERE)
+        Attribute :does_not_exist (given with value 1) doesn't exist for foo event handlers.
+        Options are: [:bar, :baz]
+      HERE
     end
   end
 end

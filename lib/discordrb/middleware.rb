@@ -146,15 +146,25 @@ module Discordrb::Middleware
     # @yield [value] the value passed into the event handler attribute
     # @yieldreturn [#call(event, state, &block)] the middleware instance as configured with `value`
     def self.register(name, attribute, &block)
-      define_singleton_method(name) do |attributes|
-        attributes.map do |key, value|
-          middleware = @middleware[name][key]
-          raise ArgumentError, "Attribute #{key.inspect} (given with value #{value.inspect}) doesn't exist for #{name} event handlers. Options are: #{@middleware[name].keys}" unless middleware
-          middleware.call(value)
-        end
-      end
-
       @middleware[name][attribute] = block
+    end
+
+    # Retrieves an array of middleware as registered under the given name and attributes
+    # @param name [Symbol] the name of the event handler
+    # @param attributes [Hash] the attributes to instantiate middleware for this handler with
+    # @return [Array<#call>] the configured middleware
+    # @raise [ArgumentError] if an unknown attribute is specified
+    def self.get(name, **attributes)
+      attributes.map do |key, value|
+        middleware = @middleware[name][key]
+
+        raise(ArgumentError, <<~HERE) unless middleware
+          Attribute #{key.inspect} (given with value #{value.inspect}) doesn't exist for #{name} event handlers.
+          Options are: #{@middleware[name].keys}
+        HERE
+
+        middleware.call(value)
+      end
     end
   end
 
@@ -184,16 +194,15 @@ module Discordrb::Middleware
           raise ArgumentError, "Middleware #{mw} does not repsond to `#call(event, state, &block)`" unless mw.respond_to?(:call)
         end
 
-        stock_middleware = if Stock.respond_to?(name)
-                             Stock.send(name, attributes)
-                           else
-                             # TODO: Remove once all events implemented under Stock
-                             handler = Discordrb::EventContainer.handler_class(klass).new(attributes, nil)
-                             HandlerMiddleware.new(handler)
-                           end
+        stock_middleware = Stock.get(name, attributes)
+        if stock_middleware.nil?
+          # TODO: Remove once all events implemented under Stock
+          handler = Discordrb::EventContainer.handler_class(klass).new(attributes, nil)
+          HandlerMiddleware.new(handler)
+        end
+
         stack = Stack.new(Array(stock_middleware) + middleware)
         handler = Handler.new(stack, block)
-
         (event_handlers[klass] ||= []) << handler
         handler
       end
