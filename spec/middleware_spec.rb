@@ -152,155 +152,109 @@ describe Discordrb::Middleware::Stock do
 end
 
 describe Discordrb::Middleware::MessageFilter do
-  describe :content_end do
-    it 'matches String' do
-      middleware = Discordrb::Middleware::MessageFilter.new('!', :content_end)
-      good_event = double(content: 'foo!')
-      bad_event = double(content: 'foo')
-      expect(middleware.call(good_event, double, &-> { true })).to eq true
-      expect(middleware.call(bad_event, double, &-> { true })).to eq nil
+  shared_examples 'middleware attributes' do |middleware, examples|
+    matching, non_matching = examples
+
+    describe middleware.inspect do
+      it "matches #{matching}" do
+        event = nested_double(nil, matching)
+        expect(middleware.call(event, double, &-> { true })).to eq true
+      end
+
+      it "doesn't match #{non_matching}" do
+        event = nested_double(nil, non_matching)
+        expect(middleware.call(event, double, &-> { true })).to eq nil
+      end
     end
   end
 
-  describe :content_end_regexp do
-    it 'matches Regexp' do
-      # BUG: Doesn't work without a group
-      middleware = Discordrb::Middleware::MessageFilter.new(/(\!$)/, :content_end_regexp)
-      good_event = double(content: 'foo!')
-      bad_event = double(content: 'foo')
-      expect(middleware.call(good_event, double, &-> { true })).to eq true
-      expect(middleware.call(bad_event, double, &-> { true })).to eq nil
-    end
-  end
+  include_examples(
+    'middleware attributes',
+    Discordrb::Middleware::MessageFilter.new('foo', :content_equal),
+    [{ content: 'foo' }, { content: 'bar' }]
+  )
 
-  describe :content_include do
-    it 'matches String' do
-      middleware = Discordrb::Middleware::MessageFilter.new('bar', :content_include)
-      good_event = double(content: 'bar')
-      bad_event = double(content: 'foo')
-      expect(middleware.call(good_event, double, &-> { true })).to eq true
-      expect(middleware.call(bad_event, double, &-> { true })).to eq nil
-    end
-  end
+  include_examples(
+    'middleware attributes',
+    Discordrb::Middleware::MessageFilter.new('foo', :content_start),
+    [{ content: 'foo bar' }, { content: 'baz bar' }]
+  )
 
-  describe :content_include_regexp do
-    it 'matches Regexp' do
-      # BUG: Doesn't work without a group
-      middleware = Discordrb::Middleware::MessageFilter.new(/foo/, :content_include_regexp)
-      good_event = double(content: 'foo')
-      bad_event = double(content: 'bar')
-      expect(middleware.call(good_event, double, &-> { true })).to eq true
-      expect(middleware.call(bad_event, double, &-> { true })).to eq nil
-    end
-  end
+  include_examples(
+    'middleware attributes',
+    Discordrb::Middleware::MessageFilter.new(/foo/, :content_start_regexp),
+    [{ content: 'foo bar' }, { content: 'baz bar' }]
+  )
 
-  describe :author_name do
-    it 'matches String by name' do
-      middleware = Discordrb::Middleware::MessageFilter.new('z64', :author_name)
-      good_event = double(author: double(name: 'z64'))
-      bad_event = double(author: double(name: 'raelys'))
-      expect(middleware.call(good_event, double, &-> { true })).to eq true
-      expect(middleware.call(bad_event, double, &-> { true })).to eq nil
-    end
-  end
+  include_examples(
+    'middleware attributes',
+    Discordrb::Middleware::MessageFilter.new('!', :content_end),
+    [{ content: 'foo!' }, { content: 'foo' }]
+  )
 
-  describe :author_id do
-    it 'matches Integer by id' do
-      middleware = Discordrb::Middleware::MessageFilter.new(123, :author_id)
-      good_event = double(author: double(id: 123))
-      bad_event = double(author: double(id: 456))
-      expect(middleware.call(good_event, double, &-> { true })).to eq true
-      expect(middleware.call(bad_event, double, &-> { true })).to eq nil
-    end
-  end
+  include_examples(
+    'middleware attributes',
+    Discordrb::Middleware::MessageFilter.new(/(\!$)/, :content_end_regexp),
+    [{ content: 'foo!' }, { content: 'foo' }]
+  )
 
-  describe :author_current_bot do
-    it 'matches :bot with current_bot' do
-      middleware = Discordrb::Middleware::MessageFilter.new(:bot, :author_current_bot)
-      good_event = double(author: double(current_bot?: true))
-      bad_event = double(author: double(current_bot?: false))
-      expect(middleware.call(good_event, double, &-> { true })).to eq true
-      expect(middleware.call(bad_event, double, &-> { true })).to eq nil
-    end
-  end
+  include_examples(
+    'middleware attributes',
+    Discordrb::Middleware::MessageFilter.new('bar', :content_include),
+    [{ content: 'foo bar baz' }, { content: 'foo baz' }]
+  )
 
-  describe :content_start do
-    it 'matches with String#start_with' do
-      middleware = Discordrb::Middleware::MessageFilter.new('!', :content_start)
-      good_event = double(content: '!foo')
-      bad_event = double(content: 'foo')
-      expect(middleware.call(good_event, double, &-> { true })).to eq true
-      expect(middleware.call(bad_event, double, &-> { true })).to eq nil
-    end
-  end
+  include_examples(
+    'middleware attributes',
+    Discordrb::Middleware::MessageFilter.new(/bar/, :content_include_regexp),
+    [{ content: 'foo bar baz' }, { content: 'foo baz' }]
+  )
 
-  describe :content_start_regexp do
-    it 'matches with a regex' do
-      middleware = Discordrb::Middleware::MessageFilter.new(/\!/, :content_start_regexp)
-      good_event = double(content: '!foo')
-      bad_event = double(content: 'foo')
-      expect(middleware.call(good_event, double, &-> { true })).to eq true
-      expect(middleware.call(bad_event, double, &-> { true })).to eq nil
-    end
-  end
+  include_examples(
+    'middleware attributes',
+    Discordrb::Middleware::MessageFilter.new('z64', :author_name),
+    [{ author: { name: 'z64' } }, { author: { name: 'raelys' } }]
+  )
 
-  describe :content_equal do
-    it 'matches on exact content' do
-      middleware = Discordrb::Middleware::MessageFilter.new('foo', :content_equal)
-      good_event = double(content: 'foo')
-      bad_event = double(content: 'bar')
-      expect(middleware.call(good_event, double, &-> { true })).to eq true
-      expect(middleware.call(bad_event, double, &-> { true })).to eq nil
-    end
-  end
+  include_examples(
+    'middleware attributes',
+    Discordrb::Middleware::MessageFilter.new(1, :author_id),
+    [{ author: { id: 1 } }, { author: { id: 2 } }]
+  )
 
-  describe :channel_name do
-    it 'matches String with channel name' do
-      middleware = Discordrb::Middleware::MessageFilter.new('foo', :channel_name)
-      good_event = double(channel: double(name: 'foo'))
-      bad_event = double(channel: double(name: 'bar'))
-      expect(middleware.call(good_event, double, &-> { true })).to eq true
-      expect(middleware.call(bad_event, double, &-> { true })).to eq nil
-    end
-  end
+  include_examples(
+    'middleware attributes',
+    Discordrb::Middleware::MessageFilter.new(:bot, :author_current_bot),
+    [{ author: { current_bot?: true } }, { author: { current_bot?: false } }]
+  )
 
-  describe :channel_id do
-    it 'matches Integer with channel ID' do
-      middleware = Discordrb::Middleware::MessageFilter.new(123, :channel_id)
-      good_event = double(channel: double(id: 123))
-      bad_event = double(channel: double(id: 456))
-      expect(middleware.call(good_event, double, &-> { true })).to eq true
-      expect(middleware.call(bad_event, double, &-> { true })).to eq nil
-    end
-  end
+  include_examples(
+    'middleware attributes',
+    Discordrb::Middleware::MessageFilter.new(1, :channel_id),
+    [{ channel: { id: 1 } }, { channel: { id: 2 } }]
+  )
 
-  describe :time_after do
-    it 'matches after the event timestamp' do
-      middleware = Discordrb::Middleware::MessageFilter.new(1, :time_after)
-      good_event = double(timestamp: 2)
-      bad_event = double(timestamp: 0)
-      expect(middleware.call(good_event, double, &-> { true })).to eq true
-      expect(middleware.call(bad_event, double, &-> { true })).to eq nil
-    end
-  end
+  include_examples(
+    'middleware attributes',
+    Discordrb::Middleware::MessageFilter.new('foo', :channel_name),
+    [{ channel: { name: 'foo' } }, { channel: { name: 'bar' } }]
+  )
 
-  describe :time_before do
-    it 'matches before the event timestamp' do
-      middleware = Discordrb::Middleware::MessageFilter.new(1, :time_before)
-      good_event = double(timestamp: 0)
-      bad_event = double(timestamp: 2)
-      expect(middleware.call(good_event, double, &-> { true })).to eq true
-      expect(middleware.call(bad_event, double, &-> { true })).to eq nil
-    end
-  end
+  include_examples(
+    'middleware attributes',
+    Discordrb::Middleware::MessageFilter.new(1, :time_after),
+    [{ timestamp: 2 }, { timestamp: 0 }]
+  )
 
-  describe :private_channel do
-    it 'matches in private channels' do
-      middleware = Discordrb::Middleware::MessageFilter.new(true, :private_channel)
-      good_event = double(channel: double(private?: true))
-      bad_event = double(channel: double(private?: false))
-      expect(middleware.call(good_event, double, &-> { true })).to eq true
-      expect(middleware.call(bad_event, double, &-> { true })).to eq nil
-    end
-  end
+  include_examples(
+    'middleware attributes',
+    Discordrb::Middleware::MessageFilter.new(1, :time_before),
+    [{ timestamp: 0 }, { timestamp: 2 }]
+  )
+
+  include_examples(
+    'middleware attributes',
+    Discordrb::Middleware::MessageFilter.new(true, :private_channel),
+    [{ channel: { private?: true } }, { channel: { private?: false } }]
+  )
 end
