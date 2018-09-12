@@ -1,6 +1,10 @@
 AllCops:
   TargetRubyVersion: 2.4
 
+Documentation:
+  Exclude:
+    - lib/discordrb/middleware/*
+
 # Allow 'Pokémon-style' exception handling
 Lint/RescueException:
   Enabled: false
