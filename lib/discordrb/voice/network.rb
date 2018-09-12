@@ -100,6 +100,7 @@ module Discordrb::Voice
     # @return [String] the audio data, encrypted
     def encrypt_audio(header, buf)
       raise 'No secret key found, despite encryption being enabled!' unless @secret_key
+
       box = RbNaCl::SecretBox.new(@secret_key)
 
       # The nonce is the header of the voice packet with 12 null bytes appended

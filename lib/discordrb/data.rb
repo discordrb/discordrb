@@ -139,6 +139,7 @@ module Discordrb
     # @return [String] the URL to the avatar image.
     def avatar_url(format = nil)
       return API::User.default_avatar(@discriminator) unless @avatar_id
+
       API::User.avatar_url(@id, @avatar_id, format)
     end
   end
@@ -313,6 +314,7 @@ module Discordrb
     # @return [String, nil] the URL of the icon image (nil if no image is set).
     def icon_url
       return nil if @icon_id.nil?
+
       API.app_icon_url(@id, @icon_id)
     end
 
@@ -379,6 +381,7 @@ module Discordrb
 
       # Merge the two permissions - if an override is defined, it has to be allow, otherwise we only care about the role
       return role_permission unless user_specific_override
+
       user_specific_override == :allow
     end
 
@@ -555,6 +558,7 @@ module Discordrb
 
       # Somehow, Discord doesn't send the server ID in the standard member format...
       raise ArgumentError, 'Cannot create a member without any information about the server!' if server.nil? && data['guild_id'].nil?
+
       @server = server || bot.server(data['guild_id'].to_i)
 
       # Initialize the roles by getting the roles from the server one-by-one
@@ -645,6 +649,7 @@ module Discordrb
     def hoist_role
       hoisted_roles = @roles.select(&:hoist)
       return nil if hoisted_roles.empty?
+
       hoisted_roles.max_by(&:position)
     end
 
@@ -652,6 +657,7 @@ module Discordrb
     def colour_role
       coloured_roles = @roles.select { |v| v.colour.combined.nonzero? }
       return nil if coloured_roles.empty?
+
       coloured_roles.max_by(&:position)
     end
     alias_method :color_role, :colour_role
@@ -659,6 +665,7 @@ module Discordrb
     # @return [ColourRGB, nil] the colour this member has.
     def colour
       return nil unless colour_role
+
       colour_role.color
     end
     alias_method :color, :colour
@@ -1432,6 +1439,7 @@ module Discordrb
     def category=(channel)
       channel = @bot.channel(channel)
       raise ArgumentError, 'Cannot set parent category to a channel that isn\'t a category' unless channel.category?
+
       update_channel_data(parent_id: channel.id)
     end
 
@@ -1444,6 +1452,7 @@ module Discordrb
     # @param lock_permissions [true, false] Whether the channel's permissions should be synced to the category's
     def sort_after(other = nil, lock_permissions = false)
       raise TypeError, 'other must be one of Channel, NilClass, or #resolve_id' unless other.is_a?(Channel) || other.nil? || other.respond_to?(:resolve_id)
+
       other = @bot.channel(other.resolve_id) if other
 
       # Container for the API request payload
@@ -1507,6 +1516,7 @@ module Discordrb
     # @raise [ArguementError] if value isn't one of true, false
     def nsfw=(nsfw)
       raise ArgumentError, 'nsfw value must be true or false' unless nsfw.is_a?(TrueClass) || nsfw.is_a?(FalseClass)
+
       update_channel_data(nsfw: nsfw)
     end
 
@@ -1521,6 +1531,7 @@ module Discordrb
     #   @return [Array<Overwrite>]
     def permission_overwrites(type = nil)
       return @permission_overwrites unless type
+
       @permission_overwrites.values.select { |e| e.type == type }
     end
 
@@ -1546,6 +1557,7 @@ module Discordrb
     # @raise [RuntimeError] if this channel is not in a category
     def sync_overwrites
       raise 'Cannot sync overwrites on a channel with no parent category' unless parent
+
       self.permission_overwrites = parent.permission_overwrites
     end
 
@@ -1554,6 +1566,7 @@ module Discordrb
     # @return [true, false, nil] whether this channels permissions match the permission overwrites of the category that it's in, or nil if it is not in a category
     def synchronized?
       return unless parent
+
       permission_overwrites == parent.permission_overwrites
     end
 
@@ -1563,6 +1576,7 @@ module Discordrb
     # @return [Array<Channel>]
     def children
       return [] unless category?
+
       server.channels.select { |c| c.parent_id == id }
     end
 
@@ -1683,6 +1697,7 @@ module Discordrb
     # @param topic [String] The new topic.
     def topic=(topic)
       raise 'Tried to set topic on voice channel' if voice?
+
       update_channel_data(topic: topic)
     end
 
@@ -1690,6 +1705,7 @@ module Discordrb
     # @param bitrate [Integer] The new bitrate (in bps). Number has to be between 8000-96000 (128000 for VIP servers)
     def bitrate=(bitrate)
       raise 'Tried to set bitrate on text channel' if text?
+
       update_channel_data(bitrate: bitrate)
     end
 
@@ -1697,6 +1713,7 @@ module Discordrb
     # @param limit [Integer] The new user limit. `0` for unlimited, has to be a number between 0-99
     def user_limit=(limit)
       raise 'Tried to set user_limit on text channel' if text?
+
       update_channel_data(user_limit: limit)
     end
 
@@ -1916,6 +1933,7 @@ module Discordrb
     # @return [Channel] the created channel.
     def create_group(user_ids)
       raise 'Attempted to create group channel on a non-pm channel!' unless pm?
+
       response = API::Channel.create_group(@bot.token, @id, user_ids.shift)
       channel = Channel.new(JSON.parse(response), @bot)
       channel.add_group_users(user_ids)
@@ -1926,6 +1944,7 @@ module Discordrb
     # @return [Channel] the group channel.
     def add_group_users(user_ids)
       raise 'Attempted to add a user to a non-group channel!' unless group?
+
       user_ids = [user_ids] unless user_ids.is_a? Array
       user_ids.each do |user_id|
         API::Channel.add_group_user(@bot.token, @id, user_id.resolve_id)
@@ -1940,6 +1959,7 @@ module Discordrb
     # @return [Channel] the group channel.
     def remove_group_users(user_ids)
       raise 'Attempted to remove a user from a non-group channel!' unless group?
+
       user_ids = [user_ids] unless user_ids.is_a? Array
       user_ids.each do |user_id|
         API::Channel.remove_group_user(@bot.token, @id, user_id.resolve_id)
@@ -1952,6 +1972,7 @@ module Discordrb
     # Leaves the group.
     def leave_group
       raise 'Attempted to leave a non-group channel!' unless group?
+
       API::Channel.leave_group(@bot.token, @id)
     end
 
@@ -1961,6 +1982,7 @@ module Discordrb
     # @return [Array<Webhook>] webhooks on the channel.
     def webhooks
       raise 'Tried to request webhooks from a non-server channel' unless server
+
       webhooks = JSON.parse(API::Channel.webhooks(@bot.token, @id))
       webhooks.map { |webhook_data| Webhook.new(webhook_data, @bot) }
     end
@@ -1969,6 +1991,7 @@ module Discordrb
     # @return [Array<Invite>] invites to the channel.
     def invites
       raise 'Tried to request invites from a non-server channel' unless server
+
       invites = JSON.parse(API::Channel.invites(@bot.token, @id))
       invites.map { |invite_data| Invite.new(invite_data, @bot) }
     end
@@ -1986,6 +2009,7 @@ module Discordrb
     def add_recipient(recipient)
       raise 'Tried to add recipient to a non-group channel' unless group?
       raise ArgumentError, 'Tried to add a non-recipient to a group' unless recipient.is_a?(Recipient)
+
       @recipients << recipient
     end
 
@@ -1997,6 +2021,7 @@ module Discordrb
     def remove_recipient(recipient)
       raise 'Tried to remove recipient from a non-group channel' unless group?
       raise ArgumentError, 'Tried to remove a non-recipient from a group' unless recipient.is_a?(Recipient)
+
       @recipients.delete(recipient)
     end
 
@@ -2031,6 +2056,7 @@ module Discordrb
 
         message = "Attempted to bulk_delete message #{e} which is too old (min = #{min_snowflake})"
         raise ArgumentError, message if strict
+
         Discordrb::LOGGER.warn(message)
         true
       end
@@ -2060,6 +2086,7 @@ module Discordrb
       # Populate permission overwrites
       @permission_overwrites = {}
       return unless overwrites
+
       overwrites.each do |element|
         id = element['id'].to_i
         @permission_overwrites[id] = Overwrite.from_hash(element)
@@ -2728,6 +2755,7 @@ module Discordrb
     def process_roles(roles)
       @roles = []
       return unless roles
+
       roles.each do |role_id|
         role = server.role(role_id)
         @roles << role
@@ -2747,6 +2775,7 @@ module Discordrb
     # @return [String] the URL to the icon image
     def icon_url
       return nil unless @icon_id
+
       API.icon_url(@id, @icon_id)
     end
   end
@@ -2968,6 +2997,7 @@ module Discordrb
     # @return [AuditLogs] The server's audit logs.
     def audit_logs(action: nil, user: nil, limit: 50, before: nil)
       raise 'Invalid audit log action!' if action && AuditLogs::ACTIONS.key(action).nil?
+
       action = AuditLogs::ACTIONS.key(action)
       user = user.resolve_id if user
       before = before.resolve_id if before
@@ -3126,6 +3156,7 @@ module Discordrb
     def widget_url
       update_data if @embed_enabled.nil?
       return unless @embed_enabled
+
       API.widget_url(@id)
     end
 
@@ -3140,6 +3171,7 @@ module Discordrb
     def widget_banner_url(style)
       update_data if @embed_enabled.nil?
       return unless @embed_enabled
+
       API.widget_url(@id, style)
     end
 
@@ -3153,6 +3185,7 @@ module Discordrb
     def splash_url
       splash_id if @splash_id.nil?
       return nil unless @splash_id
+
       API.splash_url(@id, @splash_id)
     end
 
@@ -3268,6 +3301,7 @@ module Discordrb
     def create_channel(name, type = 0, topic: nil, bitrate: nil, user_limit: nil, permission_overwrites: nil, parent: nil, nsfw: false, rate_limit_per_user: nil, reason: nil)
       type = Channel::TYPES[type] if type.is_a?(Symbol)
       raise ArgumentError, 'Channel type must be either 0 (text), 2 (voice), or 4 (category)!' unless [0, 2, 4].include?(type)
+
       permission_overwrites.map! { |e| e.is_a?(Overwrite) ? e.to_hash : e } if permission_overwrites.is_a?(Array)
       parent_id = parent.respond_to?(:resolve_id) ? parent.resolve_id : nil
       response = API::Server.create_channel(@bot.token, @id, name, type, topic, bitrate, user_limit, permission_overwrites, parent_id, nsfw, rate_limit_per_user, reason)
@@ -3611,6 +3645,7 @@ module Discordrb
       @roles_by_id = {}
 
       return unless roles
+
       roles.each do |element|
         role = Role.new(element, @bot, self)
         @roles << role
@@ -3620,6 +3655,7 @@ module Discordrb
 
     def process_emoji(emoji)
       return if emoji.empty?
+
       emoji.each do |element|
         new_emoji = Emoji.new(element, @bot, self)
         @emoji[new_emoji.id] = new_emoji
@@ -3628,6 +3664,7 @@ module Discordrb
 
     def process_members(members)
       return unless members
+
       members.each do |element|
         member = Member.new(element, self, @bot)
         @members[member.id] = member
@@ -3637,8 +3674,10 @@ module Discordrb
     def process_presences(presences)
       # Update user statuses with presence info
       return unless presences
+
       presences.each do |element|
         next unless element['user']
+
         user_id = element['user']['id'].to_i
         user = @members[user_id]
         if user
@@ -3654,6 +3693,7 @@ module Discordrb
       @channels_by_id = {}
 
       return unless channels
+
       channels.each do |element|
         channel = @bot.ensure_channel(element, self)
         @channels << channel
@@ -3663,6 +3703,7 @@ module Discordrb
 
     def process_voice_states(voice_states)
       return unless voice_states
+
       voice_states.each do |element|
         update_voice_state(element)
       end
@@ -3733,8 +3774,10 @@ module Discordrb
 
       # Will not exist if the data was requested through a webhook token
       return unless data['user']
+
       @owner = @server.member(data['user']['id'].to_i)
       return if @owner
+
       Discordrb::LOGGER.debug("Member with ID #{data['user']['id']} not cached (possibly left the server).")
       @owner = @bot.ensure_user(data['user'])
     end
@@ -3790,6 +3833,7 @@ module Discordrb
     # @return [String] the URL to the avatar image
     def avatar_url
       return API::User.default_avatar unless @avatar
+
       API::User.avatar_url(@id, @avatar)
     end
 
@@ -3958,6 +4002,7 @@ module Discordrb
       # @return [Channel, nil] the amount of messages deleted. Won't be nil if the action is `:message_delete`.
       def channel
         return nil unless @channel_id
+
         @channel ||= @bot.channel(@channel_id, @server, bot, self)
       end
 
@@ -3985,6 +4030,7 @@ module Discordrb
       # @!visibility private
       def process_changes(changes)
         return unless changes
+
         changes.each do |element|
           change = Change.new(element, @server, @bot, self)
           @changes[change.key] = change
@@ -4136,6 +4182,7 @@ module Discordrb
       return :create if %i[channel_create channel_overwrite_create member_ban_add role_create invite_create webhook_create emoji_create].include?(action)
       return :delete if %i[channel_delete channel_overwrite_delete member_kick member_prune member_ban_remove role_delete invite_delete webhook_delete emoji_delete message_delete].include?(action)
       return :update if %i[server_update channel_update channel_overwrite_update member_update member_role_update role_update invite_update webhook_update emoji_update].include?(action)
+
       :unknown
     end
   end

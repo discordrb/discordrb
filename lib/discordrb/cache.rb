@@ -134,6 +134,7 @@ module Discordrb
     def pm_channel(id)
       id = id.resolve_id
       return @pm_channels[id] if @pm_channels[id]
+
       debug("Creating pm channel with user id #{id}")
       response = API::User.create_pm(token, id)
       channel = Channel.new(JSON.parse(response), self)
@@ -248,6 +249,7 @@ module Discordrb
     def find_user(username, discrim = nil)
       users = @users.values.find_all { |e| e.username == username }
       return users.find { |u| u.discrim == discrim } if discrim
+
       users
     end
   end

@@ -161,6 +161,7 @@ module Discordrb::Voice
       sleep IDEAL_LENGTH / 1000.0 if @was_playing_before
 
       return unless wait_for_confirmation
+
       @has_stopped_playing = false
       sleep IDEAL_LENGTH / 1000.0 until @has_stopped_playing
       @has_stopped_playing = false

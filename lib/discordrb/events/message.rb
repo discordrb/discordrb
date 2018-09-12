@@ -129,6 +129,7 @@ module Discordrb::Events
     # @param file [File] The file to be attached
     def attach_file(file)
       raise ArgumentError, 'Argument is not a file!' unless file.is_a?(File)
+
       @file = file
       nil
     end

@@ -44,11 +44,13 @@ module Discordrb::Webhooks
         @colour = nil
       elsif value.is_a? Integer
         raise ArgumentError, 'Embed colour must be 24-bit!' if value >= 16_777_216
+
         @colour = value
       elsif value.is_a? String
         self.colour = value.delete('#').to_i(16)
       elsif value.is_a? Array
         raise ArgumentError, 'Colour tuple must have three values!' if value.length != 3
+
         self.colour = value[0] << 16 | value[1] << 8 | value[2]
       else
         self.colour = value.to_i

@@ -207,8 +207,10 @@ module Discordrb::Commands
         result += char if b_level <= 0
 
         next unless char == @attributes[:sub_chain_end] && !quoted
+
         b_level -= 1
         next unless b_level.zero?
+
         nested = @chain[b_start + 1..index - 1]
         subchain = CommandChain.new(nested, @bot, true)
         result += subchain.execute(event)
