@@ -63,6 +63,9 @@ module Discordrb
     # Used when Discord doesn't provide a more specific code
     UnknownError = Code(0)
 
+    # Resource Not Found
+    ResourceNotFound = Code(404)
+
     # Unknown Account
     UnknownAccount = Code(10_001)
 

@@ -46,7 +46,8 @@ module Discordrb
     def channel(id, server = nil)
       id = id.resolve_id
 
-      raise Discordrb::Errors::NoPermission if @restricted_channels.include? id
+      # TODO: check this
+      raise Discordrb::Errors::MissingPermissions if @restricted_channels.include? id
 
       debug("Obtaining data for channel with id #{id}")
       return @channels[id] if @channels[id]
@@ -54,7 +55,7 @@ module Discordrb
       begin
         begin
           response = API::Channel.resolve(token, id)
-        rescue RestClient::ResourceNotFound
+        rescue Discordrb::Errors::ResourceNotFound
           return nil
         end
         channel = Channel.new(JSON.parse(response), self, server)
@@ -79,7 +80,7 @@ module Discordrb
       LOGGER.out("Resolving user #{id}")
       begin
         response = API::User.resolve(token, id)
-      rescue RestClient::ResourceNotFound
+      rescue Discordrb::Errors::ResourceNotFound
         return nil
       end
       user = User.new(JSON.parse(response), self)
@@ -119,7 +120,7 @@ module Discordrb
       LOGGER.out("Resolving member #{server_id} on server #{user_id}")
       begin
         response = API::Server.resolve_member(token, server_id, user_id)
-      rescue RestClient::ResourceNotFound
+      rescue Discordrb::Errors::ResourceNotFound
         return nil
       end
       member = Member.new(JSON.parse(response), server, self)

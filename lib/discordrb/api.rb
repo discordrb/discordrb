@@ -163,10 +163,8 @@ module Discordrb::API
 
     # Handle fatal response
     if response.fatal?
-      code = body['code']
-
-      # TODO: Generic APIError class
-      raise "Unknown API error: #{response.inspect}" unless code
+      # Read Discord specific error code, or default to the response's code
+      code = body['code'] || response.code
 
       # Decode custom error class, and raise it
       code_error_class = Discordrb::Errors.error_class_for(code)
