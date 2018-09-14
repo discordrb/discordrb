@@ -247,10 +247,10 @@ module Discordrb::API
     request(
       :auth_login,
       nil,
-      :post,
-      "#{api_base}/auth/login",
-      email: email,
-      password: password
+      :POST,
+      '/auth/login',
+      headers: { content_type: :json },
+      payload: { email: email, password: password }
     )
   end
 
@@ -259,10 +259,9 @@ module Discordrb::API
     request(
       :auth_logout,
       nil,
-      :post,
-      "#{api_base}/auth/logout",
-      nil,
-      Authorization: token
+      :POST,
+      '/auth/logout',
+      headers: { Authorization: token }
     )
   end
 
@@ -271,11 +270,10 @@ module Discordrb::API
     request(
       :oauth2_applications,
       nil,
-      :post,
-      "#{api_base}/oauth2/applications",
-      { name: name, redirect_uris: redirect_uris }.to_json,
-      Authorization: token,
-      content_type: :json
+      :POST,
+      '/oauth2/applications',
+      headers: { Authorization: token, content_type: :json },
+      payload: { name: name, redirect_uris: redirect_uris }
     )
   end
 
@@ -284,11 +282,10 @@ module Discordrb::API
     request(
       :oauth2_applications,
       nil,
-      :put,
-      "#{api_base}/oauth2/applications",
-      { name: name, redirect_uris: redirect_uris, description: description, icon: icon }.to_json,
-      Authorization: token,
-      content_type: :json
+      :PUT,
+      '/oauth2/applications',
+      headers: { Authorization: token, content_type: :json },
+      payload: { name: name, redirect_uris: redirect_uris, description: description, icon: icon }
     )
   end
 
@@ -297,9 +294,9 @@ module Discordrb::API
     request(
       :oauth2_applications_me,
       nil,
-      :get,
-      "#{api_base}/oauth2/applications/@me",
-      Authorization: token
+      :GET,
+      '/oauth2/applications/@me',
+      headers: { Authorization: token }
     )
   end
 
@@ -310,10 +307,9 @@ module Discordrb::API
     request(
       :channels_cid_messages_mid_ack,
       nil, # This endpoint is unavailable for bot accounts and thus isn't subject to its rate limit requirements.
-      :post,
-      "#{api_base}/channels/#{channel_id}/messages/#{message_id}/ack",
-      nil,
-      Authorization: token
+      :POST,
+      "/channels/#{channel_id}/messages/#{message_id}/ack",
+      headers: { Authorization: token }
     )
   end
 
@@ -322,9 +318,9 @@ module Discordrb::API
     request(
       :gateway,
       nil,
-      :get,
-      "#{api_base}/gateway",
-      Authorization: token
+      :GET,
+      '/gateway',
+      headers: { Authorization: token }
     )
   end
 
@@ -333,11 +329,10 @@ module Discordrb::API
     request(
       :auth_login,
       nil,
-      :post,
-      "#{api_base}/auth/login",
-      {}.to_json,
-      Authorization: token,
-      content_type: :json
+      :POST,
+      '/auth/login',
+      headers: { Authorization: token, content_type: :json },
+      payload: {}
     )
   end
 
@@ -346,10 +341,9 @@ module Discordrb::API
     request(
       :voice_regions,
       nil,
-      :get,
-      "#{api_base}/voice/regions",
-      Authorization: token,
-      content_type: :json
+      :GET,
+      '/voice/regions',
+      headers: { Authorization: token }
     )
   end
 end

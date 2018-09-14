@@ -10,8 +10,8 @@ module Discordrb::API::Webhook
     Discordrb::API.request(
       :webhooks_wid,
       nil,
-      :get,
-      "#{Discordrb::API.api_base}/webhooks/#{webhook_id}",
+      :GET,
+      "/webhooks/#{webhook_id}",
       Authorization: token
     )
   end
@@ -22,8 +22,8 @@ module Discordrb::API::Webhook
     Discordrb::API.request(
       :webhooks_wid,
       nil,
-      :get,
-      "#{Discordrb::API.api_base}/webhooks/#{webhook_id}/#{webhook_token}"
+      :GET,
+      "/webhooks/#{webhook_id}/#{webhook_token}"
     )
   end
 
@@ -33,8 +33,8 @@ module Discordrb::API::Webhook
     Discordrb::API.request(
       :webhooks_wid,
       webhook_id,
-      :patch,
-      "#{Discordrb::API.api_base}/webhooks/#{webhook_id}",
+      :PATCH,
+      "/webhooks/#{webhook_id}",
       data.to_json,
       Authorization: token,
       content_type: :json,
@@ -48,8 +48,8 @@ module Discordrb::API::Webhook
     Discordrb::API.request(
       :webhooks_wid,
       webhook_id,
-      :patch,
-      "#{Discordrb::API.api_base}/webhooks/#{webhook_id}/#{webhook_token}",
+      :PATCH,
+      "/webhooks/#{webhook_id}/#{webhook_token}",
       data.to_json,
       content_type: :json,
       'X-Audit-Log-Reason': reason
@@ -62,8 +62,8 @@ module Discordrb::API::Webhook
     Discordrb::API.request(
       :webhooks_wid,
       webhook_id,
-      :delete,
-      "#{Discordrb::API.api_base}/webhooks/#{webhook_id}",
+      :DELETE,
+      "/webhooks/#{webhook_id}",
       Authorization: token,
       'X-Audit-Log-Reason': reason
     )
@@ -75,8 +75,8 @@ module Discordrb::API::Webhook
     Discordrb::API.request(
       :webhooks_wid,
       webhook_id,
-      :delete,
-      "#{Discordrb::API.api_base}/webhooks/#{webhook_id}/#{webhook_token}",
+      :DELETE,
+      "/webhooks/#{webhook_id}/#{webhook_token}",
       'X-Audit-Log-Reason': reason
     )
   end

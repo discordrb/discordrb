@@ -10,9 +10,9 @@ module Discordrb::API::User
     Discordrb::API.request(
       :users_uid,
       nil,
-      :get,
-      "#{Discordrb::API.api_base}/users/#{user_id}",
-      Authorization: token
+      :GET,
+      "/users/#{user_id}",
+      headers: { Authorization: token }
     )
   end
 
@@ -22,9 +22,9 @@ module Discordrb::API::User
     Discordrb::API.request(
       :users_me,
       nil,
-      :get,
-      "#{Discordrb::API.api_base}/users/@me",
-      Authorization: token
+      :GET,
+      '/users/@me',
+      headers: { Authorization: token }
     )
   end
 
@@ -33,12 +33,10 @@ module Discordrb::API::User
     Discordrb::API.request(
       :guilds_sid_members_me_nick,
       server_id, # This is technically a guild endpoint
-      :patch,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}/members/@me/nick",
-      { nick: nick }.to_json,
-      Authorization: token,
-      content_type: :json,
-      'X-Audit-Log-Reason': reason
+      :PATCH,
+      "/guilds/#{server_id}/members/@me/nick",
+      headers: { Authorization: token, content_type: :json, 'X-Audit-Log-Reason': reason },
+      payload: { nick: nick }
     )
   end
 
@@ -48,11 +46,10 @@ module Discordrb::API::User
     Discordrb::API.request(
       :users_me,
       nil,
-      :patch,
-      "#{Discordrb::API.api_base}/users/@me",
+      :PATCH,
+      '/users/@me',
       { avatar: avatar, email: email, new_password: new_password, password: password, username: new_username }.to_json,
-      Authorization: token,
-      content_type: :json
+      headers: { Authorization: token, content_type: :json }
     )
   end
 
@@ -62,9 +59,9 @@ module Discordrb::API::User
     Discordrb::API.request(
       :users_me_guilds,
       nil,
-      :get,
-      "#{Discordrb::API.api_base}/users/@me/guilds",
-      Authorization: token
+      :GET,
+      '/users/@me/guilds',
+      headers: { Authorization: token }
     )
   end
 
@@ -74,9 +71,9 @@ module Discordrb::API::User
     Discordrb::API.request(
       :users_me_guilds_sid,
       nil,
-      :delete,
-      "#{Discordrb::API.api_base}/users/@me/guilds/#{server_id}",
-      Authorization: token
+      :DELETE,
+      "/users/@me/guilds/#{server_id}",
+      headers: { Authorization: token }
     )
   end
 
@@ -86,9 +83,9 @@ module Discordrb::API::User
     Discordrb::API.request(
       :users_me_channels,
       nil,
-      :get,
-      "#{Discordrb::API.api_base}/users/@me/channels",
-      Authorization: token
+      :GET,
+      '/users/@me/channels',
+      headers: { Authorization: token }
     )
   end
 
@@ -99,10 +96,9 @@ module Discordrb::API::User
       :users_me_channels,
       nil,
       :post,
-      "#{Discordrb::API.api_base}/users/@me/channels",
-      { recipient_id: recipient_id }.to_json,
-      Authorization: token,
-      content_type: :json
+      '/users/@me/channels',
+      headers: { Authorization: token, content_type: :json },
+      payload: { recipient_id: recipient_id }
     )
   end
 
@@ -112,9 +108,9 @@ module Discordrb::API::User
     Discordrb::API.request(
       :users_me_connections,
       nil,
-      :get,
-      "#{Discordrb::API.api_base}/users/@me/connections",
-      Authorization: token
+      :GET,
+      '/users/@me/connections',
+      headers: { Authorizationd: token }
     )
   end
 
@@ -123,11 +119,10 @@ module Discordrb::API::User
     Discordrb::API.request(
       :users_me_settings,
       nil,
-      :patch,
-      "#{Discordrb::API.api_base}/users/@me/settings",
-      { status: status }.to_json,
-      Authorization: token,
-      content_type: :json
+      :PATCH,
+      '/users/@me/settings',
+      headers: { Authorization: token, content_type: :json },
+      payload: { status: status }
     )
   end
 
