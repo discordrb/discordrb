@@ -29,7 +29,7 @@ module Discordrb
     def voice_regions
       return @voice_regions unless @voice_regions.empty?
 
-      regions = JSON.parse API.voice_regions(token)
+      regions = API.voice_regions(token)
       regions.each do |data|
         @voice_regions[data['id']] = VoiceRegion.new(data)
       end
@@ -58,7 +58,7 @@ module Discordrb
         rescue Discordrb::Errors::ResourceNotFound
           return nil
         end
-        channel = Channel.new(JSON.parse(response), self, server)
+        channel = Channel.new(response, self, server)
         @channels[id] = channel
       rescue Discordrb::Errors::NoPermission
         debug "Tried to get access to restricted channel #{id}, blacklisting it"
@@ -83,7 +83,7 @@ module Discordrb
       rescue Discordrb::Errors::ResourceNotFound
         return nil
       end
-      user = User.new(JSON.parse(response), self)
+      user = User.new(response, self)
       @users[id] = user
     end
 
@@ -101,7 +101,7 @@ module Discordrb
       rescue Discordrb::Errors::NoPermission
         return nil
       end
-      server = Server.new(JSON.parse(response), self)
+      server = Server.new(response, self)
       @servers[id] = server
     end
 
@@ -123,7 +123,7 @@ module Discordrb
       rescue Discordrb::Errors::ResourceNotFound
         return nil
       end
-      member = Member.new(JSON.parse(response), server, self)
+      member = Member.new(response, server, self)
       server.cache_member(member)
     end
 
@@ -137,7 +137,7 @@ module Discordrb
       return @pm_channels[id] if @pm_channels[id]
       debug("Creating pm channel with user id #{id}")
       response = API::User.create_pm(token, id)
-      channel = Channel.new(JSON.parse(response), self)
+      channel = Channel.new(response, self)
       @pm_channels[id] = channel
     end
 
@@ -203,7 +203,7 @@ module Discordrb
     # @return [Invite] The invite with information about the given invite URL.
     def invite(invite)
       code = resolve_invite_code(invite)
-      Invite.new(JSON.parse(API::Invite.resolve(token, code)), self)
+      Invite.new(API::Invite.resolve(token, code), self)
     end
 
     # Finds a channel given its name and optionally the name of the server it is in.
