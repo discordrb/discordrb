@@ -46,7 +46,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Rich embeds can now be sent alongside messages, for example using the `embed` parameter in `send_message`, or with the new method `Channel#send_embed`
 - `advanced_functionality` bots now support escaping using backslashes ([#293](https://github.com/meew0/discordrb/issues/293) / [#304](https://github.com/meew0/discordrb/pull/304), thanks @LikeLakers2)
 - Added type checking and conversion for commands ([#298](https://github.com/meew0/discordrb/pull/298), thanks @ohtaavi)
-- Bulk deleting messages now checks for message age (see also [hammerandchisel/discord-api-docs#208](https://github.com/hammerandchisel/discord-api-docs/issues/208)). By default, it will ignore messages that are too old to be bulk deleted, but there is also a `strict` mode setting now that raises an exception in such a case.
+- Bulk deleting messages now checks for message age (see also [discordapp/discord-api-docs#208](https://github.com/discordapp/discord-api-docs/issues/208)). By default, it will ignore messages that are too old to be bulk deleted, but there is also a `strict` mode setting now that raises an exception in such a case.
 - Reactions can now be viewed for existing messages ([#262](https://github.com/meew0/discordrb/pull/262), thanks @z64), added to messages ([#266](https://github.com/meew0/discordrb/pull/266), thanks @z64), and listened for using gateway events as well as internal handlers ([#300](https://github.com/meew0/discordrb/issues/300)).
 - Game types and stream URLs are now cached ([#297](https://github.com/meew0/discordrb/issues/297))
 - The default non-streaming game was changed to be `0` instead of `nil` ([#277](https://github.com/meew0/discordrb/pull/277), thanks @zeyla)
@@ -150,7 +150,7 @@ As with 2.0.0, there are some breaking changes! They are, as always, highlighted
 ### Added
 - **The `application_id` parameter has been renamed to `client_id`**. With the changes to how bot applications work, it would just be confusing to have it be called `application_id` any longer. If you try to use `application_id` now, it will raise a descriptive exception; with 3.1.0 that will be removed too (you'll get a less descriptive exception).
 - The gateway implementation has been completely rewritten, for more performance, stability and maintainability. This means that **to call some internal methods like `inject_reconnect`, a `Gateway` instance (available as `Bot#gateway`) now needs to be used.**
-- **User login using email and password has been removed**. Use a user token instead, see also [here](https://github.com/hammerandchisel/discord-api-docs/issues/69#issuecomment-223886862).
+- **User login using email and password has been removed**. Use a user token instead, see also [here](https://github.com/discordapp/discord-api-docs/issues/69#issuecomment-223886862).
 - In addition to the rewrite, the gateway version has also been upgraded to protocol version 6 (the rewrite was for v5). **With this, the way channel types are handled has been changed a bit!** If you've been using the abstraction methods like `Channel#voice?`, you should be fine though. This also includes support for group chats on user accounts, as that was the only real functionality change on v6. ([#211](https://github.com/meew0/discordrb/pull/211), thanks @Daniel-Worrall)
 - **Custom prefix handlers for `CommandBot`s now get the full message object as their parameter rather than only the content**, for even more flexibility.
 - For internal consistency, **the `UnknownGuild` error was renamed to `UnknownServer`**. I doubt this change affects anyone, but if you handle that error specifically in your bot, make sure to change it.
@@ -192,7 +192,7 @@ As with 2.0.0, there are some breaking changes! They are, as always, highlighted
 - A method `Bot#connected?` has been added to check whether the bot is currently connected to the gateway.
 - The indescriptive error message that was previously sent when calling methods like `Bot#game=` without an active gateway connection has been replaced with a more descriptive one.
 - The bot's token is now, by default, redacted from any logging output; this can be turned off if desired using the `redact_token` initialization parameter. ([#225](https://github.com/meew0/discordrb/issues/225) / [#231](https://github.com/meew0/discordrb/pull/231), thanks @Daniel-Worrall)
-- The new rate limit headers are now supported. This will have no real impact on any code using discordrb, but it means discordrb is now considered compliant again. See also [here](https://github.com/hammerandchisel/discord-api-docs/issues/108).
+- The new rate limit headers are now supported. This will have no real impact on any code using discordrb, but it means discordrb is now considered compliant again. See also [here](https://github.com/discordapp/discord-api-docs/issues/108).
 - Rogue presences, i.e. presences without an associated cached member, now print a log message instead of being completely ignored
 - A variety of aliases have been added to existing methods.
 - An example to show off voice sending has been added to the repo, and existing examples have been improved.
@@ -267,7 +267,7 @@ As with 2.0.0, there are some breaking changes! They are, as always, highlighted
 - The internal REST rate limit handler was updated:
   - It now tracks message rate limits server wide to properly handle new bot account rate limits. ([#100](https://github.com/meew0/discordrb/issues/100))
   - It now keeps track of all requests, even those that are known not to be rate limited (it just won't do anything to them). This allows for more flexibility should future rate limits be added.
-- Guild sharding is now supported using the optional `shard_id` and `num_shards` to bot initializers. Read about it here: https://github.com/hammerandchisel/discord-api-docs/issues/17 ([#98](https://github.com/meew0/discordrb/issues/98))
+- Guild sharding is now supported using the optional `shard_id` and `num_shards` to bot initializers. Read about it here: https://github.com/discordapp/discord-api-docs/issues/17 ([#98](https://github.com/meew0/discordrb/issues/98))
 - Commands can now require users to have specific action permissions to be able to execute them using the `:required_permissions` attribute. ([#104](https://github.com/meew0/discordrb/issues/104) / [#112](https://github.com/meew0/discordrb/pull/112))
 - A `heartbeat` event was added that gets triggered every now and then to allow for roughly periodic actions. ([#110](https://github.com/meew0/discordrb/pull/110))
 - Prefixes are now more flexible in the format they can have - arrays and callables are now allowed as well. Read the documentation for more info.([#107](https://github.com/meew0/discordrb/issues/107) / [#109](https://github.com/meew0/discordrb/pull/109))
