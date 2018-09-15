@@ -1,7 +1,7 @@
 [![Gem](https://img.shields.io/gem/v/discordrb.svg)](https://rubygems.org/gems/discordrb)
 [![Gem](https://img.shields.io/gem/dt/discordrb.svg)](https://rubygems.org/gems/discordrb)
 [![Build Status](https://travis-ci.org/meew0/discordrb.svg?branch=master)](https://travis-ci.org/meew0/discordrb)
-[![Inline docs](http://inch-ci.org/github/meew0/discordrb.svg?branch=master&style=shields)](http://inch-ci.org/github/meew0/discordrb)
+[![Inline docs](https://inch-ci.org/github/meew0/discordrb.svg?branch=master&style=shields)](https://inch-ci.org/github/meew0/discordrb)
 [![Code Climate](https://codeclimate.com/github/meew0/discordrb/badges/gpa.svg)](https://codeclimate.com/github/meew0/discordrb)
 [![Test Coverage](https://codeclimate.com/github/meew0/discordrb/badges/coverage.svg)](https://codeclimate.com/github/meew0/discordrb/coverage)
 [![Join Discord](https://img.shields.io/badge/discord-join-7289DA.svg)](https://discord.gg/cyK3Hjm)
@@ -19,14 +19,14 @@ An implementation of the [Discord](https://discordapp.com/) API using Ruby.
 * [Development](https://github.com/meew0/discordrb#development), [Contributing](https://github.com/meew0/discordrb#contributing)
 * [License](https://github.com/meew0/discordrb#license)
 
-See also: [Documentation](http://www.rubydoc.info/gems/discordrb), [Tutorials](https://github.com/meew0/discordrb/wiki)
+See also: [Documentation](https://www.rubydoc.info/gems/discordrb), [Tutorials](https://github.com/meew0/discordrb/wiki)
 
 ## Dependencies
 
 * Ruby 2.2+
-* An installed build system for native extensions (on Windows for Ruby < 2.4, try the [DevKit](http://rubyinstaller.org/downloads/); installation instructions [here](https://github.com/oneclick/rubyinstaller/wiki/Development-Kit#quick-start) - you only need to do the quick start)
+* An installed build system for native extensions (on Windows for Ruby < 2.4, try the [DevKit](https://rubyinstaller.org/downloads/); installation instructions [here](https://github.com/oneclick/rubyinstaller/wiki/Development-Kit#quick-start) - you only need to do the quick start)
 
-> **Note:** RubyInstaller for Ruby versions 2.4+ will install the DevKit as the last step of the installation. 
+> **Note:** RubyInstaller for Ruby versions 2.4+ will install the DevKit as the last step of the installation.
 
 ### Voice dependencies
 
@@ -41,7 +41,7 @@ In addition to this, if you're on Windows and want to use voice functionality, y
 
 ### With Bundler
 
-Using [Bundler](http://bundler.io/#getting-started), you can add discordrb to your Gemfile:
+Using [Bundler](https://bundler.io/#getting-started), you can add discordrb to your Gemfile:
 
     gem 'discordrb'
 
@@ -49,7 +49,7 @@ And then install via `bundle install`.
 
 Run the [ping example](https://github.com/meew0/discordrb/blob/master/examples/ping.rb) to verify that the installation works (make sure to replace the token and client ID in there with your bots'!):
 
-To run the bot while using bundler: 
+To run the bot while using bundler:
 
     bundle exec ruby ping.rb
 
@@ -61,14 +61,14 @@ Alternatively, while Bundler is the recommended option, you can also install dis
 
     gem install discordrb
 
-#### Windows 
+#### Windows
 
 > **Make sure you have the DevKit installed! See the [Dependencies](https://github.com/meew0/discordrb#dependencies) section)**
 
     gem install discordrb --platform=ruby
-    
+
 To run the bot:
- 
+
     ruby ping.rb
 
 #### Troubleshooting
@@ -94,7 +94,7 @@ To enable the changes
 
 ##### RubyInstaller for ruby 2.3.3 and below
 
-Download the development kit [here](http://rubyinstaller.org/downloads/) (scroll down to "Development Kit", then choose the one for Ruby 2.0 and your system architecture) and extract it somewhere. Open a command prompt in that folder and run:
+Download the development kit [here](https://rubyinstaller.org/downloads/) (scroll down to "Development Kit", then choose the one for Ruby 2.0 and your system architecture) and extract it somewhere. Open a command prompt in that folder and run:
 
     ruby dk.rb init
     ruby dk.rb install
@@ -147,7 +147,7 @@ If you've made an open source project on GitHub that uses discordrb, consider ad
 
 Also included is a webhooks client, which can be used as a separate gem `discordrb-webhooks`. This special client can be used to form requests to Discord webhook URLs in a high-level manner.
 
-- [`discordrb-webhooks` documentation](http://www.rubydoc.info/gems/discordrb-webhooks)
+- [`discordrb-webhooks` documentation](https://www.rubydoc.info/gems/discordrb-webhooks)
 - [More information about webhooks](https://support.discordapp.com/hc/en-us/articles/228383668-Intro-to-Webhooks)
 - [Embed visualizer tool](https://leovoel.github.io/embed-visualizer/) - Includes a discordrb code generator for forming embeds
 
@@ -189,4 +189,4 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/meew0/
 
 ## License
 
-The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
+The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).

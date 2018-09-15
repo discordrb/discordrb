@@ -92,9 +92,9 @@ module Discordrb
     # @param parse_self [true, false] Whether the bot should react on its own messages. It's best to turn this off
     #   unless you really need this so you don't inadvertently create infinite loops.
     # @param shard_id [Integer] The number of the shard this bot should handle. See
-    #   https://github.com/hammerandchisel/discord-api-docs/issues/17 for how to do sharding.
+    #   https://github.com/discordapp/discord-api-docs/issues/17 for how to do sharding.
     # @param num_shards [Integer] The total number of shards that should be running. See
-    #   https://github.com/hammerandchisel/discord-api-docs/issues/17 for how to do sharding.
+    #   https://github.com/discordapp/discord-api-docs/issues/17 for how to do sharding.
     # @param redact_token [true, false] Whether the bot should redact the token in logs. Default is true.
     # @param ignore_bots [true, false] Whether the bot should ignore bot accounts or not. Default is false.
     # @param compress_mode [:none, :large, :stream] Sets which compression mode should be used when connecting

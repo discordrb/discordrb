@@ -1,8 +1,8 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
-and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
 [View diff for this release.](https://github.com/meew0/discordrb/compare/v3.2.1...HEAD)
@@ -19,7 +19,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Bulk deleting now uses the new non-deprecated URL – this has no immediate effect, but once the old one will be removed bots using it will not be able to bulk delete anymore (see also [#309](https://github.com/meew0/discordrb/issues/309))
 
 ### Fixed
-- Fixed another bug with resumes that caused issues when resuming a zombie connection 
+- Fixed another bug with resumes that caused issues when resuming a zombie connection
 - Fixed a bug that caused issues when playing short files ([#326](https://github.com/meew0/discordrb/issues/316))
 
 ## [3.2.0.1] - 2017-01-29
@@ -46,24 +46,24 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Rich embeds can now be sent alongside messages, for example using the `embed` parameter in `send_message`, or with the new method `Channel#send_embed`
 - `advanced_functionality` bots now support escaping using backslashes ([#293](https://github.com/meew0/discordrb/issues/293) / [#304](https://github.com/meew0/discordrb/pull/304), thanks @LikeLakers2)
 - Added type checking and conversion for commands ([#298](https://github.com/meew0/discordrb/pull/298), thanks @ohtaavi)
-- Bulk deleting messages now checks for message age (see also [hammerandchisel/discord-api-docs#208](https://github.com/hammerandchisel/discord-api-docs/issues/208)). By default, it will ignore messages that are too old to be bulk deleted, but there is also a `strict` mode setting now that raises an exception in such a case.
+- Bulk deleting messages now checks for message age (see also [discordapp/discord-api-docs#208](https://github.com/discordapp/discord-api-docs/issues/208)). By default, it will ignore messages that are too old to be bulk deleted, but there is also a `strict` mode setting now that raises an exception in such a case.
 - Reactions can now be viewed for existing messages ([#262](https://github.com/meew0/discordrb/pull/262), thanks @z64), added to messages ([#266](https://github.com/meew0/discordrb/pull/266), thanks @z64), and listened for using gateway events as well as internal handlers ([#300](https://github.com/meew0/discordrb/issues/300)).
 - Game types and stream URLs are now cached ([#297](https://github.com/meew0/discordrb/issues/297))
-- The default non-streaming game was changed to be `0` instead of `nil` ([#277](https://github.com/meew0/discordrb/pull/277), thanks @zeyla) 
+- The default non-streaming game was changed to be `0` instead of `nil` ([#277](https://github.com/meew0/discordrb/pull/277), thanks @zeyla)
 - A method `Channel#delete_message` was added to support deleting single messages by ID without prior resolution.
 - Permission overwrites can now be deleted from channels ([#268](https://github.com/meew0/discordrb/pull/268), thanks @greenbigfrog)
 - There is now a utility method `IDObject.synthesise` that creates snowflakes with specific timestamps out of thin air.
 - Typing events are now respondable, so you can call `#respond` on them for example ([#270](https://github.com/meew0/discordrb/pull/270), thanks @VxJasonxV)
 - Message authors can now be `User` objects if a `Member` object could not be found or created ([#290](https://github.com/meew0/discordrb/issues/290))
 - Added two new events, `unknown` ([#288](https://github.com/meew0/discordrb/issues/288)) and `raw`, that are raised for unknown dispatches and all dispatches, respectively.
-- Bots can now be set to fully ignore other bots ([#257](https://github.com/meew0/discordrb/pull/257), thanks @greenbigfrog) 
+- Bots can now be set to fully ignore other bots ([#257](https://github.com/meew0/discordrb/pull/257), thanks @greenbigfrog)
 - Voice state update events now have an `old_channel` property/attribute that denotes the previous channel the user was in in case of joining/moving/leaving.
 - The default help command no longer shows commands the user can't use ([#275](https://github.com/meew0/discordrb/pull/275), thanks @FormalHellhound)
 - Updated the command example to no longer include user-specific stuff ([#260](https://github.com/meew0/discordrb/issues/260))
 - `Server#role` now resolves IDs, so they can be passed as strings if necessary.
 
 ### Fixed
-- Fixed bots' shard settings being ignored in certain cases 
+- Fixed bots' shard settings being ignored in certain cases
 - Parsing role mentions using `Bot#parse_mention` works properly now.
 - Fixed some specific REST methods that were broken by the API module refactor ([#302](https://github.com/meew0/discordrb/pull/302), thanks @LikeLakers2)
 - Cached channel data is now updated properly on change ([#272](https://github.com/meew0/discordrb/issues/272))
@@ -80,7 +80,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   - It no longer fails completely if called from PM if there are any commands that require server-specific checks ([#308](https://github.com/meew0/discordrb/issues/308))
   - Fixed a slight formatting mistake
 - Quoted command arguments in `advanced_functionality` are no longer split by newline
-- Fixed a specific edge case in command chain handling where handling commands with the same name as the chain delimiter was broken 
+- Fixed a specific edge case in command chain handling where handling commands with the same name as the chain delimiter was broken
 
 ## [3.1.1] - 2016-10-21
 [3.1.1]: https://github.com/meew0/discordrb/releases/tag/v3.1.1
@@ -150,7 +150,7 @@ As with 2.0.0, there are some breaking changes! They are, as always, highlighted
 ### Added
 - **The `application_id` parameter has been renamed to `client_id`**. With the changes to how bot applications work, it would just be confusing to have it be called `application_id` any longer. If you try to use `application_id` now, it will raise a descriptive exception; with 3.1.0 that will be removed too (you'll get a less descriptive exception).
 - The gateway implementation has been completely rewritten, for more performance, stability and maintainability. This means that **to call some internal methods like `inject_reconnect`, a `Gateway` instance (available as `Bot#gateway`) now needs to be used.**
-- **User login using email and password has been removed**. Use a user token instead, see also [here](https://github.com/hammerandchisel/discord-api-docs/issues/69#issuecomment-223886862).
+- **User login using email and password has been removed**. Use a user token instead, see also [here](https://github.com/discordapp/discord-api-docs/issues/69#issuecomment-223886862).
 - In addition to the rewrite, the gateway version has also been upgraded to protocol version 6 (the rewrite was for v5). **With this, the way channel types are handled has been changed a bit!** If you've been using the abstraction methods like `Channel#voice?`, you should be fine though. This also includes support for group chats on user accounts, as that was the only real functionality change on v6. ([#211](https://github.com/meew0/discordrb/pull/211), thanks @Daniel-Worrall)
 - **Custom prefix handlers for `CommandBot`s now get the full message object as their parameter rather than only the content**, for even more flexibility.
 - For internal consistency, **the `UnknownGuild` error was renamed to `UnknownServer`**. I doubt this change affects anyone, but if you handle that error specifically in your bot, make sure to change it.
@@ -192,7 +192,7 @@ As with 2.0.0, there are some breaking changes! They are, as always, highlighted
 - A method `Bot#connected?` has been added to check whether the bot is currently connected to the gateway.
 - The indescriptive error message that was previously sent when calling methods like `Bot#game=` without an active gateway connection has been replaced with a more descriptive one.
 - The bot's token is now, by default, redacted from any logging output; this can be turned off if desired using the `redact_token` initialization parameter. ([#225](https://github.com/meew0/discordrb/issues/225) / [#231](https://github.com/meew0/discordrb/pull/231), thanks @Daniel-Worrall)
-- The new rate limit headers are now supported. This will have no real impact on any code using discordrb, but it means discordrb is now considered compliant again. See also [here](https://github.com/hammerandchisel/discord-api-docs/issues/108).
+- The new rate limit headers are now supported. This will have no real impact on any code using discordrb, but it means discordrb is now considered compliant again. See also [here](https://github.com/discordapp/discord-api-docs/issues/108).
 - Rogue presences, i.e. presences without an associated cached member, now print a log message instead of being completely ignored
 - A variety of aliases have been added to existing methods.
 - An example to show off voice sending has been added to the repo, and existing examples have been improved.
@@ -267,7 +267,7 @@ As with 2.0.0, there are some breaking changes! They are, as always, highlighted
 - The internal REST rate limit handler was updated:
   - It now tracks message rate limits server wide to properly handle new bot account rate limits. ([#100](https://github.com/meew0/discordrb/issues/100))
   - It now keeps track of all requests, even those that are known not to be rate limited (it just won't do anything to them). This allows for more flexibility should future rate limits be added.
-- Guild sharding is now supported using the optional `shard_id` and `num_shards` to bot initializers. Read about it here: https://github.com/hammerandchisel/discord-api-docs/issues/17 ([#98](https://github.com/meew0/discordrb/issues/98))
+- Guild sharding is now supported using the optional `shard_id` and `num_shards` to bot initializers. Read about it here: https://github.com/discordapp/discord-api-docs/issues/17 ([#98](https://github.com/meew0/discordrb/issues/98))
 - Commands can now require users to have specific action permissions to be able to execute them using the `:required_permissions` attribute. ([#104](https://github.com/meew0/discordrb/issues/104) / [#112](https://github.com/meew0/discordrb/pull/112))
 - A `heartbeat` event was added that gets triggered every now and then to allow for roughly periodic actions. ([#110](https://github.com/meew0/discordrb/pull/110))
 - Prefixes are now more flexible in the format they can have - arrays and callables are now allowed as well. Read the documentation for more info.([#107](https://github.com/meew0/discordrb/issues/107) / [#109](https://github.com/meew0/discordrb/pull/109))
@@ -513,22 +513,22 @@ puts bot.profile.username
 
 ### Added
 * **`bot.find` and `bot.find_user` have had their fuzzy search feature removed because it only caused problems. If you still need it, you can copy the code from the repo's history.** In addition, `find` was renamed to `find_channel` but still exists as a (deprecated) alias.
-* The in-line documentation using Yard is now complete and can be [accessed at RubyDoc](http://www.rubydoc.info/github/meew0/discordrb/master/). It's not quite polished yet and some things may be confusing, but it should be mostly usable.
+* The in-line documentation using Yard is now complete and can be [accessed at RubyDoc](https://www.rubydoc.info/github/meew0/discordrb/master/). It's not quite polished yet and some things may be confusing, but it should be mostly usable.
 * Events and commands can now be thoroughly modularized using a system I call 'containers'. (TODO: Add a tutorial here later)
 * Support for the latest API changes:
   * `Server.leave` does something different than `Server.delete`
   * The WebSocket connection now uses version 3 of the protocol
-* Voice bots now support playing DCA files using the [`play_dca`](http://www.rubydoc.info/github/meew0/discordrb/master/Discordrb%2FVoice%2FVoiceBot%3Aplay_dca) method. (TODO: Add a section to the voice tutorial)
-* The [volume](http://www.rubydoc.info/github/meew0/discordrb/master/Discordrb%2FVoice%2FVoiceBot%3Avolume) of a voice bot can now be changed during playback and not only for future playbacks.
+* Voice bots now support playing DCA files using the [`play_dca`](https://www.rubydoc.info/github/meew0/discordrb/master/Discordrb%2FVoice%2FVoiceBot%3Aplay_dca) method. (TODO: Add a section to the voice tutorial)
+* The [volume](https://www.rubydoc.info/github/meew0/discordrb/master/Discordrb%2FVoice%2FVoiceBot%3Avolume) of a voice bot can now be changed during playback and not only for future playbacks.
 * A `Channel.prune` method was added to quickly delete lots of messages from a channel. (It appears that this is something lots of bots do.)
-* [`Server#members`](http://www.rubydoc.info/github/meew0/discordrb/master/Discordrb%2FServer%3Amembers) is now aliased to `users`.
-* An attribute [`Server#member_count`](http://www.rubydoc.info/github/meew0/discordrb/master/Discordrb%2FServer%3Amember_count) was added that is accurate even if chunked members have not been added yet.
-* An attribute [`Server#large?`](http://www.rubydoc.info/github/meew0/discordrb/master/Discordrb%2FServer%3Alarge) was added that is true if a server could possibly have an inaccurate list of members.
+* [`Server#members`](https://www.rubydoc.info/github/meew0/discordrb/master/Discordrb%2FServer%3Amembers) is now aliased to `users`.
+* An attribute [`Server#member_count`](https://www.rubydoc.info/github/meew0/discordrb/master/Discordrb%2FServer%3Amember_count) was added that is accurate even if chunked members have not been added yet.
+* An attribute [`Server#large?`](https://www.rubydoc.info/github/meew0/discordrb/master/Discordrb%2FServer%3Alarge) was added that is true if a server could possibly have an inaccurate list of members.
 * Some more specific error classes have been added to replace the RestClient generic ones.
 * Quickly sending a message using the `event << 'text'` syntax now works in every type of message event, not just commands.
-* You can now set the bitrate of sent audio data using `bot.voice.encoder.bitrate = 64000` (see [`Encoder#bitrate=`](http://www.rubydoc.info/github/meew0/discordrb/master/Discordrb/Voice/Encoder#bitrate%3D-instance_method)). Note that sent audio data will always be unaffected by voice channel bitrate settings, those only tell the client at what bitrate it should send.
-* A rate limiting feature was added to commands - you can define buckets using the [`bucket`](http://www.rubydoc.info/github/meew0/discordrb/master/Discordrb%2FCommands%2FRateLimiter%3Abucket) method and use them as a parameter for [`command`](http://www.rubydoc.info/github/meew0/discordrb/master/Discordrb%2FCommands%2FCommandContainer%3Acommand).
-  * A [`SimpleRateLimiter`](http://www.rubydoc.info/github/meew0/discordrb/master/Discordrb/Commands/SimpleRateLimiter) class was also added if you want rate limiting independent from commands (e. g. for events)
+* You can now set the bitrate of sent audio data using `bot.voice.encoder.bitrate = 64000` (see [`Encoder#bitrate=`](https://www.rubydoc.info/github/meew0/discordrb/master/Discordrb/Voice/Encoder#bitrate%3D-instance_method)). Note that sent audio data will always be unaffected by voice channel bitrate settings, those only tell the client at what bitrate it should send.
+* A rate limiting feature was added to commands - you can define buckets using the [`bucket`](https://www.rubydoc.info/github/meew0/discordrb/master/Discordrb%2FCommands%2FRateLimiter%3Abucket) method and use them as a parameter for [`command`](https://www.rubydoc.info/github/meew0/discordrb/master/Discordrb%2FCommands%2FCommandContainer%3Acommand).
+  * A [`SimpleRateLimiter`](https://www.rubydoc.info/github/meew0/discordrb/master/Discordrb/Commands/SimpleRateLimiter) class was also added if you want rate limiting independent from commands (e. g. for events)
 * Connecting to the WebSocket now uses an exponential falloff system so we don't spam Discord with requests anymore.
 * Debug timestamps are now accurate to milliseconds.
 
@@ -594,7 +594,7 @@ puts bot.profile.username
 [View diff for this release.](https://github.com/meew0/discordrb/compare/v1.5.4...v1.6.0)
 
 ### Added
-* The inline documentation using YARD was greatly improved and is now mostly usable, at least for the data classes and voice classes. It's still not complete enough to be released on GitHub, but you can build it yourself using [YARD](http://yardoc.org/).
+* The inline documentation using YARD was greatly improved and is now mostly usable, at least for the data classes and voice classes. It's still not complete enough to be released on GitHub, but you can build it yourself using [YARD](https://yardoc.org/).
 * It's now possible to encrypt sent voice data using an optional parameter in `voice_connect`. The encryption uses RbNaCl's [SecretBox](https://github.com/cryptosphere/rbnacl/wiki/Secret-Key-Encryption#algorithm-details) and is enabled by default.
 * The [new library comparison](https://discordapi.com/unofficial/comparison.html) is now fully supported, barring voice receive and multi-send: (#39)
   * `bot.invite` will create an `Invite` object from a code containing information about it.
