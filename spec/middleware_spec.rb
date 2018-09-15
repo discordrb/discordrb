@@ -257,4 +257,11 @@ describe Discordrb::Middleware::MessageFilter do
     Discordrb::Middleware::MessageFilter.new(true, :private_channel),
     [{ channel: { private?: true } }, { channel: { private?: false } }]
   )
+
+  it 'inverts condition when negated' do
+    middleware = Discordrb::Middleware::MessageFilter.new(not!(double('value')), :content_equal)
+    allow(middleware).to receive(:content_equal).and_return(false)
+    result = middleware.call(double('event'), double('state'), &-> { true })
+    expect(result).to eq true
+  end
 end

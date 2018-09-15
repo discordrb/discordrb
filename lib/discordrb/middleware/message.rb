@@ -3,7 +3,13 @@ module Discordrb::Middleware
   # @!visibility private
   class MessageFilter
     def initialize(value, attribute)
-      @value = value
+      if value.is_a?(Discordrb::Events::Negated)
+        @value = value.object
+        @negated = true
+      else
+        @value = value
+      end
+
       @attribute = attribute
     end
 
@@ -71,6 +77,7 @@ module Discordrb::Middleware
 
     def call(event, _state)
       matches = send(@attribute, event)
+      matches = !matches if @negated
       yield if matches
     end
   end
