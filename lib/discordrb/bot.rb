@@ -443,9 +443,13 @@ module Discordrb
     # @return [Array<User, Channel, Role, Emoji>] The array of users, channels, roles and emoji identified by the mentions, or `nil` if none exists.
     def parse_mentions(mentions, server = nil)
       array_to_return = []
+      # While possible mentions may be in message
       while mentions.include?('<') && mentions.include?('>')
+        # Removing all content before the next possible mention
         mentions = mentions.split('<', 2)[1]
+        # Locate the first valid mention enclosed in `<...>`, otherwise advance to the next open `<`
         next unless mentions.split('>', 2).first.length < mentions.split('<', 2).first.length
+        # Store the possible mention value to be validated with RegEx
         mention = mentions.split('>', 2).first
         if /@!?(?<id>\d+)/ =~ mention
           array_to_return << user(id) unless user(id).nil?
