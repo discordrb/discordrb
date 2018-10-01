@@ -1356,7 +1356,7 @@ module Discordrb
     # @!visibility private
     def initialize(data, bot, server = nil)
       @bot = bot
-      # data is a sometimes a Hash and other times an array of Hashes, you only want the last one if it's an array
+      # data is sometimes a Hash and other times an array of Hashes, you only want the last one if it's an array
       data = data[-1] if data.is_a?(Array)
 
       @id = data['id'].to_i
