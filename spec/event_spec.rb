@@ -135,6 +135,42 @@ describe Discordrb::Events do
         # t.summary
       end
     end
+
+    shared_examples 'end_with attributes' do |r, m, n|
+      regex, matching, non_matching = r, m, n
+
+      describe 'end_with attribute' do
+        it "matches #{matching}" do
+          handler = Discordrb::Events::MessageEventHandler.new({ end_with: regex }, double('proc'))
+          event = double('event', channel: double('channel', private?: false), author: double('author'), timestamp: double('timestamp'), content: matching)
+          allow(event).to receive(:is_a?).with(Discordrb::Events::MessageEvent).and_return(true)
+          expect(handler.matches?(event)).to be_truthy
+        end
+
+        it "doesn't match #{non_matching}" do
+          handler = Discordrb::Events::MessageEventHandler.new({ end_with: regex }, double('proc'))
+          event = double('event', channel: double('channel', private?: false), author: double('author'), timestamp: double('timestamp'), content: non_matching)
+          allow(event).to receive(:is_a?).with(Discordrb::Events::MessageEvent).and_return(true)
+          expect(handler.matches?(event)).to be_falsy
+        end
+      end
+    end
+
+    include_examples(
+      'end_with attributes', /foo/, 'foo', 'f'
+    )
+
+    include_examples(
+      'end_with attributes', /!$/, 'foo!', 'foo'
+    )
+
+    include_examples(
+      'end_with attributes', /f(o)+/, 'foo', 'f'
+    )
+
+    include_examples(
+      'end_with attributes', /e(fg)+(x(abba){1,2}x)*[stu]/i, 'abcdefgfgxabbaabbaxT', 'abcdefgfgxabbaabbaxT.'
+    )
   end
 
   # This data is shared across examples, so it needs to be defined here
