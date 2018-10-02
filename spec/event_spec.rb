@@ -169,7 +169,7 @@ describe Discordrb::Events do
     include_examples(
       'end_with attributes', /e(fg)+(x(abba){1,2}x)*[stu]/i, 'abcdefgfgxabbaabbaxT', 'abcdefgfgxabbaabbaxT.'
     )
-    
+
     include_examples(
       'end_with attributes', 'bar', 'foobar', 'foobarbaz'
     )
