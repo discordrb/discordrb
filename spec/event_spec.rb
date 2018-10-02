@@ -136,17 +136,17 @@ describe Discordrb::Events do
       end
     end
 
-    shared_examples 'end_with attributes' do |regex, matching, non_matching|
+    shared_examples 'end_with attributes' do |expr, matching, non_matching|
       describe 'end_with attribute' do
         it "matches #{matching}" do
-          handler = Discordrb::Events::MessageEventHandler.new({ end_with: regex }, double('proc'))
+          handler = Discordrb::Events::MessageEventHandler.new({ end_with: expr }, double('proc'))
           event = double('event', channel: double('channel', private?: false), author: double('author'), timestamp: double('timestamp'), content: matching)
           allow(event).to receive(:is_a?).with(Discordrb::Events::MessageEvent).and_return(true)
           expect(handler.matches?(event)).to be_truthy
         end
 
         it "doesn't match #{non_matching}" do
-          handler = Discordrb::Events::MessageEventHandler.new({ end_with: regex }, double('proc'))
+          handler = Discordrb::Events::MessageEventHandler.new({ end_with: expr }, double('proc'))
           event = double('event', channel: double('channel', private?: false), author: double('author'), timestamp: double('timestamp'), content: non_matching)
           allow(event).to receive(:is_a?).with(Discordrb::Events::MessageEvent).and_return(true)
           expect(handler.matches?(event)).to be_falsy
@@ -168,6 +168,10 @@ describe Discordrb::Events do
 
     include_examples(
       'end_with attributes', /e(fg)+(x(abba){1,2}x)*[stu]/i, 'abcdefgfgxabbaabbaxT', 'abcdefgfgxabbaabbaxT.'
+    )
+    
+    include_examples(
+      'end_with attributes', 'bar', 'foobar', 'foobarbaz'
     )
   end
 
