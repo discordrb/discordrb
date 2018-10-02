@@ -20,5 +20,6 @@
   "last_message_id": null,
   "type": 0,
   "id": "269512751339143168",
-  "nsfw": false
+  "nsfw": false,
+  "rate_limit_per_user": 0
 }
