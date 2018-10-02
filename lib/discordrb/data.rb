@@ -1540,9 +1540,8 @@ module Discordrb
 
     # Sets the amount of time (in seconds) users have to wait in between sending messages.
     # @param rate_limit_per_user [Integer]
-    # @raise [ArgumentError] if value isn't an Integer
+    # @raise [ArgumentError] if value isn't between 0 and 120
     def rate_limit_per_user=(rate)
-      raise ArgumentError, 'rate_limit_per_user value must be an Integer' unless rate.is_a?(Integer)
       raise ArgumentError, 'rate_limit_per_user must be between 0 and 120' unless rate.between?(0, 120)
       update_channel_data(rate_limit_per_user: rate)
     end
