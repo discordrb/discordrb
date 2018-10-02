@@ -1539,7 +1539,7 @@ module Discordrb
     end
 
     # Sets the amount of time (in seconds) users have to wait in between sending messages.
-    # @param rate_limit_per_user [Integer]
+    # @param rate [Integer]
     # @raise [ArgumentError] if value isn't between 0 and 120
     def rate_limit_per_user=(rate)
       raise ArgumentError, 'rate_limit_per_user must be between 0 and 120' unless rate.between?(0, 120)
