@@ -1543,6 +1543,7 @@ module Discordrb
     # @raise [ArgumentError] if value isn't an Integer
     def rate_limit_per_user=(rate_limit_per_user)
       raise ArgumentError, 'rate_limit_per_user value must be an Integer' unless rate_limit_per_user.is_a?(Integer)
+      raise ArgumentError, 'rate_limit_per_user must be between 0 and 120' unless rate_limit_per_user.between?(0, 120)
       update_channel_data(rate_limit_per_user: rate_limit_per_user)
     end
 
