@@ -3272,7 +3272,7 @@ module Discordrb
     # @param permission_overwrites [Array<Hash>, Array<Overwrite>] permission overwrites for this channel
     # @param parent [Channel, #resolve_id] parent category for this channel to be created in.
     # @param nsfw [true, false] whether this channel should be created as nsfw
-    # @param rate_limit_per_user[Integer] how many seconds users need to wait in between messages.
+    # @param rate_limit_per_user [Integer] how many seconds users need to wait in between messages.
     # @param reason [String] The reason the for the creation of this channel.
     # @return [Channel] the created channel.
     # @raise [ArgumentError] if type is not 0 (text), 2 (voice), or 4 (category)
