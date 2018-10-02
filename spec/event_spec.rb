@@ -136,9 +136,7 @@ describe Discordrb::Events do
       end
     end
 
-    shared_examples 'end_with attributes' do |r, m, n|
-      regex, matching, non_matching = r, m, n
-
+    shared_examples 'end_with attributes' do |regex, matching, non_matching|
       describe 'end_with attribute' do
         it "matches #{matching}" do
           handler = Discordrb::Events::MessageEventHandler.new({ end_with: regex }, double('proc'))
