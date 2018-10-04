@@ -60,7 +60,6 @@ describe Discordrb::Channel do
     shared_examples('API call') do |property_name, num|
       it "should call the API with #{property_name}" do
         allow(channel).to receive(:update_data)
-        allow(JSON).to receive(:parse)
         data = double(property_name)
         expectation = Array.new(num) { anything } << data << any_args
         expect(Discordrb::API::Channel).to receive(:update).with(*expectation)
@@ -79,11 +78,10 @@ describe Discordrb::Channel do
     context 'when permission_overwrite are not set' do
       it 'should not send permission_overwrite' do
         allow(channel).to receive(:update_data)
-        allow(JSON).to receive(:parse)
         new_data = double('new data')
         allow(new_data).to receive(:[])
         allow(new_data).to receive(:[]).with(:permission_overwrites).and_return(false)
-        expect(Discordrb::API::Channel).to receive(:update).with(any_args, nil, anything)
+        expect(Discordrb::API::Channel).to receive(:update).with(any_args, nil, anything).and_return(new_data)
         channel.__send__(:update_channel_data, new_data)
       end
     end
@@ -93,11 +91,10 @@ describe Discordrb::Channel do
         nsfw = double('nsfw')
         channel.instance_variable_set(:@nsfw, nsfw)
         allow(channel).to receive(:update_data)
-        allow(JSON).to receive(:parse)
         new_data = double('new data')
         allow(new_data).to receive(:[])
         allow(new_data).to receive(:[]).with(:nsfw).and_return(1)
-        expect(Discordrb::API::Channel).to receive(:update).with(any_args, nsfw, anything, anything)
+        expect(Discordrb::API::Channel).to receive(:update).with(any_args, nsfw, anything, anything).and_return(new_data)
         channel.__send__(:update_channel_data, new_data)
       end
     end
@@ -107,11 +104,10 @@ describe Discordrb::Channel do
         nsfw = double('nsfw')
         channel.instance_variable_set(:@nsfw, nsfw)
         allow(channel).to receive(:update_data)
-        allow(JSON).to receive(:parse)
         new_data = double('new data')
         allow(new_data).to receive(:[])
         allow(new_data).to receive(:[]).with(:nsfw).and_return(1)
-        expect(Discordrb::API::Channel).to receive(:update).with(any_args, nsfw, anything, anything)
+        expect(Discordrb::API::Channel).to receive(:update).with(any_args, nsfw, anything, anything).and_return(new_data)
         channel.__send__(:update_channel_data, new_data)
       end
     end
@@ -119,8 +115,7 @@ describe Discordrb::Channel do
     it 'should call #update_data with new data' do
       response_data = double('new data')
       expect(channel).to receive(:update_data).with(response_data)
-      allow(JSON).to receive(:parse).and_return(response_data)
-      allow(Discordrb::API::Channel).to receive(:update)
+      allow(Discordrb::API::Channel).to receive(:update).and_return(response_data)
       channel.__send__(:update_channel_data, double('data', :[] => double('sub_data', map: double)))
     end
 
@@ -167,14 +162,14 @@ describe Discordrb::Channel do
     include_examples('update property data', :parent_id)
 
     it 'should call process_permission_overwrites' do
-      allow(Discordrb::API::Channel).to receive(:resolve).and_return('{}')
+      allow(Discordrb::API::Channel).to receive(:resolve).and_return({})
       expect(channel).to receive(:process_permission_overwrites)
       channel.__send__(:update_data)
     end
 
     context 'when data is not provided' do
       it 'should request it from the API' do
-        expect(Discordrb::API::Channel).to receive(:resolve).and_return('{}')
+        expect(Discordrb::API::Channel).to receive(:resolve).and_return({})
         channel.__send__(:update_data)
       end
     end
@@ -615,8 +610,7 @@ describe Discordrb::Webhook do
       it 'calls update_internal' do
         webhook
         data = double('data', :[] => double)
-        allow(JSON).to receive(:parse).and_return(data)
-        allow(Discordrb::API::Webhook).to receive(:update_webhook)
+        allow(Discordrb::API::Webhook).to receive(:update_webhook).and_return(data)
         expect(webhook).to receive(:update_internal).with(data)
         webhook.send(:update_webhook, double('data', delete: reason))
       end
@@ -626,8 +620,7 @@ describe Discordrb::Webhook do
       it 'doesn\'t call update_internal' do
         webhook
         data = double('data', :[] => nil)
-        allow(JSON).to receive(:parse).and_return(data)
-        allow(Discordrb::API::Webhook).to receive(:update_webhook)
+        allow(Discordrb::API::Webhook).to receive(:update_webhook).and_return(data)
         expect(webhook).to_not receive(:update_internal)
         webhook.send(:update_webhook, double('data', delete: reason))
       end
@@ -637,7 +630,7 @@ describe Discordrb::Webhook do
       it 'calls auth API' do
         webhook
         data = double('data', delete: reason)
-        allow(JSON).to receive(:parse).and_return(double('received_data', :[] => double))
+        allow(Discordrb::API::Webhook).to receive(:update_webhook).and_return(double('received_data', :[] => double))
         expect(Discordrb::API::Webhook).to receive(:update_webhook).with(token, webhook_id, data, reason)
         webhook.send(:update_webhook, data)
       end
@@ -648,7 +641,7 @@ describe Discordrb::Webhook do
 
       it 'calls token API' do
         data = double('data', delete: reason)
-        allow(JSON).to receive(:parse).and_return(double('received_data', :[] => double))
+        allow(Discordrb::API::Webhook).to receive(:token_update_webhook).and_return(double('received_data', :[] => double))
         expect(Discordrb::API::Webhook).to receive(:token_update_webhook).with(webhook_token, webhook_id, data, reason)
         webhook.send(:update_webhook, data)
       end

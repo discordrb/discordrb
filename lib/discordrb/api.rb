@@ -9,7 +9,7 @@ require 'discordrb/errors'
 # List of methods representing endpoints in Discord's API
 module Discordrb::API
   # The base URL of the Discord REST API.
-  APIBASE = 'https://discordapp.com/api/v6'.freeze
+  APIBASE = 'https://discordapp.com/api/v7'.freeze
 
   # The URL of Discord's CDN
   CDN_URL = 'https://cdn.discordapp.com'.freeze
@@ -74,79 +74,106 @@ module Discordrb::API
     mutex.unlock
   end
 
-  # Performs a RestClient request.
-  # @param type [Symbol] The type of HTTP request to use.
-  # @param attributes [Array] The attributes for the request.
-  def raw_request(type, attributes)
-    RestClient.send(type, *attributes)
-  rescue RestClient::Forbidden => e
-    # HACK: for #request, dynamically inject restclient's response into NoPermission - this allows us to ratelimit
-    noprm = Discordrb::Errors::NoPermission.new
-    noprm.define_singleton_method(:_rc_response) { e.response }
-    raise noprm, "The bot doesn't have the required permission to do this!"
-  rescue RestClient::BadGateway
-    Discordrb::LOGGER.warn('Got a 502 while sending a request! Not a big deal, retrying the request')
-    retry
+  # A response from Discord's API
+  Response = Struct.new(:code, :body, :headers) do
+    # @return [true, false] whether this reponse repesents a successful
+    #   (2XX series) request
+    def success?
+      (200..299).cover?(code)
+    end
+
+    # @return [true, false] whether the request can be retried
+    def fatal?
+      [400, 401, 403, 404, 500].include?(code)
+    end
+
+    # @return [true, false] whether the request is being rate limited
+    def too_many_requests?
+      code == 429
+    end
+
+    # @return [true, false] whether this reponse's body contains JSON content
+    def json_body?
+      headers[:content_type] == 'application/json'
+    end
+  end
+
+  # Performs an HTTP request to Discord's API
+  # @param method [Symbol] HTTP method
+  # @param resource [String] API resource (including querystring)
+  # @param headers [Hash] HTTP headers
+  # @param payload [String] HTTP request body
+  # @return [Response]
+  def raw_request(method, resource, headers, payload)
+    Discordrb::LOGGER.info("[HTTP OUT] #{method} #{resource}")
+    url = api_base + URI.encode(resource)
+    RestClient::Request.execute(method: method, url: url, headers: headers, payload: payload) do |response, _request, _result|
+      Discordrb::LOGGER.info("[HTTP IN] #{response.code} (#{response.body.size})")
+      case response.code
+      when 200..299, 400..499, 502
+        # Successful, Client Error
+        Response.new(response.code, response.body, response.headers)
+      else
+        # TODO: Fall back on RestClient's handling for any other code value (for now)
+        Discordrb::LOGGER.warn("Unhandled HTTP code #{response.code}, falling back to RestClient:\n#{response.inspect}")
+        response.return!(&block)
+      end
+    end
   end
 
   # Make an API request, including rate limit handling.
-  def request(key, major_parameter, type, *attributes)
-    # Add a custom user agent
-    attributes.last[:user_agent] = user_agent if attributes.last.is_a? Hash
+  def request(key, major_parameter, method, resource, headers: {}, payload: nil)
+    # Obtain this requests bucket mutex, and wait for it to be unlocked
+    bucket = [key, major_parameter].freeze
+    mutex = @mutexes[bucket] ||= Mutex.new
+    mutex_wait(mutex)
+    mutex_wait(@global_mutex) if @global_mutex.locked?
 
-    # The most recent Discord rate limit requirements require the support of major parameters, where a particular route
-    # and major parameter combination (*not* the HTTP method) uniquely identifies a RL bucket.
-    key = [key, major_parameter].freeze
+    # Apply custom user agent
+    headers[:user_agent] = user_agent
 
-    begin
-      mutex = @mutexes[key] ||= Mutex.new
+    # Serialize payload if JSON content is being sent
+    payload = payload.to_json if headers[:content_type] == :json
 
-      # Lock and unlock, i.e. wait for the mutex to unlock and don't do anything with it afterwards
-      mutex_wait(mutex)
+    # Execute the request
+    response = raw_request(method, resource, headers, payload)
 
-      # If the global mutex happens to be locked right now, wait for that as well.
-      mutex_wait(@global_mutex) if @global_mutex.locked?
-
-      response = nil
-      begin
-        response = raw_request(type, attributes)
-      rescue RestClient::Exception => e
-        response = e.response
-        raise e
-      rescue Discordrb::Errors::NoPermission => e
-        if e.respond_to?(:_rc_response)
-          response = e._rc_response
-        else
-          Discordrb::LOGGER.warn("NoPermission doesn't respond_to? _rc_response!")
-        end
-
-        raise e
-      ensure
-        if response
-          handle_preemptive_rl(response.headers, mutex, key) if response.headers[:x_ratelimit_remaining] == '0' && !mutex.locked?
-        else
-          Discordrb::LOGGER.ratelimit('Response was nil before trying to preemptively rate limit!')
-        end
-      end
-    rescue RestClient::TooManyRequests => e
-      # If the 429 is from the global RL, then we have to use the global mutex instead.
-      mutex = @global_mutex if e.response.headers[:x_ratelimit_global] == 'true'
-
-      unless mutex.locked?
-        response = JSON.parse(e.response)
-        wait_seconds = response['retry_after'].to_i / 1000.0
-        Discordrb::LOGGER.ratelimit("Locking RL mutex (key: #{key}) for #{wait_seconds} seconds due to Discord rate limiting")
-        trace("429 #{key.join(' ')}")
-
-        # Wait the required time synchronized by the mutex (so other incoming requests have to wait) but only do it if
-        # the mutex isn't locked already so it will only ever wait once
-        sync_wait(wait_seconds, mutex)
-      end
-
-      retry
+    # Handle preemptive rate limiting
+    if response.headers[:x_ratelimit_remaining] == '0' && !mutex.locked?
+      handle_preemptive_rl(response.headers, mutex, key)
     end
 
-    response
+    # Decode body if we received JSON
+    body = if response.json_body?
+             JSON.parse(response.body)
+           else
+             response.body
+           end
+
+    # If it was a successful request, we have nothing left to do
+    # except return the body:
+    return body if response.success?
+
+    # Handle exceeded rate limit
+    if response.too_many_requests?
+      mutex = @global_mutex if response.headers[:x_ratelimit_global] == 'true'
+      wait_seconds = body['retry_after'].to_i / 1000.0
+      handle_exceeded_rl(wait_seconds, mutex, key)
+    end
+
+    # Handle fatal response
+    if response.fatal?
+      # Read Discord specific error code, or default to the response's code
+      code = body['code'] || response.code
+
+      # Decode custom error class, and raise it
+      code_error_class = Discordrb::Errors.error_class_for(code)
+      raise code_error_class, body['message']
+    end
+
+    # Retry recursively
+    Discordrb::LOGGER.warn("Request failed with #{response.code}, retrying")
+    request(bucket, method, resource, headers, payload)
   end
 
   # Handles premeptive ratelimiting by waiting the given mutex by the difference of the Date header to the
@@ -161,6 +188,15 @@ module Discordrb::API
 
     Discordrb::LOGGER.warn("Locking RL mutex (key: #{key}) for #{delta} seconds preemptively")
     sync_wait(delta, mutex)
+  end
+
+  def handle_exceeded_rl(wait_seconds, mutex, key)
+    Discordrb::LOGGER.ratelimit("Locking RL mutex (key: #{key}) for #{wait_seconds} seconds due to Discord rate limiting")
+    trace("429 #{key.join(' ')}")
+
+    # Wait the required time synchronized by the mutex (so other incoming requests have to wait) but only do it if
+    # the mutex isn't locked already so it will only ever wait once
+    sync_wait(wait_seconds, mutex)
   end
 
   # Perform rate limit tracing. All this method does is log the current backtrace to the console with the `:ratelimit`
@@ -209,10 +245,10 @@ module Discordrb::API
     request(
       :auth_login,
       nil,
-      :post,
-      "#{api_base}/auth/login",
-      email: email,
-      password: password
+      :POST,
+      '/auth/login',
+      headers: { content_type: :json },
+      payload: { email: email, password: password }
     )
   end
 
@@ -221,10 +257,9 @@ module Discordrb::API
     request(
       :auth_logout,
       nil,
-      :post,
-      "#{api_base}/auth/logout",
-      nil,
-      Authorization: token
+      :POST,
+      '/auth/logout',
+      headers: { Authorization: token }
     )
   end
 
@@ -233,11 +268,10 @@ module Discordrb::API
     request(
       :oauth2_applications,
       nil,
-      :post,
-      "#{api_base}/oauth2/applications",
-      { name: name, redirect_uris: redirect_uris }.to_json,
-      Authorization: token,
-      content_type: :json
+      :POST,
+      '/oauth2/applications',
+      headers: { Authorization: token, content_type: :json },
+      payload: { name: name, redirect_uris: redirect_uris }
     )
   end
 
@@ -246,11 +280,10 @@ module Discordrb::API
     request(
       :oauth2_applications,
       nil,
-      :put,
-      "#{api_base}/oauth2/applications",
-      { name: name, redirect_uris: redirect_uris, description: description, icon: icon }.to_json,
-      Authorization: token,
-      content_type: :json
+      :PUT,
+      '/oauth2/applications',
+      headers: { Authorization: token, content_type: :json },
+      payload: { name: name, redirect_uris: redirect_uris, description: description, icon: icon }
     )
   end
 
@@ -259,9 +292,9 @@ module Discordrb::API
     request(
       :oauth2_applications_me,
       nil,
-      :get,
-      "#{api_base}/oauth2/applications/@me",
-      Authorization: token
+      :GET,
+      '/oauth2/applications/@me',
+      headers: { Authorization: token }
     )
   end
 
@@ -272,10 +305,9 @@ module Discordrb::API
     request(
       :channels_cid_messages_mid_ack,
       nil, # This endpoint is unavailable for bot accounts and thus isn't subject to its rate limit requirements.
-      :post,
-      "#{api_base}/channels/#{channel_id}/messages/#{message_id}/ack",
-      nil,
-      Authorization: token
+      :POST,
+      "/channels/#{channel_id}/messages/#{message_id}/ack",
+      headers: { Authorization: token }
     )
   end
 
@@ -284,9 +316,9 @@ module Discordrb::API
     request(
       :gateway,
       nil,
-      :get,
-      "#{api_base}/gateway",
-      Authorization: token
+      :GET,
+      '/gateway',
+      headers: { Authorization: token }
     )
   end
 
@@ -295,11 +327,10 @@ module Discordrb::API
     request(
       :auth_login,
       nil,
-      :post,
-      "#{api_base}/auth/login",
-      {}.to_json,
-      Authorization: token,
-      content_type: :json
+      :POST,
+      '/auth/login',
+      headers: { Authorization: token, content_type: :json },
+      payload: {}
     )
   end
 
@@ -308,10 +339,9 @@ module Discordrb::API
     request(
       :voice_regions,
       nil,
-      :get,
-      "#{api_base}/voice/regions",
-      Authorization: token,
-      content_type: :json
+      :GET,
+      '/voice/regions',
+      headers: { Authorization: token }
     )
   end
 end

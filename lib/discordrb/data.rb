@@ -1777,7 +1777,7 @@ module Discordrb
     # @return [Array<Message>] the retrieved messages.
     def history(amount, before_id = nil, after_id = nil, around_id = nil)
       logs = API::Channel.messages(@bot.token, @id, amount, before_id, after_id, around_id)
-      JSON.parse(logs).map { |message| Message.new(message, @bot) }
+      logs.map { |message| Message.new(message, @bot) }
     end
 
     # Retrieves message history, but only message IDs for use with prune.
@@ -1785,7 +1785,7 @@ module Discordrb
     # @!visibility private
     def history_ids(amount, before_id = nil, after_id = nil, around_id = nil)
       logs = API::Channel.messages(@bot.token, @id, amount, before_id, after_id, around_id)
-      JSON.parse(logs).map { |message| message['id'].to_i }
+      logs.map { |message| message['id'].to_i }
     end
 
     # Returns a single message from this channel's history by ID.
@@ -1793,8 +1793,8 @@ module Discordrb
     # @return [Message, nil] the retrieved message, or `nil` if it couldn't be found.
     def load_message(message_id)
       response = API::Channel.message(@bot.token, @id, message_id)
-      return Message.new(JSON.parse(response), @bot)
-    rescue RestClient::ResourceNotFound
+      return Message.new(response, @bot)
+    rescue Errors::ResourceNotFound
       return nil
     end
 
@@ -1804,7 +1804,7 @@ module Discordrb
     # @return [Array<Message>] the received messages.
     def pins
       msgs = API::Channel.pinned_messages(@bot.token, @id)
-      JSON.parse(msgs).map { |msg| Message.new(msg, @bot) }
+      msgs.map { |msg| Message.new(msg, @bot) }
     end
 
     # Delete the last N messages on this channel.
@@ -1881,7 +1881,7 @@ module Discordrb
     # @return [Invite] the created invite.
     def make_invite(max_age = 0, max_uses = 0, temporary = false, unique = false, reason = nil)
       response = API::Channel.create_invite(@bot.token, @id, max_age, max_uses, temporary, unique, reason)
-      Invite.new(JSON.parse(response), @bot)
+      Invite.new(response, @bot)
     end
 
     alias_method :invite, :make_invite
@@ -1902,7 +1902,7 @@ module Discordrb
     def create_group(user_ids)
       raise 'Attempted to create group channel on a non-pm channel!' unless pm?
       response = API::Channel.create_group(@bot.token, @id, user_ids.shift)
-      channel = Channel.new(JSON.parse(response), @bot)
+      channel = Channel.new(response, @bot)
       channel.add_group_users(user_ids)
     end
 
@@ -1946,7 +1946,7 @@ module Discordrb
     # @return [Array<Webhook>] webhooks on the channel.
     def webhooks
       raise 'Tried to request webhooks from a non-server channel' unless server
-      webhooks = JSON.parse(API::Channel.webhooks(@bot.token, @id))
+      webhooks = API::Channel.webhooks(@bot.token, @id)
       webhooks.map { |webhook_data| Webhook.new(webhook_data, @bot) }
     end
 
@@ -1954,7 +1954,7 @@ module Discordrb
     # @return [Array<Invite>] invites to the channel.
     def invites
       raise 'Tried to request invites from a non-server channel' unless server
-      invites = JSON.parse(API::Channel.invites(@bot.token, @id))
+      invites = API::Channel.invites(@bot.token, @id)
       invites.map { |invite_data| Invite.new(invite_data, @bot) }
     end
 
@@ -1989,7 +1989,7 @@ module Discordrb
     # @note For internal use only
     # @!visibility private
     def update_data(new_data = nil)
-      new_data ||= JSON.parse(API::Channel.resolve(@bot.token, @id))
+      new_data ||= API::Channel.resolve(@bot.token, @id)
       @name = new_data[:name] || new_data['name'] || @name
       @topic = new_data[:topic] || new_data['topic'] || @topic
       @position = new_data[:position] || new_data['position'] || @position
@@ -2027,15 +2027,15 @@ module Discordrb
       new_nsfw = new_data[:nsfw].is_a?(TrueClass) || new_data[:nsfw].is_a?(FalseClass) ? new_nsfw : @nsfw
       # send permission_overwrite only when explicitly set
       overwrites = new_data[:permission_overwrites] ? new_data[:permission_overwrites].map { |_, v| v.to_hash } : nil
-      response = JSON.parse(API::Channel.update(@bot.token, @id,
-                                                new_data[:name] || @name,
-                                                new_data[:topic] || @topic,
-                                                new_data[:position] || @position,
-                                                new_data[:bitrate] || @bitrate,
-                                                new_data[:user_limit] || @user_limit,
-                                                new_nsfw,
-                                                overwrites,
-                                                new_data[:parent_id] || @parent_id))
+      response = API::Channel.update(@bot.token, @id,
+                                     new_data[:name] || @name,
+                                     new_data[:topic] || @topic,
+                                     new_data[:position] || @position,
+                                     new_data[:bitrate] || @bitrate,
+                                     new_data[:user_limit] || @user_limit,
+                                     new_nsfw,
+                                     overwrites,
+                                     new_data[:parent_id] || @parent_id)
       update_data(response)
     end
 
@@ -2499,7 +2499,7 @@ module Discordrb
     # @return [Message] the resulting message.
     def edit(new_content, new_embed = nil)
       response = API::Channel.edit_message(@bot.token, @channel.id, @id, new_content, [], new_embed ? new_embed.to_hash : nil)
-      Message.new(JSON.parse(response), @bot)
+      Message.new(response, @bot)
     end
 
     # Deletes this message.
@@ -2600,7 +2600,7 @@ module Discordrb
     # @return [Array<User>] the users who used this reaction
     def reacted_with(reaction)
       reaction = reaction.to_reaction if reaction.respond_to?(:to_reaction)
-      response = JSON.parse(API::Channel.get_reactions(@bot.token, @channel.id, @id, reaction))
+      response = API::Channel.get_reactions(@bot.token, @channel.id, @id, reaction)
       response.map { |d| User.new(d, @bot) }
     end
 
@@ -2945,7 +2945,7 @@ module Discordrb
 
     # @return [Array<Integration>] an array of all the integrations connected to this server.
     def integrations
-      integration = JSON.parse(API::Server.integrations(@bot.token, @id))
+      integration = API::Server.integrations(@bot.token, @id)
       integration.map { |element| Integration.new(element, @bot, self) }
     end
 
@@ -2959,14 +2959,14 @@ module Discordrb
       action = AuditLogs::Actions.key(action)
       user = user.resolve_id if user
       before = before.resolve_id if before
-      AuditLogs.new(self, @bot, JSON.parse(API::Server.audit_logs(@bot.token, @id, limit, user, action, before)))
+      AuditLogs.new(self, @bot, API::Server.audit_logs(@bot.token, @id, limit, user, action, before))
     end
 
     # Cache @embed
     # @note For internal use only
     # @!visibility private
     def cache_embed_data
-      data = JSON.parse(API::Server.embed(@bot.token, @id))
+      data = API::Server.embed(@bot.token, @id)
       @embed_enabled = data['enabled']
       @embed_channel_id = data['channel_id']
     end
@@ -3028,7 +3028,7 @@ module Discordrb
     def modify_embed(enabled, channel, reason = nil)
       cache_embed_data if @embed_enabled.nil?
       channel_id = channel ? channel.resolve_id : @embed_channel_id
-      response = JSON.parse(API::Server.modify_embed(@bot.token, @id, enabled, channel_id, reason))
+      response = API::Server.modify_embed(@bot.token, @id, enabled, channel_id, reason)
       @embed_enabled = response['enabled']
       @embed_channel_id = response['channel_id']
     end
@@ -3060,7 +3060,7 @@ module Discordrb
     def add_member_using_token(user, access_token, nick: nil, roles: [], deaf: false, mute: false)
       user_id = user.resolve_id
       roles = roles.is_a?(Array) ? roles.map(&:resolve_id) : [roles.resolve_id]
-      response = JSON.parse(API::Server.add_member(@bot.token, @id, user_id, access_token, nick, roles, deaf, mute))
+      response = API::Server.add_member(@bot.token, @id, user_id, access_token, nick, roles, deaf, mute)
       add_member Member.new(response, self, @bot)
     end
 
@@ -3071,7 +3071,7 @@ module Discordrb
     def prune_count(days)
       raise ArgumentError, 'Days must be between 1 and 30' unless days.between?(1, 30)
 
-      response = JSON.parse API::Server.prune_count(@bot.token, @id, days)
+      response = API::Server.prune_count(@bot.token, @id, days)
       response['pruned']
     end
 
@@ -3083,7 +3083,7 @@ module Discordrb
     def begin_prune(days, reason = nil)
       raise ArgumentError, 'Days must be between 1 and 30' unless days.between?(1, 30)
 
-      response = JSON.parse API::Server.begin_prune(@bot.token, @id, days, reason)
+      response = API::Server.begin_prune(@bot.token, @id, days, reason)
       response['pruned']
     end
 
@@ -3133,7 +3133,7 @@ module Discordrb
 
     # @return [String] the hexadecimal ID used to identify this server's splash image for their VIP invite page.
     def splash_id
-      @splash_id ||= JSON.parse(API::Server.resolve(@bot.token, @id))['splash']
+      @splash_id ||= API::Server.resolve(@bot.token, @id)['splash']
     end
 
     # @return [String, nil] the splash image URL for the server's VIP invite page.
@@ -3170,7 +3170,7 @@ module Discordrb
     # @note For internal use only
     # @!visibility private
     def update_role_positions(role_positions)
-      response = JSON.parse(API::Server.update_role_positions(@bot.token, @id, role_positions))
+      response = API::Server.update_role_positions(@bot.token, @id, role_positions)
       response.each do |data|
         updated_role = Role.new(data, @bot, self)
         role(updated_role.id).update_from(updated_role)
@@ -3258,7 +3258,7 @@ module Discordrb
       permission_overwrites.map! { |e| e.is_a?(Overwrite) ? e.to_hash : e } if permission_overwrites.is_a?(Array)
       parent_id = parent.respond_to?(:resolve_id) ? parent.resolve_id : nil
       response = API::Server.create_channel(@bot.token, @id, name, type, topic, bitrate, user_limit, permission_overwrites, parent_id, nsfw, reason)
-      Channel.new(JSON.parse(response), @bot)
+      Channel.new(response, @bot)
     end
 
     # Creates a role on this server which can then be modified. It will be initialized
@@ -3284,14 +3284,14 @@ module Discordrb
 
       response = API::Server.create_role(@bot.token, @id, name, colour, hoist, mentionable, permissions, reason)
 
-      role = Role.new(JSON.parse(response), @bot, self)
+      role = Role.new(response, @bot, self)
       @roles << role
       role
     end
 
     # @return [Array<ServerBan>] a list of banned users on this server and the reason they were banned.
     def bans
-      response = JSON.parse(API::Server.bans(@bot.token, @id))
+      response = API::Server.bans(@bot.token, @id)
       response.map do |e|
         ServerBan.new(self, User.new(e['user'], @bot), e['reason'])
       end
@@ -3354,7 +3354,7 @@ module Discordrb
 
       @available_voice_regions = {}
 
-      data = JSON.parse API::Server.regions(@bot.token, @id)
+      data = API::Server.regions(@bot.token, @id)
       @available_voice_regions = data.map { |e| VoiceRegion.new e }
     end
 
@@ -3482,14 +3482,14 @@ module Discordrb
     # Requests a list of Webhooks on the server.
     # @return [Array<Webhook>] webhooks on the server.
     def webhooks
-      webhooks = JSON.parse(API::Server.webhooks(@bot.token, @id))
+      webhooks = API::Server.webhooks(@bot.token, @id)
       webhooks.map { |webhook| Webhook.new(webhook, @bot) }
     end
 
     # Requests a list of Invites to the server.
     # @return [Array<Invite>] invites to the server.
     def invites
-      invites = JSON.parse(API::Server.invites(@bot.token, @id))
+      invites = API::Server.invites(@bot.token, @id)
       invites.map { |invite| Invite.new(invite, @bot) }
     end
 
@@ -3525,7 +3525,7 @@ module Discordrb
     # @note For internal use only
     # @!visibility private
     def update_data(new_data = nil)
-      new_data ||= JSON.parse(API::Server.resolve(@bot.token, @id))
+      new_data ||= API::Server.resolve(@bot.token, @id)
       @name = new_data[:name] || new_data['name'] || @name
       @region_id = new_data[:region] || new_data['region'] || @region_id
       @icon_id = new_data[:icon] || new_data['icon'] || @icon_id
@@ -3578,17 +3578,17 @@ module Discordrb
     private
 
     def update_server_data(new_data)
-      response = JSON.parse(API::Server.update(@bot.token, @id,
-                                               new_data[:name] || @name,
-                                               new_data[:region] || @region_id,
-                                               new_data[:icon_id] || @icon_id,
-                                               new_data[:afk_channel_id] || @afk_channel_id,
-                                               new_data[:afk_timeout] || @afk_timeout,
-                                               new_data[:splash] || @splash,
-                                               new_data[:default_message_notifications] || @default_message_notifications,
-                                               new_data[:verification_level] || @verification_level,
-                                               new_data[:explicit_content_filter] || @explicit_content_filter,
-                                               new_data[:system_channel_id] || @system_channel_id))
+      response = API::Server.update(@bot.token, @id,
+                                    new_data[:name] || @name,
+                                    new_data[:region] || @region_id,
+                                    new_data[:icon_id] || @icon_id,
+                                    new_data[:afk_channel_id] || @afk_channel_id,
+                                    new_data[:afk_timeout] || @afk_timeout,
+                                    new_data[:splash] || @splash,
+                                    new_data[:default_message_notifications] || @default_message_notifications,
+                                    new_data[:verification_level] || @verification_level,
+                                    new_data[:explicit_content_filter] || @explicit_content_filter,
+                                    new_data[:system_channel_id] || @system_channel_id)
       update_data(response)
     end
 
@@ -3809,11 +3809,11 @@ module Discordrb
 
     def update_webhook(new_data)
       reason = new_data.delete(:reason)
-      data = JSON.parse(if token?
-                          API::Webhook.token_update_webhook(@token, @id, new_data, reason)
-                        else
-                          API::Webhook.update_webhook(@bot.token, @id, new_data, reason)
-                        end)
+      data = if token?
+               API::Webhook.token_update_webhook(@token, @id, new_data, reason)
+             else
+               API::Webhook.update_webhook(@bot.token, @id, new_data, reason)
+             end
       # Only update cache if API call worked
       update_internal(data) if data['name']
     end

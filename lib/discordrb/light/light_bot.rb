@@ -32,13 +32,13 @@ module Discordrb::Light
     # @return [LightProfile] the details of the user this bot is connected to.
     def profile
       response = Discordrb::API::User.profile(@token)
-      LightProfile.new(JSON.parse(response), self)
+      LightProfile.new(response, self)
     end
 
     # @return [Array<LightServer>] the servers this bot is connected to.
     def servers
       response = Discordrb::API::User.servers(@token)
-      JSON.parse(response).map { |e| LightServer.new(e, self) }
+      response.map { |e| LightServer.new(e, self) }
     end
 
     # Joins a server using an instant invite.
@@ -52,7 +52,7 @@ module Discordrb::Light
     # @return [Array<Connection>] this account's connections.
     def connections
       response = Discordrb::API::User.connections(@token)
-      JSON.parse(response).map { |e| Connection.new(e, self) }
+      response.map { |e| Connection.new(e, self) }
     end
   end
 end

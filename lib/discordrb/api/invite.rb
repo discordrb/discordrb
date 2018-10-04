@@ -10,9 +10,9 @@ module Discordrb::API::Invite
     Discordrb::API.request(
       :invite_code,
       nil,
-      :get,
-      "#{Discordrb::API.api_base}/invite/#{invite_code}#{counts ? '?with_counts=true' : ''}",
-      Authorization: token
+      :GET,
+      "/invite/#{invite_code}#{counts ? '?with_counts=true' : ''}",
+      headers: { Authorization: token }
     )
   end
 
@@ -22,10 +22,9 @@ module Discordrb::API::Invite
     Discordrb::API.request(
       :invites_code,
       nil,
-      :delete,
-      "#{Discordrb::API.api_base}/invites/#{code}",
-      Authorization: token,
-      'X-Audit-Log-Reason': reason
+      :DELETE,
+      "/invites/#{code}",
+      headers: { Authorization: token, 'X-Audit-Log-Reason': reason }
     )
   end
 
@@ -35,10 +34,9 @@ module Discordrb::API::Invite
     Discordrb::API.request(
       :invite_code,
       nil,
-      :post,
-      "#{Discordrb::API.api_base}/invite/#{invite_code}",
-      nil,
-      Authorization: token
+      :POST,
+      "/invite/#{invite_code}",
+      headers: { Authorization: token }
     )
   end
 end

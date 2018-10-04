@@ -10,11 +10,10 @@ module Discordrb::API::Server
     Discordrb::API.request(
       :guilds,
       nil,
-      :post,
-      "#{Discordrb::API.api_base}/guilds",
+      :POST,
+      '/guilds',
       { name: name, region: region.to_s }.to_json,
-      Authorization: token,
-      content_type: :json
+      headers: { Authorization: token, content_type: :json }
     )
   end
 
@@ -24,9 +23,9 @@ module Discordrb::API::Server
     Discordrb::API.request(
       :guilds_sid,
       server_id,
-      :get,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}",
-      Authorization: token
+      :GET,
+      "/guilds/#{server_id}",
+      headers: { Authorization: token }
     )
   end
 
@@ -36,12 +35,10 @@ module Discordrb::API::Server
     Discordrb::API.request(
       :guilds_sid,
       server_id,
-      :patch,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}",
-      { name: name, region: region, icon: icon, afk_channel_id: afk_channel_id, afk_timeout: afk_timeout, splash: splash, default_message_notifications: default_message_notifications, verification_level: verification_level, explicit_content_filter: explicit_content_filter, system_channel_id: system_channel_id }.to_json,
-      Authorization: token,
-      content_type: :json,
-      'X-Audit-Log-Reason': reason
+      :PATCH,
+      "/guilds/#{server_id}",
+      headers: { Authorization: token, content_type: :json, 'X-Audit-Log-Reason': reason },
+      payload: { name: name, region: region, icon: icon, afk_channel_id: afk_channel_id, afk_timeout: afk_timeout, splash: splash, default_message_notifications: default_message_notifications, verification_level: verification_level, explicit_content_filter: explicit_content_filter, system_channel_id: system_channel_id }
     )
   end
 
@@ -50,12 +47,10 @@ module Discordrb::API::Server
     Discordrb::API.request(
       :guilds_sid,
       server_id,
-      :patch,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}",
-      { owner_id: user_id }.to_json,
-      Authorization: token,
-      content_type: :json,
-      'X-Audit-Log-Reason': reason
+      :PATCH,
+      "/guilds/#{server_id}",
+      headers: { Authorization: token, content_type: :json, 'X-Audit-Log-Reason': reason },
+      payload: { owner_id: user_id }
     )
   end
 
@@ -65,9 +60,9 @@ module Discordrb::API::Server
     Discordrb::API.request(
       :guilds_sid,
       server_id,
-      :delete,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}",
-      Authorization: token
+      :DELETE,
+      "/guilds/#{server_id}",
+      headers: { Authorization: token }
     )
   end
 
@@ -77,9 +72,9 @@ module Discordrb::API::Server
     Discordrb::API.request(
       :guilds_sid_channels,
       server_id,
-      :get,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}/channels",
-      Authorization: token
+      :GET,
+      "/guilds/#{server_id}/channels",
+      headers: { Authorization: token }
     )
   end
 
@@ -89,12 +84,10 @@ module Discordrb::API::Server
     Discordrb::API.request(
       :guilds_sid_channels,
       server_id,
-      :post,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}/channels",
-      { name: name, type: type, topic: topic, bitrate: bitrate, user_limit: user_limit, permission_overwrites: permission_overwrites, parent_id: parent_id, nsfw: nsfw }.to_json,
-      Authorization: token,
-      content_type: :json,
-      'X-Audit-Log-Reason': reason
+      :POST,
+      "/guilds/#{server_id}/channels",
+      headers: { Authorization: token, content_type: :json, 'X-Audit-Log-Reason': reason },
+      payload: { name: name, type: type, topic: topic, bitrate: bitrate, user_limit: user_limit, permission_overwrites: permission_overwrites, parent_id: parent_id, nsfw: nsfw }
     )
   end
 
@@ -104,11 +97,10 @@ module Discordrb::API::Server
     Discordrb::API.request(
       :guilds_sid_channels,
       server_id,
-      :patch,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}/channels",
-      positions.to_json,
-      Authorization: token,
-      content_type: :json
+      :PATCH,
+      "/guilds/#{server_id}/channels",
+      headers: { Authorization: token, content_type: :json },
+      payload: positions
     )
   end
 
@@ -118,9 +110,9 @@ module Discordrb::API::Server
     Discordrb::API.request(
       :guilds_sid_members_uid,
       server_id,
-      :get,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}/members/#{user_id}",
-      Authorization: token
+      :GET,
+      "/guilds/#{server_id}/members/#{user_id}",
+      headers: { Authorization: token }
     )
   end
 
@@ -130,29 +122,30 @@ module Discordrb::API::Server
     Discordrb::API.request(
       :guilds_sid_members,
       server_id,
-      :get,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}/members?limit=#{limit}#{"&after=#{after}" if after}",
-      Authorization: token
+      :GET,
+      "/guilds/#{server_id}/members?limit=#{limit}#{"&after=#{after}" if after}",
+      headers: { Authorization: token }
     )
   end
 
   # Update a user properties
   # https://discordapp.com/developers/docs/resources/guild#modify-guild-member
   def update_member(token, server_id, user_id, nick: nil, roles: nil, mute: nil, deaf: nil, channel_id: nil, reason: nil)
+    data = {
+      roles: roles,
+      nick: nick,
+      mute: mute,
+      deaf: deaf,
+      channel_id: channel_id
+    }.reject { |_, v| v.nil? }
+
     Discordrb::API.request(
       :guilds_sid_members_uid,
       server_id,
-      :patch,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}/members/#{user_id}", {
-        roles: roles,
-        nick: nick,
-        mute: mute,
-        deaf: deaf,
-        channel_id: channel_id
-      }.reject { |_, v| v.nil? }.to_json,
-      Authorization: token,
-      content_type: :json,
-      'X-Audit-Log-Reason': reason
+      :PATCH,
+      "/guilds/#{server_id}/members/#{user_id}",
+      headers: { Authorization: token, content_type: :json, 'X-Audit-Log-Reason': reason },
+      payload: data
     )
   end
 
@@ -162,11 +155,9 @@ module Discordrb::API::Server
     Discordrb::API.request(
       :guilds_sid_members_uid,
       server_id,
-      :delete,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}/members/#{user_id}",
-      Authorization: token,
-      content_type: :json,
-      'X-Audit-Log-Reason': reason
+      :DELETE,
+      "/guilds/#{server_id}/members/#{user_id}",
+      headers: { Authorization: token, content_type: :json, 'X-Audit-Log-Reason': reason }
     )
   end
 
@@ -176,23 +167,22 @@ module Discordrb::API::Server
     Discordrb::API.request(
       :guilds_sid_bans,
       server_id,
-      :get,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}/bans",
-      Authorization: token
+      :GET,
+      "/guilds/#{server_id}/bans",
+      headers: { Authorization: token }
     )
   end
 
   # Ban a user from a server and delete their messages from the last message_days days
   # https://discordapp.com/developers/docs/resources/guild#create-guild-ban
   def ban_user(token, server_id, user_id, message_days, reason = nil)
-    reason = URI.encode(reason) if reason
     Discordrb::API.request(
       :guilds_sid_bans_uid,
       server_id,
-      :put,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}/bans/#{user_id}?delete-message-days=#{message_days}&reason=#{reason}",
+      :PUT,
+      "/guilds/#{server_id}/bans/#{user_id}?delete-message-days=#{message_days}&reason=#{reason}",
       nil,
-      Authorization: token
+      headers: { Authorization: token }
     )
   end
 
@@ -202,10 +192,9 @@ module Discordrb::API::Server
     Discordrb::API.request(
       :guilds_sid_bans_uid,
       server_id,
-      :delete,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}/bans/#{user_id}",
-      Authorization: token,
-      'X-Audit-Log-Reason': reason
+      :DELETE,
+      "/guilds/#{server_id}/bans/#{user_id}",
+      headers: { Authorization: token, 'X-Audit-Log-Reason': reason }
     )
   end
 
@@ -215,9 +204,9 @@ module Discordrb::API::Server
     Discordrb::API.request(
       :guilds_sid_roles,
       server_id,
-      :get,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}/roles",
-      Authorization: token
+      :GET,
+      "/guilds/#{server_id}/roles",
+      headers: { Authorization: token }
     )
   end
 
@@ -230,12 +219,10 @@ module Discordrb::API::Server
     Discordrb::API.request(
       :guilds_sid_roles,
       server_id,
-      :post,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}/roles",
-      { color: colour, name: name, hoist: hoist, mentionable: mentionable, permissions: packed_permissions }.to_json,
-      Authorization: token,
-      content_type: :json,
-      'X-Audit-Log-Reason': reason
+      :POST,
+      "/guilds/#{server_id}/roles",
+      headers: { Authorization: token, content_type: :json, 'X-Audit-Log-Reason': reason },
+      payload: { color: colour, name: name, hoist: hoist, mentionable: mentionable, permissions: packed_permissions }
     )
   end
 
@@ -248,12 +235,10 @@ module Discordrb::API::Server
     Discordrb::API.request(
       :guilds_sid_roles_rid,
       server_id,
-      :patch,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}/roles/#{role_id}",
-      { color: colour, name: name, hoist: hoist, mentionable: mentionable, permissions: packed_permissions }.to_json,
-      Authorization: token,
-      content_type: :json,
-      'X-Audit-Log-Reason': reason
+      :PATCH,
+      "/guilds/#{server_id}/roles/#{role_id}",
+      headers: { Authorization: token,      content_type: :json, 'X-Audit-Log-Reason': reason },
+      payload: { color: colour, name: name, hoist: hoist, mentionable: mentionable, permissions: packed_permissions }
     )
   end
 
@@ -263,11 +248,10 @@ module Discordrb::API::Server
     Discordrb::API.request(
       :guilds_sid_roles,
       server_id,
-      :patch,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}/roles",
-      roles.to_json,
-      Authorization: token,
-      content_type: :json
+      :PATCH,
+      "/guilds/#{server_id}/roles",
+      headers: { Authorization: token, content_type: :json },
+      payload: roles
     )
   end
 
@@ -277,10 +261,9 @@ module Discordrb::API::Server
     Discordrb::API.request(
       :guilds_sid_roles_rid,
       server_id,
-      :delete,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}/roles/#{role_id}",
-      Authorization: token,
-      'X-Audit-Log-Reason': reason
+      :DELETE,
+      "/guilds/#{server_id}/roles/#{role_id}",
+      headers: { Authorization: token, 'X-Audit-Log-Reason': reason }
     )
   end
 
@@ -290,11 +273,9 @@ module Discordrb::API::Server
     Discordrb::API.request(
       :guilds_sid_members_uid_roles_rid,
       server_id,
-      :put,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}/members/#{user_id}/roles/#{role_id}",
-      nil,
-      Authorization: token,
-      'X-Audit-Log-Reason': reason
+      :PUT,
+      "/guilds/#{server_id}/members/#{user_id}/roles/#{role_id}",
+      headers: { Authorization: token, 'X-Audit-Log-Reason': reason }
     )
   end
 
@@ -304,10 +285,9 @@ module Discordrb::API::Server
     Discordrb::API.request(
       :guilds_sid_members_uid_roles_rid,
       server_id,
-      :delete,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}/members/#{user_id}/roles/#{role_id}",
-      Authorization: token,
-      'X-Audit-Log-Reason': reason
+      :DELETE,
+      "/guilds/#{server_id}/members/#{user_id}/roles/#{role_id}",
+      headers: { Authorization: token, 'X-Audit-Log-Reason': reason }
     )
   end
 
@@ -317,9 +297,9 @@ module Discordrb::API::Server
     Discordrb::API.request(
       :guilds_sid_prune,
       server_id,
-      :get,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}/prune?days=#{days}",
-      Authorization: token
+      :GET,
+      "/guilds/#{server_id}/prune?days=#{days}",
+      headers: { Authorization: token }
     )
   end
 
@@ -329,11 +309,10 @@ module Discordrb::API::Server
     Discordrb::API.request(
       :guilds_sid_prune,
       server_id,
-      :post,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}/prune",
-      { days: days },
-      Authorization: token,
-      'X-Audit-Log-Reason': reason
+      :POST,
+      "/guilds/#{server_id}/prune",
+      headers: { Authorization: token, content_type: :json, 'X-Audit-Log-Reason': reason },
+      payload: { days: days }
     )
   end
 
@@ -343,9 +322,9 @@ module Discordrb::API::Server
     Discordrb::API.request(
       :guilds_sid_invites,
       server_id,
-      :get,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}/invites",
-      Authorization: token
+      :GET,
+      "/guilds/#{server_id}/invites",
+      headers: { Authorization: token }
     )
   end
 
@@ -355,9 +334,9 @@ module Discordrb::API::Server
     Discordrb::API.request(
       :guilds_sid_auditlogs,
       server_id,
-      :get,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}/audit-logs?limit=#{limit}#{"&user_id=#{userid}" if userid}#{"&action_type=#{actiontype}" if actiontype}#{"&before=#{before}" if before}",
-      Authorization: token
+      :GET,
+      "/guilds/#{server_id}/audit-logs?limit=#{limit}#{"&user_id=#{userid}" if userid}#{"&action_type=#{actiontype}" if actiontype}#{"&before=#{before}" if before}",
+      headers: { Authorization: token }
     )
   end
 
@@ -367,9 +346,9 @@ module Discordrb::API::Server
     Discordrb::API.request(
       :guilds_sid_integrations,
       server_id,
-      :get,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}/integrations",
-      Authorization: token
+      :GET,
+      "/guilds/#{server_id}/integrations",
+      headers: { Authorization: token }
     )
   end
 
@@ -379,10 +358,10 @@ module Discordrb::API::Server
     Discordrb::API.request(
       :guilds_sid_integrations,
       server_id,
-      :post,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}/integrations",
-      { type: type, id: id },
-      Authorization: token
+      :POST,
+      "/guilds/#{server_id}/integrations",
+      headers: { Authorization: token, content_type: :json },
+      payload: { type: type, id: id }
     )
   end
 
@@ -392,11 +371,10 @@ module Discordrb::API::Server
     Discordrb::API.request(
       :guilds_sid_integrations_iid,
       server_id,
-      :patch,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}/integrations/#{integration_id}",
-      { expire_behavior: expire_behavior, expire_grace_period: expire_grace_period, enable_emoticons: enable_emoticons }.to_json,
-      Authorization: token,
-      content_type: :json
+      :PATCH,
+      "/guilds/#{server_id}/integrations/#{integration_id}",
+      headers: { Authorization: token, content_type: :json },
+      payload: { expire_behavior: expire_behavior, expire_grace_period: expire_grace_period, enable_emoticons: enable_emoticons }
     )
   end
 
@@ -406,9 +384,9 @@ module Discordrb::API::Server
     Discordrb::API.request(
       :guilds_sid_integrations_iid,
       server_id,
-      :delete,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}/integrations/#{integration_id}",
-      Authorization: token
+      :DELETE,
+      "/guilds/#{server_id}/integrations/#{integration_id}",
+      headers: { Authorization: token }
     )
   end
 
@@ -418,10 +396,9 @@ module Discordrb::API::Server
     Discordrb::API.request(
       :guilds_sid_integrations_iid_sync,
       server_id,
-      :post,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}/integrations/#{integration_id}/sync",
-      nil,
-      Authorization: token
+      :POST,
+      "/guilds/#{server_id}/integrations/#{integration_id}/sync",
+      headers: { Authorization: token }
     )
   end
 
@@ -431,9 +408,9 @@ module Discordrb::API::Server
     Discordrb::API.request(
       :guilds_sid_embed,
       server_id,
-      :get,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}/embed",
-      Authorization: token
+      :GET,
+      "/guilds/#{server_id}/embed",
+      headers: { Authorization: token }
     )
   end
 
@@ -443,12 +420,10 @@ module Discordrb::API::Server
     Discordrb::API.request(
       :guilds_sid_embed,
       server_id,
-      :patch,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}/embed",
-      { enabled: enabled, channel_id: channel_id }.to_json,
-      Authorization: token,
-      'X-Audit-Log-Reason': reason,
-      content_type: :json
+      :PATCH,
+      "/guilds/#{server_id}/embed",
+      headers: { Authorization: token, 'X-Audit-Log-Reason': reason, content_type: :json },
+      payload: { enabled: enabled, channel_id: channel_id }
     )
   end
 
@@ -457,12 +432,10 @@ module Discordrb::API::Server
     Discordrb::API.request(
       :guilds_sid_emojis,
       server_id,
-      :post,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}/emojis",
-      { image: image, name: name }.to_json,
-      Authorization: token,
-      content_type: :json,
-      'X-Audit-Log-Reason': reason
+      :POST,
+      "/guilds/#{server_id}/emojis",
+      headers: { Authorization: token, content_type: :json, 'X-Audit-Log-Reason': reason },
+      payload: { image: image, name: name }
     )
   end
 
@@ -471,12 +444,10 @@ module Discordrb::API::Server
     Discordrb::API.request(
       :guilds_sid_emojis_eid,
       server_id,
-      :patch,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}/emojis/#{emoji_id}",
-      { name: name }.to_json,
-      Authorization: token,
-      content_type: :json,
-      'X-Audit-Log-Reason': reason
+      :PATCH,
+      "/guilds/#{server_id}/emojis/#{emoji_id}",
+      headers: { Authorization: token, content_type: :json, 'X-Audit-Log-Reason': reason },
+      payload: { name: name }
     )
   end
 
@@ -485,10 +456,9 @@ module Discordrb::API::Server
     Discordrb::API.request(
       :guilds_sid_emojis_eid,
       server_id,
-      :delete,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}/emojis/#{emoji_id}",
-      Authorization: token,
-      'X-Audit-Log-Reason': reason
+      :DELETE,
+      "/guilds/#{server_id}/emojis/#{emoji_id}",
+      headers: { Authorization: token, 'X-Audit-Log-Reason': reason }
     )
   end
 
@@ -497,9 +467,9 @@ module Discordrb::API::Server
     Discordrb::API.request(
       :guilds_sid_regions,
       server_id,
-      :get,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}/regions",
-      Authorization: token
+      :GET,
+      "/guilds/#{server_id}/regions",
+      headers: { Authorization: token }
     )
   end
 
@@ -509,9 +479,9 @@ module Discordrb::API::Server
     Discordrb::API.request(
       :guilds_sid_webhooks,
       server_id,
-      :get,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}/webhooks",
-      Authorization: token
+      :GET,
+      "/guilds/#{server_id}/webhooks",
+      headers: { Authorization: token }
     )
   end
 
@@ -521,11 +491,10 @@ module Discordrb::API::Server
     Discordrb::API.request(
       :guilds_sid_members_uid,
       server_id,
-      :put,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}/members/#{user_id}",
-      { access_token: access_token, nick: nick, roles: roles, mute: mute, deaf: deaf }.to_json,
-      content_type: :json,
-      Authorization: token
+      :PUT,
+      "/guilds/#{server_id}/members/#{user_id}",
+      headers: { content_type: :json, Authorization: token },
+      payload: { access_token: access_token, nick: nick, roles: roles, mute: mute, deaf: deaf }
     )
   end
 end

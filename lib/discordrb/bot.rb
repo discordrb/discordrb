@@ -201,7 +201,7 @@ module Discordrb
     def bot_application
       return unless @type == :bot
       response = API.oauth_application(token)
-      Application.new(JSON.parse(response), self)
+      Application.new(response, self)
     end
 
     alias_method :bot_app, :bot_application
@@ -362,7 +362,7 @@ module Discordrb
       debug("Sending message to #{channel} with content '#{content}'")
 
       response = API::Channel.create_message(token, channel, content, tts, embed ? embed.to_hash : nil)
-      Message.new(JSON.parse(response), self)
+      Message.new(response, self)
     end
 
     # Sends a text message to a channel given its ID and the message's content,
@@ -395,7 +395,7 @@ module Discordrb
     def send_file(channel, file, caption: nil, tts: false)
       channel = channel.resolve_id
       response = API::Channel.upload_file(token, channel, file, caption: caption, tts: tts)
-      Message.new(JSON.parse(response), self)
+      Message.new(response, self)
     end
 
     # Creates a server on Discord with a specified name and a region.
@@ -406,7 +406,7 @@ module Discordrb
     # @return [Server] The server that was created.
     def create_server(name, region = :'eu-central')
       response = API::Server.create(token, name, region)
-      id = JSON.parse(response)['id'].to_i
+      id = response['id'].to_i
       sleep 0.1 until @servers[id]
       server = @servers[id]
       debug "Successfully created server #{server.id} with name #{server.name}"
@@ -419,7 +419,7 @@ module Discordrb
     # @param redirect_uris [Array<String>] URIs that Discord should redirect your users to after authorizing.
     # @return [Array(String, String)] your applications' client ID and client secret to be used in OAuth authorization.
     def create_oauth_application(name, redirect_uris)
-      response = JSON.parse(API.create_oauth_application(@token, name, redirect_uris))
+      response = API.create_oauth_application(@token, name, redirect_uris)
       [response['id'], response['secret']]
     end
 
