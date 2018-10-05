@@ -18,8 +18,8 @@ module Discordrb::API::Channel
 
   # Update a channel's data
   # https://discordapp.com/developers/docs/resources/channel#modify-channel
-  def update(token, channel_id, name, topic, position, bitrate, user_limit, nsfw, permission_overwrites = nil, parent_id = nil, reason = nil)
-    data = { name: name, position: position, topic: topic, bitrate: bitrate, user_limit: user_limit, nsfw: nsfw, parent_id: parent_id }
+  def update(token, channel_id, name, topic, position, bitrate, user_limit, nsfw, permission_overwrites = nil, parent_id = nil, rate_limit_per_user = nil, reason = nil)
+    data = { name: name, position: position, topic: topic, bitrate: bitrate, user_limit: user_limit, nsfw: nsfw, parent_id: parent_id, rate_limit_per_user: rate_limit_per_user }
     data[:permission_overwrites] = permission_overwrites unless permission_overwrites.nil?
     Discordrb::API.request(
       :channels_cid,

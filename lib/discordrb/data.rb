@@ -1338,6 +1338,10 @@ module Discordrb
     attr_reader :nsfw
     alias_method :nsfw?, :nsfw
 
+    # @return [Integer] the amount of time (in seconds) users need to wait to send in between messages.
+    attr_reader :rate_limit_per_user
+    alias_method :slowmode_rate, :rate_limit_per_user
+
     # @return [true, false] whether or not this channel is a PM or group channel.
     def private?
       pm? || group?
@@ -1391,6 +1395,7 @@ module Discordrb
       end
 
       @nsfw = data['nsfw'] || false || @name.start_with?('nsfw')
+      @rate_limit_per_user = data['rate_limit_per_user'] || 0
 
       process_permission_overwrites(data['permission_overwrites'])
     end
@@ -1533,6 +1538,16 @@ module Discordrb
       update_channel_data(permission_overwrites: overwrites)
     end
 
+    # Sets the amount of time (in seconds) users have to wait in between sending messages.
+    # @param rate [Integer]
+    # @raise [ArgumentError] if value isn't between 0 and 120
+    def rate_limit_per_user=(rate)
+      raise ArgumentError, 'rate_limit_per_user must be between 0 and 120' unless rate.between?(0, 120)
+      update_channel_data(rate_limit_per_user: rate)
+    end
+
+    alias_method :slowmode_rate=, :rate_limit_per_user=
+
     # Syncs this channels overwrites with its parent category
     # @raise [RuntimeError] if this channel is not in a category
     def sync_overwrites
@@ -1587,6 +1602,11 @@ module Discordrb
     end
 
     alias_method :default?, :default_channel?
+
+    # @return [true, false] whether or not this channel has slowmode enabled
+    def slowmode?
+      @rate_limit_per_user != 0
+    end
 
     # Sends a message to this channel.
     # @param content [String] The content to send. Should not be longer than 2000 characters or it will result in an error.
@@ -1749,6 +1769,7 @@ module Discordrb
       @permission_overwrites = other.permission_overwrites
       @nsfw = other.nsfw
       @parent_id = other.parent_id
+      @rate_limit_per_user = other.rate_limit_per_user
     end
 
     # The list of users currently in this channel. For a voice channel, it will return all the members currently
@@ -1999,6 +2020,7 @@ module Discordrb
       @nsfw = new_nsfw.nil? ? @nsfw : new_nsfw
       @parent_id = new_data[:parent_id] || new_data['parent_id'] || @parent_id
       process_permission_overwrites(new_data[:permission_overwrites] || new_data['permission_overwrites'])
+      @rate_limit_per_user = new_data[:rate_limit_per_user] || new_data['rate_limit_per_user'] || @rate_limit_per_user
     end
 
     private
@@ -2035,7 +2057,8 @@ module Discordrb
                                                 new_data[:user_limit] || @user_limit,
                                                 new_nsfw,
                                                 overwrites,
-                                                new_data[:parent_id] || @parent_id))
+                                                new_data[:parent_id] || @parent_id,
+                                                new_data[:rate_limit_per_user] || @rate_limit_per_user))
       update_data(response)
     end
 
@@ -3247,17 +3270,18 @@ module Discordrb
     # @param bitrate [Integer] the bitrate of this channel, if it will be a voice channel
     # @param user_limit [Integer] the user limit of this channel, if it will be a voice channel
     # @param permission_overwrites [Array<Hash>, Array<Overwrite>] permission overwrites for this channel
-    # @param nsfw [true, false] whether this channel should be created as nsfw
     # @param parent [Channel, #resolve_id] parent category for this channel to be created in.
+    # @param nsfw [true, false] whether this channel should be created as nsfw
+    # @param rate_limit_per_user [Integer] how many seconds users need to wait in between messages.
     # @param reason [String] The reason the for the creation of this channel.
     # @return [Channel] the created channel.
     # @raise [ArgumentError] if type is not 0 (text), 2 (voice), or 4 (category)
-    def create_channel(name, type = 0, topic: nil, bitrate: nil, user_limit: nil, permission_overwrites: nil, parent: nil, nsfw: false, reason: nil)
+    def create_channel(name, type = 0, topic: nil, bitrate: nil, user_limit: nil, permission_overwrites: nil, parent: nil, nsfw: false, rate_limit_per_user: nil, reason: nil)
       type = Channel::TYPES[type] if type.is_a?(Symbol)
       raise ArgumentError, 'Channel type must be either 0 (text), 2 (voice), or 4 (category)!' unless [0, 2, 4].include?(type)
       permission_overwrites.map! { |e| e.is_a?(Overwrite) ? e.to_hash : e } if permission_overwrites.is_a?(Array)
       parent_id = parent.respond_to?(:resolve_id) ? parent.resolve_id : nil
-      response = API::Server.create_channel(@bot.token, @id, name, type, topic, bitrate, user_limit, permission_overwrites, parent_id, nsfw, reason)
+      response = API::Server.create_channel(@bot.token, @id, name, type, topic, bitrate, user_limit, permission_overwrites, parent_id, nsfw, rate_limit_per_user, reason)
       Channel.new(JSON.parse(response), @bot)
     end
 

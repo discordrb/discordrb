@@ -56,6 +56,24 @@ describe Discordrb::Channel do
     end
   end
 
+  describe '#rate_limit_per_user=' do
+    it_behaves_like 'a Channel property', :rate_limit_per_user do
+      let(:property_value) { 0 }
+    end
+  end
+
+  describe '#slowmode?' do
+    it 'works when the value is 0' do
+      channel.instance_variable_set(:@rate_limit_per_user, 0)
+      expect(channel.slowmode?).to be_falsy
+    end
+
+    it "works when the value isn't 0" do
+      channel.instance_variable_set(:@rate_limit_per_user, 5)
+      expect(channel.slowmode?).to be_truthy
+    end
+  end
+
   describe '#update_channel_data' do
     shared_examples('API call') do |property_name, num|
       it "should call the API with #{property_name}" do
@@ -75,6 +93,7 @@ describe Discordrb::Channel do
     include_examples('API call', :bitrate, 5)
     include_examples('API call', :user_limit, 6)
     include_examples('API call', :parent_id, 9)
+    include_examples('API call', :rate_limit_per_user, 10)
 
     context 'when permission_overwrite are not set' do
       it 'should not send permission_overwrite' do
@@ -97,7 +116,7 @@ describe Discordrb::Channel do
         new_data = double('new data')
         allow(new_data).to receive(:[])
         allow(new_data).to receive(:[]).with(:nsfw).and_return(1)
-        expect(Discordrb::API::Channel).to receive(:update).with(any_args, nsfw, anything, anything)
+        expect(Discordrb::API::Channel).to receive(:update).with(any_args, nsfw, anything, anything, anything)
         channel.__send__(:update_channel_data, new_data)
       end
     end
@@ -111,7 +130,21 @@ describe Discordrb::Channel do
         new_data = double('new data')
         allow(new_data).to receive(:[])
         allow(new_data).to receive(:[]).with(:nsfw).and_return(1)
-        expect(Discordrb::API::Channel).to receive(:update).with(any_args, nsfw, anything, anything)
+        expect(Discordrb::API::Channel).to receive(:update).with(any_args, nsfw, anything, anything, anything)
+        channel.__send__(:update_channel_data, new_data)
+      end
+    end
+
+    context 'when passed an Integer for rate_limit_per_user' do
+      it 'should pass the new value' do
+        rate_limit_per_user = 5
+        channel.instance_variable_set(:@rate_limit_per_user, rate_limit_per_user)
+        allow(channel).to receive(:update_data)
+        allow(JSON).to receive(:parse)
+        new_data = double('new data')
+        allow(new_data).to receive(:[])
+        allow(new_data).to receive(:[]).with(:rate_limit_per_user).and_return(5)
+        expect(Discordrb::API::Channel).to receive(:update).with(any_args, rate_limit_per_user)
         channel.__send__(:update_channel_data, new_data)
       end
     end
