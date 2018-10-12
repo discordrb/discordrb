@@ -1105,7 +1105,7 @@ module Discordrb
         # Ignore friends list presences
         return unless data['guild_id']
 
-        now_playing = data['game']
+        now_playing = data['game'].nil? ? nil : data['game']['name']
         presence_user = @users[data['user']['id'].to_i]
         played_before = presence_user.nil? ? nil : presence_user.game
         update_presence(data)
