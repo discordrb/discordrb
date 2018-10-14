@@ -2352,6 +2352,7 @@ module Discordrb
       @bot = bot
       @message = message
 
+      @id = data['id']
       @url = data['url']
       @proxy_url = data['proxy_url']
       @filename = data['filename']
