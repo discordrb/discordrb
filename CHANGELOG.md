@@ -46,7 +46,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `Invite` now supplies `member_count` and `online_member_count` ([#454](https://github.com/meew0/discordrb/pull/454), thanks @Snazzah)
 - `Server` methods for managing a server's embed (widget) settings ([#435](https://github.com/meew0/discordrb/pull/435))
 - Support for category channels in `Server` and `Channel` ([#415](https://github.com/meew0/discordrb/pull/415), [#477](https://github.com/meew0/discordrb/pull/477), thanks @omnilord)
-- `CommandBot` and commands channel white-list can now be modified after creation ([#446](https://github.com/meew0/discordrb/pull/446), thanks @omnilord)
+- `CommandBot` and commands channel whitelist can now be modified after creation ([#446](https://github.com/meew0/discordrb/pull/446), thanks @omnilord)
 - A `Role`'s `position` can now be sorted relative to other roles ([#445](https://github.com/meew0/discordrb/pull/445), thanks @mattantonelli)
 - The `return` keyword inside of commands can be used to return content to Discord ([#462](https://github.com/meew0/discordrb/pull/462), thanks @TrenchFroast)
 - `Emoji` now supplies `animated` ([#464](https://github.com/meew0/discordrb/pull/464), thanks @PixeLInc)
