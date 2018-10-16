@@ -665,8 +665,15 @@ module Discordrb
 
     private
 
-    # Throws a useful exception if there's currently no gateway connection
+    # Throws a useful exception if there's currently no gateway connection.
+    # Also prints a warning if there are unavailable servers.
     def gateway_check
+      if @unavailable_servers && @unavailable_servers > 0
+        # There are servers that are unavailable.
+        LOGGER.warn("Note that there are #{@unavailable_servers} servers unavailable")
+        LOGGER.warn('Servers may be unavailable due to an outage, or your bot is on very large servers that are taking a while to load.')
+      end
+
       return if connected?
 
       raise "A gateway connection is necessary to call this method! You'll have to do it inside any event (e.g. `ready`) or after `bot.run :async`."
@@ -949,8 +956,8 @@ module Discordrb
       # Check whether there are still unavailable servers and there have been more than 10 seconds since READY
       if @unavailable_servers && @unavailable_servers > 0 && (Time.now - @unavailable_timeout_time) > 10
         # The server streaming timed out!
-        LOGGER.warn("Server streaming timed out with #{@unavailable_servers} servers remaining")
-        LOGGER.warn("This means some servers are unavailable due to an outage. Notifying ready now, we'll have to live without these servers")
+        LOGGER.debug("Server streaming timed out with #{@unavailable_servers} servers remaining")
+        LOGGER.debug('Calling ready now because server loading is taking a long time. Servers may be unavailable due to an outage, or your bot is on very large servers.')
 
         # Unset the unavailable server count so this doesn't get triggered again
         @unavailable_servers = 0
