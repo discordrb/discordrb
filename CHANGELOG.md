@@ -52,7 +52,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `Emoji` now supplies `animated` ([#464](https://github.com/meew0/discordrb/pull/464), thanks @PixeLInc)
 - Additional instructions for installation of Ruby's devkit for Ruby 2.3+ ([#468](https://github.com/meew0/discordrb/pull/468), thanks @oct2pus)
 - `Server` API for retrieving a server's audit logs ([#353](https://github.com/meew0/discordrb/pull/353), thanks @Snazzah)
-- `EventContainer` methods for server role create, delete, and update events ([#494](https://github.com/meew0/discordrb/pull/494), thanks @Daniel-Worral, thanks @Daniel-Worrall)
+- `EventContainer` methods for server role create, delete, and update events ([#494](https://github.com/meew0/discordrb/pull/494), thanks @Daniel-Worrall)
 - `PlayingEvent` now returns `details` ([#486](https://github.com/meew0/discordrb/pull/486), thanks @xTVaser)
 - `Role` now supplies `server` ([#505](https://github.com/meew0/discordrb/pull/505), thanks @micke)
 - Documentation for the `discordrb-webhooks` gem in `README.md` ([#460](https://github.com/meew0/discordrb/pull/460))
