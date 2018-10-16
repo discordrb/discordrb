@@ -75,7 +75,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Methods for creating channels accept additional arguments ([#321](https://github.com/meew0/discordrb/pull/321))
 - `Channel` overwrite-related API now returns an `Overwrite` object ([#321](https://github.com/meew0/discordrb/pull/321))
 - Creating roles now accepts more parameters ([#323](https://github.com/meew0/discordrb/pull/323), thanks @Reaver01)
-- Ratelimits are now logged to a `:ratelimit` logging level and can be configured
+- Rate limits are now logged to a `:ratelimit` logging level and can be configured
 - `client_id` in `Bot#initilalize` is now optional, and will be cached automatically by the API when needed ([#337](https://github.com/meew0/discordrb/pull/337))
 - `Voice::Encoder#encode_file` now accepts options for ffmpeg ([#341](https://github.com/meew0/discordrb/pull/341), thanks @oyisre)
 - Objects that implement `IDObject` can now be compared using more operators ([#346](https://github.com/meew0/discordrb/pull/346), thanks @mattantonelli)
