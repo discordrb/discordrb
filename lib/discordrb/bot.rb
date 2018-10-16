@@ -950,7 +950,7 @@ module Discordrb
       if @unavailable_servers && @unavailable_servers > 0 && (Time.now - @unavailable_timeout_time) > 10
         # The server streaming timed out!
         LOGGER.warn("Server streaming timed out with #{@unavailable_servers} servers remaining")
-        LOGGER.warn("This means some servers are unavailable due to an outage. Notifying ready now, we'll have to live without these servers")
+        LOGGER.warn('Calling ready now because server loading is taking a long time. Servers may be unavailable due to an outage, or your bot is on very large servers.')
 
         # Unset the unavailable server count so this doesn't get triggered again
         @unavailable_servers = 0
