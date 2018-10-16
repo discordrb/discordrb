@@ -20,7 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Methods for filtering the kinds of overwrites present on a channel ([#321](https://github.com/meew0/discordrb/pull/321))
 - `Channel#default_channel?`, for checking if a channel is the default channel of a server ([#320](https://github.com/meew0/discordrb/pull/320), thanks @Reaver01)
 - Method for returning a `Server`'s `@everyone` role
-- Reaction can now be serialized with `#to_s` to be used in `Message#react` more easily ([#342](https://github.com/meew0/discordrb/pull/342))
+- Reactions can now be serialized with `#to_s` to be used in `Message#react` more easily ([#342](https://github.com/meew0/discordrb/pull/342))
 - Additional objects and attributes for parsing embeds on messages ([#344](https://github.com/meew0/discordrb/pull/344), thanks @mattantonelli)
 - Methods for finding a members highest role, the role that is hoisting the member, or giving the member color ([#335](https://github.com/meew0/discordrb/pull/335), thanks @Snazzah)
 - API support for managing webhooks ([#356](https://github.com/meew0/discordrb/pull/356), thanks @Daniel-Worrall)
