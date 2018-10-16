@@ -94,7 +94,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `Cache#server` now returns `nil` if a server is not found instead of raising an exception ([#424](https://github.com/meew0/discordrb/pull/424), thanks @soukouki)
 - `Bucket#rate_limited?` now accepts an `increment` value for weighted rate limits ([#427](https://github.com/meew0/discordrb/pull/427), thanks @Lavode)
 - `Server#bans` now returns `Array<ServerBan>`, which contains `reason` data in addition to the user banned ([#404](https://github.com/meew0/discordrb/pull/404))
-- `Channel#pune` now accepts a block that can be used to filter the messages to be pruned ([#421](https://github.com/meew0/discordrb/pull/421), thanks @snapcase)
+- `Channel#prune` now accepts a block that can be used to filter the messages to be pruned ([#421](https://github.com/meew0/discordrb/pull/421), thanks @snapcase)
 - WSCS verions message is now only printed when using voice functionality ([#438](https://github.com/meew0/discordrb/pull/438), thanks @dreid)
 - `API::Server.update_channel` is now `API::Server.update_channel_positions`
 - CI is now tested against Ruby 2.3, 2.4, and 2.5 ([#476](https://github.com/meew0/discordrb/pull/476), thanks @nicolasleger)
