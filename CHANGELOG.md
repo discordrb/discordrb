@@ -33,7 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Example of using awaits ([#370](https://github.com/meew0/discordrb/pull/370))
 - Methods on `Member` for kicking and banning ([#404](https://github.com/meew0/discordrb/pull/404))
 - API method and abstraction for adding members to guilds with OAuth2 tokens ([#413](https://github.com/meew0/discordrb/pull/413))
-- Example of using a prefix proc ([#411](https://github.com/meew0/discordrb/pull/413))
+- Example of using a prefix proc ([#411](https://github.com/meew0/discordrb/pull/411))
 - Methods for managing a server's system channel ([#437](https://github.com/meew0/discordrb/pull/437), thanks @ldelelis)
 - Additional error code constants ([#419](https://github.com/meew0/discordrb/pull/419), thanks @LikeLakers2)
 - Commands can be created with a `:rescue` argument, to provide a message or callback when an unhandled exception is raised when executing the command ([#360](https://github.com/meew0/discordrb/pull/360))
