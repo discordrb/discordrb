@@ -86,7 +86,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Webhook related events can now be matched on webhook ID ([#363](https://github.com/meew0/discordrb/pull/363), thanks @Daniel-Worrall)
 - Discord's default user avatar URLs will now be returned when applicable ([#375](https://github.com/meew0/discordrb/pull/375))
 - `Cache#find_user` can now find individual users if name and discriminator is given ([#384](https://github.com/meew0/discordrb/pull/384))
-- `ReactionEvent` provides server, and member if possible ([#351](https://github.com/meew0/discordrb/pull/351), thanks @Daniel-Worrall)
+- `ReactionEvent` provides both `server` and `member`, if possible ([#351](https://github.com/meew0/discordrb/pull/351), thanks @Daniel-Worrall)
 - Installation instructions now include guides for installing with Bundler ([#386](https://github.com/meew0/discordrb/pull/386), [#405](https://github.com/meew0/discordrb/pull/405), thanks @VxJasonxV and @PixeLInc)
 - `default_channel` implementation is updated to reflect Discord changes ([#382](https://github.com/meew0/discordrb/pull/382), [#534](https://github.com/meew0/discordrb/pull/534))
 - Documentation around the conditions where our API returns `nil` is clarified ([#395](https://github.com/meew0/discordrb/pull/395), thanks @LikeLakers2)
