@@ -135,7 +135,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `CommandBot`'s advanced functionality properly handles empty strings in certain settings ([#379](https://github.com/meew0/discordrb/pull/379), thanks @LikeLakers2)
 - Rate limit headers are processed correctly when running into certain API exceptions ([#440](https://github.com/meew0/discordrb/pull/440), thanks @unleashy)
 - Typos preventing `ArgumentError` from being raised when processing `arg_types` ([#400](https://github.com/meew0/discordrb/pull/400), thanks @Daniel-Worrall)
-- `Server#create_role` correctly accepts a `ColourRGB` via `#combined`
+- `Server#create_role` correctly accepts a `ColourRGB`/`ColorRGB` via `#combined`
 - `EventContainer#add_handler` correctly adds handlers for events that haven't had internal storage created for them yet
 - When a server is initially cached, its channels are now cached in a way that prevents REST exceptions from being raised when attempting to process gateway events with uncached channels as a subject ([#391](https://github.com/meew0/discordrb/pull/391))
 - Await event matching now considers specific subclasses, preventing certain awaits to be triggered wrongly on different events in the same class tree ([#431](https://github.com/meew0/discordrb/pull/431))
