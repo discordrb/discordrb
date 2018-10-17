@@ -107,7 +107,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The changelog now follows the "Keep a Changelog" format ([#504](https://github.com/meew0/discordrb/pull/504), thanks @connorshea)
 - `Bot#run` documentation is adjusted to clarify the use of its async argument ([#521](https://github.com/meew0/discordrb/pull/521))
 - `Bot#join` is renamed to `Bot#accept_invite` ([#521](https://github.com/meew0/discordrb/pull/521))
-- `Embed#colour=` accepts instances of `ColourRGB` ([#523](https://github.com/meew0/discordrb/pull/523))
+- `Embed#colour=`/`Embed#color=` now accepts instances of `ColourRGB`/`ColorRGB` ([#523](https://github.com/meew0/discordrb/pull/523))
 - `Gateway` now performs certificate validation, and enforces use of TLSv1.2. If you experience issues (please report them!), you can return to the old codepath by setting `DISCORDRB_SSL_VERIFY_NONE` ([#528](https://github.com/meew0/discordrb/pull/528), thanks @cky)
 - Documentation clarifications around `voice_state_update`, `member_update`, and `server_create` ([#531](https://github.com/meew0/discordrb/pull/531))
 - URLs listed across the code base now use https, various other cleanups ([#540](https://github.com/meew0/discordrb/pull/540), thanks @ChallahuAkbar)
