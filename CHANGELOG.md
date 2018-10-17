@@ -152,7 +152,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `PlayingEvent` now correctly returns `server` ([#486](https://github.com/meew0/discordrb/pull/486), thanks @xTVaser)
 - Roles will no longer be cached twice when using `Server#create_role` ([#488](https://github.com/meew0/discordrb/pull/488))
 - Race condition when creating event handlers inside of other event handlers ([#514](https://github.com/meew0/discordrb/pull/514))
-- Command chain execution is halted immediately if `execute_command` fails, fixing some possible errors to occur with `advanced_functionality` ([#517](https://github.com/meew0/discordrb/pull/517), thanks @unleashy)
+- Command chain execution is halted immediately if `execute_command` fails, fixing some possible errors that could occur with `advanced_functionality` ([#517](https://github.com/meew0/discordrb/pull/517), thanks @unleashy)
 - In the event non-existent role IDs are observed in a member object, they are ignored to prevent cache related errors ([#535](https://github.com/meew0/discordrb/pull/535))
 - `end_with` attribute in `MessageEventHandler` now accepts group-less regular expressions without throwing exceptions ([#571](https://github.com/meew0/discordrb/pull/571), thanks @badBlackShark)
 - `PresenceEvent` is correctly raised when dispatched ([#574](https://github.com/meew0/discordrb/pull/574))
