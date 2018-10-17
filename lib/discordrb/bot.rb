@@ -146,6 +146,7 @@ module Discordrb
     # @return [Hash<Integer => User>] The users by ID.
     def users
       gateway_check
+      unavailable_servers_check
       @users
     end
 
@@ -153,6 +154,7 @@ module Discordrb
     # @return [Hash<Integer => Server>] The servers by ID.
     def servers
       gateway_check
+      unavailable_servers_check
       @servers
     end
 
@@ -165,6 +167,7 @@ module Discordrb
     #   @return [Array<Emoji>] the emoji available.
     def emoji(id = nil)
       gateway_check
+      unavailable_servers_check
 
       emoji_hash = @servers.values.map(&:emoji).reduce(&:merge)
       if id
@@ -666,10 +669,13 @@ module Discordrb
     private
 
     # Throws a useful exception if there's currently no gateway connection.
-    # Also prints a warning if there are unavailable servers.
     def gateway_check
       raise "A gateway connection is necessary to call this method! You'll have to do it inside any event (e.g. `ready`) or after `bot.run :async`." unless connected?
+    end
 
+    # Logs a warning if there are servers which are still unavailable.
+    # e.g. due to a Discord outage or because the servers are large and taking a while to load.
+    def unavailable_servers_check
       # Return unless there are servers that are unavailable.
       return unless @unavailable_servers && @unavailable_servers > 0
       LOGGER.warn("#{@unavailable_servers} servers haven't been cached yet.")
