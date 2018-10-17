@@ -141,7 +141,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Await event matching now considers specific subclasses, preventing certain awaits to be triggered wrongly on different events in the same class tree ([#431](https://github.com/meew0/discordrb/pull/431))
 - Bulk deleting messages properly filters out messages older than two weeks ([#439](https://github.com/meew0/discordrb/pull/439), thanks @Emberwalker)
 - Rate limiting when certain API errors occur are handled properly ([#440](https://github.com/meew0/discordrb/pull/440), thanks @unleashy)
-- Querying the cache for an unknown member no longer adds `nil` elements, causing unexpected behavior ([#456](https://github.com/meew0/discordrb/pull/456))
+- Querying the cache for an unknown member no longer adds `nil` elements, which caused unexpected behavior ([#456](https://github.com/meew0/discordrb/pull/456))
 - Logging behaves correctly when token is an empty string ([#449](https://github.com/meew0/discordrb/pull/449), thanks @Daniel-Worrall)
 - Several typos in documentation ([#444](https://github.com/meew0/discordrb/pull/444), thanks @ToppleKek)
 - When possible, `User` objects are now cached from messages instead of making an API request that may fail
