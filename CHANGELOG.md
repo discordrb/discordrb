@@ -82,7 +82,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Filled in permissions bit for viewing a server's audit log ([#349](https://github.com/meew0/discordrb/pull/349), thanks @Daniel-Worrall)
 - https://cdn.discordapp.com is now used as the base URL for CDN resources like avatars and server icons ([#358](https://github.com/meew0/discordrb/pull/358))
 - Reaction events raised from the bot's actions will respect `parse_self` ([#350](https://github.com/meew0/discordrb/pull/350), thanks @Daniel-Worrall)
-- `Webhooks::Embed#initialize` parses its `color` argument ([#364](https://github.com/meew0/discordrb/pull/364), thanks @Daniel-Worrall)
+- `Webhooks::Embed#initialize` parses its `color`/`colour` argument ([#364](https://github.com/meew0/discordrb/pull/364), thanks @Daniel-Worrall)
 - Webhook related events can now be matched on webhook ID ([#363](https://github.com/meew0/discordrb/pull/363), thanks @Daniel-Worrall)
 - Discord's default user avatar URLs will now be returned when applicable ([#375](https://github.com/meew0/discordrb/pull/375))
 - `Cache#find_user` can now find individual users if name and discriminator is given ([#384](https://github.com/meew0/discordrb/pull/384))
