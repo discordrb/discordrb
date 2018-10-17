@@ -59,7 +59,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A new, synchronous awaits system available via `#await!` ([#499](https://github.com/meew0/discordrb/pull/499))
 - `Channel#sort_after`, for moving a channel around a server within categories easily ([#497](https://github.com/meew0/discordrb/pull/497))
 - The gemspec now includes a link to the changelog ([#515](https://github.com/meew0/discordrb/pull/515), thanks @ChallahuAkbar)
-- Commands can now be restricted by either `allowed_roles` and `required_roles` ([#469](https://github.com/meew0/discordrb/pull/469), thanks @elfenars)
+- Commands can now be restricted by either `allowed_roles` or `required_roles` ([#469](https://github.com/meew0/discordrb/pull/469), thanks @elfenars)
 - `Bot#parse_mention` parses `Channel` mentions ([#525](https://github.com/meew0/discordrb/pull/525), thanks @estherbolik)
 - Support for Discord's `zlib-stream` gateway compression, as well as options to configure the compression mode in `Bot#initialize` ([#527](https://github.com/meew0/discordrb/pull/527), thanks @oct2pus for additional testing)
 - "Priority Speaker" permission bit ([#530](https://github.com/meew0/discordrb/pull/530), thanks @Chewsterchew)
