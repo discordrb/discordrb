@@ -194,8 +194,7 @@ module Discordrb::Middleware
           raise ArgumentError, "Middleware #{mw} does not repsond to `#call(event, state, &block)`" unless mw.respond_to?(:call)
         end
 
-        stock_middleware = Stock.get(name, attributes)
-        if stock_middleware.nil?
+        stock_middleware = Stock.get(name, attributes) || begin
           # TODO: Remove once all events implemented under Stock
           handler = Discordrb::EventContainer.handler_class(klass).new(attributes, nil)
           HandlerMiddleware.new(handler)
