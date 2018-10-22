@@ -112,6 +112,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Documentation clarifications around `voice_state_update`, `member_update`, and `server_create` ([#531](https://github.com/meew0/discordrb/pull/531))
 - URLs listed across the code base now use https, various other cleanups ([#540](https://github.com/meew0/discordrb/pull/540), thanks @ChallahuAkbar)
 - Dependency on the `ffi` gem is restricted to `>= 1.9.24` to prevent a security exploit on Windows, per [CVE-2018-1000201](https://nvd.nist.gov/vuln/detail/CVE-2018-1000201) ([#544](https://github.com/meew0/discordrb/pull/544))
+- Warnings about accessing cached data after server streaming times out are now clarified and printed when accessing relevant methods ([#578](https://github.com/meew0/discordrb/pull/578), thanks @connorshea)
 
 ### Deprecated
 
