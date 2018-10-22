@@ -146,6 +146,7 @@ module Discordrb
     # @return [Hash<Integer => User>] The users by ID.
     def users
       gateway_check
+      unavailable_servers_check
       @users
     end
 
@@ -153,6 +154,7 @@ module Discordrb
     # @return [Hash<Integer => Server>] The servers by ID.
     def servers
       gateway_check
+      unavailable_servers_check
       @servers
     end
 
@@ -165,6 +167,7 @@ module Discordrb
     #   @return [Array<Emoji>] the emoji available.
     def emoji(id = nil)
       gateway_check
+      unavailable_servers_check
 
       emoji_hash = @servers.values.map(&:emoji).reduce(&:merge)
       if id
@@ -665,11 +668,18 @@ module Discordrb
 
     private
 
-    # Throws a useful exception if there's currently no gateway connection
+    # Throws a useful exception if there's currently no gateway connection.
     def gateway_check
-      return if connected?
+      raise "A gateway connection is necessary to call this method! You'll have to do it inside any event (e.g. `ready`) or after `bot.run :async`." unless connected?
+    end
 
-      raise "A gateway connection is necessary to call this method! You'll have to do it inside any event (e.g. `ready`) or after `bot.run :async`."
+    # Logs a warning if there are servers which are still unavailable.
+    # e.g. due to a Discord outage or because the servers are large and taking a while to load.
+    def unavailable_servers_check
+      # Return unless there are servers that are unavailable.
+      return unless @unavailable_servers && @unavailable_servers > 0
+      LOGGER.warn("#{@unavailable_servers} servers haven't been cached yet.")
+      LOGGER.warn('Servers may be unavailable due to an outage, or your bot is on very large servers that are taking a while to load.')
     end
 
     ### ##    ## ######## ######## ########  ##    ##    ###    ##        ######
@@ -949,8 +959,8 @@ module Discordrb
       # Check whether there are still unavailable servers and there have been more than 10 seconds since READY
       if @unavailable_servers && @unavailable_servers > 0 && (Time.now - @unavailable_timeout_time) > 10
         # The server streaming timed out!
-        LOGGER.warn("Server streaming timed out with #{@unavailable_servers} servers remaining")
-        LOGGER.warn("This means some servers are unavailable due to an outage. Notifying ready now, we'll have to live without these servers")
+        LOGGER.debug("Server streaming timed out with #{@unavailable_servers} servers remaining")
+        LOGGER.debug('Calling ready now because server loading is taking a long time. Servers may be unavailable due to an outage, or your bot is on very large servers.')
 
         # Unset the unavailable server count so this doesn't get triggered again
         @unavailable_servers = 0
