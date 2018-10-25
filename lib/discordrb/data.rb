@@ -11,6 +11,7 @@ require 'discordrb/api/invite'
 require 'discordrb/api/user'
 require 'discordrb/api/webhook'
 require 'discordrb/webhooks/embeds'
+require 'discordrb/paginator'
 require 'time'
 require 'base64'
 
