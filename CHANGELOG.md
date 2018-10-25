@@ -12,10 +12,56 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [View diff for this release.](https://github.com/meew0/discordrb/compare/v3.2.1...v3.3.0)
 
+
+### Summary
+
+3.3.0 brings discordrb up to speed with new features added to Discord's API over the last year. Included is a large number of fixes, optimizations, and library features.
+
+Since there is a lot here, here are highlights of the more notable changes in this release:
+
+- We now use SSL certificate validation in our gateway connections, and enforce use of TLSv1.2. If this is an issue
+  for your platform or environment (you get errors related to SSL), please report this with relevant details. You
+  can revert to the old codepath at any time by setting `DISCORDRB_SSL_VERIFY_NONE`. This environment variable will
+  be removed in a later release when this proves to be a stable default.
+
+- `CommandBot` now supports a new method of "aliasing" commands with the `aliases:` keyword. It accepts an array
+  of symbols of alternate command names. Currently this is supported by passing an array of symbols for the command
+  name itself, but this essentially makes "copies" of the command, meaning each alias will show up in your help command.
+  Using `aliases` instead, the library will recognize that these other names *are aliases* instead of copying the command.
+  Aliases will be listed when users use `!help` with the command name, or any of its aliases. For now you may chose to use
+  either style, but you cannot use both. Specifying an array for the command name is now considered deprecated.
+
+- There are now two methods of creating "awaits" in discordrb. The new style is a blocking (synchronous) method that
+  uses threads and regular event handlers in the background. The new methods are all named with a bang (`!`),
+  i.e. `user.await!`, `message.await!`, and simply return the raised event. This system should be less confusing that
+  the current asynchronous one. These blocking awaits no longer have an identifying key and only accept the event
+  attributes as an argument. There is also a special reserved attribute called `timeout` that will stop waiting for
+  an event and return `nil` if the given number of seconds has passed. Eventually this new system of awaits will
+  replace the old one in a later breaking change. A short example:
+
+```ruby
+bot.message(content: '!test') do |event|
+  event.respond 'What is your name?'
+  response = event.message.await!(timeout: 3)
+  if response
+    event.respond "Hello, #{response.message.content}!"
+  else
+    event.respond 'You took too long!'
+  end
+end
+```
+
+The entire changelog follows, with items that contain breaking changes noted. If you use parts of the library
+mentioned in a breaking change, you can read the PR and diff for the full details. If you need help with
+understanding, updating your bot, or have any other questions, please feel free to [join us on Discord](https://discord.gg/cyK3Hjm)
+or open an issue if necessary.
+
+Thank you to all of our contributors!
+
 ### Added
 
-- API methods to add and remove single member roles ([#310](https://github.com/meew0/discordrb/pull/310))
-- API methods and abstractions for listing available voice regions ([#311](https://github.com/meew0/discordrb/pull/311))
+- **(breaking change)** API methods to add and remove single member roles ([#310](https://github.com/meew0/discordrb/pull/310))
+- **(breaking change)** API methods and abstractions for listing available voice regions ([#311](https://github.com/meew0/discordrb/pull/311))
 - `Server` methods to prune members and to get the number of members available for pruning ([#315](https://github.com/meew0/discordrb/pull/315))
 - Methods for filtering the kinds of overwrites present on a channel ([#321](https://github.com/meew0/discordrb/pull/321))
 - `Channel#default_channel?`, for checking if a channel is the default channel of a server ([#320](https://github.com/meew0/discordrb/pull/320), thanks @Reaver01)
@@ -34,18 +80,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Methods on `Member` for kicking and banning ([#404](https://github.com/meew0/discordrb/pull/404))
 - API method and abstraction for adding members to guilds with OAuth2 tokens ([#413](https://github.com/meew0/discordrb/pull/413))
 - Example of using a prefix proc ([#411](https://github.com/meew0/discordrb/pull/411))
-- Methods for managing a server's system channel ([#437](https://github.com/meew0/discordrb/pull/437), thanks @ldelelis)
-- Additional error code constants ([#419](https://github.com/meew0/discordrb/pull/419), thanks @LikeLakers2)
+- **(breaking change)** Methods for managing a server's system channel ([#437](https://github.com/meew0/discordrb/pull/437), thanks @ldelelis)
+- **(breaking change)** Additional error code constants ([#419](https://github.com/meew0/discordrb/pull/419), thanks @LikeLakers2)
 - Commands can be created with a `:rescue` argument, to provide a message or callback when an unhandled exception is raised when executing the command ([#360](https://github.com/meew0/discordrb/pull/360))
-- Additional `Server` properties for verification levels, default message notification levels, and explicit content filter settings ([#414](https://github.com/meew0/discordrb/pull/414), thanks @PixeLInc)
-- `nonce` is accepted in `API::Channel.create_message` ([#414](https://github.com/meew0/discordrb/pull/414), thanks @PixeLInc)
+- **(breaking change)** Additional `Server` properties for verification levels, default message notification levels, and explicit content filter settings ([#414](https://github.com/meew0/discordrb/pull/414), thanks @PixeLInc)
+- **(breaking change)** `nonce` is accepted in `API::Channel.create_message` ([#414](https://github.com/meew0/discordrb/pull/414), thanks @PixeLInc)
 - Setters for new status options (`Bot#listening=`, `Bot#watching=`) ([#432](https://github.com/meew0/discordrb/pull/432), thanks @PixeLInc)
 - Documentation examples for sending a file ([#409](https://github.com/meew0/discordrb/pull/409))
 - Respondable implements `#send_embed` ([#420](https://github.com/meew0/discordrb/pull/420))
 - `Invite` now supplies `max_age` and `created_at`
 - `Invite` now supplies `member_count` and `online_member_count` ([#454](https://github.com/meew0/discordrb/pull/454), thanks @Snazzah)
 - `Server` methods for managing a server's embed (widget) settings ([#435](https://github.com/meew0/discordrb/pull/435))
-- Support for category channels in `Server` and `Channel` ([#415](https://github.com/meew0/discordrb/pull/415), [#477](https://github.com/meew0/discordrb/pull/477), thanks @omnilord)
+- **(breaking change)** Support for category channels in `Server` and `Channel` ([#415](https://github.com/meew0/discordrb/pull/415), [#477](https://github.com/meew0/discordrb/pull/477), thanks @omnilord)
 - `CommandBot` and commands channel whitelist can now be modified after creation ([#446](https://github.com/meew0/discordrb/pull/446), thanks @omnilord)
 - A `Role`'s `position` can now be sorted relative to other roles ([#445](https://github.com/meew0/discordrb/pull/445), thanks @mattantonelli)
 - The `return` keyword inside of commands can be used to return content to Discord ([#462](https://github.com/meew0/discordrb/pull/462), thanks @TrenchFroast)
@@ -64,17 +110,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Support for Discord's `zlib-stream` gateway compression, as well as options to configure the compression mode in `Bot#initialize` ([#527](https://github.com/meew0/discordrb/pull/527), thanks @oct2pus for additional testing)
 - "Priority Speaker" permission bit ([#530](https://github.com/meew0/discordrb/pull/530), thanks @Chewsterchew)
 - Implemented `aliases` attribute in commands, for an improved alternative to "command copying" by passing an array to the command name ([#524](https://github.com/meew0/discordrb/pull/524))
-- Methods for managing a `Channel`'s slowmode settings ([#573](https://github.com/meew0/discordrb/pull/573), thanks @badBlackShark)
+- **(breaking change)** Methods for managing a `Channel`'s slowmode settings ([#573](https://github.com/meew0/discordrb/pull/573), thanks @badBlackShark)
 
 ### Changed
 
 - `Channel#make_invite` now accepts an argument to always return a unique invite code ([#312](https://github.com/meew0/discordrb/pull/312))
 - More of the API accepts objects that respond to `#resolve_id` ([#313](https://github.com/meew0/discordrb/pull/313), [#328](https://github.com/meew0/discordrb/pull/328), thanks @Likelakers2)
-- `Channel#history` and `API::Channel.messages` now accepts `around_id` ([#314](https://github.com/meew0/discordrb/pull/314))
-- `API::Server.prune_count` accepts `days` ([#315](https://github.com/meew0/discordrb/pull/315))
-- Methods for creating channels accept additional arguments ([#321](https://github.com/meew0/discordrb/pull/321))
+- **(breaking change)** `Channel#history` and `API::Channel.messages` now accepts `around_id` ([#314](https://github.com/meew0/discordrb/pull/314))
+- **(breaking change)** `API::Server.prune_count` accepts `days` ([#315](https://github.com/meew0/discordrb/pull/315))
+- **(breaking change)** Methods for creating channels accept additional arguments ([#321](https://github.com/meew0/discordrb/pull/321))
 - `Channel` overwrite-related API now returns an `Overwrite` object ([#321](https://github.com/meew0/discordrb/pull/321))
-- Creating roles now accepts more parameters ([#323](https://github.com/meew0/discordrb/pull/323), thanks @Reaver01)
+- **(breaking change)** Creating roles now accepts more parameters ([#323](https://github.com/meew0/discordrb/pull/323), thanks @Reaver01)
 - Rate limits are now logged to a `:ratelimit` logging level and can be configured
 - `client_id` in `Bot#initilalize` is now optional, and will be cached automatically by the API when needed ([#337](https://github.com/meew0/discordrb/pull/337))
 - `Voice::Encoder#encode_file` now accepts options for ffmpeg ([#341](https://github.com/meew0/discordrb/pull/341), thanks @oyisre)
@@ -88,15 +134,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `Cache#find_user` can now find individual users if name and discriminator is given ([#384](https://github.com/meew0/discordrb/pull/384))
 - `ReactionEvent` provides both `server` and `member`, if possible ([#351](https://github.com/meew0/discordrb/pull/351), thanks @Daniel-Worrall)
 - Installation instructions now include guides for installing with Bundler ([#386](https://github.com/meew0/discordrb/pull/386), [#405](https://github.com/meew0/discordrb/pull/405), thanks @VxJasonxV and @PixeLInc)
-- `default_channel` implementation is updated to reflect Discord changes ([#382](https://github.com/meew0/discordrb/pull/382), [#534](https://github.com/meew0/discordrb/pull/534))
+- **(breaking change)** `default_channel` implementation is updated to reflect Discord changes ([#382](https://github.com/meew0/discordrb/pull/382), [#534](https://github.com/meew0/discordrb/pull/534))
 - Documentation around the conditions where our API returns `nil` is clarified ([#395](https://github.com/meew0/discordrb/pull/395), thanks @LikeLakers2)
 - Whenever possible, we update cached data about a `Server` returned to us from making changes to it
-- `Cache#server` now returns `nil` if a server is not found instead of raising an exception ([#424](https://github.com/meew0/discordrb/pull/424), thanks @soukouki)
+- **(breaking change)** `Cache#server` now returns `nil` if a server is not found instead of raising an exception ([#424](https://github.com/meew0/discordrb/pull/424), thanks @soukouki)
 - `Bucket#rate_limited?` now accepts an `increment` value for weighted rate limits ([#427](https://github.com/meew0/discordrb/pull/427), thanks @Lavode)
-- `Server#bans` now returns `Array<ServerBan>`, which contains `reason` data in addition to the user banned ([#404](https://github.com/meew0/discordrb/pull/404))
+- **(breaking change)** `Server#bans` now returns `Array<ServerBan>`, which contains `reason` data in addition to the user banned ([#404](https://github.com/meew0/discordrb/pull/404))
 - `Channel#prune` now accepts a block that can be used to filter the messages to be pruned ([#421](https://github.com/meew0/discordrb/pull/421), thanks @snapcase)
 - WSCS verions message is now only printed when using voice functionality ([#438](https://github.com/meew0/discordrb/pull/438), thanks @dreid)
-- `API::Server.update_channel` is now `API::Server.update_channel_positions`
+- **(breaking change)** `API::Server.update_channel` is now `API::Server.update_channel_positions`
 - CI is now tested against Ruby 2.3, 2.4, and 2.5 ([#476](https://github.com/meew0/discordrb/pull/476), thanks @nicolasleger)
 - CI now tests with YARD to validate docstrings
 - Specs for `Channel` are refactored ([#481](https://github.com/meew0/discordrb/pull/481), thanks @Daniel-Worrall)
@@ -106,7 +152,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `Bot#parse_mention` will now return an `Emoji` object for a mention of an emoji the bot isn't connected to ([#473](https://github.com/meew0/discordrb/pull/473))
 - The changelog now follows the "Keep a Changelog" format ([#504](https://github.com/meew0/discordrb/pull/504), thanks @connorshea)
 - `Bot#run` documentation is adjusted to clarify the use of its async argument ([#521](https://github.com/meew0/discordrb/pull/521))
-- `Bot#join` is renamed to `Bot#accept_invite` ([#521](https://github.com/meew0/discordrb/pull/521))
+- **(breaking change)** `Bot#join` is renamed to `Bot#accept_invite` ([#521](https://github.com/meew0/discordrb/pull/521))
 - `Embed#colour=`/`Embed#color=` now accepts instances of `ColourRGB`/`ColorRGB` ([#523](https://github.com/meew0/discordrb/pull/523))
 - `Gateway` now performs certificate validation, and enforces use of TLSv1.2. If you experience issues (please report them!), you can return to the old codepath by setting `DISCORDRB_SSL_VERIFY_NONE` ([#528](https://github.com/meew0/discordrb/pull/528), thanks @cky)
 - Documentation clarifications around `voice_state_update`, `member_update`, and `server_create` ([#531](https://github.com/meew0/discordrb/pull/531))
@@ -120,8 +166,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
-- Unsupported `mentions` argument in Create Message API ([#420](https://github.com/meew0/discordrb/pull/420))
-- `TrueClass` is no longer an alias for `:debug` logging in `Bot#initialize`
+- **(breaking change)** Unsupported `mentions` argument in Create Message API ([#420](https://github.com/meew0/discordrb/pull/420))
+- **(breaking change)** `TrueClass` is no longer an alias for `:debug` logging in `Bot#initialize`
 
 ### Fixed
 
