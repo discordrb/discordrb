@@ -60,7 +60,7 @@ Thank you to all of our contributors!
 
 ### Added
 
-- **(breaking change)** API methods to add and remove single member roles ([#310](https://github.com/meew0/discordrb/pull/310))
+- API methods to add and remove single member roles ([#310](https://github.com/meew0/discordrb/pull/310))
 - **(breaking change)** API methods and abstractions for listing available voice regions ([#311](https://github.com/meew0/discordrb/pull/311))
 - `Server` methods to prune members and to get the number of members available for pruning ([#315](https://github.com/meew0/discordrb/pull/315))
 - Methods for filtering the kinds of overwrites present on a channel ([#321](https://github.com/meew0/discordrb/pull/321))
