@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 [View diff for this release.](https://github.com/meew0/discordrb/compare/v3.3.0...HEAD)
 
-## [3.3.0] - TBD
+## [3.3.0] - 2018-10-27
 [3.3.0]: https://github.com/meew0/discordrb/releases/tag/v3.3.0
 
 [View diff for this release.](https://github.com/meew0/discordrb/compare/v3.2.1...v3.3.0)
