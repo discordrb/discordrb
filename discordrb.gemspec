@@ -29,7 +29,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'rbnacl', '~> 3.4.0' # 24: update
   spec.add_dependency 'ffi', '>= 1.9.24'
 
-  spec.add_dependency 'discordrb-webhooks', '~> 3.2.0.1'
+  spec.add_dependency 'discordrb-webhooks', '~> 3.3.0'
 
   spec.required_ruby_version = '>= 2.2.4'
 

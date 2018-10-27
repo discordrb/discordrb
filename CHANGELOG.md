@@ -5,7 +5,205 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
-[View diff for this release.](https://github.com/meew0/discordrb/compare/v3.2.1...HEAD)
+[View diff for this release.](https://github.com/meew0/discordrb/compare/v3.3.0...HEAD)
+
+## [3.3.0] - 2018-10-27
+[3.3.0]: https://github.com/meew0/discordrb/releases/tag/v3.3.0
+
+[View diff for this release.](https://github.com/meew0/discordrb/compare/v3.2.1...v3.3.0)
+
+
+### Summary
+
+3.3.0 brings discordrb up to speed with new features added to Discord's API over the last year. Included is a large number of fixes, optimizations, and library features.
+
+Since there is a lot here, here are highlights of the more notable changes in this release:
+
+- We now use SSL certificate validation in our gateway connections, and enforce use of TLSv1.2. If this is an issue
+  for your platform or environment (you get errors related to SSL), please report this with relevant details. You
+  can revert to the old codepath at any time by setting `DISCORDRB_SSL_VERIFY_NONE`. This environment variable will
+  be removed in a later release when this proves to be a stable default.
+
+- `CommandBot` now supports a new method of "aliasing" commands with the `aliases:` keyword. It accepts an array
+  of symbols of alternate command names. Currently this is supported by passing an array of symbols for the command
+  name itself, but this essentially makes "copies" of the command, meaning each alias will show up in your help command.
+  Using `aliases` instead, the library will recognize that these other names *are aliases* instead of copying the command.
+  Aliases will be listed when users use `!help` with the command name, or any of its aliases. For now you may chose to use
+  either style, but you cannot use both. Specifying an array for the command name is now considered deprecated.
+
+- There are now two methods of creating "awaits" in discordrb. The new style is a blocking (synchronous) method that
+  uses threads and regular event handlers in the background. The new methods are all named with a bang (`!`),
+  i.e. `user.await!`, `message.await!`, and simply return the raised event. This system should be less confusing that
+  the current asynchronous one. These blocking awaits no longer have an identifying key and only accept the event
+  attributes as an argument. There is also a special reserved attribute called `timeout` that will stop waiting for
+  an event and return `nil` if the given number of seconds has passed. Eventually this new system of awaits will
+  replace the old one in a later breaking change. A short example:
+
+```ruby
+bot.message(content: '!test') do |event|
+  event.respond 'What is your name?'
+  response = event.message.await!(timeout: 3)
+  if response
+    event.respond "Hello, #{response.message.content}!"
+  else
+    event.respond 'You took too long!'
+  end
+end
+```
+
+The entire changelog follows, with items that contain breaking changes noted. If you use parts of the library
+mentioned in a breaking change, you can read the PR and diff for the full details. If you need help with
+understanding, updating your bot, or have any other questions, please feel free to [join us on Discord](https://discord.gg/cyK3Hjm)
+or open an issue if necessary.
+
+Thank you to all of our contributors!
+
+### Added
+
+- API methods to add and remove single member roles ([#310](https://github.com/meew0/discordrb/pull/310))
+- **(breaking change)** API methods and abstractions for listing available voice regions ([#311](https://github.com/meew0/discordrb/pull/311))
+- `Server` methods to prune members and to get the number of members available for pruning ([#315](https://github.com/meew0/discordrb/pull/315))
+- Methods for filtering the kinds of overwrites present on a channel ([#321](https://github.com/meew0/discordrb/pull/321))
+- `Channel#default_channel?`, for checking if a channel is the default channel of a server ([#320](https://github.com/meew0/discordrb/pull/320), thanks @Reaver01)
+- Method for returning a `Server`'s `@everyone` role
+- Reactions can now be serialized with `#to_s` to be used in `Message#react` more easily ([#342](https://github.com/meew0/discordrb/pull/342))
+- Additional objects and attributes for parsing embeds on messages ([#344](https://github.com/meew0/discordrb/pull/344), thanks @mattantonelli)
+- Methods for finding a members highest role, the role that is hoisting the member, or giving the member color ([#335](https://github.com/meew0/discordrb/pull/335), thanks @Snazzah)
+- API support for managing webhooks ([#356](https://github.com/meew0/discordrb/pull/356), thanks @Daniel-Worrall)
+- Support for reading and managing a channel's `nsfw` property ([#380](https://github.com/meew0/discordrb/pull/380))
+- The `:administrator` permissions value is aliased as `:administrate` ([#322](https://github.com/meew0/discordrb/pull/322))
+- Class methods on `Permissions` for easily building permissions bits values ([#322](https://github.com/meew0/discordrb/pull/322))
+- `Gateway#send_packet` and `Gateway#send_raw` methods to send custom data payloads to the gateway
+- Methods for reading `icon_url` and `proxy_icon_url` in `EmbedAuthor`
+- Methods for obtaining a server and channels invites ([#394](https://github.com/meew0/discordrb/pull/394))
+- Example of using awaits ([#370](https://github.com/meew0/discordrb/pull/370))
+- Methods on `Member` for kicking and banning ([#404](https://github.com/meew0/discordrb/pull/404))
+- API method and abstraction for adding members to guilds with OAuth2 tokens ([#413](https://github.com/meew0/discordrb/pull/413))
+- Example of using a prefix proc ([#411](https://github.com/meew0/discordrb/pull/411))
+- **(breaking change)** Methods for managing a server's system channel ([#437](https://github.com/meew0/discordrb/pull/437), thanks @ldelelis)
+- **(breaking change)** Additional error code constants ([#419](https://github.com/meew0/discordrb/pull/419), thanks @LikeLakers2)
+- Commands can be created with a `:rescue` argument, to provide a message or callback when an unhandled exception is raised when executing the command ([#360](https://github.com/meew0/discordrb/pull/360))
+- **(breaking change)** Additional `Server` properties for verification levels, default message notification levels, and explicit content filter settings ([#414](https://github.com/meew0/discordrb/pull/414), thanks @PixeLInc)
+- **(breaking change)** `nonce` is accepted in `API::Channel.create_message` ([#414](https://github.com/meew0/discordrb/pull/414), thanks @PixeLInc)
+- Setters for new status options (`Bot#listening=`, `Bot#watching=`) ([#432](https://github.com/meew0/discordrb/pull/432), thanks @PixeLInc)
+- Documentation examples for sending a file ([#409](https://github.com/meew0/discordrb/pull/409))
+- Respondable implements `#send_embed` ([#420](https://github.com/meew0/discordrb/pull/420))
+- `Invite` now supplies `max_age` and `created_at`
+- `Invite` now supplies `member_count` and `online_member_count` ([#454](https://github.com/meew0/discordrb/pull/454), thanks @Snazzah)
+- `Server` methods for managing a server's embed (widget) settings ([#435](https://github.com/meew0/discordrb/pull/435))
+- **(breaking change)** Support for category channels in `Server` and `Channel` ([#415](https://github.com/meew0/discordrb/pull/415), [#477](https://github.com/meew0/discordrb/pull/477), thanks @omnilord)
+- `CommandBot` and commands channel whitelist can now be modified after creation ([#446](https://github.com/meew0/discordrb/pull/446), thanks @omnilord)
+- A `Role`'s `position` can now be sorted relative to other roles ([#445](https://github.com/meew0/discordrb/pull/445), thanks @mattantonelli)
+- The `return` keyword inside of commands can be used to return content to Discord ([#462](https://github.com/meew0/discordrb/pull/462), thanks @TrenchFroast)
+- `Emoji` now supplies `animated` ([#464](https://github.com/meew0/discordrb/pull/464), thanks @PixeLInc)
+- Additional instructions for installation of Ruby's devkit for Ruby 2.3+ ([#468](https://github.com/meew0/discordrb/pull/468), thanks @oct2pus)
+- `Server` API for retrieving a server's audit logs ([#353](https://github.com/meew0/discordrb/pull/353), thanks @Snazzah)
+- `EventContainer` methods for server role create, delete, and update events ([#494](https://github.com/meew0/discordrb/pull/494), thanks @Daniel-Worrall)
+- `PlayingEvent` now returns `details` ([#486](https://github.com/meew0/discordrb/pull/486), thanks @xTVaser)
+- `Role` now supplies `server` ([#505](https://github.com/meew0/discordrb/pull/505), thanks @micke)
+- Documentation for the `discordrb-webhooks` gem in `README.md` ([#460](https://github.com/meew0/discordrb/pull/460))
+- A new, synchronous awaits system available via `#await!` ([#499](https://github.com/meew0/discordrb/pull/499))
+- `Channel#sort_after`, for moving a channel around a server within categories easily ([#497](https://github.com/meew0/discordrb/pull/497))
+- The gemspec now includes a link to the changelog ([#515](https://github.com/meew0/discordrb/pull/515), thanks @ChallahuAkbar)
+- Commands can now be restricted by either `allowed_roles` or `required_roles` ([#469](https://github.com/meew0/discordrb/pull/469), thanks @elfenars)
+- `Bot#parse_mention` parses `Channel` mentions ([#525](https://github.com/meew0/discordrb/pull/525), thanks @estherbolik)
+- Support for Discord's `zlib-stream` gateway compression, as well as options to configure the compression mode in `Bot#initialize` ([#527](https://github.com/meew0/discordrb/pull/527), thanks @oct2pus for additional testing)
+- "Priority Speaker" permission bit ([#530](https://github.com/meew0/discordrb/pull/530), thanks @Chewsterchew)
+- Implemented `aliases` attribute in commands, for an improved alternative to "command copying" by passing an array to the command name ([#524](https://github.com/meew0/discordrb/pull/524))
+- **(breaking change)** Methods for managing a `Channel`'s slowmode settings ([#573](https://github.com/meew0/discordrb/pull/573), thanks @badBlackShark)
+
+### Changed
+
+- `Channel#make_invite` now accepts an argument to always return a unique invite code ([#312](https://github.com/meew0/discordrb/pull/312))
+- More of the API accepts objects that respond to `#resolve_id` ([#313](https://github.com/meew0/discordrb/pull/313), [#328](https://github.com/meew0/discordrb/pull/328), thanks @Likelakers2)
+- **(breaking change)** `Channel#history` and `API::Channel.messages` now accepts `around_id` ([#314](https://github.com/meew0/discordrb/pull/314))
+- **(breaking change)** `API::Server.prune_count` accepts `days` ([#315](https://github.com/meew0/discordrb/pull/315))
+- **(breaking change)** Methods for creating channels accept additional arguments ([#321](https://github.com/meew0/discordrb/pull/321))
+- `Channel` overwrite-related API now returns an `Overwrite` object ([#321](https://github.com/meew0/discordrb/pull/321))
+- **(breaking change)** Creating roles now accepts more parameters ([#323](https://github.com/meew0/discordrb/pull/323), thanks @Reaver01)
+- Rate limits are now logged to a `:ratelimit` logging level and can be configured
+- `client_id` in `Bot#initilalize` is now optional, and will be cached automatically by the API when needed ([#337](https://github.com/meew0/discordrb/pull/337))
+- `Voice::Encoder#encode_file` now accepts options for ffmpeg ([#341](https://github.com/meew0/discordrb/pull/341), thanks @oyisre)
+- Objects that implement `IDObject` can now be compared using more operators ([#346](https://github.com/meew0/discordrb/pull/346), thanks @mattantonelli)
+- Filled in permissions bit for viewing a server's audit log ([#349](https://github.com/meew0/discordrb/pull/349), thanks @Daniel-Worrall)
+- https://cdn.discordapp.com is now used as the base URL for CDN resources like avatars and server icons ([#358](https://github.com/meew0/discordrb/pull/358))
+- Reaction events raised from the bot's actions will respect `parse_self` ([#350](https://github.com/meew0/discordrb/pull/350), thanks @Daniel-Worrall)
+- `Webhooks::Embed#initialize` parses its `color`/`colour` argument ([#364](https://github.com/meew0/discordrb/pull/364), thanks @Daniel-Worrall)
+- Webhook related events can now be matched on webhook ID ([#363](https://github.com/meew0/discordrb/pull/363), thanks @Daniel-Worrall)
+- Discord's default user avatar URLs will now be returned when applicable ([#375](https://github.com/meew0/discordrb/pull/375))
+- `Cache#find_user` can now find individual users if name and discriminator is given ([#384](https://github.com/meew0/discordrb/pull/384))
+- `ReactionEvent` provides both `server` and `member`, if possible ([#351](https://github.com/meew0/discordrb/pull/351), thanks @Daniel-Worrall)
+- Installation instructions now include guides for installing with Bundler ([#386](https://github.com/meew0/discordrb/pull/386), [#405](https://github.com/meew0/discordrb/pull/405), thanks @VxJasonxV and @PixeLInc)
+- **(breaking change)** `default_channel` implementation is updated to reflect Discord changes ([#382](https://github.com/meew0/discordrb/pull/382), [#534](https://github.com/meew0/discordrb/pull/534))
+- Documentation around the conditions where our API returns `nil` is clarified ([#395](https://github.com/meew0/discordrb/pull/395), thanks @LikeLakers2)
+- Whenever possible, we update cached data about a `Server` returned to us from making changes to it
+- **(breaking change)** `Cache#server` now returns `nil` if a server is not found instead of raising an exception ([#424](https://github.com/meew0/discordrb/pull/424), thanks @soukouki)
+- `Bucket#rate_limited?` now accepts an `increment` value for weighted rate limits ([#427](https://github.com/meew0/discordrb/pull/427), thanks @Lavode)
+- **(breaking change)** `Server#bans` now returns `Array<ServerBan>`, which contains `reason` data in addition to the user banned ([#404](https://github.com/meew0/discordrb/pull/404))
+- `Channel#prune` now accepts a block that can be used to filter the messages to be pruned ([#421](https://github.com/meew0/discordrb/pull/421), thanks @snapcase)
+- WSCS verions message is now only printed when using voice functionality ([#438](https://github.com/meew0/discordrb/pull/438), thanks @dreid)
+- **(breaking change)** `API::Server.update_channel` is now `API::Server.update_channel_positions`
+- CI is now tested against Ruby 2.3, 2.4, and 2.5 ([#476](https://github.com/meew0/discordrb/pull/476), thanks @nicolasleger)
+- CI now tests with YARD to validate docstrings
+- Specs for `Channel` are refactored ([#481](https://github.com/meew0/discordrb/pull/481), thanks @Daniel-Worrall)
+- Specs are refactored to not use `module` namespaces ([#520](https://github.com/meew0/discordrb/pull/520), thanks @Daniel-Worrall)
+- `Bot` now logs to `LOGGER.info` when the bot successfully resumes
+- Code climate tooling is updated ([#489](https://github.com/meew0/discordrb/pull/489), thanks @ChallahuAkbar)
+- `Bot#parse_mention` will now return an `Emoji` object for a mention of an emoji the bot isn't connected to ([#473](https://github.com/meew0/discordrb/pull/473))
+- The changelog now follows the "Keep a Changelog" format ([#504](https://github.com/meew0/discordrb/pull/504), thanks @connorshea)
+- `Bot#run` documentation is adjusted to clarify the use of its async argument ([#521](https://github.com/meew0/discordrb/pull/521))
+- **(breaking change)** `Bot#join` is renamed to `Bot#accept_invite` ([#521](https://github.com/meew0/discordrb/pull/521))
+- `Embed#colour=`/`Embed#color=` now accepts instances of `ColourRGB`/`ColorRGB` ([#523](https://github.com/meew0/discordrb/pull/523))
+- `Gateway` now performs certificate validation, and enforces use of TLSv1.2. If you experience issues (please report them!), you can return to the old codepath by setting `DISCORDRB_SSL_VERIFY_NONE` ([#528](https://github.com/meew0/discordrb/pull/528), thanks @cky)
+- Documentation clarifications around `voice_state_update`, `member_update`, and `server_create` ([#531](https://github.com/meew0/discordrb/pull/531))
+- URLs listed across the code base now use https, various other cleanups ([#540](https://github.com/meew0/discordrb/pull/540), thanks @ChallahuAkbar)
+- Dependency on the `ffi` gem is restricted to `>= 1.9.24` to prevent a security exploit on Windows, per [CVE-2018-1000201](https://nvd.nist.gov/vuln/detail/CVE-2018-1000201) ([#544](https://github.com/meew0/discordrb/pull/544))
+- Warnings about accessing cached data after server streaming times out are now clarified and printed when accessing relevant methods ([#578](https://github.com/meew0/discordrb/pull/578), thanks @connorshea)
+
+### Deprecated
+
+- The existing awaits system is deprecated in favor of a simpler, synchronous system introduced in [#499](https://github.com/meew0/discordrb/pull/499) ([#509](https://github.com/meew0/discordrb/pull/509))
+
+### Removed
+
+- **(breaking change)** Unsupported `mentions` argument in Create Message API ([#420](https://github.com/meew0/discordrb/pull/420))
+- **(breaking change)** `TrueClass` is no longer an alias for `:debug` logging in `Bot#initialize`
+
+### Fixed
+
+- `Errors::MessageTooLong` is now raised correctly ([#325](https://github.com/meew0/discordrb/pull/325), thanks @Daniel-Worrall)
+- Certain `Reaction` related events properly inherit `Event` ([#329](https://github.com/meew0/discordrb/pull/329), thanks @valeth)
+- Permissions calculation now takes the server's `@everyone` role permissions into consideration (additional work by [#357](https://github.com/meew0/discordrb/pull/357), thanks @mattantonelli)
+- `Role#members` had a typo preventing it from working ([#340](https://github.com/meew0/discordrb/pull/340))
+- `Message#my_reactions` now correctly returns `Array<Reaction>` ([#342](https://github.com/meew0/discordrb/pull/342))
+- Several internal checks have been added to make bots more resilient to zombie connections
+- Documentation for `TypingEvent` is now more accurate ([#367](https://github.com/meew0/discordrb/pull/367), thanks @Snazzah)
+- Corrected implementation of the `reason` parameter in various API ([#372](https://github.com/meew0/discordrb/pull/372))
+- `CommandBot`'s advanced functionality properly handles empty strings in certain settings ([#379](https://github.com/meew0/discordrb/pull/379), thanks @LikeLakers2)
+- Rate limit headers are processed correctly when running into certain API exceptions ([#440](https://github.com/meew0/discordrb/pull/440), thanks @unleashy)
+- Typos preventing `ArgumentError` from being raised when processing `arg_types` ([#400](https://github.com/meew0/discordrb/pull/400), thanks @Daniel-Worrall)
+- `Server#create_role` correctly accepts a `ColourRGB`/`ColorRGB` via `#combined`
+- `EventContainer#add_handler` correctly adds handlers for events that haven't had internal storage created for them yet
+- When a server is initially cached, its channels are now cached in a way that prevents REST exceptions from being raised when attempting to process gateway events with uncached channels as a subject ([#391](https://github.com/meew0/discordrb/pull/391))
+- Await event matching now considers specific subclasses, preventing certain awaits to be triggered wrongly on different events in the same class tree ([#431](https://github.com/meew0/discordrb/pull/431))
+- Bulk deleting messages properly filters out messages older than two weeks ([#439](https://github.com/meew0/discordrb/pull/439), thanks @Emberwalker)
+- Rate limiting when certain API errors occur are handled properly ([#440](https://github.com/meew0/discordrb/pull/440), thanks @unleashy)
+- Querying the cache for an unknown member no longer adds `nil` elements, which caused unexpected behavior ([#456](https://github.com/meew0/discordrb/pull/456))
+- Logging behaves correctly when token is an empty string ([#449](https://github.com/meew0/discordrb/pull/449), thanks @Daniel-Worrall)
+- Several typos in documentation ([#444](https://github.com/meew0/discordrb/pull/444), thanks @ToppleKek)
+- When possible, `User` objects are now cached from messages instead of making an API request that may fail
+- `rest-client` is upgraded to `>= 2.1.0.rc1`, as `2.1.0` is completely broken on Windows with Ruby 2.5 ([#478](https://github.com/meew0/discordrb/pull/478), thanks @Daniel-Worrall and @swarley)
+- `EmbedAuthor` sets the correct instance variable for `proxy_icon_url`
+- `ReactionEvent` correctly returns the server on which it occurred ([#484](https://github.com/meew0/discordrb/pull/484), thanks @charagarlnad)
+- `ServerRoleCreateEvent` no longer fails to match when supplying a `name` attribute ([#493](https://github.com/meew0/discordrb/pull/493), [#506](https://github.com/meew0/discordrb/pull/506), thanks @Daniel-Worrall and @micke)
+- `PlayingEvent` now correctly returns `server` ([#486](https://github.com/meew0/discordrb/pull/486), thanks @xTVaser)
+- Roles will no longer be cached twice when using `Server#create_role` ([#488](https://github.com/meew0/discordrb/pull/488))
+- Race condition when creating event handlers inside of other event handlers ([#514](https://github.com/meew0/discordrb/pull/514))
+- Command chain execution is halted immediately if `execute_command` fails, fixing some possible errors that could occur with `advanced_functionality` ([#517](https://github.com/meew0/discordrb/pull/517), thanks @unleashy)
+- In the event non-existent role IDs are observed in a member object, they are ignored to prevent cache related errors ([#535](https://github.com/meew0/discordrb/pull/535))
+- `end_with` attribute in `MessageEventHandler` now accepts group-less regular expressions without throwing exceptions ([#571](https://github.com/meew0/discordrb/pull/571), thanks @badBlackShark)
+- `PresenceEvent` is correctly raised when dispatched ([#574](https://github.com/meew0/discordrb/pull/574))
+- `Attachment#initialize` correctly sets `@id` instance variable ([#575](https://github.com/meew0/discordrb/pull/575), thanks @kandayo)
 
 ## [3.2.1] - 2017-02-18
 [3.2.1]: https://github.com/meew0/discordrb/releases/tag/v3.2.1
