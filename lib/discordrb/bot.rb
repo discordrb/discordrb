@@ -678,7 +678,8 @@ module Discordrb
     # e.g. due to a Discord outage or because the servers are large and taking a while to load.
     def unavailable_servers_check
       # Return unless there are servers that are unavailable.
-      return unless @unavailable_servers && @unavailable_servers > 0
+      return unless @unavailable_servers&.positive?
+
       LOGGER.warn("#{@unavailable_servers} servers haven't been cached yet.")
       LOGGER.warn('Servers may be unavailable due to an outage, or your bot is on very large servers that are taking a while to load.')
     end

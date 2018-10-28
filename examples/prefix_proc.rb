@@ -11,7 +11,7 @@ require 'discordrb'
 # Here, we'll be using channel IDs so that it's easy to test in one server.
 PREFIXES = {
   345687437722386433 => '!',
-  83281822225530880  => '?'
+  83281822225530880 => '?'
 }.freeze
 
 # The CommandBot initializer accepts a Proc as a prefix, which will be
