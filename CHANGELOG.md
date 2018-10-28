@@ -33,7 +33,7 @@ Since there is a lot here, here are highlights of the more notable changes in th
 
 - There are now two methods of creating "awaits" in discordrb. The new style is a blocking (synchronous) method that
   uses threads and regular event handlers in the background. The new methods are all named with a bang (`!`),
-  i.e. `user.await!`, `message.await!`, and simply return the raised event. This system should be less confusing that
+  i.e. `user.await!`, `message.await!`, and simply return the raised event. This system should be less confusing than
   the current asynchronous one. These blocking awaits no longer have an identifying key and only accept the event
   attributes as an argument. There is also a special reserved attribute called `timeout` that will stop waiting for
   an event and return `nil` if the given number of seconds has passed. Eventually this new system of awaits will
