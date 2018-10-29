@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Discordrb::Middleware
   # Internal middleware for matching on {Events::MessageEvent} attributes
   # @!visibility private
@@ -22,7 +24,7 @@ module Discordrb::Middleware
     end
 
     def content_start_regexp(event)
-      (event.content =~ @value) && (event.content =~ @value).zero?
+      (event.content =~ @value)&.zero?
     end
 
     def content_end(event)
