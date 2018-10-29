@@ -5,7 +5,7 @@ module Discordrb
   class Permissions
     # This hash maps bit positions to logical permissions.
     # I'm not sure what the unlabeled bits are reserved for.
-    Flags = {
+    FLAGS = {
       # Bit => Permission # Value
       0 => :create_instant_invite, # 1
       1 => :kick_members,          # 2
@@ -40,7 +40,7 @@ module Discordrb
       30 => :manage_emojis         # 1073741824
     }.freeze
 
-    Flags.each do |position, flag|
+    FLAGS.each do |position, flag|
       attr_reader flag
       define_method "can_#{flag}=" do |value|
         new_bits = @bits
@@ -49,7 +49,7 @@ module Discordrb
         else
           new_bits &= ~(1 << position)
         end
-        @writer.write(new_bits) if @writer
+        @writer&.write(new_bits)
         @bits = new_bits
         init_vars
       end
@@ -69,7 +69,7 @@ module Discordrb
 
     # Initialize the instance variables based on the bitset.
     def init_vars
-      Flags.each do |position, flag|
+      FLAGS.each do |position, flag|
         flag_set = ((@bits >> position) & 0x1) == 1
         instance_variable_set "@#{flag}", flag_set
       end
@@ -85,7 +85,7 @@ module Discordrb
     def self.bits(list)
       value = 0
 
-      Flags.each do |position, flag|
+      FLAGS.each do |position, flag|
         value += 2**position if list.include? flag
       end
 

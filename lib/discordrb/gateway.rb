@@ -25,8 +25,6 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-require 'thread'
-
 module Discordrb
   # Gateway packet opcodes
   module Opcodes
@@ -181,7 +179,7 @@ module Discordrb
 
     # Whether the WebSocket connection to the gateway is currently open
     def open?
-      @handshake && @handshake.finished? && !@closed
+      @handshake&.finished? && !@closed
     end
 
     # Stops the bot gracefully, disconnecting the websocket without immediately killing the thread. This means that
@@ -402,12 +400,12 @@ module Discordrb
 
     # Sends a custom packet over the connection. This can be useful to implement future yet unimplemented functionality
     # or for testing. You probably shouldn't use this unless you know what you're doing.
-    # @param op [Integer] The opcode the packet should be sent as. Can be one of {Opcodes} or a custom value if
+    # @param opcode [Integer] The opcode the packet should be sent as. Can be one of {Opcodes} or a custom value if
     #   necessary.
     # @param packet [Object] Some arbitrary JSON-serialisable data that should be sent as the `d` field.
-    def send_packet(op, packet)
+    def send_packet(opcode, packet)
       data = {
-        op: op,
+        op: opcode,
         d: packet
       }
 
@@ -446,7 +444,7 @@ module Discordrb
             else
               sleep 1
             end
-          rescue => e
+          rescue StandardError => e
             LOGGER.error('An error occurred while heartbeating!')
             LOGGER.log_exception(e)
           end
@@ -567,7 +565,7 @@ module Discordrb
 
       # We're done! Delegate to the websocket loop
       websocket_loop
-    rescue => e
+    rescue StandardError => e
       LOGGER.error('An error occurred while connecting to the websocket!')
       LOGGER.log_exception(e)
     end
@@ -621,7 +619,7 @@ module Discordrb
             # If the handshake hasn't finished, handle it
             handle_handshake_data(recv_data)
           end
-        rescue => e
+        rescue StandardError => e
           handle_error(e)
         end
       end
@@ -750,7 +748,7 @@ module Discordrb
       LOGGER.debug("Trace: #{packet['d']['_trace']}")
       LOGGER.debug("Session: #{@session.inspect}")
 
-      if @session && @session.should_resume?
+      if @session&.should_resume?
         # Make sure we're sending heartbeats again
         @session.resume
 
@@ -802,7 +800,7 @@ module Discordrb
       # Try to send it
       begin
         @socket.write frame.to_s
-      rescue => e
+      rescue StandardError => e
         # There has been an error!
         @pipe_broken = true
         handle_internal_close(e)
@@ -814,7 +812,7 @@ module Discordrb
       return if @closed
 
       # Suspend the session so we don't send heartbeats
-      @session.suspend if @session
+      @session&.suspend
 
       # Send a close frame (if we can)
       send nil, :close unless @pipe_broken
@@ -830,7 +828,7 @@ module Discordrb
       end
 
       # Close the socket if possible
-      @socket.close if @socket
+      @socket&.close
       @socket = nil
 
       # Make sure we do necessary things as soon as we're closed

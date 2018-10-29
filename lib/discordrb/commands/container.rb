@@ -21,7 +21,7 @@ module Discordrb::Commands
     #   permissions to execute a command. %name% in the message will be replaced with the name of the command. Disable
     #   the message by setting this option to false.
     # @option attributes [Array<Symbol>] :required_permissions Discord action permissions (e.g. `:kick_members`) that
-    #   should be required to use this command. See {Discordrb::Permissions::Flags} for a list.
+    #   should be required to use this command. See {Discordrb::Permissions::FLAGS} for a list.
     # @option attributes [Array<Role>, Array<#resolve_id>] :required_roles Roles that user must have to use this command
     #   (user must have all of them).
     # @option attributes [Array<Role>, Array<#resolve_id>] :allowed_roles Roles that user should have to use this command
@@ -100,9 +100,7 @@ module Discordrb::Commands
       container_modules = container.singleton_class.included_modules
 
       # If the container is an EventContainer and we can include it, then do that
-      if container_modules.include?(Discordrb::EventContainer) && respond_to?(:include_events)
-        include_events(container)
-      end
+      include_events(container) if container_modules.include?(Discordrb::EventContainer) && respond_to?(:include_events)
 
       if container_modules.include? Discordrb::Commands::CommandContainer
         include_commands(container)

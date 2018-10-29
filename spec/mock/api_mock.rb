@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Mock for Discordrb::API that allows setting arbitrary results and checking previous requests
 require 'json'
 
@@ -17,8 +19,6 @@ module APIMock
                      attributes[1].is_a?(Hash) ? nil : JSON.parse(attributes[1])
                    end
       @last_headers = attributes.last
-
-      @next_response ||= nil
     end
   end
 end

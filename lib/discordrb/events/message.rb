@@ -129,6 +129,7 @@ module Discordrb::Events
     # @param file [File] The file to be attached
     def attach_file(file)
       raise ArgumentError, 'Argument is not a file!' unless file.is_a?(File)
+
       @file = file
       nil
     end
@@ -164,7 +165,7 @@ module Discordrb::Events
           if a.is_a? String
             e.start_with? a
           elsif a.is_a? Regexp
-            (e =~ a) && (e =~ a).zero?
+            (e =~ a)&.zero?
           end
         end,
         matches_all(@attributes[:ending_with] || @attributes[:end_with], event.content) do |a, e|

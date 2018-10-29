@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 require 'discordrb'
 
 describe Discordrb::Permissions do
   subject { Discordrb::Permissions.new }
 
-  describe Discordrb::Permissions::Flags do
+  describe Discordrb::Permissions::FLAGS do
     it 'creates a setter for each flag' do
-      responds_to_methods = Discordrb::Permissions::Flags.map do |_, flag|
+      responds_to_methods = Discordrb::Permissions::FLAGS.map do |_, flag|
         subject.respond_to?(:"can_#{flag}=")
       end
 
@@ -20,9 +22,9 @@ describe Discordrb::Permissions do
     end
   end
 
-  context 'with Flags stubbed' do
+  context 'with FLAGS stubbed' do
     before do
-      stub_const('Discordrb::Permissions::Flags', 0 => :foo, 1 => :bar)
+      stub_const('Discordrb::Permissions::FLAGS', 0 => :foo, 1 => :bar)
     end
 
     describe '#init_vars' do

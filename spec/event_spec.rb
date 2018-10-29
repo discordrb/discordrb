@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'discordrb'
 
 describe Discordrb::Events do
@@ -177,11 +179,11 @@ describe Discordrb::Events do
 
   # This data is shared across examples, so it needs to be defined here
   SERVER_ID = 1
-  SERVER_NAME = 'server_name'.freeze
+  SERVER_NAME = 'server_name'
   EMOJI1_ID = 10
-  EMOJI1_NAME = 'emoji_name_1'.freeze
+  EMOJI1_NAME = 'emoji_name_1'
   EMOJI2_ID = 11
-  EMOJI2_NAME = 'emoji_name_2'.freeze
+  EMOJI2_NAME = 'emoji_name_2'
 
   shared_examples 'ServerEvent' do
     describe '#initialize' do

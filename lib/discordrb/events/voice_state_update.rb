@@ -76,6 +76,7 @@ module Discordrb::Events
         end,
         matches_all(@attributes[:channel], event.channel) do |a, e|
           next unless e # Don't bother if the channel is nil
+
           a == if a.is_a? String
                  e.name
                elsif a.is_a? Integer
@@ -86,6 +87,7 @@ module Discordrb::Events
         end,
         matches_all(@attributes[:old_channel], event.old_channel) do |a, e|
           next unless e # Don't bother if the channel is nil
+
           a == if a.is_a? String
                  e.name
                elsif a.is_a? Integer

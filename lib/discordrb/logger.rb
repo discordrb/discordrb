@@ -2,7 +2,7 @@
 
 module Discordrb
   # The format log timestamps should be in, in strftime format
-  LOG_TIMESTAMP_FORMAT = '%Y-%m-%d %H:%M:%S.%L'.freeze
+  LOG_TIMESTAMP_FORMAT = '%Y-%m-%d %H:%M:%S.%L'
 
   # Logs debug messages
   class Logger
@@ -38,10 +38,10 @@ module Discordrb
     }.freeze
 
     # The ANSI format code that resets formatting
-    FORMAT_RESET = "\u001B[0m".freeze
+    FORMAT_RESET = "\u001B[0m"
 
     # The ANSI format code that makes something bold
-    FORMAT_BOLD = "\u001B[1m".freeze
+    FORMAT_BOLD = "\u001B[1m"
 
     MODES.each do |mode, hash|
       define_method(mode) do |message|

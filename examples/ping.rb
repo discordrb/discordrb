@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This simple bot responds to every "Ping!" message with a "Pong!"
 
 require 'discordrb'

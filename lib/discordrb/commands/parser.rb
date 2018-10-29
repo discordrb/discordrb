@@ -100,9 +100,7 @@ module Discordrb::Commands
       if check_permissions
         rate_limited = event.bot.rate_limited?(@attributes[:bucket], event.author)
         if @attributes[:bucket] && rate_limited
-          if @attributes[:rate_limit_message]
-            event.respond @attributes[:rate_limit_message].gsub('%time%', rate_limited.round(2).to_s)
-          end
+          event.respond @attributes[:rate_limit_message].gsub('%time%', rate_limited.round(2).to_s) if @attributes[:rate_limit_message]
           return
         end
       end
@@ -112,7 +110,7 @@ module Discordrb::Commands
     rescue LocalJumpError => ex # occurs when breaking
       result = ex.exit_value
       event.drain_into(result)
-    rescue => exception # Something went wrong inside our @block!
+    rescue StandardError => exception # Something went wrong inside our @block!
       rescue_value = @attributes[:rescue] || event.bot.attributes[:rescue]
       if rescue_value
         event.respond(rescue_value.gsub('%exception%', exception.message)) if rescue_value.is_a?(String)
@@ -209,8 +207,10 @@ module Discordrb::Commands
         result += char if b_level <= 0
 
         next unless char == @attributes[:sub_chain_end] && !quoted
+
         b_level -= 1
         next unless b_level.zero?
+
         nested = @chain[b_start + 1..index - 1]
         subchain = CommandChain.new(nested, @bot, true)
         result += subchain.execute(event)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rspec-prof'
 require 'simplecov'
 SimpleCov.start

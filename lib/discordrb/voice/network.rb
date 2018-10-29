@@ -22,10 +22,10 @@ end
 
 module Discordrb::Voice
   # Signifies to Discord that encryption should be used
-  ENCRYPTED_MODE = 'xsalsa20_poly1305'.freeze
+  ENCRYPTED_MODE = 'xsalsa20_poly1305'
 
   # Signifies to Discord that no encryption should be used
-  PLAIN_MODE = 'plain'.freeze
+  PLAIN_MODE = 'plain'
 
   # Represents a UDP connection to a voice server. This connection is used to send the actual audio data.
   class VoiceUDP
@@ -100,6 +100,7 @@ module Discordrb::Voice
     # @return [String] the audio data, encrypted
     def encrypt_audio(header, buf)
       raise 'No secret key found, despite encryption being enabled!' unless @secret_key
+
       box = RbNaCl::SecretBox.new(@secret_key)
 
       # The nonce is the header of the voice packet with 12 null bytes appended

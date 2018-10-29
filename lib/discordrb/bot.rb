@@ -107,7 +107,7 @@ module Discordrb
         type: nil, name: '', fancy_log: false, suppress_ready: false, parse_self: false,
         shard_id: nil, num_shards: nil, redact_token: true, ignore_bots: false,
         compress_mode: :stream
-    )
+      )
       LOGGER.mode = log_mode
       LOGGER.token = token if redact_token
 
@@ -203,6 +203,7 @@ module Discordrb
     # @return [Application, nil] The bot's application info. Returns `nil` if bot is not a bot account.
     def bot_application
       return unless @type == :bot
+
       response = API.oauth_application(token)
       Application.new(JSON.parse(response), self)
     end
@@ -448,6 +449,7 @@ module Discordrb
         channel(id, server)
       elsif /<@&(?<id>\d+)>/ =~ mention
         return server.role(id) if server
+
         @servers.values.each do |element|
           role = element.role(id)
           return role unless role.nil?
@@ -489,7 +491,6 @@ module Discordrb
     def game=(name)
       gateway_check
       update_status(@status, name, nil)
-      name
     end
 
     alias_method :playing=, :game=
@@ -500,7 +501,6 @@ module Discordrb
     def listening=(name)
       gateway_check
       update_status(@status, name, nil, nil, nil, 2)
-      name
     end
 
     # Sets the current watching status to the specified name.
@@ -509,7 +509,6 @@ module Discordrb
     def watching=(name)
       gateway_check
       update_status(@status, name, nil, nil, nil, 3)
-      name
     end
 
     # Sets the currently online stream to the specified name and Twitch URL.
@@ -576,6 +575,7 @@ module Discordrb
     # @deprecated Will be changed to blocking behavior in v4.0. Use {#add_await!} instead.
     def add_await(key, type, attributes = {}, &block)
       raise "You can't await an AwaitEvent!" if type == Discordrb::Events::AwaitEvent
+
       await = Await.new(self, key, type, attributes, block)
       @awaits ||= {}
       @awaits[key] = await
@@ -590,7 +590,7 @@ module Discordrb
       raise "You can't await an AwaitEvent!" if type == Discordrb::Events::AwaitEvent
 
       timeout = attributes[:timeout]
-      raise ArgumentError, 'Timeout must be a number > 0' if timeout && timeout.is_a?(Numeric) && timeout <= 0
+      raise ArgumentError, 'Timeout must be a number > 0' if timeout&.is_a?(Numeric) && !timeout&.positive?
 
       mutex = Mutex.new
       cv = ConditionVariable.new
@@ -615,6 +615,7 @@ module Discordrb
 
       remove_handler(handler)
       raise 'ConditionVariable was signaled without returning an event!' if response.nil? && timeout.nil?
+
       response
     end
 
@@ -677,7 +678,8 @@ module Discordrb
     # e.g. due to a Discord outage or because the servers are large and taking a while to load.
     def unavailable_servers_check
       # Return unless there are servers that are unavailable.
-      return unless @unavailable_servers && @unavailable_servers > 0
+      return unless @unavailable_servers&.positive?
+
       LOGGER.warn("#{@unavailable_servers} servers haven't been cached yet.")
       LOGGER.warn('Servers may be unavailable due to an outage, or your bot is on very large servers that are taking a while to load.')
     end
@@ -751,6 +753,7 @@ module Discordrb
 
       debug("Voice server update received! chan: #{channel.inspect}")
       return unless channel
+
       @should_connect_to_voice.delete(server_id)
       debug('Updating voice server!')
 
@@ -787,6 +790,7 @@ module Discordrb
       channel = Channel.new(data, self)
       old_channel = @channels[channel.id]
       return unless old_channel
+
       old_channel.update_from(channel)
     end
 
@@ -957,7 +961,7 @@ module Discordrb
 
     def handle_dispatch(type, data)
       # Check whether there are still unavailable servers and there have been more than 10 seconds since READY
-      if @unavailable_servers && @unavailable_servers > 0 && (Time.now - @unavailable_timeout_time) > 10
+      if @unavailable_servers&.positive? && (Time.now - @unavailable_timeout_time) > 10
         # The server streaming timed out!
         LOGGER.debug("Server streaming timed out with #{@unavailable_servers} servers remaining")
         LOGGER.debug('Calling ready now because server loading is taking a long time. Servers may be unavailable due to an outage, or your bot is on very large servers.')
@@ -1300,6 +1304,7 @@ module Discordrb
       @event_handlers ||= {}
       handlers = @event_handlers[event.class]
       return unless handlers
+
       handlers.dup.each do |handler|
         call_event(handler, event) if handler.matches?(event)
       end
@@ -1315,7 +1320,7 @@ module Discordrb
         begin
           handler.call(event)
           handler.after_call(event)
-        rescue => e
+        rescue StandardError => e
           log_exception(e)
         ensure
           @event_threads.delete(t)
@@ -1328,6 +1333,7 @@ module Discordrb
       @awaits.each do |_, await|
         key, should_delete = await.match(event)
         next unless key
+
         debug("should_delete: #{should_delete}")
         @awaits.delete(await.key) if should_delete
 

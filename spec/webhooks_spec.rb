@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'discordrb/webhooks'
 
 describe Discordrb::Webhooks do

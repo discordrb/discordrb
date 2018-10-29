@@ -95,7 +95,7 @@ module Discordrb::Voice
 
       @encoder = Encoder.new
       @ws.connect
-    rescue => e
+    rescue StandardError => e
       Discordrb::LOGGER.log_exception(e)
       raise
     end
@@ -161,6 +161,7 @@ module Discordrb::Voice
       sleep IDEAL_LENGTH / 1000.0 if @was_playing_before
 
       return unless wait_for_confirmation
+
       @has_stopped_playing = false
       sleep IDEAL_LENGTH / 1000.0 until @has_stopped_playing
       @has_stopped_playing = false
@@ -220,7 +221,7 @@ module Discordrb::Voice
 
         begin
           Process.kill('TERM', encoded_io.pid)
-        rescue => e
+        rescue StandardError => e
           Discordrb::LOGGER.warn('Failed to kill ffmpeg process! You *might* have a process leak now.')
           Discordrb::LOGGER.warn("Reason: #{e}")
         end
@@ -255,7 +256,7 @@ module Discordrb::Voice
       stop_playing(true) if @playing
 
       @bot.debug "Reading DCA file #{file}"
-      input_stream = open(file)
+      input_stream = File.open(file)
 
       magic = input_stream.read(4)
       raise ArgumentError, 'Not a DCA1 file! The file might have been corrupted, please recreate it.' unless magic == 'DCA1'
@@ -277,7 +278,7 @@ module Discordrb::Voice
 
           header = header_str.unpack('s<')[0]
 
-          raise 'Negative header in DCA file! Your file is likely corrupted.' if header < 0
+          raise 'Negative header in DCA file! Your file is likely corrupted.' if header.negative?
         rescue EOFError
           @bot.debug 'Finished DCA parsing (EOFError)'
           next :stop
@@ -311,7 +312,7 @@ module Discordrb::Voice
         break unless @playing
 
         # If we should skip, get some data, discard it and go to the next iteration
-        if @skips > 0
+        if @skips.positive?
           @skips -= 1
           yield
           next
@@ -364,7 +365,7 @@ module Discordrb::Voice
         # If paused, wait
         sleep 0.1 while @paused
 
-        if @length > 0
+        if @length.positive?
           # Wait `length` ms, then send the next packet
           sleep @length / 1000.0
         else

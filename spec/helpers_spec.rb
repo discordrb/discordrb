@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe '#load_data_file' do
   it 'should load the test data correctly' do
     data = load_data_file(:test)

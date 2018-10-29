@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Eval bots are useful for developers because they give you a way to execute code directly from your Discord channel,
 # e.g. to quickly check something, demonstrate something to other, or something else entirely. Special care must be
 # taken since anyone with access to the command can execute arbitrary code on your system which may potentially be
@@ -12,7 +14,7 @@ bot.command(:eval, help_available: false) do |event, *code|
 
   begin
     eval code.join(' ')
-  rescue
+  rescue StandardError
     'An error occurred 😞'
   end
 end

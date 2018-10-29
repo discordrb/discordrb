@@ -72,7 +72,7 @@ module Discordrb::API::Channel
 
   # Send a message to a channel
   # https://discordapp.com/developers/docs/resources/channel#create-message
-  def create_message(token, channel_id, message, tts = false, embed = nil, nonce = nil) # send message
+  def create_message(token, channel_id, message, tts = false, embed = nil, nonce = nil)
     Discordrb::API.request(
       :channels_cid_messages_mid,
       channel_id,
@@ -84,7 +84,8 @@ module Discordrb::API::Channel
     )
   rescue RestClient::BadRequest => e
     parsed = JSON.parse(e.response.body)
-    raise Discordrb::Errors::MessageTooLong, "Message over the character limit (#{message.length} > 2000)" if parsed['content'] && parsed['content'].is_a?(Array) && parsed['content'].first == 'Must be 2000 or fewer in length.'
+    raise Discordrb::Errors::MessageTooLong, "Message over the character limit (#{message.length} > 2000)" if parsed['content']&.is_a?(Array) && parsed['content'].first == 'Must be 2000 or fewer in length.'
+
     raise
   end
 
@@ -144,7 +145,7 @@ module Discordrb::API::Channel
   # Create a reaction on a message using this client
   # https://discordapp.com/developers/docs/resources/channel#create-reaction
   def create_reaction(token, channel_id, message_id, emoji)
-    emoji = URI.encode(emoji) unless emoji.ascii_only?
+    emoji = URI.encode_www_form_component(emoji) unless emoji.ascii_only?
     Discordrb::API.request(
       :channels_cid_messages_mid_reactions_emoji_me,
       channel_id,
@@ -159,7 +160,7 @@ module Discordrb::API::Channel
   # Delete this client's own reaction on a message
   # https://discordapp.com/developers/docs/resources/channel#delete-own-reaction
   def delete_own_reaction(token, channel_id, message_id, emoji)
-    emoji = URI.encode(emoji) unless emoji.ascii_only?
+    emoji = URI.encode_www_form_component(emoji) unless emoji.ascii_only?
     Discordrb::API.request(
       :channels_cid_messages_mid_reactions_emoji_me,
       channel_id,
@@ -172,7 +173,7 @@ module Discordrb::API::Channel
   # Delete another client's reaction on a message
   # https://discordapp.com/developers/docs/resources/channel#delete-user-reaction
   def delete_user_reaction(token, channel_id, message_id, emoji, user_id)
-    emoji = URI.encode(emoji) unless emoji.ascii_only?
+    emoji = URI.encode_www_form_component(emoji) unless emoji.ascii_only?
     Discordrb::API.request(
       :channels_cid_messages_mid_reactions_emoji_uid,
       channel_id,
@@ -185,7 +186,7 @@ module Discordrb::API::Channel
   # Get a list of clients who reacted with a specific reaction on a message
   # https://discordapp.com/developers/docs/resources/channel#get-reactions
   def get_reactions(token, channel_id, message_id, emoji)
-    emoji = URI.encode(emoji) unless emoji.ascii_only?
+    emoji = URI.encode_www_form_component(emoji) unless emoji.ascii_only?
     Discordrb::API.request(
       :channels_cid_messages_mid_reactions_emoji,
       channel_id,

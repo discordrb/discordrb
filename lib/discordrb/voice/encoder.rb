@@ -30,6 +30,7 @@ module Discordrb::Voice
       @filter_volume = 1
 
       raise LoadError, 'Opus unavailable - voice not supported! Please install opus for voice support to work.' unless OPUS_AVAILABLE
+
       @opus = Opus::Encoder.new(sample_rate, frame_size, channels)
     end
 
@@ -100,6 +101,7 @@ module Discordrb::Voice
 
     def filter_volume_argument
       return '' if @filter_volume == 1
+
       @use_avconv ? "-vol #{(@filter_volume * 256).ceil}" : "-af volume=#{@filter_volume}"
     end
   end

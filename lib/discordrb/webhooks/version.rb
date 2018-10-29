@@ -4,6 +4,6 @@
 module Discordrb
   module Webhooks
     # The current version of discordrb-webhooks.
-    VERSION = '3.3.0'.freeze
+    VERSION = '3.3.0'
   end
 end

@@ -9,10 +9,10 @@ require 'discordrb/errors'
 # List of methods representing endpoints in Discord's API
 module Discordrb::API
   # The base URL of the Discord REST API.
-  APIBASE = 'https://discordapp.com/api/v6'.freeze
+  APIBASE = 'https://discordapp.com/api/v6'
 
   # The URL of Discord's CDN
-  CDN_URL = 'https://cdn.discordapp.com'.freeze
+  CDN_URL = 'https://cdn.discordapp.com'
 
   module_function
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'discordrb'
 
 # Create a bot
@@ -50,7 +52,7 @@ end
 # https://www.rubydoc.info/gems/discordrb/Discordrb%2FBot:add_await
 
 # the unicode ":x:" emoji
-CROSS_MARK = "\u274c".freeze
+CROSS_MARK = "\u274c"
 
 bot.message(content: '!time') do |event|
   # Send a message, and store a reference to it that we can issue a delete request later

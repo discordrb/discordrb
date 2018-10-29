@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # discordrb can send music or other audio data to voice channels. This example exists to show that off.
 #
 # To avoid copyright infringement, the example music I will be using is a self-composed piece of highly debatable
