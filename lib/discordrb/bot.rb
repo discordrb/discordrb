@@ -449,6 +449,7 @@ module Discordrb
         mentions = mentions.split('<', 2)[1]
         # Locate the first valid mention enclosed in `<...>`, otherwise advance to the next open `<`
         next unless mentions.split('>', 2).first.length < mentions.split('<', 2).first.length
+
         # Store the possible mention value to be validated with RegEx
         mention = mentions.split('>', 2).first
         if /@!?(?<id>\d+)/ =~ mention
