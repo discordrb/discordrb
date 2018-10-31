@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 [View diff for this release.](https://github.com/meew0/discordrb/compare/v3.3.0...HEAD)
 
+### Added
+
+- `Bot#parse_mentions`, which extracts *all* mentions found in a string ([#526](https://github.com/meew0/discordrb/pull/526), thanks @SanksTheYokai)
+
 ### Changed
 
 - **(breaking change)** Upgraded minimum Ruby version to 2.3.7, and upgraded Rubocop to 0.60.0. This additionally changes the name of some public constants. ([#487](https://github.com/meew0/discordrb/pull/487), thanks @ChallahuAkbar)
