@@ -15,7 +15,7 @@ about: Request a new feature, or change an existing one
 
   - It is a feature present in other popular Discord libraries
 
-  Include simple code examples (psuedocode is fine) that demonstrate
+  Include simple code examples (pseudocode is fine) that demonstrate
   what you want to do.
 
   Do your best to think about how this new feature would impact the code
