@@ -32,8 +32,8 @@ about: Report a bug to help us improve the library
 
 **Ruby version:**
 
-<!--- Paste full output of `$ ruby -v` here --->
+<!--- Paste full output of `ruby -v` here --->
 
 **Discordrb version:**
 
-<!--- Paste full output of `$ gem list discordrb` or `$ bundle list discordrb` here --->
+<!--- Paste full output of `gem list discordrb` or `bundle list discordrb` here --->
