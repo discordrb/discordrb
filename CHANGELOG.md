@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - `Bot#parse_mentions`, which extracts *all* mentions found in a string ([#526](https://github.com/meew0/discordrb/pull/526), thanks @SanksTheYokai)
+- Issue and pull request templates ([#585](https://github.com/meew0/discordrb/pull/585))
 
 ### Changed
 
