@@ -104,7 +104,7 @@ end
 RSpec::Matchers.define_negated_matcher :an_array_excluding, :include
 
 def load_data_file(*name)
-  JSON.parse(File.read("#{File.dirname(__FILE__)}/data/#{name.join('/')}.json"))
+  JSON.parse(File.read("#{File.dirname(__FILE__)}/json_examples/#{name.join('/')}.json"))
 end
 
 # Creates a helper method that gives access to a particular fixture's data.
