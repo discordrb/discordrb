@@ -22,11 +22,12 @@ Gem::Specification.new do |spec|
     'changelog_uri' => 'https://github.com/meew0/discordrb/blob/master/CHANGELOG.md'
   }
   spec.require_paths = ['lib']
+  spec.extensions << 'ext/mkrf_conf.rb'
 
   spec.add_dependency 'ffi', '>= 1.9.24'
   spec.add_dependency 'opus-ruby'
   spec.add_dependency 'rbnacl', '~> 5.0'
-  spec.add_dependency 'rest-client', '>= 2.1.0.rc1'
+  spec.add_dependency 'rest-client', '~> 2.0'
   spec.add_dependency 'websocket-client-simple', '>= 0.3.0'
 
   spec.add_dependency 'discordrb-webhooks', '~> 3.3.0'
