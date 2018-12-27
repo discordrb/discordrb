@@ -139,6 +139,12 @@ module Discordrb::Events
       @file = nil
     end
 
+    # Add a blocking {Await} for a message with the same message author and channel.
+    # @see Bot#add_await!,
+    def await!(attributes = {})
+      @bot.add_await!(Discordrb::Events::MessageEvent, { from: @message.author.id, in: @channel.id }.merge(attributes))
+    end
+
     # @return [true, false] whether or not this message was sent by the bot itself
     def from_bot?
       @message.user.id == @bot.profile.id
