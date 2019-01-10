@@ -85,13 +85,13 @@ module Discordrb::API::Server
 
   # Create a channel
   # https://discordapp.com/developers/docs/resources/guild#create-guild-channel
-  def create_channel(token, server_id, name, type, topic, bitrate, user_limit, permission_overwrites, parent_id, nsfw, rate_limit_per_user, reason = nil)
+  def create_channel(token, server_id, name, type, topic, bitrate, user_limit, permission_overwrites, parent_id, nsfw, rate_limit_per_user, position, reason = nil)
     Discordrb::API.request(
       :guilds_sid_channels,
       server_id,
       :post,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/channels",
-      { name: name, type: type, topic: topic, bitrate: bitrate, user_limit: user_limit, permission_overwrites: permission_overwrites, parent_id: parent_id, nsfw: nsfw, rate_limit_per_user: rate_limit_per_user }.to_json,
+      { name: name, type: type, topic: topic, bitrate: bitrate, user_limit: user_limit, permission_overwrites: permission_overwrites, parent_id: parent_id, nsfw: nsfw, rate_limit_per_user: rate_limit_per_user, position: position }.to_json,
       Authorization: token,
       content_type: :json,
       'X-Audit-Log-Reason': reason
