@@ -101,12 +101,14 @@ module Discordrb
     #   to Discord's gateway. `:none` will request that no payloads are received compressed (not recommended for
     #   production bots). `:large` will request that large payloads are received compressed. `:stream` will request
     #   that all data be received in a continuous compressed stream.
+    # @param retry_badgateway [true, false] Whether the bot should retry after getting a 502 error while sending
+    #   a request. Default is true.
     def initialize(
         log_mode: :normal,
         token: nil, client_id: nil,
         type: nil, name: '', fancy_log: false, suppress_ready: false, parse_self: false,
         shard_id: nil, num_shards: nil, redact_token: true, ignore_bots: false,
-        compress_mode: :stream
+        compress_mode: :stream, retry_badgateway: true
       )
       LOGGER.mode = log_mode
       LOGGER.token = token if redact_token
