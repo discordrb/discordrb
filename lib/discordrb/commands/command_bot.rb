@@ -69,6 +69,7 @@ module Discordrb::Commands
     # @option attributes [String] :quote_end Character that should end a quoted string (see
     #   :advanced_functionality). Default is '"' or the same as :quote_start. Set to an empty string to disable.
     # @option attributes [true, false] :ignore_bots Whether the bot should ignore bot accounts or not. Default is false.
+    # @option attributes [true, false] :case_sensitive Whether the bot should be case-sensitive for commands. Default is true.
     def initialize(attributes = {})
       super(
         log_mode: attributes[:log_mode],
@@ -83,7 +84,8 @@ module Discordrb::Commands
         num_shards: attributes[:num_shards],
         redact_token: attributes.key?(:redact_token) ? attributes[:redact_token] : true,
         ignore_bots: attributes[:ignore_bots],
-        compress_mode: attributes[:compress_mode])
+        compress_mode: attributes[:compress_mode],
+        retry_badgateway: attributes[:retry_gateway])
 
       @prefix = attributes[:prefix]
       @attributes = {
@@ -129,6 +131,9 @@ module Discordrb::Commands
 
         # Quoted mode ending character
         quote_end: attributes[:quote_end] || attributes[:quote_start] || '"',
+        
+        # Case-sensitivity of commands
+        case_sensitive: attributes[:case_sensitive].nil? true : attributes[:case_sensitive],
 
         # Default block for handling internal exceptions, or a string to respond with
         rescue: attributes[:rescue]
@@ -209,7 +214,11 @@ module Discordrb::Commands
       debug("Executing command #{name} with arguments #{arguments}")
       return unless @commands
 
-      command = @commands[name]
+      if (@attributes[:case_sensitive])
+          command = @commands[name]
+      else
+          command = @commands[name.downcase]
+      end
       command = command.aliased_command if command.is_a?(CommandAlias)
       return unless !check_permissions || channels?(event.channel, @attributes[:channels]) ||
                     (command && !command.attributes[:channels].nil?)
