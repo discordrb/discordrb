@@ -41,6 +41,16 @@ module Discordrb::API
     @bot_name = value
   end
 
+  # @return [true, false] if bot should retry when receiving a bad gateway, previously specified using #retry_badgateway=.
+  def retry_badgateway
+    @retry_badgateway
+  end
+
+  # Sets whether the bot should retry after receiving a bad gateway error.
+  def retry_badgateway=(value)
+    @retry_badgateway = value
+  end
+  
   # Changes the rate limit tracing behaviour. If rate limit tracing is on, a full backtrace will be logged on every RL
   # hit.
   # @param value [true, false] whether or not to enable rate limit tracing
@@ -86,7 +96,9 @@ module Discordrb::API
     raise noprm, "The bot doesn't have the required permission to do this!"
   rescue RestClient::BadGateway
     Discordrb::LOGGER.warn('Got a 502 while sending a request! Not a big deal, retrying the request')
-    retry
+    if (@retry_badgateway)
+      retry
+    end
   end
 
   # Make an API request, including rate limit handling.
