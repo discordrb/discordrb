@@ -219,6 +219,7 @@ module Discordrb
     # @return [String] The API token.
     def token
       API.bot_name = @name
+      API.retry_badgateway = @retry_badgateway
       @token
     end
 
