@@ -126,6 +126,8 @@ module Discordrb
       @prevent_ready = suppress_ready
 
       @compress_mode = compress_mode
+      
+      @retry_badgateway = retry_badgateway
 
       @token = process_token(@type, token)
       @gateway = Gateway.new(self, @token, @shard_key, @compress_mode)
