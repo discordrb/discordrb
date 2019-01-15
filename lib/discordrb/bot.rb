@@ -62,6 +62,10 @@ module Discordrb
     # @return [Gateway] the underlying {Gateway} object.
     attr_reader :gateway
 
+    # @return [Symbol] the type of bot, either `:bot` or `:user`
+    # !@visibility private
+    attr_reader :type
+
     include EventContainer
     include Cache
 

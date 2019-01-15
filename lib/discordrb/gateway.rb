@@ -521,8 +521,23 @@ module Discordrb
     end
 
     def find_gateway
-      response = API.gateway(@token)
-      JSON.parse(response)['url']
+      response = nil
+      if @bot.type == :bot
+        begin
+          response = JSON.parse(API.gateway_bot(@token))
+          sessions = response['session_start_limit']
+          LOGGER.debug("Found gateway URL: #{response['url']}")
+          LOGGER.debug("Sessions remaining: #{sessions['remaining']} / #{sessions['total']}")
+        rescue StandardError => ex
+          LOGGER.error("Failed to get gateway URL! This means your token is incorrect, or Discord couldn't be reached.")
+          LOGGER.log_exception(ex)
+          # There's nothing we can do - the token cannot be corrected at runtime.
+          exit(1)
+        end
+      else
+        response = JSON.parse(API.gateway(@token))
+      end
+      response['url']
     end
 
     def process_gateway
