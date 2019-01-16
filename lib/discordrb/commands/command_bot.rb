@@ -133,7 +133,7 @@ module Discordrb::Commands
         quote_end: attributes[:quote_end] || attributes[:quote_start] || '"',
         
         # Case-sensitivity of commands
-        case_sensitive: attributes[:case_sensitive].nil? true : attributes[:case_sensitive],
+        case_sensitive: attributes[:case_sensitive].nil? ? true : attributes[:case_sensitive],
 
         # Default block for handling internal exceptions, or a string to respond with
         rescue: attributes[:rescue]
