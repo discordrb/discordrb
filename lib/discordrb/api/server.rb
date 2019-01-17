@@ -467,13 +467,13 @@ module Discordrb::API::Server
   end
 
   # Changes an emoji name
-  def edit_emoji(token, server_id, emoji_id, name, reason = nil)
+  def edit_emoji(token, server_id, emoji_id, name, roles = nil, reason = nil)
     Discordrb::API.request(
       :guilds_sid_emojis_eid,
       server_id,
       :patch,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/emojis/#{emoji_id}",
-      { name: name }.to_json,
+      { name: name, roles: roles }.to_json,
       Authorization: token,
       content_type: :json,
       'X-Audit-Log-Reason': reason
