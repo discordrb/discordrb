@@ -224,7 +224,7 @@ module Discordrb
     # Check if any reactions were used in this message.
     # @return [true, false] whether or not this message has reactions
     def reactions?
-      @reactions.any?
+      @reactions.empty?
     end
 
     # Returns the reactions made by the current bot or user.
