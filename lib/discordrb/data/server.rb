@@ -142,6 +142,11 @@ module Discordrb
 
     alias_method :users, :members
 
+    # @return [Member] the bot's own `Member` on this server
+    def bot
+      member(@bot.profile)
+    end
+
     # @return [Array<Integration>] an array of all the integrations connected to this server.
     def integrations
       integration = JSON.parse(API::Server.integrations(@bot.token, @id))
