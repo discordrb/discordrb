@@ -1,0 +1,128 @@
+version: 2.1
+
+commands:
+  setup-env:
+    description: Sets up the testing environment
+    steps:
+      - run:
+          name: Install OS packages
+          command: apk add git build-base ruby-dev ruby-etc ruby-json libsodium
+      - checkout
+      - run:
+          name: "Ruby version"
+          command: |
+            ruby -v
+            echo $RUBY_VERSION > ruby_version.txt
+      - restore_cache:
+          keys:
+            - bundle-cache-v1-{{ checksum "ruby_version.txt" }}-{{ .Branch }}-{{ checksum "Gemfile" }}-{{ checksum "discordrb.gemspec" }}
+            - bundle-cache-v1-{{ checksum "ruby_version.txt" }}-{{ .Branch }}
+            - bundle-cache-v1-{{ checksum "ruby_version.txt" }}
+      - run:
+          name: Install dependencies
+          command: bundle install --path vendor/bundle
+      - save_cache:
+          key: bundle-cache-v1-{{ checksum "ruby_version.txt" }}-{{ .Branch }}-{{ checksum "Gemfile" }}-{{ checksum "discordrb.gemspec" }}
+          paths:
+            - ./vendor/bundle
+
+jobs:
+  test_ruby_24:
+    docker:
+      - image: ruby:2.4-alpine
+    steps:
+      - setup-env
+      - run:
+          name: Run RSpec
+          command: bundle exec rspec
+
+  test_ruby_25:
+    docker:
+      - image: ruby:2.5-alpine
+    steps:
+      - setup-env
+      - run:
+          name: Run RSpec
+          command: bundle exec rspec
+
+  test_ruby_26:
+    docker:
+      - image: ruby:2.6-alpine
+    steps:
+      - setup-env
+      - run:
+          name: Run RSpec
+          command: bundle exec rspec
+
+  rubocop:
+    docker:
+      - image: ruby:2.5-alpine
+    steps:
+      - setup-env
+      - run:
+          name: Run Rubocop
+          command: bundle exec rubocop
+
+  yard:
+    docker:
+      - image: ruby:2.5-alpine
+    steps:
+      - setup-env
+      - attach_workspace:
+          at: /tmp/workspace
+      - run:
+          name: Run YARD
+          command: bundle exec yard --output-dir /tmp/workspace/docs
+      - persist_to_workspace:
+          root: /tmp/workspace
+          paths:
+            - docs
+
+  pages:
+    machine: true
+    steps:
+      - attach_workspace:
+          at: /tmp/workspace
+      - run:
+          name: Clone docs
+          command: git clone --depth 1 https://${DOCS_GITHUB_TOKEN}@github.com/${CIRCLE_PROJECT_USERNAME}/discordrb.git -b gh-pages .
+      - run:
+          name: Push updated docs
+          command: |
+            git config user.name "Circle CI"
+            git config user.email "zachnowicki@gmail.com"
+
+            SOURCE_BRANCH=$CIRCLE_BRANCH
+            if [ -n "$CIRCLE_TAG" ]; then
+              SOURCE_BRANCH=$CIRCLE_TAG
+            fi
+
+            mkdir -p $SOURCE_BRANCH
+            rm -r $SOURCE_BRANCH/*
+            cp -r /tmp/workspace/docs/. ./$SOURCE_BRANCH/
+
+            git add $SOURCE_BRANCH
+            git commit --allow-empty -m "Deploy docs"
+            git push -q https://${DOCS_GITHUB_TOKEN}@github.com/${CIRCLE_PROJECT_USERNAME}/discordrb.git
+
+workflows:
+  test:
+    jobs:
+      - test_ruby_24:
+          filters: {branches: {only: /.*/}, tags: {only: /^v.*/}}
+      - test_ruby_25:
+          filters: {branches: {only: /.*/}, tags: {only: /^v.*/}}
+      - test_ruby_26:
+          filters: {branches: {only: /.*/}, tags: {only: /^v.*/}}
+      - rubocop:
+          filters: {branches: {only: /.*/}, tags: {only: /^v.*/}}
+      - yard:
+          filters: {branches: {only: /.*/}, tags: {only: /^v.*/}}
+  deploy:
+    jobs:
+      - yard:
+          filters: {branches: {only: /master/}, tags: {only: /^v.*/}}
+      - pages:
+          requires:
+            - yard
+          filters: {branches: {only: /master/}, tags: {only: /^v.*/}}
