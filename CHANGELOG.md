@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The monolithic `data.rb` file has been split into multiple files for easier development ([#482](https://github.com/meew0/discordrb/pull/482))
 - Loosened `bundler` development dependency to allow use of `bundler` 1.x and 2.x ([#591](https://github.com/meew0/discordrb/pull/591), thanks ChallahuAkbar)
 - `API::Server.create_channel` and `Server#create_channel` now accepts `position` ([#592](https://github.com/meew0/discordrb/pull/592), thanks @swarley)
+- `Bot.new` will now raise a more helpful exception when the passed token string is empty or nil ([#599](https://github.com/meew0/discordrb/pull/599))
 
 ## [3.3.0] - 2018-10-27
 [3.3.0]: https://github.com/meew0/discordrb/releases/tag/v3.3.0

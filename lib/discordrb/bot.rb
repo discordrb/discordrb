@@ -125,6 +125,8 @@ module Discordrb
 
       @compress_mode = compress_mode
 
+      raise 'Token string is empty or nil' if token.nil? || token.empty?
+
       @token = process_token(@type, token)
       @gateway = Gateway.new(self, @token, @shard_key, @compress_mode)
 

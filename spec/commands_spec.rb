@@ -86,7 +86,7 @@ describe Discordrb::Commands::CommandBot, order: :defined do
   end
 
   context 'no defined commands' do
-    bot = Discordrb::Commands::CommandBot.new token: '', help_available: false
+    bot = Discordrb::Commands::CommandBot.new token: 'token', help_available: false
 
     it 'should successfully trigger the command' do
       event = double
@@ -104,7 +104,7 @@ describe Discordrb::Commands::CommandBot, order: :defined do
   end
 
   context 'single command' do
-    bot = Discordrb::Commands::CommandBot.new token: '', help_available: false
+    bot = Discordrb::Commands::CommandBot.new token: 'token', help_available: false
 
     bot.command :name do
       SIMPLE_RESPONSE
@@ -121,7 +121,7 @@ describe Discordrb::Commands::CommandBot, order: :defined do
 
   describe '#execute_command', order: :defined do
     context 'with role filter', order: :defined do
-      bot = Discordrb::Commands::CommandBot.new(token: '', help_available: false)
+      bot = Discordrb::Commands::CommandBot.new(token: 'token', help_available: false)
 
       describe 'required_roles' do
         before do
@@ -178,7 +178,7 @@ describe Discordrb::Commands::CommandBot, order: :defined do
 
     context 'with channel filter', order: :defined do
       context 'when list is not initialized in bot parameters', order: :defined do
-        bot = Discordrb::Commands::CommandBot.new(token: '', help_available: false)
+        bot = Discordrb::Commands::CommandBot.new(token: 'token', help_available: false)
 
         bot.command :name do
           SIMPLE_RESPONSE
@@ -223,7 +223,7 @@ describe Discordrb::Commands::CommandBot, order: :defined do
       end
 
       context 'when list is initialized in bot parameters', order: :defined do
-        bot = Discordrb::Commands::CommandBot.new(token: '', help_available: false, channels: [TEST_CHANNELS[0]])
+        bot = Discordrb::Commands::CommandBot.new(token: 'token', help_available: false, channels: [TEST_CHANNELS[0]])
 
         bot.command :name do
           SIMPLE_RESPONSE
@@ -283,7 +283,7 @@ describe Discordrb::Commands::CommandBot, order: :defined do
       end
 
       context 'listed as a channel name', order: :defined do
-        bot = Discordrb::Commands::CommandBot.new(token: '', help_available: false)
+        bot = Discordrb::Commands::CommandBot.new(token: 'token', help_available: false)
 
         bot.command :name do
           SIMPLE_RESPONSE
@@ -312,7 +312,7 @@ describe Discordrb::Commands::CommandBot, order: :defined do
       end
 
       context 'listed as an object', order: :defined do
-        bot = Discordrb::Commands::CommandBot.new(token: '', help_available: false)
+        bot = Discordrb::Commands::CommandBot.new(token: 'token', help_available: false)
 
         bot.command :name do
           SIMPLE_RESPONSE
@@ -341,7 +341,7 @@ describe Discordrb::Commands::CommandBot, order: :defined do
       end
 
       context 'command_bot#channels=', order: :defined do
-        bot = Discordrb::Commands::CommandBot.new(token: '', help_available: false, channels: [TEST_CHANNELS[0], TEST_CHANNELS[1]])
+        bot = Discordrb::Commands::CommandBot.new(token: 'token', help_available: false, channels: [TEST_CHANNELS[0], TEST_CHANNELS[1]])
 
         bot.command :name do
           SIMPLE_RESPONSE

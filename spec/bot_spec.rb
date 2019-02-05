@@ -37,6 +37,11 @@ describe Discordrb::Bot do
     expect(bot.server(server_id).emoji.size).to eq(2)
   end
 
+  it 'raises when token string is empty or nil' do
+    expect { described_class.new(token: '') }.to raise_error('Token string is empty or nil')
+    expect { described_class.new(token: nil) }.to raise_error('Token string is empty or nil')
+  end
+
   describe '#parse_mentions' do
     it 'parses user mentions' do
       user_a = double(:user_a)
