@@ -501,19 +501,20 @@ module Discordrb
 
     # Add a new custom emoji on this server.
     # @param name [String] The name of emoji to create.
-    # @param image [String, #read] A base64 encoded string with the image data, or an object that responds to `#read`.
+    # @param image [String, #read] A base64 encoded string with the image data, or an object that responds to `#read`, such as `File`.
     # @param roles [Array<Role, String, Integer>] An array of roles, or role IDs to be whitelisted for this emoji.
     # @param reason [String] The reason the for the creation of this channel.
     # @return [Emoji] The Emoji that has been added.
-    def add_emoji(name, image, roles = [], reason = nil)
+    def add_emoji(name, image, roles = [], reason: nil)
       image_string = image
       if image.respond_to? :read
         image_string = 'data:image/jpg;base64,'
         image_string += Base64.strict_encode64(image.read)
       end
 
-      response = JSON.parse(API::Server.add_emoji(@bot.token, @id, image_string, name, roles.map(&:resolve_id), reason))
-      @emoji[response['id'].to_i]
+      data = JSON.parse(API::Server.add_emoji(@bot.token, @id, image_string, name, roles.map(&:resolve_id), reason))
+      new_emoji = Emoji.new(data)
+      @emoji[new_emoji.id] = new_emoji
     end
 
     # Change the name and/or whitelist of an emoji on this server.
@@ -523,8 +524,9 @@ module Discordrb
     # @return [Emoji] The edited emoji.
     def edit_emoji(emoji, name: nil, roles: nil, reason: nil)
       emoji = @emoji[emoji.resolve_id]
-      API::Server.edit_emoji(@bot.token, @id, emoji.resolve_id, name || emoji.name, (roles || emoji.roles).map(&:resolve_id), reason)
-      emoji
+      data = JSON.parse(API::Server.edit_emoji(@bot.token, @id, emoji.resolve_id, name || emoji.name, (roles || emoji.roles).map(&:resolve_id), reason))
+      new_emoji = Emoji.new(data)
+      @emoji[new_emoji.id] = new_emoji
     end
 
     # @return [Array<ServerBan>] a list of banned users on this server and the reason they were banned.

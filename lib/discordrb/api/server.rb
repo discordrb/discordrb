@@ -452,7 +452,8 @@ module Discordrb::API::Server
     )
   end
 
-  # Adds a custom emoji
+  # Adds a custom emoji.
+  # https://discordapp.com/developers/docs/resources/emoji#create-guild-emoji
   def add_emoji(token, server_id, image, name, roles = [], reason = nil)
     Discordrb::API.request(
       :guilds_sid_emojis,
@@ -466,7 +467,8 @@ module Discordrb::API::Server
     )
   end
 
-  # Changes an emoji name
+  # Changes an emoji name and/or roles.
+  # https://discordapp.com/developers/docs/resources/emoji#modify-guild-emoji
   def edit_emoji(token, server_id, emoji_id, name, roles = nil, reason = nil)
     Discordrb::API.request(
       :guilds_sid_emojis_eid,
