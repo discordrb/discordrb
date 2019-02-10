@@ -92,26 +92,11 @@ Select option 3, and then run
 
 To enable the changes
 
-##### RubyInstaller for ruby 2.3.3 and below
-
-Download the development kit [here](https://rubyinstaller.org/downloads/) (scroll down to "Development Kit", then choose the one for Ruby 2.0 and your system architecture) and extract it somewhere. Open a command prompt in that folder and run:
-
-    ruby dk.rb init
-    ruby dk.rb install
-
-Then reinstall discordrb:
-
-    gem uninstall discordrb
-    bundle install
-
-    # Or, if you didn't use bundler:
-    gem install discordrb
-
 **If Ruby complains about `ffi_c` not being able to be found:**
 
 For example
 
-    C:/Ruby23-x64/lib/ruby/2.3.0/rubygems/core_ext/kernel_require.rb:55:in `require': cannot load such file -- ffi_c (LoadError)
+    C:/Ruby25-x64/lib/ruby/2.5.0/rubygems/core_ext/kernel_require.rb:55:in `require': cannot load such file -- ffi_c (LoadError)
 
 Your ffi setup is screwed up, first run `gem uninstall ffi` (uninstall all versions if it asks you, say yes to any unmet dependencies), then run `gem install ffi --platform=ruby` to fix it. If it says something about build tools, follow the steps in the first troubleshooting section.
 
