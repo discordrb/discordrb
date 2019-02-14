@@ -499,12 +499,12 @@ module Discordrb
       role
     end
 
-    # Add a new custom emoji on this server.
+    # Adds a new custom emoji on this server.
     # @param name [String] The name of emoji to create.
     # @param image [String, #read] A base64 encoded string with the image data, or an object that responds to `#read`, such as `File`.
     # @param roles [Array<Role, String, Integer>] An array of roles, or role IDs to be whitelisted for this emoji.
-    # @param reason [String] The reason the for the creation of this channel.
-    # @return [Emoji] The Emoji that has been added.
+    # @param reason [String] The reason the for the creation of this emoji.
+    # @return [Emoji] The emoji that has been added.
     def add_emoji(name, image, roles = [], reason: nil)
       image_string = image
       if image.respond_to? :read
@@ -524,10 +524,11 @@ module Discordrb
       API::Server.delete_emoji(@bot.token, @id, emoji.resolve_id, reason)
     end
 
-    # Change the name and/or whitelist of an emoji on this server.
-    # @param emoji [Emoji, Integer, String] The emoji to edit.
+    # Changes the name and/or role whitelist of an emoji on this server.
+    # @param emoji [Emoji, Integer, String] The emoji or emoji ID to edit.
     # @param name [String] The new name for the emoji.
     # @param roles [Array<Role, Integer, String>] A new array of roles, or role IDs, to whitelist.
+    # @param reason [String] The reason for the editing of this emoji.
     # @return [Emoji] The edited emoji.
     def edit_emoji(emoji, name: nil, roles: nil, reason: nil)
       emoji = @emoji[emoji.resolve_id]
