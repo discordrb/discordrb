@@ -517,8 +517,15 @@ module Discordrb
       @emoji[new_emoji.id] = new_emoji
     end
 
+    # Delete a custom emoji on this server
+    # @param emoji [Emoji, Integer, String]
+    # @param reason [String] The reason the for the deletion of this emoji.
+    def delete_emoji(emoji, reason: nil)
+      API::Server.delete_emoji(@bot.token, @id, emoji.resolve_id, reason)
+    end
+
     # Change the name and/or whitelist of an emoji on this server.
-    # @param emoji [Emoji, String, Integer] The emoji to edit.
+    # @param emoji [Emoji, Integer, String] The emoji to edit.
     # @param name [String] The new name for the emoji.
     # @param roles [Array<Role, Integer, String>] A new array of roles, or role IDs, to whitelist.
     # @return [Emoji] The edited emoji.

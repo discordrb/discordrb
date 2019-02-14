@@ -483,6 +483,7 @@ module Discordrb::API::Server
   end
 
   # Deletes a custom emoji
+  # https://discordapp.com/developers/docs/resources/emoji#delete-guild-emoji
   def delete_emoji(token, server_id, emoji_id, reason = nil)
     Discordrb::API.request(
       :guilds_sid_emojis_eid,
