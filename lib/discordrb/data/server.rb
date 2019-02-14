@@ -518,7 +518,7 @@ module Discordrb
     end
 
     # Delete a custom emoji on this server
-    # @param emoji [Emoji, Integer, String]
+    # @param emoji [Emoji, Integer, String] The emoji or emoji ID to be deleted.
     # @param reason [String] The reason the for the deletion of this emoji.
     def delete_emoji(emoji, reason: nil)
       API::Server.delete_emoji(@bot.token, @id, emoji.resolve_id, reason)
