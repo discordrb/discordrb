@@ -133,7 +133,7 @@ module Discordrb::Events
       raise ArgumentError, 'Argument is not a file!' unless file.is_a?(File)
 
       @file = file
-      @file.define_singleton_method(:original_filename) { filename }
+      @file.define_singleton_method(:original_filename) { filename } if file.respond_to?(:read) && filename
       nil
     end
 

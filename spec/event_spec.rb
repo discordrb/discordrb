@@ -100,6 +100,39 @@ describe Discordrb::Events do
     end
   end
 
+  describe Discordrb::Events::MessageEvent do
+    let(:bot) { double }
+    let(:message) { double('message', channel: nil) }
+
+    subject :event do
+      described_class.new(message, bot)
+    end
+
+    describe '#attach_file' do
+      it 'defines an original_filename singleton when filename is passed' do
+        file = double(:file)
+        filename = double(:filename)
+
+        allow(file).to receive(:is_a?).with(File).and_return(true)
+        allow(file).to receive(:respond_to?).with(:read).and_return(true)
+
+        event.attach_file(file, filename: filename)
+
+        expect(file.original_filename).to eq filename
+      end
+
+      it 'does not define original_filename when filename is nil' do
+        file = double(:file)
+
+        allow(file).to receive(:is_a?).with(File).and_return(true)
+        allow(file).to receive(:respond_to?).with(:read).and_return(true)
+
+        expect(file).not_to receive(:define_singleton_method)
+        event.attach_file(file)
+      end
+    end
+  end
+
   describe Discordrb::Events::EventHandler do
     describe 'matches?' do
       it 'should raise an error' do
