@@ -141,4 +141,30 @@ describe Discordrb::Bot do
       expect(emoji.roles).to eq([])
     end
   end
+
+  describe '#send_file' do
+    it 'defines an original_filename singleton when filename is passed' do
+      file = double(:file)
+      filename = double(:filename)
+
+      allow(file).to receive(:respond_to?).with(:read).and_return(true)
+      allow(Discordrb::API::Channel).to receive(:upload_file).and_return('{}')
+      allow(Discordrb::Message).to receive(:new)
+
+      bot.send_file(0, file, filename: filename)
+
+      expect(file.original_filename).to eq filename
+    end
+
+    it 'does not define original_filename when filename is nil' do
+      file = double(:file)
+
+      allow(file).to receive(:respond_to?).with(:read).and_return(true)
+      allow(Discordrb::API::Channel).to receive(:upload_file).and_return('{}')
+      allow(Discordrb::Message).to receive(:new)
+
+      expect(file).not_to receive(:define_singleton_method)
+      bot.send_file(0, file)
+    end
+  end
 end
