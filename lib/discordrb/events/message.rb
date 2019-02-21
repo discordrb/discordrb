@@ -117,20 +117,23 @@ module Discordrb::Events
     # because it avoids rate limiting problems
     # @param file [File] The file to send to the channel
     # @param caption [String] The caption attached to the file
+    # @param filename [String] Overrides the filename of the uploaded file
     # @return [Discordrb::Message] the message that was sent
     # @example Send a file from disk
     #   event.send_file(File.open('rubytaco.png', 'r'))
-    def send_file(file, caption: nil)
-      @message.channel.send_file(file, caption: caption)
+    def send_file(file, caption: nil, filename: nil)
+      @message.channel.send_file(file, caption: caption, filename: filename)
     end
 
     # Attaches a file to the message event and converts the message into
     # a caption.
     # @param file [File] The file to be attached
-    def attach_file(file)
+    # @param filename [String] Overrides the filename of the uploaded file
+    def attach_file(file, filename: nil)
       raise ArgumentError, 'Argument is not a file!' unless file.is_a?(File)
 
       @file = file
+      @file.define_singleton_method(:original_filename) { filename }
       nil
     end
 

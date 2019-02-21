@@ -396,9 +396,13 @@ module Discordrb
     # @param file [File] The file that should be sent.
     # @param caption [string] The caption for the file.
     # @param tts [true, false] Whether or not this file's caption should be sent using Discord text-to-speech.
+    # @param filename [String] Overrides the filename of the uploaded file
     # @example Send a file from disk
     #   bot.send_file(83281822225530880, File.open('rubytaco.png', 'r'))
-    def send_file(channel, file, caption: nil, tts: false)
+    def send_file(channel, file, caption: nil, tts: false, filename: nil)
+      # https://github.com/rest-client/rest-client/blob/v2.0.2/lib/restclient/payload.rb#L160
+      file.define_singleton_method(:original_filename) { filename } if file.respond_to?(:read) && filename
+
       channel = channel.resolve_id
       response = API::Channel.upload_file(token, channel, file, caption: caption, tts: tts)
       Message.new(JSON.parse(response), self)
