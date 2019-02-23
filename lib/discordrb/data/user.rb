@@ -100,11 +100,12 @@ module Discordrb
     # Send the user a file.
     # @param file [File] The file to send to the user
     # @param caption [String] The caption of the file being sent
+    # @param filename [String] Overrides the filename of the uploaded file
     # @return [Message] the message sent to this user.
     # @example Send a file from disk
     #   user.send_file(File.open('rubytaco.png', 'r'))
-    def send_file(file, caption = nil)
-      pm.send_file(file, caption: caption)
+    def send_file(file, caption = nil, filename: nil)
+      pm.send_file(file, caption: caption, filename: filename)
     end
 
     # Set the user's name

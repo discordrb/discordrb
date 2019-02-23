@@ -100,6 +100,32 @@ describe Discordrb::Events do
     end
   end
 
+  describe Discordrb::Events::MessageEvent do
+    let(:bot) { double }
+    let(:channel) { double }
+    let(:message) { double('message', channel: channel) }
+
+    subject :event do
+      described_class.new(message, bot)
+    end
+
+    describe 'after_call' do
+      subject :handler do
+        Discordrb::Events::MessageEventHandler.new(double, double('proc'))
+      end
+
+      it 'calls send_file with attached file and filename' do
+        file = double(:file)
+        filename = double(:filename)
+        allow(file).to receive(:is_a?).with(File).and_return(true)
+
+        expect(event).to receive(:send_file).with(file, caption: '', filename: filename)
+        event.attach_file(file, filename: filename)
+        handler.after_call(event)
+      end
+    end
+  end
+
   describe Discordrb::Events::EventHandler do
     describe 'matches?' do
       it 'should raise an error' do

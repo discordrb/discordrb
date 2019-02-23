@@ -141,4 +141,31 @@ describe Discordrb::Bot do
       expect(emoji.roles).to eq([])
     end
   end
+
+  describe '#send_file' do
+    let(:channel) { double(:channel, resolve_id: double) }
+
+    it 'defines original_filename when filename is passed' do
+      original_filename = double(:original_filename)
+      file = double(:file, original_filename: original_filename, read: true)
+      new_filename = double('new filename')
+
+      allow(Discordrb::API::Channel).to receive(:upload_file).and_return('{}')
+      allow(Discordrb::Message).to receive(:new)
+
+      bot.send_file(channel, file, filename: new_filename)
+      expect(file.original_filename).to eq new_filename
+    end
+
+    it 'does not define original_filename when filename is nil' do
+      original_filename = double(:original_filename)
+      file = double(:file, read: true, original_filename: original_filename)
+
+      allow(Discordrb::API::Channel).to receive(:upload_file).and_return('{}')
+      allow(Discordrb::Message).to receive(:new)
+
+      bot.send_file(channel, file)
+      expect(file.original_filename).to eq original_filename
+    end
+  end
 end
