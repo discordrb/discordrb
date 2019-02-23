@@ -82,8 +82,11 @@ module Discordrb::Events
     # @return [String] the message that has been saved by calls to {#<<} and will be sent to Discord upon completion.
     attr_reader :saved_message
 
-    # @return [File] the file that have been saved by calls to {#attach_file} and will be sent to Discord upon completion.
+    # @return [File] the file that has been saved by a call to {#attach_file} and will be sent to Discord upon completion.
     attr_reader :file
+
+    # @return [String] the filename set in {#attach_file} that will override the original filename when sent.
+    attr_reader :filename
 
     # @!attribute [r] author
     #   @return [Member, User] who sent this message.
@@ -110,6 +113,7 @@ module Discordrb::Events
       @channel = message.channel
       @saved_message = ''
       @file = nil
+      @filename = nil
     end
 
     # Sends file with a caption to the channel this message was sent in, right now.
@@ -133,13 +137,14 @@ module Discordrb::Events
       raise ArgumentError, 'Argument is not a file!' unless file.is_a?(File)
 
       @file = file
-      @file.define_singleton_method(:original_filename) { filename } if file.respond_to?(:read) && filename
+      @filename = filename
       nil
     end
 
     # Detaches a file from the message event.
     def detach_file
       @file = nil
+      @filename = nil
     end
 
     # @return [true, false] whether or not this message was sent by the bot itself
@@ -225,7 +230,7 @@ module Discordrb::Events
       if event.file.nil?
         event.send_message(event.saved_message) unless event.saved_message.empty?
       else
-        event.send_file(event.file, caption: event.saved_message)
+        event.send_file(event.file, caption: event.saved_message, filename: event.filename)
       end
     end
   end

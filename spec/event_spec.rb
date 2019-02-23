@@ -102,33 +102,39 @@ describe Discordrb::Events do
 
   describe Discordrb::Events::MessageEvent do
     let(:bot) { double }
-    let(:message) { double('message', channel: nil) }
+    let(:channel) { double }
+    let(:message) { double('message', channel: channel) }
 
     subject :event do
       described_class.new(message, bot)
     end
 
     describe '#attach_file' do
+      subject :handler do
+        Discordrb::Events::MessageEventHandler.new(double, double('proc'))
+      end
+
       it 'defines an original_filename singleton when filename is passed' do
-        file = double(:file)
-        filename = double(:filename)
+        original_filename = double(:filename)
+        file = double(:file, original_filename: original_filename, read: true)
+        new_filename = double('new filename')
 
         allow(file).to receive(:is_a?).with(File).and_return(true)
-        allow(file).to receive(:respond_to?).with(:read).and_return(true)
 
-        event.attach_file(file, filename: filename)
-
-        expect(file.original_filename).to eq filename
+        event.attach_file(file, filename: new_filename)
+        expect(event).to receive(:send_file).with(file, caption: '', filename: new_filename)
+        handler.after_call(event)
       end
 
       it 'does not define original_filename when filename is nil' do
-        file = double(:file)
+        original_filename = double(:filename)
+        file = double(:file, original_filename: original_filename, read: true)
 
         allow(file).to receive(:is_a?).with(File).and_return(true)
-        allow(file).to receive(:respond_to?).with(:read).and_return(true)
 
-        expect(file).not_to receive(:define_singleton_method)
         event.attach_file(file)
+        expect(event).to receive(:send_file).with(file, caption: '', filename: nil)
+        handler.after_call(event)
       end
     end
   end
