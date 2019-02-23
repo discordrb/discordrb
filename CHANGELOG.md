@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `API::Server.create_channel` and `Server#create_channel` now accepts `position` ([#592](https://github.com/meew0/discordrb/pull/592), thanks @swarley)
 - `Bot.new` will now raise a more helpful exception when the passed token string is empty or nil ([#599](https://github.com/meew0/discordrb/pull/599))
 - `compress_mode` in `Bot.new` now defaults to `:large` instead of `:stream` ([#601](https://github.com/meew0/discordrb/pull/601))
+- `send_file` methods now accept `filename` to rename a file when uploading to Discord ([#605](https://github.com/meew0/discordrb/pull/605), thanks @swarley)
 
 ## [3.3.0] - 2018-10-27
 [3.3.0]: https://github.com/meew0/discordrb/releases/tag/v3.3.0
