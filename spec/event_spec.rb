@@ -119,7 +119,7 @@ describe Discordrb::Events do
         filename = double(:filename)
         allow(file).to receive(:is_a?).with(File).and_return(true)
 
-        expect(event).to receive(:send_file).with(file, caption: '', filename: new_filename)
+        expect(event).to receive(:send_file).with(file, caption: '', filename: filename)
         event.attach_file(file, filename: filename)
         handler.after_call(event)
       end
