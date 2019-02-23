@@ -109,31 +109,18 @@ describe Discordrb::Events do
       described_class.new(message, bot)
     end
 
-    describe '#attach_file' do
+    describe 'after_call' do
       subject :handler do
         Discordrb::Events::MessageEventHandler.new(double, double('proc'))
       end
 
-      it 'defines an original_filename singleton when filename is passed' do
-        original_filename = double(:filename)
-        file = double(:file, original_filename: original_filename, read: true)
-        new_filename = double('new filename')
-
+      it 'calls send_file with attached file and filename' do
+        file = double(:file)
+        filename = double(:filename)
         allow(file).to receive(:is_a?).with(File).and_return(true)
 
-        event.attach_file(file, filename: new_filename)
         expect(event).to receive(:send_file).with(file, caption: '', filename: new_filename)
-        handler.after_call(event)
-      end
-
-      it 'does not define original_filename when filename is nil' do
-        original_filename = double(:filename)
-        file = double(:file, original_filename: original_filename, read: true)
-
-        allow(file).to receive(:is_a?).with(File).and_return(true)
-
-        event.attach_file(file)
-        expect(event).to receive(:send_file).with(file, caption: '', filename: nil)
+        event.attach_file(file, filename: filename)
         handler.after_call(event)
       end
     end
