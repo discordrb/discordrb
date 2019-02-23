@@ -145,7 +145,7 @@ describe Discordrb::Bot do
   describe '#send_file' do
     let(:channel) { double(:channel, resolve_id: double) }
 
-    it 'defines an original_filename singleton when filename is passed' do
+    it 'defines original_filename when filename is passed' do
       original_filename = double(:original_filename)
       file = double(:file, original_filename: original_filename, read: true)
       new_filename = double('new filename')
