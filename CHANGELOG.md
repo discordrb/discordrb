@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `Bot#parse_mentions`, which extracts *all* mentions found in a string ([#526](https://github.com/meew0/discordrb/pull/526), thanks @SanksTheYokai)
 - Issue and pull request templates ([#585](https://github.com/meew0/discordrb/pull/585))
 - `Server#bot` method for obtaining your bot's own `Member` on a particular server ([#597](https://github.com/meew0/discordrb/pull/597))
+- `Attachment#spoiler?`, to check if an attachment is a spoiler or not ([#603](https://github.com/meew0/discordrb/pull/603), thanks @swarley)
 
 ### Changed
 

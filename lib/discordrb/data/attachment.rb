@@ -47,5 +47,10 @@ module Discordrb
     def image?
       !(@width.nil? || @height.nil?)
     end
+
+    # @return [true, false] whether this file is tagged as a spoiler.
+    def spoiler?
+      @filename.start_with? 'SPOILER_'
+    end
   end
 end
