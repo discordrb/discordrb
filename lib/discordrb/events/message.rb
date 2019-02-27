@@ -88,6 +88,9 @@ module Discordrb::Events
     # @return [String] the filename set in {#attach_file} that will override the original filename when sent.
     attr_reader :filename
 
+    # @param spoiler [true, false] Whether or not this file should appear as a spoiler. Set by {#attach_file}
+    attr_reader :spoiler
+
     # @!attribute [r] author
     #   @return [Member, User] who sent this message.
     #   @see Message#author
@@ -114,6 +117,7 @@ module Discordrb::Events
       @saved_message = ''
       @file = nil
       @filename = nil
+      @spoiler = nil
     end
 
     # Sends file with a caption to the channel this message was sent in, right now.
@@ -122,22 +126,25 @@ module Discordrb::Events
     # @param file [File] The file to send to the channel
     # @param caption [String] The caption attached to the file
     # @param filename [String] Overrides the filename of the uploaded file
+    # @param spoiler [true, false] Whether or not this file should appear as a spoiler.
     # @return [Discordrb::Message] the message that was sent
     # @example Send a file from disk
     #   event.send_file(File.open('rubytaco.png', 'r'))
-    def send_file(file, caption: nil, filename: nil)
-      @message.channel.send_file(file, caption: caption, filename: filename)
+    def send_file(file, caption: nil, filename: nil, spoiler: nil)
+      @message.channel.send_file(file, caption: caption, filename: filename, spoiler: spoiler)
     end
 
     # Attaches a file to the message event and converts the message into
     # a caption.
     # @param file [File] The file to be attached
     # @param filename [String] Overrides the filename of the uploaded file
-    def attach_file(file, filename: nil)
+    # @param spoiler [true, false] Whether or not this file should appear as a spoiler.
+    def attach_file(file, filename: nil, spoiler: nil)
       raise ArgumentError, 'Argument is not a file!' unless file.is_a?(File)
 
       @file = file
       @filename = filename
+      @spoiler = spoiler
       nil
     end
 
@@ -145,6 +152,7 @@ module Discordrb::Events
     def detach_file
       @file = nil
       @filename = nil
+      @spoiler = nil
     end
 
     # @return [true, false] whether or not this message was sent by the bot itself
@@ -230,7 +238,7 @@ module Discordrb::Events
       if event.file.nil?
         event.send_message(event.saved_message) unless event.saved_message.empty?
       else
-        event.send_file(event.file, caption: event.saved_message, filename: event.filename)
+        event.send_file(event.file, caption: event.saved_message, filename: event.filename, spoiler: event.spoiler)
       end
     end
   end
