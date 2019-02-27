@@ -89,7 +89,7 @@ module Discordrb::Events
     attr_reader :filename
 
     # @return [true, false] Whether or not this file should appear as a spoiler. Set by {#attach_file}
-    attr_reader :spoiler
+    attr_reader :file_spoiler
 
     # @!attribute [r] author
     #   @return [Member, User] who sent this message.
@@ -117,7 +117,7 @@ module Discordrb::Events
       @saved_message = ''
       @file = nil
       @filename = nil
-      @spoiler = nil
+      @file_spoiler = nil
     end
 
     # Sends file with a caption to the channel this message was sent in, right now.
@@ -144,7 +144,7 @@ module Discordrb::Events
 
       @file = file
       @filename = filename
-      @spoiler = spoiler
+      @file_spoiler = spoiler
       nil
     end
 
@@ -152,7 +152,7 @@ module Discordrb::Events
     def detach_file
       @file = nil
       @filename = nil
-      @spoiler = nil
+      @file_spoiler = nil
     end
 
     # @return [true, false] whether or not this message was sent by the bot itself
@@ -238,7 +238,7 @@ module Discordrb::Events
       if event.file.nil?
         event.send_message(event.saved_message) unless event.saved_message.empty?
       else
-        event.send_file(event.file, caption: event.saved_message, filename: event.filename, spoiler: event.spoiler)
+        event.send_file(event.file, caption: event.saved_message, filename: event.filename, spoiler: event.file_spoiler)
       end
     end
   end
