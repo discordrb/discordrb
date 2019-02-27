@@ -88,7 +88,7 @@ module Discordrb::Events
     # @return [String] the filename set in {#attach_file} that will override the original filename when sent.
     attr_reader :filename
 
-    # @param spoiler [true, false] Whether or not this file should appear as a spoiler. Set by {#attach_file}
+    # @return [true, false] Whether or not this file should appear as a spoiler. Set by {#attach_file}
     attr_reader :spoiler
 
     # @!attribute [r] author
