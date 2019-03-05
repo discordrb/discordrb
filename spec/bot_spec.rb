@@ -178,13 +178,13 @@ describe Discordrb::Bot do
       expect(file.original_filename).to eq 'SPOILER_file.txt'
     end
 
-    it 'does not prepend "SPOILER_" when spoiler is truthy if filename.start_with? "SPOILER_"' do
-      file = double(:file, read: true)
+    it 'does not prepend "SPOILER_" if the filename starts with "SPOILER_"' do
+      file = double(:file, read: true, path: 'SPOILER_file.txt')
 
       allow(Discordrb::API::Channel).to receive(:upload_file).and_return('{}')
       allow(Discordrb::Message).to receive(:new)
 
-      bot.send_file(channel, file, filename: 'SPOILER_file.txt', spoiler: true)
+      bot.send_file(channel, file, spoiler: true)
       expect(file.original_filename).to eq 'SPOILER_file.txt'
     end
 
