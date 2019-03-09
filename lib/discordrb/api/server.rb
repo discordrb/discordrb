@@ -452,28 +452,30 @@ module Discordrb::API::Server
     )
   end
 
-  # Adds a custom emoji
-  def add_emoji(token, server_id, image, name, reason = nil)
+  # Adds a custom emoji.
+  # https://discordapp.com/developers/docs/resources/emoji#create-guild-emoji
+  def add_emoji(token, server_id, image, name, roles = [], reason = nil)
     Discordrb::API.request(
       :guilds_sid_emojis,
       server_id,
       :post,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/emojis",
-      { image: image, name: name }.to_json,
+      { image: image, name: name, roles: roles }.to_json,
       Authorization: token,
       content_type: :json,
       'X-Audit-Log-Reason': reason
     )
   end
 
-  # Changes an emoji name
-  def edit_emoji(token, server_id, emoji_id, name, reason = nil)
+  # Changes an emoji name and/or roles.
+  # https://discordapp.com/developers/docs/resources/emoji#modify-guild-emoji
+  def edit_emoji(token, server_id, emoji_id, name, roles = nil, reason = nil)
     Discordrb::API.request(
       :guilds_sid_emojis_eid,
       server_id,
       :patch,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/emojis/#{emoji_id}",
-      { name: name }.to_json,
+      { name: name, roles: roles }.to_json,
       Authorization: token,
       content_type: :json,
       'X-Audit-Log-Reason': reason
@@ -481,6 +483,7 @@ module Discordrb::API::Server
   end
 
   # Deletes a custom emoji
+  # https://discordapp.com/developers/docs/resources/emoji#delete-guild-emoji
   def delete_emoji(token, server_id, emoji_id, reason = nil)
     Discordrb::API.request(
       :guilds_sid_emojis_eid,
