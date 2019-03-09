@@ -114,13 +114,14 @@ describe Discordrb::Events do
         Discordrb::Events::MessageEventHandler.new(double, double('proc'))
       end
 
-      it 'calls send_file with attached file and filename' do
+      it 'calls send_file with attached file, filename, and spoiler' do
         file = double(:file)
         filename = double(:filename)
+        spoiler = double(:spoiler)
         allow(file).to receive(:is_a?).with(File).and_return(true)
 
-        expect(event).to receive(:send_file).with(file, caption: '', filename: filename)
-        event.attach_file(file, filename: filename)
+        expect(event).to receive(:send_file).with(file, caption: '', filename: filename, spoiler: spoiler)
+        event.attach_file(file, filename: filename, spoiler: spoiler)
         handler.after_call(event)
       end
     end

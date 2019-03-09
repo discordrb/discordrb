@@ -375,10 +375,11 @@ module Discordrb
     # @param caption [string] The caption for the file.
     # @param tts [true, false] Whether or not this file's caption should be sent using Discord text-to-speech.
     # @param filename [String] Overrides the filename of the uploaded file
+    # @param spoiler [true, false] Whether or not this file should appear as a spoiler.
     # @example Send a file from disk
     #   channel.send_file(File.open('rubytaco.png', 'r'))
-    def send_file(file, caption: nil, tts: false, filename: nil)
-      @bot.send_file(@id, file, caption: caption, tts: tts, filename: filename)
+    def send_file(file, caption: nil, tts: false, filename: nil, spoiler: nil)
+      @bot.send_file(@id, file, caption: caption, tts: tts, filename: filename, spoiler: spoiler)
     end
 
     # Deletes a message on this channel. Mostly useful in case a message needs to be deleted when only the ID is known

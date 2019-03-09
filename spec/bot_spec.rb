@@ -167,5 +167,35 @@ describe Discordrb::Bot do
       bot.send_file(channel, file)
       expect(file.original_filename).to eq original_filename
     end
+
+    it 'prepends "SPOILER_" when spoiler is truthy and the filename does not start with "SPOILER_"' do
+      file = double(:file, read: true)
+
+      allow(Discordrb::API::Channel).to receive(:upload_file).and_return('{}')
+      allow(Discordrb::Message).to receive(:new)
+
+      bot.send_file(channel, file, filename: 'file.txt', spoiler: true)
+      expect(file.original_filename).to eq 'SPOILER_file.txt'
+    end
+
+    it 'does not prepend "SPOILER_" if the filename starts with "SPOILER_"' do
+      file = double(:file, read: true, path: 'SPOILER_file.txt')
+
+      allow(Discordrb::API::Channel).to receive(:upload_file).and_return('{}')
+      allow(Discordrb::Message).to receive(:new)
+
+      bot.send_file(channel, file, spoiler: true)
+      expect(file.original_filename).to eq 'SPOILER_file.txt'
+    end
+
+    it 'uses the original filename when spoiler is truthy and filename is nil' do
+      file = double(:file, read: true, path: 'file.txt')
+
+      allow(Discordrb::API::Channel).to receive(:upload_file).and_return('{}')
+      allow(Discordrb::Message).to receive(:new)
+
+      bot.send_file(channel, file, spoiler: true)
+      expect(file.original_filename).to eq 'SPOILER_file.txt'
+    end
   end
 end
