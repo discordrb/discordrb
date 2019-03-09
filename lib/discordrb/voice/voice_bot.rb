@@ -262,7 +262,7 @@ module Discordrb::Voice
       raise ArgumentError, 'Not a DCA1 file! The file might have been corrupted, please recreate it.' unless magic == 'DCA1'
 
       # Read the metadata header, then read the metadata and discard it as we don't care about it
-      metadata_header = input_stream.read(4).unpack('l<')[0]
+      metadata_header = input_stream.read(4).unpack1('l<')
       input_stream.read(metadata_header)
 
       # Play the data, without re-encoding it to opus
@@ -276,7 +276,7 @@ module Discordrb::Voice
             next :stop
           end
 
-          header = header_str.unpack('s<')[0]
+          header = header_str.unpack1('s<')
 
           raise 'Negative header in DCA file! Your file is likely corrupted.' if header.negative?
         rescue EOFError

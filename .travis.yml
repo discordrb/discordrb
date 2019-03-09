@@ -1,8 +1,8 @@
 language: ruby
 rvm:
-  - 2.3.7
-  - 2.4.4
-  - 2.5.1
+  - 2.4
+  - 2.5
+  - 2.6
 before_script:
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 -o ./cc-test-reporter
   - chmod +x ./cc-test-reporter
@@ -21,7 +21,7 @@ deploy:
     local-dir: docs
     on:
       branch: master
-      rvm: 2.5.1
+      rvm: 2.6
   - provider: pages
     skip-cleanup: true
     github-token: $GITHUB_TOKEN
@@ -29,4 +29,4 @@ deploy:
     local-dir: docs
     on:
       tags: true
-      rvm: 2.5.1
+      rvm: 2.6
