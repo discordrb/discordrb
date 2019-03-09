@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Issue and pull request templates ([#585](https://github.com/meew0/discordrb/pull/585))
 - `Server#bot` method for obtaining your bot's own `Member` on a particular server ([#597](https://github.com/meew0/discordrb/pull/597))
 - `Attachment#spoiler?`, to check if an attachment is a spoiler or not ([#603](https://github.com/meew0/discordrb/pull/603), thanks @swarley)
+- Methods on `Server` to manage the server's emoji ([#595](https://github.com/meew0/discordrb/pull/595), thanks @swarley)
 
 ### Changed
 
@@ -25,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `Bot.new` will now raise a more helpful exception when the passed token string is empty or nil ([#599](https://github.com/meew0/discordrb/pull/599))
 - `compress_mode` in `Bot.new` now defaults to `:large` instead of `:stream` ([#601](https://github.com/meew0/discordrb/pull/601))
 - `send_file` methods now accept `filename` to rename a file when uploading to Discord ([#605](https://github.com/meew0/discordrb/pull/605), thanks @swarley)
+- Emoji related `API` methods now accept arguments to change an emoji's role whitelist ([#595](https://github.com/meew0/discordrb/pull/595), thanks @swarley)
 
 ## [3.3.0] - 2018-10-27
 [3.3.0]: https://github.com/meew0/discordrb/releases/tag/v3.3.0
