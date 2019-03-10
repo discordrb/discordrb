@@ -18,10 +18,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Drop support for Ruby 2.3 (EOL) ([#583](https://github.com/meew0/discordrb/pull/583), thanks @PanisSupraOmnia)
-- **(breaking change)** Upgraded minimum Ruby version to 2.3.7, and upgraded Rubocop to 0.60.0. This additionally changes the name of some public constants. ([#487](https://github.com/meew0/discordrb/pull/487), thanks @ChallahuAkbar)
-- Dependencies for `rbnacl`, `rake`, and `rspec` have been updated ([#538](https://github.com/meew0/discordrb/pull/538), thanks @ChallahuAkbar)
+- **(breaking change)** Upgraded minimum Ruby version to 2.3.7, and upgraded Rubocop to 0.60.0. This additionally changes the name of some public constants. ([#487](https://github.com/meew0/discordrb/pull/487), thanks @PanisSupraOmnia)
+- Dependencies for `rbnacl`, `rake`, and `rspec` have been updated ([#538](https://github.com/meew0/discordrb/pull/538), thanks @PanisSupraOmnia)
 - The monolithic `data.rb` file has been split into multiple files for easier development ([#482](https://github.com/meew0/discordrb/pull/482))
-- Loosened `bundler` development dependency to allow use of `bundler` 1.x and 2.x ([#591](https://github.com/meew0/discordrb/pull/591), thanks ChallahuAkbar)
+- Loosened `bundler` development dependency to allow use of `bundler` 1.x and 2.x ([#591](https://github.com/meew0/discordrb/pull/591), thanks @PanisSupraOmnia)
 - `API::Server.create_channel` and `Server#create_channel` now accepts `position` ([#592](https://github.com/meew0/discordrb/pull/592), thanks @swarley)
 - `Bot.new` will now raise a more helpful exception when the passed token string is empty or nil ([#599](https://github.com/meew0/discordrb/pull/599))
 - `compress_mode` in `Bot.new` now defaults to `:large` instead of `:stream` ([#601](https://github.com/meew0/discordrb/pull/601))
@@ -126,7 +126,7 @@ Thank you to all of our contributors!
 - Documentation for the `discordrb-webhooks` gem in `README.md` ([#460](https://github.com/meew0/discordrb/pull/460))
 - A new, synchronous awaits system available via `#await!` ([#499](https://github.com/meew0/discordrb/pull/499))
 - `Channel#sort_after`, for moving a channel around a server within categories easily ([#497](https://github.com/meew0/discordrb/pull/497))
-- The gemspec now includes a link to the changelog ([#515](https://github.com/meew0/discordrb/pull/515), thanks @ChallahuAkbar)
+- The gemspec now includes a link to the changelog ([#515](https://github.com/meew0/discordrb/pull/515), thanks @PanisSupraOmnia)
 - Commands can now be restricted by either `allowed_roles` or `required_roles` ([#469](https://github.com/meew0/discordrb/pull/469), thanks @elfenars)
 - `Bot#parse_mention` parses `Channel` mentions ([#525](https://github.com/meew0/discordrb/pull/525), thanks @estherbolik)
 - Support for Discord's `zlib-stream` gateway compression, as well as options to configure the compression mode in `Bot#initialize` ([#527](https://github.com/meew0/discordrb/pull/527), thanks @oct2pus for additional testing)
@@ -170,7 +170,7 @@ Thank you to all of our contributors!
 - Specs for `Channel` are refactored ([#481](https://github.com/meew0/discordrb/pull/481), thanks @Daniel-Worrall)
 - Specs are refactored to not use `module` namespaces ([#520](https://github.com/meew0/discordrb/pull/520), thanks @Daniel-Worrall)
 - `Bot` now logs to `LOGGER.info` when the bot successfully resumes
-- Code climate tooling is updated ([#489](https://github.com/meew0/discordrb/pull/489), thanks @ChallahuAkbar)
+- Code climate tooling is updated ([#489](https://github.com/meew0/discordrb/pull/489), thanks @PanisSupraOmnia)
 - `Bot#parse_mention` will now return an `Emoji` object for a mention of an emoji the bot isn't connected to ([#473](https://github.com/meew0/discordrb/pull/473))
 - The changelog now follows the "Keep a Changelog" format ([#504](https://github.com/meew0/discordrb/pull/504), thanks @connorshea)
 - `Bot#run` documentation is adjusted to clarify the use of its async argument ([#521](https://github.com/meew0/discordrb/pull/521))
@@ -178,7 +178,7 @@ Thank you to all of our contributors!
 - `Embed#colour=`/`Embed#color=` now accepts instances of `ColourRGB`/`ColorRGB` ([#523](https://github.com/meew0/discordrb/pull/523))
 - `Gateway` now performs certificate validation, and enforces use of TLSv1.2. If you experience issues (please report them!), you can return to the old codepath by setting `DISCORDRB_SSL_VERIFY_NONE` ([#528](https://github.com/meew0/discordrb/pull/528), thanks @cky)
 - Documentation clarifications around `voice_state_update`, `member_update`, and `server_create` ([#531](https://github.com/meew0/discordrb/pull/531))
-- URLs listed across the code base now use https, various other cleanups ([#540](https://github.com/meew0/discordrb/pull/540), thanks @ChallahuAkbar)
+- URLs listed across the code base now use https, various other cleanups ([#540](https://github.com/meew0/discordrb/pull/540), thanks @PanisSupraOmnia)
 - Dependency on the `ffi` gem is restricted to `>= 1.9.24` to prevent a security exploit on Windows, per [CVE-2018-1000201](https://nvd.nist.gov/vuln/detail/CVE-2018-1000201) ([#544](https://github.com/meew0/discordrb/pull/544))
 - Warnings about accessing cached data after server streaming times out are now clarified and printed when accessing relevant methods ([#578](https://github.com/meew0/discordrb/pull/578), thanks @connorshea)
 
