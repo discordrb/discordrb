@@ -772,7 +772,7 @@ module Discordrb
     end
 
     def handle_close(e)
-      @bot.send(:raise_event, Events::DisconnectEvent.new(@bot))
+      @bot.__send__(:raise_event, Events::DisconnectEvent.new(@bot))
 
       if e.respond_to? :code
         # It is a proper close frame we're dealing with, print reason and message to console
