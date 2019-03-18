@@ -5,8 +5,8 @@ inherit_mode:
     - AllowedNames
 
 AllCops:
-  TargetRubyVersion: 2.4
   NewCops: enable
+  TargetRubyVersion: 2.5
 
 # Disable line length checks
 Layout/LineLength:
