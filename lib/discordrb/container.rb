@@ -109,6 +109,18 @@ module Discordrb
       register_event(MessageDeleteEvent, attributes, block)
     end
 
+    # This **event** is raised whenever a MESSAGE_UPDATE. This event catches some message updates that may
+    # not raise a MessageEditEvent. See [#507](https://github.com/meew0/discordrb/issues/507) for details.
+    # @param attributes [Hash] The event's attributes.
+    # @option attributes [#resolve_id] :id Matches the ID of the message that was updated.
+    # @option attributes [String, Integer, Channel] :in Matches the channel the message was updated in.
+    # @yield The block is executed when the event is raised.
+    # @yieldparam event [MessageUpdateEvent] The event that was raised.
+    # @return [MessageUpdateEventHandler] the event handler that was registered.
+    def message_update(attributes = {}, &block)
+      register_event(MessageUpdateEvent, attributes, block)
+    end
+
     # This **event** is raised when somebody reacts to a message.
     # @param attributes [Hash] The event's attributes.
     # @option attributes [Integer, String] :emoji Matches the ID of the emoji that was reacted with, or its name.

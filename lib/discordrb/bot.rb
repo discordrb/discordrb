@@ -1087,6 +1087,10 @@ module Discordrb
         update_message(data)
 
         message = Message.new(data, self)
+
+        event = MessageUpdateEvent.new(message, self)
+        raise_event(event)
+
         return if message.from_bot? && !should_parse_self
 
         unless message.author
