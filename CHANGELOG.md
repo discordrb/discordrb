@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `Server#bot` method for obtaining your bot's own `Member` on a particular server ([#597](https://github.com/meew0/discordrb/pull/597))
 - `Attachment#spoiler?`, to check if an attachment is a spoiler or not ([#603](https://github.com/meew0/discordrb/pull/603), thanks @swarley)
 - Methods on `Server` to manage the server's emoji ([#595](https://github.com/meew0/discordrb/pull/595), thanks @swarley)
+- `Paginator` utility class for wrapping paginated endpoints ([#579](https://github.com/meew0/discordrb/pull/579))
 
 ### Changed
 
