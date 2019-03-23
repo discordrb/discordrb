@@ -32,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Permission calculation when the internal sorting of roles is unreliable ([#609](https://github.com/meew0/discordrb/pull/609))
+- `DisconnectEvent` is now raised when a gateway close frame is handled ([#611](https://github.com/meew0/discordrb/pull/611), thanks @swarley)
 
 ## [3.3.0] - 2018-10-27
 [3.3.0]: https://github.com/meew0/discordrb/releases/tag/v3.3.0
