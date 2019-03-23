@@ -61,6 +61,9 @@ module Discordrb
     attr_reader :pinned
     alias_method :pinned?, :pinned
 
+    # @return [Server, nil] the server in which this message was sent.
+    attr_reader :server
+
     # @return [Integer, nil] the webhook ID that sent this message, or `nil` if it wasn't sent through a webhook.
     attr_reader :webhook_id
 
@@ -76,6 +79,8 @@ module Discordrb
       @tts = data['tts']
       @nonce = data['nonce']
       @mention_everyone = data['mention_everyone']
+
+      @server = bot.servers[data['guild_id'].to_i] if data['guild_id']
 
       @author = if data['author']
                   if data['author']['discriminator'] == ZERO_DISCRIM
