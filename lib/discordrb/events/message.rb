@@ -308,4 +308,11 @@ module Discordrb::Events
 
   # Event handler for {MessageDeleteEvent}
   class MessageDeleteEventHandler < MessageIDEventHandler; end
+
+  # Raised whenever a MESSAGE_UPDATE is recieved
+  # @see Discordrb::EventContainer#message_update
+  class MessageUpdateEvent < MessageEvent; end
+
+  # Event handler for {MessageUpdateEvent}
+  class MessageUpdateEventHandler < MessageEventHandler; end
 end

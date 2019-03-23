@@ -109,6 +109,20 @@ module Discordrb
       register_event(MessageDeleteEvent, attributes, block)
     end
 
+    # This **event** is raised whenever a message is updated. Message updates can be triggered from
+    # a user editing their own message, or from Discord automatically attaching embeds to the
+    # user's message for URLs contained in the message's content. If you only want to listen
+    # for users editing their own messages, use the {message_edit} handler instead.
+    # @param attributes [Hash] The event's attributes.
+    # @option attributes [#resolve_id] :id Matches the ID of the message that was updated.
+    # @option attributes [String, Integer, Channel] :in Matches the channel the message was updated in.
+    # @yield The block is executed when the event is raised.
+    # @yieldparam event [MessageUpdateEvent] The event that was raised.
+    # @return [MessageUpdateEventHandler] the event handler that was registered.
+    def message_update(attributes = {}, &block)
+      register_event(MessageUpdateEvent, attributes, block)
+    end
+
     # This **event** is raised when somebody reacts to a message.
     # @param attributes [Hash] The event's attributes.
     # @option attributes [Integer, String] :emoji Matches the ID of the emoji that was reacted with, or its name.
