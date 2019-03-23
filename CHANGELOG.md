@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Methods on `Server` to manage the server's emoji ([#595](https://github.com/meew0/discordrb/pull/595), thanks @swarley)
 - `Paginator` utility class for wrapping paginated endpoints ([#579](https://github.com/meew0/discordrb/pull/579))
 - `EventContainer#message_update`, which is fired whenever a message is updated, either by Discord or the user ([#612](https://www.youtube.com/watch?v=fzpCAT4jiRE), thanks @swarley)
+- `Message#server` ([#614](https://github.com/meew0/discordrb/pull/614), thanks @swarley)
 
 ### Changed
 
