@@ -35,7 +35,7 @@ module Discordrb::Commands
     end
 
     # Performs a rate limiting request
-    # @param thing [#resolve_id, Integer, Symbol] The particular thing that should be rate-limited (usually a user/channel, but you can also choose arbitrary integers or symbols)
+    # @param thing [String, Integer, Symbol] The particular thing that should be rate-limited (usually a user/channel, but you can also choose arbitrary integers or symbols)
     # @param rate_limit_time [Time] The time to base the rate limiting on, only useful for testing.
     # @param increment [Integer] How much to increment the rate-limit counter. Default is 1.
     # @return [Integer, false] the waiting time until the next request, in seconds, or false if the request succeeded
@@ -105,7 +105,7 @@ module Discordrb::Commands
 
     # Performs a rate limit request.
     # @param key [Symbol] Which bucket to perform the request for.
-    # @param thing [#resolve_id, Integer, Symbol] What should be rate-limited.
+    # @param thing [String, Integer, Symbol] What should be rate-limited.
     # @param increment (see Bucket#rate_limited?)
     # @see Bucket#rate_limited?
     # @return [Integer, false] How much time to wait or false if the request succeeded.

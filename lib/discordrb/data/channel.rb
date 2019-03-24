@@ -138,7 +138,7 @@ module Discordrb
     alias_method :parent, :category
 
     # Sets this channels parent category
-    # @param channel [Channel, #resolve_id] the target category channel
+    # @param channel [Channel, String, Integer] the target category channel, or its ID
     # @raise [ArgumentError] if the target channel isn't a category
     def category=(channel)
       channel = @bot.channel(channel)
@@ -150,12 +150,12 @@ module Discordrb
     alias_method :parent=, :category=
 
     # Sorts this channel's position to follow another channel.
-    # @param other [Channel, #resolve_id, nil] The channel below which this channel should be sorted. If the given
+    # @param other [Channel, String, Integer, nil] The channel, or its ID, below which this channel should be sorted. If the given
     #   channel is a category, this channel will be sorted at the top of that category. If it is `nil`, the channel will
     #   be sorted at the top of the channel list.
     # @param lock_permissions [true, false] Whether the channel's permissions should be synced to the category's
     def sort_after(other = nil, lock_permissions = false)
-      raise TypeError, 'other must be one of Channel, NilClass, or #resolve_id' unless other.is_a?(Channel) || other.nil? || other.respond_to?(:resolve_id)
+      raise TypeError, 'other must be one of Channel, NilClass, String, or Integer' unless other.is_a?(Channel) || other.nil? || other.respond_to?(:resolve_id)
 
       other = @bot.channel(other.resolve_id) if other
 
@@ -383,7 +383,7 @@ module Discordrb
     end
 
     # Deletes a message on this channel. Mostly useful in case a message needs to be deleted when only the ID is known
-    # @param message [Message, String, Integer, #resolve_id] The message that should be deleted.
+    # @param message [Message, String, Integer, String, Integer] The message, or its ID, that should be deleted.
     def delete_message(message)
       API::Channel.delete_message(@bot.token, @id, message.resolve_id)
     end
@@ -465,7 +465,7 @@ module Discordrb
     end
 
     # Deletes a permission overwrite for this channel
-    # @param target [Member, User, Role, Profile, Recipient, #resolve_id] What permission overwrite to delete
+    # @param target [Member, User, Role, Profile, Recipient, String, Integer] What permission overwrite to delete
     #   @param reason [String] The reason the for the overwrite deletion.
     def delete_overwrite(target, reason = nil)
       raise 'Tried deleting a overwrite for an invalid target' unless target.is_a?(Member) || target.is_a?(User) || target.is_a?(Role) || target.is_a?(Profile) || target.is_a?(Recipient) || target.respond_to?(:resolve_id)
@@ -577,7 +577,7 @@ module Discordrb
     end
 
     # Deletes a collection of messages
-    # @param messages [Array<Message, Integer, #resolve_id>] the messages (or message IDs) to delete. Total must be an amount between 2 and 100 (Discord limitation)
+    # @param messages [Array<Message, String, Integer>] the messages (or message IDs) to delete. Total must be an amount between 2 and 100 (Discord limitation)
     # @param strict [true, false] Whether an error should be raised when a message is reached that is too old to be bulk
     #   deleted. If this is false only a warning message will be output to the console.
     # @raise [ArgumentError] if the amount of messages is not a value between 2 and 100
@@ -647,7 +647,7 @@ module Discordrb
     end
 
     # Adds a user to a group channel.
-    # @param user_ids [Array<#resolve_id>, #resolve_id] User ID or array of user IDs to add to the group channel.
+    # @param user_ids [Array<String, Integer>, String, Integer] User ID or array of user IDs to add to the group channel.
     # @return [Channel] the group channel.
     def add_group_users(user_ids)
       raise 'Attempted to add a user to a non-group channel!' unless group?
@@ -662,7 +662,7 @@ module Discordrb
     alias_method :add_group_user, :add_group_users
 
     # Removes a user from a group channel.
-    # @param user_ids [Array<#resolve_id>, #resolve_id] User ID or array of user IDs to remove from the group channel.
+    # @param user_ids [Array<String, Integer>, String, Integer] User ID or array of user IDs to remove from the group channel.
     # @return [Channel] the group channel.
     def remove_group_users(user_ids)
       raise 'Attempted to remove a user from a non-group channel!' unless group?

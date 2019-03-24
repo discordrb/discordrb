@@ -57,7 +57,7 @@ module Discordrb
     end
 
     # Sets the webhook's channel
-    # @param channel [Channel, String, Integer, #resolve_id] The channel the webhook should use.
+    # @param channel [Channel, String, Integer] The channel the webhook should use.
     def channel=(channel)
       update_webhook(channel_id: channel.resolve_id)
     end
@@ -71,7 +71,7 @@ module Discordrb
     # Updates the webhook if you need to edit more than 1 attribute.
     # @param data [Hash] the data to update.
     # @option data [String, #read, nil] :avatar The new avatar, in base64-encoded JPG format, or nil to delete the avatar.
-    # @option data [Channel, String, Integer, #resolve_id] :channel The channel the webhook should use.
+    # @option data [Channel, String, Integer] :channel The channel the webhook should use.
     # @option data [String] :name The webhook's new name.
     # @option data [String] :reason The reason for the webhook changes.
     def update(data)
