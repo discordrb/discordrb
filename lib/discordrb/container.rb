@@ -125,7 +125,7 @@ module Discordrb
 
     # This **event** is raised when somebody reacts to a message.
     # @param attributes [Hash] The event's attributes.
-    # @option attributes [Integer, String] :emoji Matches the ID of the emoji that was reacted with, or its name.
+    # @option attributes [String, Integer] :emoji Matches the ID of the emoji that was reacted with, or its name.
     # @yield The block is executed when the event is raised.
     # @yieldparam event [ReactionAddEvent] The event that was raised.
     # @return [ReactionAddEventHandler] The event handler that was registered.
@@ -135,7 +135,7 @@ module Discordrb
 
     # This **event** is raised when somebody removes a reaction from a message.
     # @param attributes [Hash] The event's attributes.
-    # @option attributes [Integer, String] :emoji Matches the ID of the emoji that was removed from the reactions, or
+    # @option attributes [String, Integer] :emoji Matches the ID of the emoji that was removed from the reactions, or
     #   its name.
     # @yield The block is executed when the event is raised.
     # @yieldparam event [ReactionRemoveEvent] The event that was raised.

@@ -110,7 +110,7 @@ module Discordrb
     end
 
     # Gets a role on this server based on its ID.
-    # @param id [Integer, String, #resolve_id] The role ID to look for.
+    # @param id [String, Integer] The role ID to look for.
     def role(id)
       id = id.resolve_id
       @roles.find { |e| e.id == id }
@@ -518,16 +518,16 @@ module Discordrb
     end
 
     # Delete a custom emoji on this server
-    # @param emoji [Emoji, Integer, String] The emoji or emoji ID to be deleted.
+    # @param emoji [Emoji, String, Integer] The emoji or emoji ID to be deleted.
     # @param reason [String] The reason the for the deletion of this emoji.
     def delete_emoji(emoji, reason: nil)
       API::Server.delete_emoji(@bot.token, @id, emoji.resolve_id, reason)
     end
 
     # Changes the name and/or role whitelist of an emoji on this server.
-    # @param emoji [Emoji, Integer, String] The emoji or emoji ID to edit.
+    # @param emoji [Emoji, String, Integer] The emoji or emoji ID to edit.
     # @param name [String] The new name for the emoji.
-    # @param roles [Array<Role, Integer, String>] A new array of roles, or role IDs, to whitelist.
+    # @param roles [Array<Role, String, Integer>] A new array of roles, or role IDs, to whitelist.
     # @param reason [String] The reason for the editing of this emoji.
     # @return [Emoji] The edited emoji.
     def edit_emoji(emoji, name: nil, roles: nil, reason: nil)

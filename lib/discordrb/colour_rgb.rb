@@ -18,7 +18,7 @@ module Discordrb
     alias_method :to_i, :combined
 
     # Make a new colour from the combined value.
-    # @param combined [Integer, String] The colour's RGB values combined into one integer or a hexadecimal string
+    # @param combined [String, Integer] The colour's RGB values combined into one integer or a hexadecimal string
     # @example Initialize a with a base 10 integer
     #   ColourRGB.new(7506394) #=> ColourRGB
     #   ColourRGB.new(0x7289da) #=> ColourRGB
