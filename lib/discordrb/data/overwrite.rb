@@ -4,7 +4,7 @@ module Discordrb
   # A permissions overwrite, when applied to channels describes additional
   # permissions a member needs to perform certain actions in context.
   class Overwrite
-    # @return [Integer] id of the thing associated with this overwrite type
+    # @return [Integer] ID of the thing associated with this overwrite type
     attr_accessor :id
 
     # @return [Symbol] either :role or :member

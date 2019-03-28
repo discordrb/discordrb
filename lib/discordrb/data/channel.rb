@@ -26,7 +26,7 @@ module Discordrb
     # @return [Integer] the type of this channel (0: text, 1: private, 2: voice, 3: group)
     attr_reader :type
 
-    # @return [Integer, nil] the id of the owner of the group channel or nil if this is not a group channel.
+    # @return [Integer, nil] the ID of the owner of the group channel or nil if this is not a group channel.
     attr_reader :owner_id
 
     # @return [Array<Recipient>, nil] the array of recipients of the private messages, or nil if this is not a Private channel
