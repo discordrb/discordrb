@@ -99,7 +99,7 @@ module Discordrb
         @server = server || bot.server(data['guild_id'].to_i)
       end
 
-      @nsfw = data['nsfw'] || false || @name.start_with?('nsfw')
+      @nsfw = data['nsfw'] || false
       @rate_limit_per_user = data['rate_limit_per_user'] || 0
 
       process_permission_overwrites(data['permission_overwrites'])
