@@ -8,6 +8,7 @@ before_script:
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
 script:
+  - bundle exec rake compile
   - bundle exec rspec spec
   - bundle exec rubocop -c .rubocop.yml
   - bin/travis_build_docs.sh
