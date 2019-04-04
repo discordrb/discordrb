@@ -450,7 +450,7 @@ module Discordrb
     #  3. If you supply one or more overwrites, the channel will be created with those permissions and ignore the parents.
     #
     # @param name [String] Name of the channel to create
-    # @param type [Integer, Symbol] Type of channel to create (0: text, 2: voice, 4: category)
+    # @param type [Integer, Symbol] Type of channel to create (0: text, 2: voice, 4: category, 5: news, 6: store)
     # @param topic [String] the topic of this channel, if it will be a text channel
     # @param bitrate [Integer] the bitrate of this channel, if it will be a voice channel
     # @param user_limit [Integer] the user limit of this channel, if it will be a voice channel
@@ -460,10 +460,10 @@ module Discordrb
     # @param rate_limit_per_user [Integer] how many seconds users need to wait in between messages.
     # @param reason [String] The reason the for the creation of this channel.
     # @return [Channel] the created channel.
-    # @raise [ArgumentError] if type is not 0 (text), 2 (voice), or 4 (category)
+    # @raise [ArgumentError] if type is not 0 (text), 2 (voice), 4 (category), 5 (news), or 6 (store)
     def create_channel(name, type = 0, topic: nil, bitrate: nil, user_limit: nil, permission_overwrites: nil, parent: nil, nsfw: false, rate_limit_per_user: nil, position: nil, reason: nil)
       type = Channel::TYPES[type] if type.is_a?(Symbol)
-      raise ArgumentError, 'Channel type must be either 0 (text), 2 (voice), or 4 (category)!' unless [0, 2, 4].include?(type)
+      raise ArgumentError, 'Channel type must be either 0 (text), 2 (voice), 4 (category), news (5), or store (6)!' unless [0, 2, 4, 5, 6].include?(type)
 
       permission_overwrites.map! { |e| e.is_a?(Overwrite) ? e.to_hash : e } if permission_overwrites.is_a?(Array)
       parent_id = parent.respond_to?(:resolve_id) ? parent.resolve_id : nil
