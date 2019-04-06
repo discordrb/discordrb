@@ -250,13 +250,18 @@ module Discordrb
 
     # Returns the list of users who reacted with a certain reaction.
     # @param reaction [String, #to_reaction] the unicode emoji or {Emoji}
+    # @param limit [Integer] the limit of how many users to retrieve. `nil` will return all users
     # @example Get all the users that reacted with a thumbsup.
     #   thumbs_up_reactions = message.reacted_with("\u{1F44D}")
     # @return [Array<User>] the users who used this reaction
-    def reacted_with(reaction)
+    def reacted_with(reaction, limit: 100)
       reaction = reaction.to_reaction if reaction.respond_to?(:to_reaction)
-      response = JSON.parse(API::Channel.get_reactions(@bot.token, @channel.id, @id, reaction))
-      response.map { |d| User.new(d, @bot) }
+      paginator = Paginator.new(limit, :down) do |last_page|
+        after_id = last_page.last.id if last_page
+        last_page = JSON.parse(API::Channel.get_reactions(@bot.token, @channel.id, @id, reaction, nil, after_id, limit))
+        last_page.map { |d| User.new(d, @bot) }
+      end
+      paginator.to_a
     end
 
     # Deletes a reaction made by a user on this message.

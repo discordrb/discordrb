@@ -32,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Emoji related `API` methods now accept arguments to change an emoji's role whitelist ([#595](https://github.com/meew0/discordrb/pull/595), thanks @swarley)
 - `send_file` API now accepts a `spoiler` kwarg to send the file as a spoiler ([#606](https://github.com/meew0/discordrb/pull/606), thanks @swarley)
 - Clarified use of `API.bot_name=` ([#622](https://github.com/meew0/discordrb/pull/622), thanks @Daniel-Worrall)
+- `Message#reacted_with` can now return all users who reacted with an emoji, instead of just the first 25 ([#615](https://github.com/meew0/discordrb/pull/615), thanks @swarley)
 
 ### Fixed
 
