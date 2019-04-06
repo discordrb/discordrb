@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `Paginator` utility class for wrapping paginated endpoints ([#579](https://github.com/meew0/discordrb/pull/579))
 - `EventContainer#message_update`, which is fired whenever a message is updated, either by Discord or the user ([#612](https://www.youtube.com/watch?v=fzpCAT4jiRE), thanks @swarley)
 - `Message#server` ([#614](https://github.com/meew0/discordrb/pull/614), thanks @swarley)
+- `Channel#news?`, `Channel#store?` ([#618](https://github.com/meew0/discordrb/pull/618), thanks @swarley)
 
 ### Changed
 
@@ -33,6 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `send_file` API now accepts a `spoiler` kwarg to send the file as a spoiler ([#606](https://github.com/meew0/discordrb/pull/606), thanks @swarley)
 - Clarified use of `API.bot_name=` ([#622](https://github.com/meew0/discordrb/pull/622), thanks @Daniel-Worrall)
 - `Message#reacted_with` can now return all users who reacted with an emoji, instead of just the first 25 ([#615](https://github.com/meew0/discordrb/pull/615), thanks @swarley)
+- `Server#create_channel` can create store and news channels, if you have access to do so ([#618](https://github.com/meew0/discordrb/pull/618), thanks @swarley)
 
 ### Fixed
 
