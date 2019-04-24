@@ -174,19 +174,6 @@ module Discordrb::Middleware
     #     Registers an {$2} event handler.
     #     @param [Array<#call>] middleware a list of objects that respond to `#call(event, state, &block)`
     #     @param [Hash] attributes attributes to match for this event (See {EventContainer#$1})
-    #     @example
-    #       class MyMiddleware
-    #         def call(event, state)
-    #           event # => $2
-    #           state[:foo] = 'bar'
-    #           yield
-    #         end
-    #       end
-    #
-    #       bot.$1(MyMiddleware.new, attribute: 'foo') do |event, state|
-    #         event # => $2
-    #         state[:foo] # => 'bar'
-    #       end
     # @!visibility private
     def event_handler(name, klass)
       define_method(name) do |*middleware, **attributes, &block|
