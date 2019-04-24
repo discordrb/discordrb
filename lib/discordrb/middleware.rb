@@ -286,3 +286,6 @@ end
 
 # Require stock middlewares
 require 'discordrb/middleware/message'
+
+# TODO: Remove when middleware is stabilized
+Discordrb::Bot.include(Discordrb::Middleware)

@@ -4,7 +4,6 @@ require 'discordrb'
 
 # Enable middleware functionality:
 require 'discordrb/middleware'
-Discordrb::Bot.include(Discordrb::Middleware)
 
 bot = Discordrb::Bot.new token: 'B0T.T0KEN.here'
 
