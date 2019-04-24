@@ -6,7 +6,7 @@
 #
 # A *middleware* can be *any* `class` that responds to `def call(event, state)`
 # and optionally `yield`s. Whether or not your `call` `yield`s or not determines
-# if the rest of the chain is executed.a
+# if the rest of the chain is executed.
 #
 # In `call`, `event` will be the invoking Discord event, and `state` is an
 # empty hash that you can store anything you like in that will persist across
