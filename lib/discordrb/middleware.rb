@@ -4,9 +4,6 @@
 # that accept chains of custom objects, or *middleware*, that get run *before*
 # your handler.
 #
-# You can enable this functionality by doing:
-# `Discordrb::Bot.include(Discordrb::Middleware)`
-#
 # A *middleware* can be *any* `class` that responds to `def call(event, state)`
 # and optionally `yield`s. Whether or not your `call` `yield`s or not determines
 # if the rest of the chain is executed.a
@@ -65,6 +62,9 @@
 #
 #   bot.message(RandomWord.new('Go to bed', 'Write more Ruby bots'),
 #               starts_with: '!random')
+# @note **This is an opt-in, unstable preview module.** Future releases may see
+#  large breaking changes to this module as it is integrated into the rest of
+#  the library. You can `require "discordrb/middleware"` to use it.
 module Discordrb::Middleware
   # Internal class that holds a chain of middleware.
   # @!visibility private
