@@ -177,17 +177,19 @@ module Discordrb::Middleware
     # @!visibility private
     def event_handler(name, klass)
       define_method(name) do |*middleware, **attributes, &block|
-        middleware.each do |mw|
-          raise ArgumentError, "Middleware #{mw} does not repsond to `#call(event, state, &block)`" unless mw.respond_to?(:call)
-        end
-
         stock_middleware = Stock.get(name, attributes) || begin
           # TODO: Remove once all events implemented under Stock
           handler = Discordrb::EventContainer.handler_class(klass).new(attributes, nil)
           HandlerMiddleware.new(handler)
         end
 
-        stack = Stack.new(Array(stock_middleware) + middleware)
+        final_middleware = Array(stock_middleware) + middleware
+
+        final_middleware.each do |mw|
+          raise ArgumentError, "Middleware #{mw} does not repsond to `#call(event, state, &block)`" unless mw.respond_to?(:call)
+        end
+
+        stack = Stack.new(final_middleware)
         handler = Handler.new(stack, block)
         (event_handlers[klass] ||= []) << handler
         handler
