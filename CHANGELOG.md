@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `Message#server` ([#614](https://github.com/meew0/discordrb/pull/614), thanks @swarley)
 - `Channel#news?`, `Channel#store?` ([#618](https://github.com/meew0/discordrb/pull/618), thanks @swarley)
 - `Server#bot_members`, `Server#non_bot_members` ([#626](https://github.com/meew0/discordrb/pull/626), thanks @flutterflies)
+- `API.get_gateway_bot` ([#632](https://github.com/meew0/discordrb/pull/632))
 
 ### Changed
 
