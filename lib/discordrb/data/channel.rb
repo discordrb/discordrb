@@ -380,6 +380,7 @@ module Discordrb
     # Useful for sending long messages, but be wary of rate limits!
     def split_send(content)
       send_multiple(Discordrb.split_message(content))
+      nil
     end
 
     # Sends a file to this channel. If it is an image, it will be embedded.
