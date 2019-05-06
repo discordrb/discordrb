@@ -40,6 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Typestrings for API that accepts discord IDs is now consistently represented as `String, Integer` ([#616](https://github.com/meew0/discordrb/pull/616), thanks @swarley)
 - When a command is executed with an invalid number of arguments, the error response is sent as a single message ([#627](https://github.com/meew0/discordrb/pull/627))
 - The `#split_send` utility method returns `nil`, to avoid the case where the return value is captured in the implicit return message ([#629](https://github.com/meew0/discordrb/pull/629), thanks @captainSV)
+- Give up reconnecting after receiving a fatal close code ([#633](https://github.com/meew0/discordrb/pull/633))
 
 ### Fixed
 
