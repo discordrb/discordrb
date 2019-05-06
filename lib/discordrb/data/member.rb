@@ -76,7 +76,7 @@ module Discordrb
       @server.owner == self
     end
 
-    # @param role [Role, Integer, #resolve_id] the role to check or its ID.
+    # @param role [Role, String, Integer] the role to check or its ID.
     # @return [true, false] whether this member has the specified role.
     def role?(role)
       role = role.resolve_id
@@ -114,7 +114,7 @@ module Discordrb
     end
 
     # Adds one or more roles to this member.
-    # @param role [Role, Array<Role, #resolve_id>, #resolve_id] The role(s) to add.
+    # @param role [Role, Array<Role, String, Integer>, String, Integer] The role(s), or their ID(s), to add.
     # @param reason [String] The reason the user's roles are being changed.
     def add_role(role, reason = nil)
       role_ids = role_id_array(role)

@@ -250,14 +250,14 @@ module Discordrb
 
     # Gets a user in the audit logs data based on user ID
     # @note This only uses data given by the audit logs request
-    # @param id [#resolve_id] The user ID to look for
+    # @param id [String, Integer] The user ID to look for
     def user(id)
       @users[id.resolve_id]
     end
 
     # Gets a webhook in the audit logs data based on webhook ID
     # @note This only uses data given by the audit logs request
-    # @param id [#resolve_id] The webhook ID to look for
+    # @param id [String, Integer] The webhook ID to look for
     def webhook(id)
       @webhooks[id.resolve_id]
     end

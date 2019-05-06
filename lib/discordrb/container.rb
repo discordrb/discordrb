@@ -89,7 +89,7 @@ module Discordrb
 
     # This **event** is raised when a message is edited in a channel.
     # @param attributes [Hash] The event's attributes.
-    # @option attributes [#resolve_id] :id Matches the ID of the message that was edited.
+    # @option attributes [String, Integer] :id Matches the ID of the message that was edited.
     # @option attributes [String, Integer, Channel] :in Matches the channel the message was edited in.
     # @yield The block is executed when the event is raised.
     # @yieldparam event [MessageEditEvent] The event that was raised.
@@ -100,7 +100,7 @@ module Discordrb
 
     # This **event** is raised when a message is deleted in a channel.
     # @param attributes [Hash] The event's attributes.
-    # @option attributes [#resolve_id] :id Matches the ID of the message that was deleted.
+    # @option attributes [String, Integer] :id Matches the ID of the message that was deleted.
     # @option attributes [String, Integer, Channel] :in Matches the channel the message was deleted in.
     # @yield The block is executed when the event is raised.
     # @yieldparam event [MessageDeleteEvent] The event that was raised.
@@ -114,7 +114,7 @@ module Discordrb
     # user's message for URLs contained in the message's content. If you only want to listen
     # for users editing their own messages, use the {message_edit} handler instead.
     # @param attributes [Hash] The event's attributes.
-    # @option attributes [#resolve_id] :id Matches the ID of the message that was updated.
+    # @option attributes [String, Integer] :id Matches the ID of the message that was updated.
     # @option attributes [String, Integer, Channel] :in Matches the channel the message was updated in.
     # @yield The block is executed when the event is raised.
     # @yieldparam event [MessageUpdateEvent] The event that was raised.
@@ -125,7 +125,7 @@ module Discordrb
 
     # This **event** is raised when somebody reacts to a message.
     # @param attributes [Hash] The event's attributes.
-    # @option attributes [Integer, String] :emoji Matches the ID of the emoji that was reacted with, or its name.
+    # @option attributes [String, Integer] :emoji Matches the ID of the emoji that was reacted with, or its name.
     # @yield The block is executed when the event is raised.
     # @yieldparam event [ReactionAddEvent] The event that was raised.
     # @return [ReactionAddEventHandler] The event handler that was registered.
@@ -135,7 +135,7 @@ module Discordrb
 
     # This **event** is raised when somebody removes a reaction from a message.
     # @param attributes [Hash] The event's attributes.
-    # @option attributes [Integer, String] :emoji Matches the ID of the emoji that was removed from the reactions, or
+    # @option attributes [String, Integer] :emoji Matches the ID of the emoji that was removed from the reactions, or
     #   its name.
     # @yield The block is executed when the event is raised.
     # @yieldparam event [ReactionRemoveEvent] The event that was raised.
@@ -230,8 +230,8 @@ module Discordrb
     # This **event** is raised when a recipient is added to a group channel.
     # @param attributes [Hash] The event's attributes.
     # @option attributes [String] :name Matches the name of the group channel that the recipient is added to.
-    # @option attributes [#resolve_id] :owner_id Matches the id of the group channel's owner.
-    # @option attributes [#resolve_id] :id Matches the id of the recipient added to the group channel.
+    # @option attributes [String, Integer] :owner_id Matches the ID of the group channel's owner.
+    # @option attributes [String, Integer] :id Matches the ID of the recipient added to the group channel.
     # @yield The block is executed when the event is raised.
     # @yieldparam event [ChannelRecipientAddEvent] The event that was raised.
     # @return [ChannelRecipientAddHandler] the event handler that was registered.
@@ -242,8 +242,8 @@ module Discordrb
     # This **event** is raised when a recipient is removed from a group channel.
     # @param attributes [Hash] The event's attributes.
     # @option attributes [String] :name Matches the name of the group channel that the recipient is added to.
-    # @option attributes [#resolve_id] :owner_id Matches the id of the group channel's owner.
-    # @option attributes [#resolve_id] :id Matches the id of the recipient removed from the group channel.
+    # @option attributes [String, Integer] :owner_id Matches the ID of the group channel's owner.
+    # @option attributes [String, Integer] :id Matches the ID of the recipient removed from the group channel.
     # @yield The block is executed when the event is raised.
     # @yieldparam event [ChannelRecipientRemoveEvent] The event that was raised.
     # @return [ChannelRecipientRemoveHandler] the event handler that was registered.
@@ -366,7 +366,7 @@ module Discordrb
     # This **event** is raised when an emoji is created.
     # @param attributes [Hash] The event's attributes.
     # @option attributes [String, Integer, Server] :server Matches the server.
-    # @option attributes [String, Integer] :id Matches the id of the emoji.
+    # @option attributes [String, Integer] :id Matches the ID of the emoji.
     # @option attributes [String] :name Matches the name of the emoji.
     # @yield The block is executed when the event is raised.
     # @yieldparam event [ServerEmojiCreateEvent] The event that was raised.
@@ -378,7 +378,7 @@ module Discordrb
     # This **event** is raised when an emoji is deleted.
     # @param attributes [Hash] The event's attributes.
     # @option attributes [String, Integer, Server] :server Matches the server.
-    # @option attributes [String, Integer] :id Matches the id of the emoji.
+    # @option attributes [String, Integer] :id Matches the ID of the emoji.
     # @option attributes [String] :name Matches the name of the emoji.
     # @yield The block is executed when the event is raised.
     # @yieldparam event [ServerEmojiDeleteEvent] The event that was raised.
@@ -390,7 +390,7 @@ module Discordrb
     # This **event** is raised when an emoji is updated.
     # @param attributes [Hash] The event's attributes.
     # @option attributes [String, Integer, Server] :server Matches the server.
-    # @option attributes [String, Integer] :id Matches the id of the emoji.
+    # @option attributes [String, Integer] :id Matches the ID of the emoji.
     # @option attributes [String] :name Matches the name of the emoji.
     # @option attributes [String] :old_name Matches the name of the emoji before the update.
     # @yield The block is executed when the event is raised.
@@ -412,7 +412,7 @@ module Discordrb
 
     # This **event** is raised when a role is deleted.
     # @param attributes [Hash] The event's attributes.
-    # @option attributes [#resolve_id] :id Matches the role id.
+    # @option attributes [String, Integer] :id Matches the role ID.
     # @yield The block is executed when the event is raised.
     # @yieldparam event [ServerRoleDeleteEvent] The event that was raised.
     # @return [ServerRoleDeleteEventHandler] the event handler that was registered.
@@ -432,9 +432,9 @@ module Discordrb
 
     # This **event** is raised when a webhook is updated.
     # @param attributes [Hash] The event's attributes.
-    # @option attributes [String, Integer, Server] :server Matches the server by name, id or instance.
-    # @option attributes [String, Integer, Channel] :channel Matches the channel by name, id or instance.
-    # @option attribute [String, Integer, Webhook] :webhook Matches the webhook by name, id or instance.
+    # @option attributes [String, Integer, Server] :server Matches the server by name, ID or instance.
+    # @option attributes [String, Integer, Channel] :channel Matches the channel by name, ID or instance.
+    # @option attribute [String, Integer, Webhook] :webhook Matches the webhook by name, ID or instance.
     # @yield The block is executed when the event is raised.
     # @yieldparam event [WebhookUpdateEvent] The event that was raised.
     # @return [WebhookUpdateEventHandler] the event handler that was registered.

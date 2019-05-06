@@ -146,7 +146,7 @@ module Discordrb
     end
 
     # Moves this role above another role in the list.
-    # @param other [Role, #resolve_id, nil] The role above which this role should be moved. If it is `nil`,
+    # @param other [Role, String, Integer, nil] The role, or its ID, above which this role should be moved. If it is `nil`,
     #   the role will be moved above the @everyone role.
     # @return [Integer] the new position of this role
     def sort_above(other = nil)

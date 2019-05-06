@@ -265,7 +265,7 @@ module Discordrb
     end
 
     # Deletes a reaction made by a user on this message.
-    # @param user [User, #resolve_id] the user who used this reaction
+    # @param user [User, String, Integer] the user or user ID who used this reaction
     # @param reaction [String, #to_reaction] the reaction to remove
     def delete_reaction(user, reaction)
       reaction = reaction.to_reaction if reaction.respond_to?(:to_reaction)

@@ -110,7 +110,7 @@ module Discordrb
     end
 
     # Gets a role on this server based on its ID.
-    # @param id [Integer, String, #resolve_id] The role ID to look for.
+    # @param id [String, Integer] The role ID to look for.
     def role(id)
       id = id.resolve_id
       @roles.find { |e| e.id == id }
@@ -154,9 +154,9 @@ module Discordrb
     end
 
     # @param action [Symbol] The action to only include.
-    # @param user [User, #resolve_id] The user to filter entries to.
+    # @param user [User, String, Integer] The user, or their ID, to filter entries to.
     # @param limit [Integer] The amount of entries to limit it to.
-    # @param before [Entry, #resolve_id] The entry to use to not include all entries after it.
+    # @param before [Entry, String, Integer] The entry, or its ID, to use to not include all entries after it.
     # @return [AuditLogs] The server's audit logs.
     def audit_logs(action: nil, user: nil, limit: 50, before: nil)
       raise 'Invalid audit log action!' if action && AuditLogs::ACTIONS.key(action).nil?
@@ -210,7 +210,7 @@ module Discordrb
     alias_method :set_widget_enabled, :set_embed_enabled
 
     # Changes the channel on the server's embed (widget)
-    # @param channel [Channel, String, Integer, #resolve_id] the channel to be referenced by the embed
+    # @param channel [Channel, String, Integer] the channel, or its ID, to be referenced by the embed
     def embed_channel=(channel)
       modify_embed(embed?, channel)
     end
@@ -218,7 +218,7 @@ module Discordrb
     alias_method :widget_channel=, :embed_channel=
 
     # Changes the channel on the server's embed (widget)
-    # @param channel [Channel, String, Integer, #resolve_id] the channel to be referenced by the embed
+    # @param channel [Channel, String, Integer] the channel, or its ID, to be referenced by the embed
     # @param reason [String, nil] the reason to be shown in the audit log for this action
     def set_embed_channel(channel, reason = nil)
       modify_embed(embed?, channel, reason)
@@ -228,7 +228,7 @@ module Discordrb
 
     # Changes the channel on the server's embed (widget), and sets whether it is enabled.
     # @param enabled [true, false] whether the embed (widget) is enabled
-    # @param channel [Channel, String, Integer, #resolve_id] the channel to be referenced by the embed
+    # @param channel [Channel, String, Integer] the channel, or its ID, to be referenced by the embed
     # @param reason [String, nil] the reason to be shown in the audit log for this action
     def modify_embed(enabled, channel, reason = nil)
       cache_embed_data if @embed_enabled.nil?
@@ -255,10 +255,10 @@ module Discordrb
     # with the `guilds.join` scope.
     # For more information about Discord's OAuth2 implementation, see: https://discordapp.com/developers/docs/topics/oauth2
     # @note Your bot must be present in this server, and have permission to create instant invites for this to work.
-    # @param user [Integer, User, #resolve_id] the user, or ID of the user to add to this server
+    # @param user [User, String, Integer] the user, or ID of the user to add to this server
     # @param access_token [String] the OAuth2 Bearer token that has been granted the `guilds.join` scope
     # @param nick [String] the nickname to give this member upon joining
-    # @param roles [Role, Array<Integer, Role, #resolve_id>] the role (or roles) to give this member upon joining
+    # @param roles [Role, Array<Role, String, Integer>] the role (or roles) to give this member upon joining
     # @param deaf [true, false] whether this member will be server deafened upon joining
     # @param mute [true, false] whether this member will be server muted upon joining
     # @return [Member] the created member
@@ -455,7 +455,7 @@ module Discordrb
     # @param bitrate [Integer] the bitrate of this channel, if it will be a voice channel
     # @param user_limit [Integer] the user limit of this channel, if it will be a voice channel
     # @param permission_overwrites [Array<Hash>, Array<Overwrite>] permission overwrites for this channel
-    # @param parent [Channel, #resolve_id] parent category for this channel to be created in.
+    # @param parent [Channel, String, Integer] parent category, or its ID, for this channel to be created in.
     # @param nsfw [true, false] whether this channel should be created as nsfw
     # @param rate_limit_per_user [Integer] how many seconds users need to wait in between messages.
     # @param reason [String] The reason the for the creation of this channel.
@@ -518,16 +518,16 @@ module Discordrb
     end
 
     # Delete a custom emoji on this server
-    # @param emoji [Emoji, Integer, String] The emoji or emoji ID to be deleted.
+    # @param emoji [Emoji, String, Integer] The emoji or emoji ID to be deleted.
     # @param reason [String] The reason the for the deletion of this emoji.
     def delete_emoji(emoji, reason: nil)
       API::Server.delete_emoji(@bot.token, @id, emoji.resolve_id, reason)
     end
 
     # Changes the name and/or role whitelist of an emoji on this server.
-    # @param emoji [Emoji, Integer, String] The emoji or emoji ID to edit.
+    # @param emoji [Emoji, String, Integer] The emoji or emoji ID to edit.
     # @param name [String] The new name for the emoji.
-    # @param roles [Array<Role, Integer, String>] A new array of roles, or role IDs, to whitelist.
+    # @param roles [Array<Role, String, Integer>] A new array of roles, or role IDs, to whitelist.
     # @param reason [String] The reason for the editing of this emoji.
     # @return [Emoji] The edited emoji.
     def edit_emoji(emoji, name: nil, roles: nil, reason: nil)
@@ -546,7 +546,7 @@ module Discordrb
     end
 
     # Bans a user from this server.
-    # @param user [User, #resolve_id] The user to ban.
+    # @param user [User, String, Integer] The user to ban.
     # @param message_days [Integer] How many days worth of messages sent by the user should be deleted.
     # @param reason [String] The reason the user is being banned.
     def ban(user, message_days = 0, reason: nil)
@@ -554,22 +554,22 @@ module Discordrb
     end
 
     # Unbans a previously banned user from this server.
-    # @param user [User, #resolve_id] The user to unban.
+    # @param user [User, String, Integer] The user to unban.
     # @param reason [String] The reason the user is being unbanned.
     def unban(user, reason = nil)
       API::Server.unban_user(@bot.token, @id, user.resolve_id, reason)
     end
 
     # Kicks a user from this server.
-    # @param user [User, #resolve_id] The user to kick.
+    # @param user [User, String, Integer] The user to kick.
     # @param reason [String] The reason the user is being kicked.
     def kick(user, reason = nil)
       API::Server.remove_member(@bot.token, @id, user.resolve_id, reason)
     end
 
     # Forcibly moves a user into a different voice channel. Only works if the bot has the permission needed.
-    # @param user [User, #resolve_id] The user to move.
-    # @param channel [Channel, #resolve_id] The voice channel to move into.
+    # @param user [User, String, Integer] The user to move.
+    # @param channel [Channel, String, Integer] The voice channel to move into.
     def move(user, channel)
       API::Server.update_member(@bot.token, @id, user.resolve_id, channel_id: channel.resolve_id)
     end
@@ -585,7 +585,7 @@ module Discordrb
     end
 
     # Transfers server ownership to another user.
-    # @param user [User, #resolve_id] The user who should become the new owner.
+    # @param user [User, String, Integer] The user who should become the new owner.
     def owner=(user)
       API::Server.transfer_ownership(@bot.token, @id, user.resolve_id)
     end
@@ -637,7 +637,7 @@ module Discordrb
     end
 
     # Sets the server's system channel.
-    # @param system_channel [Channel, String, Integer, #resolve_id, nil] The new system channel, or `nil` should it be disabled.
+    # @param system_channel [Channel, String, Integer, nil] The new system channel, or `nil` should it be disabled.
     def system_channel=(system_channel)
       update_server_data(system_channel_id: system_channel.resolve_id)
     end
