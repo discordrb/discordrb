@@ -168,8 +168,19 @@ module Discordrb
       end
 
       LOGGER.debug('WS thread created! Now waiting for confirmation that everything worked')
-      sleep(0.5) until @ws_success
-      LOGGER.debug('Confirmation received! Exiting run.')
+      loop do
+        sleep(0.5)
+
+        if @ws_success
+          LOGGER.debug('Confirmation received! Exiting run.')
+          break
+        end
+
+        if @should_reconnect == false
+          LOGGER.debug('Reconnection flag was unset. Exiting run.')
+          break
+        end
+      end
     end
 
     # Prevents all further execution until the websocket thread stops (e.g. through a closed connection).
@@ -771,6 +782,12 @@ module Discordrb
       handle_close(e)
     end
 
+    # Close codes that are unrecoverable, after which we should not try to reconnect.
+    # - 4003: Not authenticated. How did this happen?
+    # - 4004: Authentication failed. Token was wrong, nothing we can do.
+    # - 4011: Sharding required. Currently requires developer intervention.
+    FATAL_CLOSE_CODES = [4003, 4004, 4011].freeze
+
     def handle_close(e)
       @bot.__send__(:raise_event, Events::DisconnectEvent.new(@bot))
 
@@ -779,12 +796,13 @@ module Discordrb
         LOGGER.error('Websocket close frame received!')
         LOGGER.error("Code: #{e.code}")
         LOGGER.error("Message: #{e.data}")
+        @should_reconnect = false if FATAL_CLOSE_CODES.include?(e.code)
       elsif e.is_a? Exception
         # Log the exception
         LOGGER.error('The websocket connection has closed due to an error!')
         LOGGER.log_exception(e)
       else
-        LOGGER.error("The websocket connection has closed: #{e.inspect}")
+        LOGGER.error("The websocket connection has closed: #{e&.inspect || '(no information)'}")
       end
     end
 
