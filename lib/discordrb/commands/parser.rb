@@ -109,17 +109,17 @@ module Discordrb::Commands
 
       result = @block.call(event, *arguments)
       event.drain_into(result)
-    rescue LocalJumpError => ex # occurs when breaking
-      result = ex.exit_value
+    rescue LocalJumpError => e # occurs when breaking
+      result = e.exit_value
       event.drain_into(result)
-    rescue StandardError => exception # Something went wrong inside our @block!
+    rescue StandardError => e # Something went wrong inside our @block!
       rescue_value = @attributes[:rescue] || event.bot.attributes[:rescue]
       if rescue_value
-        event.respond(rescue_value.gsub('%exception%', exception.message)) if rescue_value.is_a?(String)
-        rescue_value.call(event, exception) if rescue_value.respond_to?(:call)
+        event.respond(rescue_value.gsub('%exception%', e.message)) if rescue_value.is_a?(String)
+        rescue_value.call(event, e) if rescue_value.respond_to?(:call)
       end
 
-      raise exception
+      raise e
     end
   end
 

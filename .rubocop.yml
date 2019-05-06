@@ -1,3 +1,9 @@
+require: rubocop-performance
+
+inherit_mode:
+  merge:
+    - AllowedNames
+
 AllCops:
   TargetRubyVersion: 2.4
 
@@ -11,23 +17,13 @@ Metrics:
 
 # Allow some common and/or obvious short method params
 Naming/UncommunicativeMethodParamName:
-  # Duplicate defaults to avoid overriding
   AllowedNames:
-    - io
-    - id
-    - to
-    - by
-    - on
-    - in
-    - at
-    - ip
     - e
-    - _
 
 # Ignore `eval` in the examples folder
 Security/Eval:
   Exclude:
-    - examples/*
+    - examples/**/*
 
 # https://stackoverflow.com/q/4763121/
 Style/Alias:
@@ -40,7 +36,7 @@ Style/ClassAndModuleChildren:
 # So RuboCop doesn't complain about application IDs
 Style/NumericLiterals:
   Exclude:
-    - examples/*
+    - examples/**/*
 
 # Prefer |m, e| for the `reduce` block arguments
 Style/SingleLineBlockParams:

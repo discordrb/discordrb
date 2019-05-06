@@ -102,12 +102,12 @@ module Discordrb
     #   production bots). `:large` will request that large payloads are received compressed. `:stream` will request
     #   that all data be received in a continuous compressed stream.
     def initialize(
-        log_mode: :normal,
-        token: nil, client_id: nil,
-        type: nil, name: '', fancy_log: false, suppress_ready: false, parse_self: false,
-        shard_id: nil, num_shards: nil, redact_token: true, ignore_bots: false,
-        compress_mode: :large
-      )
+      log_mode: :normal,
+      token: nil, client_id: nil,
+      type: nil, name: '', fancy_log: false, suppress_ready: false, parse_self: false,
+      shard_id: nil, num_shards: nil, redact_token: true, ignore_bots: false,
+      compress_mode: :large
+    )
       LOGGER.mode = log_mode
       LOGGER.token = token if redact_token
 
