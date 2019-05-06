@@ -290,6 +290,18 @@ module Discordrb::API
     )
   end
 
+  # Get the gateway to be used, with additional information for sharding and
+  # session start limits
+  def gateway_bot(token)
+    request(
+      :gateway_bot,
+      nil,
+      :get,
+      "#{api_base}/gateway/bot",
+      Authorization: token
+    )
+  end
+
   # Validate a token (this request will fail if the token is invalid)
   def validate_token(token)
     request(
