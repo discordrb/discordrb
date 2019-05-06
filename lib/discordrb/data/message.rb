@@ -38,7 +38,7 @@ module Discordrb
     # @return [Array<Embed>] the embed objects contained in this message.
     attr_reader :embeds
 
-    # @return [Hash<String => Reaction>] the reaction objects attached to this message keyed by the name of the reaction
+    # @return [Array<Reaction>] the reaction objects contained in this message.
     attr_reader :reactions
 
     # @return [true, false] whether the message used Text-To-Speech (TTS) or not.
@@ -113,10 +113,10 @@ module Discordrb
 
       @emoji = []
 
-      @reactions = {}
+      @reactions = []
 
       data['reactions']&.each do |element|
-        @reactions[element['emoji']['name']] = Reaction.new(element)
+        @reactions << Reaction.new(element)
       end
 
       @mentions = []
@@ -229,13 +229,13 @@ module Discordrb
     # Check if any reactions were used in this message.
     # @return [true, false] whether or not this message has reactions
     def reactions?
-      @reactions.any?
+      @reactions.empty?
     end
 
     # Returns the reactions made by the current bot or user.
     # @return [Array<Reaction>] the reactions
     def my_reactions
-      @reactions.values.select(&:me)
+      @reactions.select(&:me)
     end
 
     # Reacts to a message.
