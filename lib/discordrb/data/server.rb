@@ -142,6 +142,16 @@ module Discordrb
 
     alias_method :users, :members
 
+    # @return [Array<Member>] an array of all the bot members on this server.
+    def bot_members
+      members.select(&:bot_account?)
+    end
+
+    # @return [Array<Member>] an array of all the non bot members on this server.
+    def non_bot_members
+      members.reject(&:bot_account?)
+    end
+
     # @return [Member] the bot's own `Member` on this server
     def bot
       member(@bot.profile)
