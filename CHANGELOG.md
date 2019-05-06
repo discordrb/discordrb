@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `EventContainer#message_update`, which is fired whenever a message is updated, either by Discord or the user ([#612](https://www.youtube.com/watch?v=fzpCAT4jiRE), thanks @swarley)
 - `Message#server` ([#614](https://github.com/meew0/discordrb/pull/614), thanks @swarley)
 - `Channel#news?`, `Channel#store?` ([#618](https://github.com/meew0/discordrb/pull/618), thanks @swarley)
+- `Server#bot_members`, `Server#non_bot_members` ([#626](https://github.com/meew0/discordrb/pull/626), thanks @flutterflies)
 
 ### Changed
 
@@ -35,12 +36,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Clarified use of `API.bot_name=` ([#622](https://github.com/meew0/discordrb/pull/622), thanks @Daniel-Worrall)
 - `Message#reacted_with` can now return all users who reacted with an emoji, instead of just the first 25 ([#615](https://github.com/meew0/discordrb/pull/615), thanks @swarley)
 - `Server#create_channel` can create store and news channels, if you have access to do so ([#618](https://github.com/meew0/discordrb/pull/618), thanks @swarley)
+- Typestrings for API that accepts discord IDs is now consistently represented as `String, Integer` ([#616](https://github.com/meew0/discordrb/pull/616), thanks @swarley)
+- When a command is executed with an invalid number of arguments, the error response is sent as a single message ([#627](https://github.com/meew0/discordrb/pull/627))
+- The `#split_send` utility method returns `nil`, to avoid the case where the return value is captured in the implicit return message ([#629](https://github.com/meew0/discordrb/pull/629), thanks @captainSV)
 
 ### Fixed
 
 - Permission calculation when the internal sorting of roles is unreliable ([#609](https://github.com/meew0/discordrb/pull/609))
 - `DisconnectEvent` is now raised when a gateway close frame is handled ([#611](https://github.com/meew0/discordrb/pull/611), thanks @swarley)
 - A cached `Channel` is no longer assumed to be NSFW if its name starts with `nsfw` ([#617](https://github.com/meew0/discordrb/pull/617), thanks @swarley)
+- **(breaking change)** `Message#reactions` is changed to return an Array instead of a hash, fixing reactions with the same `name` value from being discarded (#[593](https://github.com/meew0/discordrb/pull/596))
+- `Channel#nsfw=` correctly forwards updated value to the API ([#628](https://github.com/meew0/discordrb/pull/628))
 
 ## [3.3.0] - 2018-10-27
 [3.3.0]: https://github.com/meew0/discordrb/releases/tag/v3.3.0
