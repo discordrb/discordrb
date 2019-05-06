@@ -785,7 +785,7 @@ module Discordrb
     end
 
     def update_channel_data(new_data)
-      new_nsfw = new_data[:nsfw].is_a?(TrueClass) || new_data[:nsfw].is_a?(FalseClass) ? new_nsfw : @nsfw
+      new_nsfw = new_data[:nsfw].is_a?(TrueClass) || new_data[:nsfw].is_a?(FalseClass) ? new_data[:nsfw] : @nsfw
       # send permission_overwrite only when explicitly set
       overwrites = new_data[:permission_overwrites] ? new_data[:permission_overwrites].map { |_, v| v.to_hash } : nil
       response = JSON.parse(API::Channel.update(@bot.token, @id,
