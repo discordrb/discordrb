@@ -614,6 +614,9 @@ module Discordrb
     # Awaits an event, blocking the current thread until a response is received.
     # @param type [Class] The event class that should be listened for.
     # @option attributes [Numeric] :timeout the amount of time to wait for a response before returning `nil`. Waits forever if omitted.
+    # @yield Executed when a matching event is received.
+    # @yieldparam event [Event] The event object that was triggered.
+    # @yieldreturn [true, false] Whether the event matches extra await criteria described by the block
     # @return [Event, nil] The event object that was triggered, or `nil` if a `timeout` was set and no event was raised in time.
     # @raise [ArgumentError] if `timeout` is given and is not a positive numeric value
     def add_await!(type, attributes = {})
@@ -628,7 +631,12 @@ module Discordrb
       block = lambda do |event|
         mutex.synchronize do
           response = event
-          cv.signal
+          if block_given?
+            result = yield(event)
+            cv.signal if result.is_a?(TrueClass)
+          else
+            cv.signal
+          end
         end
       end
 

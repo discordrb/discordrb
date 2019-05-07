@@ -186,8 +186,8 @@ module Discordrb
 
     # Add a blocking {Await} for a message with the same user and channel.
     # @see Bot#add_await!
-    def await!(attributes = {})
-      @bot.add_await!(Discordrb::Events::MessageEvent, { from: @author.id, in: @channel.id }.merge(attributes))
+    def await!(attributes = {}, &block)
+      @bot.add_await!(Discordrb::Events::MessageEvent, { from: @author.id, in: @channel.id }.merge(attributes), &block)
     end
 
     # @return [true, false] whether this message was sent by the current {Bot}.
