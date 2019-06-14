@@ -698,6 +698,18 @@ module Discordrb
 
     alias_method :leave, :leave_group
 
+    # Creates a webhook in this channel
+    # @param name [String] the default name of this webhook.
+    # @param avatar [String] the default avatar URL to give this hook
+    # @param reason [String] the reason why this happened, for the audit logs
+    # @return [Webhook] the instantiated webhook.
+    def create_webhook(name, avatar = nil, reason = nil)
+      raise 'Tried to create a webhook in a non-server channel' unless server
+
+      hook = API::Channel.create_webhook(@bot.token, @id, name, avatar, reason)
+      Webhook.new(JSON.parse(hook), @bot)
+    end
+
     # Requests a list of Webhooks on the channel.
     # @return [Array<Webhook>] webhooks on the channel.
     def webhooks
