@@ -704,7 +704,8 @@ module Discordrb
     # @param reason [String] the reason why this happened, for the audit logs
     # @return [Webhook] the instantiated webhook.
     def create_webhook(name, avatar = nil, reason = nil)
-      raise 'Tried to create a webhook in a non-server channel' unless server
+      raise ArgumentError, 'Tried to create a webhook in a non-server channel' unless server
+      raise ArgumentError, 'Tried to create a webhook in a non-text channel' unless text_channel?
 
       hook = API::Channel.create_webhook(@bot.token, @id, name, avatar, reason)
       Webhook.new(JSON.parse(hook), @bot)
