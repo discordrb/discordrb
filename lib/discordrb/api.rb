@@ -199,6 +199,11 @@ module Discordrb::API
     "#{cdn_url}/splashes/#{server_id}/#{splash_id}.#{format}"
   end
 
+  # Make a banner URL from server and banner IDs
+  def banner_url(server_id, banner_id, format = 'webp')
+    "#{cdn_url}/banners/#{server_id}/#{banner_id}.#{format}"
+  end
+
   # Make an emoji icon URL from emoji ID
   def emoji_icon_url(emoji_id, format = 'webp')
     "#{cdn_url}/emojis/#{emoji_id}.#{format}"

@@ -68,6 +68,7 @@ module Discordrb
       @large = data['large']
       @member_count = data['member_count']
       @splash_id = nil
+      @banner_id = nil
       @features = data['features'].map { |element| element.downcase.to_sym }
       @members = {}
       @voice_states = {}
@@ -85,6 +86,10 @@ module Discordrb
 
       # Only get the owner of the server actually exists (i.e. not for ServerDeleteEvent)
       @owner = member(@owner_id) if exists
+
+      # Nitro Server Boosting related variables
+      @boosters = data['premium_subscription_count']
+      @level = data['premium_tier']
     end
 
     # The default channel is the text channel on this server with the highest position
@@ -364,6 +369,35 @@ module Discordrb
       API.splash_url(@id, @splash_id)
     end
 
+    # The banner is shown on partnered, verified, or servers with a boost level of 2 or higher.
+    # @return [String] the hexadecimal ID used to identify this server's banner image, shown by the server name.
+    def banner_id
+      @banner_id ||= JSON.parse(API::Server.resolve(@bot.token, @id))['banner']
+    end
+
+    # @return [String, nil] the banner image URL for the server's banner image.
+    #   `nil` if there is no banner image.
+    def banner_url
+      banner_id if @banner_id.nil?
+      return nil unless @banner_id
+
+      API.banner_url(@id, @banner_id)
+    end
+
+    # The server's amount of Nitro boosters.
+    # @return [Integer] the amount of boosters, 0 if no one has boosted.
+    def boosters
+      @boosters
+    end
+
+    # The server's Nitro boost level.
+    # @return [Integer] the boost level, 0 if no level.
+    def level
+      @level
+    end
+
+    alias_method :boost_level, :level
+
     # Adds a role to the role cache
     # @note For internal use only
     # @!visibility private
@@ -547,6 +581,23 @@ module Discordrb
       data = JSON.parse(API::Server.edit_emoji(@bot.token, @id, emoji.resolve_id, name || emoji.name, (roles || emoji.roles).map(&:resolve_id), reason))
       new_emoji = Emoji.new(data)
       @emoji[new_emoji.id] = new_emoji
+    end
+
+    # The amount of emoji the server can have, based on Nitro Boost Level.
+    # @return [Integer] the max amount of emoji
+    def max_emoji
+      case @level
+      when 0
+        return 50
+      when 1
+        return 100
+      when 2
+        return 150
+      when 3
+        return 250
+      else
+        return 50
+      end
     end
 
     # @return [Array<ServerBan>] a list of banned users on this server and the reason they were banned.
