@@ -386,15 +386,11 @@ module Discordrb
 
     # The server's amount of Nitro boosters.
     # @return [Integer] the amount of boosters, 0 if no one has boosted.
-    def boosters
-      @boosters
-    end
+    attr_reader :boosters
 
     # The server's Nitro boost level.
     # @return [Integer] the boost level, 0 if no level.
-    def level
-      @level
-    end
+    attr_reader :level
 
     alias_method :boost_level, :level
 
@@ -588,15 +584,15 @@ module Discordrb
     def max_emoji
       case @level
       when 0
-        return 50
+        50
       when 1
-        return 100
+        100
       when 2
-        return 150
+        150
       when 3
-        return 250
+        250
       else
-        return 50
+        50
       end
     end
 
