@@ -6,6 +6,10 @@ module Discordrb
     # @return [Time] when this member joined the server.
     attr_reader :joined_at
 
+    # @return [Time, nil] when this member boosted this server, `nil` if they haven't.
+    attr_reader :premium_since
+    alias_method :boosting_since, :premium_since
+
     # @return [String, nil] the nickname this member has, or `nil` if it has none.
     attr_reader :nick
     alias_method :nickname, :nick
@@ -69,6 +73,12 @@ module Discordrb
 
       @nick = data['nick']
       @joined_at = data['joined_at'] ? Time.parse(data['joined_at']) : nil
+      @premium_since = data['premium_since'] ? Time.parse(data['premium_since']) : nil
+    end
+
+    # @return [true, false] if this user is a Nitro Booster.
+    def boosting?
+      !@premium_since.nil?
     end
 
     # @return [true, false] whether this member is the server owner.
