@@ -583,8 +583,6 @@ module Discordrb
     # @return [Integer] the max amount of emoji
     def max_emoji
       case @level
-      when 0
-        50
       when 1
         100
       when 2
