@@ -87,9 +87,8 @@ module Discordrb
       # Only get the owner of the server actually exists (i.e. not for ServerDeleteEvent)
       @owner = member(@owner_id) if exists
 
-      # Nitro Server Boosting related variables
-      @boosters = data['premium_subscription_count']
-      @level = data['premium_tier']
+      @booster_count = data['premium_subscription_count']
+      @boost_level = data['premium_tier']
     end
 
     # The default channel is the text channel on this server with the highest position
@@ -369,30 +368,27 @@ module Discordrb
       API.splash_url(@id, @splash_id)
     end
 
-    # The banner is shown on partnered, verified, or servers with a boost level of 2 or higher.
     # @return [String] the hexadecimal ID used to identify this server's banner image, shown by the server name.
     def banner_id
       @banner_id ||= JSON.parse(API::Server.resolve(@bot.token, @id))['banner']
     end
 
-    # @return [String, nil] the banner image URL for the server's banner image.
+    # @return [String, nil] the banner image URL for the server's banner image, or
     #   `nil` if there is no banner image.
     def banner_url
       banner_id if @banner_id.nil?
-      return nil unless @banner_id
+      return unless @banner_id
 
       API.banner_url(@id, @banner_id)
     end
 
     # The server's amount of Nitro boosters.
     # @return [Integer] the amount of boosters, 0 if no one has boosted.
-    attr_reader :boosters
+    attr_reader :booster_count
 
     # The server's Nitro boost level.
     # @return [Integer] the boost level, 0 if no level.
-    attr_reader :level
-
-    alias_method :boost_level, :level
+    attr_reader :boost_level
 
     # Adds a role to the role cache
     # @note For internal use only
@@ -579,7 +575,7 @@ module Discordrb
       @emoji[new_emoji.id] = new_emoji
     end
 
-    # The amount of emoji the server can have, based on Nitro Boost Level.
+    # The amount of emoji the server can have, based on its current Nitro Boost Level.
     # @return [Integer] the max amount of emoji
     def max_emoji
       case @level
