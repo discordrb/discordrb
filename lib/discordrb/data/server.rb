@@ -377,7 +377,7 @@ module Discordrb
     #   `nil` if there is no banner image.
     def banner_url
       banner_id if @banner_id.nil?
-      return unless @banner_id
+      return unless banner_id
 
       API.banner_url(@id, @banner_id)
     end
