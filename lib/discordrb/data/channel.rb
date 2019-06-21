@@ -702,6 +702,7 @@ module Discordrb
     # @param name [String] the default name of this webhook.
     # @param avatar [String] the default avatar URL to give this webhook.
     # @param reason [String] the reason for the webhook creation.
+    # @raise [ArgumentError] if the channel isn't a text channel in a server.
     # @return [Webhook] the created webhook.
     def create_webhook(name, avatar = nil, reason = nil)
       raise ArgumentError, 'Tried to create a webhook in a non-server channel' unless server
