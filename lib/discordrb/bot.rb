@@ -101,12 +101,16 @@ module Discordrb
     #   to Discord's gateway. `:none` will request that no payloads are received compressed (not recommended for
     #   production bots). `:large` will request that large payloads are received compressed. `:stream` will request
     #   that all data be received in a continuous compressed stream.
+    # @param subscription_events [true, false] If set to `false`, Discord will not send presence updates or typing
+    #   events to this bot once connected. This can be helpful to reduce CPU and memory load for bots that are
+    #   on a large number of populous servers. Note that depending on your usage of discordrb, this may increase
+    #   the chance of accessing cached user data (usernames, avatars) that is out of date.
     def initialize(
       log_mode: :normal,
       token: nil, client_id: nil,
       type: nil, name: '', fancy_log: false, suppress_ready: false, parse_self: false,
       shard_id: nil, num_shards: nil, redact_token: true, ignore_bots: false,
-      compress_mode: :large
+      compress_mode: :large, subscription_events: true
     )
       LOGGER.mode = log_mode
       LOGGER.token = token if redact_token
@@ -124,11 +128,12 @@ module Discordrb
       @prevent_ready = suppress_ready
 
       @compress_mode = compress_mode
+      @subscription_events = subscription_events
 
       raise 'Token string is empty or nil' if token.nil? || token.empty?
 
       @token = process_token(@type, token)
-      @gateway = Gateway.new(self, @token, @shard_key, @compress_mode)
+      @gateway = Gateway.new(self, @token, @shard_key, @compress_mode, @subscription_events)
 
       init_cache
 

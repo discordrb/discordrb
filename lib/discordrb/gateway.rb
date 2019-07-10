@@ -143,7 +143,7 @@ module Discordrb
     # @return [true, false] whether or not this gateway should check for heartbeat ACKs.
     attr_accessor :check_heartbeat_acks
 
-    def initialize(bot, token, shard_key = nil, compress_mode = :stream)
+    def initialize(bot, token, shard_key = nil, compress_mode = :stream, subscription_events = true)
       @token = token
       @bot = bot
 
@@ -157,6 +157,8 @@ module Discordrb
       @check_heartbeat_acks = true
 
       @compress_mode = compress_mode
+
+      @subscription_events = subscription_events
     end
 
     # Connect to the gateway server in a separate thread
@@ -283,7 +285,7 @@ module Discordrb
                       '$device': 'discordrb',
                       '$referrer': '',
                       '$referring_domain': ''
-                    }, compress, 100, @shard_key)
+                    }, compress, 100, @shard_key, @subscription_events)
     end
 
     # Sends an identify packet (op 2). This starts a new session on the current connection and tells Discord who we are.
@@ -304,13 +306,16 @@ module Discordrb
     #   its member list chunked.
     # @param shard_key [Array(Integer, Integer), nil] The shard key to use for sharding, represented as
     #   [shard_id, num_shards], or nil if the bot should not be sharded.
-    def send_identify(token, properties, compress, large_threshold, shard_key = nil)
+    # @param subscription_events [true, false] If set to `false`, Discord will not send presence updates or typing events
+    #   for the established session.
+    def send_identify(token, properties, compress, large_threshold, shard_key = nil, subscription_events = true)
       data = {
         # Don't send a v anymore as it's entirely determined by the URL now
         token: token,
         properties: properties,
         compress: compress,
-        large_threshold: large_threshold
+        large_threshold: large_threshold,
+        guild_subscriptions: subscription_events
       }
 
       # Don't include the shard key at all if it is nil as Discord checks for its mere existence
