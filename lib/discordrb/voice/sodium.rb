@@ -21,8 +21,8 @@ module Discordrb::Voice
   # Utility class for interacting with required `xsalsa20poly1305` functions for voice transmission
   # @!visibility private
   class SecretBox
-    # Exception raised when a key with invalid length is used
-    class KeyLengthError < RuntimeError
+    # Exception raised when a key or nonce with invalid length is used
+    class LengthError < RuntimeError
     end
 
     # Exception raised when encryption or decryption fails
@@ -43,7 +43,7 @@ module Discordrb::Voice
 
     # @param key [String] Crypto key of length {KEY_LENGTH}
     def initialize(key)
-      raise(KeyLengthError, 'Key length') if key.bytesize != KEY_LENGTH
+      raise(LengthError, 'Key length') if key.bytesize != KEY_LENGTH
 
       @key = key
     end
@@ -52,6 +52,8 @@ module Discordrb::Voice
     # @param nonce [String] encryption nonce for this message
     # @param message [String] message to be encrypted
     def box(nonce, message)
+      raise(LengthError, 'Nonce length') if nonce.bytesize != NONCE_BYTES
+
       message_padded = prepend_zeroes(ZERO_BYTES, message)
       buffer = zero_string(message_padded.bytesize)
 
@@ -65,6 +67,8 @@ module Discordrb::Voice
     # @param nonce [String] encryption nonce for this ciphertext
     # @param ciphertext [String] ciphertext to decrypt
     def open(nonce, ciphertext)
+      raise(LengthError, 'Nonce length') if nonce.bytesize != NONCE_BYTES
+
       ct_padded = prepend_zeroes(BOX_ZERO_BYTES, ciphertext)
       buffer = zero_string(ct_padded.bytesize)
 

@@ -21,6 +21,22 @@ describe Discordrb::Voice::SecretBox do
 
   it 'raises on invalid key length' do
     key = rand_bytes(Discordrb::Voice::SecretBox::KEY_LENGTH - 1)
-    expect { Discordrb::Voice::SecretBox.new(key) }.to raise_error(Discordrb::Voice::SecretBox::KeyLengthError)
+    expect { Discordrb::Voice::SecretBox.new(key) }.to raise_error(Discordrb::Voice::SecretBox::LengthError)
+  end
+
+  describe '#box' do
+    it 'raises on invalid nonce length' do
+      key = rand_bytes(Discordrb::Voice::SecretBox::KEY_LENGTH)
+      nonce = rand_bytes(Discordrb::Voice::SecretBox::NONCE_BYTES - 1)
+      expect { Discordrb::Voice::SecretBox.new(key).box(nonce, '') }.to raise_error(Discordrb::Voice::SecretBox::LengthError)
+    end
+  end
+
+  describe '#open' do
+    it 'raises on invalid nonce length' do
+      key = rand_bytes(Discordrb::Voice::SecretBox::KEY_LENGTH)
+      nonce = rand_bytes(Discordrb::Voice::SecretBox::NONCE_BYTES - 1)
+      expect { Discordrb::Voice::SecretBox.new(key).open(nonce, '') }.to raise_error(Discordrb::Voice::SecretBox::LengthError)
+    end
   end
 end
