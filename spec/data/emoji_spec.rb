@@ -26,4 +26,18 @@ describe Discordrb::Emoji do
       expect(emoji.mention).to eq '<:rubytaco:315242245274075157>'
     end
   end
+
+  describe '#to_reaction' do
+    it 'serializes to reaction format' do
+      expect(emoji.to_reaction).to eq 'rubytaco:315242245274075157'
+    end
+
+    context 'when ID is nil' do
+      it 'serializes to reaction format without custom emoji ID character' do
+        allow(emoji).to receive(:id).and_return(nil)
+
+        expect(emoji.to_reaction).to eq 'rubytaco'
+      end
+    end
+  end
 end
