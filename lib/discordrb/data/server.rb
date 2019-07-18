@@ -271,12 +271,14 @@ module Discordrb
     # @param roles [Role, Array<Role, String, Integer>] the role (or roles) to give this member upon joining
     # @param deaf [true, false] whether this member will be server deafened upon joining
     # @param mute [true, false] whether this member will be server muted upon joining
-    # @return [Member] the created member
+    # @return [Member, `nil`] the created member, or `nil` if the user is already a member of this server.
     def add_member_using_token(user, access_token, nick: nil, roles: [], deaf: false, mute: false)
       user_id = user.resolve_id
       roles = roles.is_a?(Array) ? roles.map(&:resolve_id) : [roles.resolve_id]
-      response = JSON.parse(API::Server.add_member(@bot.token, @id, user_id, access_token, nick, roles, deaf, mute))
-      add_member Member.new(response, self, @bot)
+      response = API::Server.add_member(@bot.token, @id, user_id, access_token, nick, roles, deaf, mute)
+      return nil if response.empty?
+
+      add_member Member.new(JSON.parse(response), self, @bot)
     end
 
     # Returns the amount of members that are candidates for pruning
