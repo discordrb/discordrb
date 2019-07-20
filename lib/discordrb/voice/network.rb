@@ -43,16 +43,12 @@ module Discordrb::Voice
     end
 
     # Initializes the UDP socket with data obtained from opcode 2.
-    # @param endpoint [String] The voice endpoint to connect to.
+    # @param ip [String] The IP address to connect to.
     # @param port [Integer] The port to connect to.
     # @param ssrc [Integer] The Super Secret Relay Code (SSRC). Discord uses this to identify different voice users
     #   on the same endpoint.
-    def connect(endpoint, port, ssrc)
-      @endpoint = endpoint
-      @endpoint = @endpoint[6..-1] if @endpoint.start_with? 'wss://'
-      @endpoint = @endpoint.gsub(':80', '') # The endpoint may contain a port, we don't want that
-      @endpoint = Resolv.getaddress @endpoint
-
+    def connect(ip, port, ssrc)
+      @ip = ip
       @port = port
       @ssrc = ssrc
     end
@@ -110,7 +106,7 @@ module Discordrb::Voice
     end
 
     def send_packet(packet)
-      @socket.send(packet, 0, @endpoint, @port)
+      @socket.send(packet, 0, @ip, @port)
     end
   end
 
@@ -224,7 +220,7 @@ module Discordrb::Voice
         @port = @ws_data['port']
         @udp_mode = mode
 
-        @udp.connect(@endpoint, @port, @ssrc)
+        @udp.connect(@ws_data['ip'], @port, @ssrc)
         @udp.send_discovery
       when 4
         # Opcode 4 sends the secret key used for encryption
