@@ -26,7 +26,7 @@ module Discordrb::API::Channel
       channel_id,
       :patch,
       "#{Discordrb::API.api_base}/channels/#{channel_id}",
-      data.to_json,
+      data,
       Authorization: token,
       content_type: :json,
       'X-Audit-Log-Reason': reason
@@ -78,7 +78,7 @@ module Discordrb::API::Channel
       channel_id,
       :post,
       "#{Discordrb::API.api_base}/channels/#{channel_id}/messages",
-      { content: message, tts: tts, embed: embed, nonce: nonce }.to_json,
+      { content: message, tts: tts, embed: embed, nonce: nonce },
       Authorization: token,
       content_type: :json
     )
@@ -110,7 +110,7 @@ module Discordrb::API::Channel
       channel_id,
       :patch,
       "#{Discordrb::API.api_base}/channels/#{channel_id}/messages/#{message_id}",
-      { content: message, mentions: mentions, embed: embed }.to_json,
+      { content: message, mentions: mentions, embed: embed },
       Authorization: token,
       content_type: :json
     )
@@ -136,7 +136,7 @@ module Discordrb::API::Channel
       channel_id,
       :post,
       "#{Discordrb::API.api_base}/channels/#{channel_id}/messages/bulk-delete",
-      { messages: messages }.to_json,
+      { messages: messages },
       Authorization: token,
       content_type: :json
     )
@@ -217,7 +217,7 @@ module Discordrb::API::Channel
       channel_id,
       :put,
       "#{Discordrb::API.api_base}/channels/#{channel_id}/permissions/#{overwrite_id}",
-      { type: type, id: overwrite_id, allow: allow, deny: deny }.to_json,
+      { type: type, id: overwrite_id, allow: allow, deny: deny },
       Authorization: token,
       content_type: :json,
       'X-Audit-Log-Reason': reason
@@ -244,7 +244,7 @@ module Discordrb::API::Channel
       channel_id,
       :post,
       "#{Discordrb::API.api_base}/channels/#{channel_id}/invites",
-      { max_age: max_age, max_uses: max_uses, temporary: temporary, unique: unique }.to_json,
+      { max_age: max_age, max_uses: max_uses, temporary: temporary, unique: unique },
       Authorization: token,
       content_type: :json,
       'X-Audit-Log-Reason': reason
@@ -321,7 +321,7 @@ module Discordrb::API::Channel
       nil,
       :post,
       "#{Discordrb::API.api_base}/users/#{bot_user_id}/channels",
-      {}.to_json,
+      {},
       Authorization: token,
       content_type: :json
     )
@@ -334,7 +334,7 @@ module Discordrb::API::Channel
       nil,
       :put,
       "#{Discordrb::API.api_base}/channels/#{pm_channel_id}/recipients/#{user_id}",
-      {}.to_json,
+      {},
       Authorization: token,
       content_type: :json
     )
@@ -353,7 +353,7 @@ module Discordrb::API::Channel
       nil,
       :put,
       "#{Discordrb::API.api_base}/channels/#{group_channel_id}/recipients/#{user_id}",
-      {}.to_json,
+      {},
       Authorization: token,
       content_type: :json
     )
@@ -391,7 +391,7 @@ module Discordrb::API::Channel
       channel_id,
       :post,
       "#{Discordrb::API.api_base}/channels/#{channel_id}/webhooks",
-      { name: name, avatar: avatar }.to_json,
+      { name: name, avatar: avatar },
       Authorization: token,
       content_type: :json,
       'X-Audit-Log-Reason': reason

@@ -35,7 +35,7 @@ module Discordrb::API::Webhook
       webhook_id,
       :patch,
       "#{Discordrb::API.api_base}/webhooks/#{webhook_id}",
-      data.to_json,
+      data,
       Authorization: token,
       content_type: :json,
       'X-Audit-Log-Reason': reason
@@ -50,7 +50,7 @@ module Discordrb::API::Webhook
       webhook_id,
       :patch,
       "#{Discordrb::API.api_base}/webhooks/#{webhook_id}/#{webhook_token}",
-      data.to_json,
+      data,
       content_type: :json,
       'X-Audit-Log-Reason': reason
     )
