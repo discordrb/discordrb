@@ -117,6 +117,9 @@ module Discordrb::Voice
   # used to manage general data about the connection, such as sending the speaking packet, which determines the green
   # circle around users on Discord, and obtaining UDP connection info.
   class VoiceWS
+    # The version of the voice gateway that's supposed to be used.
+    VOICE_GATEWAY_VERSION = 4
+
     # @return [VoiceUDP] the UDP voice connection over which the actual audio data is sent.
     attr_reader :udp
 
@@ -181,7 +184,7 @@ module Discordrb::Voice
 
       @client.send({
         op: 3,
-        d: nil
+        d: millis
       }.to_json)
     end
 
@@ -218,7 +221,6 @@ module Discordrb::Voice
         # Opcode 2 contains data to initialize the UDP connection
         @ws_data = packet['d']
 
-        @heartbeat_interval = @ws_data['heartbeat_interval']
         @ssrc = @ws_data['ssrc']
         @port = @ws_data['port']
         @udp_mode = mode
@@ -230,6 +232,9 @@ module Discordrb::Voice
         @ws_data = packet['d']
         @ready = true
         @udp.secret_key = @ws_data['secret_key'].pack('C*')
+      when 8
+        # Opcode 8 contains the heartbeat interval.
+        @heartbeat_interval = packet['d']['heartbeat_interval'] * 0.75
       end
     end
 
@@ -296,7 +301,7 @@ module Discordrb::Voice
     end
 
     def init_ws
-      host = "wss://#{@endpoint}:443"
+      host = "wss://#{@endpoint}:443/?v=#{VOICE_GATEWAY_VERSION}"
       @bot.debug("Connecting VWS to host: #{host}")
 
       # Connect the WS
