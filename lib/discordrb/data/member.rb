@@ -193,6 +193,11 @@ module Discordrb
       API::Server.update_member(@bot.token, @server.id, @user.id, mute: false)
     end
 
+    # Disconnect this member from a voice channel.
+    def disconnect
+      API::Server.update_member(@bot.token, @server.id, @user.id, channel_id: :null)
+    end
+
     # @see Member#set_nick
     def nick=(nick)
       set_nick(nick)
