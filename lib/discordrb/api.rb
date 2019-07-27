@@ -97,7 +97,8 @@ module Discordrb::API
     if attributes.count { |elem| elem.is_a? Hash } > 1
       payload_index = attributes.index { |elem| elem.is_a? Hash }
       payload = attributes[payload_index]
-      payload.compact!.each do |k,v|
+      payload.compact!
+      payload.each do |k,v|
         payload[k] = nil if v == :null
       end
       attributes[payload_index] = payload.to_json
