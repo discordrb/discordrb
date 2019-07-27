@@ -72,7 +72,7 @@ module Discordrb::Voice
       ct_padded = prepend_zeroes(BOX_ZERO_BYTES, ciphertext)
       buffer = zero_string(ct_padded.bytesize)
 
-      success = Sodium.crypto_secretbox_xsalsa20poly1305(buffer, ct_padded, ct_padded.bytesize, nonce, @key)
+      success = Sodium.crypto_secretbox_xsalsa20poly1305_open(buffer, ct_padded, ct_padded.bytesize, nonce, @key)
       raise(CryptoError, "Decryption failed (#{success})") unless success.zero?
 
       remove_zeroes(ZERO_BYTES, buffer)

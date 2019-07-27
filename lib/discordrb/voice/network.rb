@@ -28,6 +28,9 @@ module Discordrb::Voice
   # @deprecated Discord no longer supports unencrypted voice communication.
   PLAIN_MODE = 'plain'
 
+  # Encryption modes supported by Discord
+  ENCRYPTION_MODES = %w[xsalsa20_poly1305_lite xsalsa20_poly1305_suffix xsalsa20_poly1305].freeze
+
   # Represents a UDP connection to a voice server. This connection is used to send the actual audio data.
   class VoiceUDP
     # @return [true, false] whether or not UDP communications are encrypted.
@@ -37,6 +40,12 @@ module Discordrb::Voice
 
     # Sets the secret key used for encryption
     attr_writer :secret_key
+
+    # The UDP encryption mode
+    attr_reader :mode
+
+    # @!visibility private
+    attr_writer :mode
 
     # Creates a new UDP connection. Only creates a socket as the discovery reply may come before the data is
     # initialized.
@@ -62,7 +71,7 @@ module Discordrb::Voice
       # Wait for a UDP message
       message = @socket.recv(70)
       ip = message[4..-3].delete("\0")
-      port = message[-2..-1].to_i
+      port = message[-2..-1].unpack1('n')
       [ip, port]
     end
 
@@ -75,10 +84,15 @@ module Discordrb::Voice
       # Header of the audio packet
       header = [0x80, 0x78, sequence, time, @ssrc].pack('CCnNN')
 
-      # Always encrypt data
-      buf = encrypt_audio(header, buf)
+      nonce = generate_nonce(header)
+      buf = encrypt_audio(buf, nonce)
 
-      send_packet(header + buf)
+      data = header + buf
+
+      # xsalsa20_poly1305 does not require an appended nonce
+      data += nonce unless @mode == 'xsalsa20_poly1305'
+
+      send_packet(data)
     end
 
     # Sends the UDP discovery packet with the internally stored SSRC. Discord will send a reply afterwards which can
@@ -94,22 +108,46 @@ module Discordrb::Voice
     private
 
     # Encrypts audio data using libsodium
-    # @param header [String] The header of the packet, to be used as the nonce
     # @param buf [String] The encoded audio data to be encrypted
+    # @param nonce [String] The nonce to be used to encrypt the data
     # @return [String] the audio data, encrypted
-    def encrypt_audio(header, buf)
+    def encrypt_audio(buf, nonce)
       raise 'No secret key found, despite encryption being enabled!' unless @secret_key
 
       secret_box = Discordrb::Voice::SecretBox.new(@secret_key)
 
-      # The nonce is the header of the voice packet with 12 null bytes appended
-      nonce = header + ([0] * 12).pack('C*')
-
-      secret_box.box(nonce, buf)
+      # Nonces must be 24 bytes in length. We right pad with null bytes for poly1305 and poly1305_lite
+      secret_box.box(nonce.ljust(24, "\0"), buf)
     end
 
     def send_packet(packet)
       @socket.send(packet, 0, @ip, @port)
+    end
+
+    # @param header [String] The header of the packet, to be used as the nonce
+    # @return [String]
+    # @note
+    #   The nonce generated depends on the encryption mode.
+    #   In xsalsa20_poly1305 the nonce is the header plus twelve null bytes for padding.
+    #   In xsalsa20_poly1305_suffix, the nonce is 24 random bytes
+    #   In xsalsa20_poly1305_lite, the nonce is an incremental 4 byte int.
+    def generate_nonce(header)
+      case @mode
+      when 'xsalsa20_poly1305'
+        header
+      when 'xsalsa20_poly1305_suffix'
+        Random.urandom(24)
+      when 'xsalsa20_poly1305_lite'
+        case @lite_nonce
+        when nil, 0xff_ff_ff_ff
+          @lite_nonce = 0
+        else
+          @lite_nonce += 1
+        end
+        [@lite_nonce].pack('N')
+      else
+        raise "`#{@mode}' is not a supported encryption mode"
+      end
     end
   end
 
@@ -117,6 +155,9 @@ module Discordrb::Voice
   # used to manage general data about the connection, such as sending the speaking packet, which determines the green
   # circle around users on Discord, and obtaining UDP connection info.
   class VoiceWS
+    # The version of the voice gateway that's supposed to be used.
+    VOICE_GATEWAY_VERSION = 4
+
     # @return [VoiceUDP] the UDP voice connection over which the actual audio data is sent.
     attr_reader :udp
 
@@ -181,12 +222,12 @@ module Discordrb::Voice
 
       @client.send({
         op: 3,
-        d: nil
+        d: millis
       }.to_json)
     end
 
     # Send a speaking packet (op 5). This determines the green circle around the avatar in the voice channel
-    # @param value [true, false] Whether or not the bot should be speaking
+    # @param value [true, false, Integer] Whether or not the bot should be speaking, can also be a bitmask denoting audio type.
     def send_speaking(value)
       @bot.debug("Speaking: #{value}")
       @client.send({
@@ -218,18 +259,23 @@ module Discordrb::Voice
         # Opcode 2 contains data to initialize the UDP connection
         @ws_data = packet['d']
 
-        @heartbeat_interval = @ws_data['heartbeat_interval']
         @ssrc = @ws_data['ssrc']
         @port = @ws_data['port']
-        @udp_mode = mode
+
+        @udp_mode = (ENCRYPTION_MODES & @ws_data['modes']).first
 
         @udp.connect(@ws_data['ip'], @port, @ssrc)
         @udp.send_discovery
       when 4
         # Opcode 4 sends the secret key used for encryption
         @ws_data = packet['d']
+
         @ready = true
         @udp.secret_key = @ws_data['secret_key'].pack('C*')
+        @udp.mode = @ws_data['mode']
+      when 8
+        # Opcode 8 contains the heartbeat interval.
+        @heartbeat_interval = packet['d']['heartbeat_interval']
       end
     end
 
@@ -276,12 +322,6 @@ module Discordrb::Voice
 
     private
 
-    # Always encrypted.
-    # @return [String] the mode string that signifies whether encryption should be used or not
-    def mode
-      ENCRYPTED_MODE
-    end
-
     def heartbeat_loop
       @heartbeat_running = true
       while @heartbeat_running
@@ -296,7 +336,7 @@ module Discordrb::Voice
     end
 
     def init_ws
-      host = "wss://#{@endpoint}:443"
+      host = "wss://#{@endpoint}:443/?v=#{VOICE_GATEWAY_VERSION}"
       @bot.debug("Connecting VWS to host: #{host}")
 
       # Connect the WS
