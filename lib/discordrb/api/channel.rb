@@ -105,7 +105,6 @@ module Discordrb::API::Channel
   # Edit a message
   # https://discordapp.com/developers/docs/resources/channel#edit-message
   def edit_message(token, channel_id, message_id, message, mentions = [], embed = nil)
-    embed = :null if embed.nil?
     Discordrb::API.request(
       :channels_cid_messages_mid,
       channel_id,
