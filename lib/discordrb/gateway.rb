@@ -149,8 +149,6 @@ module Discordrb
 
       @shard_key = shard_key
 
-      @getc_mutex = Mutex.new
-
       # Whether the connection to the gateway has succeeded yet
       @ws_success = false
 
@@ -197,9 +195,9 @@ module Discordrb
     # Discord is immediately aware of the closed connection and makes the bot appear offline instantly.
     #
     # If this method doesn't work or you're looking for something more drastic, use {#kill} instead.
-    def stop(no_sync = false)
+    def stop
       @should_reconnect = false
-      close(no_sync)
+      close
 
       # Return nil so command bots don't send a message
       nil
@@ -595,11 +593,8 @@ module Discordrb
             handle_internal_close('Socket is nil in websocket_loop')
           end
 
-          recv_data = nil
-
-          # Get some data from the socket, synchronised so the socket can't be closed during this
-          # 24: remove locking
-          @getc_mutex.synchronize { recv_data = @socket.getc }
+          # Get some data from the socket
+          recv_data = @socket.getc
 
           # Check if we actually got data
           unless recv_data
@@ -827,7 +822,7 @@ module Discordrb
       end
     end
 
-    def close(no_sync = false)
+    def close
       # If we're already closed, there's no need to do anything - return
       return if @closed
 
@@ -838,14 +833,7 @@ module Discordrb
       send nil, :close unless @pipe_broken
 
       # We're officially closed, notify the main loop.
-      # This needs to be synchronised with the getc mutex, so the notification, and especially the actual
-      # close afterwards, don't coincide with the main loop reading something from the SSL socket.
-      # This would cause a segfault due to (I suspect) Ruby bug #12292: https://bugs.ruby-lang.org/issues/12292
-      if no_sync
-        @closed = true
-      else
-        @getc_mutex.synchronize { @closed = true }
-      end
+      @closed = true
 
       # Close the socket if possible
       @socket&.close

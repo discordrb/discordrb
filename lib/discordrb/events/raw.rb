@@ -30,9 +30,7 @@ module Discordrb::Events
       [
         matches_all(@attributes[:type] || @attributes[:t], event.type) do |a, e|
           if a.is_a? Regexp
-            # 24: update to matches?
-            match = a.match(e)
-            match ? (e == match[0]) : false
+            a.match?(e)
           else
             e.to_s.casecmp(a.to_s).zero?
           end
