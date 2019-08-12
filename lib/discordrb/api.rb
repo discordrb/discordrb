@@ -94,6 +94,9 @@ module Discordrb::API
     # Add a custom user agent
     attributes.last[:user_agent] = user_agent if attributes.last.is_a? Hash
 
+    # Specify RateLimit precision
+    attributes.last[:x_ratelimit_precision] = "millisecond"
+
     # The most recent Discord rate limit requirements require the support of major parameters, where a particular route
     # and major parameter combination (*not* the HTTP method) uniquely identifies a RL bucket.
     key = [key, major_parameter].freeze
@@ -155,7 +158,7 @@ module Discordrb::API
     Discordrb::LOGGER.ratelimit "RL bucket depletion detected! Date: #{headers[:date]} Reset: #{headers[:x_ratelimit_reset]}"
 
     now = Time.rfc2822(headers[:date])
-    reset = Time.at(headers[:x_ratelimit_reset].to_i)
+    reset = Time.at(headers[:x_ratelimit_reset].to_f)
 
     delta = reset - now
 
