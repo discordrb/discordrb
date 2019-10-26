@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = 'Webhook client for discordrb'
   spec.description   = "A client for Discord's webhooks to fit alongside [discordrb](https://rubygems.org/gems/discordrb)."
-  spec.homepage      = 'https://github.com/meew0/discordrb'
+  spec.homepage      = 'https://github.com/discordrb/discordrb'
   spec.license       = 'MIT'
 
   spec.files         = `git ls-files -z lib/discordrb/webhooks/`.split("\x0") + ['lib/discordrb/webhooks.rb']
