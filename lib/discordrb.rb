@@ -52,6 +52,14 @@ module Discordrb
     # being the character limit, otherwise just return an array with one element
     ideal_ary = ideal.length > CHARACTER_LIMIT ? ideal.chars.each_slice(CHARACTER_LIMIT).map(&:join) : [ideal]
 
+    # If there is no space to logically split the message on in the message (No spaces at all), it stays the same, otherwise
+    # cut string on index of the last space, and put everything after that space in the next index
+    # Note: please find a way to be more inclusive of 'where to logical split message', /\b/ captures the end of string, and also fix this messy ternary
+    # Note: also doesn't work past the first 4000 characters, obviously. Fix that./EDIT: FIXED
+    0.upto(ideal_ary.length-2) { |x| ideal_ary[x].rindex(/ /).nil? ? (ideal_ary[x] = ideal_ary[x])
+    : (ideal_ary[x], ideal_ary[x+1] = ideal_ary[x][0..ideal_ary[x].rindex(/ /)],
+    (ideal_ary[x][ideal_ary[x].rindex(/ /)..-1] + ideal_ary[x+1])) }
+
     # Slice off the ideal part and strip newlines
     rest = msg[ideal.length..-1].strip
 
