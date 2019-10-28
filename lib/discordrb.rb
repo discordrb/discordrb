@@ -55,9 +55,15 @@ module Discordrb
     # If there is no space to logically split the message on in the message (No spaces at all), it stays the same, otherwise
     # cut string on index of the last space, and put everything after that space in the next index
     # Note: please find a way to be more inclusive of 'where to logical split message', /\b/ captures the end of string
-    0.upto(ideal_ary.length-2) { |x| ideal_ary[x].rindex(/ /).nil? ? (ideal_ary[x] = ideal_ary[x])
-    : (ideal_ary[x], ideal_ary[x+1] = ideal_ary[x][0..ideal_ary[x].rindex(/ /)],
-    (ideal_ary[x][ideal_ary[x].rindex(/ /)..-1] + ideal_ary[x+1])) }
+
+    0.upto(ideal_ary.length-2) do |x|
+      if ideal_ary[x].rindex(/ /).nil? #if there is no space to break on, just leave it be
+        (ideal_ary[x] = ideal_ary[x])  #not the best way to do this, probably, but I don't personally know a better way
+      else
+        ideal_ary[x+1] = ideal_ary[x][ideal_ary[x].rindex(/ /)..-1] + ideal_ary[x+1] #shift the split bit from the string and move it one index up
+        ideal_ary[x] = ideal_ary[x][0..ideal_ary[x].rindex(/ /)] #split the string at the last space character
+      end
+    end
 
     # Slice off the ideal part and strip newlines
     rest = msg[ideal.length..-1].strip
