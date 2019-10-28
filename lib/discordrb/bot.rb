@@ -883,6 +883,7 @@ module Discordrb
     def delete_guild_member(data)
       server_id = data['guild_id'].to_i
       server = self.server(server_id)
+      return unless server # Server was deleted on GUILD_DELETE. See #619
 
       user_id = data['user']['id'].to_i
       server.delete_member(user_id)
