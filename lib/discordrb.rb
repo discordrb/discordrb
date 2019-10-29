@@ -48,21 +48,9 @@ module Discordrb
     # Find the largest element that is still below the character limit, or if none such element exists return the first
     ideal = joined.max_by { |e| e.length > CHARACTER_LIMIT ? -1 : e.length }
 
-    # If it's still larger than the character limit (none was smaller than it) split it into slices with the length
-    # being the character limit, otherwise just return an array with one element
-    ideal_ary = ideal.length > CHARACTER_LIMIT ? ideal.chars.each_slice(CHARACTER_LIMIT).map(&:join) : [ideal]
-
-    # If there is no space to logically split the message on in the message (No spaces at all), it stays the same, otherwise
-    # cut string on index of the last space, and put everything after that space in the next index
-    # Note: please find a way to be more inclusive of 'where to logical split message', /\b/ captures the end of string
-
-    0.upto(ideal_ary.length-2) do |x|
-      index = ideal_ary[x].rindex(/\s/)
-      unless index.nil?
-        ideal_ary[x+1] = ideal_ary[x][index..-1] + ideal_ary[x+1] #shift the split bit from the string and move it one index up
-        ideal_ary[x] = ideal_ary[x][0..index] #split the string at the last space character
-      end
-    end
+    # If it's still larger than the character limit (none was smaller than it) split it into the largest chunk without
+    # cutting words apart, breaking on the nearest space within character limit, otherwise just return an array with one element
+    ideal_ary = ideal.length > 2000 ? ideal.split(/(.{,2000}\b+?)/).reject(&:empty?) : [ideal]
 
     # Slice off the ideal part and strip newlines
     rest = msg[ideal.length..-1].strip
