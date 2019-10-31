@@ -50,7 +50,7 @@ module Discordrb
 
     # If it's still larger than the character limit (none was smaller than it) split it into the largest chunk without
     # cutting words apart, breaking on the nearest space within character limit, otherwise just return an array with one element
-    ideal_ary = ideal.length > 2000 ? ideal.split(/(.{,2000}\b+?)/).reject(&:empty?) : [ideal]
+    ideal_ary = ideal.length > CHARACTER_LIMIT ? ideal.split(/(.{,CHARACTER_LIMIT}\b+?)/).reject(&:empty?) : [ideal]
 
     # Slice off the ideal part and strip newlines
     rest = msg[ideal.length..-1].strip
