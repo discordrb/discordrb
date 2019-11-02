@@ -620,8 +620,8 @@ module Discordrb
     # Add a blocking {Await} for a message in this channel. This is identical in functionality to adding a
     # {Discordrb::Events::MessageEvent} await with the `in` attribute as this channel.
     # @see Bot#add_await!
-    def await!(attributes = {})
-      @bot.add_await!(Discordrb::Events::MessageEvent, { in: @id }.merge(attributes))
+    def await!(attributes = {}, &block)
+      @bot.add_await!(Discordrb::Events::MessageEvent, { in: @id }.merge(attributes), &block)
     end
 
     # Creates a new invite to this channel.

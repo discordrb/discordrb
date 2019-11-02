@@ -42,6 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `#split_send` utility method returns `nil`, to avoid the case where the return value is captured in the implicit return message ([#629](https://github.com/meew0/discordrb/pull/629), thanks @captainSV)
 - Give up reconnecting after receiving a fatal close code ([#633](https://github.com/meew0/discordrb/pull/633))
 - Misc upgrades to RuboCop v0.68 ([#624](https://github.com/meew0/discordrb/pull/624), thanks @PanisSupraOmnia)
+- `await!` methods now accept a block to test for matching event conditions ([#635](https://github.com/discordrb/discordrb/pull/635), thanks @z64)
 
 ### Fixed
 
