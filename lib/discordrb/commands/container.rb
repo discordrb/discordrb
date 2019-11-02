@@ -13,7 +13,7 @@ module Discordrb::Commands
     attr_reader :commands
 
     # Adds a new command to the container.
-    # @param name [Symbol, Array<Symbol>] The name of the command to add, or an array of multiple names for the command
+    # @param name [Symbol] The name of the command to add.
     # @param attributes [Hash] The attributes to initialize the command with.
     # @option attributes [Integer] :permission_level The minimum permission level that can use this command, inclusive.
     #   See {CommandBot#set_user_permission} and {CommandBot#set_role_permission}.
@@ -55,26 +55,22 @@ module Discordrb::Commands
     # @note `LocalJumpError`s are rescued from internally, giving bots the opportunity to use `return` or `break` in
     #   their blocks without propagating an exception.
     # @return [Command] The command that was added.
-    # @deprecated The command name argument will no longer support arrays in the next release.
-    #   Use the `aliases` attribute instead.
     def command(name, attributes = {}, &block)
       @commands ||= {}
-      if name.is_a? Array
-        new_command = nil
 
-        name.each do |e|
-          new_command = Command.new(e, attributes, &block)
-          @commands[e] = new_command
-        end
-
-        new_command
-      else
-        new_command = Command.new(name, attributes, &block)
-        new_command.attributes[:aliases].each do |aliased_name|
-          @commands[aliased_name] = CommandAlias.new(aliased_name, new_command)
-        end
-        @commands[name] = new_command
+      # TODO: Remove in 4.0
+      if name.is_a?(Array)
+        name, *aliases = name
+        attributes[:aliases] = aliases if attributes[:aliases].nil?
+        Discordrb::LOGGER.warn("While registering command #{name.inspect}")
+        Discordrb::LOGGER.warn('Arrays for command aliases is removed. Please use `aliases` argument instead.')
       end
+
+      new_command = Command.new(name, attributes, &block)
+      new_command.attributes[:aliases].each do |aliased_name|
+        @commands[aliased_name] = CommandAlias.new(aliased_name, new_command)
+      end
+      @commands[name] = new_command
     end
 
     # Removes a specific command from this container.
