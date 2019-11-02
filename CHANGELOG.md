@@ -51,6 +51,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **(breaking change)** `Message#reactions` is changed to return an Array instead of a hash, fixing reactions with the same `name` value from being discarded (#[593](https://github.com/meew0/discordrb/pull/596))
 - `Channel#nsfw=` correctly forwards updated value to the API ([#628](https://github.com/meew0/discordrb/pull/628))
 - `Emoji#==` works correctly for unicode emoji ([#590](https://github.com/discordrb/discordrb/pull/590), thanks @soukouki)
+- Attribute matching for voice state update events ([#625](https://github.com/discordrb/discordrb/pull/625), thanks @swarley) 
 
 ## [3.3.0] - 2018-10-27
 [3.3.0]: https://github.com/meew0/discordrb/releases/tag/v3.3.0
