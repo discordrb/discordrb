@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `Channel#news?`, `Channel#store?` ([#618](https://github.com/meew0/discordrb/pull/618), thanks @swarley)
 - `Server#bot_members`, `Server#non_bot_members` ([#626](https://github.com/meew0/discordrb/pull/626), thanks @flutterflies)
 - `API.get_gateway_bot` ([#632](https://github.com/meew0/discordrb/pull/632))
+- `Channel#create_webhook` ([#637](https://github.com/discordrb/discordrb/pull/637), thanks @Chew)
 
 ### Changed
 
