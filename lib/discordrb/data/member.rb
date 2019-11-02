@@ -77,7 +77,7 @@ module Discordrb
 
     # @return [true, false] if this user is a Nitro Booster of this server.
     def boosting?
-      !@premium_since.nil?
+      !@boosting_since.nil?
     end
 
     # @return [true, false] whether this member is the server owner.
