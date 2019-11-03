@@ -50,6 +50,8 @@ module Discordrb
 
     # @return [String] the layout to use this emoji in a reaction
     def to_reaction
+      return name if id.nil?
+
       "#{name}:#{id}"
     end
 
