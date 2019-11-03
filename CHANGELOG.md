@@ -56,6 +56,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `Emoji#==` works correctly for unicode emoji ([#590](https://github.com/discordrb/discordrb/pull/590), thanks @soukouki)
 - Attribute matching for voice state update events ([#625](https://github.com/discordrb/discordrb/pull/625), thanks @swarley) 
 
+### Removed
+
+- Removed dependency on `rbnacl` in favor of our own FFI bindings ([#641](https://github.com/discordrb/discordrb/pull/641), thanks @z64)
+
 ## [3.3.0] - 2018-10-27
 [3.3.0]: https://github.com/meew0/discordrb/releases/tag/v3.3.0
 

@@ -311,7 +311,7 @@ module Discordrb
     # connected to voice, the existing connection will be terminated - you don't have to call
     # {Discordrb::Voice::VoiceBot#destroy} before calling this method.
     # @param chan [Channel, String, Integer] The voice channel, or its ID, to connect to.
-    # @param encrypted [true, false] Whether voice communication should be encrypted using RbNaCl's SecretBox
+    # @param encrypted [true, false] Whether voice communication should be encrypted using
     #   (uses an XSalsa20 stream cipher for encryption and Poly1305 for authentication)
     # @return [Voice::VoiceBot] the initialized bot over which audio data can then be sent.
     def voice_connect(chan, encrypted = true)

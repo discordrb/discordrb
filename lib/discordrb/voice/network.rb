@@ -8,16 +8,15 @@ require 'json'
 require 'discordrb/websocket'
 
 begin
-  RBNACL_AVAILABLE = if ENV['DISCORDRB_NONACL']
-                       false
-                     else
-                       require 'rbnacl'
-                       true
-                     end
+  LIBSODIUM_AVAILABLE = if ENV['DISCORDRB_NONACL']
+                          false
+                        else
+                          require 'discordrb/voice/sodium'
+                        end
 rescue LoadError
   puts "libsodium not available! You can continue to use discordrb as normal but voice support won't work.
         Read https://github.com/meew0/discordrb/wiki/Installing-libsodium for more details."
-  RBNACL_AVAILABLE = false
+  LIBSODIUM_AVAILABLE = false
 end
 
 module Discordrb::Voice
@@ -94,19 +93,19 @@ module Discordrb::Voice
 
     private
 
-    # Encrypts audio data using RbNaCl
+    # Encrypts audio data using libsodium
     # @param header [String] The header of the packet, to be used as the nonce
     # @param buf [String] The encoded audio data to be encrypted
     # @return [String] the audio data, encrypted
     def encrypt_audio(header, buf)
       raise 'No secret key found, despite encryption being enabled!' unless @secret_key
 
-      box = RbNaCl::SecretBox.new(@secret_key)
+      secret_box = Discordrb::Voice::SecretBox.new(@secret_key)
 
       # The nonce is the header of the voice packet with 12 null bytes appended
       nonce = header + ([0] * 12).pack('C*')
 
-      box.encrypt(nonce, buf)
+      secret_box.box(nonce, buf)
     end
 
     def send_packet(packet)
@@ -128,7 +127,7 @@ module Discordrb::Voice
     # @param session [String] The voice session ID Discord sends over the regular websocket
     # @param endpoint [String] The endpoint URL to connect to
     def initialize(channel, bot, token, session, endpoint)
-      raise 'RbNaCl is unavailable - unable to create voice bot! Please read https://github.com/meew0/discordrb/wiki/Installing-libsodium' unless RBNACL_AVAILABLE
+      raise 'libsodium is unavailable - unable to create voice bot! Please read https://github.com/meew0/discordrb/wiki/Installing-libsodium' unless LIBSODIUM_AVAILABLE
 
       @channel = channel
       @bot = bot

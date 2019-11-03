@@ -7,6 +7,7 @@ before_script:
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 -o ./cc-test-reporter
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
+  - sudo apt-get install libsodium-dev
 script:
   - bundle exec rspec spec
   - bundle exec rubocop -c .rubocop.yml
