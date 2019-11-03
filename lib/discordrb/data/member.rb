@@ -251,6 +251,13 @@ module Discordrb
       @nick = nick
     end
 
+    # Update this member's boosting timestamp
+    # @note For internal user only.
+    # @!visibility private
+    def update_boosting_since(time)
+      @boosting_since = time
+    end
+
     include PermissionCalculator
 
     # Overwriting inspect for debug purposes
