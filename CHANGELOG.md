@@ -46,6 +46,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `await!` methods now accept a block to test for matching event conditions ([#635](https://github.com/discordrb/discordrb/pull/635), thanks @z64)
 - Dependency updates for RuboCop v0.74, redcarpet, and simplecov ([#636](https://github.com/discordrb/discordrb/pull/636), thanks @PanisSupraOmnia)
 - Update voice logic to connect to the IP address from READY ([#644](https://github.com/discordrb/discordrb/pull/644), thanks @swarley)
+- Refactored use of enumerable code in `Discordrb.split_message` ([#646](https://github.com/discordrb/discordrb/pull/646), thanks @piharpi)
 
 ### Fixed
 
