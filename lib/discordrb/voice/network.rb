@@ -22,9 +22,6 @@ module Discordrb::Voice
   # Signifies to Discord that encryption should be used
   ENCRYPTED_MODE = 'xsalsa20_poly1305'
 
-  # Signifies to Discord that no encryption should be used
-  PLAIN_MODE = 'plain'
-
   # Represents a UDP connection to a voice server. This connection is used to send the actual audio data.
   class VoiceUDP
     # @return [true, false] whether or not UDP communications are encrypted.
@@ -38,6 +35,7 @@ module Discordrb::Voice
     # initialized.
     def initialize
       @socket = UDPSocket.new
+      @encryped = true
     end
 
     # Initializes the UDP socket with data obtained from opcode 2.
@@ -70,8 +68,8 @@ module Discordrb::Voice
       # Header of the audio packet
       header = [0x80, 0x78, sequence, time, @ssrc].pack('CCnNN')
 
-      # Encrypt data, if necessary
-      buf = encrypt_audio(header, buf) if encrypted?
+      # Always encrypt data
+      buf = encrypt_audio(header, buf)
 
       send_packet(header + buf)
     end
@@ -271,9 +269,10 @@ module Discordrb::Voice
 
     private
 
+    # Always encrypted.
     # @return [String] the mode string that signifies whether encryption should be used or not
     def mode
-      @udp.encrypted? ? ENCRYPTED_MODE : PLAIN_MODE
+      ENCRYPTED_MODE
     end
 
     def heartbeat_loop
