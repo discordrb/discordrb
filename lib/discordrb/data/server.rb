@@ -56,6 +56,14 @@ module Discordrb
     # @return [Hash<Integer => VoiceState>] the hash (user ID => voice state) of voice states of members on this server
     attr_reader :voice_states
 
+    # The server's amount of Nitro boosters.
+    # @return [Integer] the amount of boosters, 0 if no one has boosted.
+    attr_reader :booster_count
+
+    # The server's Nitro boost level.
+    # @return [Integer] the boost level, 0 if no level.
+    attr_reader :boost_level
+
     # @!visibility private
     def initialize(data, bot, exists = true)
       @bot = bot
@@ -381,14 +389,6 @@ module Discordrb
 
       API.banner_url(@id, @banner_id)
     end
-
-    # The server's amount of Nitro boosters.
-    # @return [Integer] the amount of boosters, 0 if no one has boosted.
-    attr_reader :booster_count
-
-    # The server's Nitro boost level.
-    # @return [Integer] the boost level, 0 if no level.
-    attr_reader :boost_level
 
     # Adds a role to the role cache
     # @note For internal use only
