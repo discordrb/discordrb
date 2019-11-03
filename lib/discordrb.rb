@@ -40,7 +40,7 @@ module Discordrb
     #  [1, 2, 3],
     #  [1, 2, 3, 4]
     # ]
-    tri = [*0...lines.length].map { |i| lines.combination(i + 1).first }
+    tri = (0...lines.length).map { |i| lines.combination(i + 1).first }
 
     # Join the individual elements together to get an array of strings with consecutively more lines
     joined = tri.map(&:join)
