@@ -55,6 +55,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `Channel#nsfw=` correctly forwards updated value to the API ([#628](https://github.com/meew0/discordrb/pull/628))
 - `Emoji#==` works correctly for unicode emoji ([#590](https://github.com/discordrb/discordrb/pull/590), thanks @soukouki)
 - Attribute matching for voice state update events ([#625](https://github.com/discordrb/discordrb/pull/625), thanks @swarley) 
+- `Emoji#to_reaction` works correctly for unicode emoji ([#642](https://github.com/discordrb/discordrb/pull/642), thanks @z64)
 
 ### Removed
 
