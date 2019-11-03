@@ -319,7 +319,6 @@ module Discordrb
 
       chan = channel(chan.resolve_id)
       server_id = chan.server.id
-      @should_encrypt_voice = encrypted
 
       if @voices[chan.id]
         debug('Voice bot exists already! Destroying it')
@@ -806,7 +805,7 @@ module Discordrb
       end
 
       debug('Got data, now creating the bot.')
-      @voices[server_id] = Discordrb::Voice::VoiceBot.new(channel, self, token, @session_id, endpoint, @should_encrypt_voice)
+      @voices[server_id] = Discordrb::Voice::VoiceBot.new(channel, self, token, @session_id, endpoint, true)
     end
 
     # Internal handler for CHANNEL_CREATE
