@@ -95,7 +95,7 @@ module Discordrb
       # Only get the owner of the server actually exists (i.e. not for ServerDeleteEvent)
       @owner = member(@owner_id) if exists
 
-      @booster_count = data['premium_subscription_count']
+      @booster_count = data['premium_subscription_count'] || 0
       @boost_level = data['premium_tier']
     end
 
