@@ -198,4 +198,11 @@ describe Discordrb::Bot do
       expect(file.original_filename).to eq 'SPOILER_file.txt'
     end
   end
+
+  describe '#voice_connect' do
+    it 'requires encryption' do
+      channel = double(:channel, resolve_id: double)
+      expect { bot.voice_connect(channel, false) }.to raise_error ArgumentError
+    end
+  end
 end

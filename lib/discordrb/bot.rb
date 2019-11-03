@@ -315,6 +315,8 @@ module Discordrb
     #   (uses an XSalsa20 stream cipher for encryption and Poly1305 for authentication)
     # @return [Voice::VoiceBot] the initialized bot over which audio data can then be sent.
     def voice_connect(chan, encrypted = true)
+      raise ArgumentError, 'Unencrypted voice connections are no longer supported.' unless encrypted
+
       chan = channel(chan.resolve_id)
       server_id = chan.server.id
       @should_encrypt_voice = encrypted
