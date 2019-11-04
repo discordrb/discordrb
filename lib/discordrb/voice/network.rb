@@ -14,7 +14,7 @@ begin
                         end
 rescue LoadError
   puts "libsodium not available! You can continue to use discordrb as normal but voice support won't work.
-        Read https://github.com/meew0/discordrb/wiki/Installing-libsodium for more details."
+        Read https://github.com/discordrb/discordrb/wiki/Installing-libsodium for more details."
   LIBSODIUM_AVAILABLE = false
 end
 
@@ -122,7 +122,7 @@ module Discordrb::Voice
     # @param session [String] The voice session ID Discord sends over the regular websocket
     # @param endpoint [String] The endpoint URL to connect to
     def initialize(channel, bot, token, session, endpoint)
-      raise 'libsodium is unavailable - unable to create voice bot! Please read https://github.com/meew0/discordrb/wiki/Installing-libsodium' unless LIBSODIUM_AVAILABLE
+      raise 'libsodium is unavailable - unable to create voice bot! Please read https://github.com/discordrb/discordrb/wiki/Installing-libsodium' unless LIBSODIUM_AVAILABLE
 
       @channel = channel
       @bot = bot

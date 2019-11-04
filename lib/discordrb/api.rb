@@ -51,7 +51,7 @@ module Discordrb::API
   # Generate a user agent identifying this requester as discordrb.
   def user_agent
     # This particular string is required by the Discord devs.
-    required = "DiscordBot (https://github.com/meew0/discordrb, v#{Discordrb::VERSION})"
+    required = "DiscordBot (https://github.com/discordrb/discordrb, v#{Discordrb::VERSION})"
     @bot_name ||= ''
 
     "#{required} rest-client/#{RestClient::VERSION} #{RUBY_ENGINE}/#{RUBY_VERSION}p#{RUBY_PATCHLEVEL} discordrb/#{Discordrb::VERSION} #{@bot_name}"

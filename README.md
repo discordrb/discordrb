@@ -1,9 +1,9 @@
 [![Gem](https://img.shields.io/gem/v/discordrb.svg)](https://rubygems.org/gems/discordrb)
 [![Gem](https://img.shields.io/gem/dt/discordrb.svg)](https://rubygems.org/gems/discordrb)
-[![Build Status](https://travis-ci.org/meew0/discordrb.svg?branch=master)](https://travis-ci.org/meew0/discordrb)
-[![Inline docs](https://inch-ci.org/github/meew0/discordrb.svg?branch=master&style=shields)](https://inch-ci.org/github/meew0/discordrb)
-[![Code Climate](https://codeclimate.com/github/meew0/discordrb/badges/gpa.svg)](https://codeclimate.com/github/meew0/discordrb)
-[![Test Coverage](https://codeclimate.com/github/meew0/discordrb/badges/coverage.svg)](https://codeclimate.com/github/meew0/discordrb/coverage)
+[![Build Status](https://travis-ci.org/discordrb/discordrb.svg?branch=master)](https://travis-ci.org/discordrb/discordrb)
+[![Inline docs](https://inch-ci.org/github/discordrb/discordrb.svg?branch=master&style=shields)](https://inch-ci.org/github/discordrb/discordrb)
+[![Code Climate](https://codeclimate.com/github/discordrb/discordrb/badges/gpa.svg)](https://codeclimate.com/github/discordrb/discordrb)
+[![Test Coverage](https://codeclimate.com/github/discordrb/discordrb/badges/coverage.svg)](https://codeclimate.com/github/discordrb/discordrb/coverage)
 [![Join Discord](https://img.shields.io/badge/discord-join-7289DA.svg)](https://discord.gg/cyK3Hjm)
 # discordrb
 
@@ -11,15 +11,15 @@ An implementation of the [Discord](https://discordapp.com/) API using Ruby.
 
 ## Quick links to sections
 
-* [Dependencies](https://github.com/meew0/discordrb#dependencies)
-* [Installation](https://github.com/meew0/discordrb#installation)
-* [Usage](https://github.com/meew0/discordrb#usage)
-* [Webhooks Client](https://github.com/meew0/discordrb#webhooks-client)
-* [Support](https://github.com/meew0/discordrb#support)
-* [Development](https://github.com/meew0/discordrb#development), [Contributing](https://github.com/meew0/discordrb#contributing)
-* [License](https://github.com/meew0/discordrb#license)
+* [Dependencies](https://github.com/discordrb/discordrb#dependencies)
+* [Installation](https://github.com/discordrb/discordrb#installation)
+* [Usage](https://github.com/discordrb/discordrb#usage)
+* [Webhooks Client](https://github.com/discordrb/discordrb#webhooks-client)
+* [Support](https://github.com/discordrb/discordrb#support)
+* [Development](https://github.com/discordrb/discordrb#development), [Contributing](https://github.com/discordrb/discordrb#contributing)
+* [License](https://github.com/discordrb/discordrb#license)
 
-See also: [Documentation](https://www.rubydoc.info/gems/discordrb), [Tutorials](https://github.com/meew0/discordrb/wiki)
+See also: [Documentation](https://www.rubydoc.info/gems/discordrb), [Tutorials](https://github.com/discordrb/discordrb/wiki)
 
 ## Dependencies
 
@@ -31,8 +31,8 @@ See also: [Documentation](https://www.rubydoc.info/gems/discordrb), [Tutorials](
 ### Voice dependencies
 
 This section only applies to you if you want to use voice functionality.
-* [libsodium](https://github.com/meew0/discordrb/wiki/Installing-libsodium)
-* A compiled libopus distribution for your system, anywhere the script can find it. See [here](https://github.com/meew0/discordrb/wiki/Installing-libopus) for installation instructions.
+* [libsodium](https://github.com/discordrb/discordrb/wiki/Installing-libsodium)
+* A compiled libopus distribution for your system, anywhere the script can find it. See [here](https://github.com/discordrb/discordrb/wiki/Installing-libopus) for installation instructions.
 * [FFmpeg](https://www.ffmpeg.org/download.html) installed and in your PATH
 
 In addition to this, if you're on Windows and want to use voice functionality, your installed Ruby version **needs to be 32 bit**, as otherwise Opus won't work.
@@ -47,7 +47,7 @@ Using [Bundler](https://bundler.io/#getting-started), you can add discordrb to y
 
 And then install via `bundle install`.
 
-Run the [ping example](https://github.com/meew0/discordrb/blob/master/examples/ping.rb) to verify that the installation works (make sure to replace the token and client ID in there with your bots'!):
+Run the [ping example](https://github.com/discordrb/discordrb/blob/master/examples/ping.rb) to verify that the installation works (make sure to replace the token and client ID in there with your bots'!):
 
 To run the bot while using bundler:
 
@@ -63,7 +63,7 @@ Alternatively, while Bundler is the recommended option, you can also install dis
 
 #### Windows
 
-> **Make sure you have the DevKit installed! See the [Dependencies](https://github.com/meew0/discordrb#dependencies) section)**
+> **Make sure you have the DevKit installed! See the [Dependencies](https://github.com/discordrb/discordrb#dependencies) section)**
 
     gem install discordrb --platform=ruby
 
@@ -102,7 +102,7 @@ Your ffi setup is screwed up, first run `gem uninstall ffi` (uninstall all versi
 
 **If you're having trouble getting voice playback to work**:
 
-Look here: https://github.com/meew0/discordrb/wiki/Voice-sending#troubleshooting
+Look here: https://github.com/discordrb/discordrb/wiki/Voice-sending#troubleshooting
 
 ## Usage
 
@@ -122,7 +122,7 @@ bot.run
 
 This bot responds to every "Ping!" with a "Pong!".
 
-See [additional examples here](https://github.com/meew0/discordrb/tree/master/examples).
+See [additional examples here](https://github.com/discordrb/discordrb/tree/master/examples).
 
 You can find examples of projects that use discordrb by [searching for the discordrb topic on GitHub](https://github.com/topics/discordrb).
 
@@ -162,7 +162,7 @@ You can find me (@meew0, ID 66237334693085184) on the unofficial Discord API ser
 
 ## Development
 
-**This section is for developing discordrb itself! If you just want to make a bot, see the [Installation](https://github.com/meew0/discordrb#installation) section.**
+**This section is for developing discordrb itself! If you just want to make a bot, see the [Installation](https://github.com/discordrb/discordrb#installation) section.**
 
 After checking out the repo, run `bin/setup` to install dependencies. You can then run tests via `bundle exec rspec spec`. Make sure to run rubocop also: `bundle exec rubocop`. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
@@ -170,7 +170,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/meew0/discordrb.
+Bug reports and pull requests are welcome on GitHub at https://github.com/discordrb/discordrb.
 
 ## License
 

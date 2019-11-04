@@ -12,14 +12,14 @@ Gem::Specification.new do |spec|
 
   spec.summary       = 'Discord API for Ruby'
   spec.description   = 'A Ruby implementation of the Discord (https://discordapp.com) API.'
-  spec.homepage      = 'https://github.com/meew0/discordrb'
+  spec.homepage      = 'https://github.com/discordrb/discordrb'
   spec.license       = 'MIT'
 
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features|examples|lib/discordrb/webhooks)/}) }
   spec.bindir        = 'exe'
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.metadata = {
-    'changelog_uri' => 'https://github.com/meew0/discordrb/blob/master/CHANGELOG.md'
+    'changelog_uri' => 'https://github.com/discordrb/discordrb/blob/master/CHANGELOG.md'
   }
   spec.require_paths = ['lib']
 
