@@ -156,12 +156,7 @@ module Discordrb::API
   # X-Ratelimit-Reset header, thus making sure we don't get 429'd in any subsequent requests.
   def handle_preemptive_rl(headers, mutex, key)
     Discordrb::LOGGER.ratelimit "RL bucket depletion detected! Date: #{headers[:date]} Reset: #{headers[:x_ratelimit_reset]}"
-
-    now = Time.rfc2822(headers[:date])
-    reset = Time.at(headers[:x_ratelimit_reset].to_f)
-
-    delta = reset - now
-
+    delta = headers[:x_ratelimit_reset_after].to_f
     Discordrb::LOGGER.warn("Locking RL mutex (key: #{key}) for #{delta} seconds preemptively")
     sync_wait(delta, mutex)
   end
