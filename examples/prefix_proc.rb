@@ -55,8 +55,8 @@ bot.command(:roll, description: 'rolls some dice',
 
   # Check for valid input; make sure we actually got numbers and not words
   begin
-    number = Integer(number)
-    sides  = Integer(sides)
+    number = Integer(number, 10)
+    sides  = Integer(sides, 10)
   rescue ArgumentError
     next 'You must pass two *numbers*.. try: `roll 2d10`'
   end

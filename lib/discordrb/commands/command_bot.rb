@@ -249,7 +249,7 @@ module Discordrb::Commands
 
         if types[i] == Integer
           begin
-            Integer(arg)
+            Integer(arg, 10)
           rescue ArgumentError
             nil
           end

@@ -61,6 +61,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Attribute matching for voice state update events ([#625](https://github.com/discordrb/discordrb/pull/625), thanks @swarley) 
 - `Emoji#to_reaction` works correctly for unicode emoji ([#642](https://github.com/discordrb/discordrb/pull/642), thanks @z64)
 - `Server#add_member_using_token` returns `nil` when user is already a member ([#643](https://github.com/discordrb/discordrb/pull/643), thanks @swarley)
+- `CommandBot`'s `Integer` parser interprets all integers as base 10 ([#656](https://github.com/discordrb/discordrb/pull/656), thanks @joshleblanc)
 
 ### Removed
 
