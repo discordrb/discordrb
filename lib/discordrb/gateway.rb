@@ -143,7 +143,7 @@ module Discordrb
     # @return [true, false] whether or not this gateway should check for heartbeat ACKs.
     attr_accessor :check_heartbeat_acks
 
-    def initialize(bot, token, shard_key = nil, compress_mode = :stream)
+    def initialize(bot, token, shard_key = nil, compress_mode = :stream, mobile = false)
       @token = token
       @bot = bot
 
@@ -155,6 +155,8 @@ module Discordrb
       @check_heartbeat_acks = true
 
       @compress_mode = compress_mode
+
+      @mobile = mobile
     end
 
     # Connect to the gateway server in a separate thread
@@ -277,7 +279,7 @@ module Discordrb
       compress = @compress_mode == :large
       send_identify(@token, {
                       '$os': RUBY_PLATFORM,
-                      '$browser': 'discordrb',
+                      '$browser': @mobile ? 'Discord Android' : 'discordrb',
                       '$device': 'discordrb',
                       '$referrer': '',
                       '$referring_domain': ''

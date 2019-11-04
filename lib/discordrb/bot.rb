@@ -106,7 +106,7 @@ module Discordrb
       token: nil, client_id: nil,
       type: nil, name: '', fancy_log: false, suppress_ready: false, parse_self: false,
       shard_id: nil, num_shards: nil, redact_token: true, ignore_bots: false,
-      compress_mode: :large
+      compress_mode: :large, mobile: false
     )
       LOGGER.mode = log_mode
       LOGGER.token = token if redact_token
@@ -125,10 +125,12 @@ module Discordrb
 
       @compress_mode = compress_mode
 
+      @mobile = mobile
+
       raise 'Token string is empty or nil' if token.nil? || token.empty?
 
       @token = process_token(@type, token)
-      @gateway = Gateway.new(self, @token, @shard_key, @compress_mode)
+      @gateway = Gateway.new(self, @token, @shard_key, @compress_mode, @mobile)
 
       init_cache
 
