@@ -95,7 +95,7 @@ module Discordrb::API
     attributes.last[:user_agent] = user_agent if attributes.last.is_a? Hash
 
     # Specify RateLimit precision
-    attributes.last[:x_ratelimit_precision] = "millisecond"
+    attributes.last[:x_ratelimit_precision] = 'millisecond'
 
     # The most recent Discord rate limit requirements require the support of major parameters, where a particular route
     # and major parameter combination (*not* the HTTP method) uniquely identifies a RL bucket.
