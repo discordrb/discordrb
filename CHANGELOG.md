@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `Attachment#spoiler?`, to check if an attachment is a spoiler or not ([#603](https://github.com/discordrb/discordrb/pull/603), thanks @swarley)
 - Methods on `Server` to manage the server's emoji ([#595](https://github.com/discordrb/discordrb/pull/595), thanks @swarley)
 - `Paginator` utility class for wrapping paginated endpoints ([#579](https://github.com/discordrb/discordrb/pull/579))
-- `EventContainer#message_update`, which is fired whenever a message is updated, either by Discord or the user ([#612](https://www.youtube.com/watch?v=fzpCAT4jiRE), thanks @swarley)
+- `EventContainer#message_update`, which is fired whenever a message is updated, either by Discord or the user ([#612](https://github.com/discordrb/discordrb/pull/612), thanks @swarley)
 - `Message#server` ([#614](https://github.com/discordrb/discordrb/pull/614), thanks @swarley)
 - `Channel#news?`, `Channel#store?` ([#618](https://github.com/discordrb/discordrb/pull/618), thanks @swarley)
 - `Server#bot_members`, `Server#non_bot_members` ([#626](https://github.com/discordrb/discordrb/pull/626), thanks @flutterflies)
