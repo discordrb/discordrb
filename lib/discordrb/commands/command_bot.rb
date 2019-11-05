@@ -20,44 +20,6 @@ module Discordrb::Commands
     # @see #initialize
     attr_reader :prefix
 
-    DEFAULT_ATTRIBUTES = {
-      # Whether advanced functionality such as command chains are enabled
-      advanced_functionality: false,
-
-      # The name of the help command (that displays information to other commands). False if none should exist
-      help_command: :help,
-
-      # Spaces allowed between prefix and command
-      spaces_allowed: false,
-
-      # Webhooks allowed to trigger commands
-      webhook_commands: true,
-
-      channels: [],
-
-      # All of the following need to be one character
-      # String to designate previous result in command chain
-      previous: '~',
-
-      # Command chain delimiter
-      chain_delimiter: '>',
-
-      # Chain argument delimiter
-      chain_args_delim: ':',
-
-      # Sub-chain starting character
-      sub_chain_start: '[',
-
-      # Sub-chain ending character
-      sub_chain_end: ']',
-
-      # Quoted mode starting character
-      quote_start: '"',
-
-      # Quoted mode ending character
-      quote_end: '"'
-    }.freeze
-
     include CommandContainer
 
     # Creates a new CommandBot and logs in to Discord.
@@ -108,13 +70,18 @@ module Discordrb::Commands
     #   :advanced_functionality). Default is '"' or the same as :quote_start. Set to an empty string to disable.
     # @option attributes [true, false] :ignore_bots Whether the bot should ignore bot accounts or not. Default is false.
     def initialize(attributes = {})
-      super_attr = self.class.superclass.instance_method(:initialize).parameters.collect { |set| set[1] if set[0] == :key }
+      # Retrieve the superclass constructor
+      super_init = self.class.superclass.instance_method(:initialize)
+      # Select the parameter names that are keyword arguments [type, name]
+      super_attr = super_init.parameters.collect { |set| set[1] if %i[key keyreq].include? set[0] }
+      # Select the keys that belong to the superclass constructor
       super_args = attributes.slice(*super_attr)
-      attributes = attributes.slice(attributes.keys - super_attr)
+      # Fill non superclass constructor attributes into a new hash
+      attributes = attributes.slice(*(attributes.keys - super_attr))
       super(super_args)
 
       @prefix = attributes[:prefix]
-      @attributes = DEFAULT_ATTRIBUTES.clone.merge(attributes)
+      @attributes = default_attributes.merge(attributes)
 
       @permissions = {
         roles: {},
@@ -492,6 +459,46 @@ module Discordrb::Commands
           end
         end
       end
+    end
+
+    def default_attributes
+      {
+        # Whether advanced functionality such as command chains are enabled
+        advanced_functionality: false,
+
+        # The name of the help command (that displays information to other commands). False if none should exist
+        help_command: :help,
+
+        # Spaces allowed between prefix and command
+        spaces_allowed: false,
+
+        # Webhooks allowed to trigger commands
+        webhook_commands: true,
+
+        channels: [],
+
+        # All of the following need to be one character
+        # String to designate previous result in command chain
+        previous: '~',
+
+        # Command chain delimiter
+        chain_delimiter: '>',
+
+        # Chain argument delimiter
+        chain_args_delim: ':',
+
+        # Sub-chain starting character
+        sub_chain_start: '[',
+
+        # Sub-chain ending character
+        sub_chain_end: ']',
+
+        # Quoted mode starting character
+        quote_start: '"',
+
+        # Quoted mode ending character
+        quote_end: '"'
+      }
     end
   end
 end
