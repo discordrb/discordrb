@@ -20,6 +20,44 @@ module Discordrb::Commands
     # @see #initialize
     attr_reader :prefix
 
+    DEFAULT_ATTRIBUTES = {
+      # Whether advanced functionality such as command chains are enabled
+      advanced_functionality: false,
+
+      # The name of the help command (that displays information to other commands). False if none should exist
+      help_command: :help,
+
+      # Spaces allowed between prefix and command
+      spaces_allowed: false,
+
+      # Webhooks allowed to trigger commands
+      webhook_commands: true,
+
+      channels: [],
+
+      # All of the following need to be one character
+      # String to designate previous result in command chain
+      previous: '~',
+
+      # Command chain delimiter
+      chain_delimiter: '>',
+
+      # Chain argument delimiter
+      chain_args_delim: ':',
+
+      # Sub-chain starting character
+      sub_chain_start: '[',
+
+      # Sub-chain ending character
+      sub_chain_end: ']',
+
+      # Quoted mode starting character
+      quote_start: '"',
+
+      # Quoted mode ending character
+      quote_end: '"'
+    }.freeze
+
     include CommandContainer
 
     # Creates a new CommandBot and logs in to Discord.
@@ -70,121 +108,20 @@ module Discordrb::Commands
     #   :advanced_functionality). Default is '"' or the same as :quote_start. Set to an empty string to disable.
     # @option attributes [true, false] :ignore_bots Whether the bot should ignore bot accounts or not. Default is false.
     def initialize(attributes = {})
-      super(
-        log_mode: attributes[:log_mode],
-        token: attributes[:token],
-        client_id: attributes[:client_id],
-        type: attributes[:type],
-        name: attributes[:name],
-        fancy_log: attributes[:fancy_log],
-        suppress_ready: attributes[:suppress_ready],
-        parse_self: attributes[:parse_self],
-        shard_id: attributes[:shard_id],
-        num_shards: attributes[:num_shards],
-        redact_token: attributes.key?(:redact_token) ? attributes[:redact_token] : true,
-        ignore_bots: attributes[:ignore_bots],
-        compress_mode: attributes[:compress_mode])
+      super_attr = self.class.superclass.instance_method(:initialize).parameters.collect { |set| set[1] if set[0] == :key }
+      super_args = attributes.slice(*super_attr)
+      attributes = attributes.slice(attributes.keys - super_attr)
+      super(super_args)
 
       @prefix = attributes[:prefix]
-      @attributes = {
-        # Whether advanced functionality such as command chains are enabled
-        advanced_functionality: attributes[:advanced_functionality].nil? ? false : attributes[:advanced_functionality],
-
-        # The name of the help command (that displays information to other commands). False if none should exist
-        help_command: attributes[:help_command].is_a?(FalseClass) ? nil : (attributes[:help_command] || :help),
-
-        # The message to display for when a command doesn't exist, %command% to get the command name in question and nil for no message
-        # No default value here because it may not be desired behaviour
-        command_doesnt_exist_message: attributes[:command_doesnt_exist_message],
-
-        # The message to be displayed when `NoPermission` error is raised.
-        no_permission_message: attributes[:no_permission_message],
-
-        # Spaces allowed between prefix and command
-        spaces_allowed: attributes[:spaces_allowed].nil? ? false : attributes[:spaces_allowed],
-
-        # Webhooks allowed to trigger commands
-        webhook_commands: attributes[:webhook_commands].nil? ? true : attributes[:webhook_commands],
-
-        channels: attributes[:channels] || [],
-
-        # All of the following need to be one character
-        # String to designate previous result in command chain
-        previous: attributes[:previous] || '~',
-
-        # Command chain delimiter
-        chain_delimiter: attributes[:chain_delimiter] || '>',
-
-        # Chain argument delimiter
-        chain_args_delim: attributes[:chain_args_delim] || ':',
-
-        # Sub-chain starting character
-        sub_chain_start: attributes[:sub_chain_start] || '[',
-
-        # Sub-chain ending character
-        sub_chain_end: attributes[:sub_chain_end] || ']',
-
-        # Quoted mode starting character
-        quote_start: attributes[:quote_start] || '"',
-
-        # Quoted mode ending character
-        quote_end: attributes[:quote_end] || attributes[:quote_start] || '"',
-
-        # Default block for handling internal exceptions, or a string to respond with
-        rescue: attributes[:rescue]
-      }
+      @attributes = DEFAULT_ATTRIBUTES.clone.merge(attributes)
 
       @permissions = {
         roles: {},
         users: {}
       }
 
-      return unless @attributes[:help_command]
-
-      command(@attributes[:help_command], max_args: 1, description: 'Shows a list of all the commands available or displays help for a specific command.', usage: 'help [command name]') do |event, command_name|
-        if command_name
-          command = @commands[command_name.to_sym]
-          if command.is_a?(CommandAlias)
-            command = command.aliased_command
-            command_name = command.name
-          end
-          return "The command `#{command_name}` does not exist!" unless command
-
-          desc = command.attributes[:description] || '*No description available*'
-          usage = command.attributes[:usage]
-          parameters = command.attributes[:parameters]
-          result = "**`#{command_name}`**: #{desc}"
-          aliases = command_aliases(command_name.to_sym)
-          unless aliases.empty?
-            result += "\nAliases: "
-            result += aliases.map { |a| "`#{a.name}`" }.join(', ')
-          end
-          result += "\nUsage: `#{usage}`" if usage
-          if parameters
-            result += "\nAccepted Parameters:\n```"
-            parameters.each { |p| result += "\n#{p}" }
-            result += '```'
-          end
-          result
-        else
-          available_commands = @commands.values.reject do |c|
-            c.is_a?(CommandAlias) || !c.attributes[:help_available] || !required_roles?(event.user, c.attributes[:required_roles]) || !allowed_roles?(event.user, c.attributes[:allowed_roles]) || !required_permissions?(event.user, c.attributes[:required_permissions], event.channel)
-          end
-          case available_commands.length
-          when 0..5
-            available_commands.reduce "**List of commands:**\n" do |memo, c|
-              memo + "**`#{c.name}`**: #{c.attributes[:description] || '*No description available*'}\n"
-            end
-          when 5..50
-            (available_commands.reduce "**List of commands:**\n" do |memo, c|
-              memo + "`#{c.name}`, "
-            end)[0..-3]
-          else
-            event.user.pm(available_commands.reduce("**List of commands:**\n") { |m, e| m + "`#{e.name}`, " }[0..-3])
-            event.channel.pm? ? '' : 'Sending list in PM!'
-          end
-        end
-      end
+      create_default_help_command if @attributes[:help_command]
     end
 
     # Returns all aliases for the command with the given name
@@ -507,6 +444,54 @@ module Discordrb::Commands
       return '' if object.is_a? Discordrb::Message
 
       object.to_s
+    end
+
+    # Create the default help command
+    def create_default_help_command
+      command(@attributes[:help_command], max_args: 1, description: 'Shows a list of all the commands available or displays help for a specific command.', usage: 'help [command name]') do |event, command_name|
+        if command_name
+          command = @commands[command_name.to_sym]
+          if command.is_a?(CommandAlias)
+            command = command.aliased_command
+            command_name = command.name
+          end
+          return "The command `#{command_name}` does not exist!" unless command
+
+          desc = command.attributes[:description] || '*No description available*'
+          usage = command.attributes[:usage]
+          parameters = command.attributes[:parameters]
+          result = "**`#{command_name}`**: #{desc}"
+          aliases = command_aliases(command_name.to_sym)
+          unless aliases.empty?
+            result += "\nAliases: "
+            result += aliases.map { |a| "`#{a.name}`" }.join(', ')
+          end
+          result += "\nUsage: `#{usage}`" if usage
+          if parameters
+            result += "\nAccepted Parameters:\n```"
+            parameters.each { |p| result += "\n#{p}" }
+            result += '```'
+          end
+          result
+        else
+          available_commands = @commands.values.reject do |c|
+            c.is_a?(CommandAlias) || !c.attributes[:help_available] || !required_roles?(event.user, c.attributes[:required_roles]) || !allowed_roles?(event.user, c.attributes[:allowed_roles]) || !required_permissions?(event.user, c.attributes[:required_permissions], event.channel)
+          end
+          case available_commands.length
+          when 0..5
+            available_commands.reduce "**List of commands:**\n" do |memo, c|
+              memo + "**`#{c.name}`**: #{c.attributes[:description] || '*No description available*'}\n"
+            end
+          when 5..50
+            (available_commands.reduce "**List of commands:**\n" do |memo, c|
+              memo + "`#{c.name}`, "
+            end)[0..-3]
+          else
+            event.user.pm(available_commands.reduce("**List of commands:**\n") { |m, e| m + "`#{e.name}`, " }[0..-3])
+            event.channel.pm? ? '' : 'Sending list in PM!'
+          end
+        end
+      end
     end
   end
 end
