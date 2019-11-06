@@ -35,7 +35,7 @@ module Discordrb::API::User
       server_id, # This is technically a guild endpoint
       :patch,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/members/@me/nick",
-      { nick: nick }.to_json,
+      { nick: nick },
       Authorization: token,
       content_type: :json,
       'X-Audit-Log-Reason': reason
@@ -50,7 +50,7 @@ module Discordrb::API::User
       nil,
       :patch,
       "#{Discordrb::API.api_base}/users/@me",
-      { avatar: avatar, email: email, new_password: new_password, password: password, username: new_username }.to_json,
+      { avatar: avatar, email: email, new_password: new_password, password: password, username: new_username },
       Authorization: token,
       content_type: :json
     )
@@ -100,7 +100,7 @@ module Discordrb::API::User
       nil,
       :post,
       "#{Discordrb::API.api_base}/users/@me/channels",
-      { recipient_id: recipient_id }.to_json,
+      { recipient_id: recipient_id },
       Authorization: token,
       content_type: :json
     )
@@ -125,7 +125,7 @@ module Discordrb::API::User
       nil,
       :patch,
       "#{Discordrb::API.api_base}/users/@me/settings",
-      { status: status }.to_json,
+      { status: status },
       Authorization: token,
       content_type: :json
     )

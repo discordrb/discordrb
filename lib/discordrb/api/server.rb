@@ -12,7 +12,7 @@ module Discordrb::API::Server
       nil,
       :post,
       "#{Discordrb::API.api_base}/guilds",
-      { name: name, region: region.to_s }.to_json,
+      { name: name, region: region.to_s },
       Authorization: token,
       content_type: :json
     )
@@ -38,7 +38,7 @@ module Discordrb::API::Server
       server_id,
       :patch,
       "#{Discordrb::API.api_base}/guilds/#{server_id}",
-      { name: name, region: region, icon: icon, afk_channel_id: afk_channel_id, afk_timeout: afk_timeout, splash: splash, default_message_notifications: default_message_notifications, verification_level: verification_level, explicit_content_filter: explicit_content_filter, system_channel_id: system_channel_id }.to_json,
+      { name: name, region: region, icon: icon, afk_channel_id: afk_channel_id, afk_timeout: afk_timeout, splash: splash, default_message_notifications: default_message_notifications, verification_level: verification_level, explicit_content_filter: explicit_content_filter, system_channel_id: system_channel_id },
       Authorization: token,
       content_type: :json,
       'X-Audit-Log-Reason': reason
@@ -52,7 +52,7 @@ module Discordrb::API::Server
       server_id,
       :patch,
       "#{Discordrb::API.api_base}/guilds/#{server_id}",
-      { owner_id: user_id }.to_json,
+      { owner_id: user_id },
       Authorization: token,
       content_type: :json,
       'X-Audit-Log-Reason': reason
@@ -91,7 +91,7 @@ module Discordrb::API::Server
       server_id,
       :post,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/channels",
-      { name: name, type: type, topic: topic, bitrate: bitrate, user_limit: user_limit, permission_overwrites: permission_overwrites, parent_id: parent_id, nsfw: nsfw, rate_limit_per_user: rate_limit_per_user, position: position }.to_json,
+      { name: name, type: type, topic: topic, bitrate: bitrate, user_limit: user_limit, permission_overwrites: permission_overwrites, parent_id: parent_id, nsfw: nsfw, rate_limit_per_user: rate_limit_per_user, position: position },
       Authorization: token,
       content_type: :json,
       'X-Audit-Log-Reason': reason
@@ -106,7 +106,7 @@ module Discordrb::API::Server
       server_id,
       :patch,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/channels",
-      positions.to_json,
+      positions,
       Authorization: token,
       content_type: :json
     )
@@ -149,7 +149,7 @@ module Discordrb::API::Server
         mute: mute,
         deaf: deaf,
         channel_id: channel_id
-      }.reject { |_, v| v.nil? }.to_json,
+      }.compact,
       Authorization: token,
       content_type: :json,
       'X-Audit-Log-Reason': reason
@@ -232,7 +232,7 @@ module Discordrb::API::Server
       server_id,
       :post,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/roles",
-      { color: colour, name: name, hoist: hoist, mentionable: mentionable, permissions: packed_permissions }.to_json,
+      { color: colour, name: name, hoist: hoist, mentionable: mentionable, permissions: packed_permissions },
       Authorization: token,
       content_type: :json,
       'X-Audit-Log-Reason': reason
@@ -250,7 +250,7 @@ module Discordrb::API::Server
       server_id,
       :patch,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/roles/#{role_id}",
-      { color: colour, name: name, hoist: hoist, mentionable: mentionable, permissions: packed_permissions }.to_json,
+      { color: colour, name: name, hoist: hoist, mentionable: mentionable, permissions: packed_permissions },
       Authorization: token,
       content_type: :json,
       'X-Audit-Log-Reason': reason
@@ -265,7 +265,7 @@ module Discordrb::API::Server
       server_id,
       :patch,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/roles",
-      roles.to_json,
+      roles,
       Authorization: token,
       content_type: :json
     )
@@ -394,7 +394,7 @@ module Discordrb::API::Server
       server_id,
       :patch,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/integrations/#{integration_id}",
-      { expire_behavior: expire_behavior, expire_grace_period: expire_grace_period, enable_emoticons: enable_emoticons }.to_json,
+      { expire_behavior: expire_behavior, expire_grace_period: expire_grace_period, enable_emoticons: enable_emoticons },
       Authorization: token,
       content_type: :json
     )
@@ -445,7 +445,7 @@ module Discordrb::API::Server
       server_id,
       :patch,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/embed",
-      { enabled: enabled, channel_id: channel_id }.to_json,
+      { enabled: enabled, channel_id: channel_id },
       Authorization: token,
       'X-Audit-Log-Reason': reason,
       content_type: :json
@@ -460,7 +460,7 @@ module Discordrb::API::Server
       server_id,
       :post,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/emojis",
-      { image: image, name: name, roles: roles }.to_json,
+      { image: image, name: name, roles: roles },
       Authorization: token,
       content_type: :json,
       'X-Audit-Log-Reason': reason
@@ -475,7 +475,7 @@ module Discordrb::API::Server
       server_id,
       :patch,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/emojis/#{emoji_id}",
-      { name: name, roles: roles }.to_json,
+      { name: name, roles: roles },
       Authorization: token,
       content_type: :json,
       'X-Audit-Log-Reason': reason
@@ -526,7 +526,7 @@ module Discordrb::API::Server
       server_id,
       :put,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/members/#{user_id}",
-      { access_token: access_token, nick: nick, roles: roles, mute: mute, deaf: deaf }.to_json,
+      { access_token: access_token, nick: nick, roles: roles, mute: mute, deaf: deaf },
       content_type: :json,
       Authorization: token
     )
