@@ -43,6 +43,21 @@ module Discordrb
     end
   end
 
+  # Data type for custom statuses
+  class CustomStatus
+    # @return [String] the custom status message
+    attr_reader :state
+    alias_method :text, :state
+
+    # @return [Emoji, String, nil] the emoji used in the status
+    attr_reader :emoji
+
+    def initialize(data, bot)
+      @state = data['state'] || ''
+      @emoji = Emoji.new(data['emoji'], bot, nil) unless data['emoji'].nil?
+    end
+  end
+
   # User on Discord, including internal data like discriminators
   class User
     include IDObject
@@ -53,6 +68,9 @@ module Discordrb
 
     # @return [String, nil] the game the user is currently playing, or `nil` if none is being played.
     attr_reader :game
+
+    # @return [CustomStatus, nil] the user's custom status if they have one
+    attr_reader :custom_status
 
     # @return [String, nil] the URL to the stream, if the user is currently streaming something.
     attr_reader :stream_url
@@ -121,6 +139,10 @@ module Discordrb
     # @!visibility private
     def update_presence(data)
       @status = data['status'].to_sym
+
+      @custom_status = if (status_data = data['activities'].find { |act| act['type'] == 4 })
+                         CustomStatus.new(status_data, @bot)
+                       end
 
       if data['game']
         game = data['game']
