@@ -870,7 +870,7 @@ module Discordrb
       return if emoji.empty?
 
       emoji.each do |element|
-        new_emoji = Emoji.new(element, @bot, self)
+        new_emoji = Emoji.new(element, self)
         @emoji[new_emoji.id] = new_emoji
       end
     end
