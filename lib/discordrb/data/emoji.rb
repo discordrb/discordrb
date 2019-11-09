@@ -18,7 +18,7 @@ module Discordrb
     attr_reader :animated
     alias_method :animated?, :animated
 
-    def initialize(data, bot, server)
+    def initialize(data, bot, server = nil)
       @bot = bot
       @roles = nil
 
