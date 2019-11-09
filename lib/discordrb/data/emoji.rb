@@ -8,18 +8,18 @@ module Discordrb
     # @return [String] the emoji name
     attr_reader :name
 
-    # @return [Server] the server of this emoji
+    # @return [Server, nil] the server of this emoji
     attr_reader :server
 
-    # @return [Array<Role>] roles this emoji is active for
+    # @return [Array<Role>, nil] roles this emoji is active for, or nil if the emoji's server is unknown
     attr_reader :roles
 
     # @return [true, false] if the emoji is animated
     attr_reader :animated
     alias_method :animated?, :animated
 
-    def initialize(data, bot, server = nil)
-      @bot = bot
+    # @!visibility private
+    def initialize(data, server = nil)
       @roles = nil
 
       @name = data['name']

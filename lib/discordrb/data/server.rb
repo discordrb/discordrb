@@ -557,7 +557,7 @@ module Discordrb
       end
 
       data = JSON.parse(API::Server.add_emoji(@bot.token, @id, image_string, name, roles.map(&:resolve_id), reason))
-      new_emoji = Emoji.new(data)
+      new_emoji = Emoji.new(data, self)
       @emoji[new_emoji.id] = new_emoji
     end
 
@@ -577,7 +577,7 @@ module Discordrb
     def edit_emoji(emoji, name: nil, roles: nil, reason: nil)
       emoji = @emoji[emoji.resolve_id]
       data = JSON.parse(API::Server.edit_emoji(@bot.token, @id, emoji.resolve_id, name || emoji.name, (roles || emoji.roles).map(&:resolve_id), reason))
-      new_emoji = Emoji.new(data)
+      new_emoji = Emoji.new(data, self)
       @emoji[new_emoji.id] = new_emoji
     end
 
@@ -917,7 +917,7 @@ module Discordrb
       return if emoji.empty?
 
       emoji.each do |element|
-        new_emoji = Emoji.new(element, @bot, self)
+        new_emoji = Emoji.new(element, self)
         @emoji[new_emoji.id] = new_emoji
       end
     end
