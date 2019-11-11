@@ -42,7 +42,7 @@ module Discordrb::Voice
     # initialized.
     def initialize
       @socket = UDPSocket.new
-      @encryped = true
+      @encrypted = true
     end
 
     # Initializes the UDP socket with data obtained from opcode 2.
