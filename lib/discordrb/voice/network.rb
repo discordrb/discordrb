@@ -270,7 +270,7 @@ module Discordrb::Voice
         @udp.mode = @ws_data['mode']
       when 8
         # Opcode 8 contains the heartbeat interval.
-        @heartbeat_interval = packet['d']['heartbeat_interval'] * 0.75
+        @heartbeat_interval = packet['d']['heartbeat_interval']
       end
     end
 
