@@ -75,7 +75,7 @@ module Discordrb::Voice
     def channel
       server_id = @channel.server.id # voice channel is only available at Servers, so `@channel.server` can't be `nil`
       bot_id = @bot.profile.id
-      @bot.servers[server_id]&.voice_states[bot_id]&.voice_channel || @channel
+      @channel = @bot.servers[server_id]&.voice_states[bot_id]&.voice_channel || @channel
     end
 
     # @!visibility private
