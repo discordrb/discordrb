@@ -100,6 +100,7 @@ module Discordrb::Voice
     end
 
     # @return [true, false] whether audio data sent will be encrypted.
+    # @deprecated Discord no longer supports unencrypted voice communication.
     def encrypted?
       true
     end
