@@ -885,6 +885,7 @@ module Discordrb
       member = server.member(data['user']['id'].to_i)
       member.update_roles(data['roles'])
       member.update_nick(data['nick'])
+      member.update_boosting_since(data['premium_since'])
     end
 
     # Internal handler for GUILD_MEMBER_DELETE

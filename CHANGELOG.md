@@ -50,6 +50,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **(breaking change)** Removed `no_sync` argument in `Bot#stop` as part of a refactor that removes Ruby 2.3 compatibility ([#652](https://github.com/discordrb/discordrb/pull/652), thanks @PanisSupraOmnia)
 - Return `rest-client` dependency to `>= 2.0.0` since `2.1.0` is now released ([#654](https://github.com/discordrb/discordrb/pull/654), thanks @ali-l)
 - Added Bit for "Streaming" permission ([#660](https://github.com/discordrb/discordrb/pull/660), thanks @NCPlayz)
+- Methods for Nitro boosting related information ([#638](https://github.com/discordrb/discordrb/pull/638), thanks @Chew)
 
 ### Fixed
 
