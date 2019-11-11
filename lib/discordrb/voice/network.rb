@@ -20,6 +20,8 @@ end
 
 module Discordrb::Voice
   # Signifies to Discord that encryption should be used
+  # @deprecated Discord now supports multiple encryption options.
+  # TODO: Resolve replacement for this constant.
   ENCRYPTED_MODE = 'xsalsa20_poly1305'
 
   # Signifies to Discord that no encryption should be used
