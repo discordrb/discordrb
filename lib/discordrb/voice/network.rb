@@ -28,6 +28,9 @@ module Discordrb::Voice
   # @deprecated Discord no longer supports unencrypted voice communication.
   PLAIN_MODE = 'plain'
 
+  # Encryption modes supported by Discord
+  ENCRYPTION_MODES = %w[xsalsa20_poly1305_lite xsalsa20_poly1305_suffix xsalsa20_poly1305].freeze
+
   # Represents a UDP connection to a voice server. This connection is used to send the actual audio data.
   class VoiceUDP
     # @return [true, false] whether or not UDP communications are encrypted.
@@ -37,6 +40,12 @@ module Discordrb::Voice
 
     # Sets the secret key used for encryption
     attr_writer :secret_key
+
+    # The UDP encryption mode
+    attr_reader :mode
+
+    # @!visibility private
+    attr_writer :mode
 
     # Creates a new UDP connection. Only creates a socket as the discovery reply may come before the data is
     # initialized.
@@ -75,10 +84,16 @@ module Discordrb::Voice
       # Header of the audio packet
       header = [0x80, 0x78, sequence, time, @ssrc].pack('CCnNN')
 
-      # Always encrypt data
-      buf = encrypt_audio(header, buf)
+      nonce = generate_nonce(header)
+      buf = encrypt_audio(header, buf, nonce)
+      @nonce += 1 if @nonce
 
-      send_packet(header + buf)
+      data = header + buf
+
+      # xsalsa20_poly1305 does not require an appended nonce
+      data += nonce unless @mode == 'xsalsa20_poly1305'
+
+      send_packet(data)
     end
 
     # Sends the UDP discovery packet with the internally stored SSRC. Discord will send a reply afterwards which can
@@ -96,20 +111,38 @@ module Discordrb::Voice
     # Encrypts audio data using libsodium
     # @param header [String] The header of the packet, to be used as the nonce
     # @param buf [String] The encoded audio data to be encrypted
+    # @param nonce [String] The nonce to be used to encrypt the data
     # @return [String] the audio data, encrypted
-    def encrypt_audio(header, buf)
+    def encrypt_audio(_header, buf, nonce)
       raise 'No secret key found, despite encryption being enabled!' unless @secret_key
 
       secret_box = Discordrb::Voice::SecretBox.new(@secret_key)
 
-      # The nonce is the header of the voice packet with 12 null bytes appended
-      nonce = header + ([0] * 12).pack('C*')
-
-      secret_box.box(nonce, buf)
+      # Nonces must be 24 bytes in length. We right pad with null bytes for poly1305 and poly1305_lite
+      secret_box.box(nonce.ljust(24, "\0"), buf)
     end
 
     def send_packet(packet)
       @socket.send(packet, 0, @ip, @port)
+    end
+
+    # The nonce generated depends on the encryption mode.
+    # In xsalsa20_poly1305 the nonce is the header plus twelve null bytes for padding.
+    # In xsalsa20_poly1305_suffix, the nonce is 24 random bytes
+    # In xsalsa20_poly1305_lite, the suffix is an incremental 4 byte int.
+    def generate_nonce(header)
+      case @mode
+      when 'xsalsa20_poly1305'
+        header
+      when 'xsalsa20_poly1305_suffix'
+        Random.urandom(24)
+      when 'xsalsa20_poly1305_lite'
+        @nonce ||= 0
+        @nonce = 0 if @nonce >= 0xff_ff_ff_ff
+        [@nonce].pack('N')
+      else
+        raise "`#{@mode}' is not a supported encryption mode"
+      end
     end
   end
 
@@ -223,15 +256,18 @@ module Discordrb::Voice
 
         @ssrc = @ws_data['ssrc']
         @port = @ws_data['port']
-        @udp_mode = mode
+
+        @udp_mode = (ENCRYPTION_MODES & @ws_data['modes']).first
 
         @udp.connect(@ws_data['ip'], @port, @ssrc)
         @udp.send_discovery
       when 4
         # Opcode 4 sends the secret key used for encryption
         @ws_data = packet['d']
+
         @ready = true
         @udp.secret_key = @ws_data['secret_key'].pack('C*')
+        @udp.mode = @ws_data['mode']
       when 8
         # Opcode 8 contains the heartbeat interval.
         @heartbeat_interval = packet['d']['heartbeat_interval'] * 0.75
@@ -280,12 +316,6 @@ module Discordrb::Voice
     end
 
     private
-
-    # Always encrypted.
-    # @return [String] the mode string that signifies whether encryption should be used or not
-    def mode
-      ENCRYPTED_MODE
-    end
 
     def heartbeat_loop
       @heartbeat_running = true
