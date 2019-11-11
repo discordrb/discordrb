@@ -21,8 +21,6 @@ module Discordrb::Voice
   # should check the parameters and adjust them to your connection: {VoiceBot#adjust_interval},
   # {VoiceBot#adjust_offset}, and {VoiceBot#adjust_average}.
   class VoiceBot
-    # @return [Channel] the current voice channel
-    attr_reader :channel
 
     # @return [Integer, nil] the amount of time the stream has been playing, or `nil` if nothing has been played yet.
     attr_reader :stream_time
@@ -72,6 +70,13 @@ module Discordrb::Voice
     # `0.5` is half the default volume and `2` is twice the default.
     # @return [Float] the volume for audio playback, `1.0` by default.
     attr_accessor :volume
+
+    # @return [Channel] the current voice channel
+    def channel
+      server_id = @channel.server.id # voice channel is only available at Servers, so `@channel.server` can't be `nil`
+      bot_id = @bot.profile.id
+      @bot.servers[server_id]&.voice_states[bot_id]&.voice_channel || @channel
+    end
 
     # @!visibility private
     def initialize(channel, bot, token, session, endpoint)
