@@ -31,6 +31,7 @@ module Discordrb::Voice
   # Represents a UDP connection to a voice server. This connection is used to send the actual audio data.
   class VoiceUDP
     # @return [true, false] whether or not UDP communications are encrypted.
+    # @deprecated Discord no longer supports unencrypted voice communication.
     attr_accessor :encrypted
     alias_method :encrypted?, :encrypted
 
