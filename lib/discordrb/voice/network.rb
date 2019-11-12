@@ -86,7 +86,6 @@ module Discordrb::Voice
 
       nonce = generate_nonce(header)
       buf = encrypt_audio(buf, nonce)
-      @nonce += 1 if @nonce
 
       data = header + buf
 
@@ -142,6 +141,7 @@ module Discordrb::Voice
         @nonce ||= 0
         @nonce = 0 if @nonce >= 0xff_ff_ff_ff
         [@nonce].pack('N')
+        @nonce += 1 if @nonce
       else
         raise "`#{@mode}' is not a supported encryption mode"
       end
