@@ -15,6 +15,7 @@ require 'discordrb/paginator'
 require 'time'
 require 'base64'
 
+require 'discordrb/data/activity'
 require 'discordrb/data/application'
 require 'discordrb/data/user'
 require 'discordrb/data/voice_state'
