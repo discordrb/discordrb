@@ -152,7 +152,8 @@ module Discordrb::Voice
     end
 
     # Sets whether or not the bot is speaking (green circle around user).
-    # @param value [true, false] whether or not the bot should be speaking.
+    # @param value [true, false, Integer] whether or not the bot should be speaking, or a bitmask denoting the audio type
+    # @note https://discordapp.com/developers/docs/topics/voice-connections#speaking for information on the speaking bitmask
     def speaking=(value)
       @playing = value
       @ws.send_speaking(value)

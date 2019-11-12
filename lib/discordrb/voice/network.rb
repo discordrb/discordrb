@@ -222,7 +222,7 @@ module Discordrb::Voice
     end
 
     # Send a speaking packet (op 5). This determines the green circle around the avatar in the voice channel
-    # @param value [true, false] Whether or not the bot should be speaking
+    # @param value [true, false, Integer] Whether or not the bot should be speaking, can also be a bitmask denoting audio type.
     def send_speaking(value)
       @bot.debug("Speaking: #{value}")
       @client.send({
