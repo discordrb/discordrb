@@ -85,7 +85,7 @@ module Discordrb::Voice
       header = [0x80, 0x78, sequence, time, @ssrc].pack('CCnNN')
 
       nonce = generate_nonce(header)
-      buf = encrypt_audio(header, buf, nonce)
+      buf = encrypt_audio(buf, nonce)
       @nonce += 1 if @nonce
 
       data = header + buf
@@ -109,11 +109,10 @@ module Discordrb::Voice
     private
 
     # Encrypts audio data using libsodium
-    # @param header [String] The header of the packet, to be used as the nonce
     # @param buf [String] The encoded audio data to be encrypted
     # @param nonce [String] The nonce to be used to encrypt the data
     # @return [String] the audio data, encrypted
-    def encrypt_audio(_header, buf, nonce)
+    def encrypt_audio(buf, nonce)
       raise 'No secret key found, despite encryption being enabled!' unless @secret_key
 
       secret_box = Discordrb::Voice::SecretBox.new(@secret_key)
@@ -126,10 +125,13 @@ module Discordrb::Voice
       @socket.send(packet, 0, @ip, @port)
     end
 
-    # The nonce generated depends on the encryption mode.
-    # In xsalsa20_poly1305 the nonce is the header plus twelve null bytes for padding.
-    # In xsalsa20_poly1305_suffix, the nonce is 24 random bytes
-    # In xsalsa20_poly1305_lite, the suffix is an incremental 4 byte int.
+    # @param header [String] The header of the packet, to be used as the nonce
+    # @return [String]
+    # @note
+    #   The nonce generated depends on the encryption mode.
+    #   In xsalsa20_poly1305 the nonce is the header plus twelve null bytes for padding.
+    #   In xsalsa20_poly1305_suffix, the nonce is 24 random bytes
+    #   In xsalsa20_poly1305_lite, the suffix is an incremental 4 byte int.
     def generate_nonce(header)
       case @mode
       when 'xsalsa20_poly1305'
