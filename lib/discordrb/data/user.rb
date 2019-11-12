@@ -51,16 +51,10 @@ module Discordrb
     # @return [Symbol] the current online status of the user (`:online`, `:offline` or `:idle`)
     attr_reader :status
 
-    # @return [String, nil] the game the user is currently playing, or `nil` if none is being played.
-    attr_reader :game
+    # @return [ActivitySet] the activities of the user
+    attr_reader :activities
 
-    # @return [String, nil] the URL to the stream, if the user is currently streaming something.
-    attr_reader :stream_url
-
-    # @return [String, Integer, nil] the type of the stream. Can technically be set to anything, most of the time it
-    #   will be 0 for no stream or 1 for Twitch streams.
-    attr_reader :stream_type
-
+    # @!visibility private
     def initialize(data, bot)
       @bot = bot
 
@@ -69,6 +63,7 @@ module Discordrb
       @discriminator = data['discriminator']
       @avatar_id = data['avatar']
       @roles = {}
+      @activities = Discordrb::ActivitySet.new
 
       @bot_account = false
       @bot_account = true if data['bot']
@@ -122,15 +117,7 @@ module Discordrb
     def update_presence(data)
       @status = data['status'].to_sym
 
-      if data['game']
-        game = data['game']
-
-        @game = game['name']
-        @stream_url = game['url']
-        @stream_type = game['type']
-      else
-        @game = @stream_url = @stream_type = nil
-      end
+      @activities = Discordrb::ActivitySet.new(data['activities'].map { |act| Activity.new(act, @bot) })
     end
 
     # Add an await for a message from this user. Specifically, this adds a global await for a MessageEvent with this
@@ -178,6 +165,24 @@ module Discordrb
       define_method(e.to_s + '?') do
         @status.to_sym == e
       end
+    end
+
+    # @return [String, nil] the game the user is currently playing, or `nil` if nothing is being played.
+    # @deprecated Please use {ActivitySet#games} for information about the user's game activity
+    def game
+      @activities.games.first&.name
+    end
+
+    # @return [Integer] returns 1 for twitch streams, or 0 for no stream.
+    # @deprecated Please use {ActivitySet#streaming} for information about the user's stream activity
+    def stream_type
+      @activities.streaming ? 1 : 0
+    end
+
+    # @return [String, nil] the URL to the stream, if the user is currently streaming something
+    # @deprecated Please use {ActivitySet#streaming} for information about the user's stream activity
+    def stream_url
+      @activities.streaming.first&.url
     end
 
     # The inspect method is overwritten to give more useful output
