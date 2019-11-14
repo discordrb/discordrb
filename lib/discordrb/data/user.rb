@@ -166,7 +166,7 @@ module Discordrb
       @discriminator == Message::ZERO_DISCRIM
     end
 
-    %i[offline idle online].each do |e|
+    %i[offline idle online dnd].each do |e|
       define_method(e.to_s + '?') do
         @status.to_sym == e
       end
