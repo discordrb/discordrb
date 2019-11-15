@@ -594,7 +594,7 @@ module Discordrb
           end
 
           # Get some data from the socket
-          recv_data = @socket.getc
+          recv_data = @socket.readpartial(4096)
 
           # Check if we actually got data
           unless recv_data
