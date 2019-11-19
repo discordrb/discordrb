@@ -374,15 +374,16 @@ module Discordrb::API::Server
   end
 
   # Create a server integration
-  # https://discord.com/developers/docs/resources/guild#create-guild-integration
-  def create_integration(token, server_id, type, id)
+  # https://discordapp.com/developers/docs/resources/guild#create-guild-integration
+  def create_integration(token, server_id, type, id, reason = nil)
     Discordrb::API.request(
       :guilds_sid_integrations,
       server_id,
       :post,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/integrations",
       { type: type, id: id },
-      Authorization: token
+      Authorization: token,
+      'X-Audit-Log-Reason': reason
     )
   end
 
@@ -401,14 +402,15 @@ module Discordrb::API::Server
   end
 
   # Delete a server integration
-  # https://discord.com/developers/docs/resources/guild#delete-guild-integration
-  def delete_integration(token, server_id, integration_id)
+  # https://discordapp.com/developers/docs/resources/guild#delete-guild-integration
+  def delete_integration(token, server_id, integration_id, reason = nil)
     Discordrb::API.request(
       :guilds_sid_integrations_iid,
       server_id,
       :delete,
       "#{Discordrb::API.api_base}/guilds/#{server_id}/integrations/#{integration_id}",
-      Authorization: token
+      Authorization: token,
+      'X-Audit-Log-Reason': reason
     )
   end
 

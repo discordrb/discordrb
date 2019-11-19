@@ -117,20 +117,21 @@ module Discordrb::API::Channel
   end
 
   # Delete a message
-  # https://discord.com/developers/docs/resources/channel#delete-message
-  def delete_message(token, channel_id, message_id)
+  # https://discordapp.com/developers/docs/resources/channel#delete-message
+  def delete_message(token, channel_id, message_id, reason = nil)
     Discordrb::API.request(
       :channels_cid_messages_mid,
       channel_id,
       :delete,
       "#{Discordrb::API.api_base}/channels/#{channel_id}/messages/#{message_id}",
-      Authorization: token
+      Authorization: token,
+      'X-Audit-Log-Reason': reason
     )
   end
 
   # Delete messages in bulk
-  # https://discord.com/developers/docs/resources/channel#bulk-delete-messages
-  def bulk_delete_messages(token, channel_id, messages = [])
+  # https://discordapp.com/developers/docs/resources/channel#bulk-delete-messages
+  def bulk_delete_messages(token, channel_id, messages = [], reason = nil)
     Discordrb::API.request(
       :channels_cid_messages_bulk_delete,
       channel_id,
@@ -138,7 +139,8 @@ module Discordrb::API::Channel
       "#{Discordrb::API.api_base}/channels/#{channel_id}/messages/bulk-delete",
       { messages: messages }.to_json,
       Authorization: token,
-      content_type: :json
+      content_type: :json,
+      'X-Audit-Log-Reason': reason
     )
   end
 
@@ -290,27 +292,29 @@ module Discordrb::API::Channel
   end
 
   # Pin a message
-  # https://discord.com/developers/docs/resources/channel#add-pinned-channel-message
-  def pin_message(token, channel_id, message_id)
+  # https://discordapp.com/developers/docs/resources/channel#add-pinned-channel-message
+  def pin_message(token, channel_id, message_id, reason = nil)
     Discordrb::API.request(
       :channels_cid_pins_mid,
       channel_id,
       :put,
       "#{Discordrb::API.api_base}/channels/#{channel_id}/pins/#{message_id}",
       nil,
-      Authorization: token
+      Authorization: token,
+      'X-Audit-Log-Reason': reason
     )
   end
 
   # Unpin a message
-  # https://discord.com/developers/docs/resources/channel#delete-pinned-channel-message
-  def unpin_message(token, channel_id, message_id)
+  # https://discordapp.com/developers/docs/resources/channel#delete-pinned-channel-message
+  def unpin_message(token, channel_id, message_id, reason = nil)
     Discordrb::API.request(
       :channels_cid_pins_mid,
       channel_id,
       :delete,
       "#{Discordrb::API.api_base}/channels/#{channel_id}/pins/#{message_id}",
-      Authorization: token
+      Authorization: token,
+      'X-Audit-Log-Reason': reason
     )
   end
 
