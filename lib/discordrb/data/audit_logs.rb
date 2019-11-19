@@ -18,6 +18,9 @@ module Discordrb
       23 => :member_ban_remove,
       24 => :member_update,
       25 => :member_role_update,
+      26 => :member_move,
+      27 => :member_disconnect,
+      28 => :bot_add,
       30 => :role_create,
       31 => :role_update,
       32 => :role_delete,
@@ -32,7 +35,13 @@ module Discordrb
       62 => :emoji_delete,
       # 70
       # 71
-      72 => :message_delete
+      72 => :message_delete,
+      73 => :message_bulk_delete,
+      74 => :message_pin,
+      75 => :message_unpin,
+      80 => :integration_create,
+      81 => :integration_update,
+      82 => :integration_delete
     }.freeze
 
     # @return [Hash<String => User>] the users included in the audit logs.
