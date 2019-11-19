@@ -14,11 +14,14 @@ module Discordrb
     # @return [Server] the server that the webhook is currently connected to.
     attr_reader :server
 
-    # @return [String] the webhook's token.
+    # @return [String, nil] the webhook's token (for Incoming Webhooks)
     attr_reader :token
 
     # @return [String] the webhook's avatar id.
     attr_reader :avatar
+
+    # @return [Integer] the webhook's type (1: Incoming, 2: Channel Follower)
+    attr_reader :type
 
     # Gets the user object of the creator of the webhook. May be limited to username, discriminator,
     # ID and avatar if the bot cannot reach the owner
@@ -34,6 +37,7 @@ module Discordrb
       @server = @channel.server
       @token = data['token']
       @avatar = data['avatar']
+      @type = data['type']
 
       # Will not exist if the data was requested through a webhook token
       return unless data['user']
