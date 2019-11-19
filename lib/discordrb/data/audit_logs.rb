@@ -151,6 +151,7 @@ module Discordrb
         when :invite then @bot.invite(@data['changes'].find { |change| change['key'] == 'code' }.values.delete_if { |v| v == 'code' }.first)
         when :webhook then @server.webhooks.find { |webhook| webhook.id == id } || @logs.webhook(id)
         when :emoji then @server.emoji[id]
+        when :integration then @server.integrations.find { |integration| integration.id == id }
         end
       end
 
