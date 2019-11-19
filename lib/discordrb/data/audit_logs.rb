@@ -304,6 +304,7 @@ module Discordrb
       when 50..59 then :webhook
       when 60..69 then :emoji
       when 70..79 then :message
+      when 80..89 then :integration
       else :unknown
       end
     end
@@ -313,9 +314,9 @@ module Discordrb
     # @!visibility private
     def self.action_type_for(action)
       action = ACTIONS[action]
-      return :create if %i[channel_create channel_overwrite_create member_ban_add role_create invite_create webhook_create emoji_create].include?(action)
-      return :delete if %i[channel_delete channel_overwrite_delete member_kick member_prune member_ban_remove role_delete invite_delete webhook_delete emoji_delete message_delete].include?(action)
-      return :update if %i[server_update channel_update channel_overwrite_update member_update member_role_update role_update invite_update webhook_update emoji_update].include?(action)
+      return :create if %i[channel_create channel_overwrite_create member_ban_add role_create invite_create webhook_create emoji_create integration_create].include?(action)
+      return :delete if %i[channel_delete channel_overwrite_delete member_kick member_prune member_ban_remove role_delete invite_delete webhook_delete emoji_delete message_delete message_bulk_delete integration_delete].include?(action)
+      return :update if %i[server_update channel_update channel_overwrite_update member_update member_role_update role_update invite_update webhook_update emoji_update integration_update].include?(action)
 
       :unknown
     end
