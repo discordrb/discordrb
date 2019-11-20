@@ -44,6 +44,26 @@ module Discordrb
       82 => :integration_delete
     }.freeze
 
+    # @!visibility private
+    CREATE_ACTIONS = %i[
+      channel_create channel_overwrite_create member_ban_add role_create
+      invite_create webhook_create emoji_create integration_create
+    ].freeze
+
+    # @!visibility private
+    DELETE_ACTIONS = %i[
+      channel_delete channel_overwrite_delete member_kick member_prune
+      member_ban_remove role_delete invite_delete webhook_delete
+      emoji_delete message_delete message_bulk_delete integration_delete
+    ].freeze
+
+    # @!visibility private
+    UPDATE_ACTIONS = %i[
+      server_update channel_update channel_overwrite_update member_update
+      member_role_update role_update invite_update webhook_update
+      emoji_update integration_update
+    ].freeze
+
     # @return [Hash<String => User>] the users included in the audit logs.
     attr_reader :users
 
@@ -315,9 +335,9 @@ module Discordrb
     # @!visibility private
     def self.action_type_for(action)
       action = ACTIONS[action]
-      return :create if %i[channel_create channel_overwrite_create member_ban_add role_create invite_create webhook_create emoji_create integration_create].include?(action)
-      return :delete if %i[channel_delete channel_overwrite_delete member_kick member_prune member_ban_remove role_delete invite_delete webhook_delete emoji_delete message_delete message_bulk_delete integration_delete].include?(action)
-      return :update if %i[server_update channel_update channel_overwrite_update member_update member_role_update role_update invite_update webhook_update emoji_update integration_update].include?(action)
+      return :create if CREATE_ACTIONS.include?(action)
+      return :delete if DELETE_ACTIONS.include?(action)
+      return :update if UPDATE_ACTIONS.include?(action)
 
       :unknown
     end
