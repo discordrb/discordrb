@@ -130,7 +130,7 @@ module Discordrb::Voice
     #   The nonce generated depends on the encryption mode.
     #   In xsalsa20_poly1305 the nonce is the header plus twelve null bytes for padding.
     #   In xsalsa20_poly1305_suffix, the nonce is 24 random bytes
-    #   In xsalsa20_poly1305_lite, the suffix is an incremental 4 byte int.
+    #   In xsalsa20_poly1305_lite, the nonce is an incremental 4 byte int.
     def generate_nonce(header)
       case @mode
       when 'xsalsa20_poly1305'
@@ -138,10 +138,13 @@ module Discordrb::Voice
       when 'xsalsa20_poly1305_suffix'
         Random.urandom(24)
       when 'xsalsa20_poly1305_lite'
-        @nonce ||= 0
-        @nonce = 0 if @nonce >= 0xff_ff_ff_ff
-        [@nonce].pack('N')
-        @nonce += 1 if @nonce
+        case @lite_nonce
+        when nil, 0xff_ff_ff_ff
+          @lite_nonce = 0
+        else
+          @lite_nonce += 1
+        end
+        [@lite_nonce].pack('N')
       else
         raise "`#{@mode}' is not a supported encryption mode"
       end
