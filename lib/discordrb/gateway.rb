@@ -591,10 +591,17 @@ module Discordrb
           unless @socket
             LOGGER.warn('Socket is nil in websocket_loop! Reconnecting')
             handle_internal_close('Socket is nil in websocket_loop')
+            next
           end
 
           # Get some data from the socket
-          recv_data = @socket.readpartial(4096)
+          begin
+            recv_data = @socket.readpartial(4096)
+          rescue EOFError
+            @pipe_broken = true
+            handle_internal_close('Socket EOF in websocket_loop')
+            next
+          end
 
           # Check if we actually got data
           unless recv_data
