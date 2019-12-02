@@ -823,7 +823,7 @@ module Discordrb
       end
     end
 
-    def close(err=nil)
+    def close(e = nil)
       # If we're already closed, there's no need to do anything - return
       return if @closed
 
@@ -841,7 +841,7 @@ module Discordrb
       @socket = nil
 
       # Make sure we do necessary things as soon as we're closed
-      handle_close(err)
+      handle_close(e)
     end
   end
 end
