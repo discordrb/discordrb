@@ -239,7 +239,7 @@ module Discordrb
     # Injects a terminal gateway error into the handler. Useful for testing the reconnect logic.
     # @param e [Exception] The exception object to inject.
     def inject_error(e)
-      handle_internal_close(e)
+      close(e)
     end
 
     # Sends a heartbeat with the last received packet's seq (to acknowledge that we have received it and all packets
@@ -590,7 +590,7 @@ module Discordrb
         begin
           unless @socket
             LOGGER.warn('Socket is nil in websocket_loop! Reconnecting')
-            handle_internal_close('Socket is nil in websocket_loop')
+            close('Socket is nil in websocket_loop')
             next
           end
 
@@ -599,7 +599,7 @@ module Discordrb
             recv_data = @socket.readpartial(4096)
           rescue EOFError
             @pipe_broken = true
-            handle_internal_close('Socket EOF in websocket_loop')
+            close('Socket EOF in websocket_loop')
             next
           end
 
@@ -620,7 +620,7 @@ module Discordrb
             while msg
               # Check whether the message is a close frame, and if it is, handle accordingly
               if msg.respond_to?(:code) && msg.code
-                handle_internal_close(msg)
+                close(msg)
                 break
               end
 
@@ -778,12 +778,6 @@ module Discordrb
       @last_heartbeat_acked = true if @check_heartbeat_acks
     end
 
-    # Called when the websocket has been disconnected in some way - say due to a pipe error while sending
-    def handle_internal_close(e)
-      close
-      handle_close(e)
-    end
-
     # Close codes that are unrecoverable, after which we should not try to reconnect.
     # - 4003: Not authenticated. How did this happen?
     # - 4004: Authentication failed. Token was wrong, nothing we can do.
@@ -825,11 +819,11 @@ module Discordrb
       rescue StandardError => e
         # There has been an error!
         @pipe_broken = true
-        handle_internal_close(e)
+        close(e)
       end
     end
 
-    def close
+    def close(err=nil)
       # If we're already closed, there's no need to do anything - return
       return if @closed
 
@@ -847,7 +841,7 @@ module Discordrb
       @socket = nil
 
       # Make sure we do necessary things as soon as we're closed
-      handle_close(nil)
+      handle_close(err)
     end
   end
 end
