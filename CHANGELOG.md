@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `Server#bot_members`, `Server#non_bot_members` ([#626](https://github.com/discordrb/discordrb/pull/626), thanks @flutterflies)
 - `API.get_gateway_bot` ([#632](https://github.com/discordrb/discordrb/pull/632))
 - `Channel#create_webhook` ([#637](https://github.com/discordrb/discordrb/pull/637), thanks @Chew)
+- `User#dnd?` and documentation for other user status methods ([#679](https://github.com/discordrb/discordrb/pull/679), thanks @kaine119)
 
 ### Changed
 
