@@ -706,7 +706,7 @@ module Discordrb
     # @return [Webhook] the created webhook.
     def create_webhook(name, avatar = nil, reason = nil)
       raise ArgumentError, 'Tried to create a webhook in a non-server channel' unless server
-      raise ArgumentError, 'Tried to create a webhook in a non-text channel' unless text_channel?
+      raise ArgumentError, 'Tried to create a webhook in a non-text channel' unless text?
 
       response = API::Channel.create_webhook(@bot.token, @id, name, avatar, reason)
       Webhook.new(JSON.parse(response), @bot)
