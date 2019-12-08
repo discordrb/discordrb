@@ -11,6 +11,7 @@ An implementation of the [Discord](https://discordapp.com/) API using Ruby.
 
 ## Quick links to sections
 
+* [Introcution](https://github.com/discordrb/discordrb#introduction)
 * [Dependencies](https://github.com/discordrb/discordrb#dependencies)
 * [Installation](https://github.com/discordrb/discordrb#installation)
 * [Usage](https://github.com/discordrb/discordrb#usage)
@@ -20,6 +21,27 @@ An implementation of the [Discord](https://discordapp.com/) API using Ruby.
 * [License](https://github.com/discordrb/discordrb#license)
 
 See also: [Documentation](https://www.rubydoc.info/gems/discordrb), [Tutorials](https://github.com/discordrb/discordrb/wiki)
+
+## Introduction
+
+`discordrb` aims to meet the following design goals:
+
+1. Full coverage of the public bot API.
+2. Expressive, high level abstractions for rapid development of common applications.
+3. Friendly to Ruby beginners, as well as beginners of open source contribution.
+
+If you enjoy using the library, consider getting involved with the community to help us improve and meet these goals!
+
+**You should consider using `discordrb` if:**
+
+- You need a bot - and fast - for small or medium sized communities, and don't want to be bogged down with "low level" details. Getting started takes minutes, and with utilities like a command parser and tools for modularization make it simple to quickly add or change your bots functionality.
+- You like or want to learn Ruby, or want to contribute to a Ruby project. A lot of our users are newcomers to Ruby, who eventually make their first open source contributions with us. We have an active Discord channel with experienced members who will happily help  you get involved, either as a user or contributor.
+- You want to experiment with Discord's API or prototype concepts for Discord bots without too much commitment.
+
+**You should consider other libraries if:**
+
+- You need to scale to large volumes of servers (>2,500) with lots of members. It's still possible, but it can be difficult to scale Ruby processes, and it requires more in depth knowledge to do so well. Especially if you already have a bot that is on a large amount of servers, porting to Ruby is unlikely to improve your performance in most cases.
+- You want full control over the library that you're using. While we expose some "lower level" interfaces, they are unstable, and only exist to serve the more powerful abstractions in the library.
 
 ## Dependencies
 
