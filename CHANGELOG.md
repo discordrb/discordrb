@@ -47,7 +47,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dependency updates for RuboCop v0.74, redcarpet, and simplecov ([#636](https://github.com/discordrb/discordrb/pull/636), thanks @PanisSupraOmnia)
 - Update voice logic to connect to the IP address from READY ([#644](https://github.com/discordrb/discordrb/pull/644), thanks @swarley)
 - Refactored use of enumerable code in `Discordrb.split_message` ([#646](https://github.com/discordrb/discordrb/pull/646), thanks @piharpi)
-- **(breaking change)** Removed `no_sync` argument in `Bot#stop` as part of a refactor that removes Ruby 2.3 compatibility ([#652](https://github.com/discordrb/discordrb/pull/652), thanks @PanisSupraOmnia)
+- **(deprecated)** `no_sync` argument in `Bot#stop` is now considered deprecated as part of a refactor that removes Ruby 2.3 compatibility ([#652](https://github.com/discordrb/discordrb/pull/652), thanks @PanisSupraOmnia)
 - Return `rest-client` dependency to `>= 2.0.0` since `2.1.0` is now released ([#654](https://github.com/discordrb/discordrb/pull/654), thanks @ali-l)
 - Added Bit for "Streaming" permission ([#660](https://github.com/discordrb/discordrb/pull/660), thanks @NCPlayz)
 - Methods for Nitro boosting related information ([#638](https://github.com/discordrb/discordrb/pull/638), thanks @Chew)

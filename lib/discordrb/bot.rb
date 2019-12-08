@@ -257,9 +257,9 @@ module Discordrb
 
     # Stops the bot gracefully, disconnecting the websocket without immediately killing the thread. This means that
     # Discord is immediately aware of the closed connection and makes the bot appear offline instantly.
-    # @param no_sync [true, false] Whether or not to disable use of synchronize in the close method. This should be true if called from a trap context.
-    def stop(no_sync = false)
-      @gateway.stop(no_sync)
+    # @note This method no longer takes an argument as of 3.4.0
+    def stop(_no_sync = nil)
+      @gateway.stop
     end
 
     # @return [true, false] whether or not the bot is currently connected to Discord.
