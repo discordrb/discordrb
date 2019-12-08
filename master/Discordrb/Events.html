@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>
+  Module: Discordrb::Events
+  
+    &mdash; Documentation by YARD 0.9.20
+  
+</title>
+
+  <link rel="stylesheet" href="../css/style.css" type="text/css" charset="utf-8" />
+
+  <link rel="stylesheet" href="../css/common.css" type="text/css" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  pathId = "Discordrb::Events";
+  relpath = '../';
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div class="nav_wrap">
+      <iframe id="nav" src="../class_list.html?1"></iframe>
+      <div id="resizer"></div>
+    </div>
+
+    <div id="main" tabindex="-1">
+      <div id="header">
+        <div id="menu">
+  
+    <a href="../_index.html">Index (E)</a> &raquo;
+    <span class='title'><span class='object_link'><a href="../Discordrb.html" title="Discordrb (module)">Discordrb</a></span></span>
+     &raquo; 
+    <span class="title">Events</span>
+  
+</div>
+
+        <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="../class_list.html">
+
+        <svg width="24" height="24">
+          <rect x="0" y="4" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="12" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="20" width="24" height="4" rx="1" ry="1"></rect>
+        </svg>
+    </a>
+  
+</div>
+        <div class="clear"></div>
+      </div>
+
+      <div id="content"><h1>Module: Discordrb::Events
+  
+  
+  
+</h1>
+<div class="box_info">
+  
+
+  
+  
+  
+  
+  
+
+  
+  <dl>
+    <dt>Included in:</dt>
+    <dd><span class='object_link'><a href="EventContainer.html" title="Discordrb::EventContainer (module)">EventContainer</a></span></dd>
+  </dl>
+  
+
+  
+  <dl>
+    <dt>Defined in:</dt>
+    <dd>lib/discordrb/events/raw.rb<span class="defines">,<br />
+  lib/discordrb/events/bans.rb,<br /> lib/discordrb/events/await.rb,<br /> lib/discordrb/events/roles.rb,<br /> lib/discordrb/events/guilds.rb,<br /> lib/discordrb/events/typing.rb,<br /> lib/discordrb/events/generic.rb,<br /> lib/discordrb/events/members.rb,<br /> lib/discordrb/events/message.rb,<br /> lib/discordrb/events/channels.rb,<br /> lib/discordrb/events/lifetime.rb,<br /> lib/discordrb/events/presence.rb,<br /> lib/discordrb/events/webhooks.rb,<br /> lib/discordrb/events/reactions.rb,<br /> lib/discordrb/events/voice_state_update.rb</span>
+</dd>
+  </dl>
+  
+</div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <p>Events used by discordrb</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><h2>Defined Under Namespace</h2>
+<p class="children">
+  
+    
+      <strong class="modules">Modules:</strong> <span class='object_link'><a href="Events/Respondable.html" title="Discordrb::Events::Respondable (module)">Respondable</a></span>
+    
+  
+    
+      <strong class="classes">Classes:</strong> <span class='object_link'><a href="Events/AwaitEvent.html" title="Discordrb::Events::AwaitEvent (class)">AwaitEvent</a></span>, <span class='object_link'><a href="Events/AwaitEventHandler.html" title="Discordrb::Events::AwaitEventHandler (class)">AwaitEventHandler</a></span>, <span class='object_link'><a href="Events/ChannelCreateEvent.html" title="Discordrb::Events::ChannelCreateEvent (class)">ChannelCreateEvent</a></span>, <span class='object_link'><a href="Events/ChannelCreateEventHandler.html" title="Discordrb::Events::ChannelCreateEventHandler (class)">ChannelCreateEventHandler</a></span>, <span class='object_link'><a href="Events/ChannelDeleteEvent.html" title="Discordrb::Events::ChannelDeleteEvent (class)">ChannelDeleteEvent</a></span>, <span class='object_link'><a href="Events/ChannelDeleteEventHandler.html" title="Discordrb::Events::ChannelDeleteEventHandler (class)">ChannelDeleteEventHandler</a></span>, <span class='object_link'><a href="Events/ChannelRecipientAddEvent.html" title="Discordrb::Events::ChannelRecipientAddEvent (class)">ChannelRecipientAddEvent</a></span>, <span class='object_link'><a href="Events/ChannelRecipientAddEventHandler.html" title="Discordrb::Events::ChannelRecipientAddEventHandler (class)">ChannelRecipientAddEventHandler</a></span>, <span class='object_link'><a href="Events/ChannelRecipientEvent.html" title="Discordrb::Events::ChannelRecipientEvent (class)">ChannelRecipientEvent</a></span>, <span class='object_link'><a href="Events/ChannelRecipientEventHandler.html" title="Discordrb::Events::ChannelRecipientEventHandler (class)">ChannelRecipientEventHandler</a></span>, <span class='object_link'><a href="Events/ChannelRecipientRemoveEvent.html" title="Discordrb::Events::ChannelRecipientRemoveEvent (class)">ChannelRecipientRemoveEvent</a></span>, <span class='object_link'><a href="Events/ChannelRecipientRemoveEventHandler.html" title="Discordrb::Events::ChannelRecipientRemoveEventHandler (class)">ChannelRecipientRemoveEventHandler</a></span>, <span class='object_link'><a href="Events/ChannelUpdateEvent.html" title="Discordrb::Events::ChannelUpdateEvent (class)">ChannelUpdateEvent</a></span>, <span class='object_link'><a href="Events/ChannelUpdateEventHandler.html" title="Discordrb::Events::ChannelUpdateEventHandler (class)">ChannelUpdateEventHandler</a></span>, <span class='object_link'><a href="Events/DisconnectEvent.html" title="Discordrb::Events::DisconnectEvent (class)">DisconnectEvent</a></span>, <span class='object_link'><a href="Events/DisconnectEventHandler.html" title="Discordrb::Events::DisconnectEventHandler (class)">DisconnectEventHandler</a></span>, <span class='object_link'><a href="Events/Event.html" title="Discordrb::Events::Event (class)">Event</a></span>, <span class='object_link'><a href="Events/EventHandler.html" title="Discordrb::Events::EventHandler (class)">EventHandler</a></span>, <span class='object_link'><a href="Events/HeartbeatEvent.html" title="Discordrb::Events::HeartbeatEvent (class)">HeartbeatEvent</a></span>, <span class='object_link'><a href="Events/HeartbeatEventHandler.html" title="Discordrb::Events::HeartbeatEventHandler (class)">HeartbeatEventHandler</a></span>, <span class='object_link'><a href="Events/LifetimeEvent.html" title="Discordrb::Events::LifetimeEvent (class)">LifetimeEvent</a></span>, <span class='object_link'><a href="Events/MentionEvent.html" title="Discordrb::Events::MentionEvent (class)">MentionEvent</a></span>, <span class='object_link'><a href="Events/MentionEventHandler.html" title="Discordrb::Events::MentionEventHandler (class)">MentionEventHandler</a></span>, <span class='object_link'><a href="Events/MessageDeleteEvent.html" title="Discordrb::Events::MessageDeleteEvent (class)">MessageDeleteEvent</a></span>, <span class='object_link'><a href="Events/MessageDeleteEventHandler.html" title="Discordrb::Events::MessageDeleteEventHandler (class)">MessageDeleteEventHandler</a></span>, <span class='object_link'><a href="Events/MessageEditEvent.html" title="Discordrb::Events::MessageEditEvent (class)">MessageEditEvent</a></span>, <span class='object_link'><a href="Events/MessageEditEventHandler.html" title="Discordrb::Events::MessageEditEventHandler (class)">MessageEditEventHandler</a></span>, <span class='object_link'><a href="Events/MessageEvent.html" title="Discordrb::Events::MessageEvent (class)">MessageEvent</a></span>, <span class='object_link'><a href="Events/MessageEventHandler.html" title="Discordrb::Events::MessageEventHandler (class)">MessageEventHandler</a></span>, <span class='object_link'><a href="Events/MessageIDEvent.html" title="Discordrb::Events::MessageIDEvent (class)">MessageIDEvent</a></span>, <span class='object_link'><a href="Events/MessageIDEventHandler.html" title="Discordrb::Events::MessageIDEventHandler (class)">MessageIDEventHandler</a></span>, <span class='object_link'><a href="Events/MessageUpdateEvent.html" title="Discordrb::Events::MessageUpdateEvent (class)">MessageUpdateEvent</a></span>, <span class='object_link'><a href="Events/MessageUpdateEventHandler.html" title="Discordrb::Events::MessageUpdateEventHandler (class)">MessageUpdateEventHandler</a></span>, <span class='object_link'><a href="Events/Negated.html" title="Discordrb::Events::Negated (class)">Negated</a></span>, <span class='object_link'><a href="Events/PlayingEvent.html" title="Discordrb::Events::PlayingEvent (class)">PlayingEvent</a></span>, <span class='object_link'><a href="Events/PlayingEventHandler.html" title="Discordrb::Events::PlayingEventHandler (class)">PlayingEventHandler</a></span>, <span class='object_link'><a href="Events/PresenceEvent.html" title="Discordrb::Events::PresenceEvent (class)">PresenceEvent</a></span>, <span class='object_link'><a href="Events/PresenceEventHandler.html" title="Discordrb::Events::PresenceEventHandler (class)">PresenceEventHandler</a></span>, <span class='object_link'><a href="Events/PrivateMessageEvent.html" title="Discordrb::Events::PrivateMessageEvent (class)">PrivateMessageEvent</a></span>, <span class='object_link'><a href="Events/PrivateMessageEventHandler.html" title="Discordrb::Events::PrivateMessageEventHandler (class)">PrivateMessageEventHandler</a></span>, <span class='object_link'><a href="Events/RawEvent.html" title="Discordrb::Events::RawEvent (class)">RawEvent</a></span>, <span class='object_link'><a href="Events/RawEventHandler.html" title="Discordrb::Events::RawEventHandler (class)">RawEventHandler</a></span>, <span class='object_link'><a href="Events/ReactionAddEvent.html" title="Discordrb::Events::ReactionAddEvent (class)">ReactionAddEvent</a></span>, <span class='object_link'><a href="Events/ReactionAddEventHandler.html" title="Discordrb::Events::ReactionAddEventHandler (class)">ReactionAddEventHandler</a></span>, <span class='object_link'><a href="Events/ReactionEvent.html" title="Discordrb::Events::ReactionEvent (class)">ReactionEvent</a></span>, <span class='object_link'><a href="Events/ReactionEventHandler.html" title="Discordrb::Events::ReactionEventHandler (class)">ReactionEventHandler</a></span>, <span class='object_link'><a href="Events/ReactionRemoveAllEvent.html" title="Discordrb::Events::ReactionRemoveAllEvent (class)">ReactionRemoveAllEvent</a></span>, <span class='object_link'><a href="Events/ReactionRemoveAllEventHandler.html" title="Discordrb::Events::ReactionRemoveAllEventHandler (class)">ReactionRemoveAllEventHandler</a></span>, <span class='object_link'><a href="Events/ReactionRemoveEvent.html" title="Discordrb::Events::ReactionRemoveEvent (class)">ReactionRemoveEvent</a></span>, <span class='object_link'><a href="Events/ReactionRemoveEventHandler.html" title="Discordrb::Events::ReactionRemoveEventHandler (class)">ReactionRemoveEventHandler</a></span>, <span class='object_link'><a href="Events/ReadyEvent.html" title="Discordrb::Events::ReadyEvent (class)">ReadyEvent</a></span>, <span class='object_link'><a href="Events/ReadyEventHandler.html" title="Discordrb::Events::ReadyEventHandler (class)">ReadyEventHandler</a></span>, <span class='object_link'><a href="Events/ServerCreateEvent.html" title="Discordrb::Events::ServerCreateEvent (class)">ServerCreateEvent</a></span>, <span class='object_link'><a href="Events/ServerCreateEventHandler.html" title="Discordrb::Events::ServerCreateEventHandler (class)">ServerCreateEventHandler</a></span>, <span class='object_link'><a href="Events/ServerDeleteEvent.html" title="Discordrb::Events::ServerDeleteEvent (class)">ServerDeleteEvent</a></span>, <span class='object_link'><a href="Events/ServerDeleteEventHandler.html" title="Discordrb::Events::ServerDeleteEventHandler (class)">ServerDeleteEventHandler</a></span>, <span class='object_link'><a href="Events/ServerEmojiCDEvent.html" title="Discordrb::Events::ServerEmojiCDEvent (class)">ServerEmojiCDEvent</a></span>, <span class='object_link'><a href="Events/ServerEmojiCDEventHandler.html" title="Discordrb::Events::ServerEmojiCDEventHandler (class)">ServerEmojiCDEventHandler</a></span>, <span class='object_link'><a href="Events/ServerEmojiChangeEvent.html" title="Discordrb::Events::ServerEmojiChangeEvent (class)">ServerEmojiChangeEvent</a></span>, <span class='object_link'><a href="Events/ServerEmojiChangeEventHandler.html" title="Discordrb::Events::ServerEmojiChangeEventHandler (class)">ServerEmojiChangeEventHandler</a></span>, <span class='object_link'><a href="Events/ServerEmojiCreateEvent.html" title="Discordrb::Events::ServerEmojiCreateEvent (class)">ServerEmojiCreateEvent</a></span>, <span class='object_link'><a href="Events/ServerEmojiCreateEventHandler.html" title="Discordrb::Events::ServerEmojiCreateEventHandler (class)">ServerEmojiCreateEventHandler</a></span>, <span class='object_link'><a href="Events/ServerEmojiDeleteEvent.html" title="Discordrb::Events::ServerEmojiDeleteEvent (class)">ServerEmojiDeleteEvent</a></span>, <span class='object_link'><a href="Events/ServerEmojiDeleteEventHandler.html" title="Discordrb::Events::ServerEmojiDeleteEventHandler (class)">ServerEmojiDeleteEventHandler</a></span>, <span class='object_link'><a href="Events/ServerEmojiUpdateEvent.html" title="Discordrb::Events::ServerEmojiUpdateEvent (class)">ServerEmojiUpdateEvent</a></span>, <span class='object_link'><a href="Events/ServerEmojiUpdateEventHandler.html" title="Discordrb::Events::ServerEmojiUpdateEventHandler (class)">ServerEmojiUpdateEventHandler</a></span>, <span class='object_link'><a href="Events/ServerEvent.html" title="Discordrb::Events::ServerEvent (class)">ServerEvent</a></span>, <span class='object_link'><a href="Events/ServerEventHandler.html" title="Discordrb::Events::ServerEventHandler (class)">ServerEventHandler</a></span>, <span class='object_link'><a href="Events/ServerMemberAddEvent.html" title="Discordrb::Events::ServerMemberAddEvent (class)">ServerMemberAddEvent</a></span>, <span class='object_link'><a href="Events/ServerMemberAddEventHandler.html" title="Discordrb::Events::ServerMemberAddEventHandler (class)">ServerMemberAddEventHandler</a></span>, <span class='object_link'><a href="Events/ServerMemberDeleteEvent.html" title="Discordrb::Events::ServerMemberDeleteEvent (class)">ServerMemberDeleteEvent</a></span>, <span class='object_link'><a href="Events/ServerMemberDeleteEventHandler.html" title="Discordrb::Events::ServerMemberDeleteEventHandler (class)">ServerMemberDeleteEventHandler</a></span>, <span class='object_link'><a href="Events/ServerMemberEvent.html" title="Discordrb::Events::ServerMemberEvent (class)">ServerMemberEvent</a></span>, <span class='object_link'><a href="Events/ServerMemberEventHandler.html" title="Discordrb::Events::ServerMemberEventHandler (class)">ServerMemberEventHandler</a></span>, <span class='object_link'><a href="Events/ServerMemberUpdateEvent.html" title="Discordrb::Events::ServerMemberUpdateEvent (class)">ServerMemberUpdateEvent</a></span>, <span class='object_link'><a href="Events/ServerMemberUpdateEventHandler.html" title="Discordrb::Events::ServerMemberUpdateEventHandler (class)">ServerMemberUpdateEventHandler</a></span>, <span class='object_link'><a href="Events/ServerRoleCreateEvent.html" title="Discordrb::Events::ServerRoleCreateEvent (class)">ServerRoleCreateEvent</a></span>, <span class='object_link'><a href="Events/ServerRoleCreateEventHandler.html" title="Discordrb::Events::ServerRoleCreateEventHandler (class)">ServerRoleCreateEventHandler</a></span>, <span class='object_link'><a href="Events/ServerRoleDeleteEvent.html" title="Discordrb::Events::ServerRoleDeleteEvent (class)">ServerRoleDeleteEvent</a></span>, <span class='object_link'><a href="Events/ServerRoleDeleteEventHandler.html" title="Discordrb::Events::ServerRoleDeleteEventHandler (class)">ServerRoleDeleteEventHandler</a></span>, <span class='object_link'><a href="Events/ServerRoleUpdateEvent.html" title="Discordrb::Events::ServerRoleUpdateEvent (class)">ServerRoleUpdateEvent</a></span>, <span class='object_link'><a href="Events/ServerRoleUpdateEventHandler.html" title="Discordrb::Events::ServerRoleUpdateEventHandler (class)">ServerRoleUpdateEventHandler</a></span>, <span class='object_link'><a href="Events/ServerUpdateEvent.html" title="Discordrb::Events::ServerUpdateEvent (class)">ServerUpdateEvent</a></span>, <span class='object_link'><a href="Events/ServerUpdateEventHandler.html" title="Discordrb::Events::ServerUpdateEventHandler (class)">ServerUpdateEventHandler</a></span>, <span class='object_link'><a href="Events/TrueEventHandler.html" title="Discordrb::Events::TrueEventHandler (class)">TrueEventHandler</a></span>, <span class='object_link'><a href="Events/TypingEvent.html" title="Discordrb::Events::TypingEvent (class)">TypingEvent</a></span>, <span class='object_link'><a href="Events/TypingEventHandler.html" title="Discordrb::Events::TypingEventHandler (class)">TypingEventHandler</a></span>, <span class='object_link'><a href="Events/UnknownEvent.html" title="Discordrb::Events::UnknownEvent (class)">UnknownEvent</a></span>, <span class='object_link'><a href="Events/UnknownEventHandler.html" title="Discordrb::Events::UnknownEventHandler (class)">UnknownEventHandler</a></span>, <span class='object_link'><a href="Events/UserBanEvent.html" title="Discordrb::Events::UserBanEvent (class)">UserBanEvent</a></span>, <span class='object_link'><a href="Events/UserBanEventHandler.html" title="Discordrb::Events::UserBanEventHandler (class)">UserBanEventHandler</a></span>, <span class='object_link'><a href="Events/UserUnbanEvent.html" title="Discordrb::Events::UserUnbanEvent (class)">UserUnbanEvent</a></span>, <span class='object_link'><a href="Events/UserUnbanEventHandler.html" title="Discordrb::Events::UserUnbanEventHandler (class)">UserUnbanEventHandler</a></span>, <span class='object_link'><a href="Events/VoiceStateUpdateEvent.html" title="Discordrb::Events::VoiceStateUpdateEvent (class)">VoiceStateUpdateEvent</a></span>, <span class='object_link'><a href="Events/VoiceStateUpdateEventHandler.html" title="Discordrb::Events::VoiceStateUpdateEventHandler (class)">VoiceStateUpdateEventHandler</a></span>, <span class='object_link'><a href="Events/WebhookUpdateEvent.html" title="Discordrb::Events::WebhookUpdateEvent (class)">WebhookUpdateEvent</a></span>, <span class='object_link'><a href="Events/WebhookUpdateEventHandler.html" title="Discordrb::Events::WebhookUpdateEventHandler (class)">WebhookUpdateEventHandler</a></span>
+    
+  
+</p>
+
+
+
+
+
+
+
+  
+    <h2>
+      Class Method Summary
+      <small><a href="#" class="summary_toggle">collapse</a></small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#matches_all-class_method" title="matches_all (class method)">.<strong>matches_all</strong>(attributes, to_check) {|a, e| ... } &#x21d2; true, false </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Attempts to match possible formats of event attributes to a set comparison value, using a comparison block.</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+
+  <div id="class_method_details" class="method_details_list">
+    <h2>Class Method Details</h2>
+
+    
+      <div class="method_details first">
+  <h3 class="signature first" id="matches_all-class_method">
+  
+    .<strong>matches_all</strong>(attributes, to_check) {|a, e| ... } &#x21d2; <tt>true</tt>, <tt>false</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Attempts to match possible formats of event attributes to a set comparison value, using a comparison block.
+It allows five kinds of attribute formats:</p>
+
+<ol>
+<li>nil -&gt; always returns true</li>
+<li>A single attribute, not negated</li>
+<li>A single attribute, negated</li>
+<li>An array of attributes, not negated</li>
+<li>An array of attributes, not negated
+Note that it doesn&#39;t allow an array of negated attributes. For info on negation stuff, see <span class='object_link'><a href="../top-level-namespace.html#not!-instance_method" title="#not! (method)">#not!</a></span></li>
+</ol>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>attributes</span>
+      
+      
+        <span class='type'>(<tt>Object</tt>, <tt>Array&lt;Object&gt;</tt>, <tt><span class='object_link'><a href="Events/Negated.html" title="Discordrb::Events::Negated (class)">Negated</a></span>&lt;Object&gt;</tt>, <tt><span class='object_link'><a href="Events/Negated.html" title="Discordrb::Events::Negated (class)">Negated</a></span>&lt;Array&lt;Object&gt;&gt;</tt>, <tt>nil</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>One or more attributes to
+compare to the to_check value.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>to_check</span>
+      
+      
+        <span class='type'>(<tt>Object</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>What to compare the attributes to.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Yields:</p>
+<ul class="yield">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>a</tt>, <tt>e</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>The block will be called when a comparison happens.</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Yield Parameters:</p>
+<ul class="yieldparam">
+  
+    <li>
+      
+        <span class='name'>a</span>
+      
+      
+        <span class='type'>(<tt>Object</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>The attribute to compare to the value to check. Will always be a single not-negated object,
+all the negation and array handling is done by the method</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>e</span>
+      
+      
+        <span class='type'>(<tt>Object</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>The value to compare the attribute to. Will always be the value passed to the function as
+to_check.</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Yield Returns:</p>
+<ul class="yieldreturn">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>true</tt>, <tt>false</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>Whether or not the attribute a matches the given comparison value e.</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>true</tt>, <tt>false</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>whether the attributes match the comparison value in at least one way.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/events/generic.rb', line 33</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_matches_all'>matches_all</span><span class='lparen'>(</span><span class='id identifier rubyid_attributes'>attributes</span><span class='comma'>,</span> <span class='id identifier rubyid_to_check'>to_check</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+  <span class='comment'># &quot;Zeroth&quot; case: attributes is nil
+</span>  <span class='kw'>return</span> <span class='kw'>true</span> <span class='kw'>if</span> <span class='id identifier rubyid_attributes'>attributes</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+
+  <span class='comment'># First case: there&#39;s a single negated attribute
+</span>  <span class='kw'>if</span> <span class='id identifier rubyid_attributes'>attributes</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'><span class='object_link'><a href="Events/Negated.html" title="Discordrb::Events::Negated (class)">Negated</a></span></span>
+    <span class='comment'># The contained object might also be an array, so recursively call matches_all (and negate the result)
+</span>    <span class='kw'>return</span> <span class='op'>!</span><span class='id identifier rubyid_matches_all'>matches_all</span><span class='lparen'>(</span><span class='id identifier rubyid_attributes'>attributes</span><span class='period'>.</span><span class='id identifier rubyid_object'>object</span><span class='comma'>,</span> <span class='id identifier rubyid_to_check'>to_check</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
+
+  <span class='comment'># Second case: there&#39;s a single, not-negated attribute
+</span>  <span class='kw'>return</span> <span class='kw'>yield</span><span class='lparen'>(</span><span class='id identifier rubyid_attributes'>attributes</span><span class='comma'>,</span> <span class='id identifier rubyid_to_check'>to_check</span><span class='rparen'>)</span> <span class='kw'>unless</span> <span class='id identifier rubyid_attributes'>attributes</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'>Array</span>
+
+  <span class='comment'># Third case: it&#39;s an array of attributes
+</span>  <span class='id identifier rubyid_attributes'>attributes</span><span class='period'>.</span><span class='id identifier rubyid_reduce'>reduce</span><span class='lparen'>(</span><span class='kw'>false</span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_result'>result</span><span class='comma'>,</span> <span class='id identifier rubyid_element'>element</span><span class='op'>|</span>
+    <span class='id identifier rubyid_result'>result</span> <span class='op'>||</span> <span class='kw'>yield</span><span class='lparen'>(</span><span class='id identifier rubyid_element'>element</span><span class='comma'>,</span> <span class='id identifier rubyid_to_check'>to_check</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+
+      <div id="footer">
+  Generated on Sun Dec  8 18:55:30 2019 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.9.20 (ruby-2.5.7).
+</div>
+
+    </div>
+  </body>
+</html>

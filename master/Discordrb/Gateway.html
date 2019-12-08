@@ -1,0 +1,2445 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>
+  Class: Discordrb::Gateway
+  
+    &mdash; Documentation by YARD 0.9.20
+  
+</title>
+
+  <link rel="stylesheet" href="../css/style.css" type="text/css" charset="utf-8" />
+
+  <link rel="stylesheet" href="../css/common.css" type="text/css" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  pathId = "Discordrb::Gateway";
+  relpath = '../';
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div class="nav_wrap">
+      <iframe id="nav" src="../class_list.html?1"></iframe>
+      <div id="resizer"></div>
+    </div>
+
+    <div id="main" tabindex="-1">
+      <div id="header">
+        <div id="menu">
+  
+    <a href="../_index.html">Index (G)</a> &raquo;
+    <span class='title'><span class='object_link'><a href="../Discordrb.html" title="Discordrb (module)">Discordrb</a></span></span>
+     &raquo; 
+    <span class="title">Gateway</span>
+  
+</div>
+
+        <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="../class_list.html">
+
+        <svg width="24" height="24">
+          <rect x="0" y="4" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="12" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="20" width="24" height="4" rx="1" ry="1"></rect>
+        </svg>
+    </a>
+  
+</div>
+        <div class="clear"></div>
+      </div>
+
+      <div id="content"><h1>Class: Discordrb::Gateway
+  
+  
+  
+</h1>
+<div class="box_info">
+  
+  <dl>
+    <dt>Inherits:</dt>
+    <dd>
+      <span class="inheritName">Object</span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next">Discordrb::Gateway</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+    </dd>
+  </dl>
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+  <dl>
+    <dt>Defined in:</dt>
+    <dd>lib/discordrb/gateway.rb</dd>
+  </dl>
+  
+</div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <p>Client for the Discord gateway protocol</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+  
+    <h2>
+      Constant Summary
+      <small><a href="#" class="constants_summary_toggle">collapse</a></small>
+    </h2>
+
+    <dl class="constants">
+      
+        <dt id="LARGE_THRESHOLD-constant" class="">LARGE_THRESHOLD =
+          <div class="docstring">
+  <div class="discussion">
+    <p>How many members there need to be in a server for it to count as &quot;large&quot;</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+        </dt>
+        <dd><pre class="code"><span class='int'>100</span></pre></dd>
+      
+        <dt id="GATEWAY_VERSION-constant" class="">GATEWAY_VERSION =
+          <div class="docstring">
+  <div class="discussion">
+    <p>The version of the gateway that&#39;s supposed to be used.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+        </dt>
+        <dd><pre class="code"><span class='int'>6</span></pre></dd>
+      
+    </dl>
+  
+
+
+
+
+  <h2>Instance Attribute Summary <small><a href="#" class="summary_toggle">collapse</a></small></h2>
+  <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#check_heartbeat_acks-instance_method" title="#check_heartbeat_acks (instance method)">#<strong>check_heartbeat_acks</strong>  &#x21d2; true, false </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Heartbeat ACKs are Discord&#39;s way of verifying on the client side whether the connection is still alive.</p>
+</div></span>
+  
+</li>
+
+    
+  </ul>
+
+
+
+
+  
+    <h2>
+      Instance Method Summary
+      <small><a href="#" class="summary_toggle">collapse</a></small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#heartbeat-instance_method" title="#heartbeat (instance method)">#<strong>heartbeat</strong>  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Sends a heartbeat with the last received packet&#39;s seq (to acknowledge that we have received it and all packets before it), or if none have been received yet, with 0.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#identify-instance_method" title="#identify (instance method)">#<strong>identify</strong>  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Identifies to Discord with the default parameters.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#initialize-instance_method" title="#initialize (instance method)">#<strong>initialize</strong>(bot, token, shard_key = nil, compress_mode = :stream)  &#x21d2; Gateway </a>
+    
+
+    
+  </span>
+  
+  
+    <span class="note title constructor">constructor</span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>A new instance of Gateway.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#inject_error-instance_method" title="#inject_error (instance method)">#<strong>inject_error</strong>(e)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Injects a terminal gateway error into the handler.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#inject_reconnect-instance_method" title="#inject_reconnect (instance method)">#<strong>inject_reconnect</strong>(url = nil)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Injects a reconnect event (op 7) into the event processor, causing Discord to reconnect to the given gateway URL.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#inject_resume-instance_method" title="#inject_resume (instance method)">#<strong>inject_resume</strong>(seq)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Injects a resume packet (op 6) into the gateway.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#kill-instance_method" title="#kill (instance method)">#<strong>kill</strong>  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Kills the websocket thread, stopping all connections to Discord.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#notify_ready-instance_method" title="#notify_ready (instance method)">#<strong>notify_ready</strong>  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Notifies the <span class='object_link'><a href="#run_async-instance_method" title="Discordrb::Gateway#run_async (method)">#run_async</a></span> method that everything is ready and the caller can now continue (i.e. with syncing, or with doing processing and then syncing).</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#open%3F-instance_method" title="#open? (instance method)">#<strong>open?</strong>  &#x21d2; Boolean </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Whether the WebSocket connection to the gateway is currently open.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#reconnect-instance_method" title="#reconnect (instance method)">#<strong>reconnect</strong>(attempt_resume = true)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Reconnects the gateway connection in a controlled manner.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#resume-instance_method" title="#resume (instance method)">#<strong>resume</strong>  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Resumes the session from the last recorded point.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#run_async-instance_method" title="#run_async (instance method)">#<strong>run_async</strong>  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Connect to the gateway server in a separate thread.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#send_heartbeat-instance_method" title="#send_heartbeat (instance method)">#<strong>send_heartbeat</strong>(sequence)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Sends a heartbeat packet (op 1).</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#send_identify-instance_method" title="#send_identify (instance method)">#<strong>send_identify</strong>(token, properties, compress, large_threshold, shard_key = nil)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Sends an identify packet (op 2).</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#send_packet-instance_method" title="#send_packet (instance method)">#<strong>send_packet</strong>(opcode, packet)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Sends a custom packet over the connection.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#send_raw-instance_method" title="#send_raw (instance method)">#<strong>send_raw</strong>(data, type = :text)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Sends custom raw data over the connection.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#send_request_members-instance_method" title="#send_request_members (instance method)">#<strong>send_request_members</strong>(server_id, query, limit)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Sends a request members packet (op 8).</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#send_resume-instance_method" title="#send_resume (instance method)">#<strong>send_resume</strong>(token, session_id, seq)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Sends a resume packet (op 6).</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#send_status_update-instance_method" title="#send_status_update (instance method)">#<strong>send_status_update</strong>(status, since, game, afk)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Sends a status update packet (op 3).</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#send_voice_state_update-instance_method" title="#send_voice_state_update (instance method)">#<strong>send_voice_state_update</strong>(server_id, channel_id, self_mute, self_deaf)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Sends a voice state update packet (op 4).</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#stop-instance_method" title="#stop (instance method)">#<strong>stop</strong>  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Stops the bot gracefully, disconnecting the websocket without immediately killing the thread.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#sync-instance_method" title="#sync (instance method)">#<strong>sync</strong>  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Prevents all further execution until the websocket thread stops (e.g. through a closed connection).</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+<div id="constructor_details" class="method_details_list">
+  <h2>Constructor Details</h2>
+  
+    <div class="method_details first">
+  <h3 class="signature first" id="initialize-instance_method">
+  
+    #<strong>initialize</strong>(bot, token, shard_key = nil, compress_mode = :stream)  &#x21d2; <tt><span class='object_link'><a href="" title="Discordrb::Gateway (class)">Gateway</a></span></tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Returns a new instance of Gateway</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/gateway.rb', line 146</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_bot'>bot</span><span class='comma'>,</span> <span class='id identifier rubyid_token'>token</span><span class='comma'>,</span> <span class='id identifier rubyid_shard_key'>shard_key</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='id identifier rubyid_compress_mode'>compress_mode</span> <span class='op'>=</span> <span class='symbol'>:stream</span><span class='rparen'>)</span>
+  <span class='ivar'>@token</span> <span class='op'>=</span> <span class='id identifier rubyid_token'>token</span>
+  <span class='ivar'>@bot</span> <span class='op'>=</span> <span class='id identifier rubyid_bot'>bot</span>
+
+  <span class='ivar'>@shard_key</span> <span class='op'>=</span> <span class='id identifier rubyid_shard_key'>shard_key</span>
+
+  <span class='comment'># Whether the connection to the gateway has succeeded yet
+</span>  <span class='ivar'>@ws_success</span> <span class='op'>=</span> <span class='kw'>false</span>
+
+  <span class='ivar'>@check_heartbeat_acks</span> <span class='op'>=</span> <span class='kw'>true</span>
+
+  <span class='ivar'>@compress_mode</span> <span class='op'>=</span> <span class='id identifier rubyid_compress_mode'>compress_mode</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+  
+</div>
+
+  <div id="instance_attr_details" class="attr_details">
+    <h2>Instance Attribute Details</h2>
+    
+      
+      <span id="check_heartbeat_acks=-instance_method"></span>
+      <div class="method_details first">
+  <h3 class="signature first" id="check_heartbeat_acks-instance_method">
+  
+    #<strong>check_heartbeat_acks</strong>  &#x21d2; <tt>true</tt>, <tt>false</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Heartbeat ACKs are Discord&#39;s way of verifying on the client side whether the connection is still alive. If this is
+set to true (default value) the gateway client will use that functionality to detect zombie connections and
+reconnect in such a case; however it may lead to instability if there&#39;s some problem with the ACKs. If this occurs
+it can simply be set to false.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>true</tt>, <tt>false</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>whether or not this gateway should check for heartbeat ACKs.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+144
+145
+146</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/gateway.rb', line 144</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_check_heartbeat_acks'>check_heartbeat_acks</span>
+  <span class='ivar'>@check_heartbeat_acks</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+
+    
+      <div class="method_details first">
+  <h3 class="signature first" id="heartbeat-instance_method">
+  
+    #<strong>heartbeat</strong>  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Sends a heartbeat with the last received packet&#39;s seq (to acknowledge that we have received it and all packets
+before it), or if none have been received yet, with 0.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+  <p class="tag_title">See Also:</p>
+  <ul class="see">
+    
+      <li><span class='object_link'><a href="#send_heartbeat-instance_method" title="Discordrb::Gateway#send_heartbeat (method)">#send_heartbeat</a></span></li>
+    
+  </ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/gateway.rb', line 248</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_heartbeat'>heartbeat</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_check_heartbeat_acks'>check_heartbeat_acks</span>
+    <span class='kw'>unless</span> <span class='ivar'>@last_heartbeat_acked</span>
+      <span class='comment'># We&#39;re in a bad situation - apparently the last heartbeat wasn&#39;t acked, which means the connection is likely
+</span>      <span class='comment'># a zombie. Reconnect
+</span>      <span class='const'><span class='object_link'><a href="../Discordrb.html#LOGGER-constant" title="Discordrb::LOGGER (constant)">LOGGER</a></span></span><span class='period'>.</span><span class='id identifier rubyid_warn'>warn</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Last heartbeat was not acked, so this is a zombie connection! Reconnecting</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+
+      <span class='comment'># We can&#39;t send anything on zombie connections
+</span>      <span class='ivar'>@pipe_broken</span> <span class='op'>=</span> <span class='kw'>true</span>
+      <span class='id identifier rubyid_reconnect'>reconnect</span>
+      <span class='kw'>return</span>
+    <span class='kw'>end</span>
+
+    <span class='ivar'>@last_heartbeat_acked</span> <span class='op'>=</span> <span class='kw'>false</span>
+  <span class='kw'>end</span>
+
+  <span class='id identifier rubyid_send_heartbeat'>send_heartbeat</span><span class='lparen'>(</span><span class='ivar'>@session</span> <span class='op'>?</span> <span class='ivar'>@session</span><span class='period'>.</span><span class='id identifier rubyid_sequence'>sequence</span> <span class='op'>:</span> <span class='int'>0</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="identify-instance_method">
+  
+    #<strong>identify</strong>  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Identifies to Discord with the default parameters.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+  <p class="tag_title">See Also:</p>
+  <ul class="see">
+    
+      <li><span class='object_link'><a href="#send_identify-instance_method" title="Discordrb::Gateway#send_identify (method)">#send_identify</a></span></li>
+    
+  </ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/gateway.rb', line 276</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_identify'>identify</span>
+  <span class='id identifier rubyid_compress'>compress</span> <span class='op'>=</span> <span class='ivar'>@compress_mode</span> <span class='op'>==</span> <span class='symbol'>:large</span>
+  <span class='id identifier rubyid_send_identify'>send_identify</span><span class='lparen'>(</span><span class='ivar'>@token</span><span class='comma'>,</span> <span class='lbrace'>{</span>
+                  <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>$os</span><span class='label_end'>&#39;:</span> <span class='const'>RUBY_PLATFORM</span><span class='comma'>,</span>
+                  <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>$browser</span><span class='label_end'>&#39;:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>discordrb</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+                  <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>$device</span><span class='label_end'>&#39;:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>discordrb</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+                  <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>$referrer</span><span class='label_end'>&#39;:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+                  <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>$referring_domain</span><span class='label_end'>&#39;:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span>
+                <span class='rbrace'>}</span><span class='comma'>,</span> <span class='id identifier rubyid_compress'>compress</span><span class='comma'>,</span> <span class='int'>100</span><span class='comma'>,</span> <span class='ivar'>@shard_key</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="inject_error-instance_method">
+  
+    #<strong>inject_error</strong>(e)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Injects a terminal gateway error into the handler. Useful for testing the reconnect logic.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>e</span>
+      
+      
+        <span class='type'>(<tt>Exception</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>The exception object to inject.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+241
+242
+243</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/gateway.rb', line 241</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_inject_error'>inject_error</span><span class='lparen'>(</span><span class='id identifier rubyid_e'>e</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_handle_internal_close'>handle_internal_close</span><span class='lparen'>(</span><span class='id identifier rubyid_e'>e</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="inject_reconnect-instance_method">
+  
+    #<strong>inject_reconnect</strong>(url = nil)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Injects a reconnect event (op 7) into the event processor, causing Discord to reconnect to the given gateway URL.
+If the URL is set to nil, it will reconnect and get an entirely new gateway URL. This method has not much use
+outside of testing and implementing highly custom reconnect logic.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>url</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>, <tt>nil</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>nil</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'><p>the URL to connect to or nil if one should be obtained from Discord.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+221
+222
+223
+224
+225
+226
+227
+228
+229</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/gateway.rb', line 221</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_inject_reconnect'>inject_reconnect</span><span class='lparen'>(</span><span class='id identifier rubyid_url'>url</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='rparen'>)</span>
+  <span class='comment'># When no URL is specified, the data should be nil, as is the case with Discord-sent packets.
+</span>  <span class='id identifier rubyid_data'>data</span> <span class='op'>=</span> <span class='id identifier rubyid_url'>url</span> <span class='op'>?</span> <span class='lbrace'>{</span> <span class='label'>url:</span> <span class='id identifier rubyid_url'>url</span> <span class='rbrace'>}</span> <span class='op'>:</span> <span class='kw'>nil</span>
+
+  <span class='id identifier rubyid_handle_message'>handle_message</span><span class='lparen'>(</span><span class='lbrace'>{</span>
+    <span class='label'>op:</span> <span class='const'><span class='object_link'><a href="Opcodes.html" title="Discordrb::Opcodes (module)">Opcodes</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="Opcodes.html#RECONNECT-constant" title="Discordrb::Opcodes::RECONNECT (constant)">RECONNECT</a></span></span><span class='comma'>,</span>
+    <span class='label'>d:</span> <span class='id identifier rubyid_data'>data</span>
+  <span class='rbrace'>}</span><span class='period'>.</span><span class='id identifier rubyid_to_json'>to_json</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="inject_resume-instance_method">
+  
+    #<strong>inject_resume</strong>(seq)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Injects a resume packet (op 6) into the gateway. If this is done with a running connection, it will cause an
+error. It has no use outside of testing stuff that I know of, but if you want to use it anyway for some reason,
+here it is.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>seq</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../Integer.html" title="Integer (class)">Integer</a></span></tt>, <tt>nil</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>The sequence ID to inject, or nil if the currently tracked one should be used.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+235
+236
+237</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/gateway.rb', line 235</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_inject_resume'>inject_resume</span><span class='lparen'>(</span><span class='id identifier rubyid_seq'>seq</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_send_resume'>send_resume</span><span class='lparen'>(</span><span class='id identifier rubyid_raw_token'>raw_token</span><span class='comma'>,</span> <span class='ivar'>@session_id</span><span class='comma'>,</span> <span class='id identifier rubyid_seq'>seq</span> <span class='op'>||</span> <span class='ivar'>@sequence</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="kill-instance_method">
+  
+    #<strong>kill</strong>  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Kills the websocket thread, stopping all connections to Discord.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+207
+208
+209</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/gateway.rb', line 207</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_kill'>kill</span>
+  <span class='ivar'>@ws_thread</span><span class='period'>.</span><span class='id identifier rubyid_kill'>kill</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="notify_ready-instance_method">
+  
+    #<strong>notify_ready</strong>  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Notifies the <span class='object_link'><a href="#run_async-instance_method" title="Discordrb::Gateway#run_async (method)">#run_async</a></span> method that everything is ready and the caller can now continue (i.e. with syncing,
+or with doing processing and then syncing)</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+213
+214
+215</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/gateway.rb', line 213</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_notify_ready'>notify_ready</span>
+  <span class='ivar'>@ws_success</span> <span class='op'>=</span> <span class='kw'>true</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="open?-instance_method">
+  
+    #<strong>open?</strong>  &#x21d2; <tt>Boolean</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Whether the WebSocket connection to the gateway is currently open</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+190
+191
+192</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/gateway.rb', line 190</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_open?'>open?</span>
+  <span class='ivar'>@handshake</span><span class='op'>&amp;.</span><span class='id identifier rubyid_finished?'>finished?</span> <span class='op'>&amp;&amp;</span> <span class='op'>!</span><span class='ivar'>@closed</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="reconnect-instance_method">
+  
+    #<strong>reconnect</strong>(attempt_resume = true)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Reconnects the gateway connection in a controlled manner.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>attempt_resume</span>
+      
+      
+        <span class='type'>(<tt>true</tt>, <tt>false</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>true</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'><p>Whether a resume should be attempted after the reconnection.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+364
+365
+366
+367
+368
+369
+370
+371</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/gateway.rb', line 364</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_reconnect'>reconnect</span><span class='lparen'>(</span><span class='id identifier rubyid_attempt_resume'>attempt_resume</span> <span class='op'>=</span> <span class='kw'>true</span><span class='rparen'>)</span>
+  <span class='ivar'>@session</span><span class='period'>.</span><span class='id identifier rubyid_suspend'>suspend</span> <span class='kw'>if</span> <span class='ivar'>@session</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_attempt_resume'>attempt_resume</span>
+
+  <span class='ivar'>@instant_reconnect</span> <span class='op'>=</span> <span class='kw'>true</span>
+  <span class='ivar'>@should_reconnect</span> <span class='op'>=</span> <span class='kw'>true</span>
+
+  <span class='id identifier rubyid_close'>close</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="resume-instance_method">
+  
+    #<strong>resume</strong>  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Resumes the session from the last recorded point.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+  <p class="tag_title">See Also:</p>
+  <ul class="see">
+    
+      <li><span class='object_link'><a href="#send_resume-instance_method" title="Discordrb::Gateway#send_resume (method)">#send_resume</a></span></li>
+    
+  </ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+358
+359
+360</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/gateway.rb', line 358</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_resume'>resume</span>
+  <span class='id identifier rubyid_send_resume'>send_resume</span><span class='lparen'>(</span><span class='ivar'>@token</span><span class='comma'>,</span> <span class='ivar'>@session</span><span class='period'>.</span><span class='id identifier rubyid_session_id'>session_id</span><span class='comma'>,</span> <span class='ivar'>@session</span><span class='period'>.</span><span class='id identifier rubyid_sequence'>sequence</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="run_async-instance_method">
+  
+    #<strong>run_async</strong>  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Connect to the gateway server in a separate thread</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/gateway.rb', line 161</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_run_async'>run_async</span>
+  <span class='ivar'>@ws_thread</span> <span class='op'>=</span> <span class='const'>Thread</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span> <span class='kw'>do</span>
+    <span class='const'>Thread</span><span class='period'>.</span><span class='id identifier rubyid_current'>current</span><span class='lbracket'>[</span><span class='symbol'>:discordrb_name</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>websocket</span><span class='tstring_end'>&#39;</span></span>
+    <span class='id identifier rubyid_connect_loop'>connect_loop</span>
+    <span class='const'><span class='object_link'><a href="../Discordrb.html#LOGGER-constant" title="Discordrb::LOGGER (constant)">LOGGER</a></span></span><span class='period'>.</span><span class='id identifier rubyid_warn'>warn</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>The WS loop exited! Not sure if this is a good thing</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
+
+  <span class='const'><span class='object_link'><a href="../Discordrb.html#LOGGER-constant" title="Discordrb::LOGGER (constant)">LOGGER</a></span></span><span class='period'>.</span><span class='id identifier rubyid_debug'>debug</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>WS thread created! Now waiting for confirmation that everything worked</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_loop'>loop</span> <span class='kw'>do</span>
+    <span class='id identifier rubyid_sleep'>sleep</span><span class='lparen'>(</span><span class='float'>0.5</span><span class='rparen'>)</span>
+
+    <span class='kw'>if</span> <span class='ivar'>@ws_success</span>
+      <span class='const'><span class='object_link'><a href="../Discordrb.html#LOGGER-constant" title="Discordrb::LOGGER (constant)">LOGGER</a></span></span><span class='period'>.</span><span class='id identifier rubyid_debug'>debug</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Confirmation received! Exiting run.</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+      <span class='kw'>break</span>
+    <span class='kw'>end</span>
+
+    <span class='kw'>if</span> <span class='ivar'>@should_reconnect</span> <span class='op'>==</span> <span class='kw'>false</span>
+      <span class='const'><span class='object_link'><a href="../Discordrb.html#LOGGER-constant" title="Discordrb::LOGGER (constant)">LOGGER</a></span></span><span class='period'>.</span><span class='id identifier rubyid_debug'>debug</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Reconnection flag was unset. Exiting run.</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+      <span class='kw'>break</span>
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="send_heartbeat-instance_method">
+  
+    #<strong>send_heartbeat</strong>(sequence)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Sends a heartbeat packet (op 1). This tells Discord that the current connection is still active and that the last
+packets until the given sequence have been processed (in case of a resume).</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>sequence</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../Integer.html" title="Integer (class)">Integer</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>The sequence number for which to send a heartbeat.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+270
+271
+272</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/gateway.rb', line 270</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_send_heartbeat'>send_heartbeat</span><span class='lparen'>(</span><span class='id identifier rubyid_sequence'>sequence</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_send_packet'>send_packet</span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="Opcodes.html" title="Discordrb::Opcodes (module)">Opcodes</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="Opcodes.html#HEARTBEAT-constant" title="Discordrb::Opcodes::HEARTBEAT (constant)">HEARTBEAT</a></span></span><span class='comma'>,</span> <span class='id identifier rubyid_sequence'>sequence</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="send_identify-instance_method">
+  
+    #<strong>send_identify</strong>(token, properties, compress, large_threshold, shard_key = nil)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Sends an identify packet (op 2). This starts a new session on the current connection and tells Discord who we are.
+This can only be done once a connection.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>token</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>The token with which to authorise the session. If it belongs to a bot account, it must be
+prefixed with &quot;Bot &quot;.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>properties</span>
+      
+      
+        <span class='type'>(<tt>Hash&lt;Symbol =&gt; <span class='object_link'><a href="../String.html" title="String (class)">String</a></span>&gt;</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>A list of properties for Discord to use in analytics. The following
+keys are recognised:</p>
+
+<ul>
+<li>&quot;$os&quot; (recommended value: the operating system the bot is running on)</li>
+<li>&quot;$browser&quot; (recommended value: library name)</li>
+<li>&quot;$device&quot; (recommended value: library name)</li>
+<li>&quot;$referrer&quot; (recommended value: empty)</li>
+<li>&quot;$referring_domain&quot; (recommended value: empty)</li>
+</ul>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>compress</span>
+      
+      
+        <span class='type'>(<tt>true</tt>, <tt>false</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>Whether certain large packets should be compressed using zlib.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>large_threshold</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../Integer.html" title="Integer (class)">Integer</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>The member threshold after which a server counts as large and will have to have
+its member list chunked.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>shard_key</span>
+      
+      
+        <span class='type'>(<tt>Array(<span class='object_link'><a href="../Integer.html" title="Integer (class)">Integer</a></span>, <span class='object_link'><a href="../Integer.html" title="Integer (class)">Integer</a></span>)</tt>, <tt>nil</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>nil</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'><p>The shard key to use for sharding, represented as
+[shard_id, num_shards], or nil if the bot should not be sharded.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/gateway.rb', line 305</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_send_identify'>send_identify</span><span class='lparen'>(</span><span class='id identifier rubyid_token'>token</span><span class='comma'>,</span> <span class='id identifier rubyid_properties'>properties</span><span class='comma'>,</span> <span class='id identifier rubyid_compress'>compress</span><span class='comma'>,</span> <span class='id identifier rubyid_large_threshold'>large_threshold</span><span class='comma'>,</span> <span class='id identifier rubyid_shard_key'>shard_key</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_data'>data</span> <span class='op'>=</span> <span class='lbrace'>{</span>
+    <span class='comment'># Don&#39;t send a v anymore as it&#39;s entirely determined by the URL now
+</span>    <span class='label'>token:</span> <span class='id identifier rubyid_token'>token</span><span class='comma'>,</span>
+    <span class='label'>properties:</span> <span class='id identifier rubyid_properties'>properties</span><span class='comma'>,</span>
+    <span class='label'>compress:</span> <span class='id identifier rubyid_compress'>compress</span><span class='comma'>,</span>
+    <span class='label'>large_threshold:</span> <span class='id identifier rubyid_large_threshold'>large_threshold</span>
+  <span class='rbrace'>}</span>
+
+  <span class='comment'># Don&#39;t include the shard key at all if it is nil as Discord checks for its mere existence
+</span>  <span class='id identifier rubyid_data'>data</span><span class='lbracket'>[</span><span class='symbol'>:shard</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_shard_key'>shard_key</span> <span class='kw'>if</span> <span class='id identifier rubyid_shard_key'>shard_key</span>
+
+  <span class='id identifier rubyid_send_packet'>send_packet</span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="Opcodes.html" title="Discordrb::Opcodes (module)">Opcodes</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="Opcodes.html#IDENTIFY-constant" title="Discordrb::Opcodes::IDENTIFY (constant)">IDENTIFY</a></span></span><span class='comma'>,</span> <span class='id identifier rubyid_data'>data</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="send_packet-instance_method">
+  
+    #<strong>send_packet</strong>(opcode, packet)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Sends a custom packet over the connection. This can be useful to implement future yet unimplemented functionality
+or for testing. You probably shouldn&#39;t use this unless you know what you&#39;re doing.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>opcode</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../Integer.html" title="Integer (class)">Integer</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>The opcode the packet should be sent as. Can be one of <span class='object_link'><a href="Opcodes.html" title="Discordrb::Opcodes (module)">Opcodes</a></span> or a custom value if
+necessary.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>packet</span>
+      
+      
+        <span class='type'>(<tt>Object</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>Some arbitrary JSON-serialisable data that should be sent as the <code>d</code> field.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+415
+416
+417
+418
+419
+420
+421
+422</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/gateway.rb', line 415</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_send_packet'>send_packet</span><span class='lparen'>(</span><span class='id identifier rubyid_opcode'>opcode</span><span class='comma'>,</span> <span class='id identifier rubyid_packet'>packet</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_data'>data</span> <span class='op'>=</span> <span class='lbrace'>{</span>
+    <span class='label'>op:</span> <span class='id identifier rubyid_opcode'>opcode</span><span class='comma'>,</span>
+    <span class='label'>d:</span> <span class='id identifier rubyid_packet'>packet</span>
+  <span class='rbrace'>}</span>
+
+  <span class='id identifier rubyid_send'>send</span><span class='lparen'>(</span><span class='id identifier rubyid_data'>data</span><span class='period'>.</span><span class='id identifier rubyid_to_json'>to_json</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="send_raw-instance_method">
+  
+    #<strong>send_raw</strong>(data, type = :text)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Sends custom raw data over the connection. Only useful for testing; even if you know what you&#39;re doing you
+probably want to use <span class='object_link'><a href="#send_packet-instance_method" title="Discordrb::Gateway#send_packet (method)">#send_packet</a></span> instead.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>data</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>The data to send.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>type</span>
+      
+      
+        <span class='type'>(<tt>Symbol</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>:text</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'><p>The type the WebSocket frame should have; either <code>:text</code>, <code>:binary</code>, <code>:ping</code>, <code>:pong</code>, or
+<code>:close</code>.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+429
+430
+431</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/gateway.rb', line 429</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_send_raw'>send_raw</span><span class='lparen'>(</span><span class='id identifier rubyid_data'>data</span><span class='comma'>,</span> <span class='id identifier rubyid_type'>type</span> <span class='op'>=</span> <span class='symbol'>:text</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_send'>send</span><span class='lparen'>(</span><span class='id identifier rubyid_data'>data</span><span class='comma'>,</span> <span class='id identifier rubyid_type'>type</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="send_request_members-instance_method">
+  
+    #<strong>send_request_members</strong>(server_id, query, limit)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Sends a request members packet (op 8). This will order Discord to gradually sent all requested members as dispatch
+events with type <code>GUILD_MEMBERS_CHUNK</code>. It is necessary to use this method in order to get all members of a large
+server (see <code>large_threshold</code> in <span class='object_link'><a href="#send_identify-instance_method" title="Discordrb::Gateway#send_identify (method)">#send_identify</a></span>), however it can also be used for other purposes.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>server_id</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../Integer.html" title="Integer (class)">Integer</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>The ID of the server whose members to query.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>query</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>If this string is not empty, only members whose username starts with this string will be
+returned.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>limit</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../Integer.html" title="Integer (class)">Integer</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>How many members to send at maximum, or <code>0</code> to send all members.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+400
+401
+402
+403
+404
+405
+406
+407
+408</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/gateway.rb', line 400</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_send_request_members'>send_request_members</span><span class='lparen'>(</span><span class='id identifier rubyid_server_id'>server_id</span><span class='comma'>,</span> <span class='id identifier rubyid_query'>query</span><span class='comma'>,</span> <span class='id identifier rubyid_limit'>limit</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_data'>data</span> <span class='op'>=</span> <span class='lbrace'>{</span>
+    <span class='label'>guild_id:</span> <span class='id identifier rubyid_server_id'>server_id</span><span class='comma'>,</span>
+    <span class='label'>query:</span> <span class='id identifier rubyid_query'>query</span><span class='comma'>,</span>
+    <span class='label'>limit:</span> <span class='id identifier rubyid_limit'>limit</span>
+  <span class='rbrace'>}</span>
+
+  <span class='id identifier rubyid_send_packet'>send_packet</span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="Opcodes.html" title="Discordrb::Opcodes (module)">Opcodes</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="Opcodes.html#REQUEST_MEMBERS-constant" title="Discordrb::Opcodes::REQUEST_MEMBERS (constant)">REQUEST_MEMBERS</a></span></span><span class='comma'>,</span> <span class='id identifier rubyid_data'>data</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="send_resume-instance_method">
+  
+    #<strong>send_resume</strong>(token, session_id, seq)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Sends a resume packet (op 6). This replays all events from a previous point specified by its packet sequence. This
+will not work if the packet to resume from has already been acknowledged using a heartbeat, or if the session ID
+belongs to a now invalid session.</p>
+
+<p>If this packet is sent at the beginning of a connection, it will act similarly to an <span class='object_link'><a href="#identify-instance_method" title="Discordrb::Gateway#identify (method)">#identify</a></span> in that it
+creates a session on the current connection. Unlike identify however, this packet can also be sent in an existing
+session and will just replay some of the events.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>token</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>The token that was used to identify the session to resume.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>session_id</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>The session ID of the session to resume.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>seq</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../Integer.html" title="Integer (class)">Integer</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>The packet sequence of the packet after which the events should be replayed.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+383
+384
+385
+386
+387
+388
+389
+390
+391</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/gateway.rb', line 383</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_send_resume'>send_resume</span><span class='lparen'>(</span><span class='id identifier rubyid_token'>token</span><span class='comma'>,</span> <span class='id identifier rubyid_session_id'>session_id</span><span class='comma'>,</span> <span class='id identifier rubyid_seq'>seq</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_data'>data</span> <span class='op'>=</span> <span class='lbrace'>{</span>
+    <span class='label'>token:</span> <span class='id identifier rubyid_token'>token</span><span class='comma'>,</span>
+    <span class='label'>session_id:</span> <span class='id identifier rubyid_session_id'>session_id</span><span class='comma'>,</span>
+    <span class='label'>seq:</span> <span class='id identifier rubyid_seq'>seq</span>
+  <span class='rbrace'>}</span>
+
+  <span class='id identifier rubyid_send_packet'>send_packet</span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="Opcodes.html" title="Discordrb::Opcodes (module)">Opcodes</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="Opcodes.html#RESUME-constant" title="Discordrb::Opcodes::RESUME (constant)">RESUME</a></span></span><span class='comma'>,</span> <span class='id identifier rubyid_data'>data</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="send_status_update-instance_method">
+  
+    #<strong>send_status_update</strong>(status, since, game, afk)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Sends a status update packet (op 3). This sets the bot user&#39;s status (online/idle/...) and game playing/streaming.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>status</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>The status that should be set (<code>online</code>, <code>idle</code>, <code>dnd</code>, <code>invisible</code>).</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>since</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../Integer.html" title="Integer (class)">Integer</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>The unix timestamp in milliseconds when the status was set. Should only be provided when
+<code>afk</code> is true.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>game</span>
+      
+      
+        <span class='type'>(<tt>Hash&lt;Symbol =&gt; Object&gt;</tt>, <tt>nil</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p><code>nil</code> if no game should be played, or a hash of <code>:game =&gt; &quot;name&quot;</code> if a
+game should be played. The hash can also contain additional attributes for streaming statuses.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>afk</span>
+      
+      
+        <span class='type'>(<tt>true</tt>, <tt>false</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>Whether the status was set due to inactivity on the user&#39;s part.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/gateway.rb', line 327</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_send_status_update'>send_status_update</span><span class='lparen'>(</span><span class='id identifier rubyid_status'>status</span><span class='comma'>,</span> <span class='id identifier rubyid_since'>since</span><span class='comma'>,</span> <span class='id identifier rubyid_game'>game</span><span class='comma'>,</span> <span class='id identifier rubyid_afk'>afk</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_data'>data</span> <span class='op'>=</span> <span class='lbrace'>{</span>
+    <span class='label'>status:</span> <span class='id identifier rubyid_status'>status</span><span class='comma'>,</span>
+    <span class='label'>since:</span> <span class='id identifier rubyid_since'>since</span><span class='comma'>,</span>
+    <span class='label'>game:</span> <span class='id identifier rubyid_game'>game</span><span class='comma'>,</span>
+    <span class='label'>afk:</span> <span class='id identifier rubyid_afk'>afk</span>
+  <span class='rbrace'>}</span>
+
+  <span class='id identifier rubyid_send_packet'>send_packet</span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="Opcodes.html" title="Discordrb::Opcodes (module)">Opcodes</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="Opcodes.html#PRESENCE-constant" title="Discordrb::Opcodes::PRESENCE (constant)">PRESENCE</a></span></span><span class='comma'>,</span> <span class='id identifier rubyid_data'>data</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="send_voice_state_update-instance_method">
+  
+    #<strong>send_voice_state_update</strong>(server_id, channel_id, self_mute, self_deaf)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Sends a voice state update packet (op 4). This packet can connect a user to a voice channel, update self mute/deaf
+status in an existing voice connection, move the user to a new voice channel on the same server or disconnect an
+existing voice connection.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>server_id</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../Integer.html" title="Integer (class)">Integer</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>The ID of the server on which this action should occur.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>channel_id</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../Integer.html" title="Integer (class)">Integer</a></span></tt>, <tt>nil</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>The channel ID to connect/move to, or <code>nil</code> to disconnect.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>self_mute</span>
+      
+      
+        <span class='type'>(<tt>true</tt>, <tt>false</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>Whether the user should itself be muted to everyone else.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>self_deaf</span>
+      
+      
+        <span class='type'>(<tt>true</tt>, <tt>false</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>Whether the user should be deaf towards other users.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/gateway.rb', line 345</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_send_voice_state_update'>send_voice_state_update</span><span class='lparen'>(</span><span class='id identifier rubyid_server_id'>server_id</span><span class='comma'>,</span> <span class='id identifier rubyid_channel_id'>channel_id</span><span class='comma'>,</span> <span class='id identifier rubyid_self_mute'>self_mute</span><span class='comma'>,</span> <span class='id identifier rubyid_self_deaf'>self_deaf</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_data'>data</span> <span class='op'>=</span> <span class='lbrace'>{</span>
+    <span class='label'>guild_id:</span> <span class='id identifier rubyid_server_id'>server_id</span><span class='comma'>,</span>
+    <span class='label'>channel_id:</span> <span class='id identifier rubyid_channel_id'>channel_id</span><span class='comma'>,</span>
+    <span class='label'>self_mute:</span> <span class='id identifier rubyid_self_mute'>self_mute</span><span class='comma'>,</span>
+    <span class='label'>self_deaf:</span> <span class='id identifier rubyid_self_deaf'>self_deaf</span>
+  <span class='rbrace'>}</span>
+
+  <span class='id identifier rubyid_send_packet'>send_packet</span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="Opcodes.html" title="Discordrb::Opcodes (module)">Opcodes</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="Opcodes.html#VOICE_STATE-constant" title="Discordrb::Opcodes::VOICE_STATE (constant)">VOICE_STATE</a></span></span><span class='comma'>,</span> <span class='id identifier rubyid_data'>data</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="stop-instance_method">
+  
+    #<strong>stop</strong>  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Stops the bot gracefully, disconnecting the websocket without immediately killing the thread. This means that
+Discord is immediately aware of the closed connection and makes the bot appear offline instantly.</p>
+
+<p>If this method doesn&#39;t work or you&#39;re looking for something more drastic, use <span class='object_link'><a href="#kill-instance_method" title="Discordrb::Gateway#kill (method)">#kill</a></span> instead.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+198
+199
+200
+201
+202
+203
+204</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/gateway.rb', line 198</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_stop'>stop</span>
+  <span class='ivar'>@should_reconnect</span> <span class='op'>=</span> <span class='kw'>false</span>
+  <span class='id identifier rubyid_close'>close</span>
+
+  <span class='comment'># Return nil so command bots don&#39;t send a message
+</span>  <span class='kw'>nil</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="sync-instance_method">
+  
+    #<strong>sync</strong>  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Prevents all further execution until the websocket thread stops (e.g. through a closed connection).</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+185
+186
+187</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/gateway.rb', line 185</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_sync'>sync</span>
+  <span class='ivar'>@ws_thread</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+
+      <div id="footer">
+  Generated on Sun Dec  8 18:55:31 2019 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.9.20 (ruby-2.5.7).
+</div>
+
+    </div>
+  </body>
+</html>
