@@ -98,7 +98,7 @@ jobs:
             fi
 
             mkdir -p $SOURCE_BRANCH
-            rm -r $SOURCE_BRANCH/*
+            rm -rf $SOURCE_BRANCH/*
             cp -r /tmp/workspace/docs/. ./$SOURCE_BRANCH/
 
             git add $SOURCE_BRANCH
