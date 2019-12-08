@@ -93,38 +93,9 @@ To run the bot:
 
     ruby ping.rb
 
-#### Troubleshooting
+### Installation Troubleshooting
 
-**If you get an error like this when installing the gem**:
-
-    ERROR:  Error installing discordrb:
-            The 'websocket-driver' native gem requires installed build tools.
-
-You're missing the development kit required to build native extensions.
-
-##### RubyInstaller for ruby 2.4.3-2 and above
-
-RubyInstaller after version 2.3.3 now includes the development kit in the installer. If you do not have the development kit and have installed ruby using RubyInstaller, open a command prompt with administrator privileges and run:
-
-    ridk install
-
-Select option 3, and then run
-
-    ridk enable
-
-To enable the changes
-
-**If Ruby complains about `ffi_c` not being able to be found:**
-
-For example
-
-    C:/Ruby25-x64/lib/ruby/2.5.0/rubygems/core_ext/kernel_require.rb:55:in `require': cannot load such file -- ffi_c (LoadError)
-
-Your ffi setup is screwed up, first run `gem uninstall ffi` (uninstall all versions if it asks you, say yes to any unmet dependencies), then run `gem install ffi --platform=ruby` to fix it. If it says something about build tools, follow the steps in the first troubleshooting section.
-
-**If you're having trouble getting voice playback to work**:
-
-Look here: https://github.com/discordrb/discordrb/wiki/Voice-sending#troubleshooting
+See https://github.com/discordrb/discordrb/wiki/FAQ#installation for a list of common problems and solutions when installing `discordrb`.
 
 ## Usage
 
