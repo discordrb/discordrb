@@ -2,8 +2,6 @@
 [![Gem](https://img.shields.io/gem/dt/discordrb.svg)](https://rubygems.org/gems/discordrb)
 [![Build Status](https://travis-ci.org/discordrb/discordrb.svg?branch=master)](https://travis-ci.org/discordrb/discordrb)
 [![Inline docs](https://inch-ci.org/github/discordrb/discordrb.svg?branch=master&style=shields)](https://inch-ci.org/github/discordrb/discordrb)
-[![Code Climate](https://codeclimate.com/github/discordrb/discordrb/badges/gpa.svg)](https://codeclimate.com/github/discordrb/discordrb)
-[![Test Coverage](https://codeclimate.com/github/discordrb/discordrb/badges/coverage.svg)](https://codeclimate.com/github/discordrb/discordrb/coverage)
 [![Join Discord](https://img.shields.io/badge/discord-join-7289DA.svg)](https://discord.gg/cyK3Hjm)
 # discordrb
 
