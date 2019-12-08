@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>
+  Module: Discordrb::Opcodes
+  
+    &mdash; Documentation by YARD 0.9.20
+  
+</title>
+
+  <link rel="stylesheet" href="../css/style.css" type="text/css" charset="utf-8" />
+
+  <link rel="stylesheet" href="../css/common.css" type="text/css" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  pathId = "Discordrb::Opcodes";
+  relpath = '../';
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div class="nav_wrap">
+      <iframe id="nav" src="../class_list.html?1"></iframe>
+      <div id="resizer"></div>
+    </div>
+
+    <div id="main" tabindex="-1">
+      <div id="header">
+        <div id="menu">
+  
+    <a href="../_index.html">Index (O)</a> &raquo;
+    <span class='title'><span class='object_link'><a href="../Discordrb.html" title="Discordrb (module)">Discordrb</a></span></span>
+     &raquo; 
+    <span class="title">Opcodes</span>
+  
+</div>
+
+        <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="../class_list.html">
+
+        <svg width="24" height="24">
+          <rect x="0" y="4" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="12" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="20" width="24" height="4" rx="1" ry="1"></rect>
+        </svg>
+    </a>
+  
+</div>
+        <div class="clear"></div>
+      </div>
+
+      <div id="content"><h1>Module: Discordrb::Opcodes
+  
+  
+  
+</h1>
+<div class="box_info">
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+  <dl>
+    <dt>Defined in:</dt>
+    <dd>lib/discordrb/gateway.rb</dd>
+  </dl>
+  
+</div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <p>Gateway packet opcodes</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+  
+    <h2>
+      Constant Summary
+      <small><a href="#" class="constants_summary_toggle">collapse</a></small>
+    </h2>
+
+    <dl class="constants">
+      
+        <dt id="DISPATCH-constant" class="">DISPATCH =
+          <div class="docstring">
+  <div class="discussion">
+    <p><strong>Received</strong> when Discord dispatches an event to the gateway (like MESSAGE_CREATE, PRESENCE_UPDATE or whatever).
+The vast majority of received packets will have this opcode.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+        </dt>
+        <dd><pre class="code"><span class='int'>0</span></pre></dd>
+      
+        <dt id="HEARTBEAT-constant" class="">HEARTBEAT =
+          <div class="docstring">
+  <div class="discussion">
+    <p><strong>Two-way</strong>: The client has to send a packet with this opcode every ~40 seconds (actual interval specified in
+READY or RESUMED) and the current sequence number, otherwise it will be disconnected from the gateway. In certain
+cases Discord may also send one, specifically if two clients are connected at once.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+        </dt>
+        <dd><pre class="code"><span class='int'>1</span></pre></dd>
+      
+        <dt id="IDENTIFY-constant" class="">IDENTIFY =
+          <div class="docstring">
+  <div class="discussion">
+    <p><strong>Sent</strong>: This is one of the two possible ways to initiate a session after connecting to the gateway. It
+should contain the authentication token along with other stuff the server has to know right from the start, such
+as large_threshold and, for older gateway versions, the desired version.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+        </dt>
+        <dd><pre class="code"><span class='int'>2</span></pre></dd>
+      
+        <dt id="PRESENCE-constant" class="">PRESENCE =
+          <div class="docstring">
+  <div class="discussion">
+    <p><strong>Sent</strong>: Packets with this opcode are used to change the user&#39;s status and played game. (Sending this is never
+necessary for a gateway client to behave correctly)</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+        </dt>
+        <dd><pre class="code"><span class='int'>3</span></pre></dd>
+      
+        <dt id="VOICE_STATE-constant" class="">VOICE_STATE =
+          <div class="docstring">
+  <div class="discussion">
+    <p><strong>Sent</strong>: Packets with this opcode are used to change a user&#39;s voice state (mute/deaf/unmute/undeaf/etc.). It is
+also used to connect to a voice server in the first place. (Sending this is never necessary for a gateway client
+to behave correctly)</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+        </dt>
+        <dd><pre class="code"><span class='int'>4</span></pre></dd>
+      
+        <dt id="VOICE_PING-constant" class="">VOICE_PING =
+          <div class="docstring">
+  <div class="discussion">
+    <p><strong>Sent</strong>: This opcode is used to ping a voice server, whatever that means. The functionality of this opcode isn&#39;t
+known well but non-user clients should never send it.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+        </dt>
+        <dd><pre class="code"><span class='int'>5</span></pre></dd>
+      
+        <dt id="RESUME-constant" class="">RESUME =
+          <div class="docstring">
+  <div class="discussion">
+    <p><strong>Sent</strong>: This is the other of two possible ways to initiate a gateway session (other than <span class='object_link'><a href="#IDENTIFY-constant" title="Discordrb::Opcodes::IDENTIFY (constant)">IDENTIFY</a></span>). Rather
+than starting an entirely new session, it resumes an existing session by replaying all events from a given
+sequence number. It should be used to recover from a connection error or anything like that when the session is
+still valid - sending this with an invalid session will cause an error to occur.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+        </dt>
+        <dd><pre class="code"><span class='int'>6</span></pre></dd>
+      
+        <dt id="RECONNECT-constant" class="">RECONNECT =
+          <div class="docstring">
+  <div class="discussion">
+    <p><strong>Received</strong>: Discord sends this opcode to indicate that the client should reconnect to a different gateway
+server because the old one is currently being decommissioned. Counterintuitively, this opcode also invalidates the
+session - the client has to create an entirely new session with the new gateway instead of resuming the old one.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+        </dt>
+        <dd><pre class="code"><span class='int'>7</span></pre></dd>
+      
+        <dt id="REQUEST_MEMBERS-constant" class="">REQUEST_MEMBERS =
+          <div class="docstring">
+  <div class="discussion">
+    <p><strong>Sent</strong>: This opcode identifies packets used to retrieve a list of members from a particular server. There is
+also a REST endpoint available for this, but it is inconvenient to use because the client has to implement
+pagination itself, whereas sending this opcode lets Discord handle the pagination and the client can just add
+members when it receives them. (Sending this is never necessary for a gateway client to behave correctly)</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+        </dt>
+        <dd><pre class="code"><span class='int'>8</span></pre></dd>
+      
+        <dt id="INVALIDATE_SESSION-constant" class="">INVALIDATE_SESSION =
+          <div class="docstring">
+  <div class="discussion">
+    <p><strong>Received</strong>: Sent by Discord when the session becomes invalid for any reason. This may include improperly
+resuming existing sessions, attempting to start sessions with invalid data, or something else entirely. The client
+should handle this by simply starting a new session.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+        </dt>
+        <dd><pre class="code"><span class='int'>9</span></pre></dd>
+      
+        <dt id="HELLO-constant" class="">HELLO =
+          <div class="docstring">
+  <div class="discussion">
+    <p><strong>Received</strong>: Sent immediately for any opened connection; tells the client to start heartbeating early on, so the
+server can safely search for a session server to handle the connection without the connection being terminated.
+As a side-effect, large bots are less likely to disconnect because of very large READY parse times.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+        </dt>
+        <dd><pre class="code"><span class='int'>10</span></pre></dd>
+      
+        <dt id="HEARTBEAT_ACK-constant" class="">HEARTBEAT_ACK =
+          <div class="docstring">
+  <div class="discussion">
+    <p><strong>Received</strong>: Returned after a heartbeat was sent to the server. This allows clients to identify and deal with
+zombie connections that don&#39;t dispatch any events anymore.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+        </dt>
+        <dd><pre class="code"><span class='int'>11</span></pre></dd>
+      
+    </dl>
+  
+
+
+
+
+
+
+
+
+
+</div>
+
+      <div id="footer">
+  Generated on Sun Dec  8 16:53:38 2019 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.9.20 (ruby-2.6.5).
+</div>
+
+    </div>
+  </body>
+</html>

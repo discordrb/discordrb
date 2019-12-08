@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>
+  File: README
+  
+    &mdash; Documentation by YARD 0.9.20
+  
+</title>
+
+  <link rel="stylesheet" href="css/style.css" type="text/css" charset="utf-8" />
+
+  <link rel="stylesheet" href="css/common.css" type="text/css" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  pathId = "README";
+  relpath = '';
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div class="nav_wrap">
+      <iframe id="nav" src="file_list.html?1"></iframe>
+      <div id="resizer"></div>
+    </div>
+
+    <div id="main" tabindex="-1">
+      <div id="header">
+        <div id="menu">
+  
+    <a href="_index.html">Index</a> &raquo; 
+    <span class="title">File: README</span>
+  
+</div>
+
+        <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="class_list.html">
+
+        <svg width="24" height="24">
+          <rect x="0" y="4" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="12" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="20" width="24" height="4" rx="1" ry="1"></rect>
+        </svg>
+    </a>
+  
+</div>
+        <div class="clear"></div>
+      </div>
+
+      <div id="content"><div id='filecontents'><p><a href="https://rubygems.org/gems/discordrb"><img src="https://img.shields.io/gem/v/discordrb.svg" alt="Gem"></a>
+<a href="https://rubygems.org/gems/discordrb"><img src="https://img.shields.io/gem/dt/discordrb.svg" alt="Gem"></a>
+<a href="https://travis-ci.org/meew0/discordrb"><img src="https://travis-ci.org/meew0/discordrb.svg?branch=master" alt="Build Status"></a>
+<a href="https://inch-ci.org/github/meew0/discordrb"><img src="https://inch-ci.org/github/meew0/discordrb.svg?branch=master&style=shields" alt="Inline docs"></a>
+<a href="https://codeclimate.com/github/meew0/discordrb"><img src="https://codeclimate.com/github/meew0/discordrb/badges/gpa.svg" alt="Code Climate"></a>
+<a href="https://codeclimate.com/github/meew0/discordrb/coverage"><img src="https://codeclimate.com/github/meew0/discordrb/badges/coverage.svg" alt="Test Coverage"></a>
+<a href="https://discord.gg/cyK3Hjm"><img src="https://img.shields.io/badge/discord-join-7289DA.svg" alt="Join Discord"></a></p>
+
+<h1>discordrb</h1>
+
+<p>An implementation of the <a href="https://discordapp.com/">Discord</a> API using Ruby.</p>
+
+<h2>Quick links to sections</h2>
+
+<ul>
+<li><a href="https://github.com/meew0/discordrb#dependencies">Dependencies</a></li>
+<li><a href="https://github.com/meew0/discordrb#installation">Installation</a></li>
+<li><a href="https://github.com/meew0/discordrb#usage">Usage</a></li>
+<li><a href="https://github.com/meew0/discordrb#webhooks-client">Webhooks Client</a></li>
+<li><a href="https://github.com/meew0/discordrb#support">Support</a></li>
+<li><a href="https://github.com/meew0/discordrb#development">Development</a>, <a href="https://github.com/meew0/discordrb#contributing">Contributing</a></li>
+<li><a href="https://github.com/meew0/discordrb#license">License</a></li>
+</ul>
+
+<p>See also: <a href="https://www.rubydoc.info/gems/discordrb">Documentation</a>, <a href="https://github.com/meew0/discordrb/wiki">Tutorials</a></p>
+
+<h2>Dependencies</h2>
+
+<ul>
+<li>Ruby 2.2+</li>
+<li>An installed build system for native extensions (on Windows for Ruby &lt; 2.4, try the <a href="https://rubyinstaller.org/downloads/">DevKit</a>; installation instructions <a href="https://github.com/oneclick/rubyinstaller/wiki/Development-Kit#quick-start">here</a> - you only need to do the quick start)</li>
+</ul>
+
+<blockquote>
+<p><strong>Note:</strong> RubyInstaller for Ruby versions 2.4+ will install the DevKit as the last step of the installation.</p>
+</blockquote>
+
+<h3>Voice dependencies</h3>
+
+<p>This section only applies to you if you want to use voice functionality.</p>
+
+<ul>
+<li><a href="https://github.com/meew0/discordrb/wiki/Installing-libsodium">libsodium</a></li>
+<li>A compiled libopus distribution for your system, anywhere the script can find it. See <a href="https://github.com/meew0/discordrb/wiki/Installing-libopus">here</a> for installation instructions.</li>
+<li><a href="https://www.ffmpeg.org/download.html">FFmpeg</a> installed and in your PATH</li>
+</ul>
+
+<p>In addition to this, if you&#39;re on Windows and want to use voice functionality, your installed Ruby version <strong>needs to be 32 bit</strong>, as otherwise Opus won&#39;t work.</p>
+
+<h2>Installation</h2>
+
+<h3>With Bundler</h3>
+
+<p>Using <a href="https://bundler.io/#getting-started">Bundler</a>, you can add discordrb to your Gemfile:</p>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_gem'>gem</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>discordrb</span><span class='tstring_end'>&#39;</span></span>
+</code></pre>
+
+<p>And then install via <code>bundle install</code>.</p>
+
+<p>Run the <a href="https://github.com/meew0/discordrb/blob/master/examples/ping.rb">ping example</a> to verify that the installation works (make sure to replace the token and client ID in there with your bots&#39;!):</p>
+
+<p>To run the bot while using bundler:</p>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_bundle'>bundle</span> <span class='id identifier rubyid_exec'>exec</span> <span class='id identifier rubyid_ruby'>ruby</span> <span class='id identifier rubyid_ping'>ping</span><span class='period'>.</span><span class='id identifier rubyid_rb'>rb</span>
+</code></pre>
+
+<h3>With Gem</h3>
+
+<p>Alternatively, while Bundler is the recommended option, you can also install discordrb without it.</p>
+
+<h4>Linux / macOS</h4>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_gem'>gem</span> <span class='id identifier rubyid_install'>install</span> <span class='id identifier rubyid_discordrb'>discordrb</span>
+</code></pre>
+
+<h4>Windows</h4>
+
+<blockquote>
+<p><strong>Make sure you have the DevKit installed! See the <a href="https://github.com/meew0/discordrb#dependencies">Dependencies</a> section)</strong></p>
+</blockquote>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_gem'>gem</span> <span class='id identifier rubyid_install'>install</span> <span class='id identifier rubyid_discordrb'>discordrb</span> <span class='op'>-</span><span class='op'>-</span><span class='id identifier rubyid_platform'>platform</span><span class='op'>=</span><span class='id identifier rubyid_ruby'>ruby</span>
+</code></pre>
+
+<p>To run the bot:</p>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_ruby'>ruby</span> <span class='id identifier rubyid_ping'>ping</span><span class='period'>.</span><span class='id identifier rubyid_rb'>rb</span>
+</code></pre>
+
+<h4>Troubleshooting</h4>
+
+<p><strong>If you get an error like this when installing the gem</strong>:</p>
+
+<pre class="code ruby"><code class="ruby">ERROR:  Error installing discordrb:
+        The &#39;websocket-driver&#39; native gem requires installed build tools.
+</code></pre>
+
+<p>You&#39;re missing the development kit required to build native extensions.</p>
+
+<h5>RubyInstaller for ruby 2.4.3-2 and above</h5>
+
+<p>RubyInstaller after version 2.3.3 now includes the development kit in the installer. If you do not have the development kit and have installed ruby using RubyInstaller, open a command prompt with administrator privileges and run:</p>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_ridk'>ridk</span> <span class='id identifier rubyid_install'>install</span>
+</code></pre>
+
+<p>Select option 3, and then run</p>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_ridk'>ridk</span> <span class='id identifier rubyid_enable'>enable</span>
+</code></pre>
+
+<p>To enable the changes</p>
+
+<h5>RubyInstaller for ruby 2.3.3 and below</h5>
+
+<p>Download the development kit <a href="https://rubyinstaller.org/downloads/">here</a> (scroll down to &quot;Development Kit&quot;, then choose the one for Ruby 2.0 and your system architecture) and extract it somewhere. Open a command prompt in that folder and run:</p>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_ruby'>ruby</span> <span class='id identifier rubyid_dk'>dk</span><span class='period'>.</span><span class='id identifier rubyid_rb'>rb</span> <span class='id identifier rubyid_init'>init</span>
+<span class='id identifier rubyid_ruby'>ruby</span> <span class='id identifier rubyid_dk'>dk</span><span class='period'>.</span><span class='id identifier rubyid_rb'>rb</span> <span class='id identifier rubyid_install'>install</span>
+</code></pre>
+
+<p>Then reinstall discordrb:</p>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_gem'>gem</span> <span class='id identifier rubyid_uninstall'>uninstall</span> <span class='id identifier rubyid_discordrb'>discordrb</span>
+<span class='id identifier rubyid_bundle'>bundle</span> <span class='id identifier rubyid_install'>install</span>
+
+<span class='comment'># Or, if you didn&#39;t use bundler:
+</span><span class='id identifier rubyid_gem'>gem</span> <span class='id identifier rubyid_install'>install</span> <span class='id identifier rubyid_discordrb'>discordrb</span>
+</code></pre>
+
+<p><strong>If Ruby complains about <code>ffi_c</code> not being able to be found:</strong></p>
+
+<p>For example</p>
+
+<pre class="code ruby"><code class="ruby">C:/Ruby23-x64/lib/ruby/2.3.0/rubygems/core_ext/kernel_require.rb:55:in `require&#39;: cannot load such file -- ffi_c (LoadError)
+</code></pre>
+
+<p>Your ffi setup is screwed up, first run <code>gem uninstall ffi</code> (uninstall all versions if it asks you, say yes to any unmet dependencies), then run <code>gem install ffi --platform=ruby</code> to fix it. If it says something about build tools, follow the steps in the first troubleshooting section.</p>
+
+<p><strong>If you&#39;re having trouble getting voice playback to work</strong>:</p>
+
+<p>Look here: <a href="https://github.com/meew0/discordrb/wiki/Voice-sending#troubleshooting">https://github.com/meew0/discordrb/wiki/Voice-sending#troubleshooting</a></p>
+
+<h2>Usage</h2>
+
+<p>You can make a simple bot like this:</p>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_require'>require</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>discordrb</span><span class='tstring_end'>&#39;</span></span>
+
+<span class='id identifier rubyid_bot'>bot</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="Discordrb.html" title="Discordrb (module)">Discordrb</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="Discordrb/Bot.html" title="Discordrb::Bot (class)">Bot</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="Discordrb/Bot.html#initialize-instance_method" title="Discordrb::Bot#initialize (method)">new</a></span></span> <span class='label'>token:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>&lt;token here&gt;</span><span class='tstring_end'>&#39;</span></span>
+
+<span class='id identifier rubyid_bot'>bot</span><span class='period'>.</span><span class='id identifier rubyid_message'>message</span><span class='lparen'>(</span><span class='label'>with_text:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Ping!</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_event'>event</span><span class='op'>|</span>
+  <span class='id identifier rubyid_event'>event</span><span class='period'>.</span><span class='id identifier rubyid_respond'>respond</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Pong!</span><span class='tstring_end'>&#39;</span></span>
+<span class='kw'>end</span>
+
+<span class='id identifier rubyid_bot'>bot</span><span class='period'>.</span><span class='id identifier rubyid_run'>run</span>
+</code></pre>
+
+<p>This bot responds to every &quot;Ping!&quot; with a &quot;Pong!&quot;.</p>
+
+<p>See <a href="https://github.com/meew0/discordrb/tree/master/examples">additional examples here</a>.</p>
+
+<p>You can find examples of projects that use discordrb by <a href="https://github.com/topics/discordrb">searching for the discordrb topic on GitHub</a>.</p>
+
+<p>If you&#39;ve made an open source project on GitHub that uses discordrb, consider adding the <code>discordrb</code> topic to your repo!</p>
+
+<h2>Webhooks Client</h2>
+
+<p>Also included is a webhooks client, which can be used as a separate gem <code>discordrb-webhooks</code>. This special client can be used to form requests to Discord webhook URLs in a high-level manner.</p>
+
+<ul>
+<li><a href="https://www.rubydoc.info/gems/discordrb-webhooks"><code>discordrb-webhooks</code> documentation</a></li>
+<li><a href="https://support.discordapp.com/hc/en-us/articles/228383668-Intro-to-Webhooks">More information about webhooks</a></li>
+<li><a href="https://leovoel.github.io/embed-visualizer/">Embed visualizer tool</a> - Includes a discordrb code generator for forming embeds</li>
+</ul>
+
+<h3>Usage</h3>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_require'>require</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>discordrb/webhooks</span><span class='tstring_end'>&#39;</span></span>
+
+<span class='const'>WEBHOOK_URL</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>https://discordapp.com/api/webhooks/424070213278105610/yByxDncRvHi02mhKQheviQI2erKkfRRwFcEp0MMBfib1ds6ZHN13xhPZNS2-fJo_ApSw</span><span class='tstring_end'>&#39;</span></span><span class='period'>.</span><span class='id identifier rubyid_freeze'>freeze</span>
+
+<span class='id identifier rubyid_client'>client</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="Discordrb.html" title="Discordrb (module)">Discordrb</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="Discordrb/Webhooks.html" title="Discordrb::Webhooks (module)">Webhooks</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="Discordrb/Webhooks/Client.html" title="Discordrb::Webhooks::Client (class)">Client</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="Discordrb/Webhooks/Client.html#initialize-instance_method" title="Discordrb::Webhooks::Client#initialize (method)">new</a></span></span><span class='lparen'>(</span><span class='label'>url:</span> <span class='const'>WEBHOOK_URL</span><span class='rparen'>)</span>
+<span class='id identifier rubyid_client'>client</span><span class='period'>.</span><span class='id identifier rubyid_execute'>execute</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_builder'>builder</span><span class='op'>|</span>
+  <span class='id identifier rubyid_builder'>builder</span><span class='period'>.</span><span class='id identifier rubyid_content'>content</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Hello world!</span><span class='tstring_end'>&#39;</span></span>
+  <span class='id identifier rubyid_builder'>builder</span><span class='period'>.</span><span class='id identifier rubyid_add_embed'>add_embed</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_embed'>embed</span><span class='op'>|</span>
+    <span class='id identifier rubyid_embed'>embed</span><span class='period'>.</span><span class='id identifier rubyid_title'>title</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Embed title</span><span class='tstring_end'>&#39;</span></span>
+    <span class='id identifier rubyid_embed'>embed</span><span class='period'>.</span><span class='id identifier rubyid_description'>description</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Embed description</span><span class='tstring_end'>&#39;</span></span>
+    <span class='id identifier rubyid_embed'>embed</span><span class='period'>.</span><span class='id identifier rubyid_timestamp'>timestamp</span> <span class='op'>=</span> <span class='const'>Time</span><span class='period'>.</span><span class='id identifier rubyid_now'>now</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span>
+</code></pre>
+
+<p><strong>Note:</strong> The <code>discordrb</code> gem relies on <code>discordrb-webhooks</code>. If you already have <code>discordrb</code> installed, <code>require &#39;discordrb/webhooks&#39;</code> will include all of the <code>Webhooks</code> features as well.</p>
+
+<h2>Support</h2>
+
+<p>You can find me (@meew0, ID 66237334693085184) on the unofficial Discord API server - if you have a question, just ask there, I or somebody else will probably answer you: <a href="https://discord.gg/3Trm6FW">https://discord.gg/3Trm6FW</a></p>
+
+<h2>Development</h2>
+
+<p><strong>This section is for developing discordrb itself! If you just want to make a bot, see the <a href="https://github.com/meew0/discordrb#installation">Installation</a> section.</strong></p>
+
+<p>After checking out the repo, run <code>bin/setup</code> to install dependencies. You can then run tests via <code>bundle exec rspec spec</code>. Make sure to run rubocop also: <code>bundle exec rubocop</code>. You can also run <code>bin/console</code> for an interactive prompt that will allow you to experiment.</p>
+
+<p>To install this gem onto your local machine, run <code>bundle exec rake install</code>. To release a new version, update the version number in <code>version.rb</code>, and then run <code>bundle exec rake release</code>, which will create a git tag for the version, push git commits and tags, and push the <code>.gem</code> file to <a href="https://rubygems.org">rubygems.org</a>.</p>
+
+<h2>Contributing</h2>
+
+<p>Bug reports and pull requests are welcome on GitHub at <a href="https://github.com/meew0/discordrb">https://github.com/meew0/discordrb</a>.</p>
+
+<h2>License</h2>
+
+<p>The gem is available as open source under the terms of the <a href="https://opensource.org/licenses/MIT">MIT License</a>.</p>
+</div></div>
+
+      <div id="footer">
+  Generated on Sun Dec  8 16:53:38 2019 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.9.20 (ruby-2.6.5).
+</div>
+
+    </div>
+  </body>
+</html>

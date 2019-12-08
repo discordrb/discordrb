@@ -1,0 +1,2277 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>
+  Class: Discordrb::Commands::CommandBot
+  
+    &mdash; Documentation by YARD 0.9.20
+  
+</title>
+
+  <link rel="stylesheet" href="../../css/style.css" type="text/css" charset="utf-8" />
+
+  <link rel="stylesheet" href="../../css/common.css" type="text/css" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  pathId = "Discordrb::Commands::CommandBot";
+  relpath = '../../';
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="../../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../../js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div class="nav_wrap">
+      <iframe id="nav" src="../../class_list.html?1"></iframe>
+      <div id="resizer"></div>
+    </div>
+
+    <div id="main" tabindex="-1">
+      <div id="header">
+        <div id="menu">
+  
+    <a href="../../_index.html">Index (C)</a> &raquo;
+    <span class='title'><span class='object_link'><a href="../../Discordrb.html" title="Discordrb (module)">Discordrb</a></span></span> &raquo; <span class='title'><span class='object_link'><a href="../Commands.html" title="Discordrb::Commands (module)">Commands</a></span></span>
+     &raquo; 
+    <span class="title">CommandBot</span>
+  
+</div>
+
+        <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="../../class_list.html">
+
+        <svg width="24" height="24">
+          <rect x="0" y="4" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="12" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="20" width="24" height="4" rx="1" ry="1"></rect>
+        </svg>
+    </a>
+  
+</div>
+        <div class="clear"></div>
+      </div>
+
+      <div id="content"><h1>Class: Discordrb::Commands::CommandBot
+  
+  
+  
+</h1>
+<div class="box_info">
+  
+  <dl>
+    <dt>Inherits:</dt>
+    <dd>
+      <span class="inheritName"><span class='object_link'><a href="../Bot.html" title="Discordrb::Bot (class)">Bot</a></span></span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next"><span class='object_link'><a href="../Bot.html" title="Discordrb::Bot (class)">Bot</a></span></li>
+          
+            <li class="next">Discordrb::Commands::CommandBot</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+    </dd>
+  </dl>
+  
+
+  
+  
+  
+  
+  <dl>
+      <dt>Includes:</dt>
+      <dd><span class='object_link'><a href="CommandContainer.html" title="Discordrb::Commands::CommandContainer (module)">CommandContainer</a></span></dd>
+  </dl>
+  
+  
+
+  
+
+  
+  <dl>
+    <dt>Defined in:</dt>
+    <dd>lib/discordrb/commands/command_bot.rb</dd>
+  </dl>
+  
+</div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <p>Bot that supports commands and command chains</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+
+
+
+  <h2>Instance Attribute Summary <small><a href="#" class="summary_toggle">collapse</a></small></h2>
+  <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#attributes-instance_method" title="#attributes (instance method)">#<strong>attributes</strong>  &#x21d2; Hash </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>This bot&#39;s attributes.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#prefix-instance_method" title="#prefix (instance method)">#<strong>prefix</strong>  &#x21d2; String, ... </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>The prefix commands are triggered with.</p>
+</div></span>
+  
+</li>
+
+    
+  </ul>
+
+
+
+  
+  
+  <h3 class="inherited">Attributes included from <span class='object_link'><a href="CommandContainer.html" title="Discordrb::Commands::CommandContainer (module)">CommandContainer</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="CommandContainer.html#commands-instance_method" title="Discordrb::Commands::CommandContainer#commands (method)">#commands</a></span></p>
+
+  
+  
+  <h3 class="inherited">Attributes inherited from <span class='object_link'><a href="../Bot.html" title="Discordrb::Bot (class)">Bot</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="../Bot.html#awaits-instance_method" title="Discordrb::Bot#awaits (method)">#awaits</a></span>, <span class='object_link'><a href="../Bot.html#event_threads-instance_method" title="Discordrb::Bot#event_threads (method)">#event_threads</a></span>, <span class='object_link'><a href="../Bot.html#gateway-instance_method" title="Discordrb::Bot#gateway (method)">#gateway</a></span>, <span class='object_link'><a href="../Bot.html#name-instance_method" title="Discordrb::Bot#name (method)">#name</a></span>, <span class='object_link'><a href="../Bot.html#shard_key-instance_method" title="Discordrb::Bot#shard_key (method)">#shard_key</a></span>, <span class='object_link'><a href="../Bot.html#should_parse_self-instance_method" title="Discordrb::Bot#should_parse_self (method)">#should_parse_self</a></span>, <span class='object_link'><a href="../Bot.html#voices-instance_method" title="Discordrb::Bot#voices (method)">#voices</a></span></p>
+
+
+  
+    <h2>
+      Instance Method Summary
+      <small><a href="#" class="summary_toggle">collapse</a></small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#add_channel-instance_method" title="#add_channel (instance method)">#<strong>add_channel</strong>(channel)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Add a channel to the list of channels the bot accepts commands from.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#arg_check-instance_method" title="#arg_check (instance method)">#<strong>arg_check</strong>(args, types = nil, server = nil)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Transforms an array of string arguments based on types array.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#channels=-instance_method" title="#channels= (instance method)">#<strong>channels=</strong>(channels)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#command_aliases-instance_method" title="#command_aliases (instance method)">#<strong>command_aliases</strong>(name)  &#x21d2; Array&lt;CommandAlias&gt; </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Returns all aliases for the command with the given name.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#execute_command-instance_method" title="#execute_command (instance method)">#<strong>execute_command</strong>(name, event, arguments, chained = false, check_permissions = true)  &#x21d2; String<sup>?</sup> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Executes a particular command on the bot.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#initialize-instance_method" title="#initialize (instance method)">#<strong>initialize</strong>(attributes = {})  &#x21d2; CommandBot </a>
+    
+
+    
+  </span>
+  
+  
+    <span class="note title constructor">constructor</span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Creates a new CommandBot and logs in to Discord.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#permission%3F-instance_method" title="#permission? (instance method)">#<strong>permission?</strong>(user, level, server)  &#x21d2; true, false </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Check if a user has permission to do something.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#remove_channel-instance_method" title="#remove_channel (instance method)">#<strong>remove_channel</strong>(channel)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Remove a channel from the list of channels the bot accepts commands from.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#set_role_permission-instance_method" title="#set_role_permission (instance method)">#<strong>set_role_permission</strong>(id, level)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Sets the permission level of a role - this applies to all users in the role.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#set_user_permission-instance_method" title="#set_user_permission (instance method)">#<strong>set_user_permission</strong>(id, level)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Sets the permission level of a user.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#simple_execute-instance_method" title="#simple_execute (instance method)">#<strong>simple_execute</strong>(chain, event)  &#x21d2; String<sup>?</sup> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Executes a command in a simple manner, without command chains or permissions.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#update_channels-instance_method" title="#update_channels (instance method)">#<strong>update_channels</strong>(channels = [])  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Update the list of channels the bot accepts commands from.</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <span class='object_link'><a href="CommandContainer.html" title="Discordrb::Commands::CommandContainer (module)">CommandContainer</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="CommandContainer.html#command-instance_method" title="Discordrb::Commands::CommandContainer#command (method)">#command</a></span>, <span class='object_link'><a href="CommandContainer.html#include!-instance_method" title="Discordrb::Commands::CommandContainer#include! (method)">#include!</a></span>, <span class='object_link'><a href="CommandContainer.html#include_commands-instance_method" title="Discordrb::Commands::CommandContainer#include_commands (method)">#include_commands</a></span>, <span class='object_link'><a href="CommandContainer.html#remove_command-instance_method" title="Discordrb::Commands::CommandContainer#remove_command (method)">#remove_command</a></span></p>
+
+  
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <span class='object_link'><a href="RateLimiter.html" title="Discordrb::Commands::RateLimiter (module)">RateLimiter</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="RateLimiter.html#bucket-instance_method" title="Discordrb::Commands::RateLimiter#bucket (method)">#bucket</a></span>, <span class='object_link'><a href="RateLimiter.html#clean-instance_method" title="Discordrb::Commands::RateLimiter#clean (method)">#clean</a></span>, <span class='object_link'><a href="RateLimiter.html#include_buckets-instance_method" title="Discordrb::Commands::RateLimiter#include_buckets (method)">#include_buckets</a></span>, <span class='object_link'><a href="RateLimiter.html#rate_limited%3F-instance_method" title="Discordrb::Commands::RateLimiter#rate_limited? (method)">#rate_limited?</a></span></p>
+
+  
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods inherited from <span class='object_link'><a href="../Bot.html" title="Discordrb::Bot (class)">Bot</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="../Bot.html#accept_invite-instance_method" title="Discordrb::Bot#accept_invite (method)">#accept_invite</a></span>, <span class='object_link'><a href="../Bot.html#add_await-instance_method" title="Discordrb::Bot#add_await (method)">#add_await</a></span>, <span class='object_link'><a href="../Bot.html#add_await!-instance_method" title="Discordrb::Bot#add_await! (method)">#add_await!</a></span>, <span class='object_link'><a href="../Bot.html#bot_application-instance_method" title="Discordrb::Bot#bot_application (method)">#bot_application</a></span>, <span class='object_link'><a href="../Bot.html#connected%3F-instance_method" title="Discordrb::Bot#connected? (method)">#connected?</a></span>, <span class='object_link'><a href="../Bot.html#create_oauth_application-instance_method" title="Discordrb::Bot#create_oauth_application (method)">#create_oauth_application</a></span>, <span class='object_link'><a href="../Bot.html#create_server-instance_method" title="Discordrb::Bot#create_server (method)">#create_server</a></span>, <span class='object_link'><a href="../Bot.html#debug-instance_method" title="Discordrb::Bot#debug (method)">#debug</a></span>, <span class='object_link'><a href="../Bot.html#debug=-instance_method" title="Discordrb::Bot#debug= (method)">#debug=</a></span>, <span class='object_link'><a href="../Bot.html#delete_invite-instance_method" title="Discordrb::Bot#delete_invite (method)">#delete_invite</a></span>, <span class='object_link'><a href="../Bot.html#dispatch-instance_method" title="Discordrb::Bot#dispatch (method)">#dispatch</a></span>, <span class='object_link'><a href="../Bot.html#dnd-instance_method" title="Discordrb::Bot#dnd (method)">#dnd</a></span>, <span class='object_link'><a href="../Bot.html#emoji-instance_method" title="Discordrb::Bot#emoji (method)">#emoji</a></span>, <span class='object_link'><a href="../Bot.html#find_emoji-instance_method" title="Discordrb::Bot#find_emoji (method)">#find_emoji</a></span>, <span class='object_link'><a href="../Bot.html#game=-instance_method" title="Discordrb::Bot#game= (method)">#game=</a></span>, <span class='object_link'><a href="../Bot.html#idle-instance_method" title="Discordrb::Bot#idle (method)">#idle</a></span>, <span class='object_link'><a href="../Bot.html#ignore_user-instance_method" title="Discordrb::Bot#ignore_user (method)">#ignore_user</a></span>, <span class='object_link'><a href="../Bot.html#ignored%3F-instance_method" title="Discordrb::Bot#ignored? (method)">#ignored?</a></span>, <span class='object_link'><a href="../Bot.html#invisible-instance_method" title="Discordrb::Bot#invisible (method)">#invisible</a></span>, <span class='object_link'><a href="../Bot.html#invite_url-instance_method" title="Discordrb::Bot#invite_url (method)">#invite_url</a></span>, <span class='object_link'><a href="../Bot.html#join-instance_method" title="Discordrb::Bot#join (method)">#join</a></span>, <span class='object_link'><a href="../Bot.html#listening=-instance_method" title="Discordrb::Bot#listening= (method)">#listening=</a></span>, <span class='object_link'><a href="../Bot.html#log_exception-instance_method" title="Discordrb::Bot#log_exception (method)">#log_exception</a></span>, <span class='object_link'><a href="../Bot.html#mode=-instance_method" title="Discordrb::Bot#mode= (method)">#mode=</a></span>, <span class='object_link'><a href="../Bot.html#online-instance_method" title="Discordrb::Bot#online (method)">#online</a></span>, <span class='object_link'><a href="../Bot.html#parse_mention-instance_method" title="Discordrb::Bot#parse_mention (method)">#parse_mention</a></span>, <span class='object_link'><a href="../Bot.html#profile-instance_method" title="Discordrb::Bot#profile (method)">#profile</a></span>, <span class='object_link'><a href="../Bot.html#prune_empty_groups-instance_method" title="Discordrb::Bot#prune_empty_groups (method)">#prune_empty_groups</a></span>, <span class='object_link'><a href="../Bot.html#raise_heartbeat_event-instance_method" title="Discordrb::Bot#raise_heartbeat_event (method)">#raise_heartbeat_event</a></span>, <span class='object_link'><a href="../Bot.html#raw_token-instance_method" title="Discordrb::Bot#raw_token (method)">#raw_token</a></span>, <span class='object_link'><a href="../Bot.html#run-instance_method" title="Discordrb::Bot#run (method)">#run</a></span>, <span class='object_link'><a href="../Bot.html#send_file-instance_method" title="Discordrb::Bot#send_file (method)">#send_file</a></span>, <span class='object_link'><a href="../Bot.html#send_message-instance_method" title="Discordrb::Bot#send_message (method)">#send_message</a></span>, <span class='object_link'><a href="../Bot.html#send_temporary_message-instance_method" title="Discordrb::Bot#send_temporary_message (method)">#send_temporary_message</a></span>, <span class='object_link'><a href="../Bot.html#servers-instance_method" title="Discordrb::Bot#servers (method)">#servers</a></span>, <span class='object_link'><a href="../Bot.html#stop-instance_method" title="Discordrb::Bot#stop (method)">#stop</a></span>, <span class='object_link'><a href="../Bot.html#stream-instance_method" title="Discordrb::Bot#stream (method)">#stream</a></span>, <span class='object_link'><a href="../Bot.html#suppress_ready_debug-instance_method" title="Discordrb::Bot#suppress_ready_debug (method)">#suppress_ready_debug</a></span>, <span class='object_link'><a href="../Bot.html#token-instance_method" title="Discordrb::Bot#token (method)">#token</a></span>, <span class='object_link'><a href="../Bot.html#unignore_user-instance_method" title="Discordrb::Bot#unignore_user (method)">#unignore_user</a></span>, <span class='object_link'><a href="../Bot.html#update_oauth_application-instance_method" title="Discordrb::Bot#update_oauth_application (method)">#update_oauth_application</a></span>, <span class='object_link'><a href="../Bot.html#update_status-instance_method" title="Discordrb::Bot#update_status (method)">#update_status</a></span>, <span class='object_link'><a href="../Bot.html#users-instance_method" title="Discordrb::Bot#users (method)">#users</a></span>, <span class='object_link'><a href="../Bot.html#voice-instance_method" title="Discordrb::Bot#voice (method)">#voice</a></span>, <span class='object_link'><a href="../Bot.html#voice_connect-instance_method" title="Discordrb::Bot#voice_connect (method)">#voice_connect</a></span>, <span class='object_link'><a href="../Bot.html#voice_destroy-instance_method" title="Discordrb::Bot#voice_destroy (method)">#voice_destroy</a></span>, <span class='object_link'><a href="../Bot.html#watching=-instance_method" title="Discordrb::Bot#watching= (method)">#watching=</a></span></p>
+
+  
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <span class='object_link'><a href="../Cache.html" title="Discordrb::Cache (module)">Discordrb::Cache</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="../Cache.html#channel-instance_method" title="Discordrb::Cache#channel (method)">#channel</a></span>, <span class='object_link'><a href="../Cache.html#ensure_channel-instance_method" title="Discordrb::Cache#ensure_channel (method)">#ensure_channel</a></span>, <span class='object_link'><a href="../Cache.html#ensure_server-instance_method" title="Discordrb::Cache#ensure_server (method)">#ensure_server</a></span>, <span class='object_link'><a href="../Cache.html#ensure_user-instance_method" title="Discordrb::Cache#ensure_user (method)">#ensure_user</a></span>, <span class='object_link'><a href="../Cache.html#find_channel-instance_method" title="Discordrb::Cache#find_channel (method)">#find_channel</a></span>, <span class='object_link'><a href="../Cache.html#find_user-instance_method" title="Discordrb::Cache#find_user (method)">#find_user</a></span>, <span class='object_link'><a href="../Cache.html#init_cache-instance_method" title="Discordrb::Cache#init_cache (method)">#init_cache</a></span>, <span class='object_link'><a href="../Cache.html#invite-instance_method" title="Discordrb::Cache#invite (method)">#invite</a></span>, <span class='object_link'><a href="../Cache.html#member-instance_method" title="Discordrb::Cache#member (method)">#member</a></span>, <span class='object_link'><a href="../Cache.html#pm_channel-instance_method" title="Discordrb::Cache#pm_channel (method)">#pm_channel</a></span>, <span class='object_link'><a href="../Cache.html#request_chunks-instance_method" title="Discordrb::Cache#request_chunks (method)">#request_chunks</a></span>, <span class='object_link'><a href="../Cache.html#resolve_invite_code-instance_method" title="Discordrb::Cache#resolve_invite_code (method)">#resolve_invite_code</a></span>, <span class='object_link'><a href="../Cache.html#server-instance_method" title="Discordrb::Cache#server (method)">#server</a></span>, <span class='object_link'><a href="../Cache.html#user-instance_method" title="Discordrb::Cache#user (method)">#user</a></span>, <span class='object_link'><a href="../Cache.html#voice_regions-instance_method" title="Discordrb::Cache#voice_regions (method)">#voice_regions</a></span></p>
+
+  
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <span class='object_link'><a href="../EventContainer.html" title="Discordrb::EventContainer (module)">EventContainer</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="../EventContainer.html#add_handler-instance_method" title="Discordrb::EventContainer#add_handler (method)">#add_handler</a></span>, <span class='object_link'><a href="../EventContainer.html#await-instance_method" title="Discordrb::EventContainer#await (method)">#await</a></span>, <span class='object_link'><a href="../EventContainer.html#channel_create-instance_method" title="Discordrb::EventContainer#channel_create (method)">#channel_create</a></span>, <span class='object_link'><a href="../EventContainer.html#channel_delete-instance_method" title="Discordrb::EventContainer#channel_delete (method)">#channel_delete</a></span>, <span class='object_link'><a href="../EventContainer.html#channel_recipient_add-instance_method" title="Discordrb::EventContainer#channel_recipient_add (method)">#channel_recipient_add</a></span>, <span class='object_link'><a href="../EventContainer.html#channel_recipient_remove-instance_method" title="Discordrb::EventContainer#channel_recipient_remove (method)">#channel_recipient_remove</a></span>, <span class='object_link'><a href="../EventContainer.html#channel_update-instance_method" title="Discordrb::EventContainer#channel_update (method)">#channel_update</a></span>, <span class='object_link'><a href="../EventContainer.html#class_from_string-class_method" title="Discordrb::EventContainer.class_from_string (method)">class_from_string</a></span>, <span class='object_link'><a href="../EventContainer.html#clear!-instance_method" title="Discordrb::EventContainer#clear! (method)">#clear!</a></span>, <span class='object_link'><a href="../EventContainer.html#disconnected-instance_method" title="Discordrb::EventContainer#disconnected (method)">#disconnected</a></span>, <span class='object_link'><a href="../EventContainer.html#event_class-class_method" title="Discordrb::EventContainer.event_class (method)">event_class</a></span>, <span class='object_link'><a href="../EventContainer.html#handler_class-class_method" title="Discordrb::EventContainer.handler_class (method)">handler_class</a></span>, <span class='object_link'><a href="../EventContainer.html#heartbeat-instance_method" title="Discordrb::EventContainer#heartbeat (method)">#heartbeat</a></span>, <span class='object_link'><a href="../EventContainer.html#include_events-instance_method" title="Discordrb::EventContainer#include_events (method)">#include_events</a></span>, <span class='object_link'><a href="../EventContainer.html#member_join-instance_method" title="Discordrb::EventContainer#member_join (method)">#member_join</a></span>, <span class='object_link'><a href="../EventContainer.html#member_leave-instance_method" title="Discordrb::EventContainer#member_leave (method)">#member_leave</a></span>, <span class='object_link'><a href="../EventContainer.html#member_update-instance_method" title="Discordrb::EventContainer#member_update (method)">#member_update</a></span>, <span class='object_link'><a href="../EventContainer.html#mention-instance_method" title="Discordrb::EventContainer#mention (method)">#mention</a></span>, <span class='object_link'><a href="../EventContainer.html#message-instance_method" title="Discordrb::EventContainer#message (method)">#message</a></span>, <span class='object_link'><a href="../EventContainer.html#message_delete-instance_method" title="Discordrb::EventContainer#message_delete (method)">#message_delete</a></span>, <span class='object_link'><a href="../EventContainer.html#message_edit-instance_method" title="Discordrb::EventContainer#message_edit (method)">#message_edit</a></span>, <span class='object_link'><a href="../EventContainer.html#playing-instance_method" title="Discordrb::EventContainer#playing (method)">#playing</a></span>, <span class='object_link'><a href="../EventContainer.html#pm-instance_method" title="Discordrb::EventContainer#pm (method)">#pm</a></span>, <span class='object_link'><a href="../EventContainer.html#presence-instance_method" title="Discordrb::EventContainer#presence (method)">#presence</a></span>, <span class='object_link'><a href="../EventContainer.html#raw-instance_method" title="Discordrb::EventContainer#raw (method)">#raw</a></span>, <span class='object_link'><a href="../EventContainer.html#reaction_add-instance_method" title="Discordrb::EventContainer#reaction_add (method)">#reaction_add</a></span>, <span class='object_link'><a href="../EventContainer.html#reaction_remove-instance_method" title="Discordrb::EventContainer#reaction_remove (method)">#reaction_remove</a></span>, <span class='object_link'><a href="../EventContainer.html#reaction_remove_all-instance_method" title="Discordrb::EventContainer#reaction_remove_all (method)">#reaction_remove_all</a></span>, <span class='object_link'><a href="../EventContainer.html#ready-instance_method" title="Discordrb::EventContainer#ready (method)">#ready</a></span>, <span class='object_link'><a href="../EventContainer.html#remove_handler-instance_method" title="Discordrb::EventContainer#remove_handler (method)">#remove_handler</a></span>, <span class='object_link'><a href="../EventContainer.html#server_create-instance_method" title="Discordrb::EventContainer#server_create (method)">#server_create</a></span>, <span class='object_link'><a href="../EventContainer.html#server_delete-instance_method" title="Discordrb::EventContainer#server_delete (method)">#server_delete</a></span>, <span class='object_link'><a href="../EventContainer.html#server_emoji-instance_method" title="Discordrb::EventContainer#server_emoji (method)">#server_emoji</a></span>, <span class='object_link'><a href="../EventContainer.html#server_emoji_create-instance_method" title="Discordrb::EventContainer#server_emoji_create (method)">#server_emoji_create</a></span>, <span class='object_link'><a href="../EventContainer.html#server_emoji_delete-instance_method" title="Discordrb::EventContainer#server_emoji_delete (method)">#server_emoji_delete</a></span>, <span class='object_link'><a href="../EventContainer.html#server_emoji_update-instance_method" title="Discordrb::EventContainer#server_emoji_update (method)">#server_emoji_update</a></span>, <span class='object_link'><a href="../EventContainer.html#server_role_create-instance_method" title="Discordrb::EventContainer#server_role_create (method)">#server_role_create</a></span>, <span class='object_link'><a href="../EventContainer.html#server_role_delete-instance_method" title="Discordrb::EventContainer#server_role_delete (method)">#server_role_delete</a></span>, <span class='object_link'><a href="../EventContainer.html#server_role_update-instance_method" title="Discordrb::EventContainer#server_role_update (method)">#server_role_update</a></span>, <span class='object_link'><a href="../EventContainer.html#server_update-instance_method" title="Discordrb::EventContainer#server_update (method)">#server_update</a></span>, <span class='object_link'><a href="../EventContainer.html#typing-instance_method" title="Discordrb::EventContainer#typing (method)">#typing</a></span>, <span class='object_link'><a href="../EventContainer.html#unknown-instance_method" title="Discordrb::EventContainer#unknown (method)">#unknown</a></span>, <span class='object_link'><a href="../EventContainer.html#user_ban-instance_method" title="Discordrb::EventContainer#user_ban (method)">#user_ban</a></span>, <span class='object_link'><a href="../EventContainer.html#user_unban-instance_method" title="Discordrb::EventContainer#user_unban (method)">#user_unban</a></span>, <span class='object_link'><a href="../EventContainer.html#voice_state_update-instance_method" title="Discordrb::EventContainer#voice_state_update (method)">#voice_state_update</a></span>, <span class='object_link'><a href="../EventContainer.html#webhook_update-instance_method" title="Discordrb::EventContainer#webhook_update (method)">#webhook_update</a></span></p>
+
+  
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <span class='object_link'><a href="../Events.html" title="Discordrb::Events (module)">Events</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="../Events.html#matches_all-class_method" title="Discordrb::Events.matches_all (method)">matches_all</a></span></p>
+<div id="constructor_details" class="method_details_list">
+  <h2>Constructor Details</h2>
+  
+    <div class="method_details first">
+  <h3 class="signature first" id="initialize-instance_method">
+  
+    #<strong>initialize</strong>(attributes = {})  &#x21d2; <tt><span class='object_link'><a href="" title="Discordrb::Commands::CommandBot (class)">CommandBot</a></span></tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Creates a new CommandBot and logs in to Discord.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>attributes</span>
+      
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>{}</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'><p>The attributes to initialize the CommandBot with.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+  
+    
+    
+    <p class="tag_title">Options Hash (<tt>attributes</tt>):</p>
+    <ul class="option">
+      
+        <li>
+          <span class="name">:prefix</span>
+          <span class="type">(<tt><span class='object_link'><a href="../../String.html" title="String (class)">String</a></span></tt>, <tt>Array&lt;<span class='object_link'><a href="../../String.html" title="String (class)">String</a></span>&gt;</tt>, <tt>#call</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'><p>The prefix that should trigger this bot&#39;s commands. It
+can be:</p>
+
+<ul>
+<li>Any string (including the empty string). This has the effect that if a message starts with the prefix, the
+prefix will be stripped and the rest of the chain will be parsed as a command chain. Note that it will be
+literal - if the prefix is &quot;hi&quot; then the corresponding trigger string for a command called &quot;test&quot; would be
+&quot;hitest&quot;. Don&#39;t forget to put spaces in if you need them!</li>
+<li>An array of prefixes. Those will behave similarly to setting one string as a prefix, but instead of only one
+string, any of the strings in the array can be used.</li>
+<li>Something Proc-like (responds to :call) that takes a <span class='object_link'><a href="../Message.html" title="Discordrb::Message (class)">Message</a></span> object as an argument and returns either
+the command chain in raw form or <code>nil</code> if the given message shouldn&#39;t be parsed. This can be used to make more
+complicated dynamic prefixes (e. g. based on server), or even something else entirely (suffixes, or most
+adventurous, infixes).</li>
+</ul>
+</div>
+          
+        </li>
+      
+        <li>
+          <span class="name">:advanced_functionality</span>
+          <span class="type">(<tt>true</tt>, <tt>false</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'><p>Whether to enable advanced functionality (very powerful
+way to nest commands into chains, see <a href="https://github.com/meew0/discordrb/wiki/Commands#command-chain-syntax">https://github.com/meew0/discordrb/wiki/Commands#command-chain-syntax</a>
+for info. Default is false.</p>
+</div>
+          
+        </li>
+      
+        <li>
+          <span class="name">:help_command</span>
+          <span class="type">(<tt>Symbol</tt>, <tt>Array&lt;Symbol&gt;</tt>, <tt>false</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'><p>The name of the command that displays info for
+other commands. Use an array if you want to have aliases. Default is &quot;help&quot;. If none should be created, use
+<code>false</code> as the value.</p>
+</div>
+          
+        </li>
+      
+        <li>
+          <span class="name">:command_doesnt_exist_message</span>
+          <span class="type">(<tt><span class='object_link'><a href="../../String.html" title="String (class)">String</a></span></tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'><p>The message that should be displayed if a user attempts
+to use a command that does not exist. If none is specified, no message will be displayed. In the message, you
+can use the string &#39;%command%&#39; that will be replaced with the name of the command.</p>
+</div>
+          
+        </li>
+      
+        <li>
+          <span class="name">:no_permission_message</span>
+          <span class="type">(<tt><span class='object_link'><a href="../../String.html" title="String (class)">String</a></span></tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'><p>The message to be displayed when <code>NoPermission</code> error is raised.</p>
+</div>
+          
+        </li>
+      
+        <li>
+          <span class="name">:spaces_allowed</span>
+          <span class="type">(<tt>true</tt>, <tt>false</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'><p>Whether spaces are allowed to occur between the prefix and the
+command. Default is false.</p>
+</div>
+          
+        </li>
+      
+        <li>
+          <span class="name">:webhook_commands</span>
+          <span class="type">(<tt>true</tt>, <tt>false</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'><p>Whether messages sent by webhooks are allowed to trigger
+commands. Default is true.</p>
+</div>
+          
+        </li>
+      
+        <li>
+          <span class="name">:channels</span>
+          <span class="type">(<tt>Array&lt;<span class='object_link'><a href="../../String.html" title="String (class)">String</a></span>, <span class='object_link'><a href="../../Integer.html" title="Integer (class)">Integer</a></span>, <span class='object_link'><a href="../Channel.html" title="Discordrb::Channel (class)">Channel</a></span>&gt;</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'><p>The channels this command bot accepts commands on.
+Superseded if a command has a &#39;channels&#39; attribute.</p>
+</div>
+          
+        </li>
+      
+        <li>
+          <span class="name">:previous</span>
+          <span class="type">(<tt><span class='object_link'><a href="../../String.html" title="String (class)">String</a></span></tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'><p>Character that should designate the result of the previous command in
+a command chain (see :advanced_functionality). Default is &#39;~&#39;. Set to an empty string to disable.</p>
+</div>
+          
+        </li>
+      
+        <li>
+          <span class="name">:chain_delimiter</span>
+          <span class="type">(<tt><span class='object_link'><a href="../../String.html" title="String (class)">String</a></span></tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'><p>Character that should designate that a new command begins in the
+command chain (see :advanced_functionality). Default is &#39;&gt;&#39;. Set to an empty string to disable.</p>
+</div>
+          
+        </li>
+      
+        <li>
+          <span class="name">:chain_args_delim</span>
+          <span class="type">(<tt><span class='object_link'><a href="../../String.html" title="String (class)">String</a></span></tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'><p>Character that should separate the command chain arguments from the
+chain itself (see :advanced_functionality). Default is &#39;:&#39;. Set to an empty string to disable.</p>
+</div>
+          
+        </li>
+      
+        <li>
+          <span class="name">:sub_chain_start</span>
+          <span class="type">(<tt><span class='object_link'><a href="../../String.html" title="String (class)">String</a></span></tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'><p>Character that should start a sub-chain (see
+:advanced_functionality). Default is &#39;[&#39;. Set to an empty string to disable.</p>
+</div>
+          
+        </li>
+      
+        <li>
+          <span class="name">:sub_chain_end</span>
+          <span class="type">(<tt><span class='object_link'><a href="../../String.html" title="String (class)">String</a></span></tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'><p>Character that should end a sub-chain (see
+:advanced_functionality). Default is &#39;]&#39;. Set to an empty string to disable.</p>
+</div>
+          
+        </li>
+      
+        <li>
+          <span class="name">:quote_start</span>
+          <span class="type">(<tt><span class='object_link'><a href="../../String.html" title="String (class)">String</a></span></tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'><p>Character that should start a quoted string (see
+:advanced_functionality). Default is &#39;&quot;&#39;. Set to an empty string to disable.</p>
+</div>
+          
+        </li>
+      
+        <li>
+          <span class="name">:quote_end</span>
+          <span class="type">(<tt><span class='object_link'><a href="../../String.html" title="String (class)">String</a></span></tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'><p>Character that should end a quoted string (see
+:advanced_functionality). Default is &#39;&quot;&#39; or the same as :quote_start. Set to an empty string to disable.</p>
+</div>
+          
+        </li>
+      
+        <li>
+          <span class="name">:ignore_bots</span>
+          <span class="type">(<tt>true</tt>, <tt>false</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'><p>Whether the bot should ignore bot accounts or not. Default is false.</p>
+</div>
+          
+        </li>
+      
+    </ul>
+  
+
+
+  <p class="tag_title">See Also:</p>
+  <ul class="see">
+    
+      <li>for other attributes that should be used to create the underlying regular bot.</li>
+    
+  </ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/commands/command_bot.rb', line 72</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_attributes'>attributes</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
+  <span class='kw'>super</span><span class='lparen'>(</span>
+    <span class='label'>log_mode:</span> <span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='symbol'>:log_mode</span><span class='rbracket'>]</span><span class='comma'>,</span>
+    <span class='label'>token:</span> <span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='symbol'>:token</span><span class='rbracket'>]</span><span class='comma'>,</span>
+    <span class='label'>client_id:</span> <span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='symbol'>:client_id</span><span class='rbracket'>]</span><span class='comma'>,</span>
+    <span class='label'>type:</span> <span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='symbol'>:type</span><span class='rbracket'>]</span><span class='comma'>,</span>
+    <span class='label'>name:</span> <span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='symbol'>:name</span><span class='rbracket'>]</span><span class='comma'>,</span>
+    <span class='label'>fancy_log:</span> <span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='symbol'>:fancy_log</span><span class='rbracket'>]</span><span class='comma'>,</span>
+    <span class='label'>suppress_ready:</span> <span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='symbol'>:suppress_ready</span><span class='rbracket'>]</span><span class='comma'>,</span>
+    <span class='label'>parse_self:</span> <span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='symbol'>:parse_self</span><span class='rbracket'>]</span><span class='comma'>,</span>
+    <span class='label'>shard_id:</span> <span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='symbol'>:shard_id</span><span class='rbracket'>]</span><span class='comma'>,</span>
+    <span class='label'>num_shards:</span> <span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='symbol'>:num_shards</span><span class='rbracket'>]</span><span class='comma'>,</span>
+    <span class='label'>redact_token:</span> <span class='id identifier rubyid_attributes'>attributes</span><span class='period'>.</span><span class='id identifier rubyid_key?'>key?</span><span class='lparen'>(</span><span class='symbol'>:redact_token</span><span class='rparen'>)</span> <span class='op'>?</span> <span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='symbol'>:redact_token</span><span class='rbracket'>]</span> <span class='op'>:</span> <span class='kw'>true</span><span class='comma'>,</span>
+    <span class='label'>ignore_bots:</span> <span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='symbol'>:ignore_bots</span><span class='rbracket'>]</span><span class='comma'>,</span>
+    <span class='label'>compress_mode:</span> <span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='symbol'>:compress_mode</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+
+  <span class='ivar'>@prefix</span> <span class='op'>=</span> <span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='symbol'>:prefix</span><span class='rbracket'>]</span>
+  <span class='ivar'>@attributes</span> <span class='op'>=</span> <span class='lbrace'>{</span>
+    <span class='comment'># Whether advanced functionality such as command chains are enabled
+</span>    <span class='label'>advanced_functionality:</span> <span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='symbol'>:advanced_functionality</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span> <span class='op'>?</span> <span class='kw'>false</span> <span class='op'>:</span> <span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='symbol'>:advanced_functionality</span><span class='rbracket'>]</span><span class='comma'>,</span>
+
+    <span class='comment'># The name of the help command (that displays information to other commands). False if none should exist
+</span>    <span class='label'>help_command:</span> <span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='symbol'>:help_command</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'>FalseClass</span><span class='rparen'>)</span> <span class='op'>?</span> <span class='kw'>nil</span> <span class='op'>:</span> <span class='lparen'>(</span><span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='symbol'>:help_command</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='symbol'>:help</span><span class='rparen'>)</span><span class='comma'>,</span>
+
+    <span class='comment'># The message to display for when a command doesn&#39;t exist, %command% to get the command name in question and nil for no message
+</span>    <span class='comment'># No default value here because it may not be desired behaviour
+</span>    <span class='label'>command_doesnt_exist_message:</span> <span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='symbol'>:command_doesnt_exist_message</span><span class='rbracket'>]</span><span class='comma'>,</span>
+
+    <span class='comment'># The message to be displayed when `NoPermission` error is raised.
+</span>    <span class='label'>no_permission_message:</span> <span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='symbol'>:no_permission_message</span><span class='rbracket'>]</span><span class='comma'>,</span>
+
+    <span class='comment'># Spaces allowed between prefix and command
+</span>    <span class='label'>spaces_allowed:</span> <span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='symbol'>:spaces_allowed</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span> <span class='op'>?</span> <span class='kw'>false</span> <span class='op'>:</span> <span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='symbol'>:spaces_allowed</span><span class='rbracket'>]</span><span class='comma'>,</span>
+
+    <span class='comment'># Webhooks allowed to trigger commands
+</span>    <span class='label'>webhook_commands:</span> <span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='symbol'>:webhook_commands</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span> <span class='op'>?</span> <span class='kw'>true</span> <span class='op'>:</span> <span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='symbol'>:webhook_commands</span><span class='rbracket'>]</span><span class='comma'>,</span>
+
+    <span class='label'>channels:</span> <span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='symbol'>:channels</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='lbracket'>[</span><span class='rbracket'>]</span><span class='comma'>,</span>
+
+    <span class='comment'># All of the following need to be one character
+</span>    <span class='comment'># String to designate previous result in command chain
+</span>    <span class='label'>previous:</span> <span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='symbol'>:previous</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>~</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+
+    <span class='comment'># Command chain delimiter
+</span>    <span class='label'>chain_delimiter:</span> <span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='symbol'>:chain_delimiter</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>&gt;</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+
+    <span class='comment'># Chain argument delimiter
+</span>    <span class='label'>chain_args_delim:</span> <span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='symbol'>:chain_args_delim</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>:</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+
+    <span class='comment'># Sub-chain starting character
+</span>    <span class='label'>sub_chain_start:</span> <span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='symbol'>:sub_chain_start</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>[</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+
+    <span class='comment'># Sub-chain ending character
+</span>    <span class='label'>sub_chain_end:</span> <span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='symbol'>:sub_chain_end</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>]</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+
+    <span class='comment'># Quoted mode starting character
+</span>    <span class='label'>quote_start:</span> <span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='symbol'>:quote_start</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>&quot;</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+
+    <span class='comment'># Quoted mode ending character
+</span>    <span class='label'>quote_end:</span> <span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='symbol'>:quote_end</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='symbol'>:quote_start</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>&quot;</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+
+    <span class='comment'># Default block for handling internal exceptions, or a string to respond with
+</span>    <span class='label'>rescue:</span> <span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='symbol'>:rescue</span><span class='rbracket'>]</span>
+  <span class='rbrace'>}</span>
+
+  <span class='ivar'>@permissions</span> <span class='op'>=</span> <span class='lbrace'>{</span>
+    <span class='label'>roles:</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='comma'>,</span>
+    <span class='label'>users:</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
+  <span class='rbrace'>}</span>
+
+  <span class='kw'>return</span> <span class='kw'>unless</span> <span class='ivar'>@attributes</span><span class='lbracket'>[</span><span class='symbol'>:help_command</span><span class='rbracket'>]</span>
+  <span class='id identifier rubyid_command'>command</span><span class='lparen'>(</span><span class='ivar'>@attributes</span><span class='lbracket'>[</span><span class='symbol'>:help_command</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='label'>max_args:</span> <span class='int'>1</span><span class='comma'>,</span> <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Shows a list of all the commands available or displays help for a specific command.</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='label'>usage:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>help [command name]</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_event'>event</span><span class='comma'>,</span> <span class='id identifier rubyid_command_name'>command_name</span><span class='op'>|</span>
+    <span class='kw'>if</span> <span class='id identifier rubyid_command_name'>command_name</span>
+      <span class='id identifier rubyid_command'>command</span> <span class='op'>=</span> <span class='ivar'>@commands</span><span class='lbracket'>[</span><span class='id identifier rubyid_command_name'>command_name</span><span class='period'>.</span><span class='id identifier rubyid_to_sym'>to_sym</span><span class='rbracket'>]</span>
+      <span class='kw'>if</span> <span class='id identifier rubyid_command'>command</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="CommandAlias.html" title="Discordrb::Commands::CommandAlias (class)">CommandAlias</a></span></span><span class='rparen'>)</span>
+        <span class='id identifier rubyid_command'>command</span> <span class='op'>=</span> <span class='id identifier rubyid_command'>command</span><span class='period'>.</span><span class='id identifier rubyid_aliased_command'>aliased_command</span>
+        <span class='id identifier rubyid_command_name'>command_name</span> <span class='op'>=</span> <span class='id identifier rubyid_command'>command</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span>
+      <span class='kw'>end</span>
+      <span class='kw'>return</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>The command `</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_command_name'>command_name</span><span class='embexpr_end'>}</span><span class='tstring_content'>` does not exist!</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>unless</span> <span class='id identifier rubyid_command'>command</span>
+      <span class='id identifier rubyid_desc'>desc</span> <span class='op'>=</span> <span class='id identifier rubyid_command'>command</span><span class='period'>.</span><span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='symbol'>:description</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>*No description available*</span><span class='tstring_end'>&#39;</span></span>
+      <span class='id identifier rubyid_usage'>usage</span> <span class='op'>=</span> <span class='id identifier rubyid_command'>command</span><span class='period'>.</span><span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='symbol'>:usage</span><span class='rbracket'>]</span>
+      <span class='id identifier rubyid_parameters'>parameters</span> <span class='op'>=</span> <span class='id identifier rubyid_command'>command</span><span class='period'>.</span><span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='symbol'>:parameters</span><span class='rbracket'>]</span>
+      <span class='id identifier rubyid_result'>result</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>**`</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_command_name'>command_name</span><span class='embexpr_end'>}</span><span class='tstring_content'>`**: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_desc'>desc</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+      <span class='id identifier rubyid_aliases'>aliases</span> <span class='op'>=</span> <span class='id identifier rubyid_command_aliases'>command_aliases</span><span class='lparen'>(</span><span class='id identifier rubyid_command_name'>command_name</span><span class='period'>.</span><span class='id identifier rubyid_to_sym'>to_sym</span><span class='rparen'>)</span>
+      <span class='kw'>unless</span> <span class='id identifier rubyid_aliases'>aliases</span><span class='period'>.</span><span class='id identifier rubyid_empty?'>empty?</span>
+        <span class='id identifier rubyid_result'>result</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\nAliases: </span><span class='tstring_end'>&quot;</span></span>
+        <span class='id identifier rubyid_result'>result</span> <span class='op'>+=</span> <span class='id identifier rubyid_aliases'>aliases</span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_a'>a</span><span class='op'>|</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>`</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_a'>a</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_content'>`</span><span class='tstring_end'>&quot;</span></span> <span class='rbrace'>}</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>, </span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+      <span class='kw'>end</span>
+      <span class='id identifier rubyid_result'>result</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\nUsage: `</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_usage'>usage</span><span class='embexpr_end'>}</span><span class='tstring_content'>`</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_usage'>usage</span>
+      <span class='kw'>if</span> <span class='id identifier rubyid_parameters'>parameters</span>
+        <span class='id identifier rubyid_result'>result</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\nAccepted Parameters:\n```</span><span class='tstring_end'>&quot;</span></span>
+        <span class='id identifier rubyid_parameters'>parameters</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_p'>p</span><span class='op'>|</span> <span class='id identifier rubyid_result'>result</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\n</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_p'>p</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span> <span class='rbrace'>}</span>
+        <span class='id identifier rubyid_result'>result</span> <span class='op'>+=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>```</span><span class='tstring_end'>&#39;</span></span>
+      <span class='kw'>end</span>
+      <span class='id identifier rubyid_result'>result</span>
+    <span class='kw'>else</span>
+      <span class='id identifier rubyid_available_commands'>available_commands</span> <span class='op'>=</span> <span class='ivar'>@commands</span><span class='period'>.</span><span class='id identifier rubyid_values'>values</span><span class='period'>.</span><span class='id identifier rubyid_reject'>reject</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_c'>c</span><span class='op'>|</span>
+        <span class='id identifier rubyid_c'>c</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="CommandAlias.html" title="Discordrb::Commands::CommandAlias (class)">CommandAlias</a></span></span><span class='rparen'>)</span> <span class='op'>||</span> <span class='op'>!</span><span class='id identifier rubyid_c'>c</span><span class='period'>.</span><span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='symbol'>:help_available</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='op'>!</span><span class='id identifier rubyid_required_roles?'>required_roles?</span><span class='lparen'>(</span><span class='id identifier rubyid_event'>event</span><span class='period'>.</span><span class='id identifier rubyid_user'>user</span><span class='comma'>,</span> <span class='id identifier rubyid_c'>c</span><span class='period'>.</span><span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='symbol'>:required_roles</span><span class='rbracket'>]</span><span class='rparen'>)</span> <span class='op'>||</span> <span class='op'>!</span><span class='id identifier rubyid_allowed_roles?'>allowed_roles?</span><span class='lparen'>(</span><span class='id identifier rubyid_event'>event</span><span class='period'>.</span><span class='id identifier rubyid_user'>user</span><span class='comma'>,</span> <span class='id identifier rubyid_c'>c</span><span class='period'>.</span><span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='symbol'>:allowed_roles</span><span class='rbracket'>]</span><span class='rparen'>)</span> <span class='op'>||</span> <span class='op'>!</span><span class='id identifier rubyid_required_permissions?'>required_permissions?</span><span class='lparen'>(</span><span class='id identifier rubyid_event'>event</span><span class='period'>.</span><span class='id identifier rubyid_user'>user</span><span class='comma'>,</span> <span class='id identifier rubyid_c'>c</span><span class='period'>.</span><span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='symbol'>:required_permissions</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_event'>event</span><span class='period'>.</span><span class='id identifier rubyid_channel'>channel</span><span class='rparen'>)</span>
+      <span class='kw'>end</span>
+      <span class='kw'>case</span> <span class='id identifier rubyid_available_commands'>available_commands</span><span class='period'>.</span><span class='id identifier rubyid_length'>length</span>
+      <span class='kw'>when</span> <span class='int'>0</span><span class='op'>..</span><span class='int'>5</span>
+        <span class='id identifier rubyid_available_commands'>available_commands</span><span class='period'>.</span><span class='id identifier rubyid_reduce'>reduce</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>**List of commands:**\n</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_memo'>memo</span><span class='comma'>,</span> <span class='id identifier rubyid_c'>c</span><span class='op'>|</span>
+          <span class='id identifier rubyid_memo'>memo</span> <span class='op'>+</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>**`</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_c'>c</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_content'>`**: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_c'>c</span><span class='period'>.</span><span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='symbol'>:description</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>*No description available*</span><span class='tstring_end'>&#39;</span></span><span class='embexpr_end'>}</span><span class='tstring_content'>\n</span><span class='tstring_end'>&quot;</span></span>
+        <span class='kw'>end</span>
+      <span class='kw'>when</span> <span class='int'>5</span><span class='op'>..</span><span class='int'>50</span>
+        <span class='lparen'>(</span><span class='id identifier rubyid_available_commands'>available_commands</span><span class='period'>.</span><span class='id identifier rubyid_reduce'>reduce</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>**List of commands:**\n</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_memo'>memo</span><span class='comma'>,</span> <span class='id identifier rubyid_c'>c</span><span class='op'>|</span>
+          <span class='id identifier rubyid_memo'>memo</span> <span class='op'>+</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>`</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_c'>c</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_content'>`, </span><span class='tstring_end'>&quot;</span></span>
+        <span class='kw'>end</span><span class='rparen'>)</span><span class='lbracket'>[</span><span class='int'>0</span><span class='op'>..</span><span class='op'>-</span><span class='int'>3</span><span class='rbracket'>]</span>
+      <span class='kw'>else</span>
+        <span class='id identifier rubyid_event'>event</span><span class='period'>.</span><span class='id identifier rubyid_user'>user</span><span class='period'>.</span><span class='id identifier rubyid_pm'>pm</span><span class='lparen'>(</span><span class='id identifier rubyid_available_commands'>available_commands</span><span class='period'>.</span><span class='id identifier rubyid_reduce'>reduce</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>**List of commands:**\n</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_m'>m</span><span class='comma'>,</span> <span class='id identifier rubyid_e'>e</span><span class='op'>|</span> <span class='id identifier rubyid_m'>m</span> <span class='op'>+</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>`</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_e'>e</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_content'>`, </span><span class='tstring_end'>&quot;</span></span> <span class='rbrace'>}</span><span class='lbracket'>[</span><span class='int'>0</span><span class='op'>..</span><span class='op'>-</span><span class='int'>3</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+        <span class='id identifier rubyid_event'>event</span><span class='period'>.</span><span class='id identifier rubyid_channel'>channel</span><span class='period'>.</span><span class='id identifier rubyid_pm?'>pm?</span> <span class='op'>?</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span> <span class='op'>:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Sending list in PM!</span><span class='tstring_end'>&#39;</span></span>
+      <span class='kw'>end</span>
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+  
+</div>
+
+  <div id="instance_attr_details" class="attr_details">
+    <h2>Instance Attribute Details</h2>
+    
+      
+      <span id=""></span>
+      <div class="method_details first">
+  <h3 class="signature first" id="attributes-instance_method">
+  
+    #<strong>attributes</strong>  &#x21d2; <tt>Hash</tt>  <span class="extras">(readonly)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Returns this bot&#39;s attributes.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>this bot&#39;s attributes.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+17
+18
+19</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/commands/command_bot.rb', line 17</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_attributes'>attributes</span>
+  <span class='ivar'>@attributes</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <div class="method_details ">
+  <h3 class="signature " id="prefix-instance_method">
+  
+    #<strong>prefix</strong>  &#x21d2; <tt><span class='object_link'><a href="../../String.html" title="String (class)">String</a></span></tt>, ...  <span class="extras">(readonly)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Returns the prefix commands are triggered with.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../../String.html" title="String (class)">String</a></span></tt>, <tt>Array&lt;<span class='object_link'><a href="../../String.html" title="String (class)">String</a></span>&gt;</tt>, <tt>#call</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>the prefix commands are triggered with.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+  <p class="tag_title">See Also:</p>
+  <ul class="see">
+    
+      <li><span class='object_link'><a href="#initialize-instance_method" title="Discordrb::Commands::CommandBot#initialize (method)">#initialize</a></span></li>
+    
+  </ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+21
+22
+23</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/commands/command_bot.rb', line 21</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_prefix'>prefix</span>
+  <span class='ivar'>@prefix</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+
+    
+      <div class="method_details first">
+  <h3 class="signature first" id="add_channel-instance_method">
+  
+    #<strong>add_channel</strong>(channel)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Add a channel to the list of channels the bot accepts commands from.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>channel</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../../String.html" title="String (class)">String</a></span></tt>, <tt><span class='object_link'><a href="../../Integer.html" title="Integer (class)">Integer</a></span></tt>, <tt><span class='object_link'><a href="../Channel.html" title="Discordrb::Channel (class)">Channel</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>The channel name, integer ID, or <code>Channel</code> object to be added</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+370
+371
+372
+373</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/commands/command_bot.rb', line 370</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_add_channel'>add_channel</span><span class='lparen'>(</span><span class='id identifier rubyid_channel'>channel</span><span class='rparen'>)</span>
+  <span class='kw'>return</span> <span class='kw'>if</span> <span class='ivar'>@attributes</span><span class='lbracket'>[</span><span class='symbol'>:channels</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_find'>find</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_c'>c</span><span class='op'>|</span> <span class='id identifier rubyid_channel'>channel</span><span class='period'>.</span><span class='id identifier rubyid_resolve_id'>resolve_id</span> <span class='op'>==</span> <span class='id identifier rubyid_c'>c</span><span class='period'>.</span><span class='id identifier rubyid_resolve_id'>resolve_id</span> <span class='rbrace'>}</span>
+  <span class='ivar'>@attributes</span><span class='lbracket'>[</span><span class='symbol'>:channels</span><span class='rbracket'>]</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_channel'>channel</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="arg_check-instance_method">
+  
+    #<strong>arg_check</strong>(args, types = nil, server = nil)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Transforms an array of string arguments based on types array.
+For example, <code>[&#39;1&#39;, &#39;10..14&#39;]</code> with types <code>[Integer, Range]</code> would turn into <code>[1, 10..14]</code>.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/commands/command_bot.rb', line 239</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_arg_check'>arg_check</span><span class='lparen'>(</span><span class='id identifier rubyid_args'>args</span><span class='comma'>,</span> <span class='id identifier rubyid_types'>types</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='id identifier rubyid_server'>server</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='rparen'>)</span>
+  <span class='kw'>return</span> <span class='id identifier rubyid_args'>args</span> <span class='kw'>unless</span> <span class='id identifier rubyid_types'>types</span>
+  <span class='id identifier rubyid_args'>args</span><span class='period'>.</span><span class='id identifier rubyid_each_with_index'>each_with_index</span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_arg'>arg</span><span class='comma'>,</span> <span class='id identifier rubyid_i'>i</span><span class='op'>|</span>
+    <span class='kw'>next</span> <span class='id identifier rubyid_arg'>arg</span> <span class='kw'>if</span> <span class='id identifier rubyid_types'>types</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span> <span class='op'>||</span> <span class='id identifier rubyid_types'>types</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span> <span class='op'>==</span> <span class='const'><span class='object_link'><a href="../../String.html" title="String (class)">String</a></span></span>
+    <span class='kw'>if</span> <span class='id identifier rubyid_types'>types</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span> <span class='op'>==</span> <span class='const'><span class='object_link'><a href="../../Integer.html" title="Integer (class)">Integer</a></span></span>
+      <span class='kw'>begin</span>
+        <span class='const'><span class='object_link'><a href="../../Integer.html" title="Integer (class)">Integer</a></span></span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='rparen'>)</span>
+      <span class='kw'>rescue</span> <span class='const'>ArgumentError</span>
+        <span class='kw'>nil</span>
+      <span class='kw'>end</span>
+    <span class='kw'>elsif</span> <span class='id identifier rubyid_types'>types</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span> <span class='op'>==</span> <span class='const'>Float</span>
+      <span class='kw'>begin</span>
+        <span class='const'>Float</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='rparen'>)</span>
+      <span class='kw'>rescue</span> <span class='const'>ArgumentError</span>
+        <span class='kw'>nil</span>
+      <span class='kw'>end</span>
+    <span class='kw'>elsif</span> <span class='id identifier rubyid_types'>types</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span> <span class='op'>==</span> <span class='const'>Time</span>
+      <span class='kw'>begin</span>
+        <span class='const'>Time</span><span class='period'>.</span><span class='id identifier rubyid_parse'>parse</span> <span class='id identifier rubyid_arg'>arg</span>
+      <span class='kw'>rescue</span> <span class='const'>ArgumentError</span>
+        <span class='kw'>nil</span>
+      <span class='kw'>end</span>
+    <span class='kw'>elsif</span> <span class='id identifier rubyid_types'>types</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span> <span class='op'>==</span> <span class='const'>TrueClass</span> <span class='op'>||</span> <span class='id identifier rubyid_types'>types</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span> <span class='op'>==</span> <span class='const'>FalseClass</span>
+      <span class='kw'>if</span> <span class='id identifier rubyid_arg'>arg</span><span class='period'>.</span><span class='id identifier rubyid_casecmp'>casecmp</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>true</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_zero?'>zero?</span> <span class='op'>||</span> <span class='id identifier rubyid_arg'>arg</span><span class='period'>.</span><span class='id identifier rubyid_downcase'>downcase</span><span class='period'>.</span><span class='id identifier rubyid_start_with?'>start_with?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>y</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+        <span class='kw'>true</span>
+      <span class='kw'>elsif</span> <span class='id identifier rubyid_arg'>arg</span><span class='period'>.</span><span class='id identifier rubyid_casecmp'>casecmp</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>false</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_zero?'>zero?</span> <span class='op'>||</span> <span class='id identifier rubyid_arg'>arg</span><span class='period'>.</span><span class='id identifier rubyid_downcase'>downcase</span><span class='period'>.</span><span class='id identifier rubyid_start_with?'>start_with?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>n</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+        <span class='kw'>false</span>
+      <span class='kw'>end</span>
+    <span class='kw'>elsif</span> <span class='id identifier rubyid_types'>types</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span> <span class='op'>==</span> <span class='const'>Symbol</span>
+      <span class='id identifier rubyid_arg'>arg</span><span class='period'>.</span><span class='id identifier rubyid_to_sym'>to_sym</span>
+    <span class='kw'>elsif</span> <span class='id identifier rubyid_types'>types</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span> <span class='op'>==</span> <span class='const'>Encoding</span>
+      <span class='kw'>begin</span>
+        <span class='const'>Encoding</span><span class='period'>.</span><span class='id identifier rubyid_find'>find</span> <span class='id identifier rubyid_arg'>arg</span>
+      <span class='kw'>rescue</span> <span class='const'>ArgumentError</span>
+        <span class='kw'>nil</span>
+      <span class='kw'>end</span>
+    <span class='kw'>elsif</span> <span class='id identifier rubyid_types'>types</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span> <span class='op'>==</span> <span class='const'>Regexp</span>
+      <span class='kw'>begin</span>
+        <span class='const'>Regexp</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span> <span class='id identifier rubyid_arg'>arg</span>
+      <span class='kw'>rescue</span> <span class='const'>ArgumentError</span>
+        <span class='kw'>nil</span>
+      <span class='kw'>end</span>
+    <span class='kw'>elsif</span> <span class='id identifier rubyid_types'>types</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span> <span class='op'>==</span> <span class='const'>Rational</span>
+      <span class='kw'>begin</span>
+        <span class='const'>Rational</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='rparen'>)</span>
+      <span class='kw'>rescue</span> <span class='const'>ArgumentError</span>
+        <span class='kw'>nil</span>
+      <span class='kw'>end</span>
+    <span class='kw'>elsif</span> <span class='id identifier rubyid_types'>types</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span> <span class='op'>==</span> <span class='const'>Range</span>
+      <span class='kw'>begin</span>
+        <span class='kw'>if</span> <span class='id identifier rubyid_arg'>arg</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>...</span><span class='tstring_end'>&#39;</span></span>
+          <span class='const'>Range</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='op'>*</span><span class='id identifier rubyid_arg'>arg</span><span class='period'>.</span><span class='id identifier rubyid_split'>split</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>...</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span><span class='lparen'>(</span><span class='op'>&amp;</span><span class='symbol'>:to_i</span><span class='rparen'>)</span><span class='comma'>,</span> <span class='kw'>true</span><span class='rparen'>)</span>
+        <span class='kw'>elsif</span> <span class='id identifier rubyid_arg'>arg</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>..</span><span class='tstring_end'>&#39;</span></span>
+          <span class='const'>Range</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='op'>*</span><span class='id identifier rubyid_arg'>arg</span><span class='period'>.</span><span class='id identifier rubyid_split'>split</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>..</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span><span class='lparen'>(</span><span class='op'>&amp;</span><span class='symbol'>:to_i</span><span class='rparen'>)</span><span class='rparen'>)</span>
+        <span class='kw'>end</span>
+      <span class='kw'>rescue</span> <span class='const'>ArgumentError</span>
+        <span class='kw'>nil</span>
+      <span class='kw'>end</span>
+    <span class='kw'>elsif</span> <span class='id identifier rubyid_types'>types</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span> <span class='op'>==</span> <span class='const'>NilClass</span>
+      <span class='kw'>nil</span>
+    <span class='kw'>elsif</span> <span class='lbracket'>[</span><span class='const'><span class='object_link'><a href="../../Discordrb.html" title="Discordrb (module)">Discordrb</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../User.html" title="Discordrb::User (class)">User</a></span></span><span class='comma'>,</span> <span class='const'><span class='object_link'><a href="../../Discordrb.html" title="Discordrb (module)">Discordrb</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Role.html" title="Discordrb::Role (class)">Role</a></span></span><span class='comma'>,</span> <span class='const'><span class='object_link'><a href="../../Discordrb.html" title="Discordrb (module)">Discordrb</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Emoji.html" title="Discordrb::Emoji (class)">Emoji</a></span></span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span> <span class='id identifier rubyid_types'>types</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span>
+      <span class='id identifier rubyid_result'>result</span> <span class='op'>=</span> <span class='id identifier rubyid_parse_mention'>parse_mention</span> <span class='id identifier rubyid_arg'>arg</span><span class='comma'>,</span> <span class='id identifier rubyid_server'>server</span>
+      <span class='id identifier rubyid_result'>result</span> <span class='kw'>if</span> <span class='id identifier rubyid_result'>result</span><span class='period'>.</span><span class='id identifier rubyid_instance_of?'>instance_of?</span> <span class='id identifier rubyid_types'>types</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span>
+    <span class='kw'>elsif</span> <span class='id identifier rubyid_types'>types</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span> <span class='op'>==</span> <span class='const'><span class='object_link'><a href="../../Discordrb.html" title="Discordrb (module)">Discordrb</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Invite.html" title="Discordrb::Invite (class)">Invite</a></span></span>
+      <span class='id identifier rubyid_resolve_invite_code'>resolve_invite_code</span> <span class='id identifier rubyid_arg'>arg</span>
+    <span class='kw'>elsif</span> <span class='id identifier rubyid_types'>types</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='symbol'>:from_argument</span><span class='rparen'>)</span>
+      <span class='kw'>begin</span>
+        <span class='id identifier rubyid_types'>types</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_from_argument'>from_argument</span> <span class='id identifier rubyid_arg'>arg</span>
+      <span class='kw'>rescue</span>
+        <span class='kw'>nil</span>
+      <span class='kw'>end</span>
+    <span class='kw'>else</span>
+      <span class='id identifier rubyid_raise'>raise</span> <span class='const'>ArgumentError</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_types'>types</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span><span class='embexpr_end'>}</span><span class='tstring_content'> doesn&#39;t implement from_argument</span><span class='tstring_end'>&quot;</span></span>
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="channels=-instance_method">
+  
+    #<strong>channels=</strong>(channels)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  
+
+  <p class="tag_title">See Also:</p>
+  <ul class="see">
+    
+      <li><span class='object_link'><a href="#update_channels-instance_method" title="Discordrb::Commands::CommandBot#update_channels (method)">#update_channels</a></span></li>
+    
+  </ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+358
+359
+360</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/commands/command_bot.rb', line 358</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_channels='>channels=</span><span class='lparen'>(</span><span class='id identifier rubyid_channels'>channels</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_update_channels'>update_channels</span><span class='lparen'>(</span><span class='id identifier rubyid_channels'>channels</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="command_aliases-instance_method">
+  
+    #<strong>command_aliases</strong>(name)  &#x21d2; <tt>Array&lt;<span class='object_link'><a href="CommandAlias.html" title="Discordrb::Commands::CommandAlias (class)">CommandAlias</a></span>&gt;</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Returns all aliases for the command with the given name</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>name</span>
+      
+      
+        <span class='type'>(<tt>Symbol</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>the name of the <code>Command</code></p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array&lt;<span class='object_link'><a href="CommandAlias.html" title="Discordrb::Commands::CommandAlias (class)">CommandAlias</a></span>&gt;</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+191
+192
+193
+194
+195</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/commands/command_bot.rb', line 191</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_command_aliases'>command_aliases</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_commands'>commands</span><span class='period'>.</span><span class='id identifier rubyid_values'>values</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_command'>command</span><span class='op'>|</span>
+    <span class='id identifier rubyid_command'>command</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="CommandAlias.html" title="Discordrb::Commands::CommandAlias (class)">CommandAlias</a></span></span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_command'>command</span><span class='period'>.</span><span class='id identifier rubyid_aliased_command'>aliased_command</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span> <span class='op'>==</span> <span class='id identifier rubyid_name'>name</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="execute_command-instance_method">
+  
+    #<strong>execute_command</strong>(name, event, arguments, chained = false, check_permissions = true)  &#x21d2; <tt><span class='object_link'><a href="../../String.html" title="String (class)">String</a></span></tt><sup>?</sup> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Executes a particular command on the bot. Mostly useful for internal stuff, but one can never know.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>name</span>
+      
+      
+        <span class='type'>(<tt>Symbol</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>The command to execute.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>event</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="CommandEvent.html" title="Discordrb::Commands::CommandEvent (class)">CommandEvent</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>The event to pass to the command.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>arguments</span>
+      
+      
+        <span class='type'>(<tt>Array&lt;<span class='object_link'><a href="../../String.html" title="String (class)">String</a></span>&gt;</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>The arguments to pass to the command.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>chained</span>
+      
+      
+        <span class='type'>(<tt>true</tt>, <tt>false</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>false</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'><p>Whether or not it should be executed as part of a command chain. If this is false,
+commands that have chain_usable set to false will not work.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>check_permissions</span>
+      
+      
+        <span class='type'>(<tt>true</tt>, <tt>false</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>true</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'><p>Whether permission parameters such as <code>required_permission</code> or
+<code>permission_level</code> should be checked.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../../String.html" title="String (class)">String</a></span></tt>, <tt>nil</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>the command&#39;s result, if there is any.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/commands/command_bot.rb', line 206</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_execute_command'>execute_command</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_event'>event</span><span class='comma'>,</span> <span class='id identifier rubyid_arguments'>arguments</span><span class='comma'>,</span> <span class='id identifier rubyid_chained'>chained</span> <span class='op'>=</span> <span class='kw'>false</span><span class='comma'>,</span> <span class='id identifier rubyid_check_permissions'>check_permissions</span> <span class='op'>=</span> <span class='kw'>true</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_debug'>debug</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Executing command </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_content'> with arguments </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_arguments'>arguments</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+  <span class='kw'>return</span> <span class='kw'>unless</span> <span class='ivar'>@commands</span>
+  <span class='id identifier rubyid_command'>command</span> <span class='op'>=</span> <span class='ivar'>@commands</span><span class='lbracket'>[</span><span class='id identifier rubyid_name'>name</span><span class='rbracket'>]</span>
+  <span class='id identifier rubyid_command'>command</span> <span class='op'>=</span> <span class='id identifier rubyid_command'>command</span><span class='period'>.</span><span class='id identifier rubyid_aliased_command'>aliased_command</span> <span class='kw'>if</span> <span class='id identifier rubyid_command'>command</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="CommandAlias.html" title="Discordrb::Commands::CommandAlias (class)">CommandAlias</a></span></span><span class='rparen'>)</span>
+  <span class='kw'>return</span> <span class='kw'>unless</span> <span class='op'>!</span><span class='id identifier rubyid_check_permissions'>check_permissions</span> <span class='op'>||</span> <span class='id identifier rubyid_channels?'>channels?</span><span class='lparen'>(</span><span class='id identifier rubyid_event'>event</span><span class='period'>.</span><span class='id identifier rubyid_channel'>channel</span><span class='comma'>,</span> <span class='ivar'>@attributes</span><span class='lbracket'>[</span><span class='symbol'>:channels</span><span class='rbracket'>]</span><span class='rparen'>)</span> <span class='op'>||</span>
+                <span class='lparen'>(</span><span class='id identifier rubyid_command'>command</span> <span class='op'>&amp;&amp;</span> <span class='op'>!</span><span class='id identifier rubyid_command'>command</span><span class='period'>.</span><span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='symbol'>:channels</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span><span class='rparen'>)</span>
+  <span class='kw'>unless</span> <span class='id identifier rubyid_command'>command</span>
+    <span class='id identifier rubyid_event'>event</span><span class='period'>.</span><span class='id identifier rubyid_respond'>respond</span> <span class='ivar'>@attributes</span><span class='lbracket'>[</span><span class='symbol'>:command_doesnt_exist_message</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_gsub'>gsub</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>%command%</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_name'>name</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='ivar'>@attributes</span><span class='lbracket'>[</span><span class='symbol'>:command_doesnt_exist_message</span><span class='rbracket'>]</span>
+    <span class='kw'>return</span>
+  <span class='kw'>end</span>
+  <span class='kw'>return</span> <span class='kw'>unless</span> <span class='op'>!</span><span class='id identifier rubyid_check_permissions'>check_permissions</span> <span class='op'>||</span> <span class='id identifier rubyid_channels?'>channels?</span><span class='lparen'>(</span><span class='id identifier rubyid_event'>event</span><span class='period'>.</span><span class='id identifier rubyid_channel'>channel</span><span class='comma'>,</span> <span class='id identifier rubyid_command'>command</span><span class='period'>.</span><span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='symbol'>:channels</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_arguments'>arguments</span> <span class='op'>=</span> <span class='id identifier rubyid_arg_check'>arg_check</span><span class='lparen'>(</span><span class='id identifier rubyid_arguments'>arguments</span><span class='comma'>,</span> <span class='id identifier rubyid_command'>command</span><span class='period'>.</span><span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='symbol'>:arg_types</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_event'>event</span><span class='period'>.</span><span class='id identifier rubyid_server'>server</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='id identifier rubyid_check_permissions'>check_permissions</span>
+  <span class='kw'>if</span> <span class='lparen'>(</span><span class='id identifier rubyid_check_permissions'>check_permissions</span> <span class='op'>&amp;&amp;</span>
+     <span class='id identifier rubyid_permission?'>permission?</span><span class='lparen'>(</span><span class='id identifier rubyid_event'>event</span><span class='period'>.</span><span class='id identifier rubyid_author'>author</span><span class='comma'>,</span> <span class='id identifier rubyid_command'>command</span><span class='period'>.</span><span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='symbol'>:permission_level</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_event'>event</span><span class='period'>.</span><span class='id identifier rubyid_server'>server</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span>
+     <span class='id identifier rubyid_required_permissions?'>required_permissions?</span><span class='lparen'>(</span><span class='id identifier rubyid_event'>event</span><span class='period'>.</span><span class='id identifier rubyid_author'>author</span><span class='comma'>,</span> <span class='id identifier rubyid_command'>command</span><span class='period'>.</span><span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='symbol'>:required_permissions</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_event'>event</span><span class='period'>.</span><span class='id identifier rubyid_channel'>channel</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span>
+     <span class='id identifier rubyid_required_roles?'>required_roles?</span><span class='lparen'>(</span><span class='id identifier rubyid_event'>event</span><span class='period'>.</span><span class='id identifier rubyid_author'>author</span><span class='comma'>,</span> <span class='id identifier rubyid_command'>command</span><span class='period'>.</span><span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='symbol'>:required_roles</span><span class='rbracket'>]</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span>
+     <span class='id identifier rubyid_allowed_roles?'>allowed_roles?</span><span class='lparen'>(</span><span class='id identifier rubyid_event'>event</span><span class='period'>.</span><span class='id identifier rubyid_author'>author</span><span class='comma'>,</span> <span class='id identifier rubyid_command'>command</span><span class='period'>.</span><span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='symbol'>:allowed_roles</span><span class='rbracket'>]</span><span class='rparen'>)</span><span class='rparen'>)</span> <span class='op'>||</span>
+     <span class='op'>!</span><span class='id identifier rubyid_check_permissions'>check_permissions</span>
+    <span class='id identifier rubyid_event'>event</span><span class='period'>.</span><span class='id identifier rubyid_command'>command</span> <span class='op'>=</span> <span class='id identifier rubyid_command'>command</span>
+    <span class='id identifier rubyid_result'>result</span> <span class='op'>=</span> <span class='id identifier rubyid_command'>command</span><span class='period'>.</span><span class='id identifier rubyid_call'>call</span><span class='lparen'>(</span><span class='id identifier rubyid_event'>event</span><span class='comma'>,</span> <span class='id identifier rubyid_arguments'>arguments</span><span class='comma'>,</span> <span class='id identifier rubyid_chained'>chained</span><span class='comma'>,</span> <span class='id identifier rubyid_check_permissions'>check_permissions</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_stringify'>stringify</span><span class='lparen'>(</span><span class='id identifier rubyid_result'>result</span><span class='rparen'>)</span>
+  <span class='kw'>else</span>
+    <span class='id identifier rubyid_event'>event</span><span class='period'>.</span><span class='id identifier rubyid_respond'>respond</span> <span class='id identifier rubyid_command'>command</span><span class='period'>.</span><span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='symbol'>:permission_message</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_gsub'>gsub</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>%name%</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_name'>name</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='id identifier rubyid_command'>command</span><span class='period'>.</span><span class='id identifier rubyid_attributes'>attributes</span><span class='lbracket'>[</span><span class='symbol'>:permission_message</span><span class='rbracket'>]</span>
+    <span class='kw'>nil</span>
+  <span class='kw'>end</span>
+<span class='kw'>rescue</span> <span class='const'><span class='object_link'><a href="../../Discordrb.html" title="Discordrb (module)">Discordrb</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Errors.html" title="Discordrb::Errors (module)">Errors</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Errors/NoPermission.html" title="Discordrb::Errors::NoPermission (class)">NoPermission</a></span></span>
+  <span class='id identifier rubyid_event'>event</span><span class='period'>.</span><span class='id identifier rubyid_respond'>respond</span> <span class='ivar'>@attributes</span><span class='lbracket'>[</span><span class='symbol'>:no_permission_message</span><span class='rbracket'>]</span> <span class='kw'>unless</span> <span class='ivar'>@attributes</span><span class='lbracket'>[</span><span class='symbol'>:no_permission_message</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+  <span class='id identifier rubyid_raise'>raise</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="permission?-instance_method">
+  
+    #<strong>permission?</strong>(user, level, server)  &#x21d2; <tt>true</tt>, <tt>false</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Check if a user has permission to do something</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>user</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../User.html" title="Discordrb::User (class)">User</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>The user to check</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>level</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../../Integer.html" title="Integer (class)">Integer</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>The minimum permission level the user should have (inclusive)</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>server</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../Server.html" title="Discordrb::Server (class)">Server</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>The server on which to check</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>true</tt>, <tt>false</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>whether or not the user has the given permission</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/commands/command_bot.rb', line 345</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_permission?'>permission?</span><span class='lparen'>(</span><span class='id identifier rubyid_user'>user</span><span class='comma'>,</span> <span class='id identifier rubyid_level'>level</span><span class='comma'>,</span> <span class='id identifier rubyid_server'>server</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_determined_level'>determined_level</span> <span class='op'>=</span> <span class='kw'>if</span> <span class='id identifier rubyid_user'>user</span><span class='period'>.</span><span class='id identifier rubyid_webhook?'>webhook?</span> <span class='op'>||</span> <span class='id identifier rubyid_server'>server</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+                       <span class='int'>0</span>
+                     <span class='kw'>else</span>
+                       <span class='id identifier rubyid_user'>user</span><span class='period'>.</span><span class='id identifier rubyid_roles'>roles</span><span class='period'>.</span><span class='id identifier rubyid_reduce'>reduce</span><span class='lparen'>(</span><span class='int'>0</span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_memo'>memo</span><span class='comma'>,</span> <span class='id identifier rubyid_role'>role</span><span class='op'>|</span>
+                         <span class='lbracket'>[</span><span class='ivar'>@permissions</span><span class='lbracket'>[</span><span class='symbol'>:roles</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='id identifier rubyid_role'>role</span><span class='period'>.</span><span class='id identifier rubyid_id'>id</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='int'>0</span><span class='comma'>,</span> <span class='id identifier rubyid_memo'>memo</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_max'>max</span>
+                       <span class='kw'>end</span>
+                     <span class='kw'>end</span>
+
+  <span class='lbracket'>[</span><span class='ivar'>@permissions</span><span class='lbracket'>[</span><span class='symbol'>:users</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='id identifier rubyid_user'>user</span><span class='period'>.</span><span class='id identifier rubyid_id'>id</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='int'>0</span><span class='comma'>,</span> <span class='id identifier rubyid_determined_level'>determined_level</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_max'>max</span> <span class='op'>&gt;=</span> <span class='id identifier rubyid_level'>level</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="remove_channel-instance_method">
+  
+    #<strong>remove_channel</strong>(channel)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Remove a channel from the list of channels the bot accepts commands from.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>channel</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../../String.html" title="String (class)">String</a></span></tt>, <tt><span class='object_link'><a href="../../Integer.html" title="Integer (class)">Integer</a></span></tt>, <tt><span class='object_link'><a href="../Channel.html" title="Discordrb::Channel (class)">Channel</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>The channel name, integer ID, or <code>Channel</code> object to be removed</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+377
+378
+379</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/commands/command_bot.rb', line 377</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_remove_channel'>remove_channel</span><span class='lparen'>(</span><span class='id identifier rubyid_channel'>channel</span><span class='rparen'>)</span>
+  <span class='ivar'>@attributes</span><span class='lbracket'>[</span><span class='symbol'>:channels</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_delete_if'>delete_if</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_c'>c</span><span class='op'>|</span> <span class='id identifier rubyid_channel'>channel</span><span class='period'>.</span><span class='id identifier rubyid_resolve_id'>resolve_id</span> <span class='op'>==</span> <span class='id identifier rubyid_c'>c</span><span class='period'>.</span><span class='id identifier rubyid_resolve_id'>resolve_id</span> <span class='rbrace'>}</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="set_role_permission-instance_method">
+  
+    #<strong>set_role_permission</strong>(id, level)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Sets the permission level of a role - this applies to all users in the role</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>id</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../../Integer.html" title="Integer (class)">Integer</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>the ID of the role whose level to set</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>level</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../../Integer.html" title="Integer (class)">Integer</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>the level to set the permission to</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+336
+337
+338</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/commands/command_bot.rb', line 336</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_set_role_permission'>set_role_permission</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_level'>level</span><span class='rparen'>)</span>
+  <span class='ivar'>@permissions</span><span class='lbracket'>[</span><span class='symbol'>:roles</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='id identifier rubyid_id'>id</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_level'>level</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="set_user_permission-instance_method">
+  
+    #<strong>set_user_permission</strong>(id, level)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Sets the permission level of a user</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>id</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../../Integer.html" title="Integer (class)">Integer</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>the ID of the user whose level to set</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>level</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../../Integer.html" title="Integer (class)">Integer</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>the level to set the permission to</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+329
+330
+331</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/commands/command_bot.rb', line 329</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_set_user_permission'>set_user_permission</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='id identifier rubyid_level'>level</span><span class='rparen'>)</span>
+  <span class='ivar'>@permissions</span><span class='lbracket'>[</span><span class='symbol'>:users</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='id identifier rubyid_id'>id</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_level'>level</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="simple_execute-instance_method">
+  
+    #<strong>simple_execute</strong>(chain, event)  &#x21d2; <tt><span class='object_link'><a href="../../String.html" title="String (class)">String</a></span></tt><sup>?</sup> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Executes a command in a simple manner, without command chains or permissions.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>chain</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../../String.html" title="String (class)">String</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>The command with its arguments separated by spaces.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>event</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="CommandEvent.html" title="Discordrb::Commands::CommandEvent (class)">CommandEvent</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>The event to pass to the command.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../../String.html" title="String (class)">String</a></span></tt>, <tt>nil</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>the command&#39;s result, if there is any.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+320
+321
+322
+323
+324</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/commands/command_bot.rb', line 320</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_simple_execute'>simple_execute</span><span class='lparen'>(</span><span class='id identifier rubyid_chain'>chain</span><span class='comma'>,</span> <span class='id identifier rubyid_event'>event</span><span class='rparen'>)</span>
+  <span class='kw'>return</span> <span class='kw'>nil</span> <span class='kw'>if</span> <span class='id identifier rubyid_chain'>chain</span><span class='period'>.</span><span class='id identifier rubyid_empty?'>empty?</span>
+  <span class='id identifier rubyid_args'>args</span> <span class='op'>=</span> <span class='id identifier rubyid_chain'>chain</span><span class='period'>.</span><span class='id identifier rubyid_split'>split</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'> </span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_execute_command'>execute_command</span><span class='lparen'>(</span><span class='id identifier rubyid_args'>args</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_sym'>to_sym</span><span class='comma'>,</span> <span class='id identifier rubyid_event'>event</span><span class='comma'>,</span> <span class='id identifier rubyid_args'>args</span><span class='lbracket'>[</span><span class='int'>1</span><span class='op'>..</span><span class='op'>-</span><span class='int'>1</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="update_channels-instance_method">
+  
+    #<strong>update_channels</strong>(channels = [])  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Update the list of channels the bot accepts commands from.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>channels</span>
+      
+      
+        <span class='type'>(<tt>Array&lt;<span class='object_link'><a href="../../String.html" title="String (class)">String</a></span>, <span class='object_link'><a href="../../Integer.html" title="Integer (class)">Integer</a></span>, <span class='object_link'><a href="../Channel.html" title="Discordrb::Channel (class)">Channel</a></span>&gt;</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>[]</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'><p>The channels this command bot accepts commands on.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+364
+365
+366</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/commands/command_bot.rb', line 364</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_update_channels'>update_channels</span><span class='lparen'>(</span><span class='id identifier rubyid_channels'>channels</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+  <span class='ivar'>@attributes</span><span class='lbracket'>[</span><span class='symbol'>:channels</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='const'>Array</span><span class='lparen'>(</span><span class='id identifier rubyid_channels'>channels</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+
+      <div id="footer">
+  Generated on Sun Dec  8 16:53:43 2019 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.9.20 (ruby-2.6.5).
+</div>
+
+    </div>
+  </body>
+</html>
