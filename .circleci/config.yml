@@ -102,22 +102,17 @@ jobs:
             cp -r /tmp/workspace/docs/. ./$SOURCE_BRANCH/
 
             git add $SOURCE_BRANCH
-            git commit --allow-empty -m "Deploy docs"
+            git commit --allow-empty -m "[skip ci] Deploy docs"
             git push -q https://${DOCS_GITHUB_TOKEN}@github.com/${CIRCLE_PROJECT_USERNAME}/discordrb.git
 
 workflows:
   test:
     jobs:
-      - test_ruby_24:
-          filters: {branches: {ignore: gh-pages}}
-      - test_ruby_25:
-          filters: {branches: {ignore: gh-pages}}
-      - test_ruby_26:
-          filters: {branches: {ignore: gh-pages}}
-      - rubocop:
-          filters: {branches: {ignore: gh-pages}}
-      - yard:
-          filters: {branches: {ignore: gh-pages}}
+      - test_ruby_24
+      - test_ruby_25
+      - test_ruby_26
+      - rubocop
+      - yard
   deploy:
     jobs:
       - yard:
