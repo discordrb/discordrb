@@ -109,20 +109,20 @@ workflows:
   test:
     jobs:
       - test_ruby_24:
-          filters: {branches: {only: /.*/}, tags: {only: /^v.*/}}
+          filters: {branches: {ignore: gh-pages}}
       - test_ruby_25:
-          filters: {branches: {only: /.*/}, tags: {only: /^v.*/}}
+          filters: {branches: {ignore: gh-pages}}
       - test_ruby_26:
-          filters: {branches: {only: /.*/}, tags: {only: /^v.*/}}
+          filters: {branches: {ignore: gh-pages}}
       - rubocop:
-          filters: {branches: {only: /.*/}, tags: {only: /^v.*/}}
+          filters: {branches: {ignore: gh-pages}}
       - yard:
-          filters: {branches: {only: /.*/}, tags: {only: /^v.*/}}
+          filters: {branches: {ignore: gh-pages}}
   deploy:
     jobs:
       - yard:
-          filters: {branches: {only: /master/}, tags: {only: /^v.*/}}
+          filters: {branches: {only: master}, tags: {only: /^v.*/}}
       - pages:
           requires:
             - yard
-          filters: {branches: {only: /master/}, tags: {only: /^v.*/}}
+          filters: {branches: {only: master}, tags: {only: /^v.*/}}
