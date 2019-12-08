@@ -11,7 +11,7 @@ An implementation of the [Discord](https://discordapp.com/) API using Ruby.
 
 ## Quick links to sections
 
-* [Introcution](https://github.com/discordrb/discordrb#introduction)
+* [Introduction](https://github.com/discordrb/discordrb#introduction)
 * [Dependencies](https://github.com/discordrb/discordrb#dependencies)
 * [Installation](https://github.com/discordrb/discordrb#installation)
 * [Usage](https://github.com/discordrb/discordrb#usage)
