@@ -151,19 +151,29 @@ end
 
 ## Support
 
-You can find me (@meew0, ID 66237334693085184) on the unofficial Discord API server - if you have a question, just ask there, I or somebody else will probably answer you: https://discord.gg/3Trm6FW
+If you need help or have a question, you can:
 
-## Development
+1. Join our [Discord channel](https://discord.gg/cyK3Hjm). This is the fastest means of getting support.
+2. [Open an issue](https://github.com/discordrb/discordrb/issues). Be sure to read the issue template, and provide as much detail as you can.
+
+## Contributing
+
+Thank you for your interest in contributing!
+Bug reports and pull requests are welcome on GitHub at https://github.com/discordrb/discordrb.
+
+In general, we recommend starting by discussing what you would like to contribute in the [Discord channel](https://discord.gg/cyK3Hjm).
+There are usually a handful of people working on things for the library, and what you're looking for may already be on the way.
+
+Additionally, there is a chance what you are looking for might already exist, or we decided not to pursue it for some reason.
+Be sure to use the search feature on our documentation, GitHub, and Discord to see if this might be the case.
+
+## Development setup
 
 **This section is for developing discordrb itself! If you just want to make a bot, see the [Installation](https://github.com/discordrb/discordrb#installation) section.**
 
 After checking out the repo, run `bin/setup` to install dependencies. You can then run tests via `bundle exec rspec spec`. Make sure to run rubocop also: `bundle exec rubocop`. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
 To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
-
-## Contributing
-
-Bug reports and pull requests are welcome on GitHub at https://github.com/discordrb/discordrb.
 
 ## License
 
