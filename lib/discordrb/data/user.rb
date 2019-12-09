@@ -168,7 +168,7 @@ module Discordrb
     end
 
     # @return [String, nil] the game the user is currently playing, or `nil` if nothing is being played.
-    # @deprecated Please use {ActivitySet#game} for information about the user's game activity
+    # @deprecated Please use {ActivitySet#games} for information about the user's game activity
     def game
       @activities.games.first&.name
     end
