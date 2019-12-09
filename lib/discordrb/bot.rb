@@ -786,7 +786,7 @@ module Discordrb
         new_channel_id = data['channel_id']
         if new_channel_id
           new_channel = channel(new_channel_id)
-          @voices[server_id].channel = new_channel
+          existing_voice.channel = new_channel
         else
           voice_destroy(server_id)
         end
