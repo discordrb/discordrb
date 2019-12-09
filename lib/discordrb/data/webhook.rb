@@ -14,7 +14,7 @@ module Discordrb
     # @return [Server] the server that the webhook is currently connected to.
     attr_reader :server
 
-    # @return [String, nil] the webhook's token (for Incoming Webhooks)
+    # @return [String, nil] the webhook's token, if this is an Incoming Webhook.
     attr_reader :token
 
     # @return [String] the webhook's avatar id.
