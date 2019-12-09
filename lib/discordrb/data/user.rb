@@ -117,7 +117,7 @@ module Discordrb
     def update_presence(data)
       @status = data['status'].to_sym
 
-      @activities = Discordrb::ActivitySet.new(data['activities'].collect { |act| Activity.new(act, @bot) })
+      @activities = Discordrb::ActivitySet.new(data['activities'].map { |act| Activity.new(act, @bot) })
     end
 
     # Add an await for a message from this user. Specifically, this adds a global await for a MessageEvent with this
@@ -167,13 +167,13 @@ module Discordrb
       end
     end
 
-    # @return [String, nil] the game the user is currently playing, or `nil` if none is being played.
+    # @return [String, nil] the game the user is currently playing, or `nil` if nothing is being played.
     # @deprecated Please use {ActivitySet#game} for information about a users game activity
     def game
       @activities.game
     end
 
-    # @return [Integer] returns 1 for twitch streams, 0 for no stream.
+    # @return [Integer] returns 1 for twitch streams, or 0 for no stream.
     # @deprecated Please use {ActivitySet#streaming} to check for the existance of a stream
     def stream_type
       @activities.streaming ? 1 : 0

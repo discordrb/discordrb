@@ -42,7 +42,7 @@ module Discordrb
     # @return [Timestamps, nil] times for the start and/or end of the activity
     attr_reader :timestamps
 
-    # @return [Secrets, nil] secrets for rich presence joining and spectating
+    # @return [Secrets, nil] secrets for rich presence, joining, and spectating
     attr_reader :secrets
 
     # @return [Assets, nil] images for the presence and their texts
@@ -80,7 +80,6 @@ module Discordrb
       @secrets = Secret.new(data['secrets']) if data['secrets']
       @assets = Assets.new(data['assets']) if data['assets']
       @party = Party.new(data['party']) if data['party']
-      # Merge of #671 requires this to be changed.
       @emoji = Emoji.new(data['emoji'], bot, nil) if data['emoji']
     end
 
@@ -195,7 +194,7 @@ module Discordrb
     end
   end
 
-  # A class for accessing a users activities
+  # A collection of a users activities.
   class ActivitySet
     # @!visibility private
     def initialize(activities)
