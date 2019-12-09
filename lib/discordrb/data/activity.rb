@@ -2,7 +2,7 @@
 
 module Discordrb
   # Contains information about user activities such as the game they are playing,
-  # music they are listening to, or their twitch stream.
+  # music they are listening to, or their live stream.
   class Activity
     # Values corresponding to the flags bitmask
     FLAGS = {
@@ -78,7 +78,7 @@ module Discordrb
 
       @timestamps = Timestamps.new(data['timestamps']) if data['timestamps']
       @secrets = Secret.new(data['secrets']) if data['secrets']
-      @assets = Assets.new(data['assets']) if data['assets']
+      @assets = Assets.new(data['assets'], @application_id) if data['assets']
       @party = Party.new(data['party']) if data['party']
       @emoji = Emoji.new(data['emoji'], bot, nil) if data['emoji']
     end
@@ -154,24 +154,42 @@ module Discordrb
 
     # Assets for rich presence images and hover text
     class Assets
-      # @return [String, nil] the asset id for the large image of this activity
-      attr_reader :large_image
+      # @return [String, nil] the asset ID for the large image of this activity
+      attr_reader :large_image_id
 
       # @return [String, nil] text displayed when hovering over the large iamge
       attr_reader :large_text
 
-      # @return [String, nil] the asset id for the small image of this activity
-      attr_reader :small_image
+      # @return [String, nil] the asset ID for the small image of this activity
+      attr_reader :small_image_id
 
       # @return [String, nil]
       attr_reader :small_text
 
+      # @return [String, nil] the application ID for these assets.
+      attr_reader :application_id
+
       # @!visibility private
-      def initialize(data)
-        @large_image = data['large_image']
+      def initialize(data, application_id)
+        @application_id = application_id
+        @large_image_id = data['large_image']
         @large_text = data['large_text']
-        @small_image = data['small_image']
+        @small_image_id = data['small_image']
         @small_text = data['small_text']
+      end
+
+      # Utility function to get an Asset's large image URL.
+      # @param format [String, nil] If `nil`, the URL will default to `webp`. You can otherwise specify one of `webp`, `jpg`, or `png`.
+      # @return [String] the URL to the large image asset.
+      def large_image_url(format = 'webp')
+        API.asset_url(@application_id, @large_image_id, format)
+      end
+
+      # Utility function to get an Asset's large image URL.
+      # @param format [String, nil] If `nil`, the URL will default to `webp`. You can otherwise specify one of `webp`, `jpg`, or `png`.
+      # @return [String] the URL to the small image asset.
+      def small_image_url(format = 'webp')
+        API.asset_url(@application_id, @small_image_id, format)
       end
     end
 
@@ -194,41 +212,49 @@ module Discordrb
     end
   end
 
-  # A collection of a users activities.
+  # A collection of the user's activities.
   class ActivitySet
+    include Enumerable
+
     # @!visibility private
-    def initialize(activities)
+    def initialize(activities = [])
       @activities = activities
     end
 
-    # @return [Array<Activity>]
-    def all
+    # @!visibility private
+    # Implement each for Enumerable
+    def each(&block)
+      @activities.each(&block)
+    end
+
+    # @return [Array<Activity>] all activities
+    def to_a
       @activities
     end
 
-    # @return [Activity, nil] the first activity of type {Activity::GAME}
-    def game
-      @activities.find { |act| act.type == Activity::GAME }
+    # @return [Array<Activity>, nil] all activities of type {Activity::GAME}
+    def games
+      @activities.select { |act| act.type == Activity::GAME }
     end
 
-    # @return [Activity, nil] the first activity of type {Activity::STREAMING}
+    # @return [Array<Activity>, nil] all activities of type {Activity::STREAMING}
     def streaming
-      @activities.find { |act| act.type == Activity::STREAMING }
+      @activities.select { |act| act.type == Activity::STREAMING }
     end
 
-    # @return [Activity, nil] the first activity of type {Activity::LISTENING}
+    # @return [Array<Activity>, nil] all activities of type {Activity::LISTENING}
     def listening
-      @activities.find { |act| act.type == Activity::LISTENING }
+      @activities.select { |act| act.type == Activity::LISTENING }
     end
 
-    # @return [Activity, nil] the first activity of type {Activity::WATCHING}
+    # @return [Array<Activity>, nil] all activities of type {Activity::WATCHING}
     def watching
-      @activities.find { |act| act.type == Activity::WATCHING }
+      @activities.select { |act| act.type == Activity::WATCHING }
     end
 
-    # @return [Activity, nil] the first activity of type {Activity::CUSTOM}
+    # @return [Array<Activity>, nil] all activities of type {Activity::CUSTOM}
     def custom_status
-      @activities.find { |act| act.type == Activity::CUSTOM }
+      @activities.select { |act| act.type == Activity::CUSTOM }
     end
   end
 end

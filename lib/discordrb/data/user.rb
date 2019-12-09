@@ -63,7 +63,7 @@ module Discordrb
       @discriminator = data['discriminator']
       @avatar_id = data['avatar']
       @roles = {}
-      @activities = Discordrb::ActivitySet.new([])
+      @activities = Discordrb::ActivitySet.new
 
       @bot_account = false
       @bot_account = true if data['bot']
@@ -168,21 +168,21 @@ module Discordrb
     end
 
     # @return [String, nil] the game the user is currently playing, or `nil` if nothing is being played.
-    # @deprecated Please use {ActivitySet#game} for information about a users game activity
+    # @deprecated Please use {ActivitySet#game} for information about the user's game activity
     def game
-      @activities.game
+      @activities.games.first&.name
     end
 
     # @return [Integer] returns 1 for twitch streams, or 0 for no stream.
-    # @deprecated Please use {ActivitySet#streaming} to check for the existance of a stream
+    # @deprecated Please use {ActivitySet#streaming} for information about the user's stream activity
     def stream_type
       @activities.streaming ? 1 : 0
     end
 
     # @return [String, nil] the URL to the stream, if the user is currently streaming something
-    # @deprecated Please use {ActivitySet#streaming} to get information about a users streams
+    # @deprecated Please use {ActivitySet#streaming} for information about the user's stream activity
     def stream_url
-      @activities.streaming&.url
+      @activities.streaming.first&.url
     end
 
     # The inspect method is overwritten to give more useful output
