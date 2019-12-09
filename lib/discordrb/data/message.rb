@@ -158,21 +158,21 @@ module Discordrb
     end
 
     # Deletes this message.
-    def delete
-      API::Channel.delete_message(@bot.token, @channel.id, @id)
+    def delete(reason = nil)
+      API::Channel.delete_message(@bot.token, @channel.id, @id, reason)
       nil
     end
 
     # Pins this message
-    def pin
-      API::Channel.pin_message(@bot.token, @channel.id, @id)
+    def pin(reason = nil)
+      API::Channel.pin_message(@bot.token, @channel.id, @id, reason)
       @pinned = true
       nil
     end
 
     # Unpins this message
-    def unpin
-      API::Channel.unpin_message(@bot.token, @channel.id, @id)
+    def unpin(reason = nil)
+      API::Channel.unpin_message(@bot.token, @channel.id, @id, reason)
       @pinned = false
       nil
     end

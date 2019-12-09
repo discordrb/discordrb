@@ -564,12 +564,13 @@ module Discordrb
     # @param amount [Integer] The amount of message history to consider for pruning. Must be a value between 2 and 100 (Discord limitation)
     # @param strict [true, false] Whether an error should be raised when a message is reached that is too old to be bulk
     #   deleted. If this is false only a warning message will be output to the console.
+    # @param reason [String, nil] The reason for pruning
     # @raise [ArgumentError] if the amount of messages is not a value between 2 and 100
     # @yield [message] Yields each message in this channels history for filtering the messages to delete
     # @example Pruning messages from a specific user ID
     #   channel.prune(100) { |m| m.author.id == 83283213010599936 }
     # @return [Integer] The amount of messages that were successfully deleted
-    def prune(amount, strict = false, &block)
+    def prune(amount, strict = false, reason = nil, &block)
       raise ArgumentError, 'Can only delete between 1 and 100 messages!' unless amount.between?(1, 100)
 
       messages =
@@ -583,10 +584,10 @@ module Discordrb
       when 0
         0
       when 1
-        API::Channel.delete_message(@bot.token, @id, messages.first)
+        API::Channel.delete_message(@bot.token, @id, messages.first, reason)
         1
       else
-        bulk_delete(messages, strict)
+        bulk_delete(messages, strict, reason)
       end
     end
 
@@ -594,13 +595,14 @@ module Discordrb
     # @param messages [Array<Message, String, Integer>] the messages (or message IDs) to delete. Total must be an amount between 2 and 100 (Discord limitation)
     # @param strict [true, false] Whether an error should be raised when a message is reached that is too old to be bulk
     #   deleted. If this is false only a warning message will be output to the console.
+    # @param reason [String, nil] The reason for deleting the messages
     # @raise [ArgumentError] if the amount of messages is not a value between 2 and 100
     # @return [Integer] The amount of messages that were successfully deleted
-    def delete_messages(messages, strict = false)
+    def delete_messages(messages, strict = false, reason = nil)
       raise ArgumentError, 'Can only delete between 2 and 100 messages!' unless messages.count.between?(2, 100)
 
       messages.map!(&:resolve_id)
-      bulk_delete(messages, strict)
+      bulk_delete(messages, strict, reason)
     end
 
     # Updates the cached permission overwrites
@@ -783,7 +785,7 @@ module Discordrb
     TWO_WEEKS = 86_400 * 14
 
     # Deletes a list of messages on this channel using bulk delete.
-    def bulk_delete(ids, strict = false)
+    def bulk_delete(ids, strict = false, reason = nil)
       min_snowflake = IDObject.synthesise(Time.now - TWO_WEEKS)
 
       ids.reject! do |e|
@@ -796,7 +798,7 @@ module Discordrb
         true
       end
 
-      API::Channel.bulk_delete_messages(@bot.token, @id, ids)
+      API::Channel.bulk_delete_messages(@bot.token, @id, ids, reason)
       ids.size
     end
 
