@@ -232,27 +232,27 @@ module Discordrb
       @activities
     end
 
-    # @return [Array<Activity>, nil] all activities of type {Activity::GAME}
+    # @return [Array<Activity>] all activities of type {Activity::GAME}
     def games
       @activities.select { |act| act.type == Activity::GAME }
     end
 
-    # @return [Array<Activity>, nil] all activities of type {Activity::STREAMING}
+    # @return [Array<Activity>] all activities of type {Activity::STREAMING}
     def streaming
       @activities.select { |act| act.type == Activity::STREAMING }
     end
 
-    # @return [Array<Activity>, nil] all activities of type {Activity::LISTENING}
+    # @return [Array<Activity>] all activities of type {Activity::LISTENING}
     def listening
       @activities.select { |act| act.type == Activity::LISTENING }
     end
 
-    # @return [Array<Activity>, nil] all activities of type {Activity::WATCHING}
+    # @return [Array<Activity>] all activities of type {Activity::WATCHING}
     def watching
       @activities.select { |act| act.type == Activity::WATCHING }
     end
 
-    # @return [Array<Activity>, nil] all activities of type {Activity::CUSTOM}
+    # @return [Array<Activity>] all activities of type {Activity::CUSTOM}
     def custom_status
       @activities.select { |act| act.type == Activity::CUSTOM }
     end
