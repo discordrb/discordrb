@@ -114,7 +114,7 @@ function. Other containers can be included into it as well. This allows for modu
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#commands-instance_method" title="#commands (instance method)">#<strong>commands</strong>  &#x21d2; Hash&lt;Symbol, Command&gt; </a>
+      <a href="#commands-instance_method" title="#commands (instance method)">#<strong>commands</strong>  &#x21d2; Hash&lt;Symbol, Command, CommandAlias&gt; </a>
     
 
     
@@ -267,7 +267,7 @@ function. Other containers can be included into it as well. This allows for modu
       <div class="method_details first">
   <h3 class="signature first" id="commands-instance_method">
   
-    #<strong>commands</strong>  &#x21d2; <tt>Hash&lt;Symbol, <span class='object_link'><a href="Command.html" title="Discordrb::Commands::Command (class)">Command</a></span>&gt;</tt>  <span class="extras">(readonly)</span>
+    #<strong>commands</strong>  &#x21d2; <tt>Hash&lt;Symbol, <span class='object_link'><a href="Command.html" title="Discordrb::Commands::Command (class)">Command</a></span>, <span class='object_link'><a href="CommandAlias.html" title="Discordrb::Commands::CommandAlias (class)">CommandAlias</a></span>&gt;</tt>  <span class="extras">(readonly)</span>
   
 
   
@@ -288,7 +288,7 @@ function. Other containers can be included into it as well. This allows for modu
     <li>
       
       
-        <span class='type'>(<tt>Hash&lt;Symbol, <span class='object_link'><a href="Command.html" title="Discordrb::Commands::Command (class)">Command</a></span>&gt;</tt>)</span>
+        <span class='type'>(<tt>Hash&lt;Symbol, <span class='object_link'><a href="Command.html" title="Discordrb::Commands::Command (class)">Command</a></span>, <span class='object_link'><a href="CommandAlias.html" title="Discordrb::Commands::CommandAlias (class)">CommandAlias</a></span>&gt;</tt>)</span>
       
       
       
@@ -397,6 +397,20 @@ their blocks without propagating an exception.</p>
     
     <p class="tag_title">Options Hash (<tt>attributes</tt>):</p>
     <ul class="option">
+      
+        <li>
+          <span class="name">:aliases</span>
+          <span class="type">(<tt>Array&lt;Symbol&gt;</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'><p>A list of additional names for this command. This in effect
+creates <span class='object_link'><a href="CommandAlias.html" title="Discordrb::Commands::CommandAlias (class)">Discordrb::Commands::CommandAlias</a></span> objects in the container (<span class='object_link'><a href="#commands-instance_method" title="Discordrb::Commands::CommandContainer#commands (method)">#commands</a></span>) that refer to the newly created command.
+Additionally, the default help command will identify these command names as an alias where applicable.</p>
+</div>
+          
+        </li>
       
         <li>
           <span class="name">:permission_level</span>
@@ -672,9 +686,6 @@ a <code>Proc</code>, it will be passed the <code>CommandEvent</code> along with 
       <pre class="lines">
 
 
-58
-59
-60
 61
 62
 63
@@ -688,10 +699,13 @@ a <code>Proc</code>, it will be passed the <code>CommandEvent</code> along with 
 71
 72
 73
-74</pre>
+74
+75
+76
+77</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/discordrb/commands/container.rb', line 58</span>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/commands/container.rb', line 61</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_command'>command</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_attributes'>attributes</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
   <span class='ivar'>@commands</span> <span class='op'>||=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
@@ -759,9 +773,6 @@ a <code>Proc</code>, it will be passed the <code>CommandEvent</code> along with 
       <pre class="lines">
 
 
-95
-96
-97
 98
 99
 100
@@ -771,10 +782,13 @@ a <code>Proc</code>, it will be passed the <code>CommandEvent</code> along with 
 104
 105
 106
-107</pre>
+107
+108
+109
+110</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/discordrb/commands/container.rb', line 95</span>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/commands/container.rb', line 98</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_include!'>include!</span><span class='lparen'>(</span><span class='id identifier rubyid_container'>container</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_container_modules'>container_modules</span> <span class='op'>=</span> <span class='id identifier rubyid_container'>container</span><span class='period'>.</span><span class='id identifier rubyid_singleton_class'>singleton_class</span><span class='period'>.</span><span class='id identifier rubyid_included_modules'>included_modules</span>
@@ -838,16 +852,16 @@ a <code>Proc</code>, it will be passed the <code>CommandEvent</code> along with 
       <pre class="lines">
 
 
-85
-86
-87
 88
 89
 90
-91</pre>
+91
+92
+93
+94</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/discordrb/commands/container.rb', line 85</span>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/commands/container.rb', line 88</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_include_commands'>include_commands</span><span class='lparen'>(</span><span class='id identifier rubyid_container'>container</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_handlers'>handlers</span> <span class='op'>=</span> <span class='id identifier rubyid_container'>container</span><span class='period'>.</span><span class='id identifier rubyid_instance_variable_get'>instance_variable_get</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>@commands</span><span class='tstring_end'>&#39;</span></span>
@@ -905,13 +919,13 @@ a <code>Proc</code>, it will be passed the <code>CommandEvent</code> along with 
       <pre class="lines">
 
 
-78
-79
-80
-81</pre>
+81
+82
+83
+84</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/discordrb/commands/container.rb', line 78</span>
+      <pre class="code"><span class="info file"># File 'lib/discordrb/commands/container.rb', line 81</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_remove_command'>remove_command</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='rparen'>)</span>
   <span class='ivar'>@commands</span> <span class='op'>||=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
@@ -927,7 +941,7 @@ a <code>Proc</code>, it will be passed the <code>CommandEvent</code> along with 
 </div>
 
       <div id="footer">
-  Generated on Mon Dec  9 14:02:22 2019 by
+  Generated on Tue Dec 10 04:34:02 2019 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.20 (ruby-2.5.7).
 </div>
