@@ -177,7 +177,7 @@ bot made itself leave the server.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#init_server-instance_method" title="#init_server (instance method)">#<strong>init_server</strong>(data, bot)  &#x21d2; Object </a>
+      <a href="#init_server-instance_method" title="#init_server (instance method)">#<strong>init_server</strong>(data, _bot)  &#x21d2; Object </a>
     
 
     
@@ -296,7 +296,7 @@ bot made itself leave the server.</p>
       <div class="method_details first">
   <h3 class="signature first" id="init_server-instance_method">
   
-    #<strong>init_server</strong>(data, bot)  &#x21d2; <tt>Object</tt> 
+    #<strong>init_server</strong>(data, _bot)  &#x21d2; <tt>Object</tt> 
   
 
   
@@ -325,7 +325,7 @@ bot made itself leave the server.</p>
     <td>
       <pre class="code"><span class="info file"># File 'lib/discordrb/events/guilds.rb', line 67</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_init_server'>init_server</span><span class='lparen'>(</span><span class='id identifier rubyid_data'>data</span><span class='comma'>,</span> <span class='id identifier rubyid_bot'>bot</span><span class='rparen'>)</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_init_server'>init_server</span><span class='lparen'>(</span><span class='id identifier rubyid_data'>data</span><span class='comma'>,</span> <span class='id identifier rubyid__bot'>_bot</span><span class='rparen'>)</span>
   <span class='ivar'>@server</span> <span class='op'>=</span> <span class='id identifier rubyid_data'>data</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>id</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -338,7 +338,7 @@ bot made itself leave the server.</p>
 </div>
 
       <div id="footer">
-  Generated on Tue Dec 10 04:34:06 2019 by
+  Generated on Tue Dec 10 04:37:29 2019 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.20 (ruby-2.5.7).
 </div>
