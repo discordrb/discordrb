@@ -56,12 +56,16 @@ module Discordrb::Events
   # Event handler for {ServerUpdateEvent}
   class ServerUpdateEventHandler < ServerEventHandler; end
 
-  # Server is deleted
+  # Server is deleted, the server was left because the bot was kicked, or the
+  # bot made itself leave the server.
   # @see Discordrb::EventContainer#server_delete
   class ServerDeleteEvent < ServerEvent
+    # @return [Integer] The ID of the server that was left.
+    attr_reader :server
+
     # Override init_server to account for the deleted server
     def init_server(data, bot)
-      @server = Discordrb::Server.new(data, bot, false)
+      @server = data['id'].to_i
     end
   end
 
