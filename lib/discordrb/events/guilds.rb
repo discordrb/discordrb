@@ -64,7 +64,7 @@ module Discordrb::Events
     attr_reader :server
 
     # Override init_server to account for the deleted server
-    def init_server(data, bot)
+    def init_server(data, _bot)
       @server = data['id'].to_i
     end
   end
