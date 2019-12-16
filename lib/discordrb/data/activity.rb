@@ -54,6 +54,9 @@ module Discordrb
     # @return [Emoji, nil] emoji data for custom statuses
     attr_reader :emoji
 
+    # @return [Time] the time when the activity was added to the user's session
+    attr_reader :created_at
+
     # Type indicating the activity is for a game
     GAME = 0
     # Type indicating the activity is a stream
@@ -75,6 +78,7 @@ module Discordrb
       @state = data['state']
       @instance = data['instance']
       @flags = data['flags'] || 0
+      @created_at = Time.at(data['created_at'].to_i)
 
       @timestamps = Timestamps.new(data['timestamps']) if data['timestamps']
       @secrets = Secret.new(data['secrets']) if data['secrets']
