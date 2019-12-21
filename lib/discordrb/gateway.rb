@@ -308,7 +308,8 @@ module Discordrb
         token: token,
         properties: properties,
         compress: compress,
-        large_threshold: large_threshold
+        large_threshold: large_threshold,
+        intents: 1 << 9
       }
 
       # Don't include the shard key at all if it is nil as Discord checks for its mere existence

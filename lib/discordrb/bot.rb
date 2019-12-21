@@ -106,7 +106,7 @@ module Discordrb
       token: nil, client_id: nil,
       type: nil, name: '', fancy_log: false, suppress_ready: false, parse_self: false,
       shard_id: nil, num_shards: nil, redact_token: true, ignore_bots: false,
-      compress_mode: :large
+      compress_mode: :large, intents: [:all]
     )
       LOGGER.mode = log_mode
       LOGGER.token = token if redact_token
@@ -142,6 +142,8 @@ module Discordrb
       @current_thread = 0
 
       @status = :online
+
+      @intents = intents.reduce(0) {|sum, intent| sum |= INTENTS[intent] }
     end
 
     # The list of users the bot shares a server with.
