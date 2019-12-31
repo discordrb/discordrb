@@ -47,12 +47,6 @@ Using [Bundler](https://bundler.io/#getting-started), you can add discordrb to y
 
 And then install via `bundle install`.
 
-Run the [ping example](https://github.com/discordrb/discordrb/blob/master/examples/ping.rb) to verify that the installation works (make sure to replace the token and client ID in there with your bots'!):
-
-To run the bot while using bundler:
-
-    bundle exec ruby ping.rb
-
 ### With Gem
 
 Alternatively, while Bundler is the recommended option, you can also install discordrb without it.
@@ -107,7 +101,7 @@ You can make a simple bot like this:
 ```ruby
 require 'discordrb'
 
-bot = Discordrb::Bot.new token: '<token here>', client_id: <client_id here>
+bot = Discordrb::Bot.new token: '<token here>'
 
 bot.message(with_text: 'Ping!') do |event|
   event.respond 'Pong!'
@@ -118,11 +112,17 @@ bot.run
 
 This bot responds to every "Ping!" with a "Pong!".
 
-To run the bot:
+To test your installation try to make and run the simple bot using the below commands based on your respective install method.
+
+To run the bot while using bundler (*if the bundler install method was followed*):
+
+    bundle exec ruby ping.rb
+
+To run the bot (*if the gem install method was followed*):
 
     ruby ping.rb
 
-*The above assumes you have a working version with the token and client id setup and the contents of the simple bot saved to a `ping.rb` file.*
+*The above assumes you have a working version with the token and the contents of the simple bot saved to a `ping.rb` file (see [ping example](https://github.com/discordrb/discordrb/blob/master/examples/ping.rb)).*
 
 See [additional examples here](https://github.com/discordrb/discordrb/tree/master/examples).
 
