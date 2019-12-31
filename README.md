@@ -107,7 +107,7 @@ You can make a simple bot like this:
 ```ruby
 require 'discordrb'
 
-bot = Discordrb::Bot.new token: '<token here>'
+bot = Discordrb::Bot.new token: '<token here>', client_id: <client_id here>
 
 bot.message(with_text: 'Ping!') do |event|
   event.respond 'Pong!'
@@ -122,7 +122,7 @@ To run the bot:
 
     ruby ping.rb
 
-*The above assumes you have a working version with the token and the contents of the simple bot saved to a `ping.rb` file.*
+*The above assumes you have a working version with the token and client id setup and the contents of the simple bot saved to a `ping.rb` file.*
 
 See [additional examples here](https://github.com/discordrb/discordrb/tree/master/examples).
 
