@@ -67,10 +67,6 @@ Alternatively, while Bundler is the recommended option, you can also install dis
 
     gem install discordrb --platform=ruby
 
-To run the bot:
-
-    ruby ping.rb
-
 #### Troubleshooting
 
 **If you get an error like this when installing the gem**:
@@ -121,6 +117,12 @@ bot.run
 ```
 
 This bot responds to every "Ping!" with a "Pong!".
+
+To run the bot:
+
+    ruby ping.rb
+
+*The above assumes you have a working version with the token and the contents of the simple bot saved to a `ping.rb` file.*
 
 See [additional examples here](https://github.com/discordrb/discordrb/tree/master/examples).
 
