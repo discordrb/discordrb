@@ -770,13 +770,13 @@ module Discordrb
 
     # Internal handler for VOICE_STATE_UPDATE
     def update_voice_state(data)
-      @session_id = data['session_id']
+      user_id = data['user_id'].to_i
+      @session_id = data['session_id'] if user_id == @profile.id
 
       server_id = data['guild_id'].to_i
       server = server(server_id)
       return unless server
 
-      user_id = data['user_id'].to_i
       old_voice_state = server.voice_states[user_id]
       old_channel_id = old_voice_state.voice_channel.id if old_voice_state
 
