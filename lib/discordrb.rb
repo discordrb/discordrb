@@ -16,57 +16,57 @@ module Discordrb
   DISCORD_EPOCH = 1_420_070_400_000
 
   INTENTS = {
-    guilds: 1 << 0,
-    guild_create: 1 << 0,
-    guild_delete: 1 << 0,
-    guild_role_create: 1 << 0,
-    guild_role_update: 1 << 0,
-    guild_role_delete: 1 << 0,
+    servers: 1 << 0,
+    server_create: 1 << 0,
+    server_delete: 1 << 0,
+    server_role_create: 1 << 0,
+    server_role_update: 1 << 0,
+    server_role_delete: 1 << 0,
     channel_create: 1  << 0,
     channel_update: 1  << 0,
     channel_delete: 1 << 0,
     channel_pins_update: 1 << 0,
 
-    guild_members: 1 << 1,
-    guild_member_add: 1 << 1,
-    guild_member_update: 1 << 1,
-    guild_member_remove: 1 << 1,
+    server_members: 1 << 1,
+    server_member_add: 1 << 1,
+    server_member_update: 1 << 1,
+    server_member_remove: 1 << 1,
 
-    guild_bans: 1 << 2,
-    guild_ban_add: 1 << 2,
-    guild_ban_remove: 1 << 2,
+    server_bans: 1 << 2,
+    server_ban_add: 1 << 2,
+    server_ban_remove: 1 << 2,
 
-    guild_emojis: 1 << 3,
-    guild_emojis_update: 1 << 3,
+    server_emojis: 1 << 3,
+    server_emojis_update: 1 << 3,
 
-    guild_integrations: 1 << 4,
-    guild_integrations_update: 1 << 4,
+    server_integrations: 1 << 4,
+    server_integrations_update: 1 << 4,
 
-    guild_webhooks: 1 << 5,
+    server_webhooks: 1 << 5,
     webhooks_update: 1 << 5,
 
-    guild_invites: 1 << 6,
+    server_invites: 1 << 6,
     invite_create: 1 << 6,
     invite_delete: 1 << 6,
 
-    guild_voice_states: 1 << 7,
+    server_voice_states: 1 << 7,
     voice_state_update: 1 << 7,
 
-    guild_presences: 1 << 8,
+    server_presences: 1 << 8,
     presence_update: 1 << 8,
 
-    guild_messages: 1 << 9,
+    server_messages: 1 << 9,
     message_create: 1 << 9,
     message_update: 1 << 9,
     message_delete: 1 << 9,
 
-    guild_message_reactions: 1 << 10,
+    server_message_reactions: 1 << 10,
     message_reaction_add: 1 << 10,
     message_reaction_remove: 1 << 10,
     message_reaction_remove_all: 1 << 10,
     message_reaction_remove_emoji: 1 << 10,
 
-    guild_message_typing: 1 << 11,
+    server_message_typing: 1 << 11,
     typing_start: 1 << 11,
 
     direct_messages: 1 << 12,
