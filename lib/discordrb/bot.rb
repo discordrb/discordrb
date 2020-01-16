@@ -127,8 +127,13 @@ module Discordrb
 
       raise 'Token string is empty or nil' if token.nil? || token.empty?
 
+      if (invalid_intents = intents.reject { |intent| INTENTS.keys.include? intent }).any?
+        raise "Invalid intents: #{invalid_intents.join ', '}"
+      end
+      @intents = intents.reduce(0) {|sum, intent| sum |= INTENTS[intent] }
+
       @token = process_token(@type, token)
-      @gateway = Gateway.new(self, @token, @shard_key, @compress_mode)
+      @gateway = Gateway.new(self, @token, @shard_key, @compress_mode, @intents)
 
       init_cache
 
@@ -143,7 +148,6 @@ module Discordrb
 
       @status = :online
 
-      @intents = intents.reduce(0) {|sum, intent| sum |= INTENTS[intent] }
     end
 
     # The list of users the bot shares a server with.
@@ -1015,7 +1019,7 @@ module Discordrb
 
     def handle_dispatch(type, data)
       # Check whether there are still unavailable servers and there have been more than 10 seconds since READY
-      if @unavailable_servers&.positive? && (Time.now - @unavailable_timeout_time) > 10
+      if @unavailable_servers&.positive? && (Time.now - @unavailable_timeout_time) > 10 && !(@intents & INTENTS[:guild_create]).zero?
         # The server streaming timed out!
         LOGGER.debug("Server streaming timed out with #{@unavailable_servers} servers remaining")
         LOGGER.debug('Calling ready now because server loading is taking a long time. Servers may be unavailable due to an outage, or your bot is on very large servers.')
