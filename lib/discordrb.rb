@@ -21,11 +21,11 @@ module Discordrb
     guild_delete: 1 << 0,
     guild_role_create: 1 << 0,
     guild_role_update: 1 << 0,
-    guild_role_delete: 1  << 0,
+    guild_role_delete: 1 << 0,
     channel_create: 1  << 0,
     channel_update: 1  << 0,
     channel_delete: 1 << 0,
-    channel_pins_update: 1  << 0,
+    channel_pins_update: 1 << 0,
 
     guild_members: 1 << 1,
     guild_member_add: 1 << 1,
@@ -36,7 +36,7 @@ module Discordrb
     guild_ban_add: 1 << 2,
     guild_ban_remove: 1 << 2,
 
-    guild_emojis: 1 << 3,        
+    guild_emojis: 1 << 3,
     guild_emojis_update: 1 << 3,
 
     guild_integrations: 1 << 4,
@@ -69,7 +69,7 @@ module Discordrb
     guild_message_typing: 1 << 11,
     typing_start: 1 << 11,
 
-    direct_messages:  1 << 12,
+    direct_messages: 1 << 12,
     direct_message_channel_create: 1 << 12,
     direct_message_create: 1 << 12,
     direct_message_update: 1 << 12,
@@ -84,7 +84,7 @@ module Discordrb
     direct_message_typing: 1 << 14,
 
     none: 0,
-    all: (0..14).reduce {|x, y| x |= (1 << y) },
+    all: (0..14).reduce { |x, y| x | (1 << y) }
   }.freeze
 
   # Compares two objects based on IDs - either the objects' IDs are equal, or one object is equal to the other's ID.
