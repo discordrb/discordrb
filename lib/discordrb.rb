@@ -81,11 +81,10 @@ module Discordrb
     direct_message_reaction_remove_all: 1 << 13,
     direct_message_reaction_remove_emoji: 1 << 13,
 
-    direct_message_typing: 1 << 14,
-
-    none: 0,
-    all: (0..14).reduce { |x, y| x | (1 << y) }
+    direct_message_typing: 1 << 14
   }.freeze
+
+  ALL_INTENTS = INTENTS.values.reduce(&:|)
 
   # Compares two objects based on IDs - either the objects' IDs are equal, or one object is equal to the other's ID.
   def self.id_compare(one_id, other)

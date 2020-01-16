@@ -101,12 +101,13 @@ module Discordrb
     #   to Discord's gateway. `:none` will request that no payloads are received compressed (not recommended for
     #   production bots). `:large` will request that large payloads are received compressed. `:stream` will request
     #   that all data be received in a continuous compressed stream.
+    # @param intents [:all, Array<Symbol>] Intents that this bot requires. See {Discordrb::INTENTS}
     def initialize(
       log_mode: :normal,
       token: nil, client_id: nil,
       type: nil, name: '', fancy_log: false, suppress_ready: false, parse_self: false,
       shard_id: nil, num_shards: nil, redact_token: true, ignore_bots: false,
-      compress_mode: :large, intents: [:all]
+      compress_mode: :large, intents: :all
     )
       LOGGER.mode = log_mode
       LOGGER.token = token if redact_token
@@ -127,11 +128,7 @@ module Discordrb
 
       raise 'Token string is empty or nil' if token.nil? || token.empty?
 
-      if (invalid_intents = intents.reject { |intent| INTENTS.key?(intent) }).any?
-        raise "Invalid intents: #{invalid_intents.join ', '}"
-      end
-
-      @intents = intents.reduce(0) { |sum, intent| sum | INTENTS[intent] }
+      @intents = intents == :all ? INTENTS.values.reduce(&:|) : calculate_intents(intents)
 
       @token = process_token(@type, token)
       @gateway = Gateway.new(self, @token, @shard_key, @compress_mode, @intents)
@@ -1401,6 +1398,25 @@ module Discordrb
 
         await_event = Discordrb::Events::AwaitEvent.new(await, event, self)
         raise_event(await_event)
+      end
+    end
+
+    def calculate_intents(intents)
+      intents.reduce(0) do |sum, intent|
+        case intent
+        when Symbol
+          if INTENTS[intent]
+            sum | INTENTS[intent]
+          else
+            LOGGER.warn("Unknown intent: #{intent}")
+            sum
+          end
+        when Number
+          sum | intent
+        else
+          LOGGER.warn("Invalid intent: #{intent}")
+          sum
+        end
       end
     end
   end

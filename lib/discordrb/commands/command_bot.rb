@@ -84,7 +84,7 @@ module Discordrb::Commands
         redact_token: attributes.key?(:redact_token) ? attributes[:redact_token] : true,
         ignore_bots: attributes[:ignore_bots],
         compress_mode: attributes[:compress_mode],
-        intents: attributes[:intents] || [:all]
+        intents: attributes[:intents] || :all
       )
 
       @prefix = attributes[:prefix]

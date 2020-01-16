@@ -143,7 +143,7 @@ module Discordrb
     # @return [true, false] whether or not this gateway should check for heartbeat ACKs.
     attr_accessor :check_heartbeat_acks
 
-    def initialize(bot, token, shard_key = nil, compress_mode = :stream, intents = INTENTS[:all])
+    def initialize(bot, token, shard_key = nil, compress_mode = :stream, intents = ALL_INTENTS)
       @token = token
       @bot = bot
 
