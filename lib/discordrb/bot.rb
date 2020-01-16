@@ -127,10 +127,11 @@ module Discordrb
 
       raise 'Token string is empty or nil' if token.nil? || token.empty?
 
-      if (invalid_intents = intents.reject { |intent| INTENTS.keys.include? intent }).any?
+      if (invalid_intents = intents.reject { |intent| INTENTS.key?(intent) }).any?
         raise "Invalid intents: #{invalid_intents.join ', '}"
       end
-      @intents = intents.reduce(0) {|sum, intent| sum |= INTENTS[intent] }
+
+      @intents = intents.reduce(0) { |sum, intent| sum | INTENTS[intent] }
 
       @token = process_token(@type, token)
       @gateway = Gateway.new(self, @token, @shard_key, @compress_mode, @intents)
@@ -147,7 +148,6 @@ module Discordrb
       @current_thread = 0
 
       @status = :online
-
     end
 
     # The list of users the bot shares a server with.
