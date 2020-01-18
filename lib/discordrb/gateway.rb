@@ -716,7 +716,7 @@ module Discordrb
 
         @session = Session.new(data['session_id'])
         @session.sequence = 0
-        @bot.__send__(:notify_ready) if (@intents & INTENTS[:guild_create]).zero?
+        @bot.__send__(:notify_ready) if (@intents & INTENTS[:servers]).zero?
       when :RESUMED
         # The RESUMED event is received after a successful op 6 (resume). It does nothing except tell the bot the
         # connection is initiated (like READY would). Starting with v5, it doesn't set a new heartbeat interval anymore
