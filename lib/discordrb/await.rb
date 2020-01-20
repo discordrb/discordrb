@@ -43,7 +43,6 @@ module Discordrb
       dummy_handler = EventContainer.handler_class(@type).new(@attributes, @bot)
       return [nil, nil] unless event.instance_of?(@type) && dummy_handler.matches?(event)
 
-      should_delete = nil
       should_delete = true if (@block && @block.call(event) != false) || !@block
 
       [@key, should_delete]
