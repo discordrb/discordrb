@@ -12,7 +12,7 @@ module Discordrb
   # The default debug logger used by discordrb.
   LOGGER = Logger.new(ENV['DISCORDRB_FANCY_LOG'])
 
-  # The unix timestamp Discord IDs are based on
+  # The Unix timestamp Discord IDs are based on
   DISCORD_EPOCH = 1_420_070_400_000
 
   # Used to declare what events you wish to recieve from Discord.

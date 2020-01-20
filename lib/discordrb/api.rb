@@ -80,7 +80,7 @@ module Discordrb::API
   def raw_request(type, attributes)
     RestClient.send(type, *attributes)
   rescue RestClient::Forbidden => e
-    # HACK: for #request, dynamically inject restclient's response into NoPermission - this allows us to ratelimit
+    # HACK: for #request, dynamically inject restclient's response into NoPermission - this allows us to rate limit
     noprm = Discordrb::Errors::NoPermission.new
     noprm.define_singleton_method(:_rc_response) { e.response }
     raise noprm, "The bot doesn't have the required permission to do this!"
@@ -152,12 +152,12 @@ module Discordrb::API
     response
   end
 
-  # Handles premeptive ratelimiting by waiting the given mutex by the difference of the Date header to the
+  # Handles pre-emptive rate limiting by waiting the given mutex by the difference of the Date header to the
   # X-Ratelimit-Reset header, thus making sure we don't get 429'd in any subsequent requests.
   def handle_preemptive_rl(headers, mutex, key)
     Discordrb::LOGGER.ratelimit "RL bucket depletion detected! Date: #{headers[:date]} Reset: #{headers[:x_ratelimit_reset]}"
     delta = headers[:x_ratelimit_reset_after].to_f
-    Discordrb::LOGGER.warn("Locking RL mutex (key: #{key}) for #{delta} seconds preemptively")
+    Discordrb::LOGGER.warn("Locking RL mutex (key: #{key}) for #{delta} seconds pre-emptively")
     sync_wait(delta, mutex)
   end
 

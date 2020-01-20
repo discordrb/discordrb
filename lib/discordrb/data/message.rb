@@ -251,7 +251,7 @@ module Discordrb
     # Returns the list of users who reacted with a certain reaction.
     # @param reaction [String, #to_reaction] the unicode emoji or {Emoji}
     # @param limit [Integer] the limit of how many users to retrieve. `nil` will return all users
-    # @example Get all the users that reacted with a thumbsup.
+    # @example Get all the users that reacted with a thumbs up.
     #   thumbs_up_reactions = message.reacted_with("\u{1F44D}")
     # @return [Array<User>] the users who used this reaction
     def reacted_with(reaction, limit: 100)

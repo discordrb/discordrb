@@ -172,10 +172,7 @@ module Discordrb
     #   The list of emoji the bot can use.
     #   @return [Array<Emoji>] the emoji available.
     def emoji(id = nil)
-      gateway_check
-      unavailable_servers_check
-
-      emoji_hash = @servers.values.map(&:emoji).reduce(&:merge)
+      emoji_hash = servers.values.map(&:emoji).reduce(&:merge)
       if id
         id = id.resolve_id
         emoji_hash[id]
@@ -232,7 +229,7 @@ module Discordrb
 
     # Runs the bot, which logs into Discord and connects the WebSocket. This
     # prevents all further execution unless it is executed with
-    # `backround` = `true`.
+    # `background` = `true`.
     # @param background [true, false] If it is `true`, then the bot will run in
     #   another thread to allow further execution. If it is `false`, this method
     #   will block until {#stop} is called. If the bot is run with `true`, make
@@ -306,8 +303,6 @@ module Discordrb
 
       server_id = channel.server.id
       return @voices[server_id] if @voices[server_id]
-
-      nil
     end
 
     # Connects to a voice channel, initializes network connections and returns the {Voice::VoiceBot} over which audio
@@ -430,8 +425,7 @@ module Discordrb
     def create_server(name, region = :'eu-central')
       response = API::Server.create(token, name, region)
       id = JSON.parse(response)['id'].to_i
-      sleep 0.1 until @servers[id]
-      server = @servers[id]
+      sleep 0.1 until (server = @servers[id])
       debug "Successfully created server #{server.id} with name #{server.name}"
       server
     end

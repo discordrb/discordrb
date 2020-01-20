@@ -79,7 +79,7 @@ module Discordrb::Events
   # Member leaves
   # @see Discordrb::EventContainer#member_leave
   class ServerMemberDeleteEvent < ServerMemberEvent
-    # Overide init_user to account for the deleted user on the server
+    # Override init_user to account for the deleted user on the server
     def init_user(data, bot)
       @user = Discordrb::User.new(data['user'], bot)
     end

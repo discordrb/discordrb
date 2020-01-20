@@ -94,7 +94,7 @@ module Discordrb::Webhooks
     #   embed.add_field(name: 'A field', value: "The field's content")
     # @param name [String] The field's name
     # @param value [String] The field's value
-    # @param inline [true, false] Whether the field should be inlined
+    # @param inline [true, false] Whether the field should be inline
     def add_field(name: nil, value: nil, inline: nil)
       self << EmbedField.new(name: name, value: value, inline: inline)
     end
