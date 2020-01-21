@@ -423,8 +423,7 @@ module Discordrb
     def create_server(name, region = :'eu-central')
       response = API::Server.create(token, name, region)
       id = JSON.parse(response)['id'].to_i
-      sleep 0.1 until @servers[id]
-      server = @servers[id]
+      sleep 0.1 until (server = @servers[id])
       debug "Successfully created server #{server.id} with name #{server.name}"
       server
     end
