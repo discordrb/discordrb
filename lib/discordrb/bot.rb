@@ -302,8 +302,6 @@ module Discordrb
 
       server_id = channel.server.id
       return @voices[server_id] if @voices[server_id]
-
-      nil
     end
 
     # Connects to a voice channel, initializes network connections and returns the {Voice::VoiceBot} over which audio
