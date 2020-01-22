@@ -351,12 +351,12 @@ module Discordrb::API::Server
 
   # Gets a server's audit logs
   # https://discordapp.com/developers/docs/resources/audit-log#get-guild-audit-log
-  def audit_logs(token, server_id, limit, userid = nil, actiontype = nil, before = nil)
+  def audit_logs(token, server_id, limit, user_id = nil, action_type = nil, before = nil)
     Discordrb::API.request(
       :guilds_sid_auditlogs,
       server_id,
       :get,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}/audit-logs?limit=#{limit}#{"&user_id=#{userid}" if userid}#{"&action_type=#{actiontype}" if actiontype}#{"&before=#{before}" if before}",
+      "#{Discordrb::API.api_base}/guilds/#{server_id}/audit-logs?limit=#{limit}#{"&user_id=#{user_id}" if user_id}#{"&action_type=#{action_type}" if action_type}#{"&before=#{before}" if before}",
       Authorization: token
     )
   end

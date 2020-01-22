@@ -4,7 +4,6 @@ module Discordrb
   # List of permissions Discord uses
   class Permissions
     # This hash maps bit positions to logical permissions.
-    # I'm not sure what the unlabeled bits are reserved for.
     FLAGS = {
       # Bit => Permission # Value
       0 => :create_instant_invite, # 1

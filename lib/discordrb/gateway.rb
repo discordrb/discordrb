@@ -248,7 +248,7 @@ module Discordrb
     def heartbeat
       if check_heartbeat_acks
         unless @last_heartbeat_acked
-          # We're in a bad situation - apparently the last heartbeat wasn't acked, which means the connection is likely
+          # We're in a bad situation - apparently the last heartbeat wasn't ACK'd, which means the connection is likely
           # a zombie. Reconnect
           LOGGER.warn('Last heartbeat was not acked, so this is a zombie connection! Reconnecting')
 
@@ -319,7 +319,7 @@ module Discordrb
 
     # Sends a status update packet (op 3). This sets the bot user's status (online/idle/...) and game playing/streaming.
     # @param status [String] The status that should be set (`online`, `idle`, `dnd`, `invisible`).
-    # @param since [Integer] The unix timestamp in milliseconds when the status was set. Should only be provided when
+    # @param since [Integer] The Unix timestamp in milliseconds when the status was set. Should only be provided when
     #   `afk` is true.
     # @param game [Hash<Symbol => Object>, nil] `nil` if no game should be played, or a hash of `:game => "name"` if a
     #   game should be played. The hash can also contain additional attributes for streaming statuses.
@@ -411,7 +411,7 @@ module Discordrb
     # or for testing. You probably shouldn't use this unless you know what you're doing.
     # @param opcode [Integer] The opcode the packet should be sent as. Can be one of {Opcodes} or a custom value if
     #   necessary.
-    # @param packet [Object] Some arbitrary JSON-serialisable data that should be sent as the `d` field.
+    # @param packet [Object] Some arbitrary JSON-serializable data that should be sent as the `d` field.
     def send_packet(opcode, packet)
       data = {
         op: opcode,

@@ -6,7 +6,7 @@ require 'discordrb/logger'
 
 # Voice support
 module Discordrb::Voice
-  # How long one voice packet should ideally be (20 ms as defined by Discord)
+  # How long one voice packet should ideally be (20ms as defined by Discord)
   IDEAL_LENGTH = 20.0
 
   # How many bytes of data to read (1920 bytes * 2 channels) from audio PCM data
@@ -39,7 +39,7 @@ module Discordrb::Voice
     # play parts back too fast. How often these measurements should be done depends a lot on the system, and if it's
     # done too quickly, especially on slow connections, the playback speed will vary wildly; if it's done too slowly
     # however, small errors will cause quality problems for a longer time.
-    # @return [Integer] how frequently audio length adjustments should be done, in ideal packets (20 ms).
+    # @return [Integer] how frequently audio length adjustments should be done, in ideal packets (20ms).
     attr_accessor :adjust_interval
 
     # This particular value is also important because ffmpeg may take longer to process the first few packets. It is
@@ -47,7 +47,7 @@ module Discordrb::Voice
     # shouldn't be any higher than {#adjust_interval}, otherwise no adjustments will take place. If {#adjust_interval}
     # is at a value higher than 10, this value should not be changed at all.
     # @see #adjust_interval
-    # @return [Integer] the packet number (1 packet = 20 ms) at which length adjustments should start.
+    # @return [Integer] the packet number (1 packet = 20ms) at which length adjustments should start.
     attr_accessor :adjust_offset
 
     # This value determines whether or not the adjustment length should be averaged with the previous value. This may
@@ -63,8 +63,8 @@ module Discordrb::Voice
     attr_accessor :adjust_debug
 
     # If this value is set, no length adjustments will ever be done and this value will always be used as the length
-    # (i. e. packets will be sent every N seconds). Be careful not to set it too low as to not spam Discord's servers.
-    # The ideal length is 20 ms (accessible by the {Discordrb::Voice::IDEAL_LENGTH} constant), this value should be
+    # (i.e. packets will be sent every N seconds). Be careful not to set it too low as to not spam Discord's servers.
+    # The ideal length is 20ms (accessible by the {Discordrb::Voice::IDEAL_LENGTH} constant), this value should be
     # slightly lower than that because encoding + sending takes time. Note that sending DCA files is significantly
     # faster than sending regular audio files (usually about four times as fast), so you might want to set this value
     # to something else if you're sending a DCA file.
@@ -135,7 +135,7 @@ module Discordrb::Voice
 
     alias_method :isplaying?, :playing?
 
-    # Continue playback. This change may take up to 100 ms to take effect, which is usually negligible.
+    # Continue playback. This change may take up to 100ms to take effect, which is usually negligible.
     def continue
       @paused = false
     end
@@ -177,7 +177,7 @@ module Discordrb::Voice
       @ws.destroy
     end
 
-    # Plays a stream of raw data to the channel. All playback methods are blocking, i. e. they wait for the playback to
+    # Plays a stream of raw data to the channel. All playback methods are blocking, i.e. they wait for the playback to
     # finish before exiting the method. This doesn't cause a problem if you just use discordrb events/commands to
     # play stuff, as these are fully threaded, but if you don't want this behaviour anyway, be sure to call these
     # methods in separate threads.
@@ -296,7 +296,7 @@ module Discordrb::Voice
 
     private
 
-    # Plays the data from the @io stream as Discord requires it
+    # Plays the data from the IO stream as Discord requires it
     def play_internal
       count = 0
       @playing = true
@@ -382,13 +382,13 @@ module Discordrb::Voice
         increment_packet_headers
         @udp.send_audio(Encoder::OPUS_SILENCE, @sequence, @time)
 
-        # Length adjustments don't matter here, we can just wait 20 ms since nobody is going to hear it anyway
+        # Length adjustments don't matter here, we can just wait 20ms since nobody is going to hear it anyway
         sleep IDEAL_LENGTH / 1000.0
       end
 
       @bot.debug('Performing final cleanup after stream ended')
 
-      # Final cleanup
+      # Final clean-up
       stop_playing
 
       # Notify any stop_playing methods running right now that we have actually stopped

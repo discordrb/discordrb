@@ -49,7 +49,7 @@ module Discordrb::Light
     #   Twitch account connection of the server owner).
     attr_reader :server_connection
 
-    # @return [Connection] the connection integrated with the server (i. e. your connection)
+    # @return [Connection] the connection integrated with the server (i.e. your connection)
     attr_reader :integrated_connection
 
     # @!visibility private

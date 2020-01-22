@@ -237,7 +237,7 @@ module Discordrb
     def update_roles(role_ids)
       @roles = []
       role_ids.each do |id|
-        # It is posible for members to have roles that do not exist
+        # It is possible for members to have roles that do not exist
         # on the server any longer. See https://github.com/discordrb/discordrb/issues/371
         role = @server.role(id)
         @roles << role if role

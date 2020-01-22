@@ -228,7 +228,7 @@ module Discordrb
 
     # Runs the bot, which logs into Discord and connects the WebSocket. This
     # prevents all further execution unless it is executed with
-    # `backround` = `true`.
+    # `background` = `true`.
     # @param background [true, false] If it is `true`, then the bot will run in
     #   another thread to allow further execution. If it is `false`, this method
     #   will block until {#stop} is called. If the bot is run with `true`, make

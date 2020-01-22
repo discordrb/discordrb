@@ -6,7 +6,7 @@ require 'discordrb/api/user'
 require 'discordrb/light/data'
 require 'discordrb/light/integrations'
 
-# This module contains classes to allow connections to bots without a connection to the gateway socket, i. e. bots
+# This module contains classes to allow connections to bots without a connection to the gateway socket, i.e. bots
 # that only use the REST part of the API.
 module Discordrb::Light
   # A bot that only uses the REST part of the API. Hierarchically unrelated to the regular {Discordrb::Bot}. Useful to

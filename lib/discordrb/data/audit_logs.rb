@@ -79,7 +79,7 @@ module Discordrb
       # @return [Integer, nil] the amount of members removed. Only present if the action is `:member_prune`.
       attr_reader :members_removed
 
-      # @return [String, nil] the reason for this action occuring.
+      # @return [String, nil] the reason for this action occurring.
       attr_reader :reason
 
       # @return [Hash<String => Change>, RoleChange, nil] the changes from this log, listing the key as the key changed. Will be a RoleChange object if the action is `:member_role_update`. Will be nil if the action is either `:message_delete` or `:member_prune`.
@@ -100,7 +100,7 @@ module Discordrb
         # Sets the 'changes' variable to a empty hash if there are no special actions.
         @changes = {} unless @action == :message_delete || @action == :member_prune || @action == :member_role_update
 
-        # Sets the 'changes' variable to a RoleChange class if theres a role update.
+        # Sets the 'changes' variable to a RoleChange class if there's a role update.
         @changes = RoleChange.new(data['changes'][0], @server) if @action == :member_role_update
 
         process_changes(data['changes']) unless @action == :member_role_update

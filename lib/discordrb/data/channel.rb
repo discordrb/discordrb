@@ -22,7 +22,7 @@ module Discordrb
     # @return [Server, nil] the server this channel is on. If this channel is a PM channel, it will be nil.
     attr_reader :server
 
-    # @return [Integer, nil] the ID of the parent channel, if this channel is inside a cateogry
+    # @return [Integer, nil] the ID of the parent channel, if this channel is inside a category
     attr_reader :parent_id
 
     # @return [Integer] the type of this channel
@@ -215,7 +215,7 @@ module Discordrb
         hash = { id: id, position: pos }
 
         # Conditionally add `lock_permissions` and `parent_id` if we're
-        # iterating past ourself
+        # iterating past ourselves
         if id == @id
           hash[:lock_permissions] = true if lock_permissions
           hash[:parent_id] = parent.nil? ? nil : parent.id
@@ -230,7 +230,7 @@ module Discordrb
 
     # Sets whether this channel is NSFW
     # @param nsfw [true, false]
-    # @raise [ArguementError] if value isn't one of true, false
+    # @raise [ArgumentError] if value isn't one of true, false
     def nsfw=(nsfw)
       raise ArgumentError, 'nsfw value must be true or false' unless nsfw.is_a?(TrueClass) || nsfw.is_a?(FalseClass)
 
@@ -491,7 +491,6 @@ module Discordrb
     # @note For internal use only
     # @!visibility private
     def update_from(other)
-      @topic = other.topic
       @name = other.name
       @position = other.position
       @topic = other.topic

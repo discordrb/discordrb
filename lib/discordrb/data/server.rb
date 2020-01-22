@@ -735,7 +735,7 @@ module Discordrb
     end
 
     # Sets the default message notification level
-    # @param notification_level [Integer, Symbol] The default message notificiation 0-1 or Symbol (see {NOTIFICATION_LEVELS})
+    # @param notification_level [Integer, Symbol] The default message notification 0-1 or Symbol (see {NOTIFICATION_LEVELS})
     def default_message_notifications=(notification_level)
       notification_level = NOTIFICATION_LEVELS[notification_level] if notification_level.is_a?(Symbol)
 
