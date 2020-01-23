@@ -168,10 +168,7 @@ module Discordrb
     #   The list of emoji the bot can use.
     #   @return [Array<Emoji>] the emoji available.
     def emoji(id = nil)
-      gateway_check
-      unavailable_servers_check
-
-      emoji_hash = @servers.values.map(&:emoji).reduce(&:merge)
+      emoji_hash = servers.values.map(&:emoji).reduce(&:merge)
       if id
         id = id.resolve_id
         emoji_hash[id]
