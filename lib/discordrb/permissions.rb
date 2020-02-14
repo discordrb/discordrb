@@ -191,8 +191,8 @@ module Discordrb
         channel_allow = permission_overwrite(action, channel, role.id)
         can_act = if channel_allow
                     # If the channel has an override, check whether it is an allow - if yes,
-                    # the user can always act
-                    true
+                    # the user can act, if not, it can't
+                    channel_allow == :allow
                   else
                     # Otherwise defer to the role
                     role.permissions.instance_variable_get("@#{action}") || can_act
