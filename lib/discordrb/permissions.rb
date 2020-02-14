@@ -187,6 +187,7 @@ module Discordrb
       roles_to_check.sort_by(&:position).reduce(false) do |can_act, role|
         # Actions allowed in any role are always allowed
         return can_act if can_act
+
         # Get the override defined for the role on the channel
         channel_allow = permission_overwrite(action, channel, role.id)
         can_act = if channel_allow
