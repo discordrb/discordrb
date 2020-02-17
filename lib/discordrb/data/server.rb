@@ -123,7 +123,7 @@ module Discordrb
 
     # Gets a role on this server based on its ID.
     # @param id [String, Integer] The role ID to look for.
-    # @return [Role] a role object based on the ID
+    # @return [Role, nil] The role identified by the ID, or `nil` if it couldn't be found.
     def role(id)
       id = id.resolve_id
       @roles.find { |e| e.id == id }
