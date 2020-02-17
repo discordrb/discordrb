@@ -10,12 +10,12 @@ require 'discordrb'
 bot = Discordrb::Commands::CommandBot.new token: 'B0T.T0KEN.here', prefix: '!'
 
 bot.command(:eval, help_available: false) do |event, *code|
-  break unless event.user.id == 66237334693085184 # Replace number with your ID
+  break unless event.user.id == 66237334693085184 # Replace number with your Discord ID
 
   begin
-    eval code.join(' ')
-  rescue StandardError
-    'An error occurred 😞'
+    event.respond(eval code.join(' ')) #
+  rescue StandardError => e
+    event.respond "An error occurred 😞\n#{e}"
   end
 end
 
