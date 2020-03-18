@@ -542,11 +542,12 @@ module Discordrb
     # @param image [String, #read] A base64 encoded string with the image data, or an object that responds to `#read`, such as `File`.
     # @param roles [Array<Role, String, Integer>] An array of roles, or role IDs to be whitelisted for this emoji.
     # @param reason [String] The reason the for the creation of this emoji.
+    # @param type [String] The type is the content type of the image.
     # @return [Emoji] The emoji that has been added.
-    def add_emoji(name, image, roles = [], reason: nil)
+    def add_emoji(name, image, roles = [], reason: nil, type: 'jpg')
       image_string = image
       if image.respond_to? :read
-        image_string = 'data:image/jpg;base64,'
+        image_string = "data:image/#{type};base64,"
         image_string += Base64.strict_encode64(image.read)
       end
 
