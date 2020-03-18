@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'discordrb/webhooks/embeds'
+
 module Discordrb
   # An Embed object that is contained in a message
   # A freshly generated embed object will not appear in a message object
@@ -69,6 +71,46 @@ module Discordrb
       @thumbnail = data['thumbnail'].nil? ? nil : EmbedThumbnail.new(data['thumbnail'], self)
       @author = data['author'].nil? ? nil : EmbedAuthor.new(data['author'], self)
       @fields = data['fields'].nil? ? nil : data['fields'].map { |field| EmbedField.new(field, self) }
+    end
+
+    # Convert the embed to a embed for posting.
+    # @example Send the embed of the posted message as it is.
+    #   bot.message do |event|
+    #     event.message.embeds.each {|embed| event.send_embed('', embed.to_postable) }
+    #   end
+    # @return [Webhooks::Embed] the embed object that can be sent by Webhook etc.
+    def to_postable
+      embed = Webhooks::Embed.new
+  
+      embed.title = @title
+      embed.description = @description
+      embed.url = @url
+      embed.timestamp = @timestamp
+      embed.color = @color
+
+      embed.footer = Webhooks::EmbedFooter.new(
+        text: @footer.text, icon_url: @footer.icon_url
+      ) if @footer
+
+      embed.image = Webhooks::EmbedImage.new(
+        url: @image.url
+      ) if @image
+
+      embed.thumbnail = Webhooks::EmbedThumbnail.new(
+        url: @thumbnail.url
+      ) if @thumbnail
+
+      embed.author = Webhooks::EmbedAuthor.new(
+        name: @author.name, url: @author.url, icon_url: @author.icon_url
+      ) if @author
+
+      embed.fields = @fields.map do |field|
+        Webhooks::EmbedField.new(
+          name: field.name, value: field.value, inline: field.inline
+        )
+      end if @fields
+  
+      embed
     end
   end
 
