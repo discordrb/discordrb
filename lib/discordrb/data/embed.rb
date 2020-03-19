@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'discordrb/webhooks/embeds'
-
 module Discordrb
   # An Embed object that is contained in a message
   # A freshly generated embed object will not appear in a message object
@@ -73,44 +71,20 @@ module Discordrb
       @fields = data['fields'].nil? ? nil : data['fields'].map { |field| EmbedField.new(field, self) }
     end
 
-    # Convert the embed to a embed for posting.
-    # @example Send the embed of the posted message as it is.
-    #   bot.message do |event|
-    #     event.message.embeds.each {|embed| event.send_embed('', embed.to_postable) }
-    #   end
-    # @return [Webhooks::Embed] the embed object that can be sent by Webhook etc.
-    def to_postable
-      embed = Webhooks::Embed.new
-  
-      embed.title = @title
-      embed.description = @description
-      embed.url = @url
-      embed.timestamp = @timestamp
-      embed.color = @color
-
-      embed.footer = Webhooks::EmbedFooter.new(
-        text: @footer.text, icon_url: @footer.icon_url
-      ) if @footer
-
-      embed.image = Webhooks::EmbedImage.new(
-        url: @image.url
-      ) if @image
-
-      embed.thumbnail = Webhooks::EmbedThumbnail.new(
-        url: @thumbnail.url
-      ) if @thumbnail
-
-      embed.author = Webhooks::EmbedAuthor.new(
-        name: @author.name, url: @author.url, icon_url: @author.icon_url
-      ) if @author
-
-      embed.fields = @fields.map do |field|
-        Webhooks::EmbedField.new(
-          name: field.name, value: field.value, inline: field.inline
-        )
-      end if @fields
-  
-      embed
+    # @return [Hash] a hash representation of this embed, to be converted to JSON.
+    def to_hash
+      {
+        title: @title,
+        description: @description,
+        url: @url,
+        timestamp: @timestamp&.utc&.iso8601,
+        color: @color,
+        footer: @footer&.to_hash,
+        image: @image&.to_hash,
+        thumbnail: @thumbnail&.to_hash,
+        author: @author&.to_hash,
+        fields: @fields&.map(&:to_hash)
+      }
     end
   end
 
@@ -135,6 +109,14 @@ module Discordrb
       @text = data['text']
       @icon_url = data['icon_url']
       @proxy_icon_url = data['proxy_icon_url']
+    end
+
+    # @return [Hash] a hash representation of this embed footer, to be converted to JSON.
+    def to_hash
+      {
+        text: @text,
+        icon_url: @icon_url
+      }
     end
   end
 
@@ -163,6 +145,13 @@ module Discordrb
       @proxy_url = data['proxy_url']
       @width = data['width']
       @height = data['height']
+    end
+
+    # @return [Hash] a hash representation of this embed image, to be converted to JSON.
+    def to_hash
+      {
+        url: @url
+      }
     end
   end
 
@@ -217,6 +206,13 @@ module Discordrb
       @width = data['width']
       @height = data['height']
     end
+
+    # @return [Hash] a hash representation of this embed thumbnail, to be converted to JSON.
+    def to_hash
+      {
+        url: @url
+      }
+    end
   end
 
   # An Embed provider for the embed object
@@ -265,6 +261,15 @@ module Discordrb
       @icon_url = data['icon_url']
       @proxy_icon_url = data['proxy_icon_url']
     end
+
+    # @return [Hash] a hash representation of this embed author, to be converted to JSON.
+    def to_hash
+      {
+        name: @name,
+        url: @url,
+        icon_url: @icon_url
+      }
+    end
   end
 
   # An Embed field for the embed object
@@ -288,6 +293,15 @@ module Discordrb
       @name = data['name']
       @value = data['value']
       @inline = data['inline']
+    end
+
+    # @return [Hash] a hash representation of this embed field, to be converted to JSON.
+    def to_hash
+      {
+        name: @name,
+        value: @value,
+        inline: @inline
+      }
     end
   end
 end
