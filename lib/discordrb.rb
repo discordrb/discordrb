@@ -16,6 +16,7 @@ module Discordrb
   DISCORD_EPOCH = 1_420_070_400_000
 
   # Used to declare what events you wish to recieve from Discord.
+  # @see https://discordapp.com/developers/docs/topics/gateway#gateway-intents
   INTENTS = {
     servers: 1 << 0,
     server_members: 1 << 1,
