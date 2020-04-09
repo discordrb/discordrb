@@ -72,13 +72,17 @@ module Discordrb::API::Channel
 
   # Send a message to a channel
   # https://discordapp.com/developers/docs/resources/channel#create-message
+<<<<<<< HEAD
   def create_message(token, channel_id, message, tts = false, embed = nil, nonce = nil)
+=======
+  def create_message(token, channel_id, message, tts = false, embed = nil, nonce = nil, allowed_mentions = nil)
+>>>>>>> c8f772db... Initial allowed_mentions implementation
     Discordrb::API.request(
       :channels_cid_messages_mid,
       channel_id,
       :post,
       "#{Discordrb::API.api_base}/channels/#{channel_id}/messages",
-      { content: message, tts: tts, embed: embed, nonce: nonce }.to_json,
+      { content: message, tts: tts, embed: embed, nonce: nonce, allowed_mentions: allowed_mentions }.to_json,
       Authorization: token,
       content_type: :json
     )

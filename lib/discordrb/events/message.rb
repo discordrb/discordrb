@@ -14,27 +14,33 @@ module Discordrb::Events
     # @param content [String] The message to send to the channel
     # @param tts [true, false] Whether or not this message should be sent using Discord text-to-speech.
     # @param embed [Hash, Discordrb::Webhooks::Embed, nil] The rich embed to append to this message.
+    # @param allowed_mentions [Hash, nil] [Allowed Mentions object](https://discordapp.com/developers/docs/resources/channel#allowed-mentions-object)
     # @return [Discordrb::Message] the message that was sent
-    def send_message(content, tts = false, embed = nil)
-      channel.send_message(content, tts, embed)
+    def send_message(content, tts = false, embed = nil, allowed_mentions = nil)
+      channel.send_message(content, tts, embed, allowed_mentions)
     end
 
     # The same as {#send_message}, but yields a {Webhooks::Embed} for easy building of embedded content inside a block.
     # @see Channel#send_embed
     # @param message [String] The message that should be sent along with the embed. If this is the empty string, only the embed will be shown.
     # @param embed [Discordrb::Webhooks::Embed, nil] The embed to start the building process with, or nil if one should be created anew.
+    # @param tts [true, false] Whether or not this message should be sent using Discord text-to-speech.
+    # @param allowed_mentions [Hash, nil] [Allowed Mentions object](https://discordapp.com/developers/docs/resources/channel#allowed-mentions-object)
     # @yield [embed] Yields the embed to allow for easy building inside a block.
     # @yieldparam embed [Discordrb::Webhooks::Embed] The embed from the parameters, or a new one.
     # @return [Message] The resulting message.
-    def send_embed(message = '', embed = nil, &block)
-      channel.send_embed(message, embed, &block)
+    def send_embed(message = '', embed = nil, tts = false, allowed_mentions = nil, &block)
+      channel.send_embed(message, embed, tts, allowed_mentions, &block)
     end
 
     # Sends a temporary message to the channel this message was sent in, right now.
     # @param content [String] The content to send. Should not be longer than 2000 characters or it will result in an error.
     # @param timeout [Float] The amount of time in seconds after which the message sent will be deleted.
-    def send_temporary_message(content, timeout)
-      channel.send_temporary_message(content, timeout)
+    # @param tts [true, false] Whether or not this message should be sent using Discord text-to-speech.
+    # @param embed [Hash, Discordrb::Webhooks::Embed, nil] The rich embed to append to this message.
+    # @param allowed_mentions [Hash, nil] [Allowed Mentions object](https://discordapp.com/developers/docs/resources/channel#allowed-mentions-object)
+    def send_temporary_message(content, timeout, tts = false, embed = nil, allowed_mentions = nil)
+      channel.send_temporary_message(content, timeout, tts, embed, allowed_mentions)
     end
 
     # Adds a string to be sent after the event has finished execution. Avoids problems with rate limiting because only

@@ -363,12 +363,13 @@ module Discordrb
     # @param content [String] The text that should be sent as a message. It is limited to 2000 characters (Discord imposed).
     # @param tts [true, false] Whether or not this message should be sent using Discord text-to-speech.
     # @param embed [Hash, Discordrb::Webhooks::Embed, nil] The rich embed to append to this message.
+    # @param allowed_mentions [Hash, nil] [Allowed Mentions object](https://discordapp.com/developers/docs/resources/channel#allowed-mentions-object)
     # @return [Message] The message that was sent.
-    def send_message(channel, content, tts = false, embed = nil)
+    def send_message(channel, content, tts = false, embed = nil, allowed_mentions = nil)
       channel = channel.resolve_id
       debug("Sending message to #{channel} with content '#{content}'")
 
-      response = API::Channel.create_message(token, channel, content, tts, embed ? embed.to_hash : nil)
+      response = API::Channel.create_message(token, channel, content, tts, embed ? embed.to_hash : nil, nil, allowed_mentions)
       Message.new(JSON.parse(response), self)
     end
 
@@ -379,11 +380,12 @@ module Discordrb
     # @param timeout [Float] The amount of time in seconds after which the message sent will be deleted.
     # @param tts [true, false] Whether or not this message should be sent using Discord text-to-speech.
     # @param embed [Hash, Discordrb::Webhooks::Embed, nil] The rich embed to append to this message.
-    def send_temporary_message(channel, content, timeout, tts = false, embed = nil)
+    # @param allowed_mentions [Hash, nil] [Allowed Mentions object](https://discordapp.com/developers/docs/resources/channel#allowed-mentions-object)
+    def send_temporary_message(channel, content, timeout, tts = false, embed = nil, allowed_mentions = nil)
       Thread.new do
         Thread.current[:discordrb_name] = "#{@current_thread}-temp-msg"
 
-        message = send_message(channel, content, tts, embed)
+        message = send_message(channel, content, tts, embed, allowed_mentions)
         sleep(timeout)
         message.delete
       end
