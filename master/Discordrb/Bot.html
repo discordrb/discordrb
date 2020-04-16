@@ -6,15 +6,15 @@
 <title>
   Class: Discordrb::Bot
   
-    &mdash; Documentation by YARD 0.9.20
+    &mdash; Documentation by YARD 0.9.24
   
 </title>
 
-  <link rel="stylesheet" href="../css/style.css" type="text/css" charset="utf-8" />
+  <link rel="stylesheet" href="../css/style.css" type="text/css" />
 
-  <link rel="stylesheet" href="../css/common.css" type="text/css" charset="utf-8" />
+  <link rel="stylesheet" href="../css/common.css" type="text/css" />
 
-<script type="text/javascript" charset="utf-8">
+<script type="text/javascript">
   pathId = "Discordrb::Bot";
   relpath = '../';
 </script>
@@ -1545,6 +1545,8 @@ be used after logging in. If you want to do something when the bot has connected
         <span class='type'>(<tt>Symbol</tt>)</span>
       
       
+        <em class="default">(defaults to: <tt>:normal</tt>)</em>
+      
       
         &mdash;
         <div class='inline'><p>The mode this bot should use for logging. See <span class='object_link'><a href="Logger.html#mode=-instance_method" title="Discordrb::Logger#mode= (method)">Logger#mode=</a></span> for a list of modes.</p>
@@ -1559,6 +1561,8 @@ be used after logging in. If you want to do something when the bot has connected
       
         <span class='type'>(<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>)</span>
       
+      
+        <em class="default">(defaults to: <tt>nil</tt>)</em>
       
       
         &mdash;
@@ -1577,6 +1581,8 @@ you&#39;re trying to log in as a bot.</p>
         <span class='type'>(<tt><span class='object_link'><a href="../Integer.html" title="Integer (class)">Integer</a></span></tt>)</span>
       
       
+        <em class="default">(defaults to: <tt>nil</tt>)</em>
+      
       
         &mdash;
         <div class='inline'><p>If you&#39;re logging in as a bot, the bot&#39;s client ID. This is optional, and may be fetched
@@ -1593,6 +1599,8 @@ from the API by calling <span class='object_link'><a href="#bot_application-inst
         <span class='type'>(<tt>Symbol</tt>)</span>
       
       
+        <em class="default">(defaults to: <tt>nil</tt>)</em>
+      
       
         &mdash;
         <div class='inline'><p>This parameter lets you manually overwrite the account type. This needs to be set when
@@ -1608,6 +1616,8 @@ logging in as a user, otherwise discordrb will treat you as a bot account. Valid
       
         <span class='type'>(<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>)</span>
       
+      
+        <em class="default">(defaults to: <tt>&#39;&#39;</tt>)</em>
       
       
         &mdash;
@@ -1626,6 +1636,8 @@ people will host on their servers separately.</p>
         <span class='type'>(<tt>true</tt>, <tt>false</tt>)</span>
       
       
+        <em class="default">(defaults to: <tt>false</tt>)</em>
+      
       
         &mdash;
         <div class='inline'><p>Whether the output log should be made extra fancy using ANSI escape codes. (Your
@@ -1641,6 +1653,8 @@ terminal may not support this.)</p>
       
         <span class='type'>(<tt>true</tt>, <tt>false</tt>)</span>
       
+      
+        <em class="default">(defaults to: <tt>false</tt>)</em>
       
       
         &mdash;
@@ -1658,6 +1672,8 @@ Useful for very large bots running in debug or verbose log_mode.</p>
         <span class='type'>(<tt>true</tt>, <tt>false</tt>)</span>
       
       
+        <em class="default">(defaults to: <tt>false</tt>)</em>
+      
       
         &mdash;
         <div class='inline'><p>Whether the bot should react on its own messages. It&#39;s best to turn this off
@@ -1673,6 +1689,8 @@ unless you really need this so you don&#39;t inadvertently create infinite loops
       
         <span class='type'>(<tt><span class='object_link'><a href="../Integer.html" title="Integer (class)">Integer</a></span></tt>)</span>
       
+      
+        <em class="default">(defaults to: <tt>nil</tt>)</em>
       
       
         &mdash;
@@ -1690,6 +1708,8 @@ unless you really need this so you don&#39;t inadvertently create infinite loops
         <span class='type'>(<tt><span class='object_link'><a href="../Integer.html" title="Integer (class)">Integer</a></span></tt>)</span>
       
       
+        <em class="default">(defaults to: <tt>nil</tt>)</em>
+      
       
         &mdash;
         <div class='inline'><p>The total number of shards that should be running. See
@@ -1706,6 +1726,8 @@ unless you really need this so you don&#39;t inadvertently create infinite loops
         <span class='type'>(<tt>true</tt>, <tt>false</tt>)</span>
       
       
+        <em class="default">(defaults to: <tt>true</tt>)</em>
+      
       
         &mdash;
         <div class='inline'><p>Whether the bot should redact the token in logs. Default is true.</p>
@@ -1721,6 +1743,8 @@ unless you really need this so you don&#39;t inadvertently create infinite loops
         <span class='type'>(<tt>true</tt>, <tt>false</tt>)</span>
       
       
+        <em class="default">(defaults to: <tt>false</tt>)</em>
+      
       
         &mdash;
         <div class='inline'><p>Whether the bot should ignore bot accounts or not. Default is false.</p>
@@ -1735,6 +1759,8 @@ unless you really need this so you don&#39;t inadvertently create infinite loops
       
         <span class='type'>(<tt>:none</tt>, <tt>:large</tt>, <tt>:stream</tt>)</span>
       
+      
+        <em class="default">(defaults to: <tt>:large</tt>)</em>
       
       
         &mdash;
@@ -2107,7 +2133,7 @@ same codebase. Not required but I recommend setting it anyway.</p>
   
 </h3><div class="docstring">
   <div class="discussion">
-    <p>Returns the current shard key</p>
+    <p>Returns the current shard key.</p>
 
 
   </div>
@@ -3880,6 +3906,8 @@ presence and any other events will still be received.</p>
         <span class='type'>(<tt><span class='object_link'><a href="Server.html" title="Discordrb::Server (class)">Server</a></span></tt>, <tt>nil</tt>)</span>
       
       
+        <em class="default">(defaults to: <tt>nil</tt>)</em>
+      
       
         &mdash;
         <div class='inline'><p>The server the bot should be invited to, or nil if a general invite should be created.</p>
@@ -3894,6 +3922,8 @@ presence and any other events will still be received.</p>
       
         <span class='type'>(<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>, <tt><span class='object_link'><a href="../Integer.html" title="Integer (class)">Integer</a></span></tt>)</span>
       
+      
+        <em class="default">(defaults to: <tt>nil</tt>)</em>
       
       
         &mdash;
@@ -4612,7 +4642,7 @@ to edit user data like the current username (see <span class='object_link'><a hr
   
 </h3><div class="docstring">
   <div class="discussion">
-    <p>Returns the raw token, without any prefix</p>
+    <p>Returns the raw token, without any prefix.</p>
 
 
   </div>
@@ -4826,6 +4856,8 @@ sure to eventually call <span class='object_link'><a href="#join-instance_method
         <span class='type'>(<tt>string</tt>)</span>
       
       
+        <em class="default">(defaults to: <tt>nil</tt>)</em>
+      
       
         &mdash;
         <div class='inline'><p>The caption for the file.</p>
@@ -4840,6 +4872,8 @@ sure to eventually call <span class='object_link'><a href="#join-instance_method
       
         <span class='type'>(<tt>true</tt>, <tt>false</tt>)</span>
       
+      
+        <em class="default">(defaults to: <tt>false</tt>)</em>
       
       
         &mdash;
@@ -4856,6 +4890,8 @@ sure to eventually call <span class='object_link'><a href="#join-instance_method
         <span class='type'>(<tt><span class='object_link'><a href="../String.html" title="String (class)">String</a></span></tt>)</span>
       
       
+        <em class="default">(defaults to: <tt>nil</tt>)</em>
+      
       
         &mdash;
         <div class='inline'><p>Overrides the filename of the uploaded file</p>
@@ -4870,6 +4906,8 @@ sure to eventually call <span class='object_link'><a href="#join-instance_method
       
         <span class='type'>(<tt>true</tt>, <tt>false</tt>)</span>
       
+      
+        <em class="default">(defaults to: <tt>nil</tt>)</em>
       
       
         &mdash;
@@ -6311,9 +6349,9 @@ directly, you should leave it as true.</p>
 </div>
 
       <div id="footer">
-  Generated on Tue Dec 10 04:37:26 2019 by
+  Generated on Thu Apr 16 00:27:49 2020 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.20 (ruby-2.5.7).
+  0.9.24 (ruby-2.5.8).
 </div>
 
     </div>
