@@ -26,9 +26,6 @@ module Discordrb
     # @return [String] the ID of the region the server is on (e.g. `amsterdam`).
     attr_reader :region_id
 
-    # @return [Member] The server owner.
-    attr_reader :owner
-
     # @return [Array<Channel>] an array of all the channels (text and voice) on this server.
     attr_reader :channels
 
@@ -65,7 +62,7 @@ module Discordrb
     attr_reader :boost_level
 
     # @!visibility private
-    def initialize(data, bot, exists = true)
+    def initialize(data, bot)
       @bot = bot
       @owner_id = data['owner_id'].to_i
       @id = data['id'].to_i
@@ -92,11 +89,13 @@ module Discordrb
       @chunked = false
       @processed_chunk_members = 0
 
-      # Only get the owner of the server actually exists (i.e. not for ServerDeleteEvent)
-      @owner = member(@owner_id) if exists
-
       @booster_count = data['premium_subscription_count'] || 0
       @boost_level = data['premium_tier']
+    end
+
+    # @return [Member] The server owner.
+    def owner
+      @owner ||= member(@owner_id)
     end
 
     # The default channel is the text channel on this server with the highest position

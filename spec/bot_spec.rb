@@ -11,7 +11,7 @@ describe Discordrb::Bot do
   fixture_property :server_id, :server_data, ['id'], :to_i
 
   # TODO: Use some way of mocking the API instead of setting the server to not exist
-  let!(:server) { Discordrb::Server.new(server_data, bot, false) }
+  let!(:server) { Discordrb::Server.new(server_data, bot) }
 
   fixture :dispatch_event, %i[emoji dispatch_event]
   fixture :dispatch_add, %i[emoji dispatch_add]
