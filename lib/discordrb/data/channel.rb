@@ -777,6 +777,13 @@ module Discordrb
       @rate_limit_per_user = new_data[:rate_limit_per_user] || new_data['rate_limit_per_user'] || @rate_limit_per_user
     end
 
+    # @return [String] a URL that a user can use to navigate to this channel in the client
+    def link
+      "https://discordapp.com/channels/#{@server&.id || '@me'}/#{@channel.id}"
+    end
+
+    alias_method :jump_link, :link
+
     private
 
     # For bulk_delete checking

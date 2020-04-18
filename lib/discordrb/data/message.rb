@@ -288,5 +288,12 @@ module Discordrb
     def inspect
       "<Message content=\"#{@content}\" id=#{@id} timestamp=#{@timestamp} author=#{@author} channel=#{@channel}>"
     end
+
+    # @return [String] a URL that a user can use to navigate to this message in the client
+    def link
+      "https://discordapp.com/channels/#{@server&.id || '@me'}/#{@channel.id}/#{@id}"
+    end
+
+    alias_method :jump_link, :link
   end
 end

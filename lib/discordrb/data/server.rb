@@ -389,6 +389,13 @@ module Discordrb
       API.banner_url(@id, @banner_id)
     end
 
+    # @return [String] a URL that a user can use to navigate to this server in the client
+    def link
+      "https://discordapp.com/channels/#{@id}"
+    end
+
+    alias_method :jump_link, :link
+
     # Adds a role to the role cache
     # @note For internal use only
     # @!visibility private
