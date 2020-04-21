@@ -20,12 +20,12 @@ module Discordrb::API::Server
 
   # Get a server's data
   # https://discordapp.com/developers/docs/resources/guild#get-guild
-  def resolve(token, server_id)
+  def resolve(token, server_id, with_counts = nil)
     Discordrb::API.request(
       :guilds_sid,
       server_id,
       :get,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}",
+      "#{Discordrb::API.api_base}/guilds/#{server_id}#{'?with_counts=true' if with_counts}",
       Authorization: token
     )
   end
