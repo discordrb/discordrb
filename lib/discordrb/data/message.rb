@@ -116,7 +116,7 @@ module Discordrb
       @reactions = []
 
       data['reactions']&.each do |element|
-        @reactions << Reaction.new(element)
+        @reactions << Reaction.new(element, server)
       end
 
       @mentions = []
