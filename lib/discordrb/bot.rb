@@ -479,7 +479,7 @@ module Discordrb
             end
           end
         elsif /(?<animated>^[a]|^${0}):(?<name>\w+):(?<id>\d+)/ =~ mention
-          array_to_return << (emoji(id) || Emoji.new({ 'animated' => !animated.nil?, 'name' => name, 'id' => id }, self))
+          array_to_return << (emoji(id) || Emoji.new({ 'animated' => !animated.nil?, 'name' => name, 'id' => id }, server))
         end
       end
       array_to_return
