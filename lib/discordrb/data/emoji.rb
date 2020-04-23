@@ -42,7 +42,7 @@ module Discordrb
 
     # @return [String] the layout to mention it (or have it used) in a message
     def mention
-      "<#{'a' if animated}:#{name}:#{id}>"
+      id.nil? ? name : "<#{'a' if animated}:#{name}:#{id}>"
     end
 
     alias_method :use, :mention
@@ -50,9 +50,7 @@ module Discordrb
 
     # @return [String] the layout to use this emoji in a reaction
     def to_reaction
-      return name if id.nil?
-
-      "#{name}:#{id}"
+      id.nil? ? name : "#{name}:#{id}"
     end
 
     # @return [String] the icon URL of the emoji
