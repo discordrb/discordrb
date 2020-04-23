@@ -214,7 +214,7 @@ module Discordrb
 
       emoji = scan_for_emoji
       emoji.each do |element|
-        @emoji << @bot.parse_mention(element)
+        @emoji << @bot.parse_mention(element, server)
       end
       @emoji
     end
