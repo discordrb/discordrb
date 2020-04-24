@@ -474,7 +474,7 @@ module Discordrb
           if server
             array_to_return << server.role(id) unless server.role(id).nil?
           else
-            @servers.values.each do |element|
+            @servers.each_value do |element|
               array_to_return << element.role(id) unless element.role(id).nil?
             end
           end

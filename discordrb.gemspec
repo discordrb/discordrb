@@ -37,7 +37,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'redcarpet', '~> 3.5.0' # YARD markdown formatting
   spec.add_development_dependency 'rspec', '~> 3.9.0'
   spec.add_development_dependency 'rspec-prof', '~> 0.0.7'
-  spec.add_development_dependency 'rubocop', '~> 0.80.0'
+  spec.add_development_dependency 'rubocop', '~> 0.82.0'
   spec.add_development_dependency 'rubocop-performance', '~> 1.0'
   spec.add_development_dependency 'simplecov', '~> 0.18.0'
   spec.add_development_dependency 'yard', '~> 0.9.9'
