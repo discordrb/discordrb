@@ -8,6 +8,10 @@ AllCops:
   TargetRubyVersion: 2.4
   NewCops: enable
 
+# Disable line length checks
+Layout/LineLength:
+  Enabled: false
+
 # Allow 'Pokémon-style' exception handling
 Lint/RescueException:
   Enabled: false
