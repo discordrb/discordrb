@@ -782,19 +782,12 @@ module Discordrb
 
       server.update_voice_state(data)
 
-<<<<<<< HEAD
       existing_voice = @voices[server_id]
       if user_id == @profile.id && existing_voice
         new_channel_id = data['channel_id']
         if new_channel_id
           new_channel = channel(new_channel_id)
           existing_voice.channel = new_channel
-=======
-      if user_id == @profile.id && @voices[server_id]
-        # If channel_id is nil, we've been disconnected from voice.
-        if data['channel_id']
-          @voices[server_id].channel = channel(data['channel_id'])
->>>>>>> bc19ce39... Add support for new encryption modes
         else
           voice_destroy(server_id)
         end

@@ -25,10 +25,6 @@ module Discordrb::Voice
     attr_reader :channel
 
     # @!visibility private
-<<<<<<< HEAD
-=======
-    # For internal use only
->>>>>>> bc19ce39... Add support for new encryption modes
     attr_writer :channel
 
     # @return [Integer, nil] the amount of time the stream has been playing, or `nil` if nothing has been played yet.
@@ -224,7 +220,7 @@ module Discordrb::Voice
       end
 
       # If the stream is a process, kill it
-      if encoded_io.respond_to? :pid
+      if encoded_io&.pid
         Discordrb::LOGGER.debug("Killing ffmpeg process with pid #{encoded_io.pid.inspect}")
 
         begin
