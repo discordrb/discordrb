@@ -27,15 +27,6 @@ commands:
             - ./vendor/bundle
 
 jobs:
-  test_ruby_24:
-    docker:
-      - image: ruby:2.4-alpine
-    steps:
-      - setup-env
-      - run:
-          name: Run RSpec
-          command: bundle exec rspec
-
   test_ruby_25:
     docker:
       - image: ruby:2.5-alpine
@@ -108,7 +99,6 @@ jobs:
 workflows:
   test:
     jobs:
-      - test_ruby_24
       - test_ruby_25
       - test_ruby_26
       - rubocop
