@@ -220,7 +220,7 @@ module Discordrb
         return [channel(id)]
       end
 
-      @servers.values.each do |server|
+      @servers.each_value do |server|
         server.channels.each do |channel|
           results << channel if channel.name == channel_name && (server_name || server.name) == server.name && (!type || (channel.type == type))
         end
