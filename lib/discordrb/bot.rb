@@ -257,9 +257,9 @@ module Discordrb
 
     # Stops the bot gracefully, disconnecting the websocket without immediately killing the thread. This means that
     # Discord is immediately aware of the closed connection and makes the bot appear offline instantly.
-    # @param no_sync [true, false] Whether or not to disable use of synchronize in the close method. This should be true if called from a trap context.
-    def stop(no_sync = false)
-      @gateway.stop(no_sync)
+    # @note This method no longer takes an argument as of 3.4.0
+    def stop(_no_sync = nil)
+      @gateway.stop
     end
 
     # @return [true, false] whether or not the bot is currently connected to Discord.
@@ -315,9 +315,10 @@ module Discordrb
     #   (uses an XSalsa20 stream cipher for encryption and Poly1305 for authentication)
     # @return [Voice::VoiceBot] the initialized bot over which audio data can then be sent.
     def voice_connect(chan, encrypted = true)
+      raise ArgumentError, 'Unencrypted voice connections are no longer supported.' unless encrypted
+
       chan = channel(chan.resolve_id)
       server_id = chan.server.id
-      @should_encrypt_voice = encrypted
 
       if @voices[chan.id]
         debug('Voice bot exists already! Destroying it')
@@ -781,6 +782,17 @@ module Discordrb
 
       server.update_voice_state(data)
 
+      existing_voice = @voices[server_id]
+      if user_id == @profile.id && existing_voice
+        new_channel_id = data['channel_id']
+        if new_channel_id
+          new_channel = channel(new_channel_id)
+          existing_voice.channel = new_channel
+        else
+          voice_destroy(server_id)
+        end
+      end
+
       old_channel_id
     end
 
@@ -804,7 +816,7 @@ module Discordrb
       end
 
       debug('Got data, now creating the bot.')
-      @voices[server_id] = Discordrb::Voice::VoiceBot.new(channel, self, token, @session_id, endpoint, @should_encrypt_voice)
+      @voices[server_id] = Discordrb::Voice::VoiceBot.new(channel, self, token, @session_id, endpoint)
     end
 
     # Internal handler for CHANNEL_CREATE
@@ -885,12 +897,14 @@ module Discordrb
       member = server.member(data['user']['id'].to_i)
       member.update_roles(data['roles'])
       member.update_nick(data['nick'])
+      member.update_boosting_since(data['premium_since'])
     end
 
     # Internal handler for GUILD_MEMBER_DELETE
     def delete_guild_member(data)
       server_id = data['guild_id'].to_i
       server = self.server(server_id)
+      return unless server
 
       user_id = data['user']['id'].to_i
       server.delete_member(user_id)

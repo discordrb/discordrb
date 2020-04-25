@@ -24,6 +24,9 @@ module Discordrb::Voice
     # @return [Channel] the current voice channel
     attr_reader :channel
 
+    # @!visibility private
+    attr_writer :channel
+
     # @return [Integer, nil] the amount of time the stream has been playing, or `nil` if nothing has been played yet.
     attr_reader :stream_time
 
@@ -74,13 +77,12 @@ module Discordrb::Voice
     attr_accessor :volume
 
     # @!visibility private
-    def initialize(channel, bot, token, session, endpoint, encrypted)
+    def initialize(channel, bot, token, session, endpoint)
       @bot = bot
       @channel = channel
 
       @ws = VoiceWS.new(channel, bot, token, session, endpoint)
       @udp = @ws.udp
-      @udp.encrypted = encrypted
 
       @sequence = @time = 0
       @skips = 0
@@ -101,8 +103,9 @@ module Discordrb::Voice
     end
 
     # @return [true, false] whether audio data sent will be encrypted.
+    # @deprecated Discord no longer supports unencrypted voice communication.
     def encrypted?
-      @udp.encrypted?
+      true
     end
 
     # Set the filter volume. This volume is applied as a filter for decoded audio data. It has the advantage that using

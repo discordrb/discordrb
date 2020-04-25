@@ -25,7 +25,8 @@ module Discordrb
     # @return [Integer, nil] the ID of the parent channel, if this channel is inside a cateogry
     attr_reader :parent_id
 
-    # @return [Integer] the type of this channel (0: text, 1: private, 2: voice, 3: group)
+    # @return [Integer] the type of this channel
+    # @see TYPES
     attr_reader :type
 
     # @return [Integer, nil] the ID of the owner of the group channel or nil if this is not a group channel.
@@ -706,7 +707,7 @@ module Discordrb
     # @return [Webhook] the created webhook.
     def create_webhook(name, avatar = nil, reason = nil)
       raise ArgumentError, 'Tried to create a webhook in a non-server channel' unless server
-      raise ArgumentError, 'Tried to create a webhook in a non-text channel' unless text_channel?
+      raise ArgumentError, 'Tried to create a webhook in a non-text channel' unless text?
 
       response = API::Channel.create_webhook(@bot.token, @id, name, avatar, reason)
       Webhook.new(JSON.parse(response), @bot)
@@ -775,6 +776,13 @@ module Discordrb
       process_permission_overwrites(new_data[:permission_overwrites] || new_data['permission_overwrites'])
       @rate_limit_per_user = new_data[:rate_limit_per_user] || new_data['rate_limit_per_user'] || @rate_limit_per_user
     end
+
+    # @return [String] a URL that a user can use to navigate to this channel in the client
+    def link
+      "https://discordapp.com/channels/#{@server&.id || '@me'}/#{@channel.id}"
+    end
+
+    alias_method :jump_link, :link
 
     private
 

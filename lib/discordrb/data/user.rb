@@ -166,7 +166,15 @@ module Discordrb
       @discriminator == Message::ZERO_DISCRIM
     end
 
-    %i[offline idle online].each do |e|
+    # @!method offline?
+    #   @return [true, false] whether this user is offline.
+    # @!method idle?
+    #   @return [true, false] whether this user is idle.
+    # @!method online?
+    #   @return [true, false] whether this user is online.
+    # @!method dnd?
+    #   @return [true, false] whether this user is set to do not disturb.
+    %i[offline idle online dnd].each do |e|
       define_method(e.to_s + '?') do
         @status.to_sym == e
       end

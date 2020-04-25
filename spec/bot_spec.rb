@@ -11,7 +11,7 @@ describe Discordrb::Bot do
   fixture_property :server_id, :server_data, ['id'], :to_i
 
   # TODO: Use some way of mocking the API instead of setting the server to not exist
-  let!(:server) { Discordrb::Server.new(server_data, bot, false) }
+  let!(:server) { Discordrb::Server.new(server_data, bot) }
 
   fixture :dispatch_event, %i[emoji dispatch_event]
   fixture :dispatch_add, %i[emoji dispatch_add]
@@ -196,6 +196,13 @@ describe Discordrb::Bot do
 
       bot.send_file(channel, file, spoiler: true)
       expect(file.original_filename).to eq 'SPOILER_file.txt'
+    end
+  end
+
+  describe '#voice_connect' do
+    it 'requires encryption' do
+      channel = double(:channel, resolve_id: double)
+      expect { bot.voice_connect(channel, false) }.to raise_error ArgumentError
     end
   end
 end

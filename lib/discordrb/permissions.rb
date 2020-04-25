@@ -26,7 +26,7 @@ module Discordrb
       16 => :read_message_history, # 65536
       17 => :mention_everyone,     # 131072
       18 => :use_external_emoji,   # 262144
-      # 19                         # 524288
+      19 => :view_server_insights, # 524288
       20 => :connect,              # 1048576
       21 => :speak,                # 2097152
       22 => :mute_members,         # 4194304

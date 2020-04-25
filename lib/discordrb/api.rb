@@ -94,6 +94,9 @@ module Discordrb::API
     # Add a custom user agent
     attributes.last[:user_agent] = user_agent if attributes.last.is_a? Hash
 
+    # Specify RateLimit precision
+    attributes.last[:x_ratelimit_precision] = 'millisecond'
+
     # The most recent Discord rate limit requirements require the support of major parameters, where a particular route
     # and major parameter combination (*not* the HTTP method) uniquely identifies a RL bucket.
     key = [key, major_parameter].freeze
@@ -153,12 +156,7 @@ module Discordrb::API
   # X-Ratelimit-Reset header, thus making sure we don't get 429'd in any subsequent requests.
   def handle_preemptive_rl(headers, mutex, key)
     Discordrb::LOGGER.ratelimit "RL bucket depletion detected! Date: #{headers[:date]} Reset: #{headers[:x_ratelimit_reset]}"
-
-    now = Time.rfc2822(headers[:date])
-    reset = Time.at(headers[:x_ratelimit_reset].to_i)
-
-    delta = reset - now
-
+    delta = headers[:x_ratelimit_reset_after].to_f
     Discordrb::LOGGER.warn("Locking RL mutex (key: #{key}) for #{delta} seconds preemptively")
     sync_wait(delta, mutex)
   end
@@ -197,6 +195,11 @@ module Discordrb::API
   # Make a splash URL from server and splash IDs
   def splash_url(server_id, splash_id, format = 'webp')
     "#{cdn_url}/splashes/#{server_id}/#{splash_id}.#{format}"
+  end
+
+  # Make a banner URL from server and banner IDs
+  def banner_url(server_id, banner_id, format = 'webp')
+    "#{cdn_url}/banners/#{server_id}/#{banner_id}.#{format}"
   end
 
   # Make an emoji icon URL from emoji ID
