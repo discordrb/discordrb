@@ -553,11 +553,9 @@ module Discordrb
     def add_emoji(name, image, roles = [], type: nil, reason: nil)
       image_string = image
       if image.respond_to? :read
-        # If the user didn't specify a type, and the `image` knows a path, 
+        # If the user didn't specify a type, and the `image` knows a path,
         # try to get its extension:
-        if type.nil? && image.respond_to?(:path)
-          type = File.extname(image.path)[1..-1]
-        end
+        type = File.extname(image.path)[1..-1] if type.nil? && image.respond_to?(:path)
         image_string = "data:image/#{type || 'jpg'};base64,"
         image_string += Base64.strict_encode64(image.read)
       end
