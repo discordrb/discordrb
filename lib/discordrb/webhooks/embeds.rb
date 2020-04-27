@@ -103,22 +103,24 @@ module Discordrb::Webhooks
     attr_accessor :fields
 
     # @return [Hash] a hash representation of this embed, to be converted to JSON.
-    def to_hash
+    def to_h
       {
         title: @title,
         description: @description,
         url: @url,
         timestamp: @timestamp&.utc&.iso8601,
         color: @colour,
-        footer: @footer&.to_hash,
-        image: @image&.to_hash,
-        thumbnail: @thumbnail&.to_hash,
-        video: @video&.to_hash,
-        provider: @provider&.to_hash,
-        author: @author&.to_hash,
-        fields: @fields.map(&:to_hash)
+        footer: @footer&.to_h,
+        image: @image&.to_h,
+        thumbnail: @thumbnail&.to_h,
+        video: @video&.to_h,
+        provider: @provider&.to_h,
+        author: @author&.to_h,
+        fields: @fields&.map(&:to_h)
       }
     end
+
+    alias_method :to_hash, :to_h
   end
 
   # An embed's footer will be displayed at the very bottom of an embed, together with the timestamp. An icon URL can be
@@ -139,12 +141,14 @@ module Discordrb::Webhooks
     end
 
     # @return [Hash] a hash representation of this embed footer, to be converted to JSON.
-    def to_hash
+    def to_h
       {
         text: @text,
         icon_url: @icon_url
       }
     end
+
+    alias_method :to_hash, :to_h
   end
 
   # An embed's image will be displayed at the bottom, in large format. It will replace a footer icon URL if one is set.
@@ -159,11 +163,13 @@ module Discordrb::Webhooks
     end
 
     # @return [Hash] a hash representation of this embed image, to be converted to JSON.
-    def to_hash
+    def to_h
       {
         url: @url
       }
     end
+
+    alias_method :to_hash, :to_h
   end
 
   # An embed's thumbnail will be displayed at the right of the message, next to the description and fields. When clicked
@@ -179,11 +185,13 @@ module Discordrb::Webhooks
     end
 
     # @return [Hash] a hash representation of this embed thumbnail, to be converted to JSON.
-    def to_hash
+    def to_h
       {
         url: @url
       }
     end
+
+    alias_method :to_hash, :to_h
   end
 
   # An embed's author will be shown at the top to indicate who "authored" the particular event the webhook was sent for.
@@ -208,13 +216,15 @@ module Discordrb::Webhooks
     end
 
     # @return [Hash] a hash representation of this embed author, to be converted to JSON.
-    def to_hash
+    def to_h
       {
         name: @name,
         url: @url,
         icon_url: @icon_url
       }
     end
+
+    alias_method :to_hash, :to_h
   end
 
   # A field is a small block of text with a header that can be relatively freely layouted with other fields.
@@ -239,12 +249,14 @@ module Discordrb::Webhooks
     end
 
     # @return [Hash] a hash representation of this embed field, to be converted to JSON.
-    def to_hash
+    def to_h
       {
         name: @name,
         value: @value,
         inline: @inline
       }
     end
+
+    alias_method :to_hash, :to_h
   end
 end

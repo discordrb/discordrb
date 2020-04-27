@@ -72,20 +72,22 @@ module Discordrb
     end
 
     # @return [Hash] a hash representation of this embed, to be converted to JSON.
-    def to_hash
+    def to_h
       {
         title: @title,
         description: @description,
         url: @url,
         timestamp: @timestamp&.utc&.iso8601,
         color: @color,
-        footer: @footer&.to_hash,
-        image: @image&.to_hash,
-        thumbnail: @thumbnail&.to_hash,
-        author: @author&.to_hash,
-        fields: @fields&.map(&:to_hash)
+        footer: @footer&.to_h,
+        image: @image&.to_h,
+        thumbnail: @thumbnail&.to_h,
+        author: @author&.to_h,
+        fields: @fields&.map(&:to_h)
       }
     end
+
+    alias_method :to_hash, :to_h
   end
 
   # An Embed footer for the embed object.
@@ -112,12 +114,14 @@ module Discordrb
     end
 
     # @return [Hash] a hash representation of this embed footer, to be converted to JSON.
-    def to_hash
+    def to_h
       {
         text: @text,
         icon_url: @icon_url
       }
     end
+
+    alias_method :to_hash, :to_h
   end
 
   # An Embed image for the embed object.
@@ -148,11 +152,13 @@ module Discordrb
     end
 
     # @return [Hash] a hash representation of this embed image, to be converted to JSON.
-    def to_hash
+    def to_h
       {
         url: @url
       }
     end
+
+    alias_method :to_hash, :to_h
   end
 
   # An Embed video for the embed object
@@ -208,11 +214,13 @@ module Discordrb
     end
 
     # @return [Hash] a hash representation of this embed thumbnail, to be converted to JSON.
-    def to_hash
+    def to_h
       {
         url: @url
       }
     end
+
+    alias_method :to_hash, :to_h
   end
 
   # An Embed provider for the embed object
@@ -263,13 +271,15 @@ module Discordrb
     end
 
     # @return [Hash] a hash representation of this embed author, to be converted to JSON.
-    def to_hash
+    def to_h
       {
         name: @name,
         url: @url,
         icon_url: @icon_url
       }
     end
+
+    alias_method :to_hash, :to_h
   end
 
   # An Embed field for the embed object
@@ -296,12 +306,14 @@ module Discordrb
     end
 
     # @return [Hash] a hash representation of this embed field, to be converted to JSON.
-    def to_hash
+    def to_h
       {
         name: @name,
         value: @value,
         inline: @inline
       }
     end
+
+    alias_method :to_hash, :to_h
   end
 end
