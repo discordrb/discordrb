@@ -22,6 +22,14 @@ describe Discordrb::Emoji do
       end
     end
 
+    context 'with a unicode emoji' do
+      it 'serializes' do
+        allow(emoji).to receive(:id).and_return(nil)
+
+        expect(emoji.mention).to eq 'rubytaco'
+      end
+    end
+
     it 'serializes' do
       expect(emoji.mention).to eq '<:rubytaco:315242245274075157>'
     end
