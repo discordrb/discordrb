@@ -778,7 +778,7 @@ module Discordrb
 
       user_id = data['user_id'].to_i
       old_voice_state = server.voice_states[user_id]
-      old_channel_id = old_voice_state.voice_channel.id if old_voice_state
+      old_channel_id = old_voice_state.voice_channel&.id if old_voice_state
 
       server.update_voice_state(data)
 
