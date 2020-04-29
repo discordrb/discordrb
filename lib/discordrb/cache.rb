@@ -99,7 +99,7 @@ module Discordrb
         data = JSON.parse(
           API::Server.resolve(token, id)
         )
-        data['channels'] = JSON.parse(
+        data['channels'] ||= JSON.parse(
           API::Server.channels(token, id)
         )
       rescue Discordrb::Errors::NoPermission
