@@ -96,11 +96,16 @@ module Discordrb
 
       LOGGER.out("Resolving server #{id}")
       begin
-        response = API::Server.resolve(token, id)
+        data = JSON.parse(
+          API::Server.resolve(token, id)
+        )
+        data['channels'] = JSON.parse(
+          API::Server.channels(token, id)
+        )
       rescue Discordrb::Errors::NoPermission
         return nil
       end
-      server = Server.new(JSON.parse(response), self)
+      server = Server.new(data, self)
       @servers[id] = server
     end
 
