@@ -51,4 +51,10 @@ bot.command :long do |event|
   # Here we don't have to worry about the return value because the `event << line` statement automatically returns nil.
 end
 
-bot.run
+# Connect to Discord
+begin
+  bot.run
+# Disconnect when killed with ctrl-c
+rescue Interrupt
+  bot.stop
+end

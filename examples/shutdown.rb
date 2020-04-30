@@ -15,7 +15,14 @@ bot.command(:exit, help_available: false) do |event|
   break unless event.user.id == 66237334693085184 # Replace number with your ID
 
   bot.send_message(event.channel.id, 'Bot is shutting down')
+  bot.stop
   exit
 end
 
-bot.run
+# Connect to Discord
+begin
+  bot.run
+# Disconnect when killed with ctrl-c
+rescue Interrupt
+  bot.stop
+end

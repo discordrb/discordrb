@@ -14,4 +14,10 @@ bot.message(content: 'Ping!') do |event|
   m.edit "Pong! Time taken: #{Time.now - event.timestamp} seconds."
 end
 
-bot.run
+# Connect to Discord
+begin
+  bot.run
+# Disconnect when killed with ctrl-c
+rescue Interrupt
+  bot.stop
+end

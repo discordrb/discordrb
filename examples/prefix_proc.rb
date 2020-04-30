@@ -69,4 +69,10 @@ bot.command(:roll, description: 'rolls some dice',
   "You rolled: `#{rolls}`, total: `#{sum}`"
 end
 
-bot.run
+# Connect to Discord
+begin
+  bot.run
+# Disconnect when killed with ctrl-c
+rescue Interrupt
+  bot.stop
+end

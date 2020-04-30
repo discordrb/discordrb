@@ -76,7 +76,12 @@ bot.message(content: '!time') do |event|
 end
 
 # Connect to Discord
-bot.run
+begin
+  bot.run
+# Disconnect when killed with ctrl-c
+rescue Interrupt
+  bot.stop
+end
 
 # For more details about Awaits, see:
 # https://www.rubydoc.info/gems/discordrb/Discordrb/Await

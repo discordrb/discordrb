@@ -19,4 +19,10 @@ bot.command(:eval, help_available: false) do |event, *code|
   end
 end
 
-bot.run
+# Connect to Discord
+begin
+  bot.run
+# Disconnect when killed with ctrl-c
+rescue Interrupt
+  bot.stop
+end

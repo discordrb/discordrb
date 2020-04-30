@@ -50,4 +50,10 @@ bot.command(:play_dca) do |event|
   voice_bot.play_dca('data/music.dca')
 end
 
-bot.run
+# Connect to Discord
+begin
+  bot.run
+# Disconnect when killed with ctrl-c
+rescue Interrupt
+  bot.stop
+end
