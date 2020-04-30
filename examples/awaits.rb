@@ -75,13 +75,10 @@ bot.message(content: '!time') do |event|
   end
 end
 
-# Connect to Discord
-begin
-  bot.run
-# Disconnect when killed with ctrl-c
-rescue Interrupt
-  bot.stop
-end
+# Gracefully disconnect when the program exits.
+at_exit { bot.stop }
+# Connect to Discord.
+bot.run
 
 # For more details about Awaits, see:
 # https://www.rubydoc.info/gems/discordrb/Discordrb/Await

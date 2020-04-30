@@ -50,10 +50,7 @@ bot.command(:play_dca) do |event|
   voice_bot.play_dca('data/music.dca')
 end
 
-# Connect to Discord
-begin
-  bot.run
-# Disconnect when killed with ctrl-c
-rescue Interrupt
-  bot.stop
-end
+# Gracefully disconnect when the program exits.
+at_exit { bot.stop }
+# Connect to Discord.
+bot.run
