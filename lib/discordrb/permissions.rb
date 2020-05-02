@@ -190,10 +190,14 @@ module Discordrb
 
         # If the channel has an override, check whether it is an allow - if yes,
         # the user can act, if not, it can't
-        return true if channel_allow == :allow
+        if channel_allow
+          return true if channel_allow == :allow
 
-        # Otherwise defer to the role
-        role.permissions.instance_variable_get("@#{action}") || can_act
+          false
+        else
+          # Otherwise defer to the role
+          role.permissions.instance_variable_get("@#{action}") || can_act
+        end
       end
     end
 
