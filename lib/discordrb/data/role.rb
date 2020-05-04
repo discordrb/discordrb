@@ -134,7 +134,7 @@ module Discordrb
     # one API call.
     #
     # Information on how this bitfield is structured can be found at
-    # https://discordapp.com/developers/docs/topics/permissions.
+    # https://discord.com/developers/docs/topics/permissions.
     # @example Remove all permissions from a role
     #   role.packed = 0
     # @param packed [Integer] A bitfield with the desired permissions value.
