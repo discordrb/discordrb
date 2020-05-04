@@ -12,7 +12,7 @@ module Discordrb::API
   APIBASE = 'https://discord.com/api/v6'
 
   # The URL of Discord's CDN
-  CDN_URL = 'https://cdn.discord.com'
+  CDN_URL = 'https://cdn.discordapp.com'
 
   module_function
 
