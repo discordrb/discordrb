@@ -283,7 +283,7 @@ module Discordrb
 
       server_id_str = server ? "&guild_id=#{server.id}" : ''
       permission_bits_str = permission_bits ? "&permissions=#{permission_bits}" : ''
-      "https://discordapp.com/oauth2/authorize?&client_id=#{@client_id}#{server_id_str}#{permission_bits_str}&scope=bot"
+      "https://discord.com/oauth2/authorize?&client_id=#{@client_id}#{server_id_str}#{permission_bits_str}&scope=bot"
     end
 
     # @return [Hash<Integer => VoiceBot>] the voice connections this bot currently has, by the server ID to which they are connected.
@@ -432,7 +432,7 @@ module Discordrb
     end
 
     # Creates a new application to do OAuth authorization with. This allows you to use OAuth to authorize users using
-    # Discord. For information how to use this, see the docs: https://discordapp.com/developers/docs/topics/oauth2
+    # Discord. For information how to use this, see the docs: https://discord.com/developers/docs/topics/oauth2
     # @param name [String] What your application should be called.
     # @param redirect_uris [Array<String>] URIs that Discord should redirect your users to after authorizing.
     # @return [Array(String, String)] your applications' client ID and client secret to be used in OAuth authorization.

@@ -779,7 +779,7 @@ module Discordrb
 
     # @return [String] a URL that a user can use to navigate to this channel in the client
     def link
-      "https://discordapp.com/channels/#{@server&.id || '@me'}/#{@channel.id}"
+      "https://discord.com/channels/#{@server&.id || '@me'}/#{@channel.id}"
     end
 
     alias_method :jump_link, :link

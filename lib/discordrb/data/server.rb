@@ -274,7 +274,7 @@ module Discordrb
 
     # Adds a member to this guild that has granted this bot's application an OAuth2 access token
     # with the `guilds.join` scope.
-    # For more information about Discord's OAuth2 implementation, see: https://discordapp.com/developers/docs/topics/oauth2
+    # For more information about Discord's OAuth2 implementation, see: https://discord.com/developers/docs/topics/oauth2
     # @note Your bot must be present in this server, and have permission to create instant invites for this to work.
     # @param user [User, String, Integer] the user, or ID of the user to add to this server
     # @param access_token [String] the OAuth2 Bearer token that has been granted the `guilds.join` scope
@@ -391,7 +391,7 @@ module Discordrb
 
     # @return [String] a URL that a user can use to navigate to this server in the client
     def link
-      "https://discordapp.com/channels/#{@id}"
+      "https://discord.com/channels/#{@id}"
     end
 
     alias_method :jump_link, :link

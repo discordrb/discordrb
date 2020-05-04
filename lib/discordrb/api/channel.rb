@@ -5,7 +5,7 @@ module Discordrb::API::Channel
   module_function
 
   # Get a channel's data
-  # https://discordapp.com/developers/docs/resources/channel#get-channel
+  # https://discord.com/developers/docs/resources/channel#get-channel
   def resolve(token, channel_id)
     Discordrb::API.request(
       :channels_cid,
@@ -17,7 +17,7 @@ module Discordrb::API::Channel
   end
 
   # Update a channel's data
-  # https://discordapp.com/developers/docs/resources/channel#modify-channel
+  # https://discord.com/developers/docs/resources/channel#modify-channel
   def update(token, channel_id, name, topic, position, bitrate, user_limit, nsfw, permission_overwrites = nil, parent_id = nil, rate_limit_per_user = nil, reason = nil)
     data = { name: name, position: position, topic: topic, bitrate: bitrate, user_limit: user_limit, nsfw: nsfw, parent_id: parent_id, rate_limit_per_user: rate_limit_per_user }
     data[:permission_overwrites] = permission_overwrites unless permission_overwrites.nil?
@@ -34,7 +34,7 @@ module Discordrb::API::Channel
   end
 
   # Delete a channel
-  # https://discordapp.com/developers/docs/resources/channel#deleteclose-channel
+  # https://discord.com/developers/docs/resources/channel#deleteclose-channel
   def delete(token, channel_id, reason = nil)
     Discordrb::API.request(
       :channels_cid,
@@ -47,7 +47,7 @@ module Discordrb::API::Channel
   end
 
   # Get a list of messages from a channel's history
-  # https://discordapp.com/developers/docs/resources/channel#get-channel-messages
+  # https://discord.com/developers/docs/resources/channel#get-channel-messages
   def messages(token, channel_id, amount, before = nil, after = nil, around = nil)
     Discordrb::API.request(
       :channels_cid_messages,
@@ -59,7 +59,7 @@ module Discordrb::API::Channel
   end
 
   # Get a single message from a channel's history by id
-  # https://discordapp.com/developers/docs/resources/channel#get-channel-message
+  # https://discord.com/developers/docs/resources/channel#get-channel-message
   def message(token, channel_id, message_id)
     Discordrb::API.request(
       :channels_cid_messages_mid,
@@ -71,7 +71,7 @@ module Discordrb::API::Channel
   end
 
   # Send a message to a channel
-  # https://discordapp.com/developers/docs/resources/channel#create-message
+  # https://discord.com/developers/docs/resources/channel#create-message
   def create_message(token, channel_id, message, tts = false, embed = nil, nonce = nil)
     Discordrb::API.request(
       :channels_cid_messages_mid,
@@ -90,7 +90,7 @@ module Discordrb::API::Channel
   end
 
   # Send a file as a message to a channel
-  # https://discordapp.com/developers/docs/resources/channel#upload-file
+  # https://discord.com/developers/docs/resources/channel#upload-file
   def upload_file(token, channel_id, file, caption: nil, tts: false)
     Discordrb::API.request(
       :channels_cid_messages_mid,
@@ -103,7 +103,7 @@ module Discordrb::API::Channel
   end
 
   # Edit a message
-  # https://discordapp.com/developers/docs/resources/channel#edit-message
+  # https://discord.com/developers/docs/resources/channel#edit-message
   def edit_message(token, channel_id, message_id, message, mentions = [], embed = nil)
     Discordrb::API.request(
       :channels_cid_messages_mid,
@@ -117,7 +117,7 @@ module Discordrb::API::Channel
   end
 
   # Delete a message
-  # https://discordapp.com/developers/docs/resources/channel#delete-message
+  # https://discord.com/developers/docs/resources/channel#delete-message
   def delete_message(token, channel_id, message_id)
     Discordrb::API.request(
       :channels_cid_messages_mid,
@@ -129,7 +129,7 @@ module Discordrb::API::Channel
   end
 
   # Delete messages in bulk
-  # https://discordapp.com/developers/docs/resources/channel#bulk-delete-messages
+  # https://discord.com/developers/docs/resources/channel#bulk-delete-messages
   def bulk_delete_messages(token, channel_id, messages = [])
     Discordrb::API.request(
       :channels_cid_messages_bulk_delete,
@@ -143,7 +143,7 @@ module Discordrb::API::Channel
   end
 
   # Create a reaction on a message using this client
-  # https://discordapp.com/developers/docs/resources/channel#create-reaction
+  # https://discord.com/developers/docs/resources/channel#create-reaction
   def create_reaction(token, channel_id, message_id, emoji)
     emoji = URI.encode_www_form_component(emoji) unless emoji.ascii_only?
     Discordrb::API.request(
@@ -158,7 +158,7 @@ module Discordrb::API::Channel
   end
 
   # Delete this client's own reaction on a message
-  # https://discordapp.com/developers/docs/resources/channel#delete-own-reaction
+  # https://discord.com/developers/docs/resources/channel#delete-own-reaction
   def delete_own_reaction(token, channel_id, message_id, emoji)
     emoji = URI.encode_www_form_component(emoji) unless emoji.ascii_only?
     Discordrb::API.request(
@@ -171,7 +171,7 @@ module Discordrb::API::Channel
   end
 
   # Delete another client's reaction on a message
-  # https://discordapp.com/developers/docs/resources/channel#delete-user-reaction
+  # https://discord.com/developers/docs/resources/channel#delete-user-reaction
   def delete_user_reaction(token, channel_id, message_id, emoji, user_id)
     emoji = URI.encode_www_form_component(emoji) unless emoji.ascii_only?
     Discordrb::API.request(
@@ -184,7 +184,7 @@ module Discordrb::API::Channel
   end
 
   # Get a list of clients who reacted with a specific reaction on a message
-  # https://discordapp.com/developers/docs/resources/channel#get-reactions
+  # https://discord.com/developers/docs/resources/channel#get-reactions
   def get_reactions(token, channel_id, message_id, emoji, before_id, after_id, limit = 100)
     emoji = URI.encode_www_form_component(emoji) unless emoji.ascii_only?
     query_string = "limit=#{limit}#{"&before=#{before_id}" if before_id}#{"&after=#{after_id}" if after_id}"
@@ -198,7 +198,7 @@ module Discordrb::API::Channel
   end
 
   # Deletes all reactions on a message from all clients
-  # https://discordapp.com/developers/docs/resources/channel#delete-all-reactions
+  # https://discord.com/developers/docs/resources/channel#delete-all-reactions
   def delete_all_reactions(token, channel_id, message_id)
     Discordrb::API.request(
       :channels_cid_messages_mid_reactions,
@@ -210,7 +210,7 @@ module Discordrb::API::Channel
   end
 
   # Update a channels permission for a role or member
-  # https://discordapp.com/developers/docs/resources/channel#edit-channel-permissions
+  # https://discord.com/developers/docs/resources/channel#edit-channel-permissions
   def update_permission(token, channel_id, overwrite_id, allow, deny, type, reason = nil)
     Discordrb::API.request(
       :channels_cid_permissions_oid,
@@ -225,7 +225,7 @@ module Discordrb::API::Channel
   end
 
   # Get a channel's invite list
-  # https://discordapp.com/developers/docs/resources/channel#get-channel-invites
+  # https://discord.com/developers/docs/resources/channel#get-channel-invites
   def invites(token, channel_id)
     Discordrb::API.request(
       :channels_cid_invites,
@@ -237,7 +237,7 @@ module Discordrb::API::Channel
   end
 
   # Create an instant invite from a server or a channel id
-  # https://discordapp.com/developers/docs/resources/channel#create-channel-invite
+  # https://discord.com/developers/docs/resources/channel#create-channel-invite
   def create_invite(token, channel_id, max_age = 0, max_uses = 0, temporary = false, unique = false, reason = nil)
     Discordrb::API.request(
       :channels_cid_invites,
@@ -252,7 +252,7 @@ module Discordrb::API::Channel
   end
 
   # Delete channel permission
-  # https://discordapp.com/developers/docs/resources/channel#delete-channel-permission
+  # https://discord.com/developers/docs/resources/channel#delete-channel-permission
   def delete_permission(token, channel_id, overwrite_id, reason = nil)
     Discordrb::API.request(
       :channels_cid_permissions_oid,
@@ -265,7 +265,7 @@ module Discordrb::API::Channel
   end
 
   # Start typing (needs to be resent every 5 seconds to keep up the typing)
-  # https://discordapp.com/developers/docs/resources/channel#trigger-typing-indicator
+  # https://discord.com/developers/docs/resources/channel#trigger-typing-indicator
   def start_typing(token, channel_id)
     Discordrb::API.request(
       :channels_cid_typing,
@@ -278,7 +278,7 @@ module Discordrb::API::Channel
   end
 
   # Get a list of pinned messages in a channel
-  # https://discordapp.com/developers/docs/resources/channel#get-pinned-messages
+  # https://discord.com/developers/docs/resources/channel#get-pinned-messages
   def pinned_messages(token, channel_id)
     Discordrb::API.request(
       :channels_cid_pins,
@@ -290,7 +290,7 @@ module Discordrb::API::Channel
   end
 
   # Pin a message
-  # https://discordapp.com/developers/docs/resources/channel#add-pinned-channel-message
+  # https://discord.com/developers/docs/resources/channel#add-pinned-channel-message
   def pin_message(token, channel_id, message_id)
     Discordrb::API.request(
       :channels_cid_pins_mid,
@@ -303,7 +303,7 @@ module Discordrb::API::Channel
   end
 
   # Unpin a message
-  # https://discordapp.com/developers/docs/resources/channel#delete-pinned-channel-message
+  # https://discord.com/developers/docs/resources/channel#delete-pinned-channel-message
   def unpin_message(token, channel_id, message_id)
     Discordrb::API.request(
       :channels_cid_pins_mid,
@@ -384,7 +384,7 @@ module Discordrb::API::Channel
   end
 
   # Create a webhook
-  # https://discordapp.com/developers/docs/resources/webhook#create-webhook
+  # https://discord.com/developers/docs/resources/webhook#create-webhook
   def create_webhook(token, channel_id, name, avatar = nil, reason = nil)
     Discordrb::API.request(
       :channels_cid_webhooks,
@@ -399,7 +399,7 @@ module Discordrb::API::Channel
   end
 
   # Get channel webhooks
-  # https://discordapp.com/developers/docs/resources/webhook#get-channel-webhooks
+  # https://discord.com/developers/docs/resources/webhook#get-channel-webhooks
   def webhooks(token, channel_id)
     Discordrb::API.request(
       :channels_cid_webhooks,
