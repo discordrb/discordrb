@@ -55,7 +55,7 @@ describe Discordrb::Message do
       data['channel_id'] = channel_id
 
       message = described_class.new(data, bot)
-      expect(message.link).to eq 'https://discordapp.com/channels/server_id/channel_id/message_id'
+      expect(message.link).to eq 'https://discord.com/channels/server_id/channel_id/message_id'
     end
 
     it 'links to a private message' do
@@ -82,7 +82,7 @@ describe Discordrb::Message do
       data['channel_id'] = channel_id
 
       message = described_class.new(data, bot)
-      expect(message.link).to eq 'https://discordapp.com/channels/@me/channel_id/message_id'
+      expect(message.link).to eq 'https://discord.com/channels/@me/channel_id/message_id'
     end
   end
 end

@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.email         = ['']
 
   spec.summary       = 'Discord API for Ruby'
-  spec.description   = 'A Ruby implementation of the Discord (https://discordapp.com) API.'
+  spec.description   = 'A Ruby implementation of the Discord (https://discord.com) API.'
   spec.homepage      = 'https://github.com/discordrb/discordrb'
   spec.license       = 'MIT'
 

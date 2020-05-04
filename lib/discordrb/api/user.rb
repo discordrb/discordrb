@@ -5,7 +5,7 @@ module Discordrb::API::User
   module_function
 
   # Get user data
-  # https://discordapp.com/developers/docs/resources/user#get-user
+  # https://discord.com/developers/docs/resources/user#get-user
   def resolve(token, user_id)
     Discordrb::API.request(
       :users_uid,
@@ -17,7 +17,7 @@ module Discordrb::API::User
   end
 
   # Get profile data
-  # https://discordapp.com/developers/docs/resources/user#get-current-user
+  # https://discord.com/developers/docs/resources/user#get-current-user
   def profile(token)
     Discordrb::API.request(
       :users_me,
@@ -43,7 +43,7 @@ module Discordrb::API::User
   end
 
   # Update user data
-  # https://discordapp.com/developers/docs/resources/user#modify-current-user
+  # https://discord.com/developers/docs/resources/user#modify-current-user
   def update_profile(token, email, password, new_username, avatar, new_password = nil)
     Discordrb::API.request(
       :users_me,
@@ -57,7 +57,7 @@ module Discordrb::API::User
   end
 
   # Get the servers a user is connected to
-  # https://discordapp.com/developers/docs/resources/user#get-current-user-guilds
+  # https://discord.com/developers/docs/resources/user#get-current-user-guilds
   def servers(token)
     Discordrb::API.request(
       :users_me_guilds,
@@ -69,7 +69,7 @@ module Discordrb::API::User
   end
 
   # Leave a server
-  # https://discordapp.com/developers/docs/resources/user#leave-guild
+  # https://discord.com/developers/docs/resources/user#leave-guild
   def leave_server(token, server_id)
     Discordrb::API.request(
       :users_me_guilds_sid,
@@ -81,7 +81,7 @@ module Discordrb::API::User
   end
 
   # Get the DMs for the current user
-  # https://discordapp.com/developers/docs/resources/user#get-user-dms
+  # https://discord.com/developers/docs/resources/user#get-user-dms
   def user_dms(token)
     Discordrb::API.request(
       :users_me_channels,
@@ -93,7 +93,7 @@ module Discordrb::API::User
   end
 
   # Create a DM to another user
-  # https://discordapp.com/developers/docs/resources/user#create-dm
+  # https://discord.com/developers/docs/resources/user#create-dm
   def create_pm(token, recipient_id)
     Discordrb::API.request(
       :users_me_channels,
@@ -107,7 +107,7 @@ module Discordrb::API::User
   end
 
   # Get information about a user's connections
-  # https://discordapp.com/developers/docs/resources/user#get-users-connections
+  # https://discord.com/developers/docs/resources/user#get-users-connections
   def connections(token)
     Discordrb::API.request(
       :users_me_connections,

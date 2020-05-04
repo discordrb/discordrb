@@ -7,7 +7,7 @@
 [![Join Discord](https://img.shields.io/badge/discord-join-7289DA.svg)](https://discord.gg/cyK3Hjm)
 # discordrb
 
-An implementation of the [Discord](https://discordapp.com/) API using Ruby.
+An implementation of the [Discord](https://discord.com/) API using Ruby.
 
 ## Quick links to sections
 
@@ -133,7 +133,7 @@ If you've made an open source project on GitHub that uses discordrb, consider ad
 Also included is a webhooks client, which can be used as a separate gem `discordrb-webhooks`. This special client can be used to form requests to Discord webhook URLs in a high-level manner.
 
 - [`discordrb-webhooks` documentation](https://www.rubydoc.info/gems/discordrb-webhooks)
-- [More information about webhooks](https://support.discordapp.com/hc/en-us/articles/228383668-Intro-to-Webhooks)
+- [More information about webhooks](https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks)
 - [Embed visualizer tool](https://leovoel.github.io/embed-visualizer/) - Includes a discordrb code generator for forming embeds
 
 ### Usage
@@ -141,7 +141,7 @@ Also included is a webhooks client, which can be used as a separate gem `discord
 ```ruby
 require 'discordrb/webhooks'
 
-WEBHOOK_URL = 'https://discordapp.com/api/webhooks/424070213278105610/yByxDncRvHi02mhKQheviQI2erKkfRRwFcEp0MMBfib1ds6ZHN13xhPZNS2-fJo_ApSw'.freeze
+WEBHOOK_URL = 'https://discord.com/api/webhooks/424070213278105610/yByxDncRvHi02mhKQheviQI2erKkfRRwFcEp0MMBfib1ds6ZHN13xhPZNS2-fJo_ApSw'.freeze
 
 client = Discordrb::Webhooks::Client.new(url: WEBHOOK_URL)
 client.execute do |builder|
