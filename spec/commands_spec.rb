@@ -49,6 +49,12 @@ describe Discordrb::Commands::CommandBot, order: :defined do
         allow(member).to receive(:webhook?) { false }
       end
     end
+    allow(event).to receive(:user) do
+      double('user').tap do |user|
+        allow(user).to receive(:id) { user_id }
+        allow(user).to receive(:webhook?) { false }
+      end
+    end
   end
 
   def append_bot_to_double(event)
@@ -115,6 +121,26 @@ describe Discordrb::Commands::CommandBot, order: :defined do
         result = bot.execute_command(:name, command_event_double, [], false, false)
 
         expect(result).to eq SIMPLE_RESPONSE
+      end
+    end
+  end
+
+  describe ':help_command' do
+    context 'without custom :help_message' do
+      it 'should print the default :help_message' do
+        bot = Discordrb::Commands::CommandBot.new(token: 'token')
+        bot.command(:name) { SIMPLE_RESPONSE }
+        result = bot.execute_command(:help, command_event_double_with_channel(first_channel), [], false, false)
+
+        expect(result).to eq "**List of commands:**\n**`help`**: Shows a list of all the commands available or displays help for a specific command.\n**`name`**: *No description available*\n"
+      end
+
+      it 'should print the custom :help_message' do
+        bot = Discordrb::Commands::CommandBot.new(token: 'token', help_message: "Custom Help Message")
+        bot.command(:name) { SIMPLE_RESPONSE }
+        result = bot.execute_command(:help, command_event_double_with_channel(first_channel), [], false, false)
+
+        expect(result).to eq "Custom Help Message\n**`help`**: Shows a list of all the commands available or displays help for a specific command.\n**`name`**: *No description available*\n"
       end
     end
   end
