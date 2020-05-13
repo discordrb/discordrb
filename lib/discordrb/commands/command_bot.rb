@@ -94,7 +94,7 @@ module Discordrb::Commands
         help_command: attributes[:help_command].is_a?(FalseClass) ? nil : (attributes[:help_command] || :help),
 
         # The message that will display above the list of commands.
-        help_message: attributes[:help_message] || "**List of commands:**",
+        help_message: attributes[:help_message] || '**List of commands:**',
 
         # The message to display for when a command doesn't exist, %command% to get the command name in question and nil for no message
         # No default value here because it may not be desired behaviour
