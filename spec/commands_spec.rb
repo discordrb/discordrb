@@ -134,7 +134,8 @@ describe Discordrb::Commands::CommandBot, order: :defined do
 
         expect(result).to eq "**List of commands:**\n**`help`**: Shows a list of all the commands available or displays help for a specific command.\n**`name`**: *No description available*\n"
       end
-
+    end
+    context 'with custom :Help_message' do
       it 'should print the custom :help_message' do
         bot = Discordrb::Commands::CommandBot.new(token: 'token', help_message: "Custom Help Message")
         bot.command(:name) { SIMPLE_RESPONSE }
