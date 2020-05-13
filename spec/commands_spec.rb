@@ -132,10 +132,10 @@ describe Discordrb::Commands::CommandBot, order: :defined do
         bot.command(:name) { SIMPLE_RESPONSE }
         result = bot.execute_command(:help, command_event_double_with_channel(first_channel), [], false, false)
 
-        expect(result).to eq %q(**List of commands:**
+        expect(result).to eq '**List of commands:**
 **`help`**: Shows a list of all the commands available or displays help for a specific command.
 **`name`**: *No description available*
-)
+'
       end
     end
     context 'with custom :Help_message' do
@@ -144,10 +144,10 @@ describe Discordrb::Commands::CommandBot, order: :defined do
         bot.command(:name) { SIMPLE_RESPONSE }
         result = bot.execute_command(:help, command_event_double_with_channel(first_channel), [], false, false)
 
-        expect(result).to eq %q(Custom Help Message
+        expect(result).to eq 'Custom Help Message
 **`help`**: Shows a list of all the commands available or displays help for a specific command.
 **`name`**: *No description available*
-)
+'
       end
     end
   end
