@@ -43,7 +43,8 @@ module Discordrb::Commands
     # @option attributes [Symbol, Array<Symbol>, false] :help_command The name of the command that displays info for
     #   other commands. Use an array if you want to have aliases. Default is "help". If none should be created, use
     #   `false` as the value.
-    # @option attributes [String] :help_message The message that will display above the list of commands.  Default is "**List of commands:**".  If :help_command is set to false, this attribute will be ignored.
+    # @option attributes [String] :help_message The message that will display above the list of commands.  Default is
+    #   "**List of commands:**".  If :help_command is set to false, this attribute will be ignored.
     # @option attributes [String] :command_doesnt_exist_message The message that should be displayed if a user attempts
     #   to use a command that does not exist. If none is specified, no message will be displayed. In the message, you
     #   can use the string '%command%' that will be replaced with the name of the command.
