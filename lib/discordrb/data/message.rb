@@ -200,30 +200,18 @@ module Discordrb
       !@webhook_id.nil?
     end
 
-    # @!visibility private
-    # @return [Array<String>] the emoji mentions found in the message
-    def scan_for_emoji
-      emoji = @content.split
-      emoji = emoji.grep(/<(?<animated>a)?:(?<name>\w+):(?<id>\d+)>?/)
-      emoji
-    end
-
     # @return [Array<Emoji>] the emotes that were used/mentioned in this message.
     def emoji
       return if @content.nil?
+      return @emoji unless @emoji.empty?
 
-      emoji = scan_for_emoji
-      emoji.each do |element|
-        @emoji << @bot.parse_mention(element)
-      end
-      @emoji
+      @emoji = @bot.parse_mentions(@content).select { |el| el.is_a? Discordrb::Emoji }
     end
 
     # Check if any emoji were used in this message.
     # @return [true, false] whether or not any emoji were used
     def emoji?
-      emoji = scan_for_emoji
-      return true unless emoji.empty?
+      emoji&.empty?
     end
 
     # Check if any reactions were used in this message.
