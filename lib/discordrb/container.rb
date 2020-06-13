@@ -126,6 +126,9 @@ module Discordrb
     # This **event** is raised when somebody reacts to a message.
     # @param attributes [Hash] The event's attributes.
     # @option attributes [String, Integer] :emoji Matches the ID of the emoji that was reacted with, or its name.
+    # @option attributes [String, Integer, User] :from Matches the user who added the reaction.
+    # @option attributes [String, Integer, Message] :message Matches the message to which the reaction was added.
+    # @option attributes [String, Integer, Channel] :in Matches the channel the reaction was added in.
     # @yield The block is executed when the event is raised.
     # @yieldparam event [ReactionAddEvent] The event that was raised.
     # @return [ReactionAddEventHandler] The event handler that was registered.
@@ -137,6 +140,9 @@ module Discordrb
     # @param attributes [Hash] The event's attributes.
     # @option attributes [String, Integer] :emoji Matches the ID of the emoji that was removed from the reactions, or
     #   its name.
+    # @option attributes [String, Integer, User] :from Matches the user who removed the reaction.
+    # @option attributes [String, Integer, Message] :message Matches the message to which the reaction was removed.
+    # @option attributes [String, Integer, Channel] :in Matches the channel the reaction was removed in.
     # @yield The block is executed when the event is raised.
     # @yieldparam event [ReactionRemoveEvent] The event that was raised.
     # @return [ReactionRemoveEventHandler] The event handler that was registered.
@@ -146,6 +152,9 @@ module Discordrb
 
     # This **event** is raised when somebody removes all reactions from a message.
     # @param attributes [Hash] The event's attributes.
+    # @option attributes [Hash] The event's attributes.
+    # @option attributes [String, Integer, Message] :message Matches the message to which the reactions were removed.
+    # @option attributes [String, Integer, Channel] :in Matches the channel the reactions were removed in.
     # @yield The block is executed when the event is raised.
     # @yieldparam event [ReactionRemoveAllEvent] The event that was raised.
     # @return [ReactionRemoveAllEventHandler] The event handler that was registered.
