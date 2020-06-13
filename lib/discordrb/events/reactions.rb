@@ -10,6 +10,7 @@ module Discordrb::Events
 
     # @return [Emoji] the emoji that was reacted with.
     attr_reader :emoji
+    attr_reader :message_id
 
     def initialize(data, bot)
       @bot = bot
@@ -60,6 +61,19 @@ module Discordrb::Events
             e.name == a || e.name == a.delete(':') || e.id == a.resolve_id
           else
             e == a
+          end
+        end,
+        matches_all(@attributes[:message], event.message_id) do |a, e|
+          a == e
+        end,
+        matches_all(@attributes[:in], event.channel) do |a, e|
+          if a.is_a? String
+            # Make sure to remove the "#" from channel names in case it was specified
+            a.delete('#') == e.name
+          elsif a.is_a? Integer
+            a == e.id
+          else
+            a == e
           end
         end
       ].reduce(true, &:&)
