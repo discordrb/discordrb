@@ -83,6 +83,12 @@ module Discordrb::Events
     def init_user(data, bot)
       @user = Discordrb::User.new(data['user'], bot)
     end
+
+    # @!attribute [r] user
+    #   @return [User] the user in question.
+    def user
+      super
+    end
   end
 
   # Event handler for {ServerMemberDeleteEvent}
