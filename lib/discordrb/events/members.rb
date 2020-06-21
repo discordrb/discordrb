@@ -84,8 +84,8 @@ module Discordrb::Events
       @user = Discordrb::User.new(data['user'], bot)
     end
 
-   # @return [User] the user in question.
-   attr_reader :user
+    # @return [User] the user in question.
+    attr_reader :user
   end
 
   # Event handler for {ServerMemberDeleteEvent}
