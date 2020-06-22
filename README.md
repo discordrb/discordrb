@@ -23,10 +23,8 @@ See also: [Documentation](https://www.rubydoc.info/gems/discordrb), [Tutorials](
 
 ## Dependencies
 
-* Ruby >= 2.4 supported
+* Ruby >= 2.5 supported
 * An installed build system for native extensions (on Windows, make sure you download the "Ruby+Devkit" version of [RubyInstaller](https://rubyinstaller.org/downloads/))
-
-> **Note:** RubyInstaller for Ruby versions 2.4+ will install the DevKit as the last step of the installation.
 
 ### Voice dependencies
 

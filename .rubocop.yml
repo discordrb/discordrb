@@ -5,7 +5,12 @@ inherit_mode:
     - AllowedNames
 
 AllCops:
-  TargetRubyVersion: 2.4
+  NewCops: enable
+  TargetRubyVersion: 2.5
+
+# Disable line length checks
+Layout/LineLength:
+  Enabled: false
 
 # Allow 'Pokémon-style' exception handling
 Lint/RescueException:
@@ -16,7 +21,7 @@ Metrics:
   Enabled: false
 
 # Allow some common and/or obvious short method params
-Naming/UncommunicativeMethodParamName:
+Naming/MethodParameterName:
   AllowedNames:
     - e
 
