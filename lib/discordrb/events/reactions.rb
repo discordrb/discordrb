@@ -11,6 +11,9 @@ module Discordrb::Events
     # @return [Emoji] the emoji that was reacted with.
     attr_reader :emoji
 
+    # @!visibility private
+    attr_reader :message_id
+
     def initialize(data, bot)
       @bot = bot
 
@@ -61,6 +64,30 @@ module Discordrb::Events
           else
             e == a
           end
+        end,
+        matches_all(@attributes[:message], event.message_id) do |a, e|
+          a == e
+        end,
+        matches_all(@attributes[:in], event.channel) do |a, e|
+          if a.is_a? String
+            # Make sure to remove the "#" from channel names in case it was specified
+            a.delete('#') == e.name
+          elsif a.is_a? Integer
+            a == e.id
+          else
+            a == e
+          end
+        end,
+        matches_all(@attributes[:from], event.user) do |a, e|
+          if a.is_a? String
+            a == e.name
+          elsif a.is_a? Integer
+            a == e
+          elsif a == :bot
+            e.current_bot?
+          else
+            a == e
+          end
         end
       ].reduce(true, &:&)
     end
@@ -81,6 +108,9 @@ module Discordrb::Events
   # Event raised when somebody removes all reactions from a message
   class ReactionRemoveAllEvent < Event
     include Respondable
+
+    # @!visibility private
+    attr_reader :message_id
 
     def initialize(data, bot)
       @bot = bot
@@ -107,7 +137,21 @@ module Discordrb::Events
       return false unless event.is_a? ReactionRemoveAllEvent
 
       # No attributes yet as there is no property available on the event that doesn't involve doing a resolution request
-      [].reduce(true, &:&)
+      [
+        matches_all(@attributes[:message], event.message_id) do |a, e|
+          a == e
+        end,
+        matches_all(@attributes[:in], event.channel) do |a, e|
+          if a.is_a? String
+            # Make sure to remove the "#" from channel names in case it was specified
+            a.delete('#') == e.name
+          elsif a.is_a? Integer
+            a == e.id
+          else
+            a == e
+          end
+        end
+      ].reduce(true, &:&)
     end
   end
 end
