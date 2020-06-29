@@ -42,6 +42,8 @@ module Discordrb
 
     # @return [String] the layout to mention it (or have it used) in a message
     def mention
+      return name if id.nil?
+
       "<#{'a' if animated}:#{name}:#{id}>"
     end
 
