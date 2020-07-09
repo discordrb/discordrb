@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'ffi'
+
 module Discordrb::Voice
   # @!visibility private
   module Sodium
