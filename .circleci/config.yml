@@ -90,7 +90,7 @@ jobs:
           name: Push updated docs
           command: |
             git config user.name "Circle CI"
-            git config user.email "zachnowicki@gmail.com"
+            git config user.email "matthew.b.carey@gmail.com"
 
             SOURCE_BRANCH=$CIRCLE_BRANCH
             if [ -n "$CIRCLE_TAG" ]; then
@@ -116,8 +116,8 @@ workflows:
   deploy:
     jobs:
       - yard:
-          filters: {branches: {only: master}, tags: {only: /^v.*/}}
+          filters: {branches: {only: next}, tags: {only: /^v.*/}}
       - pages:
           requires:
             - yard
-          filters: {branches: {only: master}, tags: {only: /^v.*/}}
+          filters: {branches: {only: next}, tags: {only: /^v.*/}}
