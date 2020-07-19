@@ -338,7 +338,7 @@ module Discordrb
     # @param content [String] The content to send. Should not be longer than 2000 characters or it will result in an error.
     # @param tts [true, false] Whether or not this message should be sent using Discord text-to-speech.
     # @param embed [Hash, Discordrb::Webhooks::Embed, nil] The rich embed to append to this message.
-    # @param allowed_mentions [Hash, nil] [Allowed Mentions object](https://discordapp.com/developers/docs/resources/channel#allowed-mentions-object)
+    # @param allowed_mentions [Hash, Discordrb::AllowedMentions, false, nil] Mentions that are allowed to ping on this message. `false` disables all pings
     # @return [Message] the message that was sent.
     def send_message(content, tts = false, embed = nil, allowed_mentions = nil)
       @bot.send_message(@id, content, tts, embed, allowed_mentions)
@@ -351,7 +351,7 @@ module Discordrb
     # @param timeout [Float] The amount of time in seconds after which the message sent will be deleted.
     # @param tts [true, false] Whether or not this message should be sent using Discord text-to-speech.
     # @param embed [Hash, Discordrb::Webhooks::Embed, nil] The rich embed to append to this message.
-    # @param allowed_mentions [Hash, nil] [Allowed Mentions object](https://discordapp.com/developers/docs/resources/channel#allowed-mentions-object)
+    # @param allowed_mentions [Hash, Discordrb::AllowedMentions, false, nil] Mentions that are allowed to ping on this message. `false` disables all pings
     def send_temporary_message(content, timeout, tts = false, embed = nil, allowed_mentions = nil)
       @bot.send_temporary_message(@id, content, timeout, tts, embed, allowed_mentions)
     end
@@ -365,7 +365,7 @@ module Discordrb
     # @param message [String] The message that should be sent along with the embed. If this is the empty string, only the embed will be shown.
     # @param embed [Discordrb::Webhooks::Embed, nil] The embed to start the building process with, or nil if one should be created anew.
     # @param tts [true, false] Whether or not this message should be sent using Discord text-to-speech.
-    # @param allowed_mentions [Hash, nil] [Allowed Mentions object](https://discordapp.com/developers/docs/resources/channel#allowed-mentions-object)
+    # @param allowed_mentions [Hash, Discordrb::AllowedMentions, false, nil] Mentions that are allowed to ping on this message. `false` disables all pings
     # @yield [embed] Yields the embed to allow for easy building inside a block.
     # @yieldparam embed [Discordrb::Webhooks::Embed] The embed from the parameters, or a new one.
     # @return [Message] The resulting message.
