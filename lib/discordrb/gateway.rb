@@ -143,7 +143,7 @@ module Discordrb
     # @return [true, false] whether or not this gateway should check for heartbeat ACKs.
     attr_accessor :check_heartbeat_acks
 
-    def initialize(bot, token, shard_key = nil, compress_mode = :stream, intents = ALL_INTENTS)
+    def initialize(bot, token, shard_key = nil, compress_mode = :stream, intents = nil)
       @token = token
       @bot = bot
 
@@ -309,9 +309,9 @@ module Discordrb
         token: token,
         properties: properties,
         compress: compress,
-        large_threshold: large_threshold,
-        intents: @intents
+        large_threshold: large_threshold
       }
+      data[:intents] = @intents unless @intents.nil?
 
       # Don't include the shard key at all if it is nil as Discord checks for its mere existence
       data[:shard] = shard_key if shard_key
@@ -716,7 +716,7 @@ module Discordrb
 
         @session = Session.new(data['session_id'])
         @session.sequence = 0
-        @bot.__send__(:notify_ready) if (@intents & INTENTS[:servers]).zero?
+        @bot.__send__(:notify_ready) if @intents && (@intents & INTENTS[:servers]).zero?
       when :RESUMED
         # The RESUMED event is received after a successful op 6 (resume). It does nothing except tell the bot the
         # connection is initiated (like READY would). Starting with v5, it doesn't set a new heartbeat interval anymore
