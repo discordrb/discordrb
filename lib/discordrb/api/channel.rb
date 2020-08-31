@@ -71,16 +71,28 @@ module Discordrb::API::Channel
   end
 
   # Send a message to a channel
-  # https://discord.com/developers/docs/resources/channel#create-message
-  def create_message(token, channel_id, message, tts = false, embed = nil, nonce = nil)
+  # https://discordapp.com/developers/docs/resources/channel#create-message
+  # @param attachments [Array<File>, nil] Attachments to use with `attachment://` in embeds. See
+  #   https://discord.com/developers/docs/resources/channel#create-message-using-attachments-within-embeds
+  def create_message(token, channel_id, message, tts = false, embed = nil, nonce = nil, attachments = nil)
+    body = { content: message, tts: tts, embed: embed, nonce: nonce }
+    body = if attachments
+             files = [*0...attachments.size].zip(attachments).to_h
+             { **files, payload_json: body.to_json }
+           else
+             body.to_json
+           end
+
+    headers = { Authorization: token }
+    headers[:content_type] = :json unless attachments
+
     Discordrb::API.request(
       :channels_cid_messages_mid,
       channel_id,
       :post,
       "#{Discordrb::API.api_base}/channels/#{channel_id}/messages",
-      { content: message, tts: tts, embed: embed, nonce: nonce }.to_json,
-      Authorization: token,
-      content_type: :json
+      body,
+      **headers
     )
   rescue RestClient::BadRequest => e
     parsed = JSON.parse(e.response.body)

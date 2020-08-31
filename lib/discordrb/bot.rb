@@ -367,11 +367,11 @@ module Discordrb
     # @param tts [true, false] Whether or not this message should be sent using Discord text-to-speech.
     # @param embed [Hash, Discordrb::Webhooks::Embed, nil] The rich embed to append to this message.
     # @return [Message] The message that was sent.
-    def send_message(channel, content, tts = false, embed = nil)
+    def send_message(channel, content, tts = false, embed = nil, attachments = nil)
       channel = channel.resolve_id
       debug("Sending message to #{channel} with content '#{content}'")
 
-      response = API::Channel.create_message(token, channel, content, tts, embed ? embed.to_hash : nil)
+      response = API::Channel.create_message(token, channel, content, tts, embed ? embed.to_hash : nil, nil, attachments)
       Message.new(JSON.parse(response), self)
     end
 
