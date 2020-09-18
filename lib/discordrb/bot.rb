@@ -283,7 +283,7 @@ module Discordrb
 
       server_id_str = server ? "&guild_id=#{server.id}" : ''
       permission_bits_str = permission_bits ? "&permissions=#{permission_bits}" : ''
-      "https://discordapp.com/oauth2/authorize?&client_id=#{@client_id}#{server_id_str}#{permission_bits_str}&scope=bot"
+      "https://discord.com/oauth2/authorize?&client_id=#{@client_id}#{server_id_str}#{permission_bits_str}&scope=bot"
     end
 
     # @return [Hash<Integer => VoiceBot>] the voice connections this bot currently has, by the server ID to which they are connected.
