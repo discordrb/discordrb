@@ -34,7 +34,7 @@ module Discordrb::Events
     end
 
     def init_roles(data, _)
-      @roles = []
+      @roles = [@server.role(@server.id)]
       return unless data['roles']
 
       data['roles'].each do |element|
