@@ -35,8 +35,11 @@ module Discordrb::Events
     # Sends a temporary message to the channel this message was sent in, right now.
     # @param content [String] The content to send. Should not be longer than 2000 characters or it will result in an error.
     # @param timeout [Float] The amount of time in seconds after which the message sent will be deleted.
-    def send_temporary_message(content, timeout)
-      channel.send_temporary_message(content, timeout)
+    # @param tts [true, false] Whether or not this message should be sent using Discord text-to-speech.
+    # @param embed [Hash, Discordrb::Webhooks::Embed, nil] The rich embed to append to this message.
+    # @param attachments [Array<File>] Files that can be referenced in embeds via `attachment://file.png`
+    def send_temporary_message(content, timeout, tts = false, embed = nil, attachments = nil)
+      channel.send_temporary_message(content, timeout, tts, embed, attachments)
     end
 
     # Adds a string to be sent after the event has finished execution. Avoids problems with rate limiting because only

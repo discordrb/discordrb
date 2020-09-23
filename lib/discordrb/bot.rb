@@ -382,11 +382,12 @@ module Discordrb
     # @param timeout [Float] The amount of time in seconds after which the message sent will be deleted.
     # @param tts [true, false] Whether or not this message should be sent using Discord text-to-speech.
     # @param embed [Hash, Discordrb::Webhooks::Embed, nil] The rich embed to append to this message.
-    def send_temporary_message(channel, content, timeout, tts = false, embed = nil)
+    # @param attachments [Array<File>] Files that can be referenced in embeds via `attachment://file.png`
+    def send_temporary_message(channel, content, timeout, tts = false, embed = nil, attachments = nil)
       Thread.new do
         Thread.current[:discordrb_name] = "#{@current_thread}-temp-msg"
 
-        message = send_message(channel, content, tts, embed)
+        message = send_message(channel, content, tts, embed, attachments)
         sleep(timeout)
         message.delete
       end
