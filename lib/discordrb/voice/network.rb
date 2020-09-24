@@ -175,7 +175,7 @@ module Discordrb::Voice
       @token = token
       @session = session
 
-      @endpoint = endpoint.gsub(':80', '')
+      @endpoint = endpoint.split(':').first
 
       @udp = VoiceUDP.new
     end
