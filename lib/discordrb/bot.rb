@@ -618,7 +618,7 @@ module Discordrb
 
     # Awaits an event, blocking the current thread until a response is received.
     # @param type [Class] The event class that should be listened for.
-    # @option attributes [Numeric] :timeout the amount of time to wait for a response before returning `nil`. Waits forever if omitted.
+    # @option attributes [Numeric] :timeout the amount of time (in seconds) to wait for a response before returning `nil`. Waits forever if omitted.
     # @yield Executed when a matching event is received.
     # @yieldparam event [Event] The event object that was triggered.
     # @yieldreturn [true, false] Whether the event matches extra await criteria described by the block
