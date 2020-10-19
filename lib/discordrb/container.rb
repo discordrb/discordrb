@@ -276,7 +276,7 @@ module Discordrb
     # @yieldparam event [VoiceServerUpdateEvent] The event that was raised.
     # @return [VoiceServerUpdateEventHandler] The event handler that was registered.
     def voice_server_update(attributes = {}, &block)
-      register(VoiceServerUpdateEvent, attributes, block)
+      register_event(VoiceServerUpdateEvent, attributes, block)
     end
 
     # This **event** is raised when a new user joins a server.

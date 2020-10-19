@@ -31,7 +31,7 @@ module Discordrb::Events
   # Event handler for VoiceServerUpdateEvent
   class VoiceServerUpdateEventHandler < EventHandler
     def matches?(event)
-      return false unless event.is_? VoiceServerUpdateEvent
+      return false unless event.is_a? VoiceServerUpdateEvent
 
       [
         matches_all(@attributes[:from], event.server) do |a, e|
