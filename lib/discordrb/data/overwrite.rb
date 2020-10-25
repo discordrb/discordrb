@@ -49,7 +49,7 @@ module Discordrb
                 :member
               elsif object.is_a? Role
                 :role
-              elsif type.is_a?(String) || type.is_a?(Symbol) && TYPES.values.include? type.to_sym
+              elsif type.is_a?(String) || type.is_a?(Symbol) && TYPES.value?(type.to_sym)
                 type.to_sym
               elsif TYPES[type]
                 TYPES[type]
