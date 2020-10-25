@@ -190,7 +190,7 @@ module Discordrb::API::Server
       :guilds_sid_bans_uid,
       server_id,
       :put,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}/bans/#{user_id}?delete-message-days=#{message_days}&reason=#{reason}",
+      "#{Discordrb::API.api_base}/guilds/#{server_id}/bans/#{user_id}?delete_message_days=#{message_days}&reason=#{reason}",
       nil,
       Authorization: token
     )
