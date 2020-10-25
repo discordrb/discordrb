@@ -425,32 +425,36 @@ module Discordrb::API::Server
     )
   end
 
-  # Retrieves a server's embed information
-  # https://discordapp.com/developers/docs/resources/guild#get-guild-embed
-  def embed(token, server_id)
+  # Retrieves a server's widget information
+  # https://discordapp.com/developers/docs/resources/guild#get-guild-widget
+  def widget(token, server_id)
     Discordrb::API.request(
-      :guilds_sid_embed,
+      :guilds_sid_widget,
       server_id,
       :get,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}/embed",
+      "#{Discordrb::API.api_base}/guilds/#{server_id}/widget",
       Authorization: token
     )
   end
 
+  alias_method :embed, :widget
+
   # Modify a server's embed settings
-  # https://discordapp.com/developers/docs/resources/guild#modify-guild-embed
-  def modify_embed(token, server_id, enabled, channel_id, reason = nil)
+  # https://discordapp.com/developers/docs/resources/guild#modify-guild-widget
+  def modify_widget(token, server_id, enabled, channel_id, reason = nil)
     Discordrb::API.request(
-      :guilds_sid_embed,
+      :guilds_sid_widget,
       server_id,
       :patch,
-      "#{Discordrb::API.api_base}/guilds/#{server_id}/embed",
+      "#{Discordrb::API.api_base}/guilds/#{server_id}/widget",
       { enabled: enabled, channel_id: channel_id }.to_json,
       Authorization: token,
       'X-Audit-Log-Reason': reason,
       content_type: :json
     )
   end
+
+  alias_method :modify_embed, :modify_widget
 
   # Adds a custom emoji.
   # https://discordapp.com/developers/docs/resources/emoji#create-guild-emoji
