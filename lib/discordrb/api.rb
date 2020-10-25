@@ -137,7 +137,7 @@ module Discordrb::API
 
       unless mutex.locked?
         response = JSON.parse(e.response)
-        wait_seconds = response['retry_after'].to_i / 1000.0
+        wait_seconds = response['retry_after'].to_f
         Discordrb::LOGGER.ratelimit("Locking RL mutex (key: #{key}) for #{wait_seconds} seconds due to Discord rate limiting")
         trace("429 #{key.join(' ')}")
 
