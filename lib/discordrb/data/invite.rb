@@ -87,8 +87,18 @@ module Discordrb
     def initialize(data, bot)
       @bot = bot
 
-      @channel = InviteChannel.new(data['channel'], bot)
-      @server = InviteServer.new(data['guild'], bot)
+      @channel = if data['channel_id']
+                   bot.channel(data['channel_id'])
+                 else
+                   @channel = InviteChannel.new(data['channel'], bot)
+                 end
+
+      @server = if data['guild_id']
+                  bot.server(data['guild_id'])
+                else
+                  InviteServer.new(data['guild'], bot)
+                end
+
       @uses = data['uses']
       @inviter = data['inviter'] ? (@bot.user(data['inviter']['id'].to_i) || User.new(data['inviter'], bot)) : nil
       @temporary = data['temporary']
