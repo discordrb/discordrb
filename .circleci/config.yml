@@ -27,15 +27,6 @@ commands:
             - ./vendor/bundle
 
 jobs:
-  test_ruby_24:
-    docker:
-      - image: ruby:2.4-alpine
-    steps:
-      - setup-env
-      - run:
-          name: Run RSpec
-          command: bundle exec rspec
-
   test_ruby_25:
     docker:
       - image: ruby:2.5-alpine
@@ -53,6 +44,15 @@ jobs:
       - run:
           name: Run RSpec
           command: bundle exec rspec
+  
+  test_ruby_27:
+    docker:
+      - image: ruby:2.7-alpine
+    steps:
+      - setup-env
+      - run:
+          name: Run RSpec
+          command: bundle exec rspec
 
   rubocop:
     docker:
@@ -61,7 +61,7 @@ jobs:
       - setup-env
       - run:
           name: Run Rubocop
-          command: bundle exec rubocop
+          command: bundle exec rubocop -P
 
   yard:
     docker:
@@ -85,12 +85,15 @@ jobs:
           at: /tmp/workspace
       - run:
           name: Clone docs
-          command: git clone --depth 1 https://${DOCS_GITHUB_TOKEN}@github.com/${CIRCLE_PROJECT_USERNAME}/discordrb.git -b gh-pages .
+          command: git clone $CIRCLE_REPOSITORY_URL -b gh-pages .
+      - add_ssh_keys:
+          fingerprints: 
+            - "9a:4c:50:94:23:46:81:74:41:97:87:04:4e:59:4b:4e"
       - run:
           name: Push updated docs
           command: |
             git config user.name "Circle CI"
-            git config user.email "matthew.b.carey@gmail.com"
+            git config user.email "ci-build@shardlab.dev"
 
             SOURCE_BRANCH=$CIRCLE_BRANCH
             if [ -n "$CIRCLE_TAG" ]; then
@@ -103,21 +106,21 @@ jobs:
 
             git add $SOURCE_BRANCH
             git commit --allow-empty -m "[skip ci] Deploy docs"
-            git push -q https://${DOCS_GITHUB_TOKEN}@github.com/${CIRCLE_PROJECT_USERNAME}/discordrb.git
+            git push -u origin gh-pages
 
 workflows:
   test:
     jobs:
-      - test_ruby_24
       - test_ruby_25
       - test_ruby_26
+      - test_ruby_27
       - rubocop
       - yard
   deploy:
     jobs:
       - yard:
-          filters: {branches: {only: next}, tags: {only: /^v.*/}}
+          filters: {branches: {only: main}, tags: {only: /^v.*/}}
       - pages:
           requires:
             - yard
-          filters: {branches: {only: next}, tags: {only: /^v.*/}}
+          filters: {branches: {only: main}, tags: {only: /^v.*/}}
