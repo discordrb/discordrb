@@ -1,4 +1,4 @@
-# Changelog
+  # Changelog
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
@@ -22,6 +22,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `API.get_gateway_bot` ([#632](https://github.com/discordrb/discordrb/pull/632))
 - `Channel#create_webhook` ([#637](https://github.com/discordrb/discordrb/pull/637), thanks @Chew)
 - `User#dnd?` and documentation for other user status methods ([#679](https://github.com/discordrb/discordrb/pull/679), thanks @kaine119)
+- `Message#link`, `Channel#link`, `Server#link` ([commit](https://github.com/shardlab/discordrb/commit/44f93948a812e06b439968c6b072c0d9b749a842), thanks @z64)
+- `ReactionEvent#message_id` and `message` option for `ReactionEventHandler` ([#728](https://github.com/discordrb/discordrb/pull/728), thanks @swarley)
+- `intents` option for `Bot#initialize`, `INTENTS`, and `ALL_INTENTS` for experimental intents support ([#698](https://github.com/discordrb/discordrb/pull/698), thanks @swarley)
+- `reason` positional arguments for various API methods, support for new audit log events ([#682](https://github.com/discordrb/discordrb/pull/682), thanks @swarley)
+- Support for `attachment://` procotol linking in `API::Channel.create_message` and methods that utilize it (`Bot#send_message`, `Channel#send_message`, `Channel#send_temporary_message`, `Channel#send_embed`, `Respondable#send_message`, `Respondable#send_embed`) ([#735](https://github.com/discordrb/discordrb/pull/735), thanks @swarley)
+- `AllowedMentions`, and `allowed_mentions` positional arguments to `API::Channel.create_message`, `Bot#send_message`, `Bot#send_temporary_message`, `Channel#send_message`, `Channel#send_temporary_message`, `Channel#send_embed`, `Respondable#send_message`, `Respondable#send_embed`, and `Respondable#send_temporary_message` ([#708](https://github.com/discordrb/discordrb/pull/708), thanks @swarley)
+- `with_counts` optional positional argument to `API::Server.resolve` ([#709](https://github.com/discordrb/discordrb/pull/709), thanks @swarley)
+- Expose full options to `Bot#send_temporary_message` and `Respondable#send_temporary_message` ([commit](https://github.com/shardlab/discordrb/commit/d20203211603cd4c06212d99e733bf5f5b3c8f0b), thanks @Birdie0)
+- `User#client_status`, `PresenceEvent#client_status`, and `client_status` option for `EventContainer#presence` ([#736](https://github.com/discordrb/discordrb/pull/736), thanks @swarley)
+- `VoiceServerUpdateEvent`, and `EventContainer#voice_server_update` ([#743](https://github.com/discordrb/discordrb/pull/743), thanks @swarley)
+- Invite events, `InviteCreateEvent`, `InviteDeleteEvent`, `EventContainer#invite_create`, `EventContainer#invite_delete` and `Server#splash_hash` ([#744](https://github.com/discordrb/discordrb/pull/744), thanks @swarley)
 
 ### Changed
 
@@ -52,6 +63,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Return `rest-client` dependency to `>= 2.0.0` since `2.1.0` is now released ([#654](https://github.com/discordrb/discordrb/pull/654), thanks @ali-l)
 - Added Bit for "Streaming" permission ([#660](https://github.com/discordrb/discordrb/pull/660), thanks @NCPlayz)
 - Methods for Nitro boosting related information ([#638](https://github.com/discordrb/discordrb/pull/638), thanks @Chew)
+- `ServerDeleteEvent#server` now returns an `Integer` ([commit](https://github.com/discordrb/discordrb/commit/bb457fe981d2b997b704ad85008ec3b185b046e8), thanks @z64)
+- User activites are now represented by `ActivitySet`, from `User#activities` ([#677](https://github.com/discordrb/discordrb/pull/677), thanks @swarley)
+- **(deprecated)** `User#game`, `User#stream_type`, and `User#stream_url` are considered deprecated in favor of `ActivitySet#games` and `ActivitySet#streaming` as activities are no longer considered to be singular. ([#677](https://github.com/discordrb/discordrb/pull/677), thanks @swarley)
+- Non CDN links now use the updated domain name `https://discord.com` ([#720](https://github.com/discordrb/discordrb/pull/720), thanks @swarley)
+- Additional fields are included in `Role#inspect` ([#731](https://github.com/discordrb/discordrb/pull/731), thanks @IotaSpencer)
+- `Invite#server` and `Invite#channel` can both return partial or full objects depending on the data source ([#744](https://github.com/discordrb/discordrb/pull/744), thanks @swarley)
+- Members now have the `@everyone` role ([#739](https://github.com/discordrb/discordrb/pull/739), thanks @kdance21)
 
 ### Fixed
 
@@ -66,6 +84,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `Server#add_member_using_token` returns `nil` when user is already a member ([#643](https://github.com/discordrb/discordrb/pull/643), thanks @swarley)
 - `CommandBot`'s `Integer` parser interprets all integers as base 10 ([#656](https://github.com/discordrb/discordrb/pull/656), thanks @joshleblanc)
 - Broken reference link in `CommandBot#initialize` documentation ([#647](https://github.com/discordrb/discordrb/pull/647), thanks @Daniel-Worrall)
+- Return the correct value for `Message#reactions?` ([#729](https://github.com/discordrb/discordrb/pull/729), thanks @swarley)
+- Gateway closes with a 4000 code on `RECONNECT`, preserving the session ([#727](https://github.com/discordrb/discordrb/pull/727), thanks @swarley)
+- `Emoji#mention` works correctly for unicode emojis ([#715](https://github.com/discordrb/discordrb/pull/715), thanks @swarley)
+- Voice now uses gateway v4 ([#648](https://github.com/discordrb/discordrb/pull/648), thanks @swarley)
+- VoiceBot now sends a `KILL` signal instead of `TERM` on Windows hosts when ending the ffmpeg process. ([#732](https://github.com/discordrb/discordrb/pull/732), thanks @swarley)
+- `Message#emoji` returns more reliably when used with other mention types ([#724](https://github.com/discordrb/discordrb/pull/724), thanks @omnilord)
+- Permission calculation now properly considers overwrites ([#712](https://github.com/discordrb/discordrb/pull/712), thanks @swarley)
 
 ### Removed
 
