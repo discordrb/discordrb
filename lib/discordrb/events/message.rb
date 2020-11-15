@@ -15,9 +15,10 @@ module Discordrb::Events
     # @param tts [true, false] Whether or not this message should be sent using Discord text-to-speech.
     # @param embed [Hash, Discordrb::Webhooks::Embed, nil] The rich embed to append to this message.
     # @param attachments [Array<File>] Files that can be referenced in embeds via `attachment://file.png`
+    # @param allowed_mentions [Hash, Discordrb::AllowedMentions, false, nil] Mentions that are allowed to ping on this message. `false` disables all pings
     # @return [Discordrb::Message] the message that was sent
-    def send_message(content, tts = false, embed = nil, attachments = nil)
-      channel.send_message(content, tts, embed, attachments)
+    def send_message(content, tts = false, embed = nil, attachments = nil, allowed_mentions = nil)
+      channel.send_message(content, tts, embed, attachments, allowed_mentions)
     end
 
     # The same as {#send_message}, but yields a {Webhooks::Embed} for easy building of embedded content inside a block.
@@ -25,11 +26,13 @@ module Discordrb::Events
     # @param message [String] The message that should be sent along with the embed. If this is the empty string, only the embed will be shown.
     # @param embed [Discordrb::Webhooks::Embed, nil] The embed to start the building process with, or nil if one should be created anew.
     # @param attachments [Array<File>] Files that can be referenced in embeds via `attachment://file.png`
+    # @param tts [true, false] Whether or not this message should be sent using Discord text-to-speech.
+    # @param allowed_mentions [Hash, Discordrb::AllowedMentions, false, nil] Mentions that are allowed to ping on this message. `false` disables all pings
     # @yield [embed] Yields the embed to allow for easy building inside a block.
     # @yieldparam embed [Discordrb::Webhooks::Embed] The embed from the parameters, or a new one.
     # @return [Message] The resulting message.
-    def send_embed(message = '', embed = nil, attachments = nil, &block)
-      channel.send_embed(message, embed, attachments, &block)
+    def send_embed(message = '', embed = nil, attachments = nil, tts = false, allowed_mentions = nil, &block)
+      channel.send_embed(message, embed, attachments, tts, allowed_mentions, &block)
     end
 
     # Sends a temporary message to the channel this message was sent in, right now.
@@ -38,8 +41,9 @@ module Discordrb::Events
     # @param tts [true, false] Whether or not this message should be sent using Discord text-to-speech.
     # @param embed [Hash, Discordrb::Webhooks::Embed, nil] The rich embed to append to this message.
     # @param attachments [Array<File>] Files that can be referenced in embeds via `attachment://file.png`
-    def send_temporary_message(content, timeout, tts = false, embed = nil, attachments = nil)
-      channel.send_temporary_message(content, timeout, tts, embed, attachments)
+    # @param allowed_mentions [Hash, Discordrb::AllowedMentions, false, nil] Mentions that are allowed to ping on this message. `false` disables all pings
+    def send_temporary_message(content, timeout, tts = false, embed = nil, attachments = nil, allowed_mentions = nil)
+      channel.send_temporary_message(content, timeout, tts, embed, attachments, allowed_mentions)
     end
 
     # Adds a string to be sent after the event has finished execution. Avoids problems with rate limiting because only

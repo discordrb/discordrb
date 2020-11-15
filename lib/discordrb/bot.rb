@@ -362,12 +362,14 @@ module Discordrb
     # @param content [String] The text that should be sent as a message. It is limited to 2000 characters (Discord imposed).
     # @param tts [true, false] Whether or not this message should be sent using Discord text-to-speech.
     # @param embed [Hash, Discordrb::Webhooks::Embed, nil] The rich embed to append to this message.
+    # @param allowed_mentions [Hash, Discordrb::AllowedMentions, false, nil] Mentions that are allowed to ping on this message. `false` disables all pings
     # @return [Message] The message that was sent.
-    def send_message(channel, content, tts = false, embed = nil, attachments = nil)
+    def send_message(channel, content, tts = false, embed = nil, attachments = nil, allowed_mentions = nil)
       channel = channel.resolve_id
       debug("Sending message to #{channel} with content '#{content}'")
+      allowed_mentions = { parse: [] } if allowed_mentions == false
 
-      response = API::Channel.create_message(token, channel, content, tts, embed ? embed.to_hash : nil, nil, attachments)
+      response = API::Channel.create_message(token, channel, content, tts, embed ? embed.to_hash : nil, nil, attachments, allowed_mentions ? allowed_mentions.to_hash : nil)
       Message.new(JSON.parse(response), self)
     end
 
@@ -379,11 +381,12 @@ module Discordrb
     # @param tts [true, false] Whether or not this message should be sent using Discord text-to-speech.
     # @param embed [Hash, Discordrb::Webhooks::Embed, nil] The rich embed to append to this message.
     # @param attachments [Array<File>] Files that can be referenced in embeds via `attachment://file.png`
-    def send_temporary_message(channel, content, timeout, tts = false, embed = nil, attachments = nil)
+    # @param allowed_mentions [Hash, Discordrb::AllowedMentions, false, nil] Mentions that are allowed to ping on this message. `false` disables all pings
+    def send_temporary_message(channel, content, timeout, tts = false, embed = nil, attachments = nil, allowed_mentions = nil)
       Thread.new do
         Thread.current[:discordrb_name] = "#{@current_thread}-temp-msg"
 
-        message = send_message(channel, content, tts, embed, attachments)
+        message = send_message(channel, content, tts, embed, attachments, allowed_mentions)
         sleep(timeout)
         message.delete
       end
