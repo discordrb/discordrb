@@ -7,7 +7,7 @@ require 'discordrb/webhooks/version'
 Gem::Specification.new do |spec|
   spec.name          = 'discordrb-webhooks'
   spec.version       = Discordrb::Webhooks::VERSION
-  spec.authors       = ['meew0', 'swarley']
+  spec.authors       = %w[meew0 swarley]
   spec.email         = ['']
 
   spec.summary       = 'Webhook client for discordrb'

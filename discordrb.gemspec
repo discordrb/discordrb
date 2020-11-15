@@ -7,7 +7,7 @@ require 'discordrb/version'
 Gem::Specification.new do |spec|
   spec.name          = 'discordrb'
   spec.version       = Discordrb::VERSION
-  spec.authors       = ['meew0', 'swarley']
+  spec.authors       = %w[meew0 swarley]
   spec.email         = ['']
 
   spec.summary       = 'Discord API for Ruby'
