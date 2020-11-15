@@ -112,5 +112,31 @@ describe Discordrb::PermissionCalculator do
       permission = subject.__send__(:defined_role_permission?, :manage_messages, channel)
       expect(permission).to eq true
     end
+
+    it 'takes overwrites into account' do
+      everyone_role = double('everyone role', id: 0, position: 0, permissions: Discordrb::Permissions.new)
+      role_a = double('role a', id: 1, position: 1, permissions: Discordrb::Permissions.new([:manage_messages]))
+      role_b = double('role b', id: 2, position: 2, permissions: Discordrb::Permissions.new)
+      channel = double('channel')
+
+      subject.server = double('server', everyone_role: everyone_role)
+      subject.roles = [role_a, role_b]
+
+      allow(subject).to receive(:permission_overwrite).and_return(nil)
+
+      allow(subject).to receive(:permission_overwrite)
+        .with(:manage_messages, channel, role_a.id)
+        .and_return(:deny)
+
+      allow(subject).to receive(:permission_overwrite)
+        .with(:manage_messages, channel, role_b.id)
+        .and_return(:allow)
+
+      subject.roles = [role_a]
+      expect(subject.__send__(:defined_role_permission?, :manage_messages, channel)).to be false
+
+      subject.roles = [role_a, role_b]
+      expect(subject.__send__(:defined_role_permission?, :manage_messages, channel)).to be true
+    end
   end
 end
