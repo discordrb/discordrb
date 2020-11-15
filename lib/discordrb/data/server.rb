@@ -366,6 +366,7 @@ module Discordrb
     def splash_id
       @splash_id ||= JSON.parse(API::Server.resolve(@bot.token, @id))['splash']
     end
+    alias splash_hash splash_id
 
     # @return [String, nil] the splash image URL for the server's VIP invite page.
     #   `nil` if there is no splash image.

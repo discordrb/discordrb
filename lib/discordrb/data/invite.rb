@@ -44,10 +44,10 @@ module Discordrb
 
   # A Discord invite to a channel
   class Invite
-    # @return [InviteChannel] the channel this invite references.
+    # @return [InviteChannel, Channel] the channel this invite references.
     attr_reader :channel
 
-    # @return [InviteServer] the server this invite references.
+    # @return [InviteServer, Server] the server this invite references.
     attr_reader :server
 
     # @return [Integer] the amount of uses left on this invite.
@@ -87,8 +87,18 @@ module Discordrb
     def initialize(data, bot)
       @bot = bot
 
-      @channel = InviteChannel.new(data['channel'], bot)
-      @server = InviteServer.new(data['guild'], bot)
+      @channel = if data['channel_id'] || bot.channel
+                   bot.channel(data['channel_id'])
+                 else
+                   InviteChannel.new(data['channel'], bot)
+                 end
+
+      @server = if data['guild_id']
+                  bot.server(data['guild_id'])
+                else
+                  InviteServer.new(data['guild'], bot)
+                end
+
       @uses = data['uses']
       @inviter = data['inviter'] ? (@bot.user(data['inviter']['id'].to_i) || User.new(data['inviter'], bot)) : nil
       @temporary = data['temporary']

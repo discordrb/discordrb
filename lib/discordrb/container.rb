@@ -498,6 +498,30 @@ module Discordrb
     alias_method :direct_message, :pm
     alias_method :dm, :pm
 
+    # This **event** is raised when an invite is created.
+    # @param attributes [Hash] The event's attributes.
+    # @option attributes [String, Integer, User] :inviter Matches the user that created the invite.
+    # @option attributes [String, Integer, Channel] :channel Matches the channel the invite was created for.
+    # @option attributes [String, Integer, Server] :server Matches the server the invite was created for.
+    # @option attributes [true, false] :temporary Matches whether the invite is temporary or not.
+    # @yield The block is executed when the event is raised.
+    # @yieldparam event [InviteCreateEvent] The event that was raised.
+    # @return [InviteCreateEventHandler] The event handler that was registered.
+    def invite_create(attributes = {}, &block)
+      register_event(InviteCreateEvent, attributes, block)
+    end
+
+    # This **event** is raised when an invite is deleted.
+    # @param attributes [Hash] The event's attributes.
+    # @option attributes [String, Integer, Channel] :channel Matches the channel the deleted invite was for.
+    # @option attributes [String, Integer, Server] :server Matches the server the deleted invite was for.
+    # @yield The block is executed when the event is raised
+    # @yieldparam event [InviteDeleteEvent] The event that was raised.
+    # @return [InviteDeleteEventHandler] The event handler that was registered.
+    def invite_delete(attributes = {}, &block)
+      register_event(InviteDeleteEvent, attributes, block)
+    end
+
     # This **event** is raised for every dispatch received over the gateway, whether supported by discordrb or not.
     # @param attributes [Hash] The event's attributes.
     # @option attributes [String, Symbol, Regexp] :type Matches the event type of the dispatch.
