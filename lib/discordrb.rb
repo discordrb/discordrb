@@ -35,6 +35,7 @@ module Discordrb
     direct_message_typing: 1 << 14
   }.freeze
 
+  # @return [Integer] All available intents
   ALL_INTENTS = INTENTS.values.reduce(&:|)
 
   # Compares two objects based on IDs - either the objects' IDs are equal, or one object is equal to the other's ID.
