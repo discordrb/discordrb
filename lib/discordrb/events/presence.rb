@@ -15,11 +15,16 @@ module Discordrb::Events
     # @return [Symbol] the new status.
     attr_reader :status
 
+    # @return [Hash<Symbol, Symbol>] the current online status (`:online`, `:idle` or `:dnd`) of the user
+    #   on various device types (`:desktop`, `:mobile`, or `:web`). The value will be `nil` if the user is offline or invisible.
+    attr_reader :client_status
+
     def initialize(data, bot)
       @bot = bot
 
       @user = bot.user(data['user']['id'].to_i)
       @status = data['status'].to_sym
+      @client_status = user.client_status
       @server = bot.server(data['guild_id'].to_i)
     end
   end
@@ -105,6 +110,9 @@ module Discordrb::Events
         end,
         matches_all(@attributes[:type], event.type) do |a, e|
           a == e
+        end,
+        matches_all(@attributes[:client_status], event.client_status) do |a, e|
+          e.slice(a.keys) == a
         end
       ].reduce(true, &:&)
     end

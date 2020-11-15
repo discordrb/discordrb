@@ -54,6 +54,10 @@ module Discordrb
     # @return [ActivitySet] the activities of the user
     attr_reader :activities
 
+    # @return [Hash<Symbol, Symbol>] the current online status (`:online`, `:idle` or `:dnd`) of the user
+    #   on various device types (`:desktop`, `:mobile`, or `:web`). The value will be `nil` if the user is offline or invisible.
+    attr_reader :client_status
+
     # @!visibility private
     def initialize(data, bot)
       @bot = bot
@@ -69,6 +73,7 @@ module Discordrb
       @bot_account = true if data['bot']
 
       @status = :offline
+      @client_status = process_client_status(data['client_status'])
     end
 
     # Get a user's PM channel or send them a PM
@@ -116,6 +121,7 @@ module Discordrb
     # @!visibility private
     def update_presence(data)
       @status = data['status'].to_sym
+      @client_status = process_client_status(data['client_status'])
 
       @activities = Discordrb::ActivitySet.new(data['activities'].map { |act| Activity.new(act, @bot) })
     end
@@ -151,6 +157,11 @@ module Discordrb
     # @return [true, false] whether this user is a fake user for a webhook message
     def webhook?
       @discriminator == Message::ZERO_DISCRIM
+    end
+
+    # @!visibility private
+    def process_client_status(client_status)
+      (client_status || {}).map { |k, v| [k.to_sym, v.to_sym] }.to_h
     end
 
     # @!method offline?
