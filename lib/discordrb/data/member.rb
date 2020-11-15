@@ -238,7 +238,7 @@ module Discordrb
       @roles = [@server.role(@server.id)]
       role_ids.each do |id|
         # It is possible for members to have roles that do not exist
-        # on the server any longer. See https://github.com/discordrb/discordrb/issues/371
+        # on the server any longer. See https://github.com/shardlab/discordrb/issues/371
         role = @server.role(id)
         @roles << role if role
       end
