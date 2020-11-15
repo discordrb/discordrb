@@ -1197,7 +1197,8 @@ module Discordrb
       when :VOICE_SERVER_UPDATE
         update_voice_server(data)
 
-        # no event as this is irrelevant to users
+        event = VoiceServerUpdateEvent.new(data, self)
+        raise_event(event)
       when :CHANNEL_CREATE
         create_channel(data)
 
