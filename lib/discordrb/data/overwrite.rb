@@ -44,9 +44,10 @@ module Discordrb
 
       @id = object.respond_to?(:id) ? object.id : object
 
-      @type = if object.is_a?(User) || object.is_a?(Member) || object.is_a?(Recipient) || object.is_a?(Profile)
+      @type = case object
+              when User, Member, Recipient, Profile
                 :member
-              elsif object.is_a? Role
+              when Role
                 :role
               else
                 type

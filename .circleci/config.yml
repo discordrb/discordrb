@@ -44,7 +44,7 @@ jobs:
       - run:
           name: Run RSpec
           command: bundle exec rspec
-  
+
   test_ruby_27:
     docker:
       - image: ruby:2.7-alpine
@@ -87,7 +87,7 @@ jobs:
           name: Clone docs
           command: git clone $CIRCLE_REPOSITORY_URL -b gh-pages .
       - add_ssh_keys:
-          fingerprints: 
+          fingerprints:
             - "9a:4c:50:94:23:46:81:74:41:97:87:04:4e:59:4b:4e"
       - run:
           name: Push updated docs

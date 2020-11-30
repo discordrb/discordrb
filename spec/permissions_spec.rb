@@ -77,8 +77,7 @@ end
 
 class ExampleCalculator
   include Discordrb::PermissionCalculator
-  attr_accessor :server
-  attr_accessor :roles
+  attr_accessor :server, :roles
 end
 
 describe Discordrb::PermissionCalculator do

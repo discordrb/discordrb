@@ -445,20 +445,18 @@ module Discordrb
       @heartbeat_thread = Thread.new do
         Thread.current[:discordrb_name] = 'heartbeat'
         loop do
-          begin
-            # Send a heartbeat if heartbeats are active and either no session exists yet, or an existing session is
-            # suspended (e.g. after op7)
-            if (@session && !@session.suspended?) || !@session
-              sleep @heartbeat_interval
-              @bot.raise_heartbeat_event
-              heartbeat
-            else
-              sleep 1
-            end
-          rescue StandardError => e
-            LOGGER.error('An error occurred while heartbeating!')
-            LOGGER.log_exception(e)
+          # Send a heartbeat if heartbeats are active and either no session exists yet, or an existing session is
+          # suspended (e.g. after op7)
+          if (@session && !@session.suspended?) || !@session
+            sleep @heartbeat_interval
+            @bot.raise_heartbeat_event
+            heartbeat
+          else
+            sleep 1
           end
+        rescue StandardError => e
+          LOGGER.error('An error occurred while heartbeating!')
+          LOGGER.log_exception(e)
         end
       end
     end
@@ -511,7 +509,7 @@ module Discordrb
           cert_store.set_default_paths
           ctx.cert_store = cert_store
         else
-          ctx.set_params ssl_version: :TLSv1_2
+          ctx.set_params ssl_version: :TLSv1_2 # rubocop:disable Naming/VariableNumber
         end
 
         socket = OpenSSL::SSL::SSLSocket.new(socket, ctx)
@@ -658,12 +656,13 @@ module Discordrb
     ZLIB_SUFFIX = "\x00\x00\xFF\xFF".b.freeze
 
     def handle_message(msg)
-      if @compress_mode == :large
+      case @compress_mode
+      when :large
         if msg.byteslice(0) == 'x'
           # The message is compressed, inflate it
           msg = Zlib::Inflate.inflate(msg)
         end
-      elsif @compress_mode == :stream
+      when :stream
         # Write deflated string to buffer
         @zlib_reader << msg
 

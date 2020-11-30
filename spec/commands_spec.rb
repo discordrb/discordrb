@@ -2,23 +2,24 @@
 
 require 'discordrb'
 
-describe Discordrb::Commands::CommandBot, order: :defined do
-  SIMPLE_RESPONSE = 'hi'
-  TEST_CHANNELS = [
-    1,
-    2,
-    '3',
-    'channel-four',
-    '#channel-five'
-  ].freeze
+# TODO: Integrate better into specs
+SIMPLE_RESPONSE = 'hi'
+TEST_CHANNELS = [
+  1,
+  2,
+  '3',
+  'channel-four',
+  '#channel-five'
+].freeze
 
+describe Discordrb::Commands::CommandBot, order: :defined do
   let(:text_channel_data) { load_data_file(:text_channel) }
   let(:default_channel_id) { 123 }
   let(:default_channel_name) { 'test-channel' }
   let(:user_id) { 321 }
   let(:user_roles) { [load_data_file(:text_channel), load_data_file(:text_channel)] }
-  let(:role_1) { user_roles[0].tap { |r| r['id'] = 240_172_879_361_212_417 }['id'] } # So we don't have the same ID in both roles.
-  let(:role_2) { user_roles[1]['id'].to_i }
+  let(:role1) { user_roles[0].tap { |r| r['id'] = 240_172_879_361_212_417 }['id'] } # So we don't have the same ID in both roles.
+  let(:role2) { user_roles[1]['id'].to_i }
   let(:test_channels) { TEST_CHANNELS }
   let(:first_channel) { test_channels[0] }
   let(:second_channel) { test_channels[1] }
@@ -126,12 +127,12 @@ describe Discordrb::Commands::CommandBot, order: :defined do
       describe 'required_roles' do
         before do
           # User has both roles.
-          bot.command :user_has_all, required_roles: [role_1, role_2] do
+          bot.command :user_has_all, required_roles: [role1, role2] do
             SIMPLE_RESPONSE
           end
 
           # User has only one of two roles.
-          bot.command :user_has_one, required_roles: [role_1, 123] do
+          bot.command :user_has_one, required_roles: [role1, 123] do
             SIMPLE_RESPONSE
           end
         end
@@ -152,7 +153,7 @@ describe Discordrb::Commands::CommandBot, order: :defined do
       describe 'allowed_roles' do
         before do
           # User has one role.
-          bot.command :user_has_one, required_roles: [role_1, 123] do
+          bot.command :user_has_one, required_roles: [role1, 123] do
             SIMPLE_RESPONSE
           end
 

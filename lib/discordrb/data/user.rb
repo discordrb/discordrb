@@ -173,7 +173,7 @@ module Discordrb
     # @!method dnd?
     #   @return [true, false] whether this user is set to do not disturb.
     %i[offline idle online dnd].each do |e|
-      define_method(e.to_s + '?') do
+      define_method("#{e}?") do
         @status.to_sym == e
       end
     end

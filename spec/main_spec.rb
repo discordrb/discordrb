@@ -15,17 +15,17 @@ describe Discordrb do
     split = Discordrb.split_message('a' * 5234)
     expect(split).to eq(['a' * 2000, 'a' * 2000, 'a' * 1234])
 
-    split_on_space = Discordrb.split_message('a' * 1990 + ' ' + 'b' * 2000)
-    expect(split_on_space).to eq(['a' * 1990 + ' ', 'b' * 2000])
+    split_on_space = Discordrb.split_message("#{'a' * 1990} #{'b' * 2000}")
+    expect(split_on_space).to eq(["#{'a' * 1990} ", 'b' * 2000])
 
     # regression test
     # there had been an issue where this would have raised an error,
     # and (if it hadn't raised) produced incorrect results
-    split = Discordrb.split_message(('a' * 800 + "\n") * 6)
+    split = Discordrb.split_message("#{'a' * 800}\n" * 6)
     expect(split).to eq([
-                          'a' * 800 + "\n" + 'a' * 800 + "\n",
-                          'a' * 800 + "\n" + 'a' * 800 + "\n",
-                          'a' * 800 + "\n" + 'a' * 800
+                          "#{'a' * 800}\n#{'a' * 800}\n",
+                          "#{'a' * 800}\n#{'a' * 800}\n",
+                          "#{'a' * 800}\n#{'a' * 800}"
                         ])
   end
 

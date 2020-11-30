@@ -580,7 +580,7 @@ module Discordrb
       raise ArgumentError, 'Can only delete between 1 and 100 messages!' unless amount.between?(1, 100)
 
       messages =
-        if block_given?
+        if block
           history(amount).select(&block).map(&:id)
         else
           history_ids(amount)

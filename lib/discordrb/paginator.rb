@@ -28,9 +28,10 @@ module Discordrb
         page = @block.call(last_page)
         return if page.empty?
 
-        enumerator = if @direction == :down
+        enumerator = case @direction
+                     when :down
                        page.each
-                     elsif @direction == :up
+                     when :up
                        page.reverse_each
                      end
 

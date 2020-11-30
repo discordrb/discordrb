@@ -4,10 +4,6 @@ module Discordrb
   # This class is a special variant of User that represents the bot's user profile (things like own username and the avatar).
   # It can be accessed using {Bot#profile}.
   class Profile < User
-    def initialize(data, bot)
-      super(data, bot)
-    end
-
     # Whether or not the user is the bot. The Profile can only ever be the bot user, so this always returns true.
     # @return [true]
     def current_bot?

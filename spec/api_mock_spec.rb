@@ -32,14 +32,14 @@ describe APIMock do
   end
 
   it 'parses headers if there is no body' do
-    Discordrb::API.raw_request(:post, ['https://example.com/test', nil, a: 1, b: 2])
+    Discordrb::API.raw_request(:post, ['https://example.com/test', nil, { a: 1, b: 2 }])
 
     expect(Discordrb::API.last_headers[:a]).to eq 1
     expect(Discordrb::API.last_headers[:b]).to eq 2
   end
 
   it 'parses body and headers if there is a body' do
-    Discordrb::API.raw_request(:post, ['https://example.com/test', { test: 1 }.to_json, a: 1, b: 2])
+    Discordrb::API.raw_request(:post, ['https://example.com/test', { test: 1 }.to_json, { a: 1, b: 2 }])
 
     expect(Discordrb::API.last_body['test']).to eq 1
     expect(Discordrb::API.last_headers[:a]).to eq 1

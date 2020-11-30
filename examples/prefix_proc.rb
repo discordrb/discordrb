@@ -63,7 +63,7 @@ bot.command(:roll, description: 'rolls some dice',
 
   # Time to roll the dice!
   rolls = Array.new(number) { rand(1..sides) }
-  sum = rolls.reduce(:+)
+  sum = rolls.sum
 
   # Return the result
   "You rolled: `#{rolls}`, total: `#{sum}`"

@@ -187,51 +187,57 @@ module Discordrb::Events
 
       [
         matches_all(@attributes[:starting_with] || @attributes[:start_with], event.content) do |a, e|
-          if a.is_a? String
+          case a
+          when String
             e.start_with? a
-          elsif a.is_a? Regexp
+          when Regexp
             (e =~ a)&.zero?
           end
         end,
         matches_all(@attributes[:ending_with] || @attributes[:end_with], event.content) do |a, e|
-          if a.is_a? String
+          case a
+          when String
             e.end_with? a
-          elsif a.is_a? Regexp
+          when Regexp
             !(e =~ Regexp.new("#{a}$")).nil?
           end
         end,
         matches_all(@attributes[:containing] || @attributes[:contains], event.content) do |a, e|
-          if a.is_a? String
+          case a
+          when String
             e.include? a
-          elsif a.is_a? Regexp
+          when Regexp
             (e =~ a)
           end
         end,
         matches_all(@attributes[:in], event.channel) do |a, e|
-          if a.is_a? String
+          case a
+          when String
             # Make sure to remove the "#" from channel names in case it was specified
             a.delete('#') == e.name
-          elsif a.is_a? Integer
+          when Integer
             a == e.id
           else
             a == e
           end
         end,
         matches_all(@attributes[:from], event.author) do |a, e|
-          if a.is_a? String
+          case a
+          when String
             a == e.name
-          elsif a.is_a? Integer
+          when Integer
             a == e.id
-          elsif a == :bot
+          when :bot
             e.current_bot?
           else
             a == e
           end
         end,
         matches_all(@attributes[:with_text] || @attributes[:content] || @attributes[:exact_text], event.content) do |a, e|
-          if a.is_a? String
+          case a
+          when String
             e == a
-          elsif a.is_a? Regexp
+          when Regexp
             match = a.match(e)
             match ? (e == match[0]) : false
           end
@@ -291,10 +297,11 @@ module Discordrb::Events
           a.resolve_id == e.resolve_id
         end,
         matches_all(@attributes[:in], event.channel) do |a, e|
-          if a.is_a? String
+          case a
+          when String
             # Make sure to remove the "#" from channel names in case it was specified
             a.delete('#') == e.name
-          elsif a.is_a? Integer
+          when Integer
             a == e.id
           else
             a == e

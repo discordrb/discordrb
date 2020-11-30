@@ -149,7 +149,7 @@ module Discordrb::API::Server
         mute: mute,
         deaf: deaf,
         channel_id: channel_id
-      }.reject { |_, v| v.nil? }.to_json,
+      }.compact.to_json,
       Authorization: token,
       content_type: :json,
       'X-Audit-Log-Reason': reason

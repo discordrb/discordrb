@@ -46,8 +46,6 @@ If you enjoy using the library, consider getting involved with the community to 
 * Ruby >= 2.5 supported
 * An installed build system for native extensions (on Windows, make sure you download the "Ruby+Devkit" version of [RubyInstaller](https://rubyinstaller.org/downloads/))
 
-> **Note:** RubyInstaller for Ruby versions 2.4+ will install the DevKit as the last step of the installation.
-
 ### Voice dependencies
 
 This section only applies to you if you want to use voice functionality.

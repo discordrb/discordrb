@@ -57,9 +57,10 @@ module Discordrb::Events
 
       [
         matches_all(@attributes[:emoji], event.emoji) do |a, e|
-          if a.is_a? Integer
+          case a
+          when Integer
             e.id == a
-          elsif a.is_a? String
+          when String
             e.name == a || e.name == a.delete(':') || e.id == a.resolve_id
           else
             e == a
@@ -69,21 +70,21 @@ module Discordrb::Events
           a == e
         end,
         matches_all(@attributes[:in], event.channel) do |a, e|
-          if a.is_a? String
+          case a
+          when String
             # Make sure to remove the "#" from channel names in case it was specified
             a.delete('#') == e.name
-          elsif a.is_a? Integer
+          when Integer
             a == e.id
           else
             a == e
           end
         end,
         matches_all(@attributes[:from], event.user) do |a, e|
-          if a.is_a? String
+          case a
+          when String
             a == e.name
-          elsif a.is_a? Integer
-            a == e
-          elsif a == :bot
+          when :bot
             e.current_bot?
           else
             a == e
@@ -142,10 +143,11 @@ module Discordrb::Events
           a == e
         end,
         matches_all(@attributes[:in], event.channel) do |a, e|
-          if a.is_a? String
+          case a
+          when String
             # Make sure to remove the "#" from channel names in case it was specified
             a.delete('#') == e.name
-          elsif a.is_a? Integer
+          when Integer
             a == e.id
           else
             a == e

@@ -92,11 +92,9 @@ module Discordrb::Commands
         event.respond(response)
         return
       end
-      unless @attributes[:chain_usable]
-        if chained
-          event.respond "Command `#{name}` cannot be used in a command chain!"
-          return
-        end
+      unless @attributes[:chain_usable] && !chained
+        event.respond "Command `#{name}` cannot be used in a command chain!"
+        return
       end
 
       if check_permissions

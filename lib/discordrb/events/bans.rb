@@ -27,20 +27,22 @@ module Discordrb::Events
 
       [
         matches_all(@attributes[:user], event.user) do |a, e|
-          if a.is_a? String
+          case a
+          when String
             a == e.name
-          elsif a.is_a? Integer
+          when Integer
             a == e.id
-          elsif a == :bot
+          when :bot
             e.current_bot?
           else
             a == e
           end
         end,
         matches_all(@attributes[:server], event.server) do |a, e|
-          a == if a.is_a? String
+          a == case a
+               when String
                  e.name
-               elsif a.is_a? Integer
+               when Integer
                  e.id
                else
                  e

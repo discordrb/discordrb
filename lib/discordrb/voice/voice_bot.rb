@@ -22,10 +22,10 @@ module Discordrb::Voice
   # {VoiceBot#adjust_offset}, and {VoiceBot#adjust_average}.
   class VoiceBot
     # @return [Channel] the current voice channel
-    attr_reader :channel
+    attr_reader :channel # rubocop:disable Style/BisectedAttrAccessor
 
     # @!visibility private
-    attr_writer :channel
+    attr_writer :channel # rubocop:disable Style/BisectedAttrAccessor
 
     # @return [Integer, nil] the amount of time the stream has been playing, or `nil` if nothing has been played yet.
     attr_reader :stream_time
@@ -211,7 +211,7 @@ module Discordrb::Voice
         end
 
         # Adjust volume
-        buf = @encoder.adjust_volume(buf, @volume) if @volume != 1.0
+        buf = @encoder.adjust_volume(buf, @volume) if @volume != 1.0 # rubocop:disable Lint/FloatComparison
 
         @first_packet = false
 

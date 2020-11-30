@@ -38,9 +38,10 @@ module Discordrb::Events
 
       [
         matches_all(@attributes[:from], event.user) do |a, e|
-          a == if a.is_a? String
+          a == case a
+               when String
                  e.name
-               elsif a.is_a? Integer
+               when Integer
                  e.id
                else
                  e
@@ -77,9 +78,10 @@ module Discordrb::Events
         matches_all(@attributes[:channel], event.channel) do |a, e|
           next unless e # Don't bother if the channel is nil
 
-          a == if a.is_a? String
+          a == case a
+               when String
                  e.name
-               elsif a.is_a? Integer
+               when Integer
                  e.id
                else
                  e
@@ -88,9 +90,10 @@ module Discordrb::Events
         matches_all(@attributes[:old_channel], event.old_channel) do |a, e|
           next unless e # Don't bother if the channel is nil
 
-          a == if a.is_a? String
+          a == case a
+               when String
                  e.name
-               elsif a.is_a? Integer
+               when Integer
                  e.id
                else
                  e

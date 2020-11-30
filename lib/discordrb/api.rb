@@ -173,7 +173,7 @@ module Discordrb::API
     Discordrb::LOGGER.ratelimit("Trace (#{reason}):")
 
     caller.each do |str|
-      Discordrb::LOGGER.ratelimit(' ' + str)
+      Discordrb::LOGGER.ratelimit(" #{str}")
     end
   end
 

@@ -5,7 +5,16 @@ inherit_mode:
     - AllowedNames
 
 AllCops:
-  TargetRubyVersion: 2.4
+  NewCops: enable
+  TargetRubyVersion: 2.5
+
+# Disable line length checks
+Layout/LineLength:
+  Enabled: false
+
+# TODO: Larger refactor
+Lint/MissingSuper:
+  Enabled: false
 
 # Allow 'Pokémon-style' exception handling
 Lint/RescueException:
@@ -16,7 +25,7 @@ Metrics:
   Enabled: false
 
 # Allow some common and/or obvious short method params
-Naming/UncommunicativeMethodParamName:
+Naming/MethodParameterName:
   AllowedNames:
     - e
 
@@ -37,6 +46,14 @@ Style/ClassAndModuleChildren:
 Style/NumericLiterals:
   Exclude:
     - examples/**/*
+
+# TODO: Requires breaking changes
+Style/OptionalBooleanParameter:
+  Enabled: false
+
+# Prefer explicit arguments in case global variables like `$;` or `$,` are changed
+Style/RedundantArgument:
+  Enabled: false
 
 # Prefer |m, e| for the `reduce` block arguments
 Style/SingleLineBlockParams:

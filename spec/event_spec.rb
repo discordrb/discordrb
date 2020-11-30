@@ -205,12 +205,15 @@ describe Discordrb::Events do
   end
 
   # This data is shared across examples, so it needs to be defined here
+  # TODO: Refactor, potentially use `shared_context`
+  # rubocop:disable Lint/ConstantDefinitionInBlock
   SERVER_ID = 1
   SERVER_NAME = 'server_name'
   EMOJI1_ID = 10
   EMOJI1_NAME = 'emoji_name_1'
   EMOJI2_ID = 11
   EMOJI2_NAME = 'emoji_name_2'
+  # rubocop:enable Lint/ConstantDefinitionInBlock
 
   shared_examples 'ServerEvent' do
     describe '#initialize' do

@@ -585,7 +585,7 @@ module Discordrb
     # @param event_class [Class] The event type
     # @return [Class] the handler type
     def self.handler_class(event_class)
-      class_from_string(event_class.to_s + 'Handler')
+      class_from_string("#{event_class}Handler")
     end
 
     # Returns the event class for a handler class type

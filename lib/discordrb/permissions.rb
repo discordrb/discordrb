@@ -41,6 +41,7 @@ module Discordrb
 
     FLAGS.each do |position, flag|
       attr_reader flag
+
       define_method "can_#{flag}=" do |value|
         new_bits = @bits
         if value

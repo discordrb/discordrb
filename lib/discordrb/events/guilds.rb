@@ -30,9 +30,10 @@ module Discordrb::Events
 
       [
         matches_all(@attributes[:server], event.server) do |a, e|
-          a == if a.is_a? String
+          a == case a
+               when String
                  e.name
-               elsif a.is_a? Integer
+               when Integer
                  e.id
                else
                  e
@@ -145,9 +146,10 @@ module Discordrb::Events
 
       [
         matches_all(@attributes[:server], event.server) do |a, e|
-          a == if a.is_a? String
+          a == case a
+               when String
                  e.name
-               elsif a.is_a? Integer
+               when Integer
                  e.id
                else
                  e
@@ -173,9 +175,10 @@ module Discordrb::Events
 
       [
         matches_all(@attributes[:server], event.server) do |a, e|
-          a == if a.is_a? String
+          a == case a
+               when String
                  e.name
-               elsif a.is_a? Integer
+               when Integer
                  e.id
                else
                  e

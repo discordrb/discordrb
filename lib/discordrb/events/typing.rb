@@ -45,18 +45,20 @@ module Discordrb::Events
 
       [
         matches_all(@attributes[:in], event.channel) do |a, e|
-          if a.is_a? String
+          case a
+          when String
             a.delete('#') == e.name
-          elsif a.is_a? Integer
+          when Integer
             a == e.id
           else
             a == e
           end
         end,
         matches_all(@attributes[:from], event.user) do |a, e|
-          a == if a.is_a? String
+          a == case a
+               when String
                  e.name
-               elsif a.is_a? Integer
+               when Integer
                  e.id
                else
                  e

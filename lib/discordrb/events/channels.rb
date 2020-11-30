@@ -126,10 +126,12 @@ module Discordrb::Events
   class ChannelRecipientEvent < Event
     # @return [Channel] the channel in question.
     attr_reader :channel
+
     delegate :name, :server, :type, :owner_id, :recipients, :topic, :user_limit, :position, :permission_overwrites, to: :channel
 
     # @return [Recipient] the recipient that was added/removed from the group
     attr_reader :recipient
+
     delegate :id, to: :recipient
 
     def initialize(data, bot)
