@@ -95,9 +95,16 @@ module Discordrb
                   else
                     member = @channel.server.member(data['author']['id'].to_i)
 
-                    unless member
+                    if member
+                      member.update_data(data['member'])
+                    else
                       Discordrb::LOGGER.debug("Member with ID #{data['author']['id']} not cached (possibly left the server).")
-                      member = @bot.ensure_user(data['author'])
+                      member = if data['member']
+                                 member_data = data['author'].merge(data['member'])
+                                 Member.new(member_data, bot)
+                               else
+                                 @bot.ensure_user(data['author'])
+                               end
                     end
 
                     member

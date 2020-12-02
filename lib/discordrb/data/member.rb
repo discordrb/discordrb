@@ -258,6 +258,18 @@ module Discordrb
       @boosting_since = time
     end
 
+    # Update this member
+    # @note For internal use only.
+    # @!visibility private
+    def update_data(data)
+      update_roles(data['roles']) if data['roles']
+      update_nick(data['nick']) if data.key?('nick')
+      @mute = data['mute'] if data.key?('mute')
+      @deaf = data['deaf'] if data.key?('deaf')
+
+      @joined_at = Time.parse(data['joined_at']) if data['joined_at']
+    end
+
     include PermissionCalculator
 
     # Overwriting inspect for debug purposes
