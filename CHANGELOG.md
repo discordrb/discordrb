@@ -4,8 +4,41 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
-[View diff for this release.](https://github.com/discordrb/discordrb/compare/v3.3.0...HEAD)
+## [3.4.0] - 2020-12-06
+[3.4.0]: https://github.com/shardlab/discordrb/releases/tag/v3.3.0
+
+[View diff for this release.](https://github.com/shardlab/discordrb/compare/v3.4.0...v3.3.0)
+
+### Summary
+
+This release has been a _very_ long time coming. It brings countless fixes, performance increases, features, and changes. So many in fact, that it's only feasible to put the major hilights in summary.
+
+The largest additions are that of intents support and a massive performance increase in our websocket read loop.
+
+Intents allow you to pick and choose what types of events are fed to your bot over the gateway. An example usage would be:
+
+```ruby
+Discordrb::Bot.new(token: 'B0T.T0K3N', intents: %i[servers server_messages])
+```
+
+
+In this example, we would only recieve the following events
+- GUILD_CREATE
+- GUILD_UPDATE
+- GUILD_DELETE
+- GUILD_ROLE_CREATE
+- GUILD_ROLE_UPDATE
+- GUILD_ROLE_DELETE
+- CHANNEL_CREATE
+- CHANNEL_UPDATE
+- CHANNEL_DELETE
+- CHANNEL_PINS_UPDATE
+- MESSAGE_CREATE
+- MESSAGE_UPDATE
+- MESSAGE_DELETE
+- MESSAGE_DELETE_BULK
+
+This feature is still experimental, as it is still unclear how some interactions within the library behave when denied previously expected events. This support will improve over time. If you want more information on intents you can read [the official documentation](https://discord.com/developers/docs/topics/gateway#gateway-intents) as well as the documentation for `Discordrb::INTENTS` and `Discordrb::Bot#initialize`.
 
 ### Added
 
@@ -33,6 +66,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `User#client_status`, `PresenceEvent#client_status`, and `client_status` option for `EventContainer#presence` ([#736](https://github.com/discordrb/discordrb/pull/736), thanks @swarley)
 - `VoiceServerUpdateEvent`, and `EventContainer#voice_server_update` ([#743](https://github.com/discordrb/discordrb/pull/743), thanks @swarley)
 - Invite events, `InviteCreateEvent`, `InviteDeleteEvent`, `EventContainer#invite_create`, `EventContainer#invite_delete` and `Server#splash_hash` ([#744](https://github.com/discordrb/discordrb/pull/744), thanks @swarley)
+- `Message#reply!`, `Message#reply?`, `Message#referenced_message` for inline reply support ([#3](https://github.com/shardlab/discordrb/pull/3), thanks @swarley)
 
 ### Changed
 
@@ -70,6 +104,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Additional fields are included in `Role#inspect` ([#731](https://github.com/discordrb/discordrb/pull/731), thanks @IotaSpencer)
 - `Invite#server` and `Invite#channel` can both return partial or full objects depending on the data source ([#744](https://github.com/discordrb/discordrb/pull/744), thanks @swarley)
 - Members now have the `@everyone` role ([#739](https://github.com/discordrb/discordrb/pull/739), thanks @kdance21)
+- Add `message_reference` as an optional positional argument to the following methods. `API::Channel.create_message`, `Bot#send_message`, `Channel#send_message`, `Channel#send_temporary_message`, `Channel#send_embed`, `Events::MessageEvent#send_message`, and `Events::MessageEvent#send_embed` ([#3](https://github.com/shardlab/discordrb/pull/3), thanks @swarley)
+- **(deprecated)** `Message#reply` has been deprecated in favor of `Message#respond`, and the functionality will be replaced with that of `reply!` in 4.0 ([#3](https://github.com/shardlab/discordrb/pull/3), thanks @swarley)
 
 ### Fixed
 
