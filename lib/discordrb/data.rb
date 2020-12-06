@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'discordrb/allowed_mentions'
 require 'discordrb/permissions'
 require 'discordrb/id_object'
 require 'discordrb/colour_rgb'

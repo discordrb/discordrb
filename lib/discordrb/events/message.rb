@@ -16,9 +16,10 @@ module Discordrb::Events
     # @param embed [Hash, Discordrb::Webhooks::Embed, nil] The rich embed to append to this message.
     # @param attachments [Array<File>] Files that can be referenced in embeds via `attachment://file.png`
     # @param allowed_mentions [Hash, Discordrb::AllowedMentions, false, nil] Mentions that are allowed to ping on this message. `false` disables all pings
+    # @param message_reference [Message, String, Integer, nil] The message, or message ID, to reply to if any.
     # @return [Discordrb::Message] the message that was sent
-    def send_message(content, tts = false, embed = nil, attachments = nil, allowed_mentions = nil)
-      channel.send_message(content, tts, embed, attachments, allowed_mentions)
+    def send_message(content, tts = false, embed = nil, attachments = nil, allowed_mentions = nil, message_reference = nil)
+      channel.send_message(content, tts, embed, attachments, allowed_mentions, message_reference)
     end
 
     # The same as {#send_message}, but yields a {Webhooks::Embed} for easy building of embedded content inside a block.
@@ -28,11 +29,12 @@ module Discordrb::Events
     # @param attachments [Array<File>] Files that can be referenced in embeds via `attachment://file.png`
     # @param tts [true, false] Whether or not this message should be sent using Discord text-to-speech.
     # @param allowed_mentions [Hash, Discordrb::AllowedMentions, false, nil] Mentions that are allowed to ping on this message. `false` disables all pings
+    # @param message_reference [Message, String, Integer, nil] The message, or message ID, to reply to if any.
     # @yield [embed] Yields the embed to allow for easy building inside a block.
     # @yieldparam embed [Discordrb::Webhooks::Embed] The embed from the parameters, or a new one.
     # @return [Message] The resulting message.
-    def send_embed(message = '', embed = nil, attachments = nil, tts = false, allowed_mentions = nil, &block)
-      channel.send_embed(message, embed, attachments, tts, allowed_mentions, &block)
+    def send_embed(message = '', embed = nil, attachments = nil, tts = false, allowed_mentions = nil, message_reference = nil, &block)
+      channel.send_embed(message, embed, attachments, tts, allowed_mentions, message_reference, &block)
     end
 
     # Sends a temporary message to the channel this message was sent in, right now.

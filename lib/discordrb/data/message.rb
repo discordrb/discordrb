@@ -80,6 +80,9 @@ module Discordrb
       @nonce = data['nonce']
       @mention_everyone = data['mention_everyone']
 
+      @referenced_message = Message.new(data['referenced_message'], bot) if data['referenced_message']
+      @message_reference = data['message_reference']
+
       @server = bot.server(data['guild_id'].to_i) if data['guild_id']
 
       @author = if data['author']
@@ -149,9 +152,31 @@ module Discordrb
     end
 
     # Replies to this message with the specified content.
+    # @deprecated Please use {#respond}.
     # @see Channel#send_message
     def reply(content)
       @channel.send_message(content)
+    end
+
+    # Sends a message to this channel.
+    # @param content [String] The content to send. Should not be longer than 2000 characters or it will result in an error.
+    # @param tts [true, false] Whether or not this message should be sent using Discord text-to-speech.
+    # @param embed [Hash, Discordrb::Webhooks::Embed, nil] The rich embed to append to this message.
+    # @param attachments [Array<File>] Files that can be referenced in embeds via `attachment://file.png`
+    # @param allowed_mentions [Hash, Discordrb::AllowedMentions, false, nil] Mentions that are allowed to ping on this message. `false` disables all pings
+    # @param mention_user [true, false] Whether the user that is being replied to should be pinged by the reply.
+    # @return [Message] the message that was sent.
+    def reply!(content, tts: false, embed: nil, attachments: nil, allowed_mentions: {}, mention_user: false)
+      allowed_mentions = { parse: [] } if allowed_mentions == false
+      allowed_mentions = allowed_mentions.to_hash.transform_keys(&:to_sym)
+      allowed_mentions[:replied_user] = mention_user
+
+      respond(content, tts, embed, attachments, allowed_mentions, self)
+    end
+
+    # (see Channel#send_message)
+    def respond(content, tts = false, embed = nil, attachments = nil, allowed_mentions = nil, message_reference = nil)
+      @channel.send_message(content, tts, embed, attachments, allowed_mentions, message_reference)
     end
 
     # Edits this message to have the specified content instead.
@@ -290,5 +315,20 @@ module Discordrb
     end
 
     alias_method :jump_link, :link
+
+    # Whether or not this message was sent in reply to another message
+    # @return [true, false]
+    def reply?
+      !@referenced_message.nil?
+    end
+
+    # @return [Message, nil] the Message this Message was sent in reply to.
+    def referenced_message
+      return @referenced_message if @referenced_message
+      return nil unless @message_reference
+
+      referenced_channel = @bot.channel(@message_reference['channel_id'])
+      @referenced_message = referenced_channel.message(@message_reference['message_id'])
+    end
   end
 end
