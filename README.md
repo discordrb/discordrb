@@ -1,3 +1,7 @@
+# This project has moved to [shardlab/discordrb](https://github.com/shardlab/discordrb)!
+
+**Please make any issues or pull requests over there.**
+
 [![Gem](https://img.shields.io/gem/v/discordrb.svg)](https://rubygems.org/gems/discordrb)
 [![Gem](https://img.shields.io/gem/dt/discordrb.svg)](https://rubygems.org/gems/discordrb)
 [![Build Status](https://travis-ci.org/discordrb/discordrb.svg?branch=master)](https://travis-ci.org/discordrb/discordrb)
