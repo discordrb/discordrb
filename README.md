@@ -2,6 +2,8 @@
 
 **Please make any issues or pull requests over there.**
 
+If you were having issues with voice in discordrb 3.3.0, it now works on current gem version. Please update your gemfile to use `~> 3.4.0`. If you want to use the current main branch, use `github: 'shardlab/discordrb'`.
+
 [![Gem](https://img.shields.io/gem/v/discordrb.svg)](https://rubygems.org/gems/discordrb)
 [![Gem](https://img.shields.io/gem/dt/discordrb.svg)](https://rubygems.org/gems/discordrb)
 [![Build Status](https://travis-ci.org/discordrb/discordrb.svg?branch=master)](https://travis-ci.org/discordrb/discordrb)
