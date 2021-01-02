@@ -385,11 +385,12 @@ module Discordrb
     # @param embed [Hash, Discordrb::Webhooks::Embed, nil] The rich embed to append to this message.
     # @param attachments [Array<File>] Files that can be referenced in embeds via `attachment://file.png`
     # @param allowed_mentions [Hash, Discordrb::AllowedMentions, false, nil] Mentions that are allowed to ping on this message. `false` disables all pings
-    def send_temporary_message(channel, content, timeout, tts = false, embed = nil, attachments = nil, allowed_mentions = nil)
+    # @param message_reference [Message, String, Integer, nil] The message, or message ID, to reply to if any.
+    def send_temporary_message(channel, content, timeout, tts = false, embed = nil, attachments = nil, allowed_mentions = nil, message_reference = nil)
       Thread.new do
         Thread.current[:discordrb_name] = "#{@current_thread}-temp-msg"
 
-        message = send_message(channel, content, tts, embed, attachments, allowed_mentions)
+        message = send_message(channel, content, tts, embed, attachments, allowed_mentions, message_reference)
         sleep(timeout)
         message.delete
       end
