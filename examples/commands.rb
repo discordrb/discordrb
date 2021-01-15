@@ -51,4 +51,7 @@ bot.command :long do |event|
   # Here we don't have to worry about the return value because the `event << line` statement automatically returns nil.
 end
 
+# Gracefully disconnect when the program exits.
+at_exit { bot.stop }
+# Connect to Discord.
 bot.run

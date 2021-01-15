@@ -75,7 +75,9 @@ bot.message(content: '!time') do |event|
   end
 end
 
-# Connect to Discord
+# Gracefully disconnect when the program exits.
+at_exit { bot.stop }
+# Connect to Discord.
 bot.run
 
 # For more details about Awaits, see:

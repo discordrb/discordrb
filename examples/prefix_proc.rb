@@ -69,4 +69,7 @@ bot.command(:roll, description: 'rolls some dice',
   "You rolled: `#{rolls}`, total: `#{sum}`"
 end
 
+# Gracefully disconnect when the program exits.
+at_exit { bot.stop }
+# Connect to Discord.
 bot.run

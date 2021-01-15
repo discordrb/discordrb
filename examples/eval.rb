@@ -19,4 +19,7 @@ bot.command(:eval, help_available: false) do |event, *code|
   end
 end
 
+# Gracefully disconnect when the program exits.
+at_exit { bot.stop }
+# Connect to Discord.
 bot.run
