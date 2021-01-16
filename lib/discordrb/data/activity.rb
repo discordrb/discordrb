@@ -17,7 +17,7 @@ module Discordrb
     # @return [String] the activity's name
     attr_reader :name
 
-    # @return [Integer, nil] activity type. Can be {GAME}, {STREAMING}, {LISTENING}, {CUSTOM}
+    # @return [Integer, nil] activity type. Can be {GAME}, {STREAMING}, {LISTENING}, {CUSTOM}, or {COMPETING}
     attr_reader :type
 
     # @return [String, nil] stream URL, when the activity type is {STREAMING}
@@ -67,6 +67,8 @@ module Discordrb
     WATCHING = 3
     # Type indicating the activity is a custom status
     CUSTOM = 4
+    # Type indicating the activity is for a competitive game
+    COMPETING = 5
 
     # @!visibility private
     def initialize(data, bot)
@@ -259,6 +261,11 @@ module Discordrb
     # @return [Array<Activity>] all activities of type {Activity::CUSTOM}
     def custom_status
       @activities.select { |act| act.type == Activity::CUSTOM }
+    end
+
+    # @return [Array<Activity>] all activities of type {Activity::COMPETING}
+    def competing
+      @activities.select { |act| act.type == Activity::COMPETING }
     end
   end
 end
