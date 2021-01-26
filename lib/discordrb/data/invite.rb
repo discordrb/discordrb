@@ -87,7 +87,7 @@ module Discordrb
     def initialize(data, bot)
       @bot = bot
 
-      @channel = if data['channel_id'] || bot.channel
+      @channel = if data['channel_id']
                    bot.channel(data['channel_id'])
                  else
                    InviteChannel.new(data['channel'], bot)
