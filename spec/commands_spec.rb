@@ -120,6 +120,40 @@ describe Discordrb::Commands::CommandBot, order: :defined do
     end
   end
 
+  context 'with :command_doesnt_exist_message attribute' do
+    let(:plain_event) { command_event_double_for_channel(first_channel) }
+
+    context 'as a string' do
+      bot = Discordrb::Commands::CommandBot.new(token: 'token', command_doesnt_exist_message: 'command %command% does not exist!')
+
+      it 'replies with the message including % substitution' do
+        expect(plain_event).to receive(:respond).with('command bleep_blorp does not exist!')
+        result = bot.execute_command(:bleep_blorp, plain_event, [])
+        expect(result).to be_nil
+      end
+    end
+
+    context 'as a lambda' do
+      bot = Discordrb::Commands::CommandBot.new(token: 'token', command_doesnt_exist_message: ->(event) { "command %command% does not exist in #{event.channel.name} and 1+2=#{1 + 2}" })
+
+      it 'executes the lambda and replies with a message including % substitution' do
+        expect(plain_event).to receive(:respond).with('command bleep_blorp does not exist in test-channel and 1+2=3')
+        result = bot.execute_command(:bleep_blorp, plain_event, [])
+        expect(result).to be_nil
+      end
+    end
+
+    context 'with a nil' do
+      bot = Discordrb::Commands::CommandBot.new(token: 'token', command_doesnt_exist_message: ->(_event) {})
+
+      it 'does not reply' do
+        expect(plain_event).to_not receive(:respond)
+        result = bot.execute_command(:bleep_blorp, plain_event, [])
+        expect(result).to be_nil
+      end
+    end
+  end
+
   describe '#execute_command', order: :defined do
     context 'with role filter', order: :defined do
       bot = Discordrb::Commands::CommandBot.new(token: 'token', help_available: false)
