@@ -46,6 +46,7 @@ module Discordrb::API::Server
   end
 
   # Transfer server ownership
+  # https://discord.com/developers/docs/resources/guild#modify-guild
   def transfer_ownership(token, server_id, user_id, reason = nil)
     Discordrb::API.request(
       :guilds_sid,
@@ -498,6 +499,7 @@ module Discordrb::API::Server
   end
 
   # Available voice regions for this server
+  # https://discord.com/developers/docs/resources/guild#get-guild-voice-regions
   def regions(token, server_id)
     Discordrb::API.request(
       :guilds_sid_regions,
