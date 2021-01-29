@@ -27,7 +27,6 @@ module Discordrb::Commands
     # @see Discordrb::Bot#initialize Discordrb::Bot#initialize for other attributes that should be used to create the underlying regular bot.
     # @option attributes [String, Array<String>, #call] :prefix The prefix that should trigger this bot's commands. It
     #   can be:
-    #
     #   * Any string (including the empty string). This has the effect that if a message starts with the prefix, the
     #     prefix will be stripped and the rest of the chain will be parsed as a command chain. Note that it will be
     #     literal - if the prefix is "hi" then the corresponding trigger string for a command called "test" would be
@@ -44,6 +43,8 @@ module Discordrb::Commands
     # @option attributes [Symbol, Array<Symbol>, false] :help_command The name of the command that displays info for
     #   other commands. Use an array if you want to have aliases. Default is "help". If none should be created, use
     #   `false` as the value.
+    # @option attributes [String] :help_message The message that will display above the list of commands.  Default is
+    #   "**List of commands:**".  If :help_command is set to false, this attribute will be ignored.
     # @option attributes [String] :command_doesnt_exist_message The message that should be displayed if a user attempts
     #   to use a command that does not exist. If none is specified, no message will be displayed. In the message, you
     #   can use the string '%command%' that will be replaced with the name of the command.
@@ -92,6 +93,9 @@ module Discordrb::Commands
 
         # The name of the help command (that displays information to other commands). False if none should exist
         help_command: attributes[:help_command].is_a?(FalseClass) ? nil : (attributes[:help_command] || :help),
+
+        # The message that will display above the list of commands.
+        help_message: attributes[:help_message] || '**List of commands:**',
 
         # The message to display for when a command doesn't exist, %command% to get the command name in question and nil for no message
         # No default value here because it may not be desired behaviour
@@ -172,15 +176,15 @@ module Discordrb::Commands
           end
           case available_commands.length
           when 0..5
-            available_commands.reduce "**List of commands:**\n" do |memo, c|
+            available_commands.reduce "#{@attributes[:help_message]}\n" do |memo, c|
               memo + "**`#{c.name}`**: #{c.attributes[:description] || '*No description available*'}\n"
             end
           when 5..50
-            (available_commands.reduce "**List of commands:**\n" do |memo, c|
+            (available_commands.reduce "#{@attributes[:help_message]}\n" do |memo, c|
               memo + "`#{c.name}`, "
             end)[0..-3]
           else
-            event.user.pm(available_commands.reduce("**List of commands:**\n") { |m, e| m + "`#{e.name}`, " }[0..-3])
+            event.user.pm(available_commands.reduce("#{@attributes[:help_message]}\n") { |m, e| m + "`#{e.name}`, " }[0..-3])
             event.channel.pm? ? '' : 'Sending list in PM!'
           end
         end
