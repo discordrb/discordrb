@@ -15,6 +15,28 @@ module Discordrb
   # The unix timestamp Discord IDs are based on
   DISCORD_EPOCH = 1_420_070_400_000
 
+  # Used to declare what events you wish to recieve from Discord.
+  # @see https://discordapp.com/developers/docs/topics/gateway#gateway-intents
+  INTENTS = {
+    servers: 1 << 0,
+    server_members: 1 << 1,
+    server_bans: 1 << 2,
+    server_emojis: 1 << 3,
+    server_integrations: 1 << 4,
+    server_webhooks: 1 << 5,
+    server_invites: 1 << 6,
+    server_voice_states: 1 << 7,
+    server_presences: 1 << 8,
+    server_messages: 1 << 9,
+    server_message_reactions: 1 << 10,
+    server_message_typing: 1 << 11,
+    direct_messages: 1 << 12,
+    direct_message_reactions: 1 << 13,
+    direct_message_typing: 1 << 14
+  }.freeze
+
+  ALL_INTENTS = INTENTS.values.reduce(&:|)
+
   # Compares two objects based on IDs - either the objects' IDs are equal, or one object is equal to the other's ID.
   def self.id_compare(one_id, other)
     other.respond_to?(:resolve_id) ? (one_id.resolve_id == other.resolve_id) : (one_id == other)
