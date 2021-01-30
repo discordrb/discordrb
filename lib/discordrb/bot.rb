@@ -513,7 +513,7 @@ module Discordrb
       @gateway.send_status_update(status, since, activity_obj, afk)
 
       # Update the status in the cache
-      profile.update_presence('status' => status.to_s, 'game' => activity_obj)
+      profile.update_presence('status' => status.to_s, 'activities' => [activity_obj])
     end
 
     # Sets the currently playing game to the specified game.
