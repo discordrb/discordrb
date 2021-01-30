@@ -157,6 +157,8 @@ module Discordrb
     # @param attributes [Hash] The event's attributes.
     # @option attributes [String, Integer, User] :from Matches the user whose status changed.
     # @option attributes [:offline, :idle, :online] :status Matches the status the user has now.
+    # @return attributes [Hash<Symbol, Symbol>] :client_status Matches the current online status (`:online`, `:idle` or `:dnd`) of the user
+    #   on various device types (`:desktop`, `:mobile`, or `:web`). The value will be `nil` when the user is offline or invisible
     # @yield The block is executed when the event is raised.
     # @yieldparam event [PresenceEvent] The event that was raised.
     # @return [PresenceEventHandler] the event handler that was registered.
