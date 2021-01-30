@@ -18,6 +18,7 @@ require 'discordrb/events/bans'
 require 'discordrb/events/raw'
 require 'discordrb/events/reactions'
 require 'discordrb/events/webhooks'
+require 'discordrb/events/invites'
 
 require 'discordrb/api'
 require 'discordrb/api/channel'
@@ -1075,6 +1076,11 @@ module Discordrb
         id = data['guild_id'].to_i
         server = server(id)
         server.process_chunk(data['members'])
+      when :INVITE_CREATE
+        invite = Invite.new(data, self)
+        raise_event(InviteCreateEvent.new(data, invite, self))
+      when :INVITE_DELETE
+        raise_event(InviteDeleteEvent.new(data, self))
       when :MESSAGE_CREATE
         if ignored?(data['author']['id'].to_i)
           debug("Ignored author with ID #{data['author']['id']}")
