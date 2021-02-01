@@ -103,6 +103,8 @@ describe Discordrb::Message do
       data['channel_id'] = channel_id
 
       message = described_class.new(data, bot)
+      message.instance_variable_set(:@server, nil)
+
       expect(message.link).to eq 'https://discord.com/channels/@me/channel_id/message_id'
     end
   end

@@ -83,7 +83,7 @@ module Discordrb
       @referenced_message = Message.new(data['referenced_message'], bot) if data['referenced_message']
       @message_reference = data['message_reference']
 
-      @server = bot.server(data['guild_id'].to_i) if data['guild_id']
+      @server = @channel.server
 
       @author = if data['author']
                   if data['author']['discriminator'] == ZERO_DISCRIM
