@@ -134,7 +134,7 @@ module Discordrb
     LARGE_THRESHOLD = 100
 
     # The version of the gateway that's supposed to be used.
-    GATEWAY_VERSION = 6
+    GATEWAY_VERSION = 8
 
     # Heartbeat ACKs are Discord's way of verifying on the client side whether the connection is still alive. If this is
     # set to true (default value) the gateway client will use that functionality to detect zombie connections and
@@ -143,7 +143,7 @@ module Discordrb
     # @return [true, false] whether or not this gateway should check for heartbeat ACKs.
     attr_accessor :check_heartbeat_acks
 
-    def initialize(bot, token, shard_key = nil, compress_mode = :stream, intents = nil)
+    def initialize(bot, token, shard_key = nil, compress_mode = :stream, intents = ALL_INTENTS)
       @token = token
       @bot = bot
 
@@ -282,7 +282,7 @@ module Discordrb
                       '$device': 'discordrb',
                       '$referrer': '',
                       '$referring_domain': ''
-                    }, compress, 100, @shard_key)
+                    }, compress, 100, @shard_key, @intents)
     end
 
     # Sends an identify packet (op 2). This starts a new session on the current connection and tells Discord who we are.
@@ -303,15 +303,15 @@ module Discordrb
     #   its member list chunked.
     # @param shard_key [Array(Integer, Integer), nil] The shard key to use for sharding, represented as
     #   [shard_id, num_shards], or nil if the bot should not be sharded.
-    def send_identify(token, properties, compress, large_threshold, shard_key = nil)
+    def send_identify(token, properties, compress, large_threshold, shard_key = nil, intents = ALL_INTENTS)
       data = {
         # Don't send a v anymore as it's entirely determined by the URL now
         token: token,
         properties: properties,
         compress: compress,
-        large_threshold: large_threshold
+        large_threshold: large_threshold,
+        intents: intents
       }
-      data[:intents] = @intents unless @intents.nil?
 
       # Don't include the shard key at all if it is nil as Discord checks for its mere existence
       data[:shard] = shard_key if shard_key
@@ -790,7 +790,8 @@ module Discordrb
     # - 4003: Not authenticated. How did this happen?
     # - 4004: Authentication failed. Token was wrong, nothing we can do.
     # - 4011: Sharding required. Currently requires developer intervention.
-    FATAL_CLOSE_CODES = [4003, 4004, 4011].freeze
+    # - 4014: Use of disabled privileged intents.
+    FATAL_CLOSE_CODES = [4003, 4004, 4011, 4014].freeze
 
     def handle_close(e)
       @bot.__send__(:raise_event, Events::DisconnectEvent.new(@bot))
@@ -800,6 +801,15 @@ module Discordrb
         LOGGER.error('Websocket close frame received!')
         LOGGER.error("Code: #{e.code}")
         LOGGER.error("Message: #{e.data}")
+
+        if e.code == 4014
+          LOGGER.error(<<~ERROR)
+            You attempted to identify with privileged intents that your bot is not authorized to use
+            Please enable the privileged intents on the bot page of your application on the discord developer page.
+            Read more here https://discord.com/developers/docs/topics/gateway#privileged-intents
+          ERROR
+        end
+
         @should_reconnect = false if FATAL_CLOSE_CODES.include?(e.code)
       elsif e.is_a? Exception
         # Log the exception

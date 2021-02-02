@@ -15,6 +15,36 @@ module Discordrb
     end
   end
 
+  # Bot/OAuth2 application for discord integrations
+  class IntegrationApplication
+    # @return [Integer] the ID of the application.
+    attr_reader :id
+
+    # @return [String] the name of the application.
+    attr_reader :name
+
+    # @return [String, nil] the icon hash of the application.
+    attr_reader :icon
+
+    # @return [String] the description of the application.
+    attr_reader :description
+
+    # @return [String] the summary of the application.
+    attr_reader :summary
+
+    # @return [User, nil] the bot associated with this application.
+    attr_reader :bot
+
+    def initialize(data, bot)
+      @id = data['id'].to_i
+      @name = data['name']
+      @icon = data['icon']
+      @description = data['description']
+      @summary = data['summary']
+      @bot = Discordrb::User.new(data['user'], bot) if data['user']
+    end
+  end
+
   # Server integration
   class Integration
     include IDObject
@@ -28,8 +58,8 @@ module Discordrb
     # @return [User] the user the integration is linked to
     attr_reader :user
 
-    # @return [Role, nil] the role that this integration uses for "subscribers"
-    attr_reader :role
+    # @return [Integer, nil] the role that this integration uses for "subscribers"
+    attr_reader :role_id
 
     # @return [true, false] whether emoticons are enabled
     attr_reader :emoticon
@@ -57,6 +87,12 @@ module Discordrb
     # @return [Integer] the grace period before subscribers expire (in days)
     attr_reader :expire_grace_period
 
+    # @return [Integer, nil] how many subscribers this integration has.
+    attr_reader :subscriber_count
+
+    # @return [true, false] has this integration been revoked.
+    attr_reader :revoked
+
     def initialize(data, bot, server)
       @bot = bot
 
@@ -71,8 +107,11 @@ module Discordrb
       @expire_behaviour = %i[remove kick][data['expire_behavior']]
       @expire_grace_period = data['expire_grace_period']
       @user = @bot.ensure_user(data['user'])
-      @role = server.role(data['role_id']) || nil
+      @role_id = data['role_id']&.to_i
       @emoticon = data['enable_emoticons']
+      @subscriber_count = data['subscriber_count']&.to_i
+      @revoked = data['revoked']
+      @application = IntegrationApplication.new(data['application'], bot) if data['application']
     end
 
     # The inspect method is overwritten to give more useful output

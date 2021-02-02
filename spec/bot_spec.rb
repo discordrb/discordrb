@@ -102,6 +102,83 @@ describe Discordrb::Bot do
       expect(bot).to receive(:raise_event).exactly(4).times
       bot.send(:handle_dispatch, type, dispatch_event)
     end
+
+    context 'when handling a PRESENCE_UPDATE' do
+      let(:user) { instance_double(Discordrb::User, activities: [], id: 12_345, client_status: nil) }
+      let(:guild_id) { 123_456 }
+      let(:activity) { instance_double(Discordrb::Activity, name: 'name') }
+      let(:activity_fixture) { { 'name' => 'New Activity' } }
+      let(:old_activity) { instance_double(Discordrb::Activity, 'old_activity', name: 'Old Activity') }
+
+      before do
+        allow(bot.instance_variable_get(:@users)).to receive(:[]).with(user.id).and_return(user)
+        allow(bot).to receive(:update_presence).and_return(nil)
+        allow(bot).to receive(:raise_event).with(kind_of(Discordrb::Events::PresenceEvent))
+        allow(bot).to receive(:raise_event).with(kind_of(Discordrb::Events::PlayingEvent))
+        allow(bot).to receive(:user).with(user.id).and_return(user)
+        allow(bot).to receive(:server).with(guild_id).and_return(instance_double(Discordrb::Server))
+      end
+
+      it 'raises a PlayingEvent for each new activity' do
+        bot.send(:handle_dispatch, :PRESENCE_UPDATE, { 'activities' => [activity_fixture, activity_fixture], 'user' => { 'id' => user.id }, 'guild_id' => guild_id })
+        expect(bot).to have_received(:raise_event).with(instance_of(Discordrb::Events::PlayingEvent)).twice
+      end
+
+      it 'raises a PlayingEvent for each removed activity' do
+        allow(user).to receive(:activities).and_return([old_activity])
+        bot.send(:handle_dispatch, :PRESENCE_UPDATE, { 'activities' => [], 'user' => { 'id' => user.id }, 'guild_id' => guild_id })
+
+        expect(bot).to have_received(:raise_event).with(instance_of(Discordrb::Events::PlayingEvent))
+      end
+
+      it 'raises a PlayingEvent for each new and removed activity' do
+        allow(user).to receive(:activities).and_return([old_activity])
+        bot.send(:handle_dispatch, :PRESENCE_UPDATE, { 'activities' => [activity_fixture], 'user' => { 'id' => user.id }, 'guild_id' => guild_id })
+
+        expect(bot).to have_received(:raise_event).with(an_instance_of(Discordrb::Events::PlayingEvent)).twice
+      end
+
+      it 'raises a PresenceEvent when the change is not activity based' do
+        bot.send(:handle_dispatch, :PRESENCE_UPDATE, { 'activities' => [], 'user' => { 'id' => user.id }, 'guild_id' => guild_id, 'status' => 'online' })
+
+        expect(bot).to have_received(:raise_event).with(an_instance_of(Discordrb::Events::PresenceEvent))
+      end
+    end
+
+    context 'when handling a MESSAGE_CREATE event' do
+      let(:channel_id) { instance_double(Integer, 'channel_id') }
+      let(:channel) { instance_double(Discordrb::Channel, recipient: author, server: nil) }
+      let(:user_id) { instance_double(Integer, 'user_id') }
+      let(:author) { instance_double(Discordrb::User, id: user_id) }
+      let(:message_fixture) { { 'author' => { 'id' => user_id }, 'channel_id' => channel_id } }
+      let(:message) { instance_double(Discordrb::Message, channel: channel, from_bot?: false, mentions: []) }
+
+      before do
+        allow(bot).to receive(:channel).with(channel_id).and_return(channel)
+        allow(channel).to receive(:is_a?).with(Discordrb::Channel).and_return(true)
+        allow(bot).to receive(:ignored?).with(user_id).and_return(false)
+        allow(bot).to receive(:raise_event)
+        allow(Discordrb::Message).to receive(:new).and_return(message)
+      end
+
+      it 'raises a ChannelCreateEvent if the DM channel is uncached' do
+        allow(channel).to receive(:private?).and_return(true)
+        allow(bot).to receive(:create_channel)
+
+        bot.send(:handle_dispatch, :MESSAGE_CREATE, message_fixture)
+
+        expect(bot).to have_received(:raise_event).with(instance_of(Discordrb::Events::ChannelCreateEvent))
+      end
+
+      it 'does not raise a ChannelCreateEvent if the DM channel is cached' do
+        allow(channel).to receive(:private?).and_return(true)
+        bot.instance_variable_set(:@pm_channels, { user_id => channel })
+
+        bot.send(:handle_dispatch, :MESSAGE_CREATE, message_fixture)
+
+        expect(bot).to_not have_received(:raise_event).with(instance_of(Discordrb::Events::ChannelCreateEvent))
+      end
+    end
   end
 
   describe '#update_guild_emoji' do

@@ -11,7 +11,7 @@ module Discordrb::API::Invite
       :invite_code,
       nil,
       :get,
-      "#{Discordrb::API.api_base}/invite/#{invite_code}#{counts ? '?with_counts=true' : ''}",
+      "#{Discordrb::API.api_base}/invites/#{invite_code}#{counts ? '?with_counts=true' : ''}",
       Authorization: token
     )
   end
@@ -36,7 +36,7 @@ module Discordrb::API::Invite
       :invite_code,
       nil,
       :post,
-      "#{Discordrb::API.api_base}/invite/#{invite_code}",
+      "#{Discordrb::API.api_base}/invites/#{invite_code}",
       nil,
       Authorization: token
     )

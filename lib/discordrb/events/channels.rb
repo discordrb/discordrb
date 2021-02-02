@@ -31,7 +31,7 @@ module Discordrb::Events
 
     def initialize(data, bot)
       @bot = bot
-      @channel = bot.channel(data['id'].to_i)
+      @channel = data.is_a?(Discordrb::Channel) ? data : bot.channel(data['id'].to_i)
     end
   end
 

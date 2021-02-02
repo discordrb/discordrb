@@ -65,28 +65,35 @@ module Discordrb::Events
     # @return [User] the user whose status got updated.
     attr_reader :user
 
-    # @return [String] the new game the user is playing.
-    attr_reader :game
+    # @return [Discordrb::Activity] The new activity
+    attr_reader :activity
 
-    # @return [String] the URL to the stream
-    attr_reader :url
+    # @!attribute [r] url
+    #   @return [String] the URL to the stream
 
-    # @return [String] what the player is currently doing (ex. game being streamed)
-    attr_reader :details
+    # @!attribute [r] details
+    #   @return [String] what the player is currently doing (ex. game being streamed)
 
-    # @return [Integer] the type of play. 0 = game, 1 = Twitch
-    attr_reader :type
+    # @!attribute [r] type
+    #   @return [Integer] the type of play. See {Discordrb::Activity}
+    delegate :url, :details, :type, to: :activity
 
-    def initialize(data, bot)
+    # @return [Hash<Symbol, Symbol>] the current online status (`:online`, `:idle` or `:dnd`) of the user
+    #   on various device types (`:desktop`, `:mobile`, or `:web`). The value will be `nil` if the user is offline or invisible.
+    attr_reader :client_status
+
+    def initialize(data, activity, bot)
       @bot = bot
+      @activity = activity
 
       @server = bot.server(data['guild_id'].to_i)
       @user = bot.user(data['user']['id'].to_i)
-      @game = data['game'] ? data['game']['name'] : nil
-      @type = data['game'] ? data['game']['type'].to_i : nil
-      # Handle optional 'game' fields safely
-      @url = data['game'] && data['game']['url'] ? data['game']['url'] : nil
-      @details = data['game'] && data['game']['details'] ? data['game']['details'] : nil
+      @client_status = @user.client_status
+    end
+
+    # @return [String] the name of the new game the user is playing.
+    def game
+      @activity.name
     end
   end
 

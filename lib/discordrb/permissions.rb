@@ -101,7 +101,7 @@ module Discordrb
     #   permission.can_speak = true
     # @example Create a permissions object that could allow/deny read messages, connect, and speak by an array of symbols
     #   Permissions.new [:read_messages, :connect, :speak]
-    # @param bits [Integer, Array<Symbol>] The permission bits that should be set from the beginning, or an array of permission flag symbols
+    # @param bits [String, Integer, Array<Symbol>] The permission bits that should be set from the beginning, or an array of permission flag symbols
     # @param writer [RoleWriter] The writer that should be used to update data when a permission is set.
     def initialize(bits = 0, writer = nil)
       @writer = writer
@@ -109,7 +109,7 @@ module Discordrb
       @bits = if bits.is_a? Array
                 self.class.bits(bits)
               else
-                bits
+                bits.to_i
               end
 
       init_vars

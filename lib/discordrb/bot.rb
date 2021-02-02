@@ -102,14 +102,13 @@ module Discordrb
     #   to Discord's gateway. `:none` will request that no payloads are received compressed (not recommended for
     #   production bots). `:large` will request that large payloads are received compressed. `:stream` will request
     #   that all data be received in a continuous compressed stream.
-    # @param intents [:all, Array<Symbol>, nil] Intents that this bot requires. See {Discordrb::INTENTS}. If `nil`, no intents
-    #   field will be passed.
+    # @param intents [:all, Array<Symbol>, nil] Intents that this bot requires.
     def initialize(
       log_mode: :normal,
       token: nil, client_id: nil,
       type: nil, name: '', fancy_log: false, suppress_ready: false, parse_self: false,
       shard_id: nil, num_shards: nil, redact_token: true, ignore_bots: false,
-      compress_mode: :large, intents: nil
+      compress_mode: :large, intents: :all
     )
       LOGGER.mode = log_mode
       LOGGER.token = token if redact_token
@@ -130,7 +129,7 @@ module Discordrb
 
       raise 'Token string is empty or nil' if token.nil? || token.empty?
 
-      @intents = intents == :all ? INTENTS.values.reduce(&:|) : calculate_intents(intents) if intents
+      @intents = intents == :all ? INTENTS.values.reduce(&:|) : calculate_intents(intents)
 
       @token = process_token(@type, token)
       @gateway = Gateway.new(self, @token, @shard_key, @compress_mode, @intents)
@@ -836,14 +835,14 @@ module Discordrb
 
     # Internal handler for CHANNEL_CREATE
     def create_channel(data)
-      channel = Channel.new(data, self)
+      channel = data.is_a?(Discordrb::Channel) ? data : Channel.new(data, self)
       server = channel.server
 
       # Handle normal and private channels separately
       if server
         server.add_channel(channel)
         @channels[channel.id] = channel
-      elsif channel.pm?
+      elsif channel.private?
         @pm_channels[channel.recipient.id] = channel
       elsif channel.group?
         @channels[channel.id] = channel
@@ -1096,7 +1095,7 @@ module Discordrb
       when :INVITE_DELETE
         raise_event(InviteDeleteEvent.new(data, self))
       when :MESSAGE_CREATE
-        if ignored?(data['author']['id'].to_i)
+        if ignored?(data['author']['id'])
           debug("Ignored author with ID #{data['author']['id']}")
           return
         end
@@ -1112,6 +1111,13 @@ module Discordrb
         message = Message.new(data, self) unless message.is_a? Message
 
         return if message.from_bot? && !should_parse_self
+
+        # Dispatch a ChannelCreateEvent for channels we don't have cached
+        if message.channel.private? && @pm_channels[message.channel.recipient.id].nil?
+          create_channel(message.channel)
+
+          raise_event(ChannelCreateEvent.new(message.channel, self))
+        end
 
         event = MessageEvent.new(message, self)
         raise_event(event)
@@ -1195,18 +1201,28 @@ module Discordrb
         # Ignore friends list presences
         return unless data['guild_id']
 
-        now_playing = data['game'].nil? ? nil : data['game']['name']
+        new_activities = (data['activities'] || []).map { |act_data| Activity.new(act_data, self) }
         presence_user = @users[data['user']['id'].to_i]
-        played_before = presence_user.nil? ? nil : presence_user.game
+        old_activities = presence_user.activities.to_a
         update_presence(data)
 
-        event = if now_playing == played_before
-                  PresenceEvent.new(data, self)
-                else
-                  PlayingEvent.new(data, self)
-                end
+        # Starting a new game
+        playing_change = new_activities.reject do |act|
+          old_activities.find { |old| old.name == act.name }
+        end
 
-        raise_event(event)
+        # Exiting an existing game
+        playing_change += old_activities.reject do |old|
+          new_activities.find { |act| act.name == old.name }
+        end
+
+        if playing_change.any?
+          playing_change.each do |act|
+            raise_event(PlayingEvent.new(data, act, self))
+          end
+        else
+          raise_event(PresenceEvent.new(data, self))
+        end
       when :VOICE_STATE_UPDATE
         old_channel_id = update_voice_state(data)
 

@@ -9,7 +9,7 @@ require 'discordrb/errors'
 # List of methods representing endpoints in Discord's API
 module Discordrb::API
   # The base URL of the Discord REST API.
-  APIBASE = 'https://discord.com/api/v6'
+  APIBASE = 'https://discord.com/api/v8'
 
   # The URL of Discord's CDN
   CDN_URL = 'https://cdn.discordapp.com'
@@ -94,9 +94,6 @@ module Discordrb::API
     # Add a custom user agent
     attributes.last[:user_agent] = user_agent if attributes.last.is_a? Hash
 
-    # Specify RateLimit precision
-    attributes.last[:x_ratelimit_precision] = 'millisecond' if attributes.last.is_a?(Hash)
-
     # The most recent Discord rate limit requirements require the support of major parameters, where a particular route
     # and major parameter combination (*not* the HTTP method) uniquely identifies a RL bucket.
     key = [key, major_parameter].freeze
@@ -115,6 +112,15 @@ module Discordrb::API
         response = raw_request(type, attributes)
       rescue RestClient::Exception => e
         response = e.response
+
+        if response.body
+          data = JSON.parse(response.body)
+          err_klass = Discordrb::Errors.error_class_for(data['code'] || 0)
+          e = err_klass.new(data['message'], data['errors'])
+
+          Discordrb::LOGGER.error(e.full_message)
+        end
+
         raise e
       rescue Discordrb::Errors::NoPermission => e
         if e.respond_to?(:_rc_response)

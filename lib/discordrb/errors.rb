@@ -29,8 +29,11 @@ module Discordrb
 
       # Create a new error with a particular message (the code should be defined by the class instance variable)
       # @param message [String] the message to use
-      def initialize(message)
+      # @param errors [Hash] API errors
+      def initialize(message, errors = nil)
         @message = message
+
+        @errors = flatten_errors(errors) if errors
       end
 
       # @return [Integer] The error code represented by this error.
@@ -38,8 +41,43 @@ module Discordrb
         self.class.code
       end
 
+      # @return [String] A message including the message and flattened errors.
+      def full_message
+        error_list = @errors.collect { |err| "\t- #{err}" }
+
+        "#{@message}\n#{error_list.join("\n")}"
+      end
+
       # @return [String] This error's represented message
       attr_reader :message
+
+      # @return [Hash] More precise errors
+      attr_reader :errors
+
+      private
+
+      # @!visibility hidden
+      # Flattens errors into a more easily read format.
+      # @example Flattening errors of a bad field
+      #   flatten_errors(data['errors'])
+      #   # => ["embed.fields[0].name: This field is required", "embed.fields[0].value: This field is required"]
+      def flatten_errors(err, prev_key = nil)
+        err.collect do |key, sub_err|
+          if prev_key
+            key = /\A\d+\Z/.match?(key) ? "#{prev_key}[#{key}]" : "#{prev_key}.#{key}"
+          end
+
+          if (errs = sub_err['_errors'])
+            "#{key}: #{errs.map { |e| e['message'] }.join(' ')}"
+          elsif sub_err['message'] || sub_err['code']
+            "#{sub_err['code'] ? "#{sub_err['code']}: " : nil}#{err_msg}"
+          elsif sub_err.is_a? String
+            sub_err
+          else
+            flatten_errors(sub_err, key)
+          end
+        end.flatten
+      end
     end
 
     # Create a new code error class

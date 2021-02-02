@@ -189,78 +189,73 @@ module Discordrb
       AuditLogs.new(self, @bot, JSON.parse(API::Server.audit_logs(@bot.token, @id, limit, user, action, before)))
     end
 
-    # Cache @embed
+    # Cache @widget
     # @note For internal use only
     # @!visibility private
-    def cache_embed_data
-      data = JSON.parse(API::Server.embed(@bot.token, @id))
-      @embed_enabled = data['enabled']
-      @embed_channel_id = data['channel_id']
+    def cache_widget_data
+      data = JSON.parse(API::Server.widget(@bot.token, @id))
+      @widget_enabled = data['enabled']
+      @widget_channel_id = data['channel_id']
     end
 
     # @return [true, false] whether or not the server has widget enabled
-    def embed_enabled?
-      cache_embed_data if @embed_enabled.nil?
-      @embed_enabled
+    def widget_enabled?
+      cache_widget_data if @widget_enabled.nil?
+      @widget_enabled
     end
-    alias_method :widget_enabled, :embed_enabled?
-    alias_method :widget?, :embed_enabled?
-    alias_method :embed?, :embed_enabled?
+    alias_method :widget?, :widget_enabled?
+    alias_method :embed_enabled, :widget_enabled?
+    alias_method :embed?, :widget_enabled?
 
-    # @return [Channel, nil] the channel the server embed will make an invite for.
-    def embed_channel
-      cache_embed_data if @embed_enabled.nil?
-      @bot.channel(@embed_channel_id) if @embed_channel_id
+    # @return [Channel, nil] the channel the server widget will make an invite for.
+    def widget_channel
+      cache_widget_data if @widget_enabled.nil?
+      @bot.channel(@widget_channel_id) if @widget_channel_id
     end
-    alias_method :widget_channel, :embed_channel
+    alias_method :embed_channel, :widget_channel
 
-    # Sets whether this server's embed (widget) is enabled
+    # Sets whether this server's widget is enabled
     # @param value [true, false]
-    def embed_enabled=(value)
-      modify_embed(value, embed_channel)
+    def widget_enabled=(value)
+      modify_widget(value, widget_channel)
     end
+    alias_method :embed_enabled=, :widget_enabled=
 
-    alias_method :widget_enabled=, :embed_enabled=
-
-    # Sets whether this server's embed (widget) is enabled
+    # Sets whether this server's widget is enabled
     # @param value [true, false]
     # @param reason [String, nil] the reason to be shown in the audit log for this action
-    def set_embed_enabled(value, reason = nil)
-      modify_embed(value, embed_channel, reason)
+    def set_widget_enabled(value, reason = nil)
+      modify_widget(value, widget_channel, reason)
     end
+    alias_method :set_embed_enabled, :set_widget_enabled
 
-    alias_method :set_widget_enabled, :set_embed_enabled
-
-    # Changes the channel on the server's embed (widget)
-    # @param channel [Channel, String, Integer] the channel, or its ID, to be referenced by the embed
-    def embed_channel=(channel)
-      modify_embed(embed?, channel)
+    # Changes the channel on the server's widget
+    # @param channel [Channel, String, Integer] the channel, or its ID, to be referenced by the widget
+    def widget_channel=(channel)
+      modify_widget(widget?, channel)
     end
+    alias_method :embed_channel=, :widget_channel=
 
-    alias_method :widget_channel=, :embed_channel=
-
-    # Changes the channel on the server's embed (widget)
-    # @param channel [Channel, String, Integer] the channel, or its ID, to be referenced by the embed
+    # Changes the channel on the server's widget
+    # @param channel [Channel, String, Integer] the channel, or its ID, to be referenced by the widget
     # @param reason [String, nil] the reason to be shown in the audit log for this action
-    def set_embed_channel(channel, reason = nil)
-      modify_embed(embed?, channel, reason)
+    def set_widget_channel(channel, reason = nil)
+      modify_widget(widget?, channel, reason)
     end
+    alias_method :set_embed_channel, :set_widget_channel
 
-    alias_method :set_widget_channel, :set_embed_channel
-
-    # Changes the channel on the server's embed (widget), and sets whether it is enabled.
-    # @param enabled [true, false] whether the embed (widget) is enabled
-    # @param channel [Channel, String, Integer] the channel, or its ID, to be referenced by the embed
+    # Changes the channel on the server's widget, and sets whether it is enabled.
+    # @param enabled [true, false] whether the widget is enabled
+    # @param channel [Channel, String, Integer] the channel, or its ID, to be referenced by the widget
     # @param reason [String, nil] the reason to be shown in the audit log for this action
-    def modify_embed(enabled, channel, reason = nil)
-      cache_embed_data if @embed_enabled.nil?
-      channel_id = channel ? channel.resolve_id : @embed_channel_id
-      response = JSON.parse(API::Server.modify_embed(@bot.token, @id, enabled, channel_id, reason))
-      @embed_enabled = response['enabled']
-      @embed_channel_id = response['channel_id']
+    def modify_widget(enabled, channel, reason = nil)
+      cache_widget_data if @widget_enabled.nil?
+      channel_id = channel ? channel.resolve_id : @widget_channel_id
+      response = JSON.parse(API::Server.modify_widget(@bot.token, @id, enabled, channel_id, reason))
+      @widget_enabled = response['enabled']
+      @widget_channel_id = response['channel_id']
     end
-
-    alias_method :modify_widget, :modify_embed
+    alias_method :modify_embed, :modify_widget
 
     # @param include_idle [true, false] Whether to count idle members as online.
     # @param include_bots [true, false] Whether to include bot accounts in the count.
@@ -842,12 +837,12 @@ module Discordrb
 
       afk_channel_id = new_data[:afk_channel_id] || new_data['afk_channel_id'] || @afk_channel
       @afk_channel_id = afk_channel_id.nil? ? nil : afk_channel_id.resolve_id
-      embed_channel_id = new_data[:embed_channel_id] || new_data['embed_channel_id'] || @embed_channel
-      @embed_channel_id = embed_channel_id.nil? ? nil : embed_channel_id.resolve_id
+      widget_channel_id = new_data[:widget_channel_id] || new_data['widget_channel_id'] || @widget_channel
+      @widget_channel_id = widget_channel_id.nil? ? nil : widget_channel_id.resolve_id
       system_channel_id = new_data[:system_channel_id] || new_data['system_channel_id'] || @system_channel
       @system_channel_id = system_channel_id.nil? ? nil : system_channel_id.resolve_id
 
-      @embed_enabled = new_data[:embed_enabled] || new_data['embed_enabled']
+      @widget_enabled = new_data[:widget_enabled] || new_data['widget_enabled']
       @splash = new_data[:splash_id] || new_data['splash_id'] || @splash_id
 
       @verification_level = new_data[:verification_level] || new_data['verification_level'] || @verification_level
