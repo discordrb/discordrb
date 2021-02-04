@@ -3,6 +3,26 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## [3.4.1] - 2020-2-4
+[3.4.1]: https://github.com/shardlab/discordrb/releases/tag/v3.4.1
+
+[View diff for this release.](https://github.com/shardlab/discordrb/compare/v3.4.0..v3.4.1)
+
+### Summary
+
+With 3.4.0, mistakes were made during the version bump leading to a bit of a dependency issue between `discordrb` and `discordrb-webhooks` (sorry!).
+This micro bump fixes this, fixes a few other code issues, and adds a few minor features.
+
+### Added
+- Added support for `competing` activity types ([#21](https://github.com/shardlab/discordrb/pull/21), thanks @kaine119)
+- Support for a callable command_does_not_exist_message ([#25](https://github.com/shardlab/discordrb/pull/25), thanks @kmcphillips)
+
+### Fixed
+- `Bot#send_temporary_message` now properly passes `message_reference` ([#17](https://github.com/shardlab/discordrb/pull/17) thanks @swarley)
+- Rate limit precision is only supplied when the route requires headers ([#11](https://github.com/shardlab/discordrb/pull/11) thanks @dali546)
+- Remove pointless conditional in `Invite` initializer ([#26](https://github.com/shardlab/discordrb/pull/26) thanks @swarley)
+- All API methods link to their official documentation counterparts ([#12](https://github.com/shardlab/discordrb/pull/12) thanks @kaine119)
+- Links to messages now work when a `guild_id` is not present in a non DM message. ([#27](https://github.com/shardlab/discordrb/pull/27) thanks @swarley)
 
 ## [3.4.0] - 2020-12-06
 [3.4.0]: https://github.com/shardlab/discordrb/releases/tag/v3.3.0
