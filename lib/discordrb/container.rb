@@ -201,6 +201,7 @@ module Discordrb
     # @yield The block is executed when the event is raised.
     # @yieldparam event [ChannelCreateEvent] The event that was raised.
     # @return [ChannelCreateEventHandler] the event handler that was registered.
+    # @note Bots do not receive this event for DM channels.
     def channel_create(attributes = {}, &block)
       register_event(ChannelCreateEvent, attributes, block)
     end

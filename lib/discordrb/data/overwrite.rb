@@ -4,6 +4,12 @@ module Discordrb
   # A permissions overwrite, when applied to channels describes additional
   # permissions a member needs to perform certain actions in context.
   class Overwrite
+    # Object types an overwrite can apply to.
+    TYPES = {
+      0 => :role,
+      1 => :member
+    }.freeze
+
     # @return [Integer] ID of the thing associated with this overwrite type
     attr_accessor :id
 
@@ -32,24 +38,23 @@ module Discordrb
     # @example Create an overwrite by ID and permissions bits
     #   Overwrite.new(120571255635181568, type: 'member', allow: 1024, deny: 0)
     # @param object [Integer, #id] the ID or object this overwrite is for
-    # @param type [String] the type of object this overwrite is for (only required if object is an Integer)
+    # @param type [String, Symbol, Integer] the type of object this overwrite is for (only required if object is an Integer)
     # @param allow [Integer, Permissions] allowed permissions for this overwrite, by bits or a Permissions object
     # @param deny [Integer, Permissions] denied permissions for this overwrite, by bits or a Permissions object
-    # @raise [ArgumentError] if type is not :member or :role
+    # @raise [ArgumentError] if type is not valid.
     def initialize(object = nil, type: nil, allow: 0, deny: 0)
-      if type
-        type = type.to_sym
-        raise ArgumentError, 'Overwrite type must be :member or :role' unless (type != :member) || (type != :role)
-      end
-
       @id = object.respond_to?(:id) ? object.id : object
 
       @type = if object.is_a?(User) || object.is_a?(Member) || object.is_a?(Recipient) || object.is_a?(Profile)
                 :member
               elsif object.is_a? Role
                 :role
+              elsif type.is_a?(String) || type.is_a?(Symbol) && TYPES.value?(type.to_sym)
+                type.to_sym
+              elsif TYPES[type]
+                TYPES[type]
               else
-                type
+                raise ArgumentError, "Invalid overwrite type: #{type}"
               end
 
       @allow = allow.is_a?(Permissions) ? allow : Permissions.new(allow)
