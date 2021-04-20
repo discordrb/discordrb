@@ -5,6 +5,7 @@ require 'discordrb/events/typing'
 require 'discordrb/events/lifetime'
 require 'discordrb/events/presence'
 require 'discordrb/events/voice_state_update'
+require 'discordrb/events/voice_server_update'
 require 'discordrb/events/channels'
 require 'discordrb/events/members'
 require 'discordrb/events/roles'
@@ -266,6 +267,16 @@ module Discordrb
     # @return [VoiceStateUpdateEventHandler] the event handler that was registered.
     def voice_state_update(attributes = {}, &block)
       register_event(VoiceStateUpdateEvent, attributes, block)
+    end
+
+    # This **event** is raised when first connecting to a server's voice channel.
+    # @param attributes [Hash] The event's attributes.
+    # @option attributes [String, Integer, User] :from Matches the server that the update is for.
+    # @yield The block is executed when the event is raised.
+    # @yieldparam event [VoiceServerUpdateEvent] The event that was raised.
+    # @return [VoiceServerUpdateEventHandler] The event handler that was registered.
+    def voice_server_update(attributes = {}, &block)
+      register_event(VoiceServerUpdateEvent, attributes, block)
     end
 
     # This **event** is raised when a new user joins a server.
