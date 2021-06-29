@@ -18,6 +18,9 @@ module Discordrb
       23 => :member_ban_remove,
       24 => :member_update,
       25 => :member_role_update,
+      26 => :member_move,
+      27 => :member_disconnect,
+      28 => :bot_add,
       30 => :role_create,
       31 => :role_update,
       32 => :role_delete,
@@ -32,8 +35,34 @@ module Discordrb
       62 => :emoji_delete,
       # 70
       # 71
-      72 => :message_delete
+      72 => :message_delete,
+      73 => :message_bulk_delete,
+      74 => :message_pin,
+      75 => :message_unpin,
+      80 => :integration_create,
+      81 => :integration_update,
+      82 => :integration_delete
     }.freeze
+
+    # @!visibility private
+    CREATE_ACTIONS = %i[
+      channel_create channel_overwrite_create member_ban_add role_create
+      invite_create webhook_create emoji_create integration_create
+    ].freeze
+
+    # @!visibility private
+    DELETE_ACTIONS = %i[
+      channel_delete channel_overwrite_delete member_kick member_prune
+      member_ban_remove role_delete invite_delete webhook_delete
+      emoji_delete message_delete message_bulk_delete integration_delete
+    ].freeze
+
+    # @!visibility private
+    UPDATE_ACTIONS = %i[
+      server_update channel_update channel_overwrite_update member_update
+      member_role_update role_update invite_update webhook_update
+      emoji_update integration_update
+    ].freeze
 
     # @return [Hash<String => User>] the users included in the audit logs.
     attr_reader :users
@@ -142,6 +171,7 @@ module Discordrb
         when :invite then @bot.invite(@data['changes'].find { |change| change['key'] == 'code' }.values.delete_if { |v| v == 'code' }.first)
         when :webhook then @server.webhooks.find { |webhook| webhook.id == id } || @logs.webhook(id)
         when :emoji then @server.emoji[id]
+        when :integration then @server.integrations.find { |integration| integration.id == id }
         end
       end
 
@@ -295,6 +325,7 @@ module Discordrb
       when 50..59 then :webhook
       when 60..69 then :emoji
       when 70..79 then :message
+      when 80..89 then :integration
       else :unknown
       end
     end
@@ -304,9 +335,9 @@ module Discordrb
     # @!visibility private
     def self.action_type_for(action)
       action = ACTIONS[action]
-      return :create if %i[channel_create channel_overwrite_create member_ban_add role_create invite_create webhook_create emoji_create].include?(action)
-      return :delete if %i[channel_delete channel_overwrite_delete member_kick member_prune member_ban_remove role_delete invite_delete webhook_delete emoji_delete message_delete].include?(action)
-      return :update if %i[server_update channel_update channel_overwrite_update member_update member_role_update role_update invite_update webhook_update emoji_update].include?(action)
+      return :create if CREATE_ACTIONS.include?(action)
+      return :delete if DELETE_ACTIONS.include?(action)
+      return :update if UPDATE_ACTIONS.include?(action)
 
       :unknown
     end
