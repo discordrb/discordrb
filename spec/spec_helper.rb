@@ -140,3 +140,19 @@ def fixture_property(name, fixture, trace, filter = nil)
     end
   end
 end
+
+# Builds a double from a possibly nested hash
+# @param name [Symbol, nil] name of the top level double
+# @param hash [Hash] hash to build the double from
+def nested_double(name, hash)
+  double(name).tap do |event|
+    hash.each do |key, value|
+      case value
+      when Hash
+        allow(event).to receive(key) { nested_double(nil, value) }
+      else
+        allow(event).to receive(key) { value }
+      end
+    end
+  end
+end

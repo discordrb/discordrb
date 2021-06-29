@@ -75,6 +75,7 @@ describe Discordrb::Permissions do
   end
 end
 
+# Basic class for testing permissions calculations
 class ExampleCalculator
   include Discordrb::PermissionCalculator
   attr_accessor :server

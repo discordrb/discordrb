@@ -2,6 +2,7 @@
 
 require 'discordrb'
 
+# Example IDObject
 class SimpleIDObject
   include Discordrb::IDObject
 

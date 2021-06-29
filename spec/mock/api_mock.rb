@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-# Mock for Discordrb::API that allows setting arbitrary results and checking previous requests
 require 'json'
 
+# Mock for Discordrb::API that allows setting arbitrary results and checking previous requests
 module APIMock
   refine Discordrb::API.singleton_class do
     attr_reader :last_method
