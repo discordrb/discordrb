@@ -173,7 +173,7 @@ module Discordrb
 
     # The inspect method is overwritten to give more useful output
     def inspect
-      "<Role name=#{@name} permissions=#{@permissions.inspect} hoist=#{@hoist} colour=#{@colour.inspect} server=#{@server.inspect}>"
+      "<Role name=#{@name} permissions=#{@permissions.inspect} hoist=#{@hoist} colour=#{@colour.inspect} server=#{@server.inspect} position=#{@position} mentionable=#{@mentionable}>"
     end
 
     private
